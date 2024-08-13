@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/RFQ.UI/.vs
+/RFQ.UI/bin/Debug/net8.0
+/RFQ.UI/obj
+/RFQ.UI.Application/bin/Debug/net8.0
+/RFQ.UI.Application/obj
+/RFQ.UI.Domain/bin/Debug/net8.0
+/RFQ.UI.Domain/obj
+/RFQ.UI.Infrastructure/bin/Debug/net8.0
+/RFQ.UI.Infrastructure/obj
