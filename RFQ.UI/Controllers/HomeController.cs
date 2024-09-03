@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RFQ.UI.Application.Inteface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Models;
@@ -8,15 +9,15 @@ namespace RFQ.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILoginServcies _loginServcies;
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILoginServices _loginServcies;
+        private readonly IProfileServices _profileServices;
         private readonly IDashboardServices _boardServices;
 
-        public HomeController(ILogger<HomeController> logger, ILoginServcies loginServcies, IDashboardServices boardServices)
+        public HomeController(ILoginServices loginServcies, IDashboardServices boardServices, IProfileServices profileServices)
         {
             _loginServcies = loginServcies;
-            _logger = logger;
             _boardServices = boardServices;
+            _profileServices = profileServices;
         }
 
         public IActionResult Index()
@@ -68,6 +69,27 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Profilesave([FromBody] ProfileViewModelDto profileViewModelDto)
+        {
+            if (profileViewModelDto != null)
+            {
+                var profile = new ProfileViewModelDto()
+                {
+                    ProfileName = profileViewModelDto.ProfileName,
+                    CompanyTypeId = profileViewModelDto.CompanyTypeId,
+                };
+                var result = _profileServices.AddProfile(profile);
+                return Json(new { result = "success" });
+            }
+            else
+            {
+                return Json(new { result = "fail" });
+
+            }
+        }
+
 
         public IActionResult ProfileRight()
         {
@@ -126,6 +148,25 @@ namespace RFQ.UI.Controllers
                     dashboardViewModel.CompanyUserDto.AddRange(userlist);
                 }
                 return View(dashboardViewModel);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> ViewProfile(ProfileViewModel profileViewModel)
+        {
+            try
+            {
+                var userlist = await _profileServices.GetProfileAll();
+                if (userlist != null && userlist.Count() > 0)
+                {
+                    profileViewModel.profileViewModelDtos.AddRange(userlist);
+                }
+                var result = JsonConvert.SerializeObject(profileViewModel);
+                return View(profileViewModel);
             }
             catch (Exception)
             {

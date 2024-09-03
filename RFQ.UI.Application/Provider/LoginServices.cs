@@ -4,7 +4,7 @@ using RFQ.UI.Models;
 
 namespace RFQ.UI.Application.Provider
 {
-    public class LoginServices : ILoginServcies
+    public class LoginServices : ILoginServices
     {
         private readonly LoginAdaptor _loginAdaptor;
 
@@ -12,9 +12,9 @@ namespace RFQ.UI.Application.Provider
         {
             _loginAdaptor = loginAdaptor;
         }
-        public Task<string> Login(LoginViewModel model)
+        public Task<string> Login(LoginViewModel loginViewModel)
         {
-            return _loginAdaptor.PostApiDataAsync(model);
+            return _loginAdaptor.PostApiDataAsync(loginViewModel);
         }
     }
 }

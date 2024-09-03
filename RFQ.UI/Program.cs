@@ -1,16 +1,22 @@
 using RFQ.UI.Application.Extension;
+using RFQ.UI.Application.Inteface;
+using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Infrastructure.Extension;
+using RFQ.UI.Infrastructure.Provider;
 
 var builder = WebApplication.CreateBuilder(args);
-var globalclass = new GlobalClass();
 // Add services to the container.
+var globalclass = new GlobalClass();
 builder.Services.AddControllersWithViews();
 builder.Services.AddEfcoreInfrastrucureService();
 builder.Services.AddApplicationService();
+
+
 builder.Services.AddHttpContextAccessor();
+//builder.Services.AddSingleton(globalclass);
 builder.Services.AddHttpClient();
-builder.Services.AddSingleton(globalclass);
 
 
 var app = builder.Build();

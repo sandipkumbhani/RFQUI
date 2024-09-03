@@ -209,15 +209,15 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title-franchise fw-semibold mb-4">Profile</h5>
-                            <form>
-                                <div class="mb-3-row">
+                            <button type="button"id="viewprofile" class="btn btn-primary">View Data</button>
+                            <form method="post" id="profileform">
                                     <div class="mb-3-city">
-                                        <label for="InputItemName" class="form-label">Profile Name</label>
-                                        <input class="form-control-btn" id="ItemName">
+                                        <label for="ProfileName" class="form-label">Profile Name</label>
+                                        <input class="form-control-btn" id="ProfileName" name="ProfileName">
                                     </div>
                                     <div class="mb-3-pin">
-                                        <label for="InputItemName" class="form-label">Applicable For</label>
-                                        <select class="form-select" tabindex="0">
+                                        <label for="CompanyTypeId" class="form-label">Applicable For</label>
+                                        <select class="form-select" tabindex="0" id="CompanyTypeId" name="CompanyTypeId">
                                             <option value="0">--Select--</option>
                                             <option value="1">Admin</option>
                                             <option value="2">Franchise</option>
@@ -226,14 +226,15 @@
                                             <option value="5">Vendor</option>
                                         </select>
                                     </div>
-                                </div>
                             </form>
+                        </div>
                             <div class="btn-save">
-                                <button type="submit" class="btn btn-primary ">Save</button>
+                                <button type="button" id="btnsave" class="btn btn-primary">Save</button>
                                 <button type="submit" class="btn btn-primary">Save & New</button>
                             </div>
-                        </div>
                     </div>
+                    <p id="dataDiv"></p>
+                    <div id="profiledata"></div>
                 </div>
             </div>
         </div>
@@ -243,5 +244,59 @@
     <script src="~/js/app.min.js"></script>
     <script src="~/js/sidebarmenu.js"></script>
     <script src="~/js/dashboard.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btnsave").click(function (e) {
+                e.preventDefault();
+
+                var ProfileViewModel = {
+                    ProfileName: $("#ProfileName").val(),
+                    CompanyTypeId: $("#CompanyTypeId").val(),
+                }
+                console.log(ProfileViewModel);
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/Profilesave",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(ProfileViewModel),
+                    dataType: "json",
+                    success: function (result) {
+                        debugger;
+                        if (result.result == "success") {
+                            $("#dataDiv").html("Profile saved successfully!");
+                        } 
+                        else {
+                            $("#dataDiv").html("Failed to save profile.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Event handler for the button click
+            $("#viewprofile").click(function () {
+                // Make an AJAX request
+                $.ajax({
+                    url: '/Home/ViewProfile',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        // Update the content on success
+                          console.log(data);
+                        $("#profiledata").text('Title: ' + data.title);
+                    },
+                    error: function (error) {
+                        // Handle errors
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
