@@ -15,7 +15,6 @@
     <title>RFQ Dashboard</title>
     <link rel="shortcut icon" type="image/png" href="~/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
-    @* <link rel="stylesheet" href="~/lib/libs/apexcharts/src/assets/apexcharts.css" /> *@
 </head>
 
 <body>
@@ -49,93 +48,115 @@
                                 <span class="hide-menu">Dashboard</span>
                             </a>
                         </li>
+                        @* Company Dropdown *@
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Franchise" aria-expanded="false">
+                            <a class="sidebar-link has-arrow" href="javascript:void(0);" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
-                                <span class="hide-menu">Franchise</span>
+                                <span class="hide-menu">Company</span>
                             </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/CorporateCompany" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Corporate Company</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/CompanyConfiguration" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Company Configuration</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/user" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">User</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/Franchise" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Franchise</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/OrganisationLocation" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Organisation Location</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
+                        @* Master Dropdown *@ 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/CorporateCompany" aria-expanded="false">
+                            <a class="sidebar-link has-arrow" href="javascript:void(0);" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
-                                <span class="hide-menu">Corporate Company</span>
+                                <span class="hide-menu">Master</span>
                             </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/CompanyConfiguration" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Company Configuration</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/OrganisationLocation" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Organisation Location</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Vendor" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Vendor</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Customer" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Customer</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Item" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Item</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Vehicle" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Vehicle</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Profile" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Profile</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/ProfileRight" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Profile Rights</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/user" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">User</span>
-                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/Customer" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Customer</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/Vehicle" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Vehicle</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/Profile" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Profile</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/ProfileRight" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Profile Rights</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/Item" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Item</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="https://localhost:7295/Home/Vendor" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Vendor</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="https://localhost:7295/Home/ResetPassword" aria-expanded="false">
@@ -185,23 +206,6 @@
                                    aria-expanded="false">
                                     <img src="~/images/profile/user-1.jpg" alt="" width="40" height="40" class="rounded-circle">
                                 </a>
-                               @*  <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                                    <div class="message-body">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
-                                        <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
-                                    </div>
-                                </div> *@
                             </li>
                         </ul>
                     </div>
@@ -274,14 +278,10 @@
                                         </tbody>  
                                     </table>
                                  </div>
-                                @*  <button type="submit" class="btn btn-primary">Add</button> *@
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
     <script src="~/jquery/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/app.min.js"></script>

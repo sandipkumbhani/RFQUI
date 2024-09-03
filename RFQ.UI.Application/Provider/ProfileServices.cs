@@ -18,6 +18,16 @@ namespace RFQ.UI.Application.Provider
             return _profileAdaptor.AddProfile(profileViewModelDto);
         }
 
+        public Task<string> DeleteProfile(int profileId)
+        {
+            return _profileAdaptor.DeleteProfile(profileId);
+        }
+
+        public Task<string> EditProfile(int profileId, ProfileViewModelDto profileViewModelDto)
+        {
+            return _profileAdaptor.EditProfile(profileId, profileViewModelDto);
+        }
+
         public async Task<IEnumerable<ProfileViewModelDto>> GetProfileAll()
         {
             return await _profileAdaptor.GetProfileAll();

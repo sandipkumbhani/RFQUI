@@ -7,5 +7,10 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> AddProfile(ProfileViewModelDto profileViewModelDto);
 
         Task<IEnumerable<ProfileViewModelDto>> GetProfileAll();
+
+        Task<string> EditProfile(int profileId, ProfileViewModelDto profileViewModelDto);
+
+        Task<string> DeleteProfile(int profileId);
+
     }
 }

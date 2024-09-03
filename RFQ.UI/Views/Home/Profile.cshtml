@@ -1,4 +1,5 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@model RFQ.UI.Domain.Model.ProfileViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     Layout = "_Layout";
@@ -209,32 +210,67 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title-franchise fw-semibold mb-4">Profile</h5>
-                            <button type="button"id="viewprofile" class="btn btn-primary">View Data</button>
-                            <form method="post" id="profileform">
-                                    <div class="mb-3-city">
-                                        <label for="ProfileName" class="form-label">Profile Name</label>
-                                        <input class="form-control-btn" id="ProfileName" name="ProfileName">
+                                <form method="post" id="profileform">
+                                    <div class="mb-3-row">
+                                        <div class="mb-3-city">
+                                            <label for="ProfileName" class="form-label">Profile Name</label>
+                                            <input class="form-control" id="ProfileName" name="ProfileName">
+                                        </div>
+                                        <div class="mb-3-pin">
+                                            <label for="CompanyTypeId" class="form-label">Applicable For</label>
+                                            <select class="form-select" tabindex="0" id="CompanyTypeId" name="CompanyTypeId">
+                                                <option value="0">--Select--</option>
+                                                <option value="1">Admin</option>
+                                                <option value="2">Franchise</option>
+                                                <option value="3">Corporate Customer</option>
+                                                <option value="4">Branch Office</option>
+                                                <option value="5">Vendor</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="mb-3-pin">
-                                        <label for="CompanyTypeId" class="form-label">Applicable For</label>
-                                        <select class="form-select" tabindex="0" id="CompanyTypeId" name="CompanyTypeId">
-                                            <option value="0">--Select--</option>
-                                            <option value="1">Admin</option>
-                                            <option value="2">Franchise</option>
-                                            <option value="3">Corporate Customer</option>
-                                            <option value="4">Branch Office</option>
-                                            <option value="5">Vendor</option>
-                                        </select>
-                                    </div>
-                            </form>
+                                </form>
                         </div>
                             <div class="btn-save">
                                 <button type="button" id="btnsave" class="btn btn-primary">Save</button>
+                                <button type="button" id="btnupdate" class="btn btn-primary" style="display:none;">Update</button>
                                 <button type="submit" class="btn btn-primary">Save & New</button>
+                                <button type="button" id="viewprofile" class="btn btn-primary">View Data</button>
                             </div>
                     </div>
                     <p id="dataDiv"></p>
                     <div id="profiledata"></div>
+                </div>
+                <div>
+                    <table id="profileTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ProfileId</th>
+                                <th>ProfileName</th>
+                                <th>CompanyTypeId</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model?.profileViewModelDtos != null && Model.profileViewModelDtos.Any())
+                            {
+                                @foreach (var item in Model.profileViewModelDtos)
+                                {
+                                    <tr>
+                                        <td>@item.ProfileId</td>
+                                        <td>@item.ProfileName</td>
+                                        <td>@item.CompanyTypeId</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                 </div>
                 </div>
             </div>
         </div>
@@ -261,13 +297,17 @@
                     data: JSON.stringify(ProfileViewModel),
                     dataType: "json",
                     success: function (result) {
-                        debugger;
+                       
                         if (result.result == "success") {
                             $("#dataDiv").html("Profile saved successfully!");
                         } 
                         else {
                             $("#dataDiv").html("Failed to save profile.");
                         }
+                        $("#btnsave").show();
+                        $("#btnupdate").hide();
+                        $("#btnsaveandnew").prop("disabled", false);
+                        $("#viewprofile").click();
                     },
                     error: function (xhr, status, error) {
                         $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
@@ -278,21 +318,138 @@
     </script>
     <script>
         $(document).ready(function () {
-            // Event handler for the button click
             $("#viewprofile").click(function () {
-                // Make an AJAX request
                 $.ajax({
                     url: '/Home/ViewProfile',
-                    method: 'GET',
+                    type: "GET",
                     dataType: 'json',
                     success: function (data) {
-                        // Update the content on success
-                          console.log(data);
-                        $("#profiledata").text('Title: ' + data.title);
+                        $("#profileTable tbody").empty(); 
+                        $.each(data.profileViewModelDtos, function (index, item) {
+                            var row = "<tr>"
+                                + "<td>" + item.profileId  + "</td>"
+                                + "<td>" + item.profileName + "</td>"
+                                + "<td>" + item.companyTypeId + "</td>"
+                                + "<td>"
+                                + "<button type='button' class='btn btn-primary' id='editprofile'>Edit</button> "
+                               
+                                + "</td>"
+                                + "</tr>";
+                            $("#profileTable tbody").append(row);
+                        });
                     },
-                    error: function (error) {
-                        // Handle errors
-                        console.error('Error:', error);
+                    error: function () {
+                        alert("Error loading data");
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(".delete-btn").click(function () {
+            var row = $(this).closest("tr");
+            var profileId = row.find("td:eq(0)").text();
+            deleteProfile(profileId);
+        });</script>
+    <script>
+        $(document).ready(function () {
+            $("#viewprofile").click(function () {
+                $.ajax({
+                    url: '/Home/ViewProfile',
+                    type: "GET",
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#profileTable tbody").empty();
+                        $.each(data.profileViewModelDtos, function (index, item) {
+                            var row = "<tr>"
+                                + "<td>" + item.profileId + "</td>"
+                                + "<td>" + item.profileName + "</td>"
+                                + "<td>" + item.companyTypeId + "</td>"
+                                + "<td>"
+                                + "<button type='button' class='btn btn-primary' onclick='editProfile(" + item.profileId + ",\"" + item.profileName + "\",\"" + item.companyTypeId + "\")'>Edit</button> "
+
+                                + "</td>"
+                                + "</tr>";
+                            $("#profileTable tbody").append(row);
+                        });
+                    },
+                    error: function () {
+                        alert("Error loading data");
+                    }
+                });
+            });
+        });
+
+
+        function deleteProfile(profileId) {
+            if (confirm("Are you sure you want to delete this profile?")) {
+                $.ajax({
+                    type: "PUT",
+                    url: "/Home/DeleteProfile/" + profileId, // Adjust the URL as needed
+                    
+                    success: function (result) {
+                        if (result.result == "success") {
+                            alert("Profile deleted successfully!");
+                            $("#viewprofile").click(); // Refresh the table after deletion
+                        } else {
+                            alert("Failed to delete profile.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                    }
+                });
+            }
+        }
+    </script>
+    <script>
+        function editProfile(profileId, profileName, companyTypeId) {
+            $("#ProfileName").val(profileName);
+            $("#CompanyTypeId").val(companyTypeId);
+
+            $('html, body').animate({
+                scrollTop: $("#profileform").offset().top
+            }, 500);
+
+            $("#profileform").data("profileId", profileId);
+
+            $("#btnsave").hide();
+            $("#btnupdate").show();
+
+            $("#btnsaveandnew").prop("disabled", true);
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#btnupdate").click(function (e) {
+                e.preventDefault();
+
+                var profileId = $("#profileform").data("profileId"); 
+                var ProfileViewModel = {
+                    ProfileId: profileId,
+                    ProfileName: $("#ProfileName").val(),
+                    CompanyTypeId: $("#CompanyTypeId").val(),
+                }
+        
+                $.ajax({
+                    type: "PUT",
+                    url: "/Home/UpdateProfile",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(ProfileViewModel),
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.result == "success") {
+                            $("#dataDiv").html("Profile updated successfully!");
+                        } else {
+                            $("#dataDiv").html("Failed to update profile.");
+                        }
+                        $("#btnsave").show();
+                        $("#btnupdate").hide();
+                        $("#btnsaveandnew").prop("disabled", false);
+                        $("#viewprofile").click();
+                    },
+                    error: function (xhr, status, error) {
+                        $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
                     }
                 });
             });

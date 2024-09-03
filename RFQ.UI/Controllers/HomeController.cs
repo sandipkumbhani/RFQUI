@@ -1,9 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RFQ.UI.Application.Inteface;
+using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Extension;
 using RFQ.UI.Models;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
+using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
 namespace RFQ.UI.Controllers
 {
@@ -12,12 +17,16 @@ namespace RFQ.UI.Controllers
         private readonly ILoginServices _loginServcies;
         private readonly IProfileServices _profileServices;
         private readonly IDashboardServices _boardServices;
+        private readonly GlobalClass _globalClass;
+        private readonly IVehicletypeServices _vehicletypeServices;
 
-        public HomeController(ILoginServices loginServcies, IDashboardServices boardServices, IProfileServices profileServices)
+        public HomeController(ILoginServices loginServcies, IDashboardServices boardServices, IProfileServices profileServices, GlobalClass globalClass,IVehicletypeServices vehicletypeServices)
         {
             _loginServcies = loginServcies;
             _boardServices = boardServices;
             _profileServices = profileServices;
+            _globalClass = globalClass;
+            _vehicletypeServices = vehicletypeServices;
         }
 
         public IActionResult Index()
@@ -91,6 +100,134 @@ namespace RFQ.UI.Controllers
         }
 
 
+        [HttpPost]
+        public IActionResult Vehicletypesave([FromBody]VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        {
+            if (vehicleTypeViewModelDto != null)
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+
+                var Vehicle = new VehicleTypeViewModelDto()
+                {
+                    CompanyId = Convert.ToInt32(companyid),
+                    VehicleTypeName = vehicleTypeViewModelDto.VehicleTypeName,
+                    CreatedBy = Convert.ToInt32(profileid),
+                    UpdatedBy = Convert.ToInt32(profileid)
+                };
+                var result = _vehicletypeServices.AddVehicleType(Vehicle);
+                return Json(new { result = "success" });
+            }
+            else
+            {
+                return Json(new { result = "fail" });
+
+            }
+        }
+
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProfile([FromBody] ProfileViewModelDto profileViewModelDto)
+        {
+            try
+            {
+                int profileId = profileViewModelDto.ProfileId;
+                var result = await _profileServices.EditProfile(profileId, profileViewModelDto);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateVehicleType([FromBody] VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        {
+            try
+            {
+                int vechicleTypeId = vehicleTypeViewModelDto.VechicleTypeId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+                var vehicle = new VehicleTypeViewModelDto
+                {
+                    VehicleTypeName = vehicleTypeViewModelDto.VehicleTypeName,
+                    CompanyId = Convert.ToInt32(companyid),
+                    CreatedBy = Convert.ToInt32(profileid),
+                    UpdatedBy = Convert.ToInt32(profileid)
+                };
+                var result = await _vehicletypeServices.EditVehicleType(vechicleTypeId, vehicle);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [Route("Home/DeleteProfile/{profileId}")]
+        [HttpDelete("{profileId}")]
+        public async Task<IActionResult> DeleteProfile(int profileId)
+        {
+            try
+            {
+                var result = await _profileServices.DeleteProfile(profileId);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [Route("Home/DeleteVehicleType/{vehicleTypeId}")]
+        [HttpDelete("{vehicleTypeId}")]
+        public async Task<IActionResult> DeleteVehicleType(int vehicleTypeId)
+        {
+            try
+            {
+                var result = await _vehicletypeServices.DeleteVehicleType(vehicleTypeId);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+
         public IActionResult ProfileRight()
         {
             return View();
@@ -160,17 +297,48 @@ namespace RFQ.UI.Controllers
         {
             try
             {
+                profileViewModel ??= new ProfileViewModel();
                 var userlist = await _profileServices.GetProfileAll();
                 if (userlist != null && userlist.Count() > 0)
                 {
                     profileViewModel.profileViewModelDtos.AddRange(userlist);
                 }
-                var result = JsonConvert.SerializeObject(profileViewModel);
-                return View(profileViewModel);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(profileViewModel); // Return JSON for AJAX requests
+                }
+                else
+                {
+                    return View(profileViewModel); // Return the view for normal requests
+                }
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
 
+        public async Task<IActionResult> ViewVehicleType(VehicleTypeViewModel vehicleTypeViewModel)
+        {
+            try
+            {
+                vehicleTypeViewModel ??= new VehicleTypeViewModel();
+                var userlist = await _vehicletypeServices.GetVehicleTypeAll();  
+                if (userlist != null && userlist.Count() > 0)
+                {
+                    vehicleTypeViewModel.vehicleTypeViewModelDtos.AddRange(userlist);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(vehicleTypeViewModel); // Return JSON for AJAX requests
+                }
+                else
+                {
+                    return View(vehicleTypeViewModel); // Return the view for normal requests
+                }
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }

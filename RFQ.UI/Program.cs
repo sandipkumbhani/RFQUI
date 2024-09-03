@@ -8,17 +8,14 @@ using RFQ.UI.Infrastructure.Provider;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
-var globalclass = new GlobalClass();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddEfcoreInfrastrucureService();
 builder.Services.AddApplicationService();
-
-
 builder.Services.AddHttpContextAccessor();
-//builder.Services.AddSingleton(globalclass);
 builder.Services.AddHttpClient();
-
-
+builder.Services.AddSingleton<GlobalClass>();
+var globalclass = new GlobalClass();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,7 +29,7 @@ if (!app.Environment.IsDevelopment())
 
 app.Use(async (context, next) =>
 {
-    // Read a specific cookie
+    var globalclass = context.RequestServices.GetRequiredService<GlobalClass>();
     var token = context.Request.Cookies["AuthToken"];
 
     if (token != null)

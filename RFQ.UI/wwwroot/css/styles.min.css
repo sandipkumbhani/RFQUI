@@ -7,6 +7,26 @@
  */ @import "../libs/simplebar/dist/simplebar.css";
 @import "../css/icons/tabler-icons/tabler-icons.css";
 
+
+/* Custom dropdown styles */
+.sidebar-item .collapse {
+    display: none;
+}
+
+.sidebar-item .has-arrow[aria-expanded="true"] + .collapse {
+    display: block;
+}
+
+.sidebar-item .has-arrow::after {
+    content: "▼";
+    float: right;
+    margin-left: auto;
+}
+
+.sidebar-item .has-arrow[aria-expanded="true"]::after {
+    content: "▲";
+}   
+
 .submit-success {
     display: none;
 }
