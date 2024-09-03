@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using RFQ.UI.Application.Inteface;
-using RFQ.UI.Application.Provider;
-using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 using RFQ.UI.Models;
@@ -20,7 +17,7 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IVehicletypeServices _vehicletypeServices;
 
-        public HomeController(ILoginServices loginServcies, IDashboardServices boardServices, IProfileServices profileServices, GlobalClass globalClass,IVehicletypeServices vehicletypeServices)
+        public HomeController(ILoginServices loginServcies, IDashboardServices boardServices, IProfileServices profileServices, GlobalClass globalClass, IVehicletypeServices vehicletypeServices)
         {
             _loginServcies = loginServcies;
             _boardServices = boardServices;
@@ -101,7 +98,7 @@ namespace RFQ.UI.Controllers
 
 
         [HttpPost]
-        public IActionResult Vehicletypesave([FromBody]VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        public IActionResult Vehicletypesave([FromBody] VehicleTypeViewModelDto vehicleTypeViewModelDto)
         {
             if (vehicleTypeViewModelDto != null)
             {
@@ -323,7 +320,7 @@ namespace RFQ.UI.Controllers
             try
             {
                 vehicleTypeViewModel ??= new VehicleTypeViewModel();
-                var userlist = await _vehicletypeServices.GetVehicleTypeAll();  
+                var userlist = await _vehicletypeServices.GetVehicleTypeAll();
                 if (userlist != null && userlist.Count() > 0)
                 {
                     vehicleTypeViewModel.vehicleTypeViewModelDtos.AddRange(userlist);

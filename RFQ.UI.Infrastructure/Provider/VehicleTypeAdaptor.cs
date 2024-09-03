@@ -2,11 +2,7 @@
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -16,7 +12,7 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
 
-        public VehicleTypeAdaptor(HttpClient httpClient,GlobalClass globalClass)
+        public VehicleTypeAdaptor(HttpClient httpClient, GlobalClass globalClass)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;

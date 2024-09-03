@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RFQ.UI.Application.Inteface;
 using RFQ.UI.Application.Provider;
-using RFQ.UI.Domain.Interfaces;
-using RFQ.UI.Domain.Model;
 
 namespace RFQ.UI.Application.Extension
 {
@@ -13,7 +11,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<ILoginServices, LoginServices>();
             services.AddScoped<IDashboardServices, DashboardServices>();
             services.AddScoped<IProfileServices, ProfileServices>();
-            services.AddScoped<IVehicletypeServices,VehicletypeServices>();
+            services.AddScoped<IVehicletypeServices, VehicletypeServices>();
             return services;
         }
     }

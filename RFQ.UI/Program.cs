@@ -1,10 +1,6 @@
 using RFQ.UI.Application.Extension;
-using RFQ.UI.Application.Inteface;
-using RFQ.UI.Application.Provider;
-using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Infrastructure.Extension;
-using RFQ.UI.Infrastructure.Provider;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
