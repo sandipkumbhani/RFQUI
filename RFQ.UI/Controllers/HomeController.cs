@@ -16,14 +16,16 @@ namespace RFQ.UI.Controllers
         private readonly IDashboardServices _boardServices;
         private readonly GlobalClass _globalClass;
         private readonly IVehicletypeServices _vehicletypeServices;
+        private readonly IMenuServices _menuServices;
 
-        public HomeController(ILoginServices loginServcies, IDashboardServices boardServices, IProfileServices profileServices, GlobalClass globalClass, IVehicletypeServices vehicletypeServices)
+        public HomeController(ILoginServices loginServcies, IMenuServices menuServices, IDashboardServices boardServices, IProfileServices profileServices, GlobalClass globalClass, IVehicletypeServices vehicletypeServices)
         {
             _loginServcies = loginServcies;
             _boardServices = boardServices;
             _profileServices = profileServices;
             _globalClass = globalClass;
             _vehicletypeServices = vehicletypeServices;
+            _menuServices = menuServices;
         }
 
         public IActionResult Index()
@@ -282,6 +284,34 @@ namespace RFQ.UI.Controllers
                     dashboardViewModel.CompanyUserDto.AddRange(userlist);
                 }
                 return View(dashboardViewModel);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> GetMenu(MenuViewModel menuViewModel)
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var menulist = await _menuServices.GetMenu(profileID);
+                if (menulist != null && menulist.Count() > 0)
+                {
+                    menuViewModel.menulistDtos.AddRange(menulist);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(menuViewModel); 
+                }
+                else
+                {
+                    return View(menuViewModel); 
+                }
             }
             catch (Exception)
             {

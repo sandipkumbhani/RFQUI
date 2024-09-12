@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Infrastructure.Provider;
 
 namespace RFQ.UI.Infrastructure.Extension
@@ -12,6 +13,7 @@ namespace RFQ.UI.Infrastructure.Extension
             services.AddScoped<UserAdaptor>();
             services.AddScoped<ProfileAdaptor>();
             services.AddScoped<VehicleTypeAdaptor>();
+            services.AddScoped<IMenuAdaptor, MenuAdaptor>();
             return services;
         }
     }
