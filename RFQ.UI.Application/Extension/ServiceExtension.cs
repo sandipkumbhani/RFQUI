@@ -8,8 +8,11 @@ namespace RFQ.UI.Application.Extension
     {
         public static IServiceCollection AddApplicationService(this IServiceCollection services)
         {
-            services.AddScoped<ILoginServcies, LoginServices>();
+            services.AddScoped<ILoginServices, LoginServices>();
             services.AddScoped<IDashboardServices, DashboardServices>();
+            services.AddScoped<IProfileServices, ProfileServices>();
+            services.AddScoped<IVehicletypeServices, VehicletypeServices>();
+            services.AddScoped<IMenuServices, MenuServices>();
             return services;
         }
     }

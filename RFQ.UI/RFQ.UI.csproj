@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RFQ.UI.Application\RFQ.UI.Application.csproj" />
     <ProjectReference Include="..\RFQ.UI.Infrastructure\RFQ.UI.Infrastructure.csproj" />
   </ItemGroup>

@@ -7,6 +7,34 @@
  */ @import "../libs/simplebar/dist/simplebar.css";
 @import "../css/icons/tabler-icons/tabler-icons.css";
 
+
+/*Custom dropdown styles*/ 
+.sidebar-item .collapse {
+    display: none;
+}
+
+.sidebar-item .has-arrow[aria-expanded="true"] + .collapse {
+    display: block;
+}
+
+.sidebar-item .has-arrow::after {
+    content: "▼";
+    float: right;
+    margin-left: auto;
+}
+
+.sidebar-item .has-arrow[aria-expanded="true"]::after {
+    content: "▲";
+}   
+
+.submit-success {
+    display: none;
+}
+
+.submit-success[data-submit="success"] {
+    display: block;
+ }
+
 :root, [data-bs-theme=light] {
     --bs-blue: #5D87FF;
     --bs-indigo: #6610f2;
@@ -223,6 +251,8 @@ body {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0,0,0,0)
 }
+
+
 
 hr {
     margin: 1rem 0;
@@ -463,6 +493,7 @@ button {
 
 button, input, optgroup, select, textarea {
     margin: 0;
+    width:300px;
     font-family: inherit;
     font-size: inherit;
     line-height: inherit
@@ -2690,6 +2721,7 @@ progress {
 }
 
 .form-label {
+    width: 160px;
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: #2A3547
@@ -2725,7 +2757,7 @@ progress {
 
 .mb-3-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     padding-top: 15px;
     align-items:flex-end;
 }
@@ -3916,6 +3948,7 @@ textarea.form-control-lg {
 }
 
 .btn-primary {
+    width:auto;
     --bs-btn-color: #fff;
     --bs-btn-bg: #5D87FF;
     --bs-btn-border-color: #5D87FF;

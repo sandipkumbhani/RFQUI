@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Extension\ServiceExtension.cs~RF170c8ef.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Contracts\" />
     <Folder Include="Handler\" />
   </ItemGroup>
