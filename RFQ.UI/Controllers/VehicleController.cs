@@ -32,7 +32,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Vehicletypesave([FromBody] VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        public IActionResult VehicleTypeSave([FromBody] VehicleTypeViewModelDto vehicleTypeViewModelDto)
         {
             if (vehicleTypeViewModelDto != null)
             {

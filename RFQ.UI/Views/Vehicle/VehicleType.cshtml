@@ -41,43 +41,9 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
-                                @* <input type="text" class="form-control" placeholder="Vehicle Type" /> *@
-                                <select id="vehicleType" name="vehicleType"
-                                        data-control="select2" data-placeholder="Select Vehicle Type" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select Vehicle Type</option>
-                                </select>
+                                <input type="text" class="form-control" id="txtVehicleType" placeholder="Vehicle Type" />
                             </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Owner Name</label>
-                                @* <input type="text" class="form-control" placeholder="Owner Name" /> *@
-                                <select id="ownerName" name="OwnerName"
-                                        data-control="select2" data-placeholder="Select Owner Name" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select Owner Name</option>
-                                </select>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label fw-semibold fs-6">Tracking Provider</label>
-                                @* <input type="text" class="form-control" placeholder="Tracking Provider" /> *@
-                                <select id="trackingProvider" name="TrackingProvider"
-                                        data-control="select2" data-placeholder="Select Tracking Provider" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select Tracking Provider</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Category</label>
-                                @* <input type="text" class="form-control" placeholder="Vehicle Category" /> *@
-                                <select id="vehicleCategory" name="vehicleCategory"
-                                        data-control="select2" data-placeholder="Select Vehicle Category" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select Vehicle Category</option>
-                                </select>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Capacity</label>
-                                <input type="text" class="form-control" placeholder="Vehicle Capacity" />
-                            </div>
-
+                            
                         </div>
                     </div>
 
@@ -93,56 +59,14 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-    const vehicleTypes = ["Car", "Bike", "Truck", "Bus", "Van"];
-     const vehicleCategories = ["Sedan", "SUV", "Hatchback", "Pickup", "Convertible"];
-    const ownerNames = ["John Doe", "Jane Smith", "Robert Johnson", "Emily Davis", "Michael Brown"];
-    const trackingProviders = ["GPS Tracker Inc.", "FleetMonitor", "TrackMe", "GeoLocate", "NavTrack"];
-        const trackingDropdown = document.getElementById("trackingProvider");
-
-    // Get the dropdown element
-    const dropdown = document.getElementById("vehicleType");
-    const categoryDropdown = document.getElementById("vehicleCategory");
-     const ownerDropdown = document.getElementById("ownerName");
-
-    // Populate dropdown options
-    vehicleTypes.forEach(type => {
-        let option = document.createElement("option");
-        option.value = type;
-        option.textContent = type;
-        dropdown.appendChild(option);
-    });
-
-    // Populate dropdown options
-    vehicleCategories.forEach(category => {
-        let option = document.createElement("option");
-        option.value = category;
-        option.textContent = category;
-        categoryDropdown.appendChild(option);
-    });
-
-    // Populate dropdown options
-    ownerNames.forEach(owner => {
-        let option = document.createElement("option");
-        option.value = owner;
-        option.textContent = owner;
-        ownerDropdown.appendChild(option);
-    });
-
-      // Populate dropdown options
-    trackingProviders.forEach(provider => {
-        let option = document.createElement("option");
-        option.value = provider;
-        option.textContent = provider;
-        trackingDropdown.appendChild(option);
-    });
-
+     
      $(document).ready(function() {
             getAndSetToken("AuthToken");
         $("#VehicleTypeForm").submit(function(event) {
             event.preventDefault();
-            var saveUrl = '@Url.Content("~/Vehicle/Vehicletypesave")';
+            var saveUrl = '@Url.Content("~/Vehicle/VehicleTypeSave")';
             var formData = {
-                VehicleTypeName: $("#vehicleType").val(),
+                VehicleTypeName: $("#txtVehicleType").val(),
             };
 
             $.ajax({
