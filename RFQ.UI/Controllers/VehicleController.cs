@@ -1,0 +1,141 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
+using System.IdentityModel.Tokens.Jwt;
+using RFQ.UI.Application.Inteface;
+using RFQ.UI.Domain.Model;
+using RFQ.UI.Extension;
+
+namespace RFQ.UI.Controllers
+{
+    public class VehicleController : Controller
+    {
+        private readonly GlobalClass _globalClass;
+        private readonly IVehicletypeServices _vehicletypeServices;
+
+        public VehicleController(IVehicletypeServices vehicletypeServices, GlobalClass globalClass)
+        {
+            _vehicletypeServices = vehicletypeServices;
+            _globalClass = globalClass;
+        }
+        public IActionResult Vehicle()
+        {
+            return View();
+        }
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult VehicleType()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Vehicletypesave([FromBody] VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        {
+            if (vehicleTypeViewModelDto != null)
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+
+                var Vehicle = new VehicleTypeViewModelDto()
+                {
+                    CompanyId = Convert.ToInt32(companyid),
+                    VehicleTypeName = vehicleTypeViewModelDto.VehicleTypeName,
+                    CreatedBy = Convert.ToInt32(profileid),
+                    UpdatedBy = Convert.ToInt32(profileid),
+                };
+                var result = _vehicletypeServices.AddVehicleType(Vehicle);
+                return Json(new { result = "success" });
+            }
+            else
+            {
+                return Json(new { result = "fail" });
+
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateVehicleType([FromBody] VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        {
+            try
+            {
+                int vechicleTypeId = vehicleTypeViewModelDto.VehicleTypeId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+                var vehicle = new VehicleTypeViewModelDto
+                {
+                    VehicleTypeName = vehicleTypeViewModelDto.VehicleTypeName,
+                    CompanyId = Convert.ToInt32(companyid),
+                    CreatedBy = Convert.ToInt32(profileid),
+                    UpdatedBy = Convert.ToInt32(profileid)
+                };
+                var result = await _vehicletypeServices.EditVehicleType(vechicleTypeId, vehicle);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        public async Task<IActionResult> ViewVehicleType(VehicleTypeViewModel vehicleTypeViewModel)
+        {
+            try
+            {
+                vehicleTypeViewModel ??= new VehicleTypeViewModel();
+                var userlist = await _vehicletypeServices.GetVehicleTypeAll();
+                if (userlist != null && userlist.Count() > 0)
+                {
+                    vehicleTypeViewModel.vehicleTypeViewModelDtos.AddRange(userlist);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(vehicleTypeViewModel); // Return JSON for AJAX requests
+                }
+                else
+                {
+                    return View(vehicleTypeViewModel); // Return the view for normal requests
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Route("Home/DeleteVehicleType/{vehicleTypeId}")]
+        [HttpDelete("{vehicleTypeId}")]
+        public async Task<IActionResult> DeleteVehicleType(int vehicleTypeId)
+        {
+            try
+            {
+                var result = await _vehicletypeServices.DeleteVehicleType(vehicleTypeId);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+    }
+}

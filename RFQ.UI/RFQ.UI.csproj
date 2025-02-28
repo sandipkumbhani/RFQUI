@@ -8,11 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\css\icons\tabler-icons\fonts\tabler-icons.svg" />
-    <None Include="wwwroot\css\icons\tabler-icons\fonts\tabler-icons.woff2" />
+    <Folder Include="Views\Profile\" />
   </ItemGroup>
 
   <ItemGroup>

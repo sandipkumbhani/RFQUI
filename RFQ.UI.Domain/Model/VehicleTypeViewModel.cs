@@ -10,7 +10,7 @@
 
         public class VehicleTypeViewModelDto
         {
-            public int VechicleTypeId { get; set; }
+            public int VehicleTypeId { get; set; }
             public int CompanyId { get; set; }
             public string? VehicleTypeName { get; set; }
             public int CreatedBy { get; set; }

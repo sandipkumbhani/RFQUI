@@ -2,7 +2,7 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "CompanyConfiguration";
+    ViewData["Title"] = "Franchise";
 }
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | User Form</title>
-    <link rel="shortcut icon icon" href="~/favicon.ico" />
+    <link rel="shortcut icon" href="~/favicon.ico" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <link href="~/css/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -116,7 +116,7 @@
                                 <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
                                     <div class="page-title d-flex align-items-center gap-1 me-3">
                                         <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 lh-1 fw-bolder fs-2x my-0 me-5">
-                                            Overview
+                                            Dashboard
                                         </h1>
                                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
                                             <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
@@ -124,7 +124,7 @@
                                             </li>
                                             <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
                                             <li class="breadcrumb-item text-gray-700">
-                                                Corporate customer configuration
+                                                Franchise
                                             </li>
                                         </ul>
                                     </div>
@@ -136,7 +136,7 @@
                                 <div class="card">
                                     <div class="card-header border-0 cursor-pointer">
                                         <div class="card-title m-0">
-                                            <h3 class="fw-bold m-0">Corporate customer configuration</h3>
+                                            <h3 class="fw-bold m-0">Franchise</h3>
                                         </div>
                                     </div>
                                     <form class="form">
@@ -144,68 +144,80 @@
                                             <div class="row">
                                                 <div class="col-xl-6">
                                                     <div class="mb-10">
-                                                        <label class="form-label col-form-label required fw-semibold fs-6">Customer Name</label>
-                                                        <select name="franchise" aria-label="Select a Franchise/Corporate"
-                                                                data-control="select2" data-placeholder="Select a Customer Name" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                                            <option value="">Select a Customer Name</option>
-                                                            <option value="AF">Afghanistan</option>
-                                                            <option value="AX">Aland Islands</option>
-                                                            <option value="AL">Albania</option>
-                                                            <option value="DZ">Algeria</option>
-                                                        </select>
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">Franchise Name </label>
+                                                        <input type="text" class="form-control" placeholder="Franchise Name" />
+                                                    </div>
+                                                    <div class="mb-10">
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">Franchise Code</label>
+                                                        <input type="text" class="form-control" placeholder="Franchise Code" />
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-6"></div>
                                                 <div class="col-xl-6">
-                                                    <div class="mb-10">
-                                                        <label class="form-label col-form-label required fw-semibold fs-6">SMS Provider</label>
+                                                    <div class="fv-row upload-imgs">
+                                                        <div class="dropzone" id="dropzonejs_example">
 
-                                                        <select name="franchise" aria-label="Select a Franchise/Corporate"
-                                                                data-control="select2" data-placeholder="Select a SMS Provider" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                                            <option value="">Select a SMS Provider</option>
-                                                            <option value="AF">Afghanistan</option>
-                                                            <option value="AX">Aland Islands</option>
-                                                            <option value="AL">Albania</option>
-                                                            <option value="DZ">Algeria</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-10">
-                                                        <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Provider</label>
+                                                            <div class="dz-message needsclick">
+                                                                <i class="bi bi-cloud-upload fs-3x text-primary"></i>
 
-                                                        <select name="franchise" aria-label="Select a Franchise/Corporate"
-                                                                data-control="select2" data-placeholder="Select a WhatsApp Provider" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                                            <option value="">Select a WhatsApp Provider</option>
-                                                            <option value="AF">Afghanistan</option>
-                                                            <option value="AX">Aland Islands</option>
-                                                            <option value="AL">Albania</option>
-                                                            <option value="DZ">Algeria</option>
-                                                        </select>
+
+                                                                <div class="ms-4">
+                                                                    <h3 class="fs-5 fw-bold text-gray-900 mb-1">Upload logo</h3>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
                                                     </div>
+                                                </div>
+                                                <div class="col-xl-12">
                                                     <div class="mb-10">
-                                                        <label class="form-label col-form-label required fw-semibold fs-6">SMTP Host</label>
-                                                        <input type="text" class="form-control" placeholder="SMTP Host" />
-                                                    </div>
-                                                    <div class="mb-10">
-                                                        <label class="form-label col-form-label required fw-semibold fs-6">SMTP User Name</label>
-                                                        <input type="text" class="form-control" placeholder="SMTP User Name" />
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">Address </label>
+                                                        <input type="text" class="form-control" placeholder="Address" />
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-6">
                                                     <div class="mb-10">
-                                                        <label class="form-label col-form-label required fw-semibold fs-6">SMS Authorization Key</label>
-                                                        <input type="text" class="form-control" placeholder="SMS Authorization Key" />
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">City</label>
+
+                                                        <select name="franchise" aria-label="Select a Franchise/Corporate"
+                                                                data-control="select2" data-placeholder="Select a City." class="form-select select2 form-select-solid form-select-lg fw-semibold">
+                                                            <option value="">Select a City</option>
+                                                            <option value="AF">Afghanistan</option>
+                                                            <option value="AX">Aland Islands</option>
+                                                            <option value="AL">Albania</option>
+                                                            <option value="DZ">Algeria</option>
+                                                        </select>
                                                     </div>
                                                     <div class="mb-10">
-                                                        <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Authorization Key</label>
-                                                        <input type="text" class="form-control" placeholder="WhatsApp Authorization Key" />
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
+                                                        <input type="text" class="form-control" placeholder="Contact Person" />
+                                                    </div>
+
+                                                    <div class="mb-10">
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number</label>
+                                                        <input type="text" class="form-control" placeholder="Mobile Number" />
                                                     </div>
                                                     <div class="mb-10">
-                                                        <label class="form-label col-form-label required fw-semibold fs-6">SMTP Port</label>
-                                                        <input type="text" class="form-control" placeholder="SMTP Port" />
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
+                                                        <input type="text" class="form-control" placeholder="Pan Number" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="mb-10">
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
+                                                        <input type="text" class="form-control" placeholder="Pincode" />
                                                     </div>
                                                     <div class="mb-10">
-                                                        <label class="form-label col-form-label required fw-semibold fs-6">SMTP Password</label>
-                                                        <input type="text" class="form-control" placeholder="SMTP Password" />
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
+                                                        <input type="text" class="form-control" placeholder="WhatsApp Number" />
+                                                    </div>
+                                                    <div class="mb-10">
+                                                        <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
+                                                        <input type="email" class="form-control" placeholder="name@example.com" />
+                                                    </div>
+                                                    <div class="mb-10">
+                                                        <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
+                                                        <input type="text" class="form-control" placeholder="GST Number" />
                                                     </div>
                                                 </div>
                                             </div>

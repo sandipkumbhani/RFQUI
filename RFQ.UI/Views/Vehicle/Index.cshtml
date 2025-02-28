@@ -1,0 +1,325 @@
+﻿@model RFQ.UI.Domain.Model.VehicleTypeViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Vehicle";
+}
+<div class="app-toolbar  pt-3 px-lg-3">
+    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
+        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+            <div class="page-title d-flex align-items-center gap-1 me-3">
+                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
+                    Overview
+                </h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
+                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
+                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
+                    <li class="breadcrumb-item text-primary">
+                        Vehicle
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="app-content  px-lg-3">
+    <div class="app-container  container-fluid">
+        <div class="card">
+            <div class="card-header border-0 cursor-pointer">
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">Vehicle</h3>
+                </div>
+            </div>
+            <form class="form">
+                <div class="card-body border-top p-9">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="row align-items-center mb-10">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Vehicle No</label>
+                                <div class="col-auto">
+                                    <input type="text" class="form-control form-control-solid" placeholder="" />
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-primary me-2">Get e-KYC</button>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
+                                @* <input type="text" class="form-control" placeholder="Vehicle Type" /> *@
+                                <select id="vehicleType" name="vehicleType" 
+                                        data-control="select2" data-placeholder="Select Vehicle Type" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+                                    <option value="">Select Vehicle Type</option>
+                                </select>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Owner Name</label>
+                                @* <input type="text" class="form-control" placeholder="Owner Name" /> *@
+                                <select id="ownerName" name="OwnerName"
+                                        data-control="select2" data-placeholder="Select Owner Name" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+                                    <option value="">Select Owner Name</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Category</label>
+                                @* <input type="text" class="form-control" placeholder="Vehicle Category" /> *@
+                                <select id="vehicleCategory" name="vehicleCategory"
+                                        data-control="select2" data-placeholder="Select Vehicle Category" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+                                    <option value="">Select Vehicle Category</option>
+                                </select>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Capacity</label>
+                                <input type="text" class="form-control" placeholder="Vehicle Capacity" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label fw-semibold fs-6">Tracking Provider</label>
+                                @* <input type="text" class="form-control" placeholder="Tracking Provider" /> *@
+                                <select id="trackingProvider" name="TrackingProvider"
+                                        data-control="select2" data-placeholder="Select Tracking Provider" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+                                    <option value="">Select Tracking Provider</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body border-top p-9">
+                    <div class="card-title m-0 pb-10">
+                        <h3 class="fw-bold m-0">e-KYC Details</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Status</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Vehicle Status" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Blacklist Status</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Blacklist Status" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Regd. Owner</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Regd. Owner" />
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Engine No</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Engine No" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Chasis No</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Chasis No" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Make-Model</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Make-Model" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">PUC Expiry Date</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="PUC Expiry Date" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Financer</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Financer" />
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Owner Serial No</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Owner Serial No" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">N P No</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="N P No" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Insurance Co</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Insurance Co" />
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Verified On</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Verified On" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">RTO Registration</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="RTO Registration" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Registration Date</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Registration Date" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Permanent Address</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Permanent Address" />
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Gross Weight</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Gross Weight" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Unladen Weight</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Unladen Weight" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Fitness Expiry Date</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Fitness Expiry Date" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Tax Expiry Date</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Tax Expiry Date" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Permit No</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Permit No" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Permit Expiry Date</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Permit Expiry Date" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">NP Expiry Date</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="NP Expiry Date" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Capacity</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Vehicle Capacity" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Policy No </label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Policy No " />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Policy Expiry Date</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Policy Expiry Date" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-srtat py-6 px-9">
+                    <button type="submit" class="btn btn-primary me-2">Save</button>
+                    <button type="submit" class="btn btn-primary">Save & New</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    const vehicleTypes = ["Car", "Bike", "Truck", "Bus", "Van"];
+     const vehicleCategories = ["Sedan", "SUV", "Hatchback", "Pickup", "Convertible"];
+    const ownerNames = ["John Doe", "Jane Smith", "Robert Johnson", "Emily Davis", "Michael Brown"];
+    const trackingProviders = ["GPS Tracker Inc.", "FleetMonitor", "TrackMe", "GeoLocate", "NavTrack"];
+        const trackingDropdown = document.getElementById("trackingProvider");
+
+    // Get the dropdown element
+    const dropdown = document.getElementById("vehicleType");
+    const categoryDropdown = document.getElementById("vehicleCategory");
+     const ownerDropdown = document.getElementById("ownerName");
+
+    // Populate dropdown options
+    vehicleTypes.forEach(type => {
+        let option = document.createElement("option");
+        option.value = type;
+        option.textContent = type;
+        dropdown.appendChild(option);
+    });
+
+    // Populate dropdown options
+    vehicleCategories.forEach(category => {
+        let option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        categoryDropdown.appendChild(option);
+    });
+
+    // Populate dropdown options
+    ownerNames.forEach(owner => {
+        let option = document.createElement("option");
+        option.value = owner;
+        option.textContent = owner;
+        ownerDropdown.appendChild(option);
+    });
+
+      // Populate dropdown options
+    trackingProviders.forEach(provider => {
+        let option = document.createElement("option");
+        option.value = provider;
+        option.textContent = provider;
+        trackingDropdown.appendChild(option);
+    });
+
+</script>
