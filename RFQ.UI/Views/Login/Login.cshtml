@@ -96,12 +96,12 @@
                 $("#loginButton").prop("disabled", true).text("Logging in...");
 
 
-                debugger;
+                
                 var formData = {
                     emailId: $("#EmailId").val(),
                     password: $("#Password").val()
                 };
-                 debugger;
+                
                 $.ajax({
                     type: "POST",
                     url: "https://localhost:7295/Login/GetToken",
@@ -112,8 +112,7 @@
                         "Accept": "application/json"
                     },
                     success: function (response) {
-                        debugger;
-                        console.log(response);
+                        
                         if (response != null) {
                             sessionStorage.setItem("authToken", response.data);
                             window.location.href = window.location.origin + "/Dashboard/Dashboard";

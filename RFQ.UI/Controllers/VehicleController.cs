@@ -4,6 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using RFQ.UI.Application.Inteface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
+using RFQ.UI.Domain.RequestDto;
+using Microsoft.EntityFrameworkCore;
 
 namespace RFQ.UI.Controllers
 {
@@ -91,6 +93,7 @@ namespace RFQ.UI.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> ViewVehicleType(VehicleTypeViewModel vehicleTypeViewModel)
         {
             try
@@ -103,20 +106,20 @@ namespace RFQ.UI.Controllers
                 }
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(vehicleTypeViewModel); // Return JSON for AJAX requests
+                    return Json(vehicleTypeViewModel); 
                 }
                 else
                 {
-                    return View(vehicleTypeViewModel); // Return the view for normal requests
+                    return View(vehicleTypeViewModel); 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
         }
 
-        [Route("Home/DeleteVehicleType/{vehicleTypeId}")]
+        [Route("Vehicle/DeleteVehicleType/{vehicleTypeId}")]
         [HttpDelete("{vehicleTypeId}")]
         public async Task<IActionResult> DeleteVehicleType(int vehicleTypeId)
         {
