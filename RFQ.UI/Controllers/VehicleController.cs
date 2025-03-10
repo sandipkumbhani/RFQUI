@@ -119,8 +119,7 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [Route("Vehicle/DeleteVehicleType/{vehicleTypeId}")]
-        [HttpDelete("{vehicleTypeId}")]
+        [HttpDelete("Vehicle/DeleteVehicleType/{vehicleTypeId}")]
         public async Task<IActionResult> DeleteVehicleType(int vehicleTypeId)
         {
             try

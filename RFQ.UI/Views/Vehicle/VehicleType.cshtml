@@ -93,7 +93,7 @@
 <script src="~/js/common.js"></script>
 <script>
     $(document).ready(function () {
-
+        var vehicleTypeViewModelDtos;
         // View Button click Call Api
         $(document).on("click", "#viewButton", function () {
             fetchVehicleTypes();
@@ -168,6 +168,7 @@
             success: function (response) {
 
                 let trlist = response.vehicleTypeViewModelDtos;
+                vehicleTypeViewModelDtos = response.vehicleTypeViewModelDtos;
                 // Destroy existing DataTable if exists
                 if ($.fn.DataTable.isDataTable('#tableVehicleType')) {
                     $('#tableVehicleType').DataTable().clear().destroy();
@@ -227,11 +228,12 @@
     }
 
     function deleteVehicleType(vehicleTypeId) {
-        var DeleteVehicleTypesUrl = '@Url.Content("~/Vehicle/DeleteMasterVehicleType/")';
-        $.ajax({
-            url: DeleteVehicleTypesUrl + vehicleTypeId,
-            type: "Post",
+       var deleteVehicleTypesUrl = '@Url.Content("~/Vehicle/DeleteVehicleType/")' + vehicleTypeId
+         $.ajax({
+            url: deleteVehicleTypesUrl,
+            type: "DELETE",
             dataType: "json",
+            data: JSON.stringify(vehicleTypeId),
             success: function (response) {
                 console.log("Deleted Succesfully")
             },
@@ -243,7 +245,8 @@
     }
 
     function saveandsavenew() {
-        var vehicleTypeName = $("#txtVehicleType").val();
+        var vehicleTypeName = $("#txtVehicleType").val()
+
         if (IsNullOrEmpty(vehicleTypeName)) {
             toastr.warning("Please enter a valid Vehicle Type", "Warning");
             return;
@@ -268,6 +271,16 @@
                 toastr.error("Failed to submit Vehicle Type", "Error");
             }
         });
+    }
+
+    function editVehicleType(vehicleTypeId){
+        console.log(vehicleTypeViewModelDtos);
+        var data = vehicleTypeViewModelDtos.filter(x=>x.vehicleTypeId == vehicleTypeId);
+        console.log(data);
+          $('#tableDiv').hide();
+          $("#backButton").css('display', 'none');
+          $("#addVehicleTypeDiv").css('display', 'Block');
+          $("#txtVehicleType").val(data[0].vehicleTypeName);
     }
 
 </script>
