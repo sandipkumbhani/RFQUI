@@ -95,7 +95,8 @@
         // Clear Search Input
         $('#clearSearch').on('click', function () {
           $('#customSearch').val('');
-          table.search('').draw();
+            table.search('').draw(); 
+                       
         });
     
         // Dropdown Actions
@@ -203,24 +204,22 @@
         });
     });
 
-     jQuery(document).ready(function () {
-       var myDropzone = new Dropzone("#dropzonejs_1", {
+    jQuery(document).ready(function () {
+         var myDropzone = new Dropzone("#dropzonejs_1", {
            url: "https://keenthemes.com/scripts/void.php", // Set the url for your upload script location
            paramName: "file", // The name that will be used to transfer the file
-           maxFiles: 10,
-           maxFilesize: 10, // MB
-           addRemoveLinks: true,
-           headers: {
-               'Access-Control-Allow-Origin': '*'
-           },
-           accept: function(file, done) {
+           maxFiles: 1,
+             maxFilesize: 10, // MB
+             addRemoveLinks: true,
+           accept: function (file, done) {
+                   debugger;
                if (file.name == "wow.jpg") {
                    done("Naha, you don't.");
                } else {
                    done();
                }
-           }
-       });
+           }    
+         });
    });
 
   jQuery(document).ready(function () {
@@ -233,6 +232,7 @@
             jQuery(this).slideDown();
         },
         hide: function (deleteElement) {
+
             jQuery(this).slideUp(deleteElement);
         }
     });
