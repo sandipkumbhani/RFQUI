@@ -49,7 +49,7 @@
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
                                 @* <input type="text" class="form-control" placeholder="Vehicle Type" /> *@
-                                <select id="vehicleType" name="vehicleType" 
+                                <select id="vehicleType" name="vehicleType"
                                         data-control="select2" data-placeholder="Select Vehicle Type" class="form-select select2 form-select-solid form-select-lg fw-semibold">
                                     <option value="">Select Vehicle Type</option>
                                 </select>
@@ -88,196 +88,193 @@
                     </div>
 
                 </div>
-                <div class="card-body border-top p-9">
-                    <div class="card-title m-0 pb-10">
+                <div class="card-body border-top p-9" id="ekycDetails">
+                    <div class="card-title m-0 pb-10" id="ekycTitle">
                         <h3 class="fw-bold m-0">e-KYC Details</h3>
                     </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="row">
-                                <div class="col-lg-6">
+                    <div class="row" id="ekycRow">
+                        <div class="col-xl-6" id="leftSection">
+                            <div class="row" id="vehicleStatusRow">
+                                <div class="col-lg-6" id="vehicleStatusCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Status</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Vehicle Status" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="vehicleStatusInput">Vehicle Status</label>
+                                        <input type="text" id="vehicleStatusInput" class="form-control form-control-solid" placeholder="Vehicle Status" />
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-6" id="blacklistStatusCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Blacklist Status</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Blacklist Status" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Regd. Owner</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Regd. Owner" />
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Engine No</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Engine No" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Chasis No</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Chasis No" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="blacklistStatusInput">Blacklist Status</label>
+                                        <input type="text" id="blacklistStatusInput" class="form-control form-control-solid" placeholder="Blacklist Status" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Make-Model</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Make-Model" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">PUC Expiry Date</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="PUC Expiry Date" />
-                                    </div>
-                                </div>
+                            <div class="mb-5" id="regdOwnerDiv">
+                                <label class="form-label col-form-label required fw-semibold fs-6" for="regdOwnerInput">Regd. Owner</label>
+                                <input type="text" id="regdOwnerInput" class="form-control form-control-solid" placeholder="Regd. Owner" />
                             </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Financer</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Financer" />
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6">
+                            <div class="row" id="engineChasisRow">
+                                <div class="col-lg-6" id="engineNoCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Owner Serial No</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Owner Serial No" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="engineNoInput">Engine No</label>
+                                        <input type="text" id="engineNoInput" class="form-control form-control-solid" placeholder="Engine No" />
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-6" id="chasisNoCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">N P No</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="N P No" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="chasisNoInput">Chasis No</label>
+                                        <input type="text" id="chasisNoInput" class="form-control form-control-solid" placeholder="Chasis No" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Insurance Co</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Insurance Co" />
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6">
+                            <div class="row" id="makeModelRow">
+                                <div class="col-lg-6" id="makeModelCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Verified On</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Verified On" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="makeModelInput">Make-Model</label>
+                                        <input type="text" id="makeModelInput" class="form-control form-control-solid" placeholder="Make-Model" />
                                     </div>
                                 </div>
-
+                                <div class="col-lg-6" id="pucExpiryRow">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="pucExpiryInput">PUC Expiry Date</label>
+                                        <input type="text" id="pucExpiryInput" class="form-control form-control-solid" placeholder="PUC Expiry Date" />
+                                    </div>
+                                </div>
                             </div>
-
+                            <div class="mb-5" id="financerDiv">
+                                <label class="form-label col-form-label required fw-semibold fs-6" for="financerInput">Financer</label>
+                                <input type="text" id="financerInput" class="form-control form-control-solid" placeholder="Financer" />
+                            </div>
+                            <div class="row" id="ownerNpRow">
+                                <div class="col-lg-6" id="ownerSerialNoCol">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="ownerSerialNoInput">Owner Serial No</label>
+                                        <input type="text" id="ownerSerialNoInput" class="form-control form-control-solid" placeholder="Owner Serial No" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6" id="npNoCol">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="npNoInput">N P No</label>
+                                        <input type="text" id="npNoInput" class="form-control form-control-solid" placeholder="N P No" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5" id="insuranceCoDiv">
+                                <label class="form-label col-form-label required fw-semibold fs-6" for="insuranceCoInput">Insurance Co</label>
+                                <input type="text" id="insuranceCoInput" class="form-control form-control-solid" placeholder="Insurance Co" />
+                            </div>
+                            <div class="row" id="verifiedOnRow">
+                                <div class="col-lg-6" id="verifiedOnCol">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="verifiedOnInput">Verified On</label>
+                                        <input type="text" id="verifiedOnInput" class="form-control form-control-solid" placeholder="Verified On" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-xl-6">
-                            <div class="row">
-                                <div class="col-lg-6">
+                        <div class="col-xl-6" id="rightSection">
+                            <div class="row" id="rtoRegRow">
+                                <div class="col-lg-6" id="rtoRegistrationCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">RTO Registration</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="RTO Registration" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="rtoRegistrationInput">RTO Registration</label>
+                                        <input type="text" id="rtoRegistrationInput" class="form-control form-control-solid" placeholder="RTO Registration" />
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-6" id="registrationDateCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Registration Date</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Registration Date" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Permanent Address</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Permanent Address" />
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Gross Weight</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Gross Weight" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Unladen Weight</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Unladen Weight" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="registrationDateInput">Registration Date</label>
+                                        <input type="text" id="registrationDateInput" class="form-control form-control-solid" placeholder="Registration Date" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-6">
+                            <div class="mb-5" id="permanentAddressDiv">
+                                <label class="form-label col-form-label required fw-semibold fs-6" for="permanentAddressInput">Permanent Address</label>
+                                <input type="text" id="permanentAddressInput" class="form-control form-control-solid" placeholder="Permanent Address" />
+                            </div>
+                            <div class="row" id="weightRow">
+                                <div class="col-lg-6" id="grossWeightCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Fitness Expiry Date</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Fitness Expiry Date" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="grossWeightInput">Gross Weight</label>
+                                        <input type="text" id="grossWeightInput" class="form-control form-control-solid" placeholder="Gross Weight" />
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-6" id="unladenWeightCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Tax Expiry Date</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Tax Expiry Date" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="unladenWeightInput">Unladen Weight</label>
+                                        <input type="text" id="unladenWeightInput" class="form-control form-control-solid" placeholder="Unladen Weight" />
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-lg-6">
+                            <div class="row" id="expiryDatesRow">
+                                <div class="col-lg-6" id="fitnessExpiryCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Permit No</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Permit No" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="fitnessExpiryInput">Fitness Expiry Date</label>
+                                        <input type="text" id="fitnessExpiryInput" class="form-control form-control-solid" placeholder="Fitness Expiry Date" />
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-6" id="taxExpiryCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Permit Expiry Date</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Permit Expiry Date" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">NP Expiry Date</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="NP Expiry Date" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Capacity</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Vehicle Capacity" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="taxExpiryInput">Tax Expiry Date</label>
+                                        <input type="text" id="taxExpiryInput" class="form-control form-control-solid" placeholder="Tax Expiry Date" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-6">
+                            <div class="row" id="permitRow">
+                                <div class="col-lg-6" id="permitNoCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Policy No </label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Policy No " />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="permitNoInput">Permit No</label>
+                                        <input type="text" id="permitNoInput" class="form-control form-control-solid" placeholder="Permit No" />
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-6" id="permitExpiryCol">
                                     <div class="mb-5">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Policy Expiry Date</label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Policy Expiry Date" />
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="permitExpiryInput">Permit Expiry Date</label>
+                                        <input type="text" id="permitExpiryInput" class="form-control form-control-solid" placeholder="Permit Expiry Date" />
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="row" id="npExpiryVehicleCapacityRow">
+                                <div class="col-lg-6" id="npExpiryCol">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="npExpiryInput">NP Expiry Date</label>
+                                        <input type="text" id="npExpiryInput" class="form-control form-control-solid" placeholder="NP Expiry Date" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6" id="vehicleCapacityCol">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="vehicleCapacityInput">Vehicle Capacity</label>
+                                        <input type="text" id="vehicleCapacityInput" class="form-control form-control-solid" placeholder="Vehicle Capacity" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="policyRow">
+                                <div class="col-lg-6" id="policyNoCol">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="policyNoInput">Policy No</label>
+                                        <input type="text" id="policyNoInput" class="form-control form-control-solid" placeholder="Policy No" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6" id="policyExpiryCol">
+                                    <div class="mb-5">
+                                        <label class="form-label col-form-label required fw-semibold fs-6" for="policyExpiryInput">Policy Expiry Date</label>
+                                        <input type="text" id="policyExpiryInput" class="form-control form-control-solid" placeholder="Policy Expiry Date" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+
                 <div class="card-footer d-flex justify-content-srtat py-6 px-9">
-                    <button type="submit" class="btn btn-primary me-2">Save</button>
-                    <button type="submit" class="btn btn-primary">Save & New</button>
+                    <button id="save_click" type="button" class="btn btn-primary me-2">Save</button>
+                    <button id="save&new_click" type="button" class="btn btn-primary">Save & New</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     const vehicleTypes = ["Car", "Bike", "Truck", "Bus", "Van"];
      const vehicleCategories = ["Sedan", "SUV", "Hatchback", "Pickup", "Convertible"];
@@ -323,3 +320,88 @@
     });
 
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("save_click").addEventListener("click", validateForm);
+        document.getElementById("save&new_click").addEventListener("click", validateForm);
+
+        function validateForm(event) {
+            event.preventDefault();
+            let isValid = true;
+
+            function showError(input) {
+                input.classList.add("is-invalid");
+            }
+
+            function removeError(input) {
+                input.classList.remove("is-invalid");
+            }
+
+            function validateRequired(input) {
+                if (input.value.trim() === "") {
+                    showError(input);
+                    isValid = false;
+                } else {
+                    removeError(input);
+                }
+            }
+
+            const requiredFields = document.querySelectorAll(".form-label.required + .form-control, .form-label.required + .form-select");
+
+            requiredFields.forEach(validateRequired);
+
+            if (isValid) {
+                event.target.closest("form").submit(); // Submit form if valid
+            }
+        }
+
+        // Hide validation error on user input
+        document.querySelectorAll(".form-control, .form-select").forEach(input => {
+            input.addEventListener("input", function () {
+                input.classList.remove("is-invalid");
+            });
+            input.addEventListener("change", function () {
+                console.log(input)
+                input.classList.remove("is-invalid");
+            });
+        });
+    });
+</script>
+
+<script>
+    function ValidateTextbox(inputId) {
+        var value = $("#" + inputId).val();
+        var pattern = /^[A-Za-z0-9]+$/;
+
+        if (!pattern.test(value)) {
+            toster.warning("Invalid input in " + inputId + "! Only letters and numbers are allowed.");
+            return false; // Invalid input
+        }
+        return true;
+    }
+
+    function ValidateForm() {
+        var inputs = [
+            "vehicleStatusInput", "blacklistStatusInput", "regdOwnerInput", "engineNoInput", "chasisNoInput",
+            "makeModelInput", "pucExpiryInput", "financerInput", "ownerSerialNoInput", "npNoInput",
+            "insuranceCoInput", "verifiedOnInput", "rtoRegistrationInput", "registrationDateInput",
+            "permanentAddressInput", "grossWeightInput", "unladenWeightInput", "fitnessExpiryInput",
+            "taxExpiryInput", "permitNoInput", "permitExpiryInput", "npExpiryInput", "vehicleCapacityInput",
+            "policyNoInput", "policyExpiryInput"
+        ];
+
+        for (var i = 0; i < inputs.length; i++) {
+            if (!ValidateTextbox(inputs[i])) {
+                return false; // Stop validation on first error
+            }
+        }
+
+        alert("All inputs are valid!");
+        return true;
+    }
+</script>
+
+
+
+
+
