@@ -138,7 +138,7 @@
         var globalUrl = '@Url.Content("~/api/global/set-token")';
         let match = document.cookie.match(new RegExp('(^| )' + cookieName + '=([^;]+)'));
         let token = match ? match[2] : null;
-
+        consol.log(token);
         if (token) {
             fetch(globalUrl, {
                 method: 'POST',
