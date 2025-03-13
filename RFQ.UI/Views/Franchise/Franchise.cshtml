@@ -202,7 +202,6 @@
             saveandsavenewFranchise();
             $('#dropzonejs_1')[0].reset();
         })
-
         $("#txtFranchiseName").on("change",function(){
             if(!isAlphaNumeric($(this).val())){
                 toastr.warning("Please enter a valid Franchise  Name", "Warning");
@@ -312,7 +311,6 @@
                 toastr.warning("Please enter a valid Email Id", "Warning");
                 return;
             }
-            
             if (IsNullOrEmpty(panNumber)) {
                 toastr.warning("Please enter a valid PAN Number", "Warning");
                 return;
@@ -325,7 +323,6 @@
                 toastr.warning("Please enter a valid Mobile Number", "Warning");
                 return;
             }
-
             if(IsNullOrEmpty(whatsappNumber)){
                 toastr.warning("Please enter a valid Whatsapp Number", "Warning");
                 return;

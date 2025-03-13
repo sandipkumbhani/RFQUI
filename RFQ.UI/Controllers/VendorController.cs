@@ -5,7 +5,7 @@ namespace RFQ.UI.Controllers
 {
     public class VendorController : Controller
     {
-        // GET: VendorController
+        // GET: VendorController`
         public ActionResult Index()
         {
             return View();
