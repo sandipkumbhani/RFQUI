@@ -1,0 +1,110 @@
+﻿@model RFQ.UI.Domain.Model.VehicleTypeViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Vehicle Indent";
+}
+<div class="app-content  px-lg-3">
+    <div class="app-container  container-fluid">
+        <div class="container my-4">
+            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
+                </svg>
+                Back
+            </button>
+        </div>
+        <div id="addVehicleTypeDiv" class="card">
+            <div class="card-header border-0 cursor-pointer">
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">Vehicle Indent</h3>
+                </div>
+            </div>
+            <form class="form">
+                <div class="card-body border-top p-9">
+                    <div class="row">
+                        <!-- Left Section -->
+                        <div class="col-xl-6">
+                            <div class="mb-4">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Location</label>
+                                <select class="form-select select2 form-select-solid" placeholder="Login/Selection"></select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Customer Name</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="DDL" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">Vehicle Type</label>
+                                <select class="form-select select2 form-select-solid" placeholder="Selection"></select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">No. of Veh. Req.</label>
+                                <input type="number" class="form-control form-control-solid" placeholder="Numeric" />
+                            </div>
+                        </div>
+
+                        <!-- Right Section -->
+                        <div class="col-xl-6">
+                            <div class="mb-4">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Incident Date</label>
+                                <input type="date" class="form-control form-control-solid" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Origin/From</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Map Search" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">Destination/To</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Map Search" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">Incident Expired On</label>
+                                <input type="datetime-local" class="form-control form-control-solid" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Details -->
+                    <h4 class="fw-bold my-4">Additional Details</h4>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">Consignor</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="DDL / Text" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">Item Name</label>
+                                <select class="form-select select2 form-select-solid" placeholder="Selection"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-6">
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">Packing Type</label>
+                                <select class="form-select select2 form-select-solid" placeholder="Selection"></select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">Remarks</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Text" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-start py-6 px-9">
+                    <button type="submit" class="btn btn-primary me-2">Save</button>
+                    <button type="submit" class="btn btn-primary">Save & New</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
