@@ -1,0 +1,219 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Request For Quote";
+}
+<div class="app-toolbar  pt-3 px-lg-3">
+    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
+        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+            <div class="page-title d-flex align-items-center gap-1 me-3">
+                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
+                    Overview
+                </h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
+                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
+                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
+                    <li class="breadcrumb-item text-primary">
+                        Request For Quote
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content  px-lg-3">
+    <div class="app-container  container-fluid">
+        <div class="container my-4">
+            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
+                </svg>
+                Back
+            </button>
+        </div>
+        <div id="addVehicleTypeDiv" class="card">
+            <div class="card-header border-0 cursor-pointer">
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">Request For Quote - Vendor</h3>
+                </div>
+            </div>
+            <form class="form">
+                <div class="card-body border-top p-9">
+                    <div class="row">
+                        <!-- Left Section -->
+                        <div class="col-xl-6">
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">Customer Name</label>
+                                <select class="form-select select2 form-select-solid" placeholder="Selection Box"></select>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">RFQ Subject</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Text" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">Vehicle Req On</label>
+                                <input type="date" class="form-control form-control-solid" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">RFQ On</label>
+                                <select class="form-select select2 form-select-solid" placeholder="Qty/Vehicle"></select>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">Item Name</label>
+                                <select class="form-select select2 form-select-solid" placeholder="Selection Box"></select>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">Max Costing</label>
+                                <input type="number" class="form-control form-control-solid" placeholder="Numeric" />
+                            </div>
+                        </div>
+                        <!-- Right Section -->
+                        <div class="col-xl-6">
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">RFQ No</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Auto Generated" disabled />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">RFQ Expired On</label>
+                                <input type="datetime-local" class="form-control form-control-solid" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">Origin/From</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Map Based Search" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">Destination/To</label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Map Based Search" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">No. of Vehicles</label>
+                                <input type="number" class="form-control form-control-solid" placeholder="Numeric" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">Total Qty in Tons</label>
+                                <input type="number" class="form-control form-control-solid" placeholder="Numeric" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RFQ Sent To Vendors Section -->
+                    <div class="mt-8">
+                        <div class="card-header p-4">
+                            <h4 class="fw-bold m-0 text-lg">RFQ Sent To Vendors</h4>
+                        </div>
+                        <div class="ard-card">
+                            <table id="datatable_ard" class="table table-striped align-middle border rounded fs-6 gy-5 gs-7 dataTable" style="width:100%">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800">
+                                        <th>Sr. No.</th>
+                                        <th>Vendor Name</th>
+                                        <th>PAN No</th>
+                                        <th>Vendor Rating</th>
+                                        <th>Mobile Number</th>
+                                        <th>WhatsApp Number</th>
+                                        <th>Email ID</th>
+                                        <th class="text-end">Edit/Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                        <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                        <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                        <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                        <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                        <td><input type="email" class="form-control form-control-sm border-primary" /></td>
+                                        <td class="text-end">
+                                            <a href="#" class="btn btn-light btn-active-light-primary btn-sm" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                                Actions
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="ti ti-edit"></i> Edit
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="ti ti-trash"></i> Delete
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <!-- Attachment Section -->
+                    <div class="card-body border-top p-6">
+                        <h4 class="fw-bold mb-4">Attachment Details</h4>
+                        <div id="kt_docs_repeater_basic">
+                            <div class="form-group">
+                                <div data-repeater-list="kt_docs_repeater_basic">
+                                    <div data-repeater-item>
+                                        <div class="form-group row">
+                                            <div class="col-md-2">
+                                                <label class="form-label col-form-label fw-semibold fs-6">File Name</label>
+                                                <input type="email" class="form-control mb-2 mb-md-0" placeholder="File Name" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label col-form-label fw-semibold fs-6">Attachment Type  </label>
+                                                <select name="franchise" aria-label="Select a Attachment Type"
+                                                        data-control="select2" data-placeholder="Select a Attachment Type" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+                                                    <option value="">Select a Attachment Type</option>
+                                                    <option value="AF">Afghanistan</option>
+                                                    <option value="AX">Aland Islands</option>
+                                                    <option value="AL">Albania</option>
+                                                    <option value="DZ">Algeria</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label col-form-label fw-semibold fs-6">Choose File </label>
+                                                <label class="input-group mb-3">
+                                                    <input class="visually-hidden" type="file">
+                                                    <span class="form-control">Choose File</span>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label col-form-label fw-semibold fs-6">Upload  </label>
+                                                <label class="input-group mb-3">
+                                                    <input class="visually-hidden" type="file">
+                                                    <span class="form-control">Upload</span>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-2 d-flex align-items-center justify-content-center">
+                                                <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                    Delete
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mt-5">
+                                <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+                                    <i class="fa-solid fa-plus"></i>
+                                    Add
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-start py-6 px-9">
+                    <button type="submit" class="btn btn-primary me-2">Save</button>
+                    <button type="submit" class="btn btn-primary">Save & New</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
