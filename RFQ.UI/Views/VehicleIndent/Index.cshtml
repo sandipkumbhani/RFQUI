@@ -1,110 +1,313 @@
-﻿@model RFQ.UI.Domain.Model.VehicleTypeViewModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Vehicle Indent";
 }
+<div class="app-toolbar  pt-3 px-lg-3">
+    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
+        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+            <div class="page-title d-flex align-items-center gap-1 me-3">
+                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
+                    Overview
+                </h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
+                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
+                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
+                    <li class="breadcrumb-item text-primary">
+                        Vehicle Indent
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="app-content  px-lg-3">
     <div class="app-container  container-fluid">
-        <div class="container my-4">
-            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
-                </svg>
-                Back
-            </button>
-        </div>
-        <div id="addVehicleTypeDiv" class="card">
+        <div class="card">
             <div class="card-header border-0 cursor-pointer">
                 <div class="card-title m-0">
                     <h3 class="fw-bold m-0">Vehicle Indent</h3>
                 </div>
             </div>
-            <form class="form">
+            <form class="form" id="vehicleIndentForm">
                 <div class="card-body border-top p-9">
-                    <div class="row">
+                    <div class="row pb-9">
                         <!-- Left Section -->
                         <div class="col-xl-6">
-                            <div class="mb-4">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Location</label>
-                                <select class="form-select select2 form-select-solid" placeholder="Login/Selection"></select>
+                            <div class="row">
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label required fw-semibold fs-6">Location</label>
+                                    <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Login/Selection"
+                                            data-control="select2" placeholder="Login/Selection" id="txtLocation">
+                                        <option value="">Select a Location</option>
+                                        <option value="0">Afghanistan</option>
+                                        <option value="1">Aland Islands</option>
+                                        <option value="2">Albania</option>
+                                        <option value="3">Algeria</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label fw-semibold fs-6">Indent No</label>
+                                    <input type="text" class="form-control form-control-solid" disabled value="Auto Generated"/>
+                                </div>
                             </div>
-
                             <div class="mb-4">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Customer Name</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="DDL" />
+                                <input type="text" class="form-control" placeholder="DDL" id="txtCustomerName"/>
                             </div>
-
-                            <div class="mb-4">
-                                <label class="form-label col-form-label fw-semibold fs-6">Vehicle Type</label>
-                                <select class="form-select select2 form-select-solid" placeholder="Selection"></select>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label col-form-label fw-semibold fs-6">No. of Veh. Req.</label>
-                                <input type="number" class="form-control form-control-solid" placeholder="Numeric" />
+                            <div class="row">
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label fw-semibold fs-6">Vehicle Type</label>
+                                    <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Select a VehicleType"
+                                            data-control="select2" placeholder="Select a VehicleType" id="txtVehicleType">
+                                        <option value="">Select a VehichleType</option>
+                                        <option value="0">Afghanistan</option>
+                                        <option value="1">Aland Islands</option>
+                                        <option value="2">Albania</option>
+                                        <option value="3">Algeria</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label fw-semibold fs-6">No. of Veh. Req.</label>
+                                    <input type="text" class="form-control" placeholder="Numeric" id="txtNoofVehicleReq"/>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Right Section -->
                         <div class="col-xl-6">
-                            <div class="mb-4">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Incident Date</label>
-                                <input type="date" class="form-control form-control-solid" />
+                            <div class="row">
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label required fw-semibold fs-6">Incident Date</label>
+                                    <input type="date" class="form-control" aria-label="Incident Date" placeholder="Date Selection" id="txtIncidentDate"/>
+                                </div>
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Req On</label>
+                                    <input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" placeholder="Date Selection" id="txtVehicleReqOn" />
+                                </div>
                             </div>
-
-                            <div class="mb-4">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Origin/From</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Map Search" />
+                            <div class="row">
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label required fw-semibold fs-6">Origin/From</label>
+                                    <input type="text" class="form-control " placeholder="Map Search" id="txtOrigin"/>
+                                </div>
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label fw-semibold fs-6">Destination/To</label>
+                                    <input type="text" class="form-control" placeholder="Map Search" id="txtDestination"/>
+                                </div>
                             </div>
-
-                            <div class="mb-4">
-                                <label class="form-label col-form-label fw-semibold fs-6">Destination/To</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Map Search" />
-                            </div>
-
                             <div class="mb-4">
                                 <label class="form-label col-form-label fw-semibold fs-6">Incident Expired On</label>
-                                <input type="datetime-local" class="form-control form-control-solid" />
+                                <input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" placeholder="Date&Time Selection" id="txtIncidentExpiredOn" />
                             </div>
                         </div>
                     </div>
 
-                    <!-- Additional Details -->
-                    <h4 class="fw-bold my-4">Additional Details</h4>
+                    <div class="card-title m-0 pb-10">
+                        <h3 class="fw-bold m-0">Additional Details</h3>
+                    </div>
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="mb-4">
                                 <label class="form-label col-form-label fw-semibold fs-6">Consignor</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="DDL / Text" />
+                                <select class="form-select select2 form-select-solid" aria-label="Select a Consignor"
+                                        data-control="select2" placeholder="Select a Consignor">
+                                    <option value="">Select a Consignor</option>
+                                    <option value="0">Afghanistan</option>
+                                    <option value="1">Aland Islands</option>
+                                    <option value="2">Albania</option>
+                                    <option value="3">Algeria</option>
+                                </select>
                             </div>
-
                             <div class="mb-4">
-                                <label class="form-label col-form-label fw-semibold fs-6">Item Name</label>
-                                <select class="form-select select2 form-select-solid" placeholder="Selection"></select>
+                                <label class="form-label col-form-label fw-semibold fs-6">Consignee</label>
+                                <select class="form-select select2 form-select-solid" aria-label="Select a Consignee"
+                                        data-control="select2" placeholder="Select a Consignee">
+                                    <option value="">Select a Consignee</option>
+                                    <option value="0">Afghanistan</option>
+                                    <option value="1">Aland Islands</option>
+                                    <option value="2">Albania</option>
+                                    <option value="3">Algeria</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label fw-semibold fs-6">Item Name</label>
+                                    <select class="form-select select2 form-select-solid" aria-label="Select a Item"
+                                            data-control="select2" placeholder="Select a Item">
+                                        <option value="">Select a Item Name</option>
+                                        <option value="0">Afghanistan</option>
+                                        <option value="1">Aland Islands</option>
+                                        <option value="2">Albania</option>
+                                        <option value="3">Algeria</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4 col-xl-6">
+                                    <label class="form-label col-form-label fw-semibold fs-6">Packing Type</label>
+                                    <select class="form-select select2 form-select-solid" aria-label="Select a PackingType"
+                                            data-control="select2" placeholder="Select a PackingType">
+                                        <option value="">Select a Packing Type</option>
+                                        <option value="0">Afghanistan</option>
+                                        <option value="1">Aland Islands</option>
+                                        <option value="2">Albania</option>
+                                        <option value="3">Algeria</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
                         <div class="col-xl-6">
                             <div class="mb-4">
-                                <label class="form-label col-form-label fw-semibold fs-6">Packing Type</label>
-                                <select class="form-select select2 form-select-solid" placeholder="Selection"></select>
+                                <label class="form-label col-form-label fw-semibold fs-6">Pickup Address</label>
+                                <input type="text" class="form-control" placeholder="Text" />
                             </div>
-
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">Delivery Address</label>
+                                <input type="text"  class="form-control" placeholder="Text" />
+                            </div>
                             <div class="mb-4">
                                 <label class="form-label col-form-label fw-semibold fs-6">Remarks</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Text" />
+                                <input type="text" class="form-control" placeholder="Text" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-footer d-flex justify-content-start py-6 px-9">
-                    <button type="submit" class="btn btn-primary me-2">Save</button>
-                    <button type="submit" class="btn btn-primary">Save & New</button>
+                    <button type="button" id="btnSaveVehicleIndent" class="btn btn-primary me-2">Save</button>
+                    <button type="button" id="btnSavenewVehicleIndent" class="btn btn-primary">Save & New</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<div class="app-footer px-lg-3 ">
+    <div class="app-container  container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
+        <div class="text-gray-900 order-2 order-md-1">
+            <span class="text-muted fw-semibold me-1">2025©</span>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="~/js/common.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#btnSaveVehicleIndent").click(function(event){
+            event.preventDefault();
+            saveandsavenewVehicleIndent();
+        })
+        $("#btnSavenewVehicleIndent").click(function(event){
+            saveandsavenewVehicleIndent();
+            $('#vehicleIndentForm')[0].reset();
+        })
+
+        $("#txtLocation").on("change",function(){
+            if(!isValidateSelect($(this).val())){
+                toastr.warning("Please enter a valid Location", "Warning");
+                return;
+            }
+        });
+        $("#txtCustomerName").on("change",function(){
+            if(!isAlphabets($(this).val())){
+                toastr.warning("Please enter a valid Customer Name", "Warning");
+                return;
+            }
+        });
+        $("#txtVehicleType").on("change",function(){
+            if(!isValidateSelect($(this).val())){
+                toastr.warning("Please enter a valid Vehicle Type", "Warning");
+                return;
+            }
+        });
+        $("#txtNoofVehicleReq").on("change",function(){
+            if(!isNumeric($(this).val())){
+                toastr.warning("Please enter a valid Number", "Warning");
+                return;
+            }
+        });
+        $("#txtIncidentDate").on("change",function(){
+            if(IsNullOrEmpty($(this).val())){
+                toastr.warning("Please enter a valid Incident date", "Warning");
+                return;
+            }
+        });
+        $("#txtVehicleReqOn").on("change",function(){
+            if(new Date($(this).val()) < new Date()){
+                toastr.warning("Please enter a valid date", "Warning");
+                return;
+            }
+        });
+        $("#txtOrigin").on("change",function(){
+            if(IsNullOrEmpty($(this).val())){
+                toastr.warning("Please enter a valid Origin", "Warning");
+                return;
+            }
+        });
+        $("#txtDestination").on("change",function(){    
+            if(IsNullOrEmpty($(this).val())){
+                toastr.warning("Please enter a valid Destination", "Warning");
+                return;
+            }
+        });
+        $("#txtIncidentExpiredOn").on("change",function(){
+            if((new Date($(this).val()) < new Date())){
+                toastr.warning("Please enter a valid Incident Expiry Date", "Warning");
+                return;
+            }
+        });
+
+        function saveandsavenewVehicleIndent(){
+            var location = $("#txtLocation").val();
+            var customerName = $("#txtCustomerName").val();
+            var vehicleType = $("#txtVehicleType").val();
+            var noofVehicleReq = $("#txtNoofVehicleReq").val();
+            var incidentDate = $("#txtIncidentDate").val();
+            var vehicleReqOn = $("#txtVehicleReqOn").val();
+            var origin = $("#txtOrigin").val();
+            var destination = $("#txtDestination").val();
+            var incidentExpiredOn = $("#txtIncidentExpiredOn").val();
+
+            if(IsNullOrEmpty(location)){
+                toastr.warning("Please enter a valid Location", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(customerName)){
+                toastr.warning("Please enter a valid Customer Name", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(vehicleType)){
+                toastr.warning("Please enter a valid Vehicle Type", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(noofVehicleReq)){
+                toastr.warning("Please enter a valid Number", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(incidentDate)){
+                toastr.warning("Please enter a valid Incident date", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(vehicleReqOn)){
+                toastr.warning("Please enter a valid date", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(origin)){
+                toastr.warning("Please enter a valid Origin", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(destination)){
+                toastr.warning("Please enter a valid Destination", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(incidentExpiredOn)){
+                toastr.warning("Please enter a valid Incident Expiry Date", "Warning");
+                return false;
+            }
+            return true;
+        }
+    })
+</script>
