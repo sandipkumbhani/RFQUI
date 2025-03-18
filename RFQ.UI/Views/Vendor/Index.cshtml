@@ -491,15 +491,11 @@
 
         $("#btnSaveVendor").click(function(event){
             event.preventDefault();
-            if(validation()){
-                saveandsavenewVendor();
-            }
+            saveandsavenewVendor();
         })
         $("#btnSavenewVendor").click(function(event){
-            if(validation()){
-                saveandsavenewVendor();
-                $('#vendorForm')[0].reset();
-            }
+            saveandsavenewVendor();
+            $('#vendorForm')[0].reset();
         })
 
         $("#txtVendorName").on("change",function(){
@@ -569,7 +565,7 @@
             }
         });
 
-        function validation(){
+        function saveandsavenewVendor(){
             var vendorName = $("#txtVendorName").val();
             var vendorCategory = $("#txtVendorCategory").val();
             var vendorAddress = $("#txtAddress").val();
@@ -630,9 +626,6 @@
             }
             return true;
 
-        }
-        function saveandsavenewVendor(){
-            console.log("Form submited");
         }
         
     })
