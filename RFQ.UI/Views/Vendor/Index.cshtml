@@ -492,7 +492,11 @@
 
         $("#btnSaveVendor").click(function(event){
             event.preventDefault();
-            saveandsavenewVendor();
+            if(validation()){
+                saveandsavenewVendor();
+            }
+            }
+            }
         })
         $("#btnSavenewFranchise").click(function(event){
             saveandsavenewVendor();
@@ -576,12 +580,63 @@
             var whatsappNumber = $("#txtWhatsappNumber").val();
             var mobileNumber = $("#txtMobileNumber").val();
             var emailId = $("#emailId").val();
-            var panNumber = $("#txtPanNubmer").val();
-            var gstNubmer = $("#txtGstNumber").val();
-            var createUser = $("#createuser").val();
-            var shareAppLink = $("#shareapplink").val();
-
+            var createUser = $("#createuser").is(":checked");
+            var shareAppLink = $("#shareapplink").is(":checked");
+       
+            if(IsNullOrEmpty(vendorName)){
+                toastr.warning("Please enter a valid Vendor Name", "Warning");
+                return false;
+            }
+            if(!isValidateSelect(vendorCategory)){
+                toastr.warning("Please enter a valid Vendor Category", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(vendorAddress)){
+                toastr.warning("Please enter a valid Vendor Address", "Warning");
+                return false;
+            }
+            if(!isValidateSelect(vendorCity)){
+                toastr.warning("Please enter a valid Vendor City", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(vendorPincode)){
+                toastr.warning("Please enter a valid PinCode", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(contactPerson)){
+                toastr.warning("Please enter a valid Contact Person", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(whatsappNumber)){
+                toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(mobileNumber)){
+                toastr.warning("Please enter a valid Mobile Number", "Warning");
+                return false;
+            }
+            if(!isValidateEmail(emailId)){
+                toastr.warning("Please enter a valid Email", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(panNumber)){
+                toastr.warning("Please enter a valid PAN Nubmer", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(gstNubmer)){
+                toastr.warning("Please enter a valid GST Number", "Warning");
+                return false;
+            }
+            return true;
 
         }
+        function saveandsavenewVendor(){
+            console.log("Form submited");
+        }
+        
+            console.log("Form submited");
+        }
+        
+        
     })
 </script>
