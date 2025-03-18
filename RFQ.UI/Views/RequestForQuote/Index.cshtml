@@ -27,75 +27,163 @@
 
 <div class="app-content  px-lg-3">
     <div class="app-container  container-fluid">
-        <div class="container my-4">
-            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
-                </svg>
-                Back
-            </button>
-        </div>
-        <div id="addVehicleTypeDiv" class="card">
+        <div class="card">
             <div class="card-header border-0 cursor-pointer">
                 <div class="card-title m-0">
                     <h3 class="fw-bold m-0">Request For Quote - Vendor</h3>
                 </div>
             </div>
-            <form class="form">
+            <form class="form" id="RfqVendorForm">
                 <div class="card-body border-top p-9">
                     <div class="row">
                         <!-- Left Section -->
                         <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">Customer Name</label>
-                                <select class="form-select select2 form-select-solid" placeholder="Selection Box"></select>
+                            <div class="mb-4">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Customer Name</label>
+                                <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
+                                        data-control="select2" placeholder="Selection Box" id="txtCustomerName">
+                                    <option value="">Select a Customer Name</option>
+                                    <option value="0">Afghanistan</option>
+                                    <option value="1">Aland Islands</option>
+                                    <option value="2">Albania</option>
+                                    <option value="3">Algeria</option>
+                                </select>
                             </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">RFQ Subject</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Text" />
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">RFQ Subject</label>
+                                <input type="text" class="form-control" placeholder="Text" id="txtRfqSubject"/>
                             </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">Vehicle Req On</label>
-                                <input type="date" class="form-control form-control-solid" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">RFQ On</label>
-                                <select class="form-select select2 form-select-solid" placeholder="Qty/Vehicle"></select>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">Item Name</label>
-                                <select class="form-select select2 form-select-solid" placeholder="Selection Box"></select>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">Max Costing</label>
-                                <input type="number" class="form-control form-control-solid" placeholder="Numeric" />
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label required col-form-label fw-semibold fs-6">Vehicle Req On</label>
+                                        <input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ On</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Qty/Vehicle"
+                                                data-control="select2" placeholder="Qty/Vehicle" id="txtRfqOn">
+                                            <option value="">Select a Option</option>
+                                            <option value="0">Qty</option>
+                                            <option value="1">Vehicle</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label  fw-semibold fs-6">Item Name</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
+                                                data-control="select2" placeholder="Selection Box" id="txtItemName">
+                                            <option value="">Select a Item Name</option>
+                                            <option value="0">Afghanistan</option>
+                                            <option value="1">Aland Islands</option>
+                                            <option value="2">Albania</option>
+                                            <option value="3">Algeria</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">Max Costing</label>
+                                        <input type="text" class="form-control" placeholder="Numeric" id="txtMaxCosting"/>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ Priority</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection"
+                                                data-control="select2" placeholder="Selection" id="txtRfqPriority">
+                                            <option value="">Select a Priority</option>
+                                            <option value="0">High</option>
+                                            <option value="1">Medium</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Vehicle Type"
+                                                data-control="select2" placeholder="Vehicle type" id="txtVehicleType">
+                                            <option value="">Select a Vehicle Type</option>
+                                            <option value="0">Afghanistan</option>
+                                            <option value="1">Aland Islands</option>
+                                            <option value="2">Albania</option>
+                                            <option value="3">Algeria</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">Packing Type</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
+                                                data-control="select2" placeholder="Selection Box" id="txtPackingType">
+                                            <option value="">Select a Packing Type</option>
+                                            <option value="0">Afghanistan</option>
+                                            <option value="1">Aland Islands</option>
+                                            <option value="2">Albania</option>
+                                            <option value="3">Algeria</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">Detention Per Day</label>
+                                        <input type="text" class="form-control" placeholder="Numeric" id="txtDetentionPerDay"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!-- Right Section -->
                         <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">RFQ No</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Auto Generated" disabled />
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">RFQ No</label>
+                                        <input type="text" class="form-control form-control-solid" placeholder="Auto Generated" disabled id="txtRfqNo"/>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ Expired On</label>
+                                        <input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" />
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Origin/From</label>
+                                        <input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" />
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">No. of Vehicles</label>
+                                        <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" />
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">RFQ Date</label>
+                                        <input type="datetime-local" class="form-control" id="txtRfqDate"/>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ Type</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection"
+                                                data-control="select2" placeholder="Selection" id="txtRfqType">
+                                            <option value="">Select a Type</option>
+                                            <option value="0">Contractual</option>
+                                            <option value="1">Adhoc</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">Destination/To</label>
+                                        <input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination"/>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">Total Qty in Tons</label>
+                                        <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty"/>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">RFQ Expired On</label>
-                                <input type="datetime-local" class="form-control form-control-solid" />
+                            <div class="mb-4">
+                                <label class="form-label col-form-label fw-semibold fs-6">Special Instructions</label>
+                                <input type="text" class="form-control" placeholder="Text" id="txtSpecialInstructions" />
                             </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">Origin/From</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Map Based Search" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">Destination/To</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Map Based Search" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">No. of Vehicles</label>
-                                <input type="number" class="form-control form-control-solid" placeholder="Numeric" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label fw-semibold">Total Qty in Tons</label>
-                                <input type="number" class="form-control form-control-solid" placeholder="Numeric" />
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">Detention Free Days</label>
+                                        <input type="text" class="form-control" placeholder="Numeric" id="txtDetentionFreeDays" />
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 align-content-center">
+                                    <div class="mt-5 ms-20">
+                                        <p><a href="#" class="link-underline-primary">View Previous Quotes</a></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -210,10 +298,215 @@
                 </div>
 
                 <div class="card-footer d-flex justify-content-start py-6 px-9">
-                    <button type="submit" class="btn btn-primary me-2">Save</button>
-                    <button type="submit" class="btn btn-primary">Save & New</button>
+                    <button type="button" id="btnSaveRfqVendor" class="btn btn-primary me-2">Save</button>
+                    <button type="button" id="btnSavenewRfqVendor" class="btn btn-primary">Save & New</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="~/js/common.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#btnSaveRfqVendor").click(function(event){
+            event.preventDefault();
+            saveandsavenewRfqVendor();
+        })
+        $("#btnSavenewRfqVendor").click(function(event){
+            saveandsavenewRfqVendor();
+            $('#RfqVendorForm')[0].reset();
+        })
+
+        $("#txtCustomerName").on("change",function(){
+            if(!isValidateSelect($(this).val())){
+                toastr.warning("Please enter a valid Customer Name", "Warning");
+                return;
+            }
+        });
+        $("#txtRfqSubject").on("change",function(){
+            if(!isAlphabets($(this).val())){
+                toastr.warning("Please enter a valid Rfq Subject", "Warning");
+                return;
+            }
+        });
+        $("#txtVehicleReqDate").on("change",function(){
+            if((new Date($(this).val()) < new Date())){
+                toastr.warning("Please enter a valid Vehicle Req Date", "Warning");
+                return;
+            }
+        });
+        $("#txtRfqOn").on("change",function(){
+            if(!isValidateSelect($(this).val())){
+                toastr.warning("Please enter a valid Option", "Warning");
+                return;
+            }
+        });
+        $("#txtItemName").on("change",function(){
+            if(!isValidateSelect($(this).val())){
+                toastr.warning("Please enter a valid Item Name", "Warning");
+                return;
+            }
+        });
+        $("#txtMaxCosting").on("change",function(){
+            if(!isNumeric($(this).val())){
+                toastr.warning("Please enter a valid Costing", "Warning");
+                return;
+            }
+        });
+        $("#txtRfqPriority").on("change",function(){
+            if(!isValidateSelect($(this).val())){
+                toastr.warning("Please enter a valid Rfq Priority", "Warning");
+                return;
+            }
+        });
+        $("#txtVehicleType").on("change",function(){
+            if(!isValidateSelect($(this).val())){
+                toastr.warning("Please enter a valid Vehicle Type", "Warning");
+                return;
+            }
+        });
+        $("#txtPackingType").on("change",function(){
+            if(!isValidateSelect($(this).val())){
+                toastr.warning("Please enter a valid Packing Type", "Warning");
+                return;
+            }
+        });
+        $("#txtDetentionPerDay").on("change",function(){
+            if(!isNumeric($(this).val())){
+                toastr.warning("Please enter a valid Detention Per Day", "Warning");
+                return;
+            }
+        });
+        $("#txtRfqExpiredOn").on("change",function(){
+            if((new Date($(this).val()) < new Date())){
+                toastr.warning("Please enter a valid Rfq Expiry Date", "Warning");
+                return;
+            }
+        });
+        $("#txtOrigin").on("change",function(){
+            if(IsNullOrEmpty($(this).val())){
+                toastr.warning("Please enter a valid Origin", "Warning");
+                return;
+            }
+        });
+        $("#txtNoofVehicles").on("change",function(){
+            if(!isNumeric($(this).val())){
+                toastr.warning("Please enter a valid Number of Vehicle", "Warning");
+                return;
+            }
+        });
+        $("#txtRfqDate").on("change",function(){
+            if(IsNullOrEmpty($(this).val())){
+                toastr.warning("Please enter a valid Rfq Date", "Warning");
+                return;
+            }
+        });
+        $("#txtRfqType").on("change",function(){
+            if(!isValidateSelect($(this).val())){
+                toastr.warning("Please enter a valid Rfq Type", "Warning");
+                return;
+            }
+        });
+        $("#txtDestination").on("change",function(){
+            if(IsNullOrEmpty($(this).val())){
+                toastr.warning("Please enter a valid Destination", "Warning");
+                return;
+            }
+        });
+        $("#txtTotalQty").on("change",function(){
+            if(!isNumeric($(this).val())){
+                toastr.warning("Please enter a valid Total Qty", "Warning");
+                return;
+            }
+        });
+        $("#txtDetentionFreeDays").on("change",function(){
+            if(!isNumeric($(this).val())){
+                toastr.warning("Please enter a valid Detention Free Days", "Warning");
+                return;
+            }
+        });
+        
+
+        function saveandsavenewRfqVendor(){
+            var customerName = $("#txtCustomerName").val();
+            var rfqSubject = $("#txtRfqSubject").val();
+            var vehicleReqDate = $("#txtVehicleReqDate").val();
+            var rfqOn = $("#txtRfqOn").val();
+            var itemName = $("#txtItemName").val();
+            var maxCosting = $("#txtMaxCosting").val();
+            var rfqPriority = $("#txtRfqPriority").val();
+            var vehicleType = $("#txtVehicleType").val();
+            var packingType = $("#txtPackingType").val();
+            var detentionPerDay = $("#txtDetentionPerDay").val();
+            var rfqExpiredOn = $("#txtRfqExpiredOn").val();
+            var origin = $("#txtOrigin").val();
+            var noOfVehicles = $("#txtNoofVehicles").val();
+            var rfqDate = $("#txtRfqDate").val();
+            var rfqType = $("#txtRfqType").val();
+            var destination = $("#txtDestination").val();
+            var totalQty = $("#txtTotalQty").val();
+            var specialInstructions = $("#txtSpecialInstructions").val();
+            var detentionFreeDays = $("#txtDetentionFreeDays").val();
+
+            if(IsNullOrEmpty(customerName)){
+                toastr.warning("Please enter a valid Customer Name", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(vehicleReqDate)){
+                toastr.warning("Please enter a valid Vehicle Req Date", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(rfqOn)){
+                toastr.warning("Please enter a valid Option", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(itemName)){
+                toastr.warning("Please enter a valid Item Name", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(rfqPriority)){
+                toastr.warning("Please enter a valid Rfq Priority", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(vehicleType)){
+                toastr.warning("Please enter a valid Vehicle Type", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(packingType)){
+                toastr.warning("Please enter a valid Packing Type", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(rfqExpiredOn)){
+                toastr.warning("Please enter a valid Rfq Expiry Date", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(origin)){
+                toastr.warning("Please enter a valid Origin", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(noOfVehicles)){
+                toastr.warning("Please enter a valid Number of Vehicle", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(rfqDate)){
+                toastr.warning("Please enter a valid Rfq Date", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(rfqType)){
+                toastr.warning("Please enter a valid Rfq Type", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(destination)){
+                toastr.warning("Please enter a valid Destination", "Warning");
+                return false;
+            }
+            if(IsNullOrEmpty(totalQty)){
+                toastr.warning("Please enter a valid Total Qty", "Warning");
+                return false;
+            }
+            return true;
+        }
+    })
+</script>
