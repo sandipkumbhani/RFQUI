@@ -72,6 +72,7 @@ namespace RFQ.UI.Controllers
 
                 var vehicle = new VehicleTypeViewModelDto
                 {
+                    VehicleTypeId = vehicleTypeViewModelDto.VehicleTypeId,
                     VehicleTypeName = vehicleTypeViewModelDto.VehicleTypeName,
                     CompanyId = Convert.ToInt32(companyid),
                     CreatedBy = Convert.ToInt32(profileid),
