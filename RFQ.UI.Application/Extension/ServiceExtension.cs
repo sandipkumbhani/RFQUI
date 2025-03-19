@@ -15,6 +15,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IMenuServices, MenuServices>();
             services.AddScoped<ICustomerServices, CustomerServices>();
             services.AddScoped<ICorporateCompanyService, CorporateCompanyService>();
+            services.AddScoped<IUsersService, UsersService>();
             return services;
         }
     }
