@@ -13,6 +13,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IProfileServices, ProfileServices>();
             services.AddScoped<IVehicletypeServices, VehicletypeServices>();
             services.AddScoped<IMenuServices, MenuServices>();
+            services.AddScoped<ICorporateCompanyService, CorporateCompanyService>();
             return services;
         }
     }
