@@ -42,7 +42,7 @@ namespace RFQ.UI.Controllers
                     CityId = customerViewModelDto.CityId,
                     PinCode = customerViewModelDto.PinCode,
                     ContactPerson = customerViewModelDto.ContactPerson,
-                    ContactNo = customerViewModelDto.MobNo,
+                    ContactNo = customerViewModelDto.ContactNo,
                     MobNo = customerViewModelDto.MobNo,
                     WhatsAppNo = customerViewModelDto.WhatsAppNo,
                     Email = customerViewModelDto.Email,
