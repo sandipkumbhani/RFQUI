@@ -54,6 +54,13 @@
                                        placeholder="Vehicle Type" />
                             </div>
                         </div>
+                        <div class="col-xl-3">
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Minimum KMS / Day</label>
+                                <input type="number" class="form-control" id="minKmsPerDay"
+                                       placeholder="Minimum KMS / Day" />
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -248,12 +255,17 @@
 
     function saveandsavenew() {
         var vehicleTypeName = $("#txtVehicleType").val()
+        var minKmsPerDay = $("#minKmsPerDay").val()
 
         if (IsNullOrEmpty(vehicleTypeName)) {
             toastr.warning("Please enter a valid Vehicle Type", "Warning");
             return;
         }
 
+        if (isNumeric(minKmsPerDay)) {
+            toastr.warning("Please enter Min Km/Day", "Warning");
+            return;
+        }
         var saveUrl = '@Url.Content("~/Vehicle/VehicleTypeSave")';
         var formData = {
             VehicleTypeName: vehicleTypeName,
@@ -297,6 +309,7 @@
     function update(vehicleTypeId) {
         console.log(vehicleTypeId);
         var vehicleTypeName = $("#txtVehicleType").val()
+        var minKmsPerDay = $("#minKmsPerDay").val()
 
         if (IsNullOrEmpty(vehicleTypeName)) {
             toastr.warning("Please enter a valid Vehicle Type", "Warning");

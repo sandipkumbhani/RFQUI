@@ -53,6 +53,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
     // Loop through each input and set the border color to blue
     inputs.forEach(function (input) {
-        input.style.borderColor = 'hsl(210,77%,46%)';
+        input.style.borderColor = '#666cff66';
+        input.style.setProperty('--placeholder-opacity', '0.0');
     });
 });
