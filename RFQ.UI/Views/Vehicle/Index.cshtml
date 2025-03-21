@@ -40,10 +40,10 @@
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vehicle No</label>
                                 <div class="col-auto">
-                                    <input type="text" class="form-control form-control-solid" placeholder="" />
+                                    <input type="text" id="vehicleNo" class="form-control form-control-solid" placeholder="" />
                                 </div>
                                 <div class="col-auto">
-                                    <button class="btn btn-primary me-2">Get e-KYC</button>
+                                    <button id="btnVehicleKyc" type="button" class="btn btn-primary me-2">Get e-KYC</button>
                                 </div>
                             </div>
                             <div class="mb-5">
@@ -74,7 +74,7 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Capacity</label>
-                                <input type="text" class="form-control" placeholder="Vehicle Capacity" />
+                                <input type="text" id="vehicleCapacity" class="form-control" placeholder="Vehicle Capacity" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label fw-semibold fs-6">Tracking Provider</label>
@@ -317,7 +317,7 @@
         GetAllVehicleCategory();
         document.getElementById("save_click").addEventListener("click", validateForm);
         document.getElementById("save&new_click").addEventListener("click", validateForm);
-
+       
         function validateForm(event) {
             event.preventDefault();
             let isValid = true;
@@ -358,7 +358,80 @@
                 input.classList.remove("is-invalid");
             });
         });
+
+        function GetAllVehicleCategory() {
+        var GetUrl = '@Url.Content("~/Vehicle/GetAllVehicleCategory")';
+        $.ajax({
+            url: GetUrl,
+            type: "GET",
+            contentType: "application/json",
+            success: function (response) {
+                console.log(response);
+                 const dropdown = document.getElementById("vehicleCategory");
+                    response.forEach(category => {
+                        const option = document.createElement("option");
+                        option.value = category.internalMasterId;
+                        option.textContent = category.internalMasterName;
+                        dropdown.appendChild(option);
+                    });
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                toastr.error("Failed to submit Vehicle Type", "Error");
+            }
+        });
+    }
     });
+
+    $("#btnVehicleKyc").on("click",function(){
+            var GetUrl = '@Url.Content("~/Vehicle/GetVehicleKycDetails")';
+                 $.ajax({
+                     url: GetUrl,
+                     type: "GET",
+                     contentType:"application/json",
+                     success: function (response) {
+                         debugger;
+                         var Data =response;
+                         var rcModel = response.vehicleRCModel;
+                         console.log(response);
+                             $("#vehicleNo").val(rcModel.vehicleNo);
+                             $("#vehicleType").val();
+                             $("#ownerName").val(rcModel.ownerName);
+                             $("#vehicleCategory").val(rcModel.vehicleCategory);
+                             $("#vehicleCapacity").val();
+                             $("#trackingProvider").val();
+                             $("#vehicleStatusInput").val(rcModel.vehicleRCStatus);
+                             $("#blacklistStatusInput").val();
+                             $("#regdOwnerInput").val(rcModel.ownerName);
+                             $("#engineNoInput").val(rcModel.vehicleEngineNumber);
+                             $("#chasisNoInput").val(rcModel.vehicleChassisNumber);
+                             $("#makeModelInput").val(rcModel.vehicleMakerModel);
+                             $("#pucExpiryInput").val(rcModel.pucExpiryDate);
+                             $("#financerInput").val(rcModel.financier);
+                             $("#ownerSerialNoInput").val(rcModel.ownerSerialNo);
+                             $("#npNoInput").val(rcModel.nationalPermitNumber);
+                             $("#insuranceCoInput").val(rcModel.insuranceCompany);
+                             $("#verifiedOnInput").val(rcModel.issueDate);
+                             $("#rtoRegistrationInput").val(rcModel.registeredAt);
+                             $("#registrationDateInput").val();
+                             $("#permanentAddressInput").val(rcModel.permanentAddress);
+                             $("#grossWeightInput").val(rcModel.vehicleGrossWeight);
+                             $("#unladenWeightInput").val(rcModel.vehicleUnladenWeight);
+                             $("#fitnessExpiryInput").val();
+                             $("#taxExpiryInput").val(rcModel.taxEndDate);
+                             $("#permitNoInput").val(rcModel.permitNumber);
+                             $("#permitExpiryInput").val(rcModel.permitExpiryDate);
+                             $("#npExpiryInput").val(rcModel.nationalPermitExpiryDate);
+                             $("#vehicleCapacityInput").val();
+                             $("#policyNoInput").val(rcModel.pucNumber);
+                             $("#policyExpiryInput").val(rcModel.pucExpiryDate);
+                     },
+                     error: function (xhr, status, error) {
+                         console.error("Error:", error);
+                         toastr.error("Failed to submit Vehicle Type", "Error");
+                     }
+                 });
+        });
 </script>
 
 <script>
@@ -392,31 +465,7 @@
         alert("All inputs are valid!");
         return true;
     }
-
-    function GetAllVehicleCategory() {
-      debugger;
-        var GetUrl = '@Url.Content("~/Vehicle/GetAllVehicleCategory")';
-        $.ajax({
-            url: GetUrl,
-            type: "GET",
-            contentType: "application/json",
-            success: function (response) {
-                console.log(response);
-                debugger
-                 const dropdown = document.getElementById("vehicleCategory");
-                    response.forEach(category => {
-                        const option = document.createElement("option");
-                        option.value = category.internalMasterId;
-                        option.textContent = category.internalMasterName;
-                        dropdown.appendChild(option);
-                    });
-            },
-            error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to submit Vehicle Type", "Error");
-            }
-        });
-    }
+   
 
 </script>
 

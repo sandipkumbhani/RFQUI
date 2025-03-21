@@ -1,6 +1,7 @@
 ﻿using RFQ.UI.Application.Inteface;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Application.Provider
 {
@@ -14,6 +15,10 @@ namespace RFQ.UI.Application.Provider
         public async Task<IEnumerable<InternalMasterDto>> GetAllVehicleCategory()
         {
             return await _vehicleAdaptor.GetAllVehicleCategory();
+        }
+        public async Task<VehicleRCModelDto> GetVehicleKycDetails()
+        {
+            return await _vehicleAdaptor.GetVehicleKycDetails();
         }
     }
 }

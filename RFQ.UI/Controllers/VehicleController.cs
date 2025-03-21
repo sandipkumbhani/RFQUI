@@ -110,11 +110,11 @@ namespace RFQ.UI.Controllers
                 }
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(vehicleTypeViewModel); 
+                    return Json(vehicleTypeViewModel);
                 }
                 else
                 {
-                    return View(vehicleTypeViewModel); 
+                    return View(vehicleTypeViewModel);
                 }
             }
             catch (Exception ex)
@@ -171,5 +171,26 @@ namespace RFQ.UI.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVehicleKycDetails()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                var vehicleCategoryList = await _vehicleServices.GetVehicleKycDetails();
+                if (vehicleCategoryList == null)
+                {
+                    return NotFound("No vehicle KYC details found.");
+                }
+                return Json(vehicleCategoryList);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }
