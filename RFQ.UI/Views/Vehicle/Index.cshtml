@@ -322,6 +322,7 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        GetAllVehicleCategory();
         document.getElementById("save_click").addEventListener("click", validateForm);
         document.getElementById("save&new_click").addEventListener("click", validateForm);
 
@@ -399,7 +400,28 @@
         alert("All inputs are valid!");
         return true;
     }
+
+    function GetAllVehicleCategory() {
+      debugger;
+        var GetUrl = '@Url.Content("~/Vehicle/GetAllVehicleCategory")';
+        $.ajax({
+            url: GetUrl,
+            type: "GET",
+            contentType: "application/json",
+            success: function (response) {
+                toastr.success("HEllo");
+                console.log(response);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                toastr.error("Failed to submit Vehicle Type", "Error");
+            }
+        });
+    }
+
+    
 </script>
+
 
 
 
