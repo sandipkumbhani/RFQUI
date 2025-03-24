@@ -26,13 +26,22 @@
 </div>
 <div class="app-content  px-lg-3">
     <div class="app-container  container-fluid">
-        <div class="card">
+        <div class="container my-4">
+            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
+                </svg>
+                Back
+            </button>
+        </div>
+        <div id="addFranchiseDiv" class="card">
             <div class="card-header border-0 cursor-pointer">
                 <div class="card-title m-0">
                     <h3 class="fw-bold m-0">Franchise</h3>
                 </div>
             </div>
-            <form class="form">
+            <form id="franchiseForm" class="form" enctype="multipart/form-data" method="post">
+                <input type="number" hidden id="txtCompanyId"/>
                 <div class="card-body border-top p-9">
                     <div class="row">
                         <div class="col-xl-6">
@@ -47,7 +56,7 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="fv-row upload-imgs">
-                                <div class="dropzone" id="dropzonejs_1" action="https://keenthemes.com/scripts/void.php">
+                                <div class="dropzone" id="dropzone">
 
                                     <div class="dz-message needsclick">
                                         <i class="bi bi-cloud-upload fs-3x text-primary"></i>
@@ -57,14 +66,15 @@
                                         </div>
 
                                     </div>
+                                    <div class="text-danger" id="uploadMessage"></div>
                                 </div>
-
+                                
                             </div>
                         </div>
                         <div class="col-xl-12">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Address </label>
-                                <input type="text" class="form-control" placeholder="Address" id="txtAddress"/>
+                                <input type="text" class="form-control" placeholder="Address" id="txtAddress" />
                             </div>
                         </div>
                         <div class="col-xl-6">
@@ -74,20 +84,20 @@
                                 <select id="txtCity" name="franchise" aria-label="Select a Franchise/Corporate"
                                         data-control="select2" data-placeholder="Select a City." class="form-select select2 form-select-solid form-select-lg fw-semibold">
                                     <option value="">Select a City</option>
-                                    <option value="AF">Afghanistan</option>
-                                    <option value="AX">Aland Islands</option>
-                                    <option value="AL">Albania</option>
-                                    <option value="DZ">Algeria</option>
+                                    <option value="0">Afghanistan</option>
+                                    <option value="1">Aland Islands</option>
+                                    <option value="2">Albania</option>
+                                    <option value="3">Algeria</option>
                                 </select>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson"/>
+                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" />
                             </div>
 
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number</label>
-                                <input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber"/>
+                                <input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
@@ -101,11 +111,11 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
-                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber"/>
+                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-                                <input type="email" class="form-control" placeholder="name@example.com" id="emailId"/>
+                                <input type="email" class="form-control" placeholder="name@example.com" id="emailId" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
@@ -133,10 +143,10 @@
                                             <select name="franchise" aria-label="Select a Attachment Type"
                                                     data-control="select2" data-placeholder="Select a Attachment Type" class="form-select select2 form-select-solid form-select-lg fw-semibold">
                                                 <option value="">Select a Attachment Type</option>
-                                                <option value="AF">Afghanistan</option>
-                                                <option value="AX">Aland Islands</option>
-                                                <option value="AL">Albania</option>
-                                                <option value="DZ">Algeria</option>
+                                                <option value="0">Afghanistan</option>
+                                                <option value="1">Aland Islands</option>
+                                                <option value="2">Albania</option>
+                                                <option value="3">Algeria</option>
                                             </select>
                                         </div>
                                         <div class="col-md-2">
@@ -175,9 +185,42 @@
                 </div>
                 <div class="card-footer d-flex justify-content-srtat py-6 px-9">
                     <button id="btnSaveFranchise" type="button" class="btn btn-primary me-2">Save</button>
-                    <button id="btnSavenewFranchise" type="button" class="btn btn-primary">Save & New</button>
+                    <button id="btnSavenewFranchise" type="button" class="btn btn-primary me-2">Save & New</button>
+                    <button type="button" id="btnupdate" class="btn btn-primary me-2" style="display:none;">Update</button>
+                    <button type="button" class="btn btn-primary" id="viewButton">View</button>
                 </div>
             </form>
+        </div>
+
+        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
+            <div class="card-header p-4">
+                <h4 class="fw-bold m-0 text-lg">Franchise List</h4>
+            </div>
+            <div class="card-body">
+                <table id="tableFranchise"
+                       class="table table-striped align-middle fs-6 mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>CompanyName</th>
+                            <th>AddressLine</th>
+                            <th>CityId</th>
+                            <th>PinCode</th>
+                            <th>ContactPerson</th>
+                            <th>Contact No</th>
+                            <th>Mobile No</th>
+                            <th>WhatsApp No</th>
+                            <th>Email</th>
+                            <th>PAN No</th>
+                            <th>GST No</th>
+                            <th>Logo</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic rows go here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -185,7 +228,46 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="~/js/common.js"></script>
 <script>
-    $(document).ready(function(){ 
+    $(document).ready(function(){
+
+        
+            // function dropzone(){
+        Dropzone.autoDiscover = false;
+        var uploadUrl = "@Url.Content("~/Franchise/Upload")";
+
+        if (Dropzone.instances.length > 0) {
+            Dropzone.instances.forEach(dz => dz.destroy());
+        }
+
+        const myDropzone = new Dropzone("#dropzone",
+        {
+            url : uploadUrl,
+            paramName : "file",
+            maxFiles : 1,
+            parallelUploads : 1, 
+            maxFilesize : 1,
+            addRemoveLinks : true,
+            acceptedFiles : "image/*",
+            success : function(file,response){
+                console.log("uploaded");
+                console.log(file.FileName);
+                console.log(response);
+            },
+            error : function(file,response){
+                $("#uploadMessage").html(response);
+                toastr.warning("Upload Only one logo", "Warning");
+                setTimeout(function() {
+                    document.getElementById('uploadMessage').style.display = 'none';
+                }, 5000);
+            }
+        })
+        // }
+
+        $("#viewButton").on("click",function(){
+            fetchFranchise();
+            $("#addFranchiseDiv").css('display','none');
+            $("#backButton").css('display','block');
+        });
 
         function validatePanNumber(number){
             return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(number);
@@ -197,11 +279,17 @@
         $("#btnSaveFranchise").click(function(event){
             event.preventDefault();
             saveandsavenewFranchise();
-        })
+        });
         $("#btnSavenewFranchise").click(function(event){
             saveandsavenewFranchise();
-            $('#dropzonejs_1')[0].reset();
-        })
+            $('#franchiseForm')[0].reset();
+        });
+        $('#backButton').click(function () {
+            $("#addFranchiseDiv").css('display', 'Block')
+            $("#backButton").css('display', 'none');
+             $('#tableDiv').hide();
+        });
+
         $("#txtFranchiseName").on("change",function(){
             if(!isAlphaNumeric($(this).val())){
                 toastr.warning("Please enter a valid Franchise  Name", "Warning");
@@ -282,6 +370,7 @@
             var emailId = $("#emailId").val();
             var panNumber = $("#txtPanNumber").val();
             var gstNumber = $("#txtGSTNumber").val();
+            var franchiseLogo = $("#dropzonejs_1").val();
 
             if (IsNullOrEmpty(franchiseName)) {
                 toastr.warning("Please enter a valid Franchise Name", "Warning");
@@ -328,6 +417,193 @@
                 return;
             }
 
-        }
-    })
+            var saveUrl = '@Url.Content("~/Franchise/FranchiseSave")'
+            var formData = {
+                CompanyName: franchiseName,
+                AddressLine: franchiseAddress,
+                CityId: franchiseCity,
+                PinCode: franchisePincode,
+                ContactPerson: contactPerson,
+                ContactNo : mobileNumber,
+                MobNo: mobileNumber,
+                WhatsAppNo: whatsappNumber,
+                Email: emailId,
+                PANNo: panNumber,
+                GSTNo: gstNumber,
+            }
+            console.log(formData);
+            $.ajax({
+                url : saveUrl,
+                type : 'POST',
+                contentType : 'application/json',
+                data : JSON.stringify(formData),
+                success : function(response){
+                    console.log(response);
+                    toastr.success("Franchise submitted successfully!");
+                },
+                error : function(xhr,status,error){
+                    console.log("Error :",error);
+                    toastr.error("Failed to submitFranchise", "Error");
+                }
+            });
+        };
+  
+        function fetchFranchise(){
+            $("#tableDiv").show();
+            var fetchFranchiseUrl = '@Url.Content("~/Franchise/GetFranchiseAll")';
+            $.ajax({
+                url : fetchFranchiseUrl,
+                type : 'GET',
+                dataType : 'json',
+                success : function(response){
+                    let franchiseList = response.franchiseViewModelDtos.filter(x=>x.companyTypeId == 2);
+                    franchiseViewModelDto = response.franchiseViewModelDtos;
+                    console.log(franchiseList);
+                    console.log(franchiseViewModelDto);
+                    if ($.fn.DataTable.isDataTable('#tableFranchise')) {
+                        $('#tableFranchise').DataTable().clear().destroy();
+                    }
+                    $('#tableFranchise').DataTable({
+                        "processing": true,
+                        "serverSide": false,
+                        "paging": true,
+                        "pageLength": 10,
+                        "lengthChange": true,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": true,
+                        "responsive": true,
+                        "info": true,
+                        "autoWidth": true,
+                        "responsive": true,
+                        "scrollX": true,
+                        "data": franchiseList,
+                        "columns": [
+                            { "data": "companyName" },
+                            { "data": "addressLine" },
+                            { "data": "cityId" },
+                            { "data": "pinCode" },
+                            { "data": "contactPerson" },
+                            { "data": "contactNo" },
+                            { "data": "mobNo" },
+                            { "data": "whatsAppNo" },
+                            { "data": "email" },
+                            { "data": "panNo" },
+                            { "data": "gstNo" },
+                            { "data": "logoImage" },
+                            { "data": "companyId",
+                                "render":function (data, type, row){
+                                    return `<div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="EditFranchise(${data})">
+                                                    <i class="ti ti-edit"></i> Edit
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="deleteFranchise(${data})">
+                                                    <i class="ti ti-trash"></i> Delete
+                                                </button>
+                                            </div>`;
+                                }
+                            },
+                        ],
+                        "columnDefs": [
+                            {
+                                "targets": "_all",
+                                "className": "text-center"
+                            }
+                        ]
+                    })
+                },
+                error : function(xhr,status,error){
+                    console.log("Error",error);
+                    toastr.error("Failed to fetch data!", "Error");
+                }
+            });
+        };
+    });
+        function EditFranchise(companyId){
+            debugger;
+            var data = franchiseViewModelDto.filter(x=>x.companyId == companyId);
+            console.log(data);
+            var formData = data[0];
+            $('#tableDiv').hide();
+            $("#backButton").css('display', 'none');
+            $("#addFranchiseDiv").css('display', 'Block');
+            $("#btnSaveFranchise").hide();
+            $("#btnupdate").show();
+            $("#btnSavenewFranchise").prop("disabled", true);
+            $("#txtCompanyId").val(formData.companyId);
+            $("#txtFranchiseName").val(formData.companyName);
+            $("#txtFranchiseCode").val(formData.companyTypeId);
+            $("#txtAddress").val(formData.addressLine);
+            $("#txtCity").val(formData.cityId);
+            $("#txtPinCode").val(formData.pinCode);
+            $("#txtContactPerson").val(formData.contactPerson);
+            $("#txtWhatsAppNumber").val(formData.whatsAppNo);
+            $("#txtMobileNumber").val(formData.mobNo);
+            $("#emailId").val(formData.email);
+            $("#txtPanNumber").val(formData.panNo);
+            $("#txtGSTNumber").val(formData.gstNo);
+        };
+
+        $("#btnupdate").click(function (e) {
+            e.preventDefault();
+            var formData = {
+                CompanyId : $("#txtCompanyId").val(),
+                CompanyName: $("#txtFranchiseName").val(),
+                AddressLine: $("#txtAddress").val(),
+                CityId: $("#txtCity").val(),
+                PinCode: $("#txtPinCode").val(),
+                ContactPerson: $("#txtContactPerson").val(),
+                ContactNo : $("#txtMobileNumber").val(),
+                MobNo: $("#txtMobileNumber").val(),
+                WhatsAppNo: $("#txtWhatsAppNumber").val(),
+                Email: $("#emailId").val(),
+                PANNo: $("#txtPanNumber").val(),
+                GSTNo: $("#txtGSTNumber").val(),
+            }
+            var editFranchiseUrl = '@Url.Content("~/Franchise/EditFranchise")';
+            $.ajax({
+                type: "PUT",
+                url: editFranchiseUrl,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(formData),
+                dataType: "json",
+                success: function (result) {
+                    if (result.result == "success") {
+                        $("#dataDiv").html("Profile updated successfully!");
+                        $("#addFranchiseDiv").css('display', 'none')
+                        fetchFranchise();
+                    } 
+                    else {
+                        $("#dataDiv").html("Failed to update profile.");
+                    }
+                    $("#btnSaveFranchise").show();
+                    $("#btnupdate").hide();
+                    $("#btnSavenewFranchise").prop("disabled", false);
+                    $("#viewprofile").click();
+                },
+                error: function (xhr, status, error) {
+                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                }
+            });
+        });
+
+        function deleteFranchise(companyId){
+            var deleteFranchiseUrl = '@Url.Content("~/Franchise/DeleteFranchise/")' + companyId
+            $.ajax({
+                url: deleteFranchiseUrl,
+                type: "DELETE",
+                dataType: "json",
+                data: JSON.stringify(companyId),
+                success: function (response) {
+                    console.log("Deleted Succesfully")
+                    fetchFranchise();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                    toastr.error("Fail	ed to fetch data!", "Error");
+                }
+            });
+        };
+    
 </script>
