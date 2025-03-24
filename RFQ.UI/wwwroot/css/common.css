@@ -2356,7 +2356,7 @@
     color:var(--bs-text-white)!important
   }
   .text-primary {
-    color:var(--bs-text-primary)!important
+    color:var(--bs-text-primary-orange)!important
   }
   .text-inverse-primary {
     color:var(--bs-primary-inverse)!important
@@ -2372,14 +2372,14 @@
   }
   .text-hover-primary:hover {
     transition:color .2s ease;
-    color:var(--bs-text-primary)!important
+    color:var(--bs-text-primary-orange)!important
   }
   .text-hover-primary:hover i {
     transition:color .2s ease;
-    color:var(--bs-text-primary)!important
+    color:var(--bs-text-primary-orange)!important
   }
   .text-hover-primary:hover .svg-icon {
-    color:var(--bs-text-primary)!important
+    color:var(--bs-text-primary-orange)!important
   }
   .text-active-primary {
     transition:color .2s ease
@@ -2389,14 +2389,14 @@
   }
   .text-active-primary.active {
     transition:color .2s ease;
-    color:var(--bs-text-primary)!important
+    color:var(--bs-text-primary-orange)!important
   }
   .text-active-primary.active i {
     transition:color .2s ease;
-    color:var(--bs-text-primary)!important
+    color:var(--bs-text-primary-orange)!important
   }
   .text-active-primary.active .svg-icon {
-    color:var(--bs-text-primary)!important
+    color:var(--bs-text-primary-orange)!important
   }
   .text-secondary {
     color:var(--bs-text-secondary)!important
@@ -3081,7 +3081,7 @@
   }
   .parent-hover:hover .parent-hover-primary {
     transition:color .2s ease;
-    color:var(--bs-text-primary)!important
+    color:var(--bs-text-primary-orange)!important
   }
   .parent-hover .parent-hover-secondary {
     transition:color .2s ease
@@ -3214,7 +3214,7 @@
   }
   .parent-active.active .parent-active-primary {
     transition:color .2s ease;
-    color:var(--bs-text-primary)!important
+    color:var(--bs-text-primary-orange)!important
   }
   .parent-active .parent-active-secondary {
     transition:color .2s ease
