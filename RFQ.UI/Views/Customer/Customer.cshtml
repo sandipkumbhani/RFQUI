@@ -55,7 +55,7 @@
                                     <input type="text" class="form-control" placeholder="" id="gstEkyc" />
                                 </div>
                                 <div class="col-auto">
-                                    <button class="btn btn-primary me-2" id="gstEKycButton">e-KYC</button>
+                                    <button class="btn btn-primary me-2" type="button" id="gstEKycButton">e-KYC</button>
                                 </div>
                             </div>
                         </div>
@@ -107,10 +107,10 @@
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">PAN No</label>
                                 <div class="col-auto">
-                                    <input type="text" class="form-control form-control-solid" placeholder="" id="panEkyc" />
+                                    <input type="text" class="form-control" placeholder="" id="panEkyc" />
                                 </div>
                                 <div class="col-auto">
-                                    <button class="btn btn-primary me-2" id="panEKycButton">e-KYC</button>
+                                    <button class="btn btn-primary me-2" type="button" id="panEKycButton">e-KYC</button>
                                 </div>
                             </div>
                         </div>
@@ -307,11 +307,6 @@
     </div>
 </div>
 
-<script src="~/jquery/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/app.min.js"></script>
-<script src="~/js/sidebarmenu.js"></script>
-<script src="~/js/dashboard.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="~/js/common.js"></script>
 
@@ -325,7 +320,7 @@
         document.getElementById("numGstNumber").value = gstKyc;
     });
 
-    $(document).ready(function () 
+     $(document).ready(function () 
     {
 
         $(document).on("click", "#viewButton", function () {
@@ -470,7 +465,7 @@
         });
     });
 
-    function fetchCustomerList() {
+     function fetchCustomerList() {
         $('#tableDiv').show();
         var fetchCustomerUrl = '@Url.Content("~/Customer/ViewCustomer")';
         $.ajax({
@@ -543,7 +538,8 @@
             }
         });
     }
-    function saveandsavenew() {
+
+     function saveandsavenew() {
         var gstKyc = $("#gstEkyc").val();
         var legalName = $("#txtLegalName").val();
         var typeBusiness = $("#txtTypeBusiness").val();
@@ -711,7 +707,7 @@
         });
     }
 
-    function editCustomer(partyId){
+     function editCustomer(partyId){
         console.log(customerViewModelDtos);
         var data = customerViewModelDtos.filter(x=>x.partyId === partyId);
         var formData = data[0];
@@ -758,10 +754,9 @@
           $("#txtEmail").val(formData.email);
           $("#numGstNumber").val(formData.gstNo);
     }
-       
 
      $(document).ready(function ()
-        {
+     {
             $("#btnupdate").click(function (e) {
                 e.preventDefault();
 
@@ -817,9 +812,11 @@
                        }
                 });
             });
-        });
 
-    function deleteCustomer(partyId) {
+            
+     });
+
+     function deleteCustomer(partyId) {
        var deleteCustomerUrl = '@Url.Content("~/Customer/DeleteCustomer/")' + partyId
          $.ajax({
             url: deleteCustomerUrl,
@@ -836,5 +833,59 @@
             }
         });
     }
+
+     $("#gstEKycButton").on("click",function(){
+            var GetUrl = '@Url.Content("~/Customer/GetGstKycDetails")';
+                 $.ajax({
+                     url: GetUrl,
+                     type: "GET",
+                     contentType: "application/json; charset=utf-8",
+                     dataType: "json",
+                     success: function (response) {
+                         console.log(response);
+                         debugger;
+                         var Data =response;
+                         var gstModel  = response.gstModel
+                             $("#txtLegalName").val(gstModel.legalName),
+                             $("#txtTypeBusiness").val(gstModel.constitutionOfBusiness),
+                             $("#txtGstStatus").val(gstModel.gstStatus),
+                             $("#txtGstAddress").val(gstModel.principalAddress),
+                             $("#txtTradeName").val(gstModel.tradeName),
+                             $("#txtAadharVerified").val(gstModel.aadhaarVerified),
+                             $("#txtGstVerifiedOn").val(gstModel.dateOfRegistration),
+                             $("#txtVerifiedGstNo").val()
+                     },
+                     error: function (xhr, status, error) {
+                         debugger;
+                         console.error("Error:", error);
+                         toastr.error("Failed to submit Vehicle Type", "Error");
+                     }
+                 });
+        });
+
+     $("#panEKycButton").on("click",function(){
+            var GetUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
+                 $.ajax({
+                     url: GetUrl,
+                     type: "GET",
+                     contentType: "application/json; charset=utf-8",
+                     dataType: "json",
+                     success: function (response) {
+                         console.log(response);
+                         debugger;
+                         var Data =response;
+                         var panModel = response.panModel
+                             $("#txtPanName").val(panModel.fullName),
+                             $("#txtAadharLinked").val(panModel.aadhaarLinked),
+                             $("#txtPanStatus").val(panModel.message),
+                             $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
+                     },
+                     error: function (xhr, status, error) {
+                         debugger;
+                         console.error("Error:", error);
+                         toastr.error("Failed to submit Vehicle Type", "Error");
+                     }
+                 });
+        });
     
 </script>

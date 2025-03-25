@@ -1,6 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using RFQ.UI.Application.Inteface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
@@ -173,6 +176,35 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetGstKycDetails()
+        {
+            try
+            {
+                var details = await _customerServices.GetGstKycDetails();
+                return Ok(details);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPanKycDetails()
+        {
+            try
+            {
+                var details = await _customerServices.GetPanKycDetails();
+                return Ok(details);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex);
             }
         }
     }

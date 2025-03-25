@@ -1,4 +1,6 @@
 ﻿using RFQ.UI.Application.Inteface;
+using RFQ.UI.Domain.Interfaces;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
 using static RFQ.UI.Domain.Model.CustomerViewModel;
 namespace RFQ.UI.Application.Provider
@@ -30,6 +32,15 @@ namespace RFQ.UI.Application.Provider
         public Task<IEnumerable<CustomerViewModelDto>> GetAllCustomer()
         {
             return _customerAdaptor.GetAllCustomer();
+        }
+
+        public async Task<GstKycDetailsDto> GetGstKycDetails()
+        {
+            return await _customerAdaptor.GetGstKycDetails();
+        }
+        public async Task<PanKycDetailModel> GetPanKycDetails()
+        {
+            return await _customerAdaptor.GetPanKycDetails();
         }
     }
 }

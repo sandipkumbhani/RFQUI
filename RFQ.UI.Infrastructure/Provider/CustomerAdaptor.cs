@@ -6,6 +6,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Models;
 using static RFQ.UI.Domain.Model.CustomerViewModel;
 using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
+using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -127,6 +128,61 @@ namespace RFQ.UI.Infrastructure.Provider
                 return Profilelist;
             }
             return null;
+        }
+        public async Task<GstKycDetailsDto?> GetGstKycDetails()
+        {
+            try
+            {
+                var _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var url = "http://103.172.151.71/RSuiteKYC/GSTAPI/GetGSTInfo?" + "GSTNo=27ACUPT0038M1ZX&ccode=FleetLynk&UserId=1";
+                var response = await _httpClient.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(responseData))
+                    return null;
+
+                var gstKycDetails = JsonConvert.DeserializeObject<GstKycDetailsDto>(responseData);
+                if (gstKycDetails == null)
+                    return null;
+                return gstKycDetails;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+                throw; 
+            }
+        }
+
+        public async Task<PanKycDetailModel?> GetPanKycDetails()
+        {
+            try
+            {
+                var _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var url = "http://103.172.151.71/RSuiteKYC/PANAPI/GePANInfo?" + "PANNo=AYMPS6006N&ccode=FleetLynk&UserId=1";
+                var response = await _httpClient.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(responseData))
+                    return null;
+
+                var panKycDetails = JsonConvert.DeserializeObject<PanKycDetailModel>(responseData);
+                if (panKycDetails == null)
+                    return null;
+                return panKycDetails;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+                throw;
+            }
         }
     }
 }
