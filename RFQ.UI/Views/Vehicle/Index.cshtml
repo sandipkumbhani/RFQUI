@@ -69,7 +69,6 @@
                                 @* <input type="text" class="form-control" placeholder="Vehicle Category" /> *@
                                 <select id="vehicleCategory" name="vehicleCategory"
                                         data-control="select2" data-placeholder="Select Vehicle Category" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select Vehicle Category</option>
                                 </select>
                             </div>
                             <div class="mb-5">
@@ -368,6 +367,12 @@
             success: function (response) {
                 console.log(response);
                  const dropdown = document.getElementById("vehicleCategory");
+                 // Add default option
+                    const defaultOption = document.createElement("option");
+                    defaultOption.value = "";
+                    defaultOption.textContent = "Select Vehicle Category";
+                    dropdown.appendChild(defaultOption);
+                // Add Other Options
                     response.forEach(category => {
                         const option = document.createElement("option");
                         option.value = category.internalMasterId;
@@ -401,7 +406,7 @@
                              $("#vehicleCapacity").val();
                              $("#trackingProvider").val();
                              $("#vehicleStatusInput").val(rcModel.vehicleRCStatus);
-                             $("#blacklistStatusInput").val();
+                             $("#blacklistStatusInput").val(rcModel.nonUseStatus);
                              $("#regdOwnerInput").val(rcModel.ownerName);
                              $("#engineNoInput").val(rcModel.vehicleEngineNumber);
                              $("#chasisNoInput").val(rcModel.vehicleChassisNumber);
@@ -413,16 +418,16 @@
                              $("#insuranceCoInput").val(rcModel.insuranceCompany);
                              $("#verifiedOnInput").val(rcModel.issueDate);
                              $("#rtoRegistrationInput").val(rcModel.registeredAt);
-                             $("#registrationDateInput").val();
+                             $("#registrationDateInput").val(rcModel.issueDate);
                              $("#permanentAddressInput").val(rcModel.permanentAddress);
                              $("#grossWeightInput").val(rcModel.vehicleGrossWeight);
                              $("#unladenWeightInput").val(rcModel.vehicleUnladenWeight);
-                             $("#fitnessExpiryInput").val();
+                             $("#fitnessExpiryInput").val(rcModel.expiryDate);
                              $("#taxExpiryInput").val(rcModel.taxEndDate);
                              $("#permitNoInput").val(rcModel.permitNumber);
                              $("#permitExpiryInput").val(rcModel.permitExpiryDate);
                              $("#npExpiryInput").val(rcModel.nationalPermitExpiryDate);
-                             $("#vehicleCapacityInput").val();
+                             $("#vehicleCapacityInput").val(rcModel.vehicleUnladenWeight);
                              $("#policyNoInput").val(rcModel.pucNumber);
                              $("#policyExpiryInput").val(rcModel.pucExpiryDate);
                      },

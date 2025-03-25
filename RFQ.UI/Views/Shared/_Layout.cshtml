@@ -209,8 +209,8 @@
                 <div id="app_sidebar" class="app-sidebar flex-column">
                     <div class="app-sidebar-logo position-relative">
                         <a href="#">
-                            <img alt="Logo" src="https://img.logoipsum.com/325.svg" class="h-30px app-sidebar-logo-default theme-light-show">
-                            <img alt="Logo" src="https://img.logoipsum.com/327.svg" class="h-20px app-sidebar-logo-minimize">
+                            <img alt="Logo" src="~/images/menu-header-Icon.png" class="h-35px app-sidebar-logo-default theme-light-show">
+                            <img alt="Logo" src="~/images/menu-header2-Icon.png" class="h-30px app-sidebar-logo-minimize">
                         </a>
                         <div class="app-sidebar-toggle btn btn-icon btn-sm btn-color-gray-600 btn-active-color-primary border border-gray-300 h-30px w-30px position-absolute rounded-circle top-50 start-100 translate-middle rotate">
                             <i class="fa-solid fa-chevron-left rotate-180"></i>
@@ -286,7 +286,7 @@
                     let menuList = response.menulistDtos;
                     let sidebarHtml = '';
                     let groupedItems = {};
-
+                    console.log(response);
                     menuList.forEach(item => {
                         if (!groupedItems[item.groupId]) {
                             groupedItems[item.groupId] = {
@@ -314,7 +314,7 @@
                             group.items.forEach(item => {
                                 sidebarHtml += '<div id="'+group.groupName+'"  class="menu-item collapse show">';
                                 sidebarHtml += '<a href="' + item.linkUrl + '" class="menu-link">';
-                                sidebarHtml += '<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>';
+                                sidebarHtml += '<span class="menu-bullet"><i class="bi '+ item.linkIcon + ' fs-1 "></i></span>';
                                 sidebarHtml += '<span class="menu-title">' + item.linkName + '</span>';
                                 sidebarHtml += '</a>';
                                 sidebarHtml += '</div>';

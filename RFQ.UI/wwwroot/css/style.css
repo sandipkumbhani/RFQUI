@@ -1159,7 +1159,7 @@ table.dataTable > thead .dt-ordering-asc:after {
     }
     .app-sidebar .app-sidebar-logo {
         height: 80px;
-        padding: 30px;
+        padding: 20px;
         border-bottom: var(--bs-app-separator-border);
     }
     .app-sidebar-toggle {
