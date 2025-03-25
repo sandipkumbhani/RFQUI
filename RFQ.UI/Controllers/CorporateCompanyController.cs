@@ -40,7 +40,7 @@ namespace RFQ.UI.Controllers
                     CityId = corporateCompanyViewModelDto.CityId,
                     PinCode = corporateCompanyViewModelDto.PinCode,
                     ContactPerson = corporateCompanyViewModelDto.ContactPerson,
-                    ContactNo = corporateCompanyViewModelDto.MobNo,
+                    ContactNo = corporateCompanyViewModelDto.ContactNo,
                     MobNo = corporateCompanyViewModelDto.MobNo,
                     WhatsAppNo = corporateCompanyViewModelDto.WhatsAppNo,
                     Email = corporateCompanyViewModelDto.Email,
@@ -73,14 +73,14 @@ namespace RFQ.UI.Controllers
 
                 var company = new CorporateCompanyViewModelDto
                 {
-                    CompanyTypeId = Convert.ToInt32(profileid),
+                    CompanyTypeId = 3,
 
                     CompanyName = corporateCompanyViewModelDto.CompanyName,
                     AddressLine = corporateCompanyViewModelDto.AddressLine,
                     CityId = corporateCompanyViewModelDto.CityId,
                     PinCode = corporateCompanyViewModelDto.PinCode,
                     ContactPerson = corporateCompanyViewModelDto.ContactPerson,
-                    ContactNo = corporateCompanyViewModelDto.MobNo,
+                    ContactNo = corporateCompanyViewModelDto.ContactNo,
                     MobNo = corporateCompanyViewModelDto.MobNo,
                     WhatsAppNo = corporateCompanyViewModelDto.WhatsAppNo,
                     Email = corporateCompanyViewModelDto.Email,

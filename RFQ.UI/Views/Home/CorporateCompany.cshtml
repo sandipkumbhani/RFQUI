@@ -52,7 +52,7 @@
 								<input type="text" class="form-control" placeholder="Company Name" id="txtCompanyName" />
 
 							</div>
-
+							
 						</div>
 						<div class="col-xl-6">
 							<div class="mb-10">
@@ -113,6 +113,10 @@
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
 								<input type="text" class="form-control" placeholder="WhatsApp Number" id="txtwhatsAppnumber" />
+							</div>
+							<div class="mb-10">
+								<label class="form-label col-form-label fw-semibold fs-6">Contact Number</label>
+								<input type="text" class="form-control" placeholder="Contact Number" id="txtcontactNumber" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
@@ -213,6 +217,7 @@
 							<th>pinCode</th>
 							<th>contactPerson</th> 
 							<th>mobNo</th>
+							<th>ContactNo</th>
 							<th>whatsAppNo</th>
 							<th>email</th>
 							<th>panNo</th>
@@ -258,7 +263,7 @@
 		});
 		$("#txtCompanyCode").on("change", function () {
 			var CompanyCo = $(this).val();
-			if (!/^\d+$/.test(CompanyCo)) {
+			if (!isAlphabets(CompanyCo)) {
 				$("#txtCompanyCode").val('');
 				toastr.warning("Please enter a Corporate Company Code", "Warning");
 				return;
@@ -269,6 +274,8 @@
 			if (!isMobile(whats)) {
 				$("#txtwhatsAppnumber").val('');
 				toastr.warning("Please enter a whatsApp number", "Warning");
+
+
 				return;
 			}
 		});
@@ -276,10 +283,20 @@
 			var MobileNum = $(this).val();
 			if (!isMobile(MobileNum)) {
 				$("#txtMobileNumber").val(''); 
-				toastr.warning("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9", "Warning");
+				toastr.warning("Please enter a valid 10-digit mobile number", "Warning");
 				return;
 			}
 		});
+
+		$("#txtcontactNumber").on("change", function () {
+			var MobileNum = $(this).val();
+			if (!isMobile(MobileNum)) {
+				$("#txtcontactNumber").val('');
+				toastr.warning("Please enter a valid 10-digit contact number", "Warning");
+				return;
+			} 
+		});
+
 		$("#txtAddress").on("change", function () {
 			var Address = $(this).val();
 			if (!isAlphaNumeric(Address)) {
@@ -377,8 +394,8 @@
 			type: "GET",
 			dataType: "json",
 			success: function (response) {
-
-				let trlist = response.corporateCompanyViewModelDto;
+				let trlist = response.corporateCompanyViewModelDto.filter(x=>x.companyTypeId==3);
+				// let trlist = response.corporateCompanyViewModelDto
 				corporateCompanyViewModelDto = response.corporateCompanyViewModelDto;
 				// Destroy existing DataTable if exists
 				if ($.fn.DataTable.isDataTable('#tableCorporateCompany')) {
@@ -411,6 +428,7 @@
 						{ "data": "pinCode" },
 						{ "data": "contactPerson" },
 						{ "data": "mobNo" },
+						{ "data": "contactNo" },
 						{ "data": "whatsAppNo" },
 						{ "data": "email" },
 						{ "data": "panNo" },
@@ -462,11 +480,13 @@
 				// 	CompanyId: companyId,
 				// 	CompanyName: $("#CompanyTypeForm").val(),
 				// }
-				var formData = {
+				var formData = {					
 					CompanyId : $("#txtCompanyId").val(),
 					CompanyName: $("#txtCompanyName").val(),
-					CompanyTypeId: $("#txtCompanyCode").val(),
+
+					// CompanyTypeId: $("#txtCompanyCode").val(),
 					MobNo: $("#txtMobileNumber").val(),
+					ContactNo : $("#txtcontactNumber").val(),
 					AddressLine: $("#txtAddress").val(),
 					CityId: $("#txtcity").val(),
 					PinCode: $("#txtpincode").val(),
@@ -475,9 +495,10 @@
 					WhatsAppNo: $("#txtwhatsAppnumber").val(),
 					PANNo: $("#txtpannumber").val(),
 					GSTNo: $("#txtgstNumber").val(),
-					ContactNo : $("#txtMobileNumber").val()
+					// ContactNo : $("#txtMobileNumber").val()
+					
 				}
-				
+						
 				$.ajax({
 					type: "PUT",
 					url: "/CorporateCompany/EditCorporateCompany",
@@ -527,6 +548,7 @@
 		var companyName = $("#txtCompanyName").val();
 		var companyCode = $("#txtCompanyCode").val();
 		var mobileNumber = $("#txtMobileNumber").val();
+		var contactNumber = $("#txtcontactNumber").val();
 		var address = $("#txtAddress").val();
 		var city = $("#txtcity").val();
 		var pincode = $("#txtpincode").val();
@@ -541,7 +563,7 @@
 			toastr.warning("Please enter a valid Corporate Company", "Warning");
 			return;
 		}
-		if (!/^\d+$/.test(companyCode)) {
+		if (!isAlphabets(companyCode)) {
 			toastr.warning("Please enter a Corporate Company Code", "Warning");
 			return;
 		}
@@ -550,9 +572,15 @@
 			return;
 		}
 		if (!isMobile(mobileNumber)) {
-			toastr.warning("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9", "Warning");
+			toastr.warning("Please enter a valid 10-digit mobile number", "Warning");
 			return;
 		}
+
+		if (!isMobile(contactNumber)) {
+			toastr.warning("Please enter a valid 10-digit contact number", "Warning");
+			return;
+		}
+
 		if (!isAlphaNumeric(address)) {
 			toastr.warning("Please enter a Address", "Warning");
 			return;
@@ -594,8 +622,9 @@
 		var saveUrl = '@Url.Content("~/CorporateCompany/CorporateCompanySave")';
 		var formData = {
 			CompanyName: companyName,
-			CompanyTypeId: companyCode,
+			// CompanyTypeId: companyCode,
 			MobNo: mobileNumber,
+			ContactNo : contactNumber,
 			AddressLine: address,
 			CityId: city,
 			PinCode: pincode,
@@ -603,8 +632,7 @@
 			Email: email,
 			WhatsAppNo: whatsAppNumber,
 			PANNo: panNumber,
-			GSTNo: gSTNumber,
-			ContactNo : mobileNumber
+			GSTNo: gSTNumber,			
 			// FranchiseName: franchiseName
 		};
 
@@ -639,9 +667,10 @@
 		  $("#btnsaveandnew").prop("disabled", true);
 		  $("#txtCompanyId").val(formData.companyId);
 		  $("#txtCompanyName").val(formData.companyName);	
-		  $("#txtCompanyCode").val(formData.companyTypeId);
+		  // $("#txtCompanyCode").val(formData.companyTypeId);
 		  $("#txtPerson").val(formData.contactPerson);
-		  $("#txtMobileNumber").val(formData.contactNo);
+		  $("#txtMobileNumber").val(formData.mobNo);
+		  $("#txtcontactNumber").val(formData.contactNo);
 		  $("#txtAddress").val(formData.addressLine);
 		  $("#txtcity").val(formData.cityId);
 		  $("#txtpincode").val(formData.pinCode);
