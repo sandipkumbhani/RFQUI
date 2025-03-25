@@ -852,7 +852,7 @@
                              $("#txtGstAddress").val(gstModel.principalAddress),
                              $("#txtTradeName").val(gstModel.tradeName),
                              $("#txtAadharVerified").val(gstModel.aadhaarVerified),
-                             $("#txtGstVerifiedOn").val(gstModel.dateOfRegistration),
+                             $("#txtGstVerifiedOn").val(new Date(gstModel.dateOfRegistration).toISOString().split('T')[0]),
                              $("#txtVerifiedGstNo").val()
                      },
                      error: function (xhr, status, error) {
