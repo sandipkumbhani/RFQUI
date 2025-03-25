@@ -711,7 +711,6 @@
         console.log(customerViewModelDtos);
         var data = customerViewModelDtos.filter(x=>x.partyId === partyId);
         var formData = data[0];
-        console.log(data);
           $('#tableDiv').hide();
           $("#backButton").css('display', 'none');
           $("#addCustomerDiv").css('display', 'Block');
@@ -720,8 +719,6 @@
           $("#SavenewButton").hide();
           $("#viewButton").hide();
 
-          // debugger;
-          // $("#gstEkyc").val(formData.gstKyc);
           $("#txtPartyId").val(formData.partyId);
           $("#txtLegalName").val(formData.legalName);
           $("#txtTypeBusiness").val(formData.typeOfBusiness);
@@ -842,8 +839,6 @@
                      contentType: "application/json; charset=utf-8",
                      dataType: "json",
                      success: function (response) {
-                         console.log(response);
-                         debugger;
                          var Data =response;
                          var gstModel  = response.gstModel
                              $("#txtLegalName").val(gstModel.legalName),
@@ -856,7 +851,6 @@
                              $("#txtVerifiedGstNo").val()
                      },
                      error: function (xhr, status, error) {
-                         debugger;
                          console.error("Error:", error);
                          toastr.error("Failed to submit Vehicle Type", "Error");
                      }
@@ -871,8 +865,6 @@
                      contentType: "application/json; charset=utf-8",
                      dataType: "json",
                      success: function (response) {
-                         console.log(response);
-                         debugger;
                          var Data =response;
                          var panModel = response.panModel
                              $("#txtPanName").val(panModel.fullName),
@@ -881,7 +873,6 @@
                              $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
                      },
                      error: function (xhr, status, error) {
-                         debugger;
                          console.error("Error:", error);
                          toastr.error("Failed to submit Vehicle Type", "Error");
                      }

@@ -521,9 +521,7 @@
         };
     });
         function EditFranchise(companyId){
-            debugger;
             var data = franchiseViewModelDto.filter(x=>x.companyId == companyId);
-            console.log(data);
             var formData = data[0];
             $('#tableDiv').hide();
             $("#backButton").css('display', 'none');
