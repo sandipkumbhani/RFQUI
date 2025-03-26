@@ -83,7 +83,10 @@
         </div>
     </div>
 
-    <script src="js/plugins.bundle.js"></script>
+    @* <script src="js/plugins.bundle.js"></script> *@
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="js/datatables.bundle.js"></script>
     <script src="js/script.js"></script>
     <script>
@@ -94,9 +97,6 @@
 
                 // Disable the submit button to prevent multiple clicks
                 $("#loginButton").prop("disabled", true).text("Logging in...");
-
-
-                
                 var formData = {
                     emailId: $("#EmailId").val(),
                     password: $("#Password").val()
