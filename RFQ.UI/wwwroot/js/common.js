@@ -52,8 +52,8 @@ window.addEventListener('DOMContentLoaded', function () {
     const inputs = document.querySelectorAll('input,select');
 
     // Loop through each input and set the border color to blue
-    inputs.forEach(function (input) {
-        input.style.borderColor = '#666cff66';
-        input.style.setProperty('--placeholder-opacity', '0.0');
-    });
+    //inputs.forEach(function (input) {
+    //    input.style.borderColor = '#666cff66';
+    //    input.style.setProperty('--placeholder-opacity', '0.0');
+    //});
 });
