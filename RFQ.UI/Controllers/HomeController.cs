@@ -164,6 +164,33 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAllCompanyAndFranchise()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var alllist = await _usersService.GetAllCompanyAndFranchise();
+                if (alllist != null && alllist.Count() > 0)
+                {
+                    return Json(alllist);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(alllist);
+                }
+                else
+                {
+                    return View(alllist);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
         public IActionResult ResetPassword()
         {
             return View();

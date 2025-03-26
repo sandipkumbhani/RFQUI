@@ -36,5 +36,9 @@ namespace RFQ.UI.Application.Provider
         {
             throw new NotImplementedException();
         }
+        public async Task<IEnumerable<GetCompanyAndFranchiseModelDto>> GetAllCompanyAndFranchise()
+        {
+            return await _usersAdaptor.GetAllCompanyAndFranchise();
+        }
     }
 }

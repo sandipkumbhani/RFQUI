@@ -153,5 +153,34 @@ namespace RFQ.UI.Controllers
             }      
 
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllFranchise()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var franchiseList = await _corporateCompanyService.GetAllFranchise();
+                if (franchiseList != null && franchiseList.Count() > 0)
+                {
+                    return Json(franchiseList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(franchiseList);
+                }
+                else
+                {
+                    return View(franchiseList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

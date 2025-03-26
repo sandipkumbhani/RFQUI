@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Models;
+using static RFQ.UI.Domain.Model.GetCompanyAndFranchiseModel;
 using static RFQ.UI.Domain.Model.UserViewModel;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -115,6 +116,27 @@ namespace RFQ.UI.Infrastructure.Provider
         public Task<string> GetUsers(int userId)
         {
             throw new NotImplementedException();
+        }
+        public async Task<IEnumerable<GetCompanyAndFranchiseModelDto>> GetAllCompanyAndFranchise()
+        {
+            try
+            {
+                var _httpclient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync("https://localhost:7272/api/Company/GetAllCompany");
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var alllist = JsonConvert.DeserializeObject<List<GetCompanyAndFranchiseModelDto>>(Convert.ToString(responseModel.Data!));
+                    return alllist;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

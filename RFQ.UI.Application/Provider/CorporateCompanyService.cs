@@ -29,6 +29,11 @@ namespace RFQ.UI.Application.Provider
             return _corporateCompanyAdaptor.EditCorporateCompany(companyId, corporateCompanyViewModelDto);
         }
 
+        public Task<IEnumerable<FranchiseListDto>> GetAllFranchise()
+        {
+            return _corporateCompanyAdaptor.GetAllFranchise();
+        }
+
         public Task<IEnumerable<CorporateCompanyViewModelDto>> GetCorporateCompanyAll()
         {
             return _corporateCompanyAdaptor.GetCorporateCompanyAll();

@@ -63,12 +63,12 @@
 							<div class="mb-5">
 								<label class="form-label col-form-label required fw-semibold fs-6">Franchise/Corporate Name</label>
 								<select name="franchise" aria-label="Select a Franchise/Corporate"
-										data-control="select2" data-placeholder="Select a Franchise/Corporate..." id="txtcorporatename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+										data-control="select2" data-placeholder="Select a Franchise/Corporate..." id="Companyandfranchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
 									<option value="0">Select a Franchise/Corporate...</option>
-									<option value="1">Afghanistan</option>
-									<option value="2">Aland Islands</option>
-									<option value="3">Albania</option>
-									<option value="4">Algeria</option>
+									@* <option value="1">Afghanistan</option> *@
+									@* <option value="2">Aland Islands</option> *@
+									@* <option value="3">Albania</option> *@
+									@* <option value="4">Algeria</option> *@
 								</select>
 							</div>
 							<div class="mb-5">
@@ -107,8 +107,6 @@
 				</div>
 			</form>
 		</div>
-
-
 		<div class="my-4"></div>
 		<div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
 			<div class="card-header p-4">
@@ -157,12 +155,12 @@
 		  });
 
 		  //FOR SELECT CORPORATENAME
-		   $("#txtcorporatename").on("change",function()
+		   $("#Companyandfranchisename").on("change",function()
 		   {
 			   var corporatename =$(this).val();
 			   if(!isValidateSelect(corporatename))
 			   {
-				   $("#txtcorporatename").val('');
+				   $("#Companyandfranchisename").val('');
 				   toastr.warning("Please select a valid CorporateName", "Warning");
 				   return;
 			   }
@@ -314,7 +312,7 @@
 		   // var Username = document.getElementById("txtname").value;
 		   // console.log(Username);
 		   var username = $('#txtname').val();
-		   var corporatename = $('#txtcorporatename').val();
+		   var corporatename = $('#Companyandfranchisename').val();
 		   var mobileno = $('#txtmobileno').val();
 		   var loginname = $('#txtloginname').val();
 		   var location = $('#txtlocation').val();
@@ -389,6 +387,42 @@
 				 }
 			 });
 	}
+
+    var GetUrl = '@Url.Content("~/Home/GetAllCompanyAndFranchise")';
+	$.ajax({
+		url: GetUrl,
+		type: "GET",
+		contentType: "application/json",
+		success: function (response) {
+			// debugger;
+			console.log(response);
+			// var data = response.filter(x=>x.companyId == companyId );
+			// console.log(data);
+				if (response && response.length > 0) {
+					$.each(response, function (index, item) {
+						$('#Companyandfranchisename').append($('<option>', {
+							value: item.companyId,
+							text: item.companyName
+					}));
+				});
+				}
+				else {
+					$('#Companyandfranchisename').empty().append('<option value="">No Company and Franchise Available</option>');
+				}
+			 // const dropdown = document.getElementById("franchisename");
+				// response.forEach(category => {
+				// 	const option = document.createElement("option");
+				// 	option.value = category.internalMasterId;
+				// 	option.textContent = category.internalMasterName;
+				// 	dropdown.appendChild(option);
+				// });
+		},
+		error: function (xhr, status, error) {
+			console.error("Error:", error);
+			toastr.error("Failed to submit company and franchise ", "Error");
+		}
+	});
+
 	$(document).ready(function ()
 	{
 		$("#btnupdate").click(function (e)
