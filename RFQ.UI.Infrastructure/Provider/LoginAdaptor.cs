@@ -15,7 +15,7 @@ namespace RFQ.UI.Infrastructure.Provider
             try
             {
                 _httpClient = new HttpClient();
-                var baseUrl = "https://localhost:7272/api/Login";
+                var baseUrl = "https://localhost:7272/api/Login/Login";
 
                 var company = JsonConvert.SerializeObject(loginViewModel);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");

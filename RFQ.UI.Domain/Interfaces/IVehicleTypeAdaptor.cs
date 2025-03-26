@@ -1,4 +1,5 @@
-﻿using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
+﻿using RFQ.UI.Domain.RequestDto;
+using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
 namespace RFQ.UI.Domain.Interfaces
 {
@@ -11,6 +12,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> EditVehicleType(int vehicleTypeId, VehicleTypeViewModelDto vehicleTypeViewModelDto);
 
         Task<string> DeleteVehicleType(int vehicleTypeId);
-
+        
     }
 }

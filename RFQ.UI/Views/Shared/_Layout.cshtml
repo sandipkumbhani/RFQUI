@@ -4,25 +4,357 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RFQ.UI</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/RFQ.UI.styles.css" asp-append-version="true" />
+    <link rel="shortcut icon" href="/star-html-pro/assets/media/logos/favicon.ico" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+    <link href="~/css/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="~/css/common.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/color.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        @* <div class="container">
-            &copy; 2024 - RFQ.UI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div> *@
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <div class="d-flex flex-column flex-root app-root">
+        <div class="app-page  flex-column flex-column-fluid ">
+            <div class="app-header">
+                <div class="app-container container-fluid d-flex align-items-stretch flex-stack">
+                    <div class="d-flex align-items-center d-block d-lg-none ms-n3">
+                        <div class="btn btn-icon btn-color-gray-600 btn-active-color-primary show-drawer w-35px h-35px me-1">
+                            <i class="bi bi-list fs-2 fs-md-1"></i>
+                        </div>
+                        <a href="#">
+                            <img src="https://img.logoipsum.com/325.svg" class="h-30px" alt="" />
+                        </a>
+                    </div>
+                    <div class="app-navbar flex-lg-grow-1">
+                        <div class="app-navbar-item d-flex align-items-stretch flex-lg-grow-1 me-2 me-lg-0">
+                            <div class="header-search d-flex align-items-center w-lg-350px">
+                                <form class="d-none d-lg-block w-100 position-relative mb-5 mb-lg-0">
+                                    <i class="bi bi-search search-icon fs-2 text-gray-500 position-absolute top-50 translate-middle-y ms-5"></i>
+                                    <input type="text" class="search-input form-control form-control-solid ps-13" name="search" value="" placeholder="Search..." />
+                                </form>
+                                <div class="search-toggle-mobile d-flex d-lg-none align-items-center">
+                                    <a href="#" class="btn btn-icon btn-custom btn-color-gray-600 btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                        <i class="bi bi-search fs-2x"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end py-7 px-7">
+                                        <form class="w-100 position-relative mb-0 mb-lg-0">
+                                            <i class="bi bi-search search-icon fs-2 text-gray-500 position-absolute top-50 translate-middle-y ms-5"></i>
+                                            <input type="text" class="search-input form-control form-control-solid  ps-13" name="search" value="" placeholder="Search..." />
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="app-navbar-item ms-1 ms-md-2">
+                            <a href="#" class="btn btn-icon btn-custom btn-color-gray-600 btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                <i class="bi bi-bell fs-2x"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end p-0 border-0 w-350px w-lg-375px">
+                                <div class="d-flex flex-column bgi-no-repeat rounded-top" style="background-image:url('../../images/menu-header-bg.jpg')">
+                                    <h3 class="text-white fw-semibold px-9 mt-10 mb-6">
+                                        Notifications <span class="fs-8 opacity-75 ps-3">24 reports</span>
+                                    </h3>
+                                </div>
+                                <div class="scroll-sm">
+                                    <div class="header-dropdown-scroll2">
+                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 relative me-4">
+                                                    <img src="~/images/profile-4.png" alt="" />
+                                                </div>
+                                                <div>
+                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
+                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
+                                                </div>
+                                            </div>
+                                            <div class="shrink-0">
+                                                <span class="badge badge-light fs-8">23 Mins ago</span>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 relative me-4">
+                                                    <img src="~/images/profile-4.png" alt="" />
+                                                </div>
+                                                <div>
+                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
+                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
+                                                </div>
+                                            </div>
+                                            <div class="shrink-0">
+                                                <span class="badge badge-light fs-8">23 Mins ago</span>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 relative me-4">
+                                                    <img src="~/images/profile-4.png" alt="" />
+                                                </div>
+                                                <div>
+                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
+                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
+                                                </div>
+                                            </div>
+                                            <div class="shrink-0">
+                                                <span class="badge badge-light fs-8">23 Mins ago</span>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 relative me-4">
+                                                    <img src="~/images/profile-4.png" alt="" />
+                                                </div>
+                                                <div>
+                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
+                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
+                                                </div>
+                                            </div>
+                                            <div class="shrink-0">
+                                                <span class="badge badge-light fs-8">23 Mins ago</span>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 relative me-4">
+                                                    <img src="~/images/profile-4.png" alt="" />
+                                                </div>
+                                                <div>
+                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
+                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
+                                                </div>
+                                            </div>
+                                            <div class="shrink-0">
+                                                <span class="badge badge-light fs-8">23 Mins ago</span>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 relative me-4">
+                                                    <img src="~/images/profile-4.png" alt="" />
+                                                </div>
+                                                <div>
+                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
+                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
+                                                </div>
+                                            </div>
+                                            <div class="shrink-0">
+                                                <span class="badge badge-light fs-8">23 Mins ago</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="py-3 text-center border-top">
+                                    <a href="javascript:void(0)" class="btn btn-color-gray-600 btn-active-color-primary">See All Notification </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="app-navbar-item me-2 ms-1 ms-md-2">
+                            <a href="#" class="cursor-pointer symbol symbol-circle symbol-35px ms-3" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                <img src="~/images/300-3.jpg" alt="user">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end border-0  menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px">
+                                <div class="menu-item px-3">
+                                    <div class="menu-content d-flex align-items-center px-3">
+                                        <div class="symbol symbol-50px me-5">
+                                            <img alt="Logo" src="~/images/300-3.jpg">
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <div class="fw-bold d-flex align-items-center fs-5">
+                                                Johnson
+                                                <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
+                                            </div>
+                                            <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
+                                                johnson@kt.com
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="separator my-2"></div>
+                                <div class="menu-item px-5">
+                                    <a href="#" class="menu-link px-5">
+                                        My Profile
+                                    </a>
+                                </div>
+                                <div class="menu-item px-5">
+                                    <a href="#" class="menu-link px-5">
+                                        My Profile
+                                    </a>
+                                </div>
+                                <div class="menu-item px-5">
+                                    <a href="#" class="menu-link px-5">
+                                        My Profile
+                                    </a>
+                                </div>
+                                <div class="menu-item px-5">
+                                    <a href="@Url.Action("Login", "Login")" class="menu-link px-5">
+                                        Sign Out
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-wrapper flex-column flex-row-fluid">
+                <div id="app_sidebar" class="app-sidebar flex-column">
+                    <div class="app-sidebar-logo position-relative">
+                        <a href="#">
+                            <img alt="Logo" src="~/images/menu-header-Icon.png" class="h-35px app-sidebar-logo-default theme-light-show">
+                            <img alt="Logo" src="~/images/menu-header2-Icon.png" class="h-30px app-sidebar-logo-minimize">
+                        </a>
+                        <div class="app-sidebar-toggle btn btn-icon btn-sm btn-color-gray-600 btn-active-color-primary border border-gray-300 h-30px w-30px position-absolute rounded-circle top-50 start-100 translate-middle rotate">
+                            <i class="fa-solid fa-chevron-left rotate-180"></i>
+                        </div>
+                    </div>
+                    <div class="app-sidebar-menu overflow-hidden">
+                        <div class="app-sidebar-wrapper my-5">
+                            <div class="hover-scroll-overlay-y my-5 mx-4">
+                                <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold px-1" id="menuitem">
+                                    <div class="menu-item">
+                                        <a class="menu-link" href="vehicle.html">
+                                            <span class="menu-icon"><i class="bi bi-car-front fs-1"></i></span>
+                                            <span class="menu-title">Vehicle</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item menu-accordion">
+                                        <span class="menu-link">
+                                            <span class="menu-icon">
+                                                <i class="bi ti-building fs-1">
+                                                </i>
+                                            </span>
+                                            <span class="menu-title">
+                                                Master
+                                            </span>
+                                            <span class="menu-arrow">
+                                            </span>
+                                        </span>
+                                        <div class="menu-sub menu-sub-accordion">
+                                            <div class="menu-item">
+                                                <a href="../customer/customer" class="menu-link">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot">
+                                                        </span>
+                                                    </span>
+                                                    <span class="menu-title">
+                                                        Customer
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a href="../Vehicle/index" class="menu-link">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot">
+                                                        </span>
+                                                    </span>
+                                                    <span class="menu-title">
+                                                        Vehicle
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="left-sidebar-overlay"></div>
+                <div class="app-main flex-column flex-row-fluid">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Home/GetMenu',
+                type: "GET",
+                dataType: 'json',
+                success: function (response) {
+                    let menuList = response.menulistDtos;
+                    let sidebarHtml = '';
+                    let groupedItems = {};
+                    console.log(response);
+                    menuList.forEach(item => {
+                        if (!groupedItems[item.groupId]) {
+                            groupedItems[item.groupId] = {
+                                groupName: item.linkGroupName,
+                                linkGroupIcon : item.linkGroupIcon,
+                                items: []
+                            };
+                        }
+                        groupedItems[item.groupId].items.push(item);
+                    });
+
+
+
+                    for (let groupId in groupedItems) {
+                        let group = groupedItems[groupId];
+
+                    sidebarHtml += '<div class="menu-item menu-accordion">';
+                            sidebarHtml += '<span class="menu-link" data-bs-toggle="collapse" data-bs-target="#'+group.groupName+'">';
+                            sidebarHtml += '<span class="menu-icon"><i class="bi '+ group.linkGroupIcon + ' fs-1 "></i></span>';
+                            sidebarHtml += '<span class="menu-title">' + group.groupName + '</span>';
+                            sidebarHtml += '<span class="menu-arrow"></span>';
+                            sidebarHtml += '</span>';
+                            sidebarHtml += '<div class="menu-sub-accordion">';
+
+                            group.items.forEach(item => {
+                                sidebarHtml += '<div id="'+group.groupName+'"  class="menu-item collapse show">';
+                                sidebarHtml += '<a href="' + item.linkUrl + '" class="menu-link">';
+                                sidebarHtml += '<span class="menu-bullet"><i class="bi '+ item.linkIcon + ' fs-1 "></i></span>';
+                                sidebarHtml += '<span class="menu-title">' + item.linkName + '</span>';
+                                sidebarHtml += '</a>';
+                                sidebarHtml += '</div>';
+                            });
+                            sidebarHtml += '</div>';
+                            sidebarHtml += '</div>';
+
+                    }
+
+                    $('#menuitem').html(sidebarHtml);
+                },
+                error: function () {
+                    console.error("Failed to load menu.");
+                }
+            });
+        });
+
+        function setToken(token) {
+            fetch('https://localhost:7295/api/global/set-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(token)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error("Failed to set token");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/jquery.repeater.min.js"></script>
+    <script src="~/js/script.js"></script>
+    <script src="~/js/common.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 </body>
 </html>

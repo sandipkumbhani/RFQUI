@@ -15,8 +15,8 @@ namespace RFQ.UI.Models
     }
     public class LoginDto
     {
-        public string EmailId { get; set; }
-        public string Password { get; set; }
+        public string emailId { get; set; }
+        public string password { get; set; }
     }
 
     public class CommanResponseDto

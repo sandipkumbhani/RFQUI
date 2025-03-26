@@ -1,0 +1,609 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Franchise";
+}
+<div class="app-toolbar  pt-3 px-lg-3">
+    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
+        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+            <div class="page-title d-flex align-items-center gap-1 me-3">
+                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
+                    Dashboard
+                </h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
+                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
+                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
+                    <li class="breadcrumb-item text-primary">
+                        Franchise
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="app-content  px-lg-3">
+    <div class="app-container  container-fluid">
+        <div class="container my-4">
+            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
+                </svg>
+                Back
+            </button>
+        </div>
+        <div id="addFranchiseDiv" class="card">
+            <div class="card-header border-0 cursor-pointer">
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">Franchise</h3>
+                </div>
+            </div>
+            <form id="franchiseForm" class="form" enctype="multipart/form-data" method="post">
+                <input type="number" hidden id="txtCompanyId"/>
+                <div class="card-body border-top p-9">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Franchise Name </label>
+                                <input type="text" class="form-control" placeholder="Franchise Name" id="txtFranchiseName" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Franchise Code</label>
+                                <input type="text" class="form-control" placeholder="Franchise Code" id="txtFranchiseCode" />
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="fv-row upload-imgs">
+                                <div class="dropzone" id="dropzone">
+
+                                    <div class="dz-message needsclick">
+                                        <i class="bi bi-cloud-upload fs-3x text-primary"></i>
+
+                                        <div class="ms-4">
+                                            <h3 class="fs-5 fw-bold text-gray-900 mb-1">Upload logo</h3>
+                                        </div>
+
+                                    </div>
+                                    <div class="text-danger" id="uploadMessage"></div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Address </label>
+                                <input type="text" class="form-control" placeholder="Address" id="txtAddress" />
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">City</label>
+
+                                <select id="txtCity" name="franchise" aria-label="Select a Franchise/Corporate"
+                                        data-control="select2" data-placeholder="Select a City." class="form-select select2 form-select-solid form-select-lg fw-semibold">
+                                    <option value="">Select a City</option>
+                                    <option value="0">Afghanistan</option>
+                                    <option value="1">Aland Islands</option>
+                                    <option value="2">Albania</option>
+                                    <option value="3">Algeria</option>
+                                </select>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
+                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" />
+                            </div>
+
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number</label>
+                                <input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
+                                <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" />
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
+                                <input type="text" class="form-control" placeholder="Pincode" id="txtPinCode" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
+                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
+                                <input type="email" class="form-control" placeholder="name@example.com" id="emailId" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
+                                <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" placeholder="GST Number" id="txtGSTNumber" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body border-top p-9">
+                    <div class="card-title m-0 pb-10">
+                        <h3 class="fw-bold m-0">Attachment Details</h3>
+                    </div>
+
+                    <div id="kt_docs_repeater_basic">
+                        <div class="form-group">
+                            <div data-repeater-list="kt_docs_repeater_basic">
+                                <div data-repeater-item>
+                                    <div class="form-group row">
+                                        <div class="col-md-2">
+                                            <label class="form-label col-form-label fw-semibold fs-6">File Name</label>
+                                            <input type="email" class="form-control mb-2 mb-md-0" placeholder="File Name" />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label col-form-label fw-semibold fs-6">Attachment Type  </label>
+                                            <select name="franchise" aria-label="Select a Attachment Type"
+                                                    data-control="select2" data-placeholder="Select a Attachment Type" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+                                                <option value="">Select a Attachment Type</option>
+                                                <option value="0">Afghanistan</option>
+                                                <option value="1">Aland Islands</option>
+                                                <option value="2">Albania</option>
+                                                <option value="3">Algeria</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label col-form-label fw-semibold fs-6">Choose File </label>
+                                            <label class="input-group mb-3">
+                                                <input class="visually-hidden" type="file">
+                                                <span class="form-control">Choose File</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label col-form-label fw-semibold fs-6">Upload  </label>
+                                            <label class="input-group mb-3">
+                                                <button type="button" class="btn btn-primary">Upload</button>
+                                                @* <input class="visually-hidden" type="file"> *@
+                                                @* <span class="form-control">Upload</span> *@
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger mt-8 mt-md-8">
+                                                <i class="bi bi-trash"></i>
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mt-5">
+                            <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+                                <i class="fa-solid fa-plus"></i>
+                                Add
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer d-flex justify-content-srtat py-6 px-9">
+                    <button id="btnSaveFranchise" type="button" class="btn btn-primary me-2">Save</button>
+                    <button id="btnSavenewFranchise" type="button" class="btn btn-primary me-2">Save & New</button>
+                    <button type="button" id="btnupdate" class="btn btn-primary me-2" style="display:none;">Update</button>
+                    <button type="button" class="btn btn-primary" id="viewButton">View</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
+            <div class="card-header p-4">
+                <h4 class="fw-bold m-0 text-lg">Franchise List</h4>
+            </div>
+            <div class="card-body">
+                <table id="tableFranchise"
+                       class="table table-striped align-middle fs-6 mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>CompanyName</th>
+                            <th>AddressLine</th>
+                            <th>CityId</th>
+                            <th>PinCode</th>
+                            <th>ContactPerson</th>
+                            <th>Contact No</th>
+                            <th>Mobile No</th>
+                            <th>WhatsApp No</th>
+                            <th>Email</th>
+                            <th>PAN No</th>
+                            <th>GST No</th>
+                            <th>Logo</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic rows go here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="~/js/common.js"></script>
+<script>
+    $(document).ready(function(){
+
+        
+            // function dropzone(){
+        Dropzone.autoDiscover = false;
+        var uploadUrl = "@Url.Content("~/Franchise/Upload")";
+
+        if (Dropzone.instances.length > 0) {
+            Dropzone.instances.forEach(dz => dz.destroy());
+        }
+
+        const myDropzone = new Dropzone("#dropzone",
+        {
+            url : uploadUrl,
+            paramName : "file",
+            maxFiles : 1,
+            parallelUploads : 1, 
+            maxFilesize : 1,
+            addRemoveLinks : true,
+            acceptedFiles : "image/*",
+            success : function(file,response){
+                console.log("uploaded");
+                console.log(file.FileName);
+                console.log(response);
+            },
+            error : function(file,response){
+                $("#uploadMessage").html(response);
+                toastr.warning("Upload Only one logo", "Warning");
+                setTimeout(function() {
+                    document.getElementById('uploadMessage').style.display = 'none';
+                }, 5000);
+            }
+        })
+        // }
+
+        $("#viewButton").on("click",function(){
+            fetchFranchise();
+            $("#addFranchiseDiv").css('display','none');
+            $("#backButton").css('display','block');
+        });
+
+        function validatePanNumber(number){
+            return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(number);
+        }
+        function validateGstNumber(number){
+            return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(number);
+        }
+
+        $("#btnSaveFranchise").click(function(event){
+            event.preventDefault();
+            saveandsavenewFranchise();
+        });
+        $("#btnSavenewFranchise").click(function(event){
+            saveandsavenewFranchise();
+            $('#franchiseForm')[0].reset();
+        });
+        $('#backButton').click(function () {
+            $("#addFranchiseDiv").css('display', 'Block')
+            $("#backButton").css('display', 'none');
+             $('#tableDiv').hide();
+        });
+
+        $("#txtFranchiseName").on("change",function(){
+            if(!isAlphaNumeric($(this).val())){
+                toastr.warning("Please enter a valid Franchise  Name", "Warning");
+                return;
+            }
+        });
+        $("#txtFranchiseCode").on("change",function(){
+            if(!isAlphaNumeric($(this).val())){
+                toastr.warning("Please enter a valid Franchise  Code", "Warning");
+                return;
+            }
+        });
+        $("#txtAddress").on("change",function(){
+            if(IsNullOrEmpty($(this).val())){
+                toastr.warning("Please enter a valid Franchise  Address", "Warning");
+                return;
+            }
+        });
+        $("#txtCity").on("change",function(){
+            if(!isValidateSelect($(this).val(),)){
+                toastr.warning("Please enter a valid Franchise  City", "Warning");
+                return;
+            }
+        });
+        $("#txtPinCode").on("change",function(){
+            if(!isNumeric($(this).val())){
+                toastr.warning("Please enter a valid Pin Code", "Warning");
+                return;
+            }
+        })
+        $("#txtContactPerson").on("change",function(){
+            if(!isAlphabets($(this).val())){
+                toastr.warning("Only letters allowed", "Warning");
+                return;
+            }
+        })
+        $("#txtWhatsAppNumber").on("change",function(){
+            if(!isMobile($(this).val())){
+                toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+                return;
+            }
+        })
+        $("#txtMobileNumber").on("change",function(){
+            if(!isMobile($(this).val())){
+                toastr.warning("Please enter a valid Mobile Number", "Warning");
+                return;
+            }
+        })
+        $("#emailId").on("change",function(){
+            if(!isValidateEmail($(this).val())){
+                toastr.warning("Please enter a valid Email", "Warning");
+                return;
+            }
+        })
+        $("#txtPanNumber").on("change",function(){
+            if(!validatePanNumber($(this).val())){
+                toastr.warning("Please enter a valid PAN Number", "Warning");
+                return;
+            }
+        })
+        $("#txtGSTNumber").on("change",function(){
+            if(!validateGstNumber($(this).val())){
+                toastr.warning("Please enter a valid GST Number", "Warning");
+                return;
+            }
+        })
+
+        function saveandsavenewFranchise(){
+
+            var franchiseName = $("#txtFranchiseName").val();
+            var franchiseCode = $("#txtFranchiseCode").val();
+            var franchiseAddress = $("#txtAddress").val();
+            var franchiseCity = $("#txtCity").val();
+            var franchisePincode = $("#txtPinCode").val();
+            var contactPerson = $("#txtContactPerson").val();
+            var whatsappNumber = $("#txtWhatsAppNumber").val();
+            var mobileNumber = $("#txtMobileNumber").val();
+            var emailId = $("#emailId").val();
+            var panNumber = $("#txtPanNumber").val();
+            var gstNumber = $("#txtGSTNumber").val();
+            var franchiseLogo = $("#dropzonejs_1").val();
+
+            if (IsNullOrEmpty(franchiseName)) {
+                toastr.warning("Please enter a valid Franchise Name", "Warning");
+                return;
+            }
+            if (IsNullOrEmpty(franchiseCode)) {
+                toastr.warning("Please enter a valid Franchise Code", "Warning");
+                return;
+            }
+            if (IsNullOrEmpty(franchiseAddress)) {
+                toastr.warning("Please enter a valid Franchise Address", "Warning");
+                return;
+            }
+            if (!isValidateSelect(franchiseCity)) {
+                toastr.warning("Please select a valid Franchise City", "Warning");
+                return;
+            }
+            if (IsNullOrEmpty(franchisePincode)) {
+                toastr.warning("Please enter a valid Franchise Pincode", "Warning");
+                return;
+            }
+            if (IsNullOrEmpty(contactPerson)) {
+                toastr.warning("Please enter a valid Contact Person", "Warning");
+                return;
+            }
+            if (IsNullOrEmpty(emailId)) {
+                toastr.warning("Please enter a valid Email Id", "Warning");
+                return;
+            }
+            if (IsNullOrEmpty(panNumber)) {
+                toastr.warning("Please enter a valid PAN Number", "Warning");
+                return;
+            }
+            if (IsNullOrEmpty(gstNumber)) {
+                toastr.warning("Please enter a valid GST Number", "Warning");
+                return;
+            }
+            if(IsNullOrEmpty(mobileNumber)){
+                toastr.warning("Please enter a valid Mobile Number", "Warning");
+                return;
+            }
+            if(IsNullOrEmpty(whatsappNumber)){
+                toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+                return;
+            }
+
+            var saveUrl = '@Url.Content("~/Franchise/FranchiseSave")'
+            var formData = {
+                CompanyName: franchiseName,
+                AddressLine: franchiseAddress,
+                CityId: franchiseCity,
+                PinCode: franchisePincode,
+                ContactPerson: contactPerson,
+                ContactNo : mobileNumber,
+                MobNo: mobileNumber,
+                WhatsAppNo: whatsappNumber,
+                Email: emailId,
+                PANNo: panNumber,
+                GSTNo: gstNumber,
+            }
+            console.log(formData);
+            $.ajax({
+                url : saveUrl,
+                type : 'POST',
+                contentType : 'application/json',
+                data : JSON.stringify(formData),
+                success : function(response){
+                    console.log(response);
+                    toastr.success("Franchise submitted successfully!");
+                },
+                error : function(xhr,status,error){
+                    console.log("Error :",error);
+                    toastr.error("Failed to submitFranchise", "Error");
+                }
+            });
+        };
+  
+        function fetchFranchise(){
+            $("#tableDiv").show();
+            var fetchFranchiseUrl = '@Url.Content("~/Franchise/GetFranchiseAll")';
+            $.ajax({
+                url : fetchFranchiseUrl,
+                type : 'GET',
+                dataType : 'json',
+                success : function(response){
+                    let franchiseList = response.franchiseViewModelDtos.filter(x=>x.companyTypeId == 2);
+                    franchiseViewModelDto = response.franchiseViewModelDtos;
+                    console.log(franchiseList);
+                    console.log(franchiseViewModelDto);
+                    if ($.fn.DataTable.isDataTable('#tableFranchise')) {
+                        $('#tableFranchise').DataTable().clear().destroy();
+                    }
+                    $('#tableFranchise').DataTable({
+                        "processing": true,
+                        "serverSide": false,
+                        "paging": true,
+                        "pageLength": 10,
+                        "lengthChange": true,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": true,
+                        "responsive": true,
+                        "info": true,
+                        "autoWidth": true,
+                        "responsive": true,
+                        "scrollX": true,
+                        "data": franchiseList,
+                        "columns": [
+                            { "data": "companyName" },
+                            { "data": "addressLine" },
+                            { "data": "cityId" },
+                            { "data": "pinCode" },
+                            { "data": "contactPerson" },
+                            { "data": "contactNo" },
+                            { "data": "mobNo" },
+                            { "data": "whatsAppNo" },
+                            { "data": "email" },
+                            { "data": "panNo" },
+                            { "data": "gstNo" },
+                            { "data": "logoImage" },
+                            { "data": "companyId",
+                                "render":function (data, type, row){
+                                    return `<div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="EditFranchise(${data})">
+                                                    <i class="ti ti-edit"></i> Edit
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="deleteFranchise(${data})">
+                                                    <i class="ti ti-trash"></i> Delete
+                                                </button>
+                                            </div>`;
+                                }
+                            },
+                        ],
+                        "columnDefs": [
+                            {
+                                "targets": "_all",
+                                "className": "text-center"
+                            }
+                        ]
+                    })
+                },
+                error : function(xhr,status,error){
+                    console.log("Error",error);
+                    toastr.error("Failed to fetch data!", "Error");
+                }
+            });
+        };
+    });
+        function EditFranchise(companyId){
+            debugger;
+            var data = franchiseViewModelDto.filter(x=>x.companyId == companyId);
+            console.log(data);
+            var formData = data[0];
+            $('#tableDiv').hide();
+            $("#backButton").css('display', 'none');
+            $("#addFranchiseDiv").css('display', 'Block');
+            $("#btnSaveFranchise").hide();
+            $("#btnupdate").show();
+            $("#btnSavenewFranchise").prop("disabled", true);
+            $("#txtCompanyId").val(formData.companyId);
+            $("#txtFranchiseName").val(formData.companyName);
+            $("#txtFranchiseCode").val(formData.companyTypeId);
+            $("#txtAddress").val(formData.addressLine);
+            $("#txtCity").val(formData.cityId);
+            $("#txtPinCode").val(formData.pinCode);
+            $("#txtContactPerson").val(formData.contactPerson);
+            $("#txtWhatsAppNumber").val(formData.whatsAppNo);
+            $("#txtMobileNumber").val(formData.mobNo);
+            $("#emailId").val(formData.email);
+            $("#txtPanNumber").val(formData.panNo);
+            $("#txtGSTNumber").val(formData.gstNo);
+        };
+
+        $("#btnupdate").click(function (e) {
+            e.preventDefault();
+            var formData = {
+                CompanyId : $("#txtCompanyId").val(),
+                CompanyName: $("#txtFranchiseName").val(),
+                AddressLine: $("#txtAddress").val(),
+                CityId: $("#txtCity").val(),
+                PinCode: $("#txtPinCode").val(),
+                ContactPerson: $("#txtContactPerson").val(),
+                ContactNo : $("#txtMobileNumber").val(),
+                MobNo: $("#txtMobileNumber").val(),
+                WhatsAppNo: $("#txtWhatsAppNumber").val(),
+                Email: $("#emailId").val(),
+                PANNo: $("#txtPanNumber").val(),
+                GSTNo: $("#txtGSTNumber").val(),
+            }
+            var editFranchiseUrl = '@Url.Content("~/Franchise/EditFranchise")';
+            $.ajax({
+                type: "PUT",
+                url: editFranchiseUrl,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(formData),
+                dataType: "json",
+                success: function (result) {
+                    if (result.result == "success") {
+                        $("#dataDiv").html("Profile updated successfully!");
+                        $("#addFranchiseDiv").css('display', 'none')
+                        fetchFranchise();
+                    } 
+                    else {
+                        $("#dataDiv").html("Failed to update profile.");
+                    }
+                    $("#btnSaveFranchise").show();
+                    $("#btnupdate").hide();
+                    $("#btnSavenewFranchise").prop("disabled", false);
+                    $("#viewprofile").click();
+                },
+                error: function (xhr, status, error) {
+                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                }
+            });
+        });
+
+        function deleteFranchise(companyId){
+            var deleteFranchiseUrl = '@Url.Content("~/Franchise/DeleteFranchise/")' + companyId
+            $.ajax({
+                url: deleteFranchiseUrl,
+                type: "DELETE",
+                dataType: "json",
+                data: JSON.stringify(companyId),
+                success: function (response) {
+                    console.log("Deleted Succesfully")
+                    fetchFranchise();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                    toastr.error("Fail	ed to fetch data!", "Error");
+                }
+            });
+        };
+    
+</script>

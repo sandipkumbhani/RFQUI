@@ -21,3 +21,7 @@
 /RFQ.UI.Domain/obj
 /RFQ.UI.Infrastructure/bin/Debug/net8.0
 /RFQ.UI.Infrastructure/obj
+/RFQ.UI/bin/Release/net8.0
+/RFQ.UI.Application/bin/Release/net8.0
+/RFQ.UI.Domain/bin/Release/net8.0
+/RFQ.UI.Infrastructure/bin/Release/net8.0

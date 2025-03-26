@@ -59,7 +59,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var Profilelist = JsonConvert.DeserializeObject<List<VehicleTypeViewModelDto>>(Convert.ToString(responseModel.Data!));
                 return Profilelist;
             }
-            return null;
+                return null;
         }
 
         public async Task<string> EditVehicleType(int vehicleTypeId, VehicleTypeViewModelDto vehicleTypeViewModelDto)

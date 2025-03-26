@@ -8,11 +8,12 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\" />
+    <Folder Include="Views\Profile\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\css\icons\tabler-icons\fonts\tabler-icons.svg" />
-    <None Include="wwwroot\css\icons\tabler-icons\fonts\tabler-icons.woff2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.2" />
   </ItemGroup>
 
   <ItemGroup>
