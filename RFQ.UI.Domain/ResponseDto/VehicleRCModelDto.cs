@@ -4,10 +4,10 @@
     {
         public VehicleRCModel VehicleRCModel { get; set; }
         public int MessageId { get; set; }
-        public string MessageDescription { get; set; }
+        public object MessageDescription { get; set; }
         public string Mode { get; set; }
-        public string ServiceProvider { get; set; }
-        public string Value { get; set; }
+        public object ServiceProvider { get; set; }
+        public object Value { get; set; }
     }
     public class VehicleRCModel
     {
@@ -22,7 +22,7 @@
         public string RegisteredAt { get; set; }
         public string VehicleRCStatus { get; set; }
         public string NormsType { get; set; }
-        public bool NonUseStatus { get; set; }
+        public string NonUseStatus { get; set; }
         public string PucNumber { get; set; }
         public DateTime PucExpiryDate { get; set; }
         public string InsurancePolicyNumber { get; set; }
@@ -38,7 +38,7 @@
         public string VehicleBodyType { get; set; }
         public string VehicleFuelType { get; set; }
         public string VehicleColor { get; set; }
-        public decimal VehicleCubicCapacity { get; set; }
+        public int VehicleCubicCapacity { get; set; }
         public int VehicleGrossWeight { get; set; }
         public int VehicleNumberOfCylinders { get; set; }
         public int VehicleSeatingCapacity { get; set; }
@@ -49,10 +49,10 @@
         public string TaxEndDate { get; set; }
         public string Financier { get; set; }
         public string PermitNumber { get; set; }
-        public DateTime? PermitExpiryDate { get; set; }
+        public string PermitExpiryDate { get; set; }
         public string NationalPermitNumber { get; set; }
-        public DateTime? NationalPermitExpiryDate { get; set; }
-        public string NationalPermitIssuedBy { get; set; }
+        public string NationalPermitExpiryDate { get; set; }
+        public string NationalPermitIssuedby { get; set; }
         public DateTime LogDateTime { get; set; }
     }
 

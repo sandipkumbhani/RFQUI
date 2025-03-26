@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 using System.Net.Http;
@@ -43,13 +44,13 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<VehicleRCModelDto> GetVehicleKycDetails()
+        public async Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto requestDto)
         {
             try
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = $"{_config["ApiSettings:VehicleRCApiUrl"]}VehicleNo=MH47A9009&UserId=1&Username=abc&serviceprovider=ulip";
+                var url = $"{_config["ApiSettings:VehicleRCApiUrl"]}VehicleNo={requestDto.VehicleNo}&UserId={requestDto.UserId}&Username={requestDto.Username}&serviceprovider={requestDto.ServiceProvider}";
 
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
