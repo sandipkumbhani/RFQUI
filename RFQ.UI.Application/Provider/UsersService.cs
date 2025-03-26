@@ -7,6 +7,7 @@ using RFQ.UI.Application.Inteface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Infrastructure.Provider;
 using static RFQ.UI.Domain.Model.DashboardViewModel;
+using static RFQ.UI.Domain.Model.GetCompanyAndFranchiseModel;
 using static RFQ.UI.Domain.Model.UserViewModel;
 
 namespace RFQ.UI.Application.Provider
@@ -42,6 +43,10 @@ namespace RFQ.UI.Application.Provider
         public Task<string> GetUsers(int userId)
         {
             throw new NotImplementedException();
+        }
+        public async Task<IEnumerable<GetCompanyAndFranchiseModelDto>> GetAllCompanyAndFranchise()
+        {
+            return await _usersAdaptor.GetAllCompanyAndFranchise();
         }
     }
 }
