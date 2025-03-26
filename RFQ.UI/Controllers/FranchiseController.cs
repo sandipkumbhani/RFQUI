@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Inteface;
@@ -6,9 +7,9 @@ using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Data.SqlTypes;
 using System.IdentityModel.Tokens.Jwt;
-using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 using static RFQ.UI.Domain.Model.FranchiseViewModel;
 
 namespace RFQ.UI.Controllers
@@ -29,14 +30,58 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-        public string Upload(IFormFile file)
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file)
         {
-            string uniqueFileName = "";
-            if (file != null)
+            try
             {
-                uniqueFileName = file.FileName + "_" + Guid.NewGuid().ToString();
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+
+                string uniqueFileName = "";
+                if (file != null)
+                {
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "franchiselogo_" + companyId);
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+                    uniqueFileName = DateTime.Now.ToString("MM/dd/yyyy") + "_" + file.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
+                return Json(new { fileName = uniqueFileName });
             }
-            return uniqueFileName;
+            catch (Exception ex) {
+                return Json(new {result="Error",message=ex.Message});
+            }
+        }
+
+        [HttpPost]
+        public JsonResult DeleteUpload(String fileName)
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "franchiselogo_" + companyId , fileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "File not found" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         [HttpPost]
@@ -65,7 +110,7 @@ namespace RFQ.UI.Controllers
                         Email = franchiseViewModelDto.Email,
                         PANNo = franchiseViewModelDto.PANNo,
                         GSTNo = franchiseViewModelDto.GSTNo,
-                        LogoImage = "logo",
+                        LogoImage = franchiseViewModelDto.LogoImage,
                         ParentCompanyId = Convert.ToInt32(companyId),
                         LinkId = 1,
                         CreatedBy = Convert.ToInt32(companyId),
@@ -137,7 +182,7 @@ namespace RFQ.UI.Controllers
                     Email = franchiseViewModelDto.Email,
                     PANNo = franchiseViewModelDto.PANNo,
                     GSTNo = franchiseViewModelDto.GSTNo,
-                    LogoImage = "logo",
+                    LogoImage = franchiseViewModelDto.LogoImage,
                     ParentCompanyId = Convert.ToInt32(parentId),
                     LinkId = 1,
                     CreatedBy = Convert.ToInt32(parentId),

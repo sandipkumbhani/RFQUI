@@ -66,7 +66,6 @@
                                         </div>
 
                                     </div>
-                                    <div class="text-danger" id="uploadMessage"></div>
                                 </div>
                                 
                             </div>
@@ -81,7 +80,7 @@
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">City</label>
 
-                                <select id="txtCity" name="franchise" aria-label="Select a Franchise/Corporate"
+                                <select id="ddlCity" name="franchise" aria-label="Select a Franchise/Corporate"
                                         data-control="select2" data-placeholder="Select a City." class="form-select select2 form-select-solid form-select-lg fw-semibold">
                                     <option value="">Select a City</option>
                                     <option value="0">Afghanistan</option>
@@ -115,7 +114,7 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-                                <input type="email" class="form-control" placeholder="name@example.com" id="emailId" />
+                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailId" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
@@ -160,8 +159,6 @@
                                             <label class="form-label col-form-label fw-semibold fs-6">Upload  </label>
                                             <label class="input-group mb-3">
                                                 <button type="button" class="btn btn-primary">Upload</button>
-                                                @* <input class="visually-hidden" type="file"> *@
-                                                @* <span class="form-control">Upload</span> *@
                                             </label>
                                         </div>
                                         <div class="col-md-4">
@@ -201,6 +198,7 @@
                        class="table table-striped align-middle fs-6 mb-0">
                     <thead class="bg-light">
                         <tr>
+                            <th>Logo</th>
                             <th>CompanyName</th>
                             <th>AddressLine</th>
                             <th>CityId</th>
@@ -212,7 +210,6 @@
                             <th>Email</th>
                             <th>PAN No</th>
                             <th>GST No</th>
-                            <th>Logo</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -230,10 +227,9 @@
 <script>
     $(document).ready(function(){
 
-        
-            // function dropzone(){
         Dropzone.autoDiscover = false;
         var uploadUrl = "@Url.Content("~/Franchise/Upload")";
+        var deleteUploadUrl = "@Url.Content("~/Franchise/DeleteUpload")";
 
         if (Dropzone.instances.length > 0) {
             Dropzone.instances.forEach(dz => dz.destroy());
@@ -249,19 +245,44 @@
             addRemoveLinks : true,
             acceptedFiles : "image/*",
             success : function(file,response){
-                console.log("uploaded");
-                console.log(file.FileName);
-                console.log(response);
+                const dropzone = document.getElementById('dropzone');
+                if(dropzone.children[1].nodeName === "IMG"){
+                    dropzone.removeChild(dropzone.children[1]);
+                }
+                $("#dropzone").val(response.fileName);
             },
-            error : function(file,response){
-                $("#uploadMessage").html(response);
-                toastr.warning("Upload Only one logo", "Warning");
-                setTimeout(function() {
-                    document.getElementById('uploadMessage').style.display = 'none';
-                }, 5000);
+            removedfile : function(file){
+                var fileName = $("#dropzone").val();
+                if (fileName) {
+                    $.ajax({
+                        url: deleteUploadUrl,
+                        type: "POST",
+                        data: { fileName: fileName },
+                        success: function (response) {
+                            $("#dropzone").val(""); 
+                        },
+                        error: function (error) {
+                            toastr.error("Error removing file.", "Error");
+                        }
+                    });
+                } 
+                var _ref;
+                return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+            },
+            error : (file,response) => {
+                toastr.warning(response, "Warning");
+                this.removeFile(file);
+            },
+            accept: function(file, done) {
+                if (this.files.length > 1) {
+                    this.removeFile(file); 
+                    toastr.warning("Only one file can be uploaded.", "Warning");
+                } else {
+                    done();
+                }
             }
-        })
-        // }
+        });
+        
 
         $("#viewButton").on("click",function(){
             fetchFranchise();
@@ -308,14 +329,14 @@
                 return;
             }
         });
-        $("#txtCity").on("change",function(){
+        $("#ddlCity").on("change",function(){
             if(!isValidateSelect($(this).val(),)){
                 toastr.warning("Please enter a valid Franchise  City", "Warning");
                 return;
             }
         });
         $("#txtPinCode").on("change",function(){
-            if(!isNumeric($(this).val())){
+            if(!/^\d{6}$/.test(($(this).val()))){
                 toastr.warning("Please enter a valid Pin Code", "Warning");
                 return;
             }
@@ -338,7 +359,7 @@
                 return;
             }
         })
-        $("#emailId").on("change",function(){
+        $("#txtEmailId").on("change",function(){
             if(!isValidateEmail($(this).val())){
                 toastr.warning("Please enter a valid Email", "Warning");
                 return;
@@ -358,19 +379,19 @@
         })
 
         function saveandsavenewFranchise(){
-
+            
             var franchiseName = $("#txtFranchiseName").val();
             var franchiseCode = $("#txtFranchiseCode").val();
             var franchiseAddress = $("#txtAddress").val();
-            var franchiseCity = $("#txtCity").val();
+            var franchiseCity = $("#ddlCity").val();
             var franchisePincode = $("#txtPinCode").val();
             var contactPerson = $("#txtContactPerson").val();
             var whatsappNumber = $("#txtWhatsAppNumber").val();
             var mobileNumber = $("#txtMobileNumber").val();
-            var emailId = $("#emailId").val();
+            var emailId = $("#txtEmailId").val();
             var panNumber = $("#txtPanNumber").val();
             var gstNumber = $("#txtGSTNumber").val();
-            var franchiseLogo = $("#dropzonejs_1").val();
+            var franchiseLogo = $("#dropzone").val();
 
             if (IsNullOrEmpty(franchiseName)) {
                 toastr.warning("Please enter a valid Franchise Name", "Warning");
@@ -430,19 +451,17 @@
                 Email: emailId,
                 PANNo: panNumber,
                 GSTNo: gstNumber,
+                LogoImage : franchiseLogo
             }
-            console.log(formData);
             $.ajax({
                 url : saveUrl,
                 type : 'POST',
                 contentType : 'application/json',
                 data : JSON.stringify(formData),
                 success : function(response){
-                    console.log(response);
                     toastr.success("Franchise submitted successfully!");
                 },
                 error : function(xhr,status,error){
-                    console.log("Error :",error);
                     toastr.error("Failed to submitFranchise", "Error");
                 }
             });
@@ -458,8 +477,6 @@
                 success : function(response){
                     let franchiseList = response.franchiseViewModelDtos.filter(x=>x.companyTypeId == 2);
                     franchiseViewModelDto = response.franchiseViewModelDtos;
-                    console.log(franchiseList);
-                    console.log(franchiseViewModelDto);
                     if ($.fn.DataTable.isDataTable('#tableFranchise')) {
                         $('#tableFranchise').DataTable().clear().destroy();
                     }
@@ -480,6 +497,13 @@
                         "scrollX": true,
                         "data": franchiseList,
                         "columns": [
+                            { "data": function(row){
+                                    return {LogoImage : row.logoImage,ParentComapanyId : row.parentCompanyId};
+                                },
+                                "render" : function(data){
+                                    return `<img src="../../franchiselogo_${data.ParentComapanyId}/${data.LogoImage}" style="height:40px;width:60px" alt="Logo"/>`
+                                }
+                            },
                             { "data": "companyName" },
                             { "data": "addressLine" },
                             { "data": "cityId" },
@@ -491,7 +515,6 @@
                             { "data": "email" },
                             { "data": "panNo" },
                             { "data": "gstNo" },
-                            { "data": "logoImage" },
                             { "data": "companyId",
                                 "render":function (data, type, row){
                                     return `<div class="btn-group" role="group">
@@ -514,16 +537,13 @@
                     })
                 },
                 error : function(xhr,status,error){
-                    console.log("Error",error);
                     toastr.error("Failed to fetch data!", "Error");
                 }
             });
         };
     });
         function EditFranchise(companyId){
-            debugger;
             var data = franchiseViewModelDto.filter(x=>x.companyId == companyId);
-            console.log(data);
             var formData = data[0];
             $('#tableDiv').hide();
             $("#backButton").css('display', 'none');
@@ -535,14 +555,18 @@
             $("#txtFranchiseName").val(formData.companyName);
             $("#txtFranchiseCode").val(formData.companyTypeId);
             $("#txtAddress").val(formData.addressLine);
-            $("#txtCity").val(formData.cityId);
+            $("#ddlCity").val(formData.cityId);
             $("#txtPinCode").val(formData.pinCode);
             $("#txtContactPerson").val(formData.contactPerson);
             $("#txtWhatsAppNumber").val(formData.whatsAppNo);
             $("#txtMobileNumber").val(formData.mobNo);
-            $("#emailId").val(formData.email);
+            $("#txtEmailId").val(formData.email);
             $("#txtPanNumber").val(formData.panNo);
             $("#txtGSTNumber").val(formData.gstNo);
+            var parentCompanyId = formData.parentCompanyId;
+            var logoImage = formData.logoImage;
+            $("#dropzone").append('<img src="../../franchiselogo_'+parentCompanyId+'/'+logoImage+'" style="height:200px;width:200px;">');
+            $(".dz-message").hide();
         };
 
         $("#btnupdate").click(function (e) {
@@ -551,15 +575,16 @@
                 CompanyId : $("#txtCompanyId").val(),
                 CompanyName: $("#txtFranchiseName").val(),
                 AddressLine: $("#txtAddress").val(),
-                CityId: $("#txtCity").val(),
+                CityId: $("#ddlCity").val(),
                 PinCode: $("#txtPinCode").val(),
                 ContactPerson: $("#txtContactPerson").val(),
                 ContactNo : $("#txtMobileNumber").val(),
                 MobNo: $("#txtMobileNumber").val(),
                 WhatsAppNo: $("#txtWhatsAppNumber").val(),
-                Email: $("#emailId").val(),
+                Email: $("#txtEmailId").val(),
                 PANNo: $("#txtPanNumber").val(),
                 GSTNo: $("#txtGSTNumber").val(),
+                LogoImage : $("#dropzone").val()
             }
             var editFranchiseUrl = '@Url.Content("~/Franchise/EditFranchise")';
             $.ajax({
@@ -596,14 +621,12 @@
                 dataType: "json",
                 data: JSON.stringify(companyId),
                 success: function (response) {
-                    console.log("Deleted Succesfully")
                     fetchFranchise();
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error:", error);
                     toastr.error("Fail	ed to fetch data!", "Error");
                 }
             });
         };
     
-</script>
+</script>           
