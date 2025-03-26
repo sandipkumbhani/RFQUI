@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RFQ.UI.Domain.ResponseDto;
 using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 
 namespace RFQ.UI.Domain.Interfaces
@@ -16,5 +17,7 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> EditCorporateCompany(int companyId, CorporateCompanyViewModelDto corporateCompanyViewModelDto);
 
         Task<string> DeleteCorporateCompany(int companyId);
+
+        Task<IEnumerable<FranchiseListDto>> GetAllFranchise();
     }
 }

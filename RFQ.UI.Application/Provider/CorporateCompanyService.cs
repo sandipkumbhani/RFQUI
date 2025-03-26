@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RFQ.UI.Application.Inteface;
 using RFQ.UI.Domain.Interfaces;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
 using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 
@@ -33,6 +34,11 @@ namespace RFQ.UI.Application.Provider
         public Task<string> EditCorporateCompany(int companyId, CorporateCompanyViewModelDto corporateCompanyViewModelDto)
         {
             return _corporateCompanyAdaptor.EditCorporateCompany(companyId, corporateCompanyViewModelDto);
+        }
+
+        public Task<IEnumerable<FranchiseListDto>> GetAllFranchise()
+        {
+            return _corporateCompanyAdaptor.GetAllFranchise();
         }
 
         public Task<IEnumerable<CorporateCompanyViewModelDto>> GetCorporateCompanyAll()
