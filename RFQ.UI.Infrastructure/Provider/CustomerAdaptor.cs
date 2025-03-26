@@ -1,12 +1,12 @@
-﻿using System.Net.Http;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System.Text;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
-using RFQ.UI.Models;
-using static RFQ.UI.Domain.Model.CustomerViewModel;
-using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Models;
+using System.Text;
+using static RFQ.UI.Domain.Model.CustomerViewModel;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -14,10 +14,14 @@ namespace RFQ.UI.Infrastructure.Provider
     {
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
-        public CustomerAdaptor(HttpClient httpClient, GlobalClass globalClass)
+        private readonly IConfiguration _config;
+        private string _fleetLynkApiUrl;
+        public CustomerAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
+            _config = configuration;
+            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
         public async Task<string> AddCustomer(CustomerViewModelDto customerViewModelDto)
         {
@@ -25,7 +29,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = "https://localhost:7272/api/MasterParty/AddMasterParty";
+                var baseurl = $"{_fleetLynkApiUrl}/MasterParty/AddMasterParty";
                 var customer = JsonConvert.SerializeObject(customerViewModelDto);
                 var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -59,7 +63,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"https://localhost:7272/api/MasterParty/DeleteMasterParty/{PartyId}";
+                var baseurl = $"{_fleetLynkApiUrl}/MasterParty/DeleteMasterParty/{PartyId}";
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
@@ -89,7 +93,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"https://localhost:7272/api/MasterParty/UpdateMasterParty/{PartyId}";
+                var baseurl = $"{_fleetLynkApiUrl}/MasterParty/UpdateMasterParty/{PartyId}";
                 var customer = JsonConvert.SerializeObject(customerViewModelDto);
                 var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -119,7 +123,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync("https://localhost:7272/api/MasterParty/GetAllMasterParty");
+            var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/MasterParty/GetAllMasterParty");
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
@@ -129,14 +133,14 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             return null;
         }
-        public async Task<GstKycDetailsDto?> GetGstKycDetails()
+        public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto requestDto)
         {
             try
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = "http://103.172.151.71/RSuiteKYC/GSTAPI/GetGSTInfo?" + "GSTNo=27ACUPT0038M1ZX&ccode=FleetLynk&UserId=1";
+                var url = $"{_config["ApiSettings:GstApiUrl"]}GSTNo={requestDto.GSTNo}&ccode={requestDto.CCode}&UserId={requestDto.UserId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                     return null;
@@ -153,18 +157,18 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception occurred: {ex.Message}");
-                throw; 
+                throw;
             }
         }
 
-        public async Task<PanKycDetailModel?> GetPanKycDetails()
+        public async Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto requestDto)
         {
             try
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = "http://103.172.151.71/RSuiteKYC/PANAPI/GePANInfo?" + "PANNo=AYMPS6006N&ccode=FleetLynk&UserId=1";
+                var url = $"{_config["ApiSettings:PanApiUrl"]}PANNo={requestDto.PANNo}&ccode={requestDto.CCode}&UserId={requestDto.UserId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                     return null;

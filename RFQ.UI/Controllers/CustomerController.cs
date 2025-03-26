@@ -1,12 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Inteface;
-using RFQ.UI.Application.Provider;
-using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
+using System.IdentityModel.Tokens.Jwt;
 using static RFQ.UI.Domain.Model.CustomerViewModel;
 
 namespace RFQ.UI.Controllers
@@ -139,7 +136,6 @@ namespace RFQ.UI.Controllers
                     CompanyId = Convert.ToInt32(companyid),
                     CreatedBy = Convert.ToInt32(profileid),
                     UpdatedBy = Convert.ToInt32(profileid),
-                    //UpdatedOn = DateTime.Now
                 };
                 var result = await _customerServices.EditCustomer(partyId, customer);
                 if (result != null)
@@ -180,12 +176,12 @@ namespace RFQ.UI.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetGstKycDetails()
+        [HttpPost]
+        public async Task<IActionResult> GetGstKycDetails([FromBody] GstKycDetailsRequestDto requestDto)
         {
             try
             {
-                var details = await _customerServices.GetGstKycDetails();
+                var details = await _customerServices.GetGstKycDetails(requestDto);
                 return Ok(details);
             }
             catch (Exception ex)
@@ -194,12 +190,12 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPanKycDetails()
+        [HttpPost]
+        public async Task<IActionResult> GetPanKycDetails([FromBody] PanKycDetailRequestDto requestDto)
         {
             try
             {
-                var details = await _customerServices.GetPanKycDetails();
+                var details = await _customerServices.GetPanKycDetails(requestDto);
                 return Ok(details);
             }
             catch (Exception ex)

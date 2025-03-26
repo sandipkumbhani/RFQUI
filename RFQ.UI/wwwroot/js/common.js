@@ -45,15 +45,3 @@ function isValidateSelect(value, selectedIndex) {
 function isMobile(number) {
     return /^[0-9]{10}$/.test(number);
 }
-
-// set all Input Box and select option is blue Border
-window.addEventListener('DOMContentLoaded', function () {
-    // Select all input elements on the page
-    const inputs = document.querySelectorAll('input,select');
-
-    // Loop through each input and set the border color to blue
-    inputs.forEach(function (input) {
-        input.style.borderColor = '#666cff66';
-        input.style.setProperty('--placeholder-opacity', '0.0');
-    });
-});

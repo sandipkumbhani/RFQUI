@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RFQ.UI.Application.Inteface;
-using RFQ.UI.Domain.Interfaces;
+﻿using RFQ.UI.Application.Inteface;
 using RFQ.UI.Infrastructure.Provider;
 using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 
@@ -22,7 +16,7 @@ namespace RFQ.UI.Application.Provider
 
         public Task<string> AddCorporateCompany(CorporateCompanyViewModelDto corporateCompanyViewModelDto)
         {
-           return _corporateCompanyAdaptor.AddCorporateCompany(corporateCompanyViewModelDto);
+            return _corporateCompanyAdaptor.AddCorporateCompany(corporateCompanyViewModelDto);
         }
 
         public Task<string> DeleteCorporateCompany(int companyId)
