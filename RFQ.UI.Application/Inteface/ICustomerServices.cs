@@ -1,4 +1,5 @@
-﻿using static RFQ.UI.Domain.Model.CustomerViewModel;
+﻿using RFQ.UI.Domain.ResponseDto;
+using static RFQ.UI.Domain.Model.CustomerViewModel;
 
 namespace RFQ.UI.Application.Inteface
 {
@@ -11,5 +12,9 @@ namespace RFQ.UI.Application.Inteface
         Task<string> EditCustomer(int PartyId, CustomerViewModelDto customerViewModelDto);
 
         Task<string> DeleteCustomer(int PartyId);
+
+        Task<GstKycDetailsDto> GetGstKycDetails();
+
+        Task<PanKycDetailModel> GetPanKycDetails();
     }
 }

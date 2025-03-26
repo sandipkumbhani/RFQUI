@@ -21,6 +21,15 @@ function isNumeric(value) {
     return /^[0-9]+$/.test(value);
 }
 
+function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}
+
 // isAlphabets function
 function isAlphabets(value) {
     return /^[A-Za-z]+$/.test(value);
@@ -29,6 +38,18 @@ function isAlphabets(value) {
 // isAlphaNumeric function
 function isAlphaNumeric(value) {
     return /^[A-Za-z0-9]+$/.test(value);
+}
+
+function AllowAlphaNumericOnly(e) {
+    if (e.shiftKey || e.ctrlKey || e.altKey) {
+        e.preventDefault();
+    }
+    else {
+        var key = e.keyCode;
+        if (!((key == 8) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90) || (key >= 48 && key <= 57) || (key >= 96 && key <= 105))) {
+            e.preventDefault();
+        }
+    }
 }
 
 // isValidateEmail function
@@ -52,8 +73,8 @@ window.addEventListener('DOMContentLoaded', function () {
     const inputs = document.querySelectorAll('input,select');
 
     // Loop through each input and set the border color to blue
-    inputs.forEach(function (input) {
-        input.style.borderColor = '#666cff66';
-        input.style.setProperty('--placeholder-opacity', '0.0');
-    });
+    //inputs.forEach(function (input) {
+    //    input.style.borderColor = '#666cff66';
+    //    input.style.setProperty('--placeholder-opacity', '0.0');
+    //});
 });

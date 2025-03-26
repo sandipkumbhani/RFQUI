@@ -1,4 +1,5 @@
-﻿using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
+﻿using RFQ.UI.Domain.ResponseDto;
+using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 
 namespace RFQ.UI.Application.Inteface
 {
@@ -11,5 +12,7 @@ namespace RFQ.UI.Application.Inteface
         Task<string> EditCorporateCompany(int companyId, CorporateCompanyViewModelDto corporateCompanyViewModelDto);
 
         Task<string> DeleteCorporateCompany(int companyId);
+
+        Task<IEnumerable<FranchiseListDto>> GetAllFranchise();
     }
 }
