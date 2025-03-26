@@ -1,12 +1,10 @@
-﻿using System.Net.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Text;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Models;
-using static RFQ.UI.Domain.Model.CustomerViewModel;
-using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Domain.RequestDto;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -19,7 +17,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = httpClient;
             _globalClass = globalClass;
         }
-        public async Task<string> AddCustomer(CustomerViewModelDto customerViewModelDto)
+        public async Task<string> AddCustomer(CustomerRequestDto customerViewModelDto)
         {
             try
             {
@@ -83,7 +81,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return "Failed to Delete Customer";
         }
 
-        public async Task<string> EditCustomer(int PartyId, CustomerViewModelDto customerViewModelDto)
+        public async Task<string> EditCustomer(int PartyId, CustomerRequestDto customerViewModelDto)
         {
             try
             {
@@ -115,7 +113,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return "Failed to update Customer";
         }
 
-        public async Task<IEnumerable<CustomerViewModelDto>> GetAllCustomer()
+        public async Task<IEnumerable<CustomerResponseDto>> GetAllCustomer()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
@@ -124,7 +122,7 @@ namespace RFQ.UI.Infrastructure.Provider
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
             {
-                var Profilelist = JsonConvert.DeserializeObject<List<CustomerViewModelDto>>(Convert.ToString(responseModel.Data!));
+                var Profilelist = JsonConvert.DeserializeObject<List<CustomerResponseDto>>(Convert.ToString(responseModel.Data!));
                 return Profilelist;
             }
             return null;

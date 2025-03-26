@@ -1,7 +1,7 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
 using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
-
 
 
 namespace RFQ.UI.Application.Provider

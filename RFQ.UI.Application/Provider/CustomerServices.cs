@@ -1,7 +1,7 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
-using static RFQ.UI.Domain.Model.CustomerViewModel;
 namespace RFQ.UI.Application.Provider
 {
     public class CustomerServices : ICustomerServices
@@ -13,7 +13,7 @@ namespace RFQ.UI.Application.Provider
             _customerAdaptor = customerAdaptor;
         }
 
-        public Task<string> AddCustomer(CustomerViewModelDto customerViewModelDto)
+        public Task<string> AddCustomer(CustomerRequestDto customerViewModelDto)
         {
             return _customerAdaptor.AddCustomer(customerViewModelDto);
         }
@@ -23,12 +23,12 @@ namespace RFQ.UI.Application.Provider
             return _customerAdaptor.DeleteCustomer(PartyId);
         }
 
-        public Task<string> EditCustomer(int PartyId, CustomerViewModelDto customerViewModelDto)
+        public Task<string> EditCustomer(int PartyId, CustomerRequestDto customerViewModelDto)
         {
             return _customerAdaptor.EditCustomer(PartyId, customerViewModelDto);
         }
 
-        public Task<IEnumerable<CustomerViewModelDto>> GetAllCustomer()
+        public Task<IEnumerable<CustomerResponseDto>> GetAllCustomer()
         {
             return _customerAdaptor.GetAllCustomer();
         }

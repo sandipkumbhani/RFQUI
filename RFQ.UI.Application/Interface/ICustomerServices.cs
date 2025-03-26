@@ -1,15 +1,15 @@
-﻿using RFQ.UI.Domain.ResponseDto;
-using static RFQ.UI.Domain.Model.CustomerViewModel;
+﻿using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Application.Interface
 {
     public interface ICustomerServices
     {
-        Task<string> AddCustomer(CustomerViewModelDto customerViewModelDto);
+        Task<string> AddCustomer(CustomerRequestDto customerViewModelDto);
 
-        Task<IEnumerable<CustomerViewModelDto>> GetAllCustomer();
+        Task<IEnumerable<CustomerResponseDto>> GetAllCustomer();
 
-        Task<string> EditCustomer(int PartyId, CustomerViewModelDto customerViewModelDto);
+        Task<string> EditCustomer(int PartyId, CustomerRequestDto customerViewModelDto);
 
         Task<string> DeleteCustomer(int PartyId);
 

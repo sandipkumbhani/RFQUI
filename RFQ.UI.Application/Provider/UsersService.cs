@@ -1,5 +1,6 @@
 ﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Infrastructure.Provider;
+using static RFQ.UI.Domain.Model.GetCompanyAndFranchiseModel;
 using static RFQ.UI.Domain.Model.UserViewModel;
 
 namespace RFQ.UI.Application.Provider

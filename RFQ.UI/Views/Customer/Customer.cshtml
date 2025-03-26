@@ -446,12 +446,12 @@
         // On form submit
         $("#btnSaveCustomer").click(function (event) {
             event.preventDefault();
-            saveandsavenew();
+            SaveAndSaveNew();
         });
 
         // Reset form fields on button click
         $('#SavenewButton').on('click', function () {
-            saveandsavenew();
+            SaveAndSaveNew();
             $('#CustomerForm')[0].reset();
         });
 
@@ -536,7 +536,7 @@
         });
     }
 
-     function saveandsavenew() {
+     function SaveAndSaveNew() {
         var gstKyc = $("#gstEkyc").val();
         var legalName = $("#txtLegalName").val();
         var typeBusiness = $("#txtTypeBusiness").val();

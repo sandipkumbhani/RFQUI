@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
-using static RFQ.UI.Domain.Model.CustomerViewModel;
 
 namespace RFQ.UI.Controllers
 {
@@ -23,44 +23,19 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CustomerSave([FromBody] CustomerViewModelDto customerViewModelDto)
+        public IActionResult CustomerSave([FromBody] CustomerRequestDto customerRequestDto)
         {
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-            string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+            string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+            string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-            if (customerViewModelDto != null)
+            if (customerRequestDto != null)
             {
-                var Customer = new CustomerViewModelDto()
-                {
-                    CompanyId = Convert.ToInt32(companyid),
-                    PartyTypeId = customerViewModelDto.PartyTypeId,
-                    PartyName = customerViewModelDto.PartyName,
-                    PartyCategoryId = customerViewModelDto.PartyCategoryId,
-                    AddressLine = customerViewModelDto.AddressLine,
-                    CityId = customerViewModelDto.CityId,
-                    PinCode = customerViewModelDto.PinCode,
-                    ContactPerson = customerViewModelDto.ContactPerson,
-                    ContactNo = customerViewModelDto.ContactNo,
-                    MobNo = customerViewModelDto.MobNo,
-                    WhatsAppNo = customerViewModelDto.WhatsAppNo,
-                    Email = customerViewModelDto.Email,
-                    PANNo = customerViewModelDto.PANNo,
-                    GSTNo = customerViewModelDto.GSTNo,
-                    LegalName = customerViewModelDto.LegalName,
-                    TradeName = customerViewModelDto.TradeName,
-                    TypeOfBusiness = customerViewModelDto.TypeOfBusiness,
-                    AadharVerified = customerViewModelDto.AadharVerified,
-                    GSTStatus = customerViewModelDto.GSTStatus,
-                    GSTVarifiedOn = customerViewModelDto.GSTVarifiedOn,
-                    PANStatus = customerViewModelDto.PANStatus,
-                    PANLinkedWithAdhar = customerViewModelDto.PANLinkedWithAdhar,
-                    PANVerifiedOn = customerViewModelDto.PANVerifiedOn,
-                    CreatedBy = Convert.ToInt32(profileid),
-                    //CreatedOn = DateTime.UtcNow,
-                    UpdatedBy = Convert.ToInt32(profileid)
-                };
-                var result = _customerServices.AddCustomer(Customer);
+                customerRequestDto.CompanyId = Convert.ToInt32(companyId);
+                customerRequestDto.CreatedBy = Convert.ToInt32(profileId);
+                customerRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+
+                var result = _customerServices.AddCustomer(customerRequestDto);
                 return Json(new { result = "success" });
             }
             else
@@ -71,33 +46,29 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewCustomer(CustomerViewModel customerViewModel)
+        public async Task<IActionResult> ViewCustomer()
         {
             try
             {
-                customerViewModel ??= new CustomerViewModel();
-                var userlist = await _customerServices.GetAllCustomer();
-                if (userlist != null && userlist.Count() > 0)
-                {
-                    customerViewModel.customerViewModelDtos.AddRange(userlist);
-                }
+                var customerList = await _customerServices.GetAllCustomer();
+
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(customerViewModel);
+                    return Json(customerList);
                 }
                 else
                 {
-                    return View(customerViewModel);
+                    return View(customerList);
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCustomer([FromBody] CustomerViewModelDto customerViewModelDto)
+        public async Task<IActionResult> UpdateCustomer([FromBody] CustomerRequestDto customerViewModelDto)
         {
             try
             {
@@ -107,37 +78,37 @@ namespace RFQ.UI.Controllers
                 }
                 int partyId = customerViewModelDto.PartyId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                var customer = new CustomerViewModelDto
-                {
-                    PartyName = customerViewModelDto.PartyName,
-                    AddressLine = customerViewModelDto.AddressLine,
-                    CityId = customerViewModelDto.CityId,
-                    PinCode = customerViewModelDto.PinCode,
-                    ContactPerson = customerViewModelDto.ContactPerson,
-                    ContactNo = customerViewModelDto.MobNo,
-                    MobNo = customerViewModelDto.MobNo,
-                    WhatsAppNo = customerViewModelDto.WhatsAppNo,
-                    Email = customerViewModelDto.Email,
-                    PANNo = customerViewModelDto.PANNo,
-                    GSTNo = customerViewModelDto.GSTNo,
-                    LegalName = customerViewModelDto.LegalName,
-                    TradeName = customerViewModelDto.TradeName,
-                    TypeOfBusiness = customerViewModelDto.TypeOfBusiness,
-                    AadharVerified = customerViewModelDto.AadharVerified,
-                    GSTStatus = customerViewModelDto.GSTStatus,
-                    GSTVarifiedOn = customerViewModelDto.GSTVarifiedOn,
-                    PANStatus = customerViewModelDto.PANStatus,
-                    PANLinkedWithAdhar = customerViewModelDto.PANLinkedWithAdhar,
-                    PANVerifiedOn = customerViewModelDto.PANVerifiedOn,
-                    CompanyId = Convert.ToInt32(companyid),
-                    CreatedBy = Convert.ToInt32(profileid),
-                    UpdatedBy = Convert.ToInt32(profileid),
-                    //UpdatedOn = DateTime.Now
-                };
-                var result = await _customerServices.EditCustomer(partyId, customer);
+                //var customer = new CustomerViewModelDto
+                //{
+                //    PartyName = customerViewModelDto.PartyName,
+                //    AddressLine = customerViewModelDto.AddressLine,
+                //    CityId = customerViewModelDto.CityId,
+                //    PinCode = customerViewModelDto.PinCode,
+                //    ContactPerson = customerViewModelDto.ContactPerson,
+                //    ContactNo = customerViewModelDto.MobNo,
+                //    MobNo = customerViewModelDto.MobNo,
+                //    WhatsAppNo = customerViewModelDto.WhatsAppNo,
+                //    Email = customerViewModelDto.Email,
+                //    PANNo = customerViewModelDto.PANNo,
+                //    GSTNo = customerViewModelDto.GSTNo,
+                //    LegalName = customerViewModelDto.LegalName,
+                //    TradeName = customerViewModelDto.TradeName,
+                //    TypeOfBusiness = customerViewModelDto.TypeOfBusiness,
+                //    AadharVerified = customerViewModelDto.AadharVerified,
+                //    GSTStatus = customerViewModelDto.GSTStatus,
+                //    GSTVarifiedOn = customerViewModelDto.GSTVarifiedOn,
+                //    PANStatus = customerViewModelDto.PANStatus,
+                //    PANLinkedWithAdhar = customerViewModelDto.PANLinkedWithAdhar,
+                //    PANVerifiedOn = customerViewModelDto.PANVerifiedOn,
+                customerViewModelDto.CompanyId = Convert.ToInt32(companyId);
+                customerViewModelDto.CreatedBy = Convert.ToInt32(profileId);
+                customerViewModelDto.UpdatedBy = Convert.ToInt32(profileId);
+                //    //UpdatedOn = DateTime.Now
+                //};
+                var result = await _customerServices.EditCustomer(partyId, customerViewModelDto);
                 if (result != null)
                 {
                     return Json(new { result = "success" });
