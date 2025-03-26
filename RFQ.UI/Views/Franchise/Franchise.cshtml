@@ -249,9 +249,7 @@
             addRemoveLinks : true,
             acceptedFiles : "image/*",
             success : function(file,response){
-                console.log("uploaded");
-                console.log(file.FileName);
-                console.log(response);
+             
             },
             error : function(file,response){
                 $("#uploadMessage").html(response);
@@ -431,18 +429,15 @@
                 PANNo: panNumber,
                 GSTNo: gstNumber,
             }
-            console.log(formData);
             $.ajax({
                 url : saveUrl,
                 type : 'POST',
                 contentType : 'application/json',
                 data : JSON.stringify(formData),
                 success : function(response){
-                    console.log(response);
                     toastr.success("Franchise submitted successfully!");
                 },
                 error : function(xhr,status,error){
-                    console.log("Error :",error);
                     toastr.error("Failed to submitFranchise", "Error");
                 }
             });
@@ -458,8 +453,6 @@
                 success : function(response){
                     let franchiseList = response.franchiseViewModelDtos.filter(x=>x.companyTypeId == 2);
                     franchiseViewModelDto = response.franchiseViewModelDtos;
-                    console.log(franchiseList);
-                    console.log(franchiseViewModelDto);
                     if ($.fn.DataTable.isDataTable('#tableFranchise')) {
                         $('#tableFranchise').DataTable().clear().destroy();
                     }
@@ -514,16 +507,13 @@
                     })
                 },
                 error : function(xhr,status,error){
-                    console.log("Error",error);
                     toastr.error("Failed to fetch data!", "Error");
                 }
             });
         };
     });
         function EditFranchise(companyId){
-            debugger;
             var data = franchiseViewModelDto.filter(x=>x.companyId == companyId);
-            console.log(data);
             var formData = data[0];
             $('#tableDiv').hide();
             $("#backButton").css('display', 'none');
@@ -596,7 +586,6 @@
                 dataType: "json",
                 data: JSON.stringify(companyId),
                 success: function (response) {
-                    console.log("Deleted Succesfully")
                     fetchFranchise();
                 },
                 error: function (xhr, status, error) {

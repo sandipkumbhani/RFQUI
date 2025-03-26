@@ -286,7 +286,6 @@
                     let menuList = response.menulistDtos;
                     let sidebarHtml = '';
                     let groupedItems = {};
-                    console.log(response);
                     menuList.forEach(item => {
                         if (!groupedItems[item.groupId]) {
                             groupedItems[item.groupId] = {

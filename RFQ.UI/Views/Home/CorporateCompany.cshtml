@@ -533,11 +533,9 @@
             dataType: "json",
 			data: JSON.stringify(companyId),
             success: function (response) {
-                console.log("Deleted Succesfully")
 				fetchCorporateCompany();
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
                 toastr.error("Fail	ed to fetch data!", "Error");
             }
         });
@@ -656,7 +654,6 @@
 
 	function EditCorporateCompany(companyId){
 
-		console.log(corporateCompanyViewModelDto);
 		var data = corporateCompanyViewModelDto.filter(x=>x.companyId == companyId);
 		var formData = data[0];
 		  $('#tableDiv').hide();

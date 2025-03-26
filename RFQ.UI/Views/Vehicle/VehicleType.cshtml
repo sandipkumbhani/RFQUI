@@ -158,7 +158,6 @@
                     if (!response.ok) {
                         console.error("Failed to set token");
                     } else {
-                        console.log("Token successfully set");
                     }
                 })
                 .catch(error => console.error("Error:", error));
@@ -244,7 +243,6 @@
             dataType: "json",
             data: JSON.stringify(vehicleTypeId),
             success: function (response) {
-                console.log("Deleted Succesfully")
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
@@ -288,7 +286,6 @@
     }
 
     function editVehicleType(vehicleTypeId){
-        console.log(vehicleTypeViewModelDtos);
         var data = vehicleTypeViewModelDtos.filter(x=>x.vehicleTypeId == vehicleTypeId);
           $('#tableDiv').hide();
           $("#backButton").css('display', 'none');
@@ -307,7 +304,6 @@
     }
 
     function update(vehicleTypeId) {
-        console.log(vehicleTypeId);
         var vehicleTypeName = $("#txtVehicleType").val()
         var minKmsPerDay = $("#minKmsPerDay").val()
 
