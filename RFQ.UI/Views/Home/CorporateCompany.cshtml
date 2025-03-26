@@ -97,11 +97,7 @@
 
 								<select name="franchise" aria-label="Select a Franchise/Corporate"
 										data-control="select2" data-placeholder="Select a Franchise Name." id="franchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-									<option value="">Select a Franchise Name</option>
-									<option value="AF">Afghanistan</option>
-									<option value="AX">Aland Islands</option>
-									<option value="AL">Albania</option>
-									<option value="DZ">Algeria</option>
+									
 								</select>
 							</div>
 						</div>
@@ -244,6 +240,34 @@
 
 	$(document).ready(function () {
 
+
+		var GetUrl = '@Url.Content("~/CorporateCompany/GetAllFranchise")';
+		$.ajax({
+			url: GetUrl,
+			type: "GET",
+			contentType: "application/json",
+			success: function (response) {
+				console.log(response);
+				var data = response.filter(x=>x.companyTypeId == 2);
+				console.log(data);
+					if (data && data.length > 0) {
+						$.each(data, function (index, item) {
+							$('#franchisename').append($('<option>', {
+								value: item.companyId,
+								text: item.companyName
+						}));
+					});
+					}
+					else {
+						$('#franchisename').empty().append('<option value="">No Franchise Available</option>');
+					}
+
+			},
+			error: function (xhr, status, error) {
+				console.error("Error:", error);
+				toastr.error("Failed to submit franchise ", "Error");
+			}
+		});
 		var corporateCompanyViewModelDto;
 		// View Button click Call Api
 		$(document).on("click", "#viewButton", function () {
@@ -388,6 +412,9 @@
 
 	});
 
+
+	
+
 	function fetchCorporateCompany() {
 		$('#tableDiv').show();
 		var fetchCorporateCompanyUrl = '@Url.Content("~/CorporateCompany/ViewCorporateCompany")';
@@ -477,11 +504,7 @@
 			$("#btnupdate").click(function (e) {
 				e.preventDefault();
 
-				// var companyId = $("#CompanyTypeForm").data("companyId");
-				// var CorporateCompanyViewModel = {
-				// 	CompanyId: companyId,
-				// 	CompanyName: $("#CompanyTypeForm").val(),
-				// }
+				
 				var formData = {					
 					CompanyId : $("#txtCompanyId").val(),
 					CompanyName: $("#txtCompanyName").val(),
@@ -682,5 +705,4 @@
 		  $("#txtGstNumber").val(formData.gstNo);
 	}
 	
-
 </script>
