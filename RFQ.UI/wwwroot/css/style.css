@@ -491,8 +491,14 @@ a {
 }
 .app-sidebar .menu > .menu-item > .menu-link {
     margin: 0 8px 3px 8px;
-    padding: 10px;
+    padding: 10px 0px 0px 0px;
 }
+.app-sidebar .menu > .menu-item > .sub-menu-link {
+    margin: 0 8px 3px 8px;
+    padding: 10px 0px 0px 10px;
+}
+ 
+
 .app-sidebar .menu .menu-link.active {
     transition: color .2s ease;
     background-color: var(--bs-primary-light-active);
