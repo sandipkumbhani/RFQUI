@@ -147,12 +147,12 @@ namespace RFQ.UI.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetGstKycDetails()
+        [HttpPost]
+        public async Task<IActionResult> GetGstKycDetails([FromBody] GstKycDetailsRequestDto requestDto)
         {
             try
             {
-                var details = await _customerServices.GetGstKycDetails();
+                var details = await _customerServices.GetGstKycDetails(requestDto);
                 return Ok(details);
             }
             catch (Exception ex)
@@ -161,12 +161,12 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPanKycDetails()
+        [HttpPost]
+        public async Task<IActionResult> GetPanKycDetails([FromBody] PanKycDetailRequestDto requestDto)
         {
             try
             {
-                var details = await _customerServices.GetPanKycDetails();
+                var details = await _customerServices.GetPanKycDetails(requestDto);
                 return Ok(details);
             }
             catch (Exception ex)

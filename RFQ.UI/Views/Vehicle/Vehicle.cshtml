@@ -301,7 +301,6 @@
         {
             $("#btnsave").click(function (e) {
                 e.preventDefault();
-                debugger
                 var VehicleTypeViewModelDto = {
                     VehicleTypeName: $("#VehicleTypeName").val(),
                 }
@@ -435,7 +434,6 @@
                     url: "/Home/DeleteVehicleType/" + vechicleTypeId, // Adjust the URL as needed
 
                     success: function (result) {
-                        debugger
                         if (result.result == "success") {
                             alert("Vehicle Type deleted successfully!");
                             $("#viewvehicltype").click(); // Refresh the table after deletion
