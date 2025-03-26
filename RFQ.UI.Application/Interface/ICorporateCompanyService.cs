@@ -1,6 +1,6 @@
 ﻿using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 
-namespace RFQ.UI.Application.Inteface
+namespace RFQ.UI.Application.Interface
 {
     public interface ICorporateCompanyService
     {

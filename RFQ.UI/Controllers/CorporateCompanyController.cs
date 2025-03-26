@@ -1,11 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
-using RFQ.UI.Application.Inteface;
-using RFQ.UI.Application.Provider;
+using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
-using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
 
 namespace RFQ.UI.Controllers

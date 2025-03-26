@@ -1,10 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using RFQ.UI.Application.Inteface;
-using RFQ.UI.Application.Provider;
-using RFQ.UI.Domain.Interfaces;
+using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 using static RFQ.UI.Domain.Model.CustomerViewModel;

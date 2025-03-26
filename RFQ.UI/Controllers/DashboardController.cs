@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RFQ.UI.Application.Inteface;
+using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 
 namespace RFQ.UI.Controllers

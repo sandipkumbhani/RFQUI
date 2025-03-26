@@ -1,14 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using RFQ.UI.Application.Inteface;
-using RFQ.UI.Application.Provider;
+﻿using Microsoft.AspNetCore.Mvc;
+using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
-using System.ComponentModel;
-using System.Data.SqlTypes;
 using System.IdentityModel.Tokens.Jwt;
-using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 using static RFQ.UI.Domain.Model.FranchiseViewModel;
 
 namespace RFQ.UI.Controllers

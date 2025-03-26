@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RFQ.UI.Application.Inteface;
-using RFQ.UI.Domain.Interfaces;
+﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Infrastructure.Provider;
 using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 

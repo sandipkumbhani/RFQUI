@@ -1,7 +1,7 @@
 ﻿using RFQ.UI.Domain.ResponseDto;
 using static RFQ.UI.Domain.Model.CustomerViewModel;
 
-namespace RFQ.UI.Application.Inteface
+namespace RFQ.UI.Application.Interface
 {
     public interface ICustomerServices
     {

@@ -1,24 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 using System.IdentityModel.Tokens.Jwt;
-using RFQ.UI.Application.Inteface;
+using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
-using RFQ.UI.Domain.RequestDto;
-using Microsoft.EntityFrameworkCore;
-using RFQ.UI.Application.Provider;
 
 namespace RFQ.UI.Controllers
 {
     public class VehicleController : Controller
     {
         private readonly GlobalClass _globalClass;
-        private readonly IVehicletypeServices _vehicletypeServices;
+        private readonly IVehicleTypeServices _vehicleTypeServices;
         private readonly IVehicleService _vehicleServices;
 
-        public VehicleController(IVehicletypeServices vehicletypeServices, GlobalClass globalClass, IVehicleService vehicleService)
+        public VehicleController(IVehicleTypeServices vehicleTypeServices, GlobalClass globalClass, IVehicleService vehicleService)
         {
-            _vehicletypeServices = vehicletypeServices;
+            _vehicleTypeServices = vehicleTypeServices;
             _globalClass = globalClass;
             _vehicleServices = vehicleService;
         }
@@ -53,7 +50,7 @@ namespace RFQ.UI.Controllers
                     CreatedBy = Convert.ToInt32(profileid),
                     UpdatedBy = Convert.ToInt32(profileid),
                 };
-                var result = _vehicletypeServices.AddVehicleType(Vehicle);
+                var result = _vehicleTypeServices.AddVehicleType(Vehicle);
                 return Json(new { result = "success" });
             }
             else
@@ -81,7 +78,7 @@ namespace RFQ.UI.Controllers
                     CreatedBy = Convert.ToInt32(profileid),
                     UpdatedBy = Convert.ToInt32(profileid)
                 };
-                var result = await _vehicletypeServices.EditVehicleType(vechicleTypeId, vehicle);
+                var result = await _vehicleTypeServices.EditVehicleType(vechicleTypeId, vehicle);
                 if (result != null)
                 {
                     return Json(new { result = "success" });
@@ -103,7 +100,7 @@ namespace RFQ.UI.Controllers
             try
             {
                 vehicleTypeViewModel ??= new VehicleTypeViewModel();
-                var userlist = await _vehicletypeServices.GetVehicleTypeAll();
+                var userlist = await _vehicleTypeServices.GetVehicleTypeAll();
                 if (userlist != null && userlist.Count() > 0)
                 {
                     vehicleTypeViewModel.vehicleTypeViewModelDtos.AddRange(userlist);
@@ -128,7 +125,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var result = await _vehicletypeServices.DeleteVehicleType(vehicleTypeId);
+                var result = await _vehicleTypeServices.DeleteVehicleType(vehicleTypeId);
                 if (result != null)
                 {
                     return Json(new { result = "success" });

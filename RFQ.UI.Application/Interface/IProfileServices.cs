@@ -1,6 +1,6 @@
 ﻿using RFQ.UI.Domain.Model;
 
-namespace RFQ.UI.Application.Inteface
+namespace RFQ.UI.Application.Interface
 {
     public interface IProfileServices
     {

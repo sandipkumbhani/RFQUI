@@ -1,6 +1,6 @@
 ﻿using RFQ.UI.Models;
 
-namespace RFQ.UI.Application.Inteface
+namespace RFQ.UI.Application.Interface
 {
     public interface ILoginServices
     {

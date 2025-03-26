@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using RFQ.UI.Domain.Model;
 using static RFQ.UI.Domain.Model.UserViewModel;
 
-namespace RFQ.UI.Application.Inteface
+namespace RFQ.UI.Application.Interface
 {
     public interface IUsersService
     {

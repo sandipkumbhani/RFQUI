@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RFQ.UI.Domain.Model.FranchiseViewModel;
 
-namespace RFQ.UI.Application.Inteface
+namespace RFQ.UI.Application.Interface
 {
     public interface IFranchiseService
     {

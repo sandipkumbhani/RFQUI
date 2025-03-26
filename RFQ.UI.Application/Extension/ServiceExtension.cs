@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RFQ.UI.Application.Inteface;
+using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
 
 namespace RFQ.UI.Application.Extension
@@ -8,16 +8,17 @@ namespace RFQ.UI.Application.Extension
     {
         public static IServiceCollection AddApplicationService(this IServiceCollection services)
         {
-            services.AddScoped<ILoginServices, LoginServices>();
+           
             services.AddScoped<IDashboardServices, DashboardServices>();
             services.AddScoped<IProfileServices, ProfileServices>();
-            services.AddScoped<IVehicletypeServices, VehicletypeServices>();
+            services.AddScoped<IVehicleTypeServices, VehicleTypeServices>();
             services.AddScoped<IMenuServices, MenuServices>();
             services.AddScoped<ICustomerServices, CustomerServices>();
             services.AddScoped<ICorporateCompanyService, CorporateCompanyService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IFranchiseService, FranchiseService>();
+            services.AddScoped<ILoginServices, LoginServices>();
             return services;
         }
     }

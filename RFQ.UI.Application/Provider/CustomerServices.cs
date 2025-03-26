@@ -1,5 +1,4 @@
-﻿using RFQ.UI.Application.Inteface;
-using RFQ.UI.Domain.Interfaces;
+﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
 using static RFQ.UI.Domain.Model.CustomerViewModel;

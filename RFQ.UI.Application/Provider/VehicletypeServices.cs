@@ -1,14 +1,14 @@
-﻿using RFQ.UI.Application.Inteface;
+﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Infrastructure.Provider;
 using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
 namespace RFQ.UI.Application.Provider
 {
-    public class VehicletypeServices : IVehicletypeServices
+    public class VehicleTypeServices : IVehicleTypeServices
     {
         private readonly VehicleTypeAdaptor _vehicleTypeAdaptor;
 
-        public VehicletypeServices(VehicleTypeAdaptor vehicleTypeAdaptor)
+        public VehicleTypeServices(VehicleTypeAdaptor vehicleTypeAdaptor)
         {
             _vehicleTypeAdaptor = vehicleTypeAdaptor;
         }

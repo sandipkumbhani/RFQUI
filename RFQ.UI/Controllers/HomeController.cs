@@ -1,29 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
-using RFQ.UI.Application.Inteface;
-using RFQ.UI.Application.Provider;
+using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Extension;
 using RFQ.UI.Models;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using static RFQ.UI.Domain.Model.DashboardViewModel;
 using static RFQ.UI.Domain.Model.UserViewModel;
-using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
 namespace RFQ.UI.Controllers
 {
     public class HomeController : Controller
     {
         private readonly GlobalClass _globalClass;
-        private readonly IVehicletypeServices _vehicletypeServices;
         private readonly IUsersService _usersService;
         private readonly IMenuServices _menuServices;
-        public HomeController(IMenuServices menuServices,  GlobalClass globalClass, IVehicletypeServices vehicletypeServices,IUsersService usersService )
+        public HomeController(IMenuServices menuServices, GlobalClass globalClass, IUsersService usersService)
         {
             _globalClass = globalClass;
-            _vehicletypeServices = vehicletypeServices;
             _usersService = usersService;
-            _menuServices = menuServices;
-            _vehicletypeServices = vehicletypeServices;
             _menuServices = menuServices;
         }
         public IActionResult Index()
@@ -53,6 +47,8 @@ namespace RFQ.UI.Controllers
 
         public IActionResult user()
         {
+            return View();
+        }
         [HttpPost]
         public IActionResult UserSave([FromBody] UserViewModelDto userViewModelDto)
         {
@@ -81,7 +77,7 @@ namespace RFQ.UI.Controllers
             }
             else
             {
-                return Json (new { result = "fail" });
+                return Json(new { result = "fail" });
             }
         }
         [HttpGet]
@@ -124,7 +120,7 @@ namespace RFQ.UI.Controllers
                     UserId = userViewModelDto.UserId,
                     CompanyId = Convert.ToInt32(companyid),
                     PersonName = userViewModelDto.PersonName,
-                    MobileNo = userViewModelDto.MobileNo,   
+                    MobileNo = userViewModelDto.MobileNo,
                     EmailId = userViewModelDto.EmailId,
                     LocationId = userViewModelDto.LocationId,
                     LoginId = userViewModelDto.LoginId,
@@ -167,8 +163,6 @@ namespace RFQ.UI.Controllers
             {
                 return Json(new { result = "error", message = ex.Message });
             }
-        {
-            return View();
         }
         public IActionResult ResetPassword()
         {
@@ -191,6 +185,8 @@ namespace RFQ.UI.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
         public async Task<IActionResult> GetMenu(MenuViewModel menuViewModel)
         {
             try
@@ -212,11 +208,9 @@ namespace RFQ.UI.Controllers
                     return View(menuViewModel);
                 }
             }
-                }
-            }
+            catch (Exception)
+            {
                 throw;
-            }
-        }
             }
         }
     }

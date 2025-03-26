@@ -1,8 +1,8 @@
 ﻿using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
-namespace RFQ.UI.Application.Inteface
+namespace RFQ.UI.Application.Interface
 {
-    public interface IVehicletypeServices
+    public interface IVehicleTypeServices
     {
         Task<string> AddVehicleType(VehicleTypeViewModelDto vehicleTypeViewModelDto);
 
