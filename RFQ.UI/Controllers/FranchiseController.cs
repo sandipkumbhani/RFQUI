@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
-using static RFQ.UI.Domain.Model.FranchiseViewModel;
 
 namespace RFQ.UI.Controllers
 {
@@ -78,7 +78,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> FranchiseSave([FromBody] FranchiseViewModelDto franchiseViewModelDto)
+        public async Task<IActionResult> FranchiseSave([FromBody] FranchiseRequestDto franchiseRequestDto)
         {
             try
             {
@@ -87,31 +87,17 @@ namespace RFQ.UI.Controllers
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
 
-                if (franchiseViewModelDto != null)
+                if (franchiseRequestDto != null)
                 {
-                    var franchise = new FranchiseViewModelDto()
-                    {
-                        CompanyName = franchiseViewModelDto.CompanyName,
-                        CompanyTypeId = 2,
-                        AddressLine = franchiseViewModelDto.AddressLine,
-                        CityId = franchiseViewModelDto.CityId,
-                        PinCode = franchiseViewModelDto.PinCode,
-                        ContactPerson = franchiseViewModelDto.ContactPerson,
-                        ContactNo = franchiseViewModelDto.MobNo,
-                        MobNo = franchiseViewModelDto.MobNo,
-                        WhatsAppNo = franchiseViewModelDto.WhatsAppNo,
-                        Email = franchiseViewModelDto.Email,
-                        PANNo = franchiseViewModelDto.PANNo,
-                        GSTNo = franchiseViewModelDto.GSTNo,
-                        LogoImage = franchiseViewModelDto.LogoImage,
-                        ParentCompanyId = Convert.ToInt32(companyId),
-                        LinkId = 1,
-                        CreatedBy = Convert.ToInt32(companyId),
-                        UpdatedBy = Convert.ToInt32(companyId),
-                        CreatedOn = DateTime.Now,
-                        UpdatedOn = DateTime.Now
-                    };
-                    var result = await _fanchiseService.AddFranchise(franchise);
+                    franchiseRequestDto.CompanyTypeId = 2;
+                    franchiseRequestDto.ParentCompanyId = Convert.ToInt32(companyId);
+                    franchiseRequestDto.LinkId = 1;
+                    franchiseRequestDto.CreatedBy = Convert.ToInt32(companyId);
+                    franchiseRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                    franchiseRequestDto.CreatedOn = DateTime.Now;
+                    franchiseRequestDto.UpdatedOn = DateTime.Now;
+
+                    var result = await _fanchiseService.AddFranchise(franchiseRequestDto);
                     return Json(new { result = "Success" });
                 }
                 else
@@ -121,69 +107,50 @@ namespace RFQ.UI.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { result = "Error", message = ex.Message });
+                throw new Exception(ex.Message);
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetFranchiseAll(FranchiseViewModel franchiseViewModel)
+        public async Task<IActionResult> GetFranchiseAll(FranchiseRequestDto franchiseRequestDto)
         {
             try
             {
-                franchiseViewModel ??= new FranchiseViewModel();
                 var franchiseUserList = await _fanchiseService.GetFranchiseAll();
-                if (franchiseUserList != null && franchiseUserList.Count() > 0)
-                {
-                    franchiseViewModel.franchiseViewModelDtos.AddRange(franchiseUserList);
-                }
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(franchiseViewModel);
+                    return Json(franchiseUserList);
                 }
                 else
                 {
-                    return View(franchiseViewModel);
+                    return View(franchiseUserList);
                 }
             }
             catch (Exception ex)
             {
-                return Json(new { result = "Error", message = ex.Message });
+                throw new Exception(ex.Message);
             }
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditFranchise([FromBody] FranchiseViewModelDto franchiseViewModelDto)
+        public async Task<IActionResult> EditFranchise([FromBody] FranchiseRequestDto franchiseRequestDto)
         {
             try
             {
-                int companyId = franchiseViewModelDto.CompanyId;
+                int companyId = franchiseRequestDto.CompanyId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string parentId = jwt.Claims.First(c => c.Type == "companyid").Value;
 
-                var franchise = new FranchiseViewModelDto()
-                {
-                    CompanyName = franchiseViewModelDto.CompanyName,
-                    CompanyTypeId = 2,
-                    AddressLine = franchiseViewModelDto.AddressLine,
-                    CityId = franchiseViewModelDto.CityId,
-                    PinCode = franchiseViewModelDto.PinCode,
-                    ContactPerson = franchiseViewModelDto.ContactPerson,
-                    ContactNo = franchiseViewModelDto.MobNo,
-                    MobNo = franchiseViewModelDto.MobNo,
-                    WhatsAppNo = franchiseViewModelDto.WhatsAppNo,
-                    Email = franchiseViewModelDto.Email,
-                    PANNo = franchiseViewModelDto.PANNo,
-                    GSTNo = franchiseViewModelDto.GSTNo,
-                    LogoImage = franchiseViewModelDto.LogoImage,
-                    ParentCompanyId = Convert.ToInt32(parentId),
-                    LinkId = 1,
-                    CreatedBy = Convert.ToInt32(parentId),
-                    UpdatedBy = Convert.ToInt32(parentId),
-                    CreatedOn = DateTime.Now,
-                    UpdatedOn = DateTime.Now
-                };
-                var result = await _fanchiseService.EditFranchise(companyId, franchise);
+                franchiseRequestDto.CompanyTypeId = 2;
+                franchiseRequestDto.ParentCompanyId = Convert.ToInt32(parentId);
+                franchiseRequestDto.LinkId = 1;
+                franchiseRequestDto.CreatedBy = Convert.ToInt32(parentId);
+                franchiseRequestDto.UpdatedBy = Convert.ToInt32(parentId);
+                franchiseRequestDto.CreatedOn = DateTime.Now;
+                franchiseRequestDto.UpdatedOn = DateTime.Now;
+
+                var result = await _fanchiseService.EditFranchise(companyId,franchiseRequestDto);
                 if (result != null)
                 {
                     return Json(new { result = "Success" });
