@@ -90,7 +90,7 @@
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
-								<input type="text" class="form-control" placeholder="Pan Number" id="txtpannumber" />
+								<input type="text" class="form-control" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="10" placeholder="Pan Number" id="txtpannumber" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Franchise Name</label>
@@ -108,23 +108,23 @@
 						<div class="col-xl-6">
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
-								<input type="text" class="form-control" placeholder="Pincode" id="txtpincode" />
+								<input type="text" class="form-control"  placeholder="Pin Code" id="txtPinCode" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
-								<input type="text" class="form-control" placeholder="WhatsApp Number" id="txtwhatsAppnumber" />
+								<input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label fw-semibold fs-6">Contact Number</label>
-								<input type="text" class="form-control" placeholder="Contact Number" id="txtcontactNumber" />
+								<input type="text" class="form-control" maxlength="10" placeholder="Contact Number" id="txtContactNumber" onkeypress="return isNumber(event)" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-								<input type="email" class="form-control" placeholder="name@example.com" id="txtEmail" />
+								<input type="email" class="form-control" placeholder="email" id="txtEmail" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
-								<input type="text" class="form-control" placeholder="GST Number" id="txtgstNumber" />
+								<input type="text" class="form-control" placeholder="GST Number" id="txtGstNumber" />
 							</div>
 						</div>
 					</div>
@@ -269,10 +269,10 @@
 				return;
 			}
 		});
-		$("#txtwhatsAppnumber").on("change", function () {
+		$("#txtWhatsAppNumber").on("change", function () {
 			var whats = $(this).val();
 			if (!isMobile(whats)) {
-				$("#txtwhatsAppnumber").val('');
+				$("#txtWhatsAppNumber").val('');
 				toastr.warning("Please enter a whatsApp number", "Warning");
 
 
@@ -288,14 +288,16 @@
 			}
 		});
 
-		$("#txtcontactNumber").on("change", function () {
-			var MobileNum = $(this).val();
-			if (!isMobile(MobileNum)) {
-				$("#txtcontactNumber").val('');
+		$("#txtContactNumber").on("change", function () {
+			var mobileNum = $(this).val();
+			if (!isMobile(mobileNum)) {
+				 $(this).focus();
 				toastr.warning("Please enter a valid 10-digit contact number", "Warning");
 				return;
 			} 
 		});
+		
+	 
 
 		$("#txtAddress").on("change", function () {
 			var Address = $(this).val();
@@ -305,10 +307,10 @@
 				return;
 			}
 		});
-		$("#txtpincode").on("change", function () {
+		$("#txtPinCode").on("change", function () {
 			var pinc = $(this).val();
 			if (!/^\d{6}$/.test(pinc)) {
-				$("#txtpincode").val('');
+				$("#txtPinCode").val('');
 				toastr.warning("Please enter a Valid Pincode", "Warning");
 				return;
 			}
@@ -345,10 +347,10 @@
 				return;
 			}
 		});
-		$("#txtgstNumber").on("change", function () {
+		$("#txtGstNumber").on("change", function () {
 			var gst = $(this).val();
 			if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(gst)) {
-				$("#txtgstNumber").val('');
+				$("#txtGstNumber").val('');
 				toastr.warning("Please enter a valid GST number", "Warning");
 				return;
 			}
@@ -486,15 +488,15 @@
 
 					// CompanyTypeId: $("#txtCompanyCode").val(),
 					MobNo: $("#txtMobileNumber").val(),
-					ContactNo : $("#txtcontactNumber").val(),
+					ContactNo : $("#txtContactNumber").val(),
 					AddressLine: $("#txtAddress").val(),
 					CityId: $("#txtcity").val(),
-					PinCode: $("#txtpincode").val(),
+					PinCode: $("#txtPinCode").val(),
 					ContactPerson: $("#txtPerson").val(),
 					Email: $("#txtEmail").val(),
-					WhatsAppNo: $("#txtwhatsAppnumber").val(),
+					WhatsAppNo: $("#txtWhatsAppNumber").val(),
 					PANNo: $("#txtpannumber").val(),
-					GSTNo: $("#txtgstNumber").val(),
+					GSTNo: $("#txtGstNumber").val(),
 					// ContactNo : $("#txtMobileNumber").val()
 					
 				}
@@ -548,15 +550,15 @@
 		var companyName = $("#txtCompanyName").val();
 		var companyCode = $("#txtCompanyCode").val();
 		var mobileNumber = $("#txtMobileNumber").val();
-		var contactNumber = $("#txtcontactNumber").val();
+		var contactNumber = $("#txtContactNumber").val();
 		var address = $("#txtAddress").val();
 		var city = $("#txtcity").val();
-		var pincode = $("#txtpincode").val();
+		var pincode = $("#txtPinCode").val();
 		var contactPerson = $("#txtPerson").val();
 		var email = $("#txtEmail").val();
-		var whatsAppNumber = $("#txtwhatsAppnumber").val();
+		var whatsAppNumber = $("#txtWhatsAppNumber").val();
 		var panNumber = $("#txtpannumber").val();
-		var gSTNumber = $("#txtgstNumber").val();
+		var gSTNumber = $("#txtGstNumber").val();
 		var franchiseName = $("#franchisename").val();
 		
 		if (!isAlphabets(companyName)) {
@@ -670,14 +672,14 @@
 		  // $("#txtCompanyCode").val(formData.companyTypeId);
 		  $("#txtPerson").val(formData.contactPerson);
 		  $("#txtMobileNumber").val(formData.mobNo);
-		  $("#txtcontactNumber").val(formData.contactNo);
+		  $("#txtContactNumber").val(formData.contactNo);
 		  $("#txtAddress").val(formData.addressLine);
 		  $("#txtcity").val(formData.cityId);
-		  $("#txtpincode").val(formData.pinCode);
+		  $("#txtPinCode").val(formData.pinCode);
 		  $("#txtEmail").val(formData.email);
-		  $("#txtwhatsAppnumber").val(formData.whatsAppNo);
+		  $("#txtWhatsAppNumber").val(formData.whatsAppNo);
 		  $("#txtpannumber").val(formData.panNo);
-		  $("#txtgstNumber").val(formData.gstNo);
+		  $("#txtGstNumber").val(formData.gstNo);
 	}
 	
 
