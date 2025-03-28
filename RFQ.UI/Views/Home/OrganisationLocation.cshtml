@@ -3,6 +3,7 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "OrganisationLocation";
+    var dynamicUrl = "https://localhost:7295";
 }
 
 
@@ -39,7 +40,7 @@
                             <span class="hide-menu">Home</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Dashboard" aria-expanded="false">
+                            <a class="sidebar-link" href="@dynamicUrl/Home/Dashboard" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
@@ -53,89 +54,110 @@
                                 </span>
                                 <span class="hide-menu">Franchise</span>
                             </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/CorporateCompany" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Corporate Company</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/CompanyConfiguration" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Company Configuration</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/user" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">User</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/Franchise" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Franchise</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/OrganisationLocation" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Organisation Location</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/CorporateCompany" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Corporate Company</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/CompanyConfiguration" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Company Configuration</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/OrganisationLocation" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Organisation Location</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Vendor" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Vendor</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Customer" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Customer</span>
-                            </a>
-                        </li>
+                        @* Master Dropdown *@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="https://localhost:7295/Home/Item" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
-                                <span class="hide-menu">Item</span>
+                                <span class="hide-menu">Master</span>
                             </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/Customer" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Customer</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/Vehicle" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Vehicle</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/Profile" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Profile</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/ProfileRight" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Profile Rights</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/Item" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Item</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="@dynamicUrl/Home/Vendor" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-dashboard"></i>
+                                        </span>
+                                        <span class="hide-menu">Vendor</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Vehicle" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Vehicle</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/Profile" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Profile</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/ProfileRight" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">Profile Rights</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/user" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-dashboard"></i>
-                                </span>
-                                <span class="hide-menu">User</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/ResetPassword" aria-expanded="false">
+                            <a class="sidebar-link" href="@dynamicUrl/Home/ResetPassword" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
@@ -143,7 +165,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="https://localhost:7295/Home/ChangePassword" aria-expanded="false">
+                            <a class="sidebar-link" href="@dynamicUrl/Home/ChangePassword" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>

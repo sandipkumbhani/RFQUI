@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
+using RFQ.UI.Domain.RequestDto;
 
 namespace RFQ.UI.Controllers
 {
@@ -169,19 +170,47 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetVehicleKycDetails()
+        [HttpPost]
+        public async Task<IActionResult> GetVehicleKycDetails([FromBody]VehicleKycRequestDto requestDto)
         {
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                var vehicleCategoryList = await _vehicleServices.GetVehicleKycDetails();
+                var vehicleCategoryList = await _vehicleServices.GetVehicleKycDetails(requestDto);
                 if (vehicleCategoryList == null)
                 {
                     return NotFound("No vehicle KYC details found.");
                 }
                 return Json(vehicleCategoryList);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllMasterVehicleType()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var vehicleCategoryList = await _vehicleServices.GetAllMasterVehicleType();
+                if (vehicleCategoryList != null && vehicleCategoryList.Count() > 0)
+                {
+                    return Json(vehicleCategoryList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(vehicleCategoryList);
+                }
+                else
+                {
+                    return View(vehicleCategoryList);
+                }
             }
             catch (Exception ex)
             {
