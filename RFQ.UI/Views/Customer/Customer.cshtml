@@ -157,7 +157,7 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">City </label>
-                                <select name="City" aria-label="Select a City" id="selectCity" class="selectpicker"  multiple data-live-search="true" data-width="100%">
+                                <select name="City" aria-label="Select a City" id="selectCity" class="selectpicker"  data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-5">
@@ -856,7 +856,7 @@
             const select = document.getElementById("selectCity");
             data.forEach(option => {
                 let opt = document.createElement("option");
-                opt.value = 0;
+                    opt.value = option.cityId;
                 opt.textContent = option.cityName;
                 select.appendChild(opt);
             });
