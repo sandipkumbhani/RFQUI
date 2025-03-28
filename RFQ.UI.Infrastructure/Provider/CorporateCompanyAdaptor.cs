@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
-using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -25,7 +20,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _globalClass = globalClass;
         }
 
-        public async Task<string> AddCorporateCompany(CorporateCompanyViewModelDto corporateCompanyViewModelDto)
+        public async Task<string> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
             try
             {
@@ -51,14 +46,14 @@ namespace RFQ.UI.Infrastructure.Provider
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
             return string.Empty;
         }
 
-        public async Task<IEnumerable<CorporateCompanyViewModelDto>> GetCorporateCompanyAll()
+        public async Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
@@ -68,7 +63,7 @@ namespace RFQ.UI.Infrastructure.Provider
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
             {
-                var Profilelist = JsonConvert.DeserializeObject<List<CorporateCompanyViewModelDto>>(Convert.ToString(responseModel.Data!));
+                var Profilelist = JsonConvert.DeserializeObject<List<CorporateCompanyResponseDto>>(Convert.ToString(responseModel.Data!));
                 return Profilelist;
             }
             return null;
@@ -99,7 +94,7 @@ namespace RFQ.UI.Infrastructure.Provider
         }
 
 
-        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyViewModelDto corporateCompanyViewModelDto)
+        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
@@ -130,7 +125,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"https://localhost:7272/api/Company/DeleteCompany/{companyId }";
+            var baseurl = $"https://localhost:7272/api/Company/DeleteCompany/{companyId}";
             var response = await _httpClient.DeleteAsync(baseurl);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);

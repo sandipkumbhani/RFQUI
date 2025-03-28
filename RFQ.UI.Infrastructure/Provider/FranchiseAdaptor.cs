@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text;
+using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Models;
-using System.Text;
-using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 using static RFQ.UI.Domain.Model.FranchiseViewModel;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -12,7 +11,7 @@ namespace RFQ.UI.Infrastructure.Provider
     {
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
-        public FranchiseAdaptor(HttpClient httpClient,GlobalClass globalClass)
+        public FranchiseAdaptor(HttpClient httpClient, GlobalClass globalClass)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;

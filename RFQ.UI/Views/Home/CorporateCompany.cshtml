@@ -1,5 +1,4 @@
-﻿
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
 	Layout = "_Layout";
@@ -38,21 +37,21 @@
 		</div>
 		<div id="addCorporateCompanyDiv" class="card">
 			<div class="card-header border-0 cursor-pointer">
-				<div class="card-title m-0">	
+				<div class="card-title m-0">
 					<h3 class="fw-bold m-0">Corporate company</h3>
 				</div>
 			</div>
 			<form class="form" id="CompanyTypeForm" method="post">
-				<input type="number" hidden id="txtCompanyId"/>             
+				<input type="number" hidden id="txtCompanyId" />
 				<div class="card-body border-top p-9">
 					<div class="row">
 						<div class="col-xl-6">
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Company Name </label>
-								<input type="text" class="form-control" placeholder="Company Name" id="txtCompanyName" />
+								<input type="text" class="form-control" placeholder="Company Name" maxlength="100" id="txtCompanyName" />
 
 							</div>
-							
+
 						</div>
 						<div class="col-xl-6">
 							<div class="mb-10">
@@ -63,7 +62,7 @@
 						<div class="col-xl-12">
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Address </label>
-								<input type="text" class="form-control" placeholder="Map Based Search" id="txtAddress" />
+								<input type="text" class="form-control" placeholder="Map Based Search" id="txtAddress" maxlength="200" />
 							</div>
 						</div>
 						<div class="col-xl-6">
@@ -71,56 +70,57 @@
 								<label class="form-label col-form-label required fw-semibold fs-6">City</label>
 
 								<select name="franchise" aria-label="Select a Franchise/Corporate"
-										data-control="select2" data-placeholder="Select a City." id="txtcity" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+										data-control="select2" data-placeholder="Select a City." id="ddlCity" class="form-select select2 form-select-solid form-select-lg fw-semibold">
 									<option value="0">Select a City</option>
 									<option value="1">Afghanistan</option>
 									<option value="2">Aland Islands</option>
 									<option value="3">Albania</option>
 									<option value="4">Algeria</option>
+
+
 								</select>
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-								<input type="text" class="form-control" placeholder="Contact Person" id="txtPerson" />
+								<input type="text" class="form-control" placeholder="Contact Person" id="txtPerson" maxlength="50" />
 							</div>
 
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Mobile Number</label>
-								<input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber" />
+								<input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber" maxlength="10" onkeypress="return isNumber(event)" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
-								<input type="text" class="form-control" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="10" placeholder="Pan Number" id="txtpannumber" />
+								<input type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" maxlength="10" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Franchise Name</label>
 
 								<select name="franchise" aria-label="Select a Franchise/Corporate"
-										data-control="select2" data-placeholder="Select a Franchise Name." id="franchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-									
+										data-control="select2" data-placeholder="Select a Franchise Name." id="ddlFranchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
 								</select>
 							</div>
 						</div>
 						<div class="col-xl-6">
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
-								<input type="text" class="form-control"  placeholder="Pin Code" id="txtPinCode" />
+								<input type="text" class="form-control" placeholder="Pin Code" id="txtPinCode" maxlength="6" onkeypress="return isNumber(event)" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
-								<input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" />
+								<input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" maxlength="10" onkeypress="return isNumber(event)" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label fw-semibold fs-6">Contact Number</label>
-								<input type="text" class="form-control" maxlength="10" placeholder="Contact Number" id="txtContactNumber" onkeypress="return isNumber(event)" />
+								<input type="text" class="form-control" placeholder="Contact Number" id="txtContactNumber" maxlength="10" onkeypress="return isNumber(event)" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-								<input type="email" class="form-control" placeholder="email" id="txtEmail" />
+								<input type="email" class="form-control" placeholder="email" id="txtEmail" maxlength="50" />
 							</div>
 							<div class="mb-10">
 								<label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
-								<input type="text" class="form-control" placeholder="GST Number" id="txtGstNumber" />
+								<input type="text" class="form-control" placeholder="GST Number" id="txtGstNumber" maxlength="15" />
 							</div>
 						</div>
 					</div>
@@ -143,12 +143,12 @@
 										<div class="col-md-2">
 											<label class="form-label col-form-label fw-semibold fs-6">Attachment Type  </label>
 											<select name="franchise" aria-label="Select a Attachment Type"
-													data-control="select2" data-placeholder="Select a Attachment Type"  class="form-select select2 form-select-solid form-select-lg fw-semibold">
-												<option value="">Select a Attachment Type</option>
-												<option value="AF">Afghanistan</option>
-												<option value="AX">Aland Islands</option>
-												<option value="AL">Albania</option>
-												<option value="DZ">Algeria</option>
+													data-control="select2" data-placeholder="Select a Attachment Type"  id="ddlAttachment" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+												@* <option value="">Select a Attachment Type</option> *@
+												@* <option value="AF">Afghanistan</option> *@
+												@* <option value="AX">Aland Islands</option> *@ 
+												@* <option value="AL">Albania</option> *@
+												@* <option value="DZ">Algeria</option> *@
 											</select>
 										</div>
 										<div class="col-md-2">
@@ -211,7 +211,7 @@
 							<th>addressLine</th>
 							<th>cityid</th>
 							<th>pinCode</th>
-							<th>contactPerson</th> 
+							<th>contactPerson</th>
 							<th>mobNo</th>
 							<th>ContactNo</th>
 							<th>whatsAppNo</th>
@@ -252,20 +252,49 @@
 				console.log(data);
 					if (data && data.length > 0) {
 						$.each(data, function (index, item) {
-							$('#franchisename').append($('<option>', {
+							$('#ddlFranchisename').append($('<option>', {
 								value: item.companyId,
 								text: item.companyName
 						}));
 					});
 					}
 					else {
-						$('#franchisename').empty().append('<option value="">No Franchise Available</option>');
+						$('#ddlFranchisename').empty().append('<option value="">No Franchise Available</option>');
 					}
 
 			},
 			error: function (xhr, status, error) {
 				console.error("Error:", error);
 				toastr.error("Failed to submit franchise ", "Error");
+			}
+		});
+
+		var GetAttachmentUrl = '@Url.Content("~/MasterAttachment/GetAllMasterAttachmentType")';
+		$.ajax({
+			url: GetAttachmentUrl,
+			type: "GET",
+			contentType: "application/json",
+			success: function (response) {
+				console.log(response);
+				// var data = response.filter(x=>x.companyTypeId == 2);
+				// console.log(data);
+
+					if (response && response.length > 0) {
+						$.each(response, function (index, item) {
+							$('#ddlAttachment').append($('<option>', {
+								value: item.attachmentTypeId,
+								text: item.attachmentTypeName
+						}));
+					});
+					}
+					else {
+						$('#ddlAttachment').empty().append('<option value="">No Attachment Available</option>');
+					}
+
+			},
+			error: function (xhr, status, error) {
+				console.error("Error:", error);
+				toastr.error("Failed to MasterAttachmentType ", "Error");
 			}
 		});
 		var corporateCompanyViewModelDto;
@@ -280,7 +309,7 @@
 		$("#txtCompanyName").on("change", function () {
 			var CompanyNa = $(this).val();
 			if (!isAlphabets(CompanyNa)) {
-				$("#txtCompanyName").val('');
+				$(this).focus();
 				toastr.warning("Please enter a valid Corporate Company", "Warning");
 				return;
 			}
@@ -288,7 +317,7 @@
 		$("#txtCompanyCode").on("change", function () {
 			var CompanyCo = $(this).val();
 			if (!isAlphabets(CompanyCo)) {
-				$("#txtCompanyCode").val('');
+				$(this).focus();
 				toastr.warning("Please enter a Corporate Company Code", "Warning");
 				return;
 			}
@@ -296,17 +325,15 @@
 		$("#txtWhatsAppNumber").on("change", function () {
 			var whats = $(this).val();
 			if (!isMobile(whats)) {
-				$("#txtWhatsAppNumber").val('');
+				$(this).focus();
 				toastr.warning("Please enter a whatsApp number", "Warning");
-
-
 				return;
 			}
 		});
 		$("#txtMobileNumber").on("change", function () {
 			var MobileNum = $(this).val();
 			if (!isMobile(MobileNum)) {
-				$("#txtMobileNumber").val(''); 
+				$(this).focus();
 				toastr.warning("Please enter a valid 10-digit mobile number", "Warning");
 				return;
 			}
@@ -318,15 +345,15 @@
 				 $(this).focus();
 				toastr.warning("Please enter a valid 10-digit contact number", "Warning");
 				return;
-			} 
+			}
 		});
-		
-	 
+
+
 
 		$("#txtAddress").on("change", function () {
 			var Address = $(this).val();
-			if (!isAlphaNumeric(Address)) {
-				$("#txtAddress").val('');
+			if (!isValidAddress(Address)) {
+				$(this).focus();
 				toastr.warning("Please enter a Address", "Warning");
 				return;
 			}
@@ -334,12 +361,12 @@
 		$("#txtPinCode").on("change", function () {
 			var pinc = $(this).val();
 			if (!/^\d{6}$/.test(pinc)) {
-				$("#txtPinCode").val('');
+				$(this).focus();
 				toastr.warning("Please enter a Valid Pincode", "Warning");
 				return;
 			}
 		});
-		$("#txtcity").on("change", function () {
+		$("#ddlCity").on("change", function () {
 			var city = $(this).val();
 			if (!isValidateSelect(city)) {
 				// $("#txtcity").val('');
@@ -350,7 +377,7 @@
 		$("#txtPerson").on("change", function () {
 			var person = $(this).val();
 			if (!isAlphabets(person)) {
-				$("#txtPerson").val('');
+				$(this).focus();
 				toastr.warning("Please enter a Contact Person", "Warning");
 				return;
 			}
@@ -358,15 +385,15 @@
 		$("#txtEmail").on("change", function () {
 			var email = $(this).val();
 			if (!isValidateEmail(email)) {
-				$("#txtEmail").val('');
+				$(this).focus();
 				toastr.warning("Please enter a valid email", "Warning");
-				return;	
+				return;
 			}
 		});
-		$("#txtpannumber").on("change", function () {
+		$("#txtPanNumber").on("change", function () {
 			var pan = $(this).val();
 			if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
-				$("#txtpannumber").val('');
+				$(this).focus();
 				toastr.warning("Please enter a valid PAN number", "Warning");
 				return;
 			}
@@ -374,12 +401,12 @@
 		$("#txtGstNumber").on("change", function () {
 			var gst = $(this).val();
 			if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(gst)) {
-				$("#txtGstNumber").val('');
+				$(this).focus();
 				toastr.warning("Please enter a valid GST number", "Warning");
 				return;
 			}
 		});
-		$("#franchisename").on("change", function () {
+		$("#ddlFranchisename").on("change", function () {
 			var fname = $(this).val();
 			if (!isValidateSelect(fname)) {
 				// $("#franchisename").val('');
@@ -387,7 +414,22 @@
 				return;
 			}
 		});
-		
+
+
+
+		function isValidAddress(value) {
+			return /^[A-Za-z0-9\s,.\-\/]+$/.test(value);
+		}
+
+
+		document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
+			element.addEventListener("input", function () {
+				this.value = this.value.toUpperCase();
+			});
+		});
+
+
+
 
 
 		// On form submit
@@ -413,7 +455,7 @@
 	});
 
 
-	
+
 
 	function fetchCorporateCompany() {
 		$('#tableDiv').show();
@@ -423,9 +465,9 @@
 			type: "GET",
 			dataType: "json",
 			success: function (response) {
-				let trlist = response.corporateCompanyViewModelDto.filter(x=>x.companyTypeId==3);
+				let trlist = response.filter(x=>x.companyTypeId==3);
 				// let trlist = response.corporateCompanyViewModelDto
-				corporateCompanyViewModelDto = response.corporateCompanyViewModelDto;
+				corporateCompanyViewModelDto = response;
 				// Destroy existing DataTable if exists
 				if ($.fn.DataTable.isDataTable('#tableCorporateCompany')) {
 					$('#tableCorporateCompany').DataTable().clear().destroy();
@@ -462,7 +504,7 @@
 						{ "data": "email" },
 						{ "data": "panNo" },
 						{ "data": "gstNo" },
-						
+
 
 						{
 							"data": "companyId",
@@ -504,8 +546,8 @@
 			$("#btnupdate").click(function (e) {
 				e.preventDefault();
 
-				
-				var formData = {					
+
+				var formData = {
 					CompanyId : $("#txtCompanyId").val(),
 					CompanyName: $("#txtCompanyName").val(),
 
@@ -513,17 +555,17 @@
 					MobNo: $("#txtMobileNumber").val(),
 					ContactNo : $("#txtContactNumber").val(),
 					AddressLine: $("#txtAddress").val(),
-					CityId: $("#txtcity").val(),
+					CityId: $("#ddlCity").val(),
 					PinCode: $("#txtPinCode").val(),
 					ContactPerson: $("#txtPerson").val(),
 					Email: $("#txtEmail").val(),
 					WhatsAppNo: $("#txtWhatsAppNumber").val(),
-					PANNo: $("#txtpannumber").val(),
+					PANNo: $("#txtPanNumber").val(),
 					GSTNo: $("#txtGstNumber").val(),
-					// ContactNo : $("#txtMobileNumber").val()
-					
+
+
 				}
-						
+
 				$.ajax({
 					type: "PUT",
 					url: "/CorporateCompany/EditCorporateCompany",
@@ -552,19 +594,19 @@
 
 	function deleteCorporateCompany(companyId) {
 	   var deleteCorporateCompanyUrl = '@Url.Content("~/CorporateCompany/DeleteCorporateCompany/")' + companyId
-         $.ajax({
+		 $.ajax({
 			url: deleteCorporateCompanyUrl,
-            type: "DELETE",
-            dataType: "json",
+			type: "DELETE",
+			dataType: "json",
 			data: JSON.stringify(companyId),
-            success: function (response) {
+			success: function (response) {
 				fetchCorporateCompany();
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Fail	ed to fetch data!", "Error");
-            }
-        });
-    }
+			},
+			error: function (xhr, status, error) {
+				toastr.error("Fail	ed to fetch data!", "Error");
+			}
+		});
+	}
 
 
 	function saveandsavenew() {
@@ -573,15 +615,15 @@
 		var mobileNumber = $("#txtMobileNumber").val();
 		var contactNumber = $("#txtContactNumber").val();
 		var address = $("#txtAddress").val();
-		var city = $("#txtcity").val();
+		var city = $("#ddlCity").val();
 		var pincode = $("#txtPinCode").val();
 		var contactPerson = $("#txtPerson").val();
 		var email = $("#txtEmail").val();
 		var whatsAppNumber = $("#txtWhatsAppNumber").val();
-		var panNumber = $("#txtpannumber").val();
+		var panNumber = $("#txtPanNumber").val();
 		var gSTNumber = $("#txtGstNumber").val();
-		var franchiseName = $("#franchisename").val();
-		
+		var franchiseName = $("#ddlFranchisename").val();
+
 		if (!isAlphabets(companyName)) {
 			toastr.warning("Please enter a valid Corporate Company", "Warning");
 			return;
@@ -604,7 +646,8 @@
 			return;
 		}
 
-		if (!isAlphaNumeric(address)) {
+
+		if (!isValidAddress(address)) {
 			toastr.warning("Please enter a Address", "Warning");
 			return;
 		}
@@ -640,7 +683,7 @@
 			return;
 		}
 
-	
+
 
 		var saveUrl = '@Url.Content("~/CorporateCompany/CorporateCompanySave")';
 		var formData = {
@@ -655,7 +698,7 @@
 			Email: email,
 			WhatsAppNo: whatsAppNumber,
 			PANNo: panNumber,
-			GSTNo: gSTNumber,			
+			GSTNo: gSTNumber,
 			// FranchiseName: franchiseName
 		};
 
@@ -666,7 +709,7 @@
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify(formData),
-			success: function (response) { 
+			success: function (response) {
 				toastr.success("Corporate Company submitted successfully!");
 
 			},
@@ -688,18 +731,18 @@
 		  $("#btnupdate").show();
 		  $("#btnsaveandnew").prop("disabled", true);
 		  $("#txtCompanyId").val(formData.companyId);
-		  $("#txtCompanyName").val(formData.companyName);	
+		  $("#txtCompanyName").val(formData.companyName);
 		  // $("#txtCompanyCode").val(formData.companyTypeId);
 		  $("#txtPerson").val(formData.contactPerson);
 		  $("#txtMobileNumber").val(formData.mobNo);
 		  $("#txtContactNumber").val(formData.contactNo);
 		  $("#txtAddress").val(formData.addressLine);
-		  $("#txtcity").val(formData.cityId);
+		  $("#ddlCity").val(formData.cityId);
 		  $("#txtPinCode").val(formData.pinCode);
 		  $("#txtEmail").val(formData.email);
 		  $("#txtWhatsAppNumber").val(formData.whatsAppNo);
-		  $("#txtpannumber").val(formData.panNo);
+		  $("#txtPanNumber").val(formData.panNo);
 		  $("#txtGstNumber").val(formData.gstNo);
 	}
-	
+
 </script>
