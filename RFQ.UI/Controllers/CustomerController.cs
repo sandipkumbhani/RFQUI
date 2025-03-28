@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 
 namespace RFQ.UI.Controllers
@@ -172,6 +173,28 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 return Ok(ex);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllCity()
+        {
+            try
+            {
+                var customerList = await _customerServices.GetAllCity();
+
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(customerList);
+                }
+                else
+                {
+                    return View(customerList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }
