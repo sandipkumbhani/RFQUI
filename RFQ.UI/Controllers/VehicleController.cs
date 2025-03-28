@@ -190,5 +190,33 @@ namespace RFQ.UI.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllMasterVehicleType()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var vehicleCategoryList = await _vehicleServices.GetAllMasterVehicleType();
+                if (vehicleCategoryList != null && vehicleCategoryList.Count() > 0)
+                {
+                    return Json(vehicleCategoryList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(vehicleCategoryList);
+                }
+                else
+                {
+                    return View(vehicleCategoryList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }

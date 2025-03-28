@@ -9,5 +9,7 @@ namespace RFQ.UI.Domain.Interfaces
         Task<IEnumerable<InternalMasterDto>> GetAllVehicleCategory();
 
         Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto requestDto);
+
+        Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType();
     }
 }
