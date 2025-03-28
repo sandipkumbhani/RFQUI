@@ -22,14 +22,14 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
-        public async Task<string> AddCustomer(CustomerRequestDto customerViewModelDto)
+        public async Task<string> AddCustomer(CustomerRequestDto customerRequestDto)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var baseurl = $"{_fleetLynkApiUrl}/MasterParty/AddMasterParty";
-                var customer = JsonConvert.SerializeObject(customerViewModelDto);
+                var customer = JsonConvert.SerializeObject(customerRequestDto);
                 var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
@@ -86,14 +86,14 @@ namespace RFQ.UI.Infrastructure.Provider
             return "Failed to Delete Customer";
         }
 
-        public async Task<string> EditCustomer(int PartyId, CustomerRequestDto customerViewModelDto)
+        public async Task<string> EditCustomer(int PartyId, CustomerRequestDto customerRequestDto)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var baseurl = $"{_fleetLynkApiUrl}/MasterParty/UpdateMasterParty/{PartyId}";
-                var customer = JsonConvert.SerializeObject(customerViewModelDto);
+                var customer = JsonConvert.SerializeObject(customerRequestDto);
                 var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
