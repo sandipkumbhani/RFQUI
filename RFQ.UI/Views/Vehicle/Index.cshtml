@@ -53,9 +53,7 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Owner Name</label>
-                                <select id="ownerName" name="OwnerName"
-                                        data-control="select2" data-placeholder="Select Owner Name" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select Owner Name</option>
+                                <select name="OwnerName" aria-label="Select Owner Name" id="ownerName" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                         </div>
@@ -279,15 +277,6 @@
     const categoryDropdown = document.getElementById("vehicleCategory");
      const ownerDropdown = document.getElementById("ownerName");
 
-
-    // Populate dropdown options
-    ownerNames.forEach(owner => {
-        let option = document.createElement("option");
-        option.value = owner;
-        option.textContent = owner;
-        ownerDropdown.appendChild(option);
-    });
-
       // Populate dropdown options
     trackingProviders.forEach(provider => {
         let option = document.createElement("option");
@@ -301,6 +290,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         GetAllVehicleCategory();
         GetAllVehicleTypeList();
+        GetAllOwnerOrVendor();
         document.getElementById("save_click").addEventListener("click", validateForm);
         document.getElementById("save&new_click").addEventListener("click", validateForm);
 
@@ -494,6 +484,40 @@
                  toastr.error("Failed to fetch data!", "Error");
              }
          });
+     }
+
+     function GetAllOwnerOrVendor() {
+         var getAllOwnerOrVendorUrl = '@Url.Content("~/Vehicle/GetAllOwnerOrVendor")'
+           $.ajax({
+              url: getAllOwnerOrVendorUrl,
+              type: "GET",
+              dataType: "json",
+              success: function (response) {
+                  debugger;
+                 const ownerDropdown = document.getElementById("ownerName");
+                     // Add default option
+                     const defaultOption = document.createElement("option");
+                     defaultOption.value = 0;
+                     defaultOption.textContent = "Select Owner Name ";
+                     ownerDropdown.appendChild(defaultOption);
+     
+                     // Add Other Options
+     
+                         response.forEach(item => {
+                             const option = document.createElement("option");
+                                 option.value = item.partyId;
+                                 option.textContent = item.partyName;
+                             ownerDropdown.appendChild(option);
+                         });
+     
+                         $('.selectpicker').selectpicker('refresh');
+                     //End
+              },
+              error: function (xhr, status, error) {
+                  console.error("Error:", error);
+                  toastr.error("Failed to fetch data!", "Error");
+              }
+          });
      }
 </script>
 
