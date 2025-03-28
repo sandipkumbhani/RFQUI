@@ -28,14 +28,10 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-
                 string uniqueFileName = "";
                 if (file != null)
                 {
-                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "franchiselogo_" + companyId);
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "franchiselogo");
                     if (!Directory.Exists(uploadsFolder))
                     {
                         Directory.CreateDirectory(uploadsFolder);
@@ -59,11 +55,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-
-                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "franchiselogo_" + companyId , fileName);
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "franchiselogo" , fileName);
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);

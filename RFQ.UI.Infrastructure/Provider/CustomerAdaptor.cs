@@ -6,6 +6,8 @@ using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Domain.RequestDto;
+using Microsoft.Extensions.Configuration;
+using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
 {

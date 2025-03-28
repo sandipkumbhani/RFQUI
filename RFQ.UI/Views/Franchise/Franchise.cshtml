@@ -47,7 +47,7 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Franchise Name </label>
-                                <input type="text" class="form-control" placeholder="Franchise Name" id="txtFranchiseName" onkeypress="return isAlphabets(event)" maxlength="100"/>
+                                <input type="text" class="form-control" placeholder="Franchise Name" id="txtFranchiseName" maxlength="100" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Franchise Code</label>
@@ -69,6 +69,7 @@
                                 </div>
                                 
                             </div>
+                            <input type="text" hidden id="txtUploadedFile" />
                         </div>
                         <div class="col-xl-12">
                             <div class="mb-5">
@@ -80,7 +81,7 @@
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">City</label>
 
-                                <select id="ddlCity" name="franchise" aria-label="Select a Franchise/Corporate"
+                                <select id="ddlCity" name="franchise" aria-label="Select a Franchise/Corporate" 
                                         data-control="select2" data-placeholder="Select a City." class="form-select select2 form-select-solid form-select-lg fw-semibold">
                                     <option value="">Select a City</option>
                                     <option value="0">Afghanistan</option>
@@ -114,11 +115,11 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailId" />
+                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailId"/>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
-                                <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" placeholder="GST Number" id="txtGSTNumber" maxlength="15" onkeypress="return isNumber(event)" />
+                                <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" placeholder="GST Number" id="txtGstNumber" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="15" />
                             </div>
                         </div>
                     </div>
@@ -183,7 +184,7 @@
                 <div class="card-footer d-flex justify-content-srtat py-6 px-9">
                     <button id="btnSaveFranchise" type="button" class="btn btn-primary me-2">Save</button>
                     <button id="btnSavenewFranchise" type="button" class="btn btn-primary me-2">Save & New</button>
-                    <button type="button" id="btnupdate" class="btn btn-primary me-2" style="display:none;">Update</button>
+                    <button type="button" id="btnUpdateFranchise" class="btn btn-primary me-2" style="display:none;">Update</button>
                     <button type="button" class="btn btn-primary" id="viewButton">View</button>
                 </div>
             </form>
@@ -234,7 +235,8 @@
         if (Dropzone.instances.length > 0) {
             Dropzone.instances.forEach(dz => dz.destroy());
         }
-
+        let isNewFranchise = false;
+        let isUpdateFranchise = false;
         const myDropzone = new Dropzone("#dropzone",
         {
             url : uploadUrl,
@@ -243,13 +245,47 @@
             parallelUploads : 1, 
             maxFilesize : 1,
             addRemoveLinks : true,
+            autoProcessQueue: false,
             acceptedFiles : "image/*",
+            init : function(){
+                $("#btnSaveFranchise").click(function(event){
+                    event.preventDefault();
+                    isNewFranchise = false;
+                    isUpdateFranchise = false;
+                    if(myDropzone.files.length > 0){
+                        myDropzone.processQueue();
+                    }                
+                });
+                $("#btnSavenewFranchise").click(function(event){
+                    isNewFranchise = true;
+                    isUpdateFranchise = false;
+                    if(myDropzone.files.length > 0){
+                        myDropzone.processQueue();
+                    } 
+                });
+                $("#btnUpdateFranchise").click(function(event){
+                    isNewFranchise = false;
+                    isUpdateFranchise = true;
+                    if(myDropzone.files.length > 0){
+                        myDropzone.processQueue();
+                    }
+                });
+            },
             success : function(file,response){
-                const dropzone = document.getElementById('dropzone');
-                if(dropzone.children[1].nodeName === "IMG"){
-                    dropzone.removeChild(dropzone.children[1]);
+                if(isUpdateFranchise){
+                    const dropzone = document.getElementById('dropzone');
+                    if(dropzone.children[1]){
+                        dropzone.removeChild(dropzone.children[1]);
+                    }
+                    UpdateFranchise(response.fileName);
                 }
-                $("#dropzone").val(response.fileName);
+                else{
+                    SaveFranchise(response.fileName);
+                    if(isNewFranchise){
+                        $('#franchiseForm')[0].reset();
+                        myDropzone.removeAllFiles();
+                    }
+                }
             },
             removedfile : function(file){
                 var fileName = $("#dropzone").val();
@@ -296,15 +332,15 @@
         function validateGstNumber(number){
             return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(number);
         }
+        // $("#txtGSTNumber").on("input",function(e){
+        //     if(!isAlphaNumeric(e.target.value)){
+        //         console.log("Invalid GST Number");
+        //         $(this).focus();
+        //         toastr.warning("Please enter a valid GST Number", "Warning");
+        //         return;
+        //     }
+        // })
 
-        $("#btnSaveFranchise").click(function(event){
-            event.preventDefault();
-            SaveFranchise();
-        });
-        $("#btnSavenewFranchise").click(function(event){
-            SaveFranchise();
-            $('#franchiseForm')[0].reset();
-        });
         $('#backButton').click(function () {
             $("#addFranchiseDiv").css('display', 'Block')
             $("#backButton").css('display', 'none');
@@ -312,62 +348,72 @@
         });
 
         $("#txtFranchiseName").on("change",function(){
-            if(!isAlphaNumeric($(this).val())){
+            if(!isAlphabets($(this).val())){
                 toastr.warning("Please enter a valid Franchise  Name", "Warning");
+                $(this).focus();
                 return;
             }
         });
         $("#txtFranchiseCode").on("change",function(){
             if(!isAlphaNumeric($(this).val())){
                 toastr.warning("Please enter a valid Franchise  Code", "Warning");
+                $(this).focus();
                 return;
             }
         });
         $("#txtAddress").on("change",function(){
             if(IsNullOrEmpty($(this).val())){
                 toastr.warning("Please enter a valid Franchise  Address", "Warning");
+                $(this).focus();
                 return;
             }
         });
         $("#ddlCity").on("change",function(){
-            if(!isValidateSelect($(this).val(),)){
+            if(!isValidateSelect($(this).val())){
                 toastr.warning("Please enter a valid Franchise  City", "Warning");
+                $(this).focus();
                 return;
             }
         });
         $("#txtPinCode").on("change",function(){
-            if(!/^\d{6}$/.test(($(this).val()))){
+            if(!/^\d{6}$/.test($(this).val())){
                 toastr.warning("Please enter a valid Pin Code", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtContactPerson").on("change",function(){
             if(!isAlphabets($(this).val())){
                 toastr.warning("Only letters allowed", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtWhatsAppNumber").on("change",function(){
             if(!isMobile($(this).val())){
                 toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtMobileNumber").on("change",function(){
             if(!isMobile($(this).val())){
                 toastr.warning("Please enter a valid Mobile Number", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtEmailId").on("change",function(){
             if(!isValidateEmail($(this).val())){
                 toastr.warning("Please enter a valid Email", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtPanNumber").on("change",function(){
             if(!validatePanNumber($(this).val())){
                 toastr.warning("Please enter a valid PAN Number", "Warning");
+                $(this).focus();
                 return;
             }
         })
@@ -378,7 +424,7 @@
             }
         })
 
-        function SaveFranchise(){
+        function SaveFranchise(fileName){
             
             var franchiseName = $("#txtFranchiseName").val();
             var franchiseCode = $("#txtFranchiseCode").val();
@@ -390,8 +436,8 @@
             var mobileNumber = $("#txtMobileNumber").val();
             var emailId = $("#txtEmailId").val();
             var panNumber = $("#txtPanNumber").val();
-            var gstNumber = $("#txtGSTNumber").val();
-            var franchiseLogo = $("#dropzone").val();
+            var gstNumber = $("#txtGstNumber").val();
+            var franchiseLogo = fileName;
 
             if (IsNullOrEmpty(franchiseName)) {
                 toastr.warning("Please enter a valid Franchise Name", "Warning");
@@ -475,8 +521,8 @@
                 type : 'GET',
                 dataType : 'json',
                 success : function(response){
-                    let franchiseList = response.franchiseViewModelDtos.filter(x=>x.companyTypeId == 2);
-                    franchiseViewModelDto = response.franchiseViewModelDtos;
+                    let franchiseList = response.filter(x=>x.companyTypeId == 2);
+                    franchiseViewModelDto = response;
                     if ($.fn.DataTable.isDataTable('#tableFranchise')) {
                         $('#tableFranchise').DataTable().clear().destroy();
                     }
@@ -497,11 +543,9 @@
                         "scrollX": true,
                         "data": franchiseList,
                         "columns": [
-                            { "data": function(row){
-                                    return {LogoImage : row.logoImage,ParentComapanyId : row.parentCompanyId};
-                                },
+                            { "data": "logoImage",
                                 "render" : function(data){
-                                    return `<img src="../../franchiselogo_${data.ParentComapanyId}/${data.LogoImage}" style="height:40px;width:60px" alt="Logo"/>`
+                                    return `<img src="../../franchiselogo/${data}" style="height:40px;width:60px" alt="Logo"/>`
                                 }
                             },
                             { "data": "companyName" },
@@ -515,13 +559,15 @@
                             { "data": "email" },
                             { "data": "panNo" },
                             { "data": "gstNo" },
-                            { "data": "companyId",
+                            { "data": function(row){
+                                    return {CompanyId : row.companyId, Logofile : row.logoImage}
+                                },
                                 "render":function (data, type, row){
                                     return `<div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-sm btn-primary" onclick="EditFranchise(${data})">
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="EditFranchise(${data.CompanyId})">
                                                     <i class="ti ti-edit"></i> Edit
                                                 </button>
-                                                <button type="button" class="btn btn-sm btn-danger" onclick="DeleteFranchise(${data})">
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="DeleteFranchise(${data.CompanyId},'${data.Logofile}')">
                                                     <i class="ti ti-trash"></i> Delete
                                                 </button>
                                             </div>`;
@@ -549,8 +595,13 @@
             $("#backButton").css('display', 'none');
             $("#addFranchiseDiv").css('display', 'Block');
             $("#btnSaveFranchise").hide();
-            $("#btnupdate").show();
+            $("#btnUpdateFranchise").show();
             $("#btnSavenewFranchise").prop("disabled", true);
+            // myDropzone.removeAllFiles();
+            const dropzone = document.getElementById('dropzone');
+                if(dropzone.children[1]){
+                    dropzone.removeChild(dropzone.children[1]);
+            }
             $("#txtCompanyId").val(formData.companyId);
             $("#txtFranchiseName").val(formData.companyName);
             $("#txtFranchiseCode").val(formData.companyTypeId);
@@ -562,15 +613,22 @@
             $("#txtMobileNumber").val(formData.mobNo);
             $("#txtEmailId").val(formData.email);
             $("#txtPanNumber").val(formData.panNo);
-            $("#txtGSTNumber").val(formData.gstNo);
+            $("#txtGstNumber").val(formData.gstNo);
             var parentCompanyId = formData.parentCompanyId;
             var logoImage = formData.logoImage;
-            $("#dropzone").append('<img src="../../franchiselogo_'+parentCompanyId+'/'+logoImage+'" style="height:200px;width:200px;">');
+            $("#txtUploadedFile").val(logoImage);
+            $("#dropzone").append('<div class="dz-preview dz-image-preview"><div class="dz-image"><img data-dz-thumbnail style="width: 120px; height: 120px; object-fit: cover;" src="../../franchiselogo/'+logoImage+'"></div></div>');
             $(".dz-message").hide();
         };
 
-        $("#btnupdate").click(function (e) {
-            e.preventDefault();
+        function UpdateFranchise(fileName) {
+            var logoFileName;
+            if(fileName){
+                logoFileName = fileName
+            }
+            else{
+                logoFileName = $("#txtUploadedFile").val();
+            }
             var formData = {
                 CompanyId : $("#txtCompanyId").val(),
                 CompanyName: $("#txtFranchiseName").val(),
@@ -583,9 +641,11 @@
                 WhatsAppNo: $("#txtWhatsAppNumber").val(),
                 Email: $("#txtEmailId").val(),
                 PANNo: $("#txtPanNumber").val(),
-                GSTNo: $("#txtGSTNumber").val(),
-                LogoImage : $("#dropzone").val()
+                GSTNo: $("#txtGstNumber").val(),
+                LogoImage : logoFileName
+                              
             }
+            console.log(formData);
             var editFranchiseUrl = '@Url.Content("~/Franchise/EditFranchise")';
             $.ajax({
                 type: "PUT",
@@ -603,7 +663,7 @@
                         $("#dataDiv").html("Failed to update profile.");
                     }
                     $("#btnSaveFranchise").show();
-                    $("#btnupdate").hide();
+                    $("#btnUpdateFranchise").hide();
                     $("#btnSavenewFranchise").prop("disabled", false);
                     $("#viewprofile").click();
                 },
@@ -611,10 +671,30 @@
                     $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
                 }
             });
-        });
+            if(fileName){
+                var deleteUploadUrl = '@Url.Content("~/Franchise/DeleteUpload")';
+                var deletefileName = $("#txtUploadedFile").val();
+                $.ajax({
+                    url: deleteUploadUrl,
+                    type: "POST",
+                    dataType: "json",
+                    data: {fileName : deletefileName},
+                    success: function (response) {
+                        console.log("delete uploaded");
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error("Fail	ed to fetch data!", "Error");
+                    }
+                });
+            }
+        }
 
-        function DeleteFranchise(companyId){
-            var deleteFranchiseUrl = '@Url.Content("~/Franchise/DeleteFranchise/")' + companyId
+        function DeleteFranchise(companyId,fileName){
+            debugger;
+            console.log(companyId);
+            console.log(fileName);
+            var deleteFranchiseUrl = '@Url.Content("~/Franchise/DeleteFranchise/")' + companyId;
+            var deleteUploadUrl = '@Url.Content("~/Franchise/DeleteUpload")';
             $.ajax({
                 url: deleteFranchiseUrl,
                 type: "DELETE",
@@ -627,6 +707,18 @@
                     toastr.error("Fail	ed to fetch data!", "Error");
                 }
             });
+            $.ajax({
+                url: deleteUploadUrl,
+                type: "POST",
+                dataType: "json",
+                data: {fileName : fileName},
+                success: function (response) {
+                    console.log("delete uploaded");
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Fail	ed to fetch data!", "Error");
+                }
+            })
         };
     
 </script>           
