@@ -81,7 +81,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
             var baseurl = $"{_fleetLynkApiUrl}/CompanyUser/UpdateUser/{UserId}";
-            var user = JsonConvert.SerializeObject(userViewModelDto);
+            var user = JsonConvert.SerializeObject(userRequestDto);
             var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
             var responseData = await response.Content.ReadAsStringAsync();
