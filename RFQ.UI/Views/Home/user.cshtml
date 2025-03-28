@@ -381,7 +381,6 @@
 		type: "GET",
 		contentType: "application/json",
 		success: function (response) {
-			// debugger;
 			console.log(response);
 			var data = response.filter(x=>x.companyTypeId == 2 || x.companyTypeId == 3);
 			console.log(data);
@@ -438,7 +437,6 @@
 		$("#btnUpdate").click(function (e)
 		{
 			e.preventDefault();
-			debugger;
 			var UserViewModel = {
 				UserId : $('#txtuserid').val(),
 				PersonName : $('#txtName').val(),

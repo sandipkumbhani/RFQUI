@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Domain.Interfaces
@@ -7,6 +8,8 @@ namespace RFQ.UI.Domain.Interfaces
     {
         Task<IEnumerable<InternalMasterDto>> GetAllVehicleCategory();
 
-        Task<VehicleRCModelDto> GetVehicleKycDetails();
+        Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto requestDto);
+
+        Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType();
     }
 }

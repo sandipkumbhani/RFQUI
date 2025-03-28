@@ -13,8 +13,10 @@ namespace RFQ.UI.Application.Interface
 
         Task<string> DeleteCustomer(int PartyId);
 
-        Task<GstKycDetailsDto> GetGstKycDetails();
+        Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto requestDto);
 
-        Task<PanKycDetailModel> GetPanKycDetails();
+        Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto requestDto);
+
+        Task<IEnumerable<comMstCityDto>> GetAllCity();
     }
 }

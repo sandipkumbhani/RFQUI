@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Models;
@@ -12,10 +13,14 @@ namespace RFQ.UI.Infrastructure.Provider
     {
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
-        public FranchiseAdaptor(HttpClient httpClient,GlobalClass globalClass)
+        private readonly IConfiguration _config;
+        private string _fleetLynkApiUrl;
+        public FranchiseAdaptor(HttpClient httpClient,GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
+            _config = configuration;
+            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
         public async Task<string> AddFranchise(FranchiseViewModelDto franchiseViewModelDto)
         {
@@ -23,7 +28,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = "https://localhost:7272/api/Company/AddCompany";
+                var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany";
                 var franchise = JsonConvert.SerializeObject(franchiseViewModelDto);
                 var requestContent = new StringContent(franchise, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -55,7 +60,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"https://localhost:7272/api/Company/DeleteCompany/{companyId}";
+            var baseurl = $"{_fleetLynkApiUrl}/Company/DeleteCompany/{companyId}";
             var response = await _httpClient.DeleteAsync(baseurl);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
@@ -79,7 +84,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"https://localhost:7272/api/Company/UpdateCompany/{companyId}";
+            var baseurl = $"{_fleetLynkApiUrl}/Company/UpdateCompany/{companyId}";
             var vehicle = JsonConvert.SerializeObject(franchiseViewModelDto);
             var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -104,7 +109,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync("https://localhost:7272/api/Company/GetAllCompany");
+            var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/Company/GetAllCompany");
 
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);

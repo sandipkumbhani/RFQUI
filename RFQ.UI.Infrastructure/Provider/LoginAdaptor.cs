@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
+using RFQ.UI.Domain.Model;
 using RFQ.UI.Models;
 using System.Text;
 
@@ -8,15 +10,23 @@ namespace RFQ.UI.Infrastructure.Provider
     public class LoginAdaptor : ILoginAdaptor
     {
         private HttpClient _httpClient;
+        private readonly GlobalClass _globalClass;
+        private readonly IConfiguration _config;
+        private string _fleetLynkApiUrl;
+        public LoginAdaptor(HttpClient httpClient,GlobalClass globalClass, IConfiguration configuration)
+        {
+            _httpClient = httpClient;
+            _globalClass = globalClass;
+            _config = configuration;
+            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
+        }
 
         public async Task<string> PostApiDataAsync(LoginViewModel loginViewModel)
         {
-
             try
             {
                 _httpClient = new HttpClient();
-                var baseUrl = "https://localhost:7272/api/Login/Login";
-
+                var baseUrl = $"{_fleetLynkApiUrl}/Login/Login";
                 var company = JsonConvert.SerializeObject(loginViewModel);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseUrl, requestContent);
@@ -42,8 +52,5 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             public string? Token { get; set; }
         }
-
-
-
     }
 }

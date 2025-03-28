@@ -52,7 +52,7 @@
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST No</label>
                                 <div class="col-auto">
-                                    <input type="text" class="form-control" placeholder="" id="gstEkyc" />
+                                    <input type="text" class="form-control" placeholder="" id="txtGstNumber" />
                                 </div>
                                 <div class="col-auto">
                                     <button class="btn btn-primary me-2" type="button" id="gstEKycButton">e-KYC</button>
@@ -107,7 +107,7 @@
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">PAN No</label>
                                 <div class="col-auto">
-                                    <input type="text" class="form-control" placeholder="" id="panEkyc" />
+                                    <input type="text" class="form-control" placeholder="" id="txtPanNumber" />
                                 </div>
                                 <div class="col-auto">
                                     <button class="btn btn-primary me-2" type="button" id="panEKycButton">e-KYC</button>
@@ -157,13 +157,7 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">City </label>
-                                <select name="franchise" aria-label="Select a City" id="selectCity"
-                                        data-control="select2" data-placeholder="Select a City" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="0">Select a City</option>
-                                    <option value="1">Afghanistan</option>
-                                    <option value="2">Aland Islands</option>
-                                    <option value="3">Albania</option>
-                                    <option value="4">Algeria</option>
+                                <select name="City" aria-label="Select a City" id="selectCity" class="selectpicker"  data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-5">
@@ -300,7 +294,7 @@
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="~/js/common.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
@@ -308,16 +302,16 @@
 
 
 <script>
-    document.getElementById("panEkyc").addEventListener("input", function() {
+    document.getElementById("txtPanNumber").addEventListener("input", function() {
         const panKyc = this.value.toUpperCase();
         document.getElementById("numPan").value = panKyc;
     });
-     document.getElementById("gstEkyc").addEventListener("input", function() {
+     document.getElementById("txtGstNumber").addEventListener("input", function() {
         const gstKyc = this.value.toUpperCase();
         document.getElementById("numGstNumber").value = gstKyc;
     });
 
-     $(document).ready(function () 
+     $(document).ready(function ()
     {
 
         $(document).on("click", "#viewButton", function () {
@@ -326,20 +320,20 @@
             $("#backButton").css('display', 'Block');
         });
         // Check Form Validation
-        $("#gstEkyc").on("change", function() {
+        $("#txtGstNumber").on("change", function() {
             var GstValue = $(this).val();
             if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(GstValue.toUpperCase())) {
-            $("#gstEkyc").val('');
+            $("#txtGstNumber").val('');
             $("#numGstNumber").val('');
             toastr.warning("Please enter a valid GST No", "Warning");
             return;
             }
             $("#numGstNumber").val(GstValue.toUpperCase());
         });
-        $("#panEkyc").on("change", function () {
+        $("#txtPanNumber").on("change", function () {
             var PanEValue = $(this).val();
             if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(PanEValue.toUpperCase())) {
-                $("#panEkyc").val('');
+                $("#txtPanNumber").val('');
                 $("#numPan").val('');
                 toastr.warning("Please enter a valid PAN No", "Warning");
                 return;
@@ -435,9 +429,9 @@
             return;
             }
         });
-       
 
-        document.querySelectorAll("#gstEkyc, #panEkyc").forEach(function (element) {
+
+        document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
             element.addEventListener("input", function () {
                 this.value = this.value.toUpperCase();
             });
@@ -460,6 +454,7 @@
             $("#backButton").css('display', 'none');
              $('#tableDiv').hide();
         });
+        GetAllCityList();
     });
 
      function fetchCustomerList() {
@@ -547,7 +542,7 @@
         var adharLinked = $("#txtAadharLinked").val();
         var panStatus = $("#txtPanStatus").val();
         var panVerifiedOn = $("#txtPanVerifiedOn").val();
-        var panKyc = $("#panEkyc").val();
+        var panKyc = $("#txtPanNumber").val();
         var customerName = $("#txtCustomerName").val();
         var customerCode = $("#txtCustomerCode").val();
         var address = $("#txtaddress").val();
@@ -757,7 +752,7 @@
                 });
             });
 
-            
+
      });
 
      function deleteCustomer(partyId) {
@@ -778,11 +773,18 @@
     }
 
      $("#gstEKycButton").on("click",function(){
+            var gstNumber= $("#txtGstNumber").val();
+
+            // Request Body
+            var Body ={
+                GSTNo:gstNumber,
+            }
             var GetUrl = '@Url.Content("~/Customer/GetGstKycDetails")';
                  $.ajax({
                      url: GetUrl,
-                     type: "GET",
-                     contentType: "application/json; charset=utf-8",
+                     type: "POST",
+                     contentType: "application/json,charset=utf-8",
+                     data : JSON.stringify(Body),
                      dataType: "json",
                      success: function (response) {
                          var Data =response;
@@ -804,12 +806,19 @@
         });
 
      $("#panEKycButton").on("click",function(){
-            var GetUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
+             var getUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
+             var panNumber= $("#txtPanNumber").val();
+
+             // Request Body
+             var Body ={
+                 PANNo:panNumber,
+             }
                  $.ajax({
-                     url: GetUrl,
-                     type: "GET",
+                     url: getUrl,
+                     type: "Post",
                      contentType: "application/json; charset=utf-8",
                      dataType: "json",
+                     data : JSON.stringify(Body),
                      success: function (response) {
                          var Data =response;
                          var panModel = response.panModel
@@ -824,7 +833,36 @@
                      }
                  });
         });
-  
+
+     function GetAllCityList() {
+        var deleteCustomerUrl = '@Url.Content("~/Customer/GetAllCity")'
+          $.ajax({
+             url: deleteCustomerUrl,
+             type: "GET",
+             dataType: "json",
+             success: function (response) {
+                 console.log(response);
+                 BindDropDown(response)
+             },
+             error: function (xhr, status, error) {
+                 console.error("Error:", error);
+                 toastr.error("Failed to fetch data!", "Error");
+             }
+         });
+     }
+
+     function BindDropDown(data) {
+            const select = document.getElementById("selectCity");
+            data.forEach(option => {
+                let opt = document.createElement("option");
+                    opt.value = option.cityId;
+                opt.textContent = option.cityName;
+                select.appendChild(opt);
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+     }
+
 </script>
 <script>
     jQuery(document).ready(function($) {
