@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
+using RFQ.UI.Domain.RequestDto;
 
 namespace RFQ.UI.Controllers
 {
@@ -169,14 +170,14 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetVehicleKycDetails()
+        [HttpPost]
+        public async Task<IActionResult> GetVehicleKycDetails([FromBody]VehicleKycRequestDto requestDto)
         {
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                var vehicleCategoryList = await _vehicleServices.GetVehicleKycDetails();
+                var vehicleCategoryList = await _vehicleServices.GetVehicleKycDetails(requestDto);
                 if (vehicleCategoryList == null)
                 {
                     return NotFound("No vehicle KYC details found.");

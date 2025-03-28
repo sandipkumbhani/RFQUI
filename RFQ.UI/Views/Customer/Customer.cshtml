@@ -157,13 +157,7 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">City </label>
-                                <select name="franchise" aria-label="Select a City" id="selectCity"
-                                        data-control="select2" data-placeholder="Select a City" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="0">Select a City</option>
-                                    <option value="1">Afghanistan</option>
-                                    <option value="2">Aland Islands</option>
-                                    <option value="3">Albania</option>
-                                    <option value="4">Algeria</option>
+                                <select name="City" aria-label="Select a City" id="selectCity" class="selectpicker"  multiple data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-5">
@@ -300,7 +294,7 @@
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="~/js/common.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
@@ -317,7 +311,7 @@
         document.getElementById("numGstNumber").value = gstKyc;
     });
 
-     $(document).ready(function () 
+     $(document).ready(function ()
     {
 
         $(document).on("click", "#viewButton", function () {
@@ -435,7 +429,7 @@
             return;
             }
         });
-       
+
 
         document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
             element.addEventListener("input", function () {
@@ -460,6 +454,7 @@
             $("#backButton").css('display', 'none');
              $('#tableDiv').hide();
         });
+        GetAllCityList();
     });
 
      function fetchCustomerList() {
@@ -757,7 +752,7 @@
                 });
             });
 
-            
+
      });
 
      function deleteCustomer(partyId) {
@@ -831,7 +826,37 @@
                      }
                  });
         });
-  
+
+     function GetAllCityList() {
+        var deleteCustomerUrl = '@Url.Content("~/Customer/GetAllCity")'
+          $.ajax({
+             url: deleteCustomerUrl,
+             type: "GET",
+             dataType: "json",
+             success: function (response) {
+                 console.log(response);
+                 BindDropDown(response)
+             },
+             error: function (xhr, status, error) {
+                 console.error("Error:", error);
+                 toastr.error("Failed to fetch data!", "Error");
+             }
+         });
+     }
+
+     function BindDropDown(data) {
+         debugger;
+            const select = document.getElementById("selectCity");
+            data.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = 0;
+                opt.textContent = option.cityName;
+                select.appendChild(opt);
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+     }
+
 </script>
 <script>
     jQuery(document).ready(function($) {

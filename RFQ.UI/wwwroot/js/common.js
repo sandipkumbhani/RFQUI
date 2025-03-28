@@ -32,7 +32,7 @@ function isNumber(evt) {
 
 // isAlphabets function
 function isAlphabets(value) {
-    return /^[A-Za-z]+$/.test(value);
+    return /^[A-Za-z\s]+$/.test(value);
 }
 
 // isAlphaNumeric function

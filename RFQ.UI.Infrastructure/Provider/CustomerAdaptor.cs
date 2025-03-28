@@ -1,12 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
-using RFQ.UI.Domain.ResponseDto;
-using RFQ.UI.Domain.RequestDto;
-using Microsoft.Extensions.Configuration;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -186,6 +184,40 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception occurred: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<comMstCityDto>> GetAllCity()
+        {
+            try
+            {
+                var _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var url = $"{_fleetLynkApiUrl}/MasterParty/GetAllCity";
+
+                var response = await _httpClient.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    return null;
+                }
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(responseData))
+                {
+                    return null;
+                }
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var CityList = JsonConvert.DeserializeObject<List<comMstCityDto>>(Convert.ToString(responseModel.Data!));
+                    return CityList;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }
