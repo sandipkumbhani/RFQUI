@@ -8,16 +8,16 @@ namespace RFQ.UI.Domain.Model
 {
     public class GetCompanyAndFranchiseModel
     {
-        public GetCompanyAndFranchiseModel()
-        {
-            getCompanyAndFranchiseModelDtos = new List<GetCompanyAndFranchiseModelDto>();
-        }
-        public List<GetCompanyAndFranchiseModelDto> getCompanyAndFranchiseModelDtos { get; set; }
-        public class GetCompanyAndFranchiseModelDto
-        {
-            public int CompanyId { get; set; }
-            public string? CompanyName { get; set; }
-           // public int CompanyTypeId { get; set; }
-        }
+        //public GetCompanyAndFranchiseModel()
+        //{
+        //    getCompanyAndFranchiseModelDtos = new List<GetCompanyAndFranchiseModelDto>();
+        //}
+        //public List<GetCompanyAndFranchiseModelDto> getCompanyAndFranchiseModelDtos { get; set; }
+        //public class GetCompanyAndFranchiseModelDto
+        //{
+        //    public int CompanyId { get; set; }
+        //    public string? CompanyName { get; set; }
+        //   // public int CompanyTypeId { get; set; }
+        //}
     }
 }

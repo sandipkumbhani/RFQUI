@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RFQ.UI.Domain.Model;
-using static RFQ.UI.Domain.Model.GetCompanyAndFranchiseModel;
-using static RFQ.UI.Domain.Model.UserViewModel;
+﻿using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Application.Interface
 {
     public interface IUsersService
     {
         Task<string> GetUsers(int userId);
-        Task<IEnumerable<UserViewModelDto>> GetAllUser();
-        Task<string> AddUsers(UserViewModelDto userViewModelDto);
-        Task<string> EditUsers(int UserId, UserViewModelDto userViewModelDto);
+        Task<IEnumerable<UserResponseDto>> GetAllUser();
+        Task<string> AddUsers(UserRequestDto userRequestDto);
+        Task<string> EditUsers(int UserId, UserRequestDto userRequestDto);
         Task<string> DeleteUsers(int UserId);
-        public Task<IEnumerable<GetCompanyAndFranchiseModelDto>> GetAllCompanyAndFranchise();
+        Task<IEnumerable<CompanyAndFranchiseListDto>> GetAllCompanyAndFranchise();
+        //Task<IEnumerable<LocationListDto>> GetAllLocation();
     }
 }

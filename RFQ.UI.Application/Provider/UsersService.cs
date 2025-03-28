@@ -1,7 +1,7 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
-using static RFQ.UI.Domain.Model.GetCompanyAndFranchiseModel;
-using static RFQ.UI.Domain.Model.UserViewModel;
 
 namespace RFQ.UI.Application.Provider
 {
@@ -13,9 +13,9 @@ namespace RFQ.UI.Application.Provider
         {
             _usersAdaptor = usersAdaptor;
         }
-        public Task<string> AddUsers(UserViewModelDto userViewModelDto)
+        public Task<string> AddUsers(UserRequestDto userRequestDto)
         {
-            return _usersAdaptor.AddUsers(userViewModelDto);
+            return _usersAdaptor.AddUsers(userRequestDto);
         }
 
         public Task<string> DeleteUsers(int UserId)
@@ -23,12 +23,12 @@ namespace RFQ.UI.Application.Provider
             return _usersAdaptor.DeleteUsers(UserId);
         }
 
-        public Task<string> EditUsers(int UserId, UserViewModelDto userViewModelDto)
+        public Task<string> EditUsers(int UserId, UserRequestDto userRequestDto)
         {
-            return _usersAdaptor.EditUsers(UserId, userViewModelDto);
+            return _usersAdaptor.EditUsers(UserId, userRequestDto);
         }
 
-        public Task<IEnumerable<UserViewModelDto>> GetAllUser()
+        public Task<IEnumerable<UserResponseDto>> GetAllUser()
         {
             return _usersAdaptor.GetAllUser();
         }
@@ -37,9 +37,13 @@ namespace RFQ.UI.Application.Provider
         {
             throw new NotImplementedException();
         }
-        public async Task<IEnumerable<GetCompanyAndFranchiseModelDto>> GetAllCompanyAndFranchise()
+        public async Task<IEnumerable<CompanyAndFranchiseListDto>> GetAllCompanyAndFranchise()
         {
             return await _usersAdaptor.GetAllCompanyAndFranchise();
         }
+        //public async Task<IEnumerable<LocationListDto>> GetAllLocation()
+        //{
+        //    return await _usersAdaptor.GetAllLocation();
+        //}
     }
 }

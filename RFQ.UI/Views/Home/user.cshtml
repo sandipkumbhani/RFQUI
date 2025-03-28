@@ -4,9 +4,7 @@
 	ViewData["Title"] = "user";
 }
 
-@* <div class="left-sidebar-overlay"></div> *@
-@* <div class="app-main flex-column flex-row-fluid"> *@
-@* 	<div class="d-flex flex-column flex-column-fluid"> *@
+
 <div class="app-toolbar  pt-3 px-lg-3">
 	<div class="app-container container-fluid d-flex flex-stack flex-wrap">
 		<div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
@@ -37,10 +35,6 @@
 				Back
 			</button>
 		</div>
-
-		@* <div id="adduserdiv" class="app-content px-lg-3"> *@
-		@* 	<div class="app-container container-fluid"> *@
-		@* 		<div class="card"> *@
 		<div id="adduserdiv" class="card">
 			<div class="card-header border-0 cursor-pointer">
 				<div class="card-title m-0">
@@ -54,16 +48,16 @@
 						<div class="col-xl-6">
 							<div class="mb-5">
 								<label class="form-label col-form-label required fw-semibold fs-6">User Name </label>
-								<input id="txtname" type="text" class="form-control" placeholder="User Name" />
+								<input id="txtName" type="text" class="form-control" minlength="4" maxlength="12" placeholder="User Name" />
 							</div>
 							<div class="mb-5">
 								<label class="form-label col-form-label required fw-semibold fs-6">Password</label>
-								<input type="password" class="form-control" placeholder="password" id="txtpassword" />
+								<input type="password" class="form-control" minlength="8" maxlength="12" placeholder="password" id="txtPassword" />
 							</div>
 							<div class="mb-5">
 								<label class="form-label col-form-label required fw-semibold fs-6">Franchise/Corporate Name</label>
 								<select name="franchise" aria-label="Select a Franchise/Corporate"
-										data-control="select2" data-placeholder="Select a Franchise/Corporate..." id="Companyandfranchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+										data-control="select2" data-placeholder="Select a Franchise/Corporate..." id="txtCompanyAndFranchiseName"  class="form-select select2 form-select-solid form-select-lg fw-semibold">
 									<option value="0">Select a Franchise/Corporate...</option>
 									@* <option value="1">Afghanistan</option> *@
 									@* <option value="2">Aland Islands</option> *@
@@ -73,22 +67,22 @@
 							</div>
 							<div class="mb-5">
 								<label class="form-label col-form-label required fw-semibold fs-6">Mobile No</label>
-								<input type="text" class="form-control" placeholder="Mobile No" id="txtmobileno" />
+								<input type="text" class="form-control" maxlength="10" placeholder="Mobile No" id="txtMobileNo" onkeypress="return isNumber(event)" />
 							</div>
 						</div>
 						<div class="col-xl-6">
 							<div class="mb-5">
 								<label class="form-label col-form-label required fw-semibold fs-6">Login Name</label>
-								<input type="text" class="form-control" placeholder="Login Name" id="txtloginname" />
+								<input type="text" class="form-control" maxlength="12" placeholder="Login Name" id="txtLoginName" />
 							</div>
 							<div class="mb-5">
 								<label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-								<input type="email" class="form-control" placeholder="name@example.com" id="txtemailid" />
+								<input type="email" class="form-control" placeholder="name@example.com" id="txtEmailid" />
 							</div>
 							<div class="mb-5">
 								<label class="form-label col-form-label required fw-semibold fs-6">Location</label>
 								<select name="location" aria-label="Select a Location"
-										data-control="select2" data-placeholder="Select a location..." id="txtlocation" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+										data-control="select2" data-placeholder="Select a location..." id="txtLocation" class="form-select select2 form-select-solid form-select-lg fw-semibold">
 									<option value="0">Select a location...</option>
 									<option value="1">Afghanistan</option>
 									<option value="2">Aland Islands</option>
@@ -96,14 +90,15 @@
 									<option value="4">Algeria</option>
 								</select>
 							</div>
+
 						</div>
 					</div>
 				</div>
 				<div class="card-footer d-flex justify-content-srtat py-6 px-9">
-					<button type="button" id="btnsaveform" class="btn btn-primary me-2">Save</button>
-					<button type="button" id="btnsavenewform" class="btn btn-primary me-2">Save & New</button>
-					<button type="button" id="viewformbutton" class="btn btn-primary me-2">View</button>
-					<button type="button" id="btnupdate" class="btn btn-primary" style="display:none">Update</button>
+					<button type="button" id="btnSaveForm" class="btn btn-primary me-2">Save</button>
+					<button type="button" id="btnSaveAndNewForm" class="btn btn-primary me-2">Save & New</button>
+					<button type="button" id="btnViewForm" class="btn btn-primary me-2">View</button>
+					<button type="button" id="btnUpdate" class="btn btn-primary" style="display:none">Update</button>
 				</div>
 			</form>
 		</div>
@@ -135,102 +130,100 @@
 <script src="~/js/common.js"></script>
 <script>
 	 // View Button click Call Api
-		var userViewModelDtos;
-		$(document).on("click", "#viewformbutton", function () {
+		var userResponseDto;
+		$(document).on("click","#btnViewForm", function () {
 			fetchuserlist();
 			$("#adduserdiv").css('display', 'none')
 			$("#backButton").css('display', 'Block');
 		});
-
 		 //check validation //FOR USERNAME
-		  $("#txtname").on("change",function()
+		  $("#txtName").on("blur change",function()
 		  {
 			 var Textname =$(this).val();
 			 if(!isAlphabets(Textname))
 			 {
-				$("#txtname").val('');
+				$("#txtName").val('');
 				toastr.warning("Please enter a valid UserName", "Warning");
 				return;
 			 }
 		  });
-
 		  //FOR SELECT CORPORATENAME
-		   $("#Companyandfranchisename").on("change",function()
+		   $("#txtCompanyAndFranchiseName").on("blur change",function()
 		   {
 			   var corporatename =$(this).val();
 			   if(!isValidateSelect(corporatename))
 			   {
-				   $("#Companyandfranchisename").val('');
+				   //$("#txtCompanyAndFranchiseName").val('');
 				   toastr.warning("Please select a valid CorporateName", "Warning");
 				   return;
 			   }
 		   });
-
 		  //FOR MOBILENO
-		  $("#txtmobileno").on("change",function()
+		  $("#txtMobileNo").on("blur change",function()
 		  {
 			 var mobileno =$(this).val();
 			 if(!isMobile(mobileno))
 			 {
-				$("#txtmobileno").val('');
+				//$("#txtMobileNo").val('');
+				 $(this).focus();
 				toastr.warning("Please enter a valid MobileNumber", "Warning");
 				return;
 			 }
 		  });
-
 		  //FOR LOGINNAME
-		  $("#txtloginname").on("change",function()
+		  $("#txtLoginName").on("blur change",function()
 		  {
 			 var loginname =$(this).val();
-			 if(!isAlphabets(loginname))
+			 //if(!isAlphabets(txtLoginName))
+			 if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(loginname))
 			 {
-				$("#txtloginname").val('');
+				$("#txtLoginName").val('');
 				toastr.warning("Please enter a valid LoginName", "Warning");
 				return;
 			 }
 		  });
-
 		  //FOR LOCATION
-			$("#txtlocation").on("change",function()
+			$("#txtLocation").on("blur change",function()
 		   {
 			   var location =$(this).val();
 			   if(!isValidateSelect(location))
 			   {
-				   $("#txtlocation").val('');
+				   //$("#txtLocation").val('');
 				   toastr.warning("Please select a valid Location", "Warning");
 				   return;
 			   }
 		   });
 		   //FOR EMAILID
-		   $("#txtemailid").on("change",function()
+		   $("#txtEmailid").on("blur change",function()
 		   {
 			   var emailid =$(this).val();
 			   if(!isValidateEmail(emailid))
 			   {
-				   $("#txtemailid").val('');
+				   $("#txtEmailid").val('');
 				   toastr.warning("Please enter a valid Email", "Warning");
 				   return;
 			   }
 		   });
 		   //FOR PASSWORD
-		   $("#txtpassword").on("change",function()
+		   $("#txtPassword").on("blur change",function()
 		   {
 			   var password =$(this).val();
-			   if(!isAlphaNumeric(password))
+			   if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password))
+			   //if(!isAlphaNumeric(password))
 			   {
-				   $("#txtpassword").val('');
+				   $("#txtPassword").val('');
 				   toastr.warning("Please enter a valid PASSWORD", "Warning");
 				   return;
 			   }
 		   });
 		  //on form submit
-		  $("#btnsaveform").click(function (event)
+		  $("#btnSaveForm").click(function (event)
 		  {
 			  event.preventDefault();
 			  Save();
 		  });
 		  //reset button
-		  $('#btnsavenewform').on('click' ,function ()
+		  $('#btnSaveAndNewForm').on('click' ,function ()
 		  {
 			  Save();
 			  $('#userbodyform')[0].reset();
@@ -251,8 +244,8 @@
 			type: "GET",
 			dataType: "json",
 			success: function (response) {
-				let trlist = response.userViewModelDtos;
-				userViewModelDtos = response.userViewModelDtos;
+				let trlist = response;
+				userResponseDto = response;
 				// Destroy existing DataTable if exists
 				if ($.fn.DataTable.isDataTable('#tableuser')) {
 					$('#tableuser').DataTable().clear().destroy();
@@ -309,53 +302,47 @@
 	}
 	function Save()
 	{
-		   // var Username = document.getElementById("txtname").value;
-		   // console.log(Username);
-		   var username = $('#txtname').val();
-		   var corporatename = $('#Companyandfranchisename').val();
-		   var mobileno = $('#txtmobileno').val();
-		   var loginname = $('#txtloginname').val();
-		   var location = $('#txtlocation').val();
-		   var emailid = $('#txtemailid').val();
-		   var password = $('#txtpassword').val();
-		   //if (!/^[A-Za-z]+$/.test(Username))
+		   var username = $('#txtName').val();
+		   var corporatename = $('#txtCompanyAndFranchiseName').val();
+		   var mobileno = $('#txtMobileNo').val();
+		   var loginname = $('#txtLoginName').val();
+		   var location = $('#txtLocation').val();
+		   var emailid = $('#txtEmailid').val();
+		   var password = $('#txtPassword').val();
+
 		   if(!isAlphabets(username))
 		   {
 			  toastr.warning("Please enter a valid UserName", "Warning");
 			  return;
 		   }
-		   //if (Corporatename == "" || Corporatename == null)
 		   if(!isValidateSelect(corporatename))
 		   {
 			  toastr.warning("Please select a valid CorporateName", "Warning");
 			  return;
 		   }
-		   //if (IsNullOrEmpty(Mobileno) || !/^\d{10}$/.test(Mobileno))
 		   if(!isMobile(mobileno))
 		   {
 			   toastr.warning("Please enter a valid MobileNumber", "Warning");
 			   return;
 		   }
-		   //if (!/^[A-Za-z]+$/.test(Loginname))
-		   if(!isAlphabets(loginname))
+		   if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(loginname))
+		   //if(!isAlphabets(loginname))
 		   {
 			  toastr.warning("Please enter a valid LoginName", "Warning");
 			  return;
 		   }
-		   //if (Location == "" || Location == null)
 		   if(!isValidateSelect(location))
 		   {
 			  toastr.warning("Please select a valid Location", "Warning");
 			  return;
 		   }
-
-		   // (!/^[a-zA-Z0-9_.+-]+[\x40][a-zA-Z]+\.[a-zA-Z]{2,6}$/.test(Emailid))
 		   if(!isValidateEmail(emailid))
 		   {
 			  toastr.warning("Please enter a valid Email", "Warning");
 			  return;
 		   }
-			 if(!isAlphaNumeric(password))
+		   if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password))
+		   //if(!isAlphaNumeric(password))
 		   {
 			  toastr.warning("Please enter a valid password", "Warning");
 			  return;
@@ -364,7 +351,7 @@
 				PersonName :username,
 				LoginId:loginname,
 				Mobileno:mobileno,
-				Corporatename:corporatename,
+				CompanyId:corporatename,
 				LocationId:location,
 				Emailid:emailid,
 				Password:password
@@ -387,8 +374,8 @@
 				 }
 			 });
 	}
-
-    var GetUrl = '@Url.Content("~/Home/GetAllCompanyAndFranchise")';
+	//For Comp&Fran
+	var GetUrl = '@Url.Content("~/Home/GetAllCompanyAndFranchise")';
 	$.ajax({
 		url: GetUrl,
 		type: "GET",
@@ -396,50 +383,73 @@
 		success: function (response) {
 			// debugger;
 			console.log(response);
-			// var data = response.filter(x=>x.companyId == companyId );
-			// console.log(data);
-				if (response && response.length > 0) {
-					$.each(response, function (index, item) {
-						$('#Companyandfranchisename').append($('<option>', {
+			var data = response.filter(x=>x.companyTypeId == 2 || x.companyTypeId == 3);
+			console.log(data);
+				if (data && data.length > 0) {
+					$.each(data, function (index, item) {
+						$('#txtCompanyAndFranchiseName').append($('<option>', {
 							value: item.companyId,
 							text: item.companyName
 					}));
 				});
 				}
 				else {
-					$('#Companyandfranchisename').empty().append('<option value="">No Company and Franchise Available</option>');
+					$('#txtCompanyAndFranchiseName').empty().append('<option value="">No Company and Franchise Available</option>');
 				}
-			 // const dropdown = document.getElementById("franchisename");
-				// response.forEach(category => {
-				// 	const option = document.createElement("option");
-				// 	option.value = category.internalMasterId;
-				// 	option.textContent = category.internalMasterName;
-				// 	dropdown.appendChild(option);
-				// });
 		},
 		error: function (xhr, status, error) {
 			console.error("Error:", error);
 			toastr.error("Failed to submit company and franchise ", "Error");
 		}
 	});
+	//For Location
+	// var GetUrl = '@Url.Content("~/Home/GetAllLocation")';
+	// $.ajax({
+	// 	url: GetUrl,
+	// 	type: "GET",
+	// 	contentType: "application/json",
+	// 	success: function (response) {
+	// 		debugger;
+	// 		console.log(response);
+	// 		var data = response.filter(x=>x.LocationId)
+	// 		console.log(data);
+	// 			if (data && data.length > 0) {
+	// 				$.each(data, function (index, item) {
+	// 					$('#txtLocation').append($('<option>', {
+	// 						value: item.locationId,
+	// 						text: item.locationName
+	// 				}));
+	// 			});
+	// 			}
+	// 			else {
+	// 				$('#txtLocation').empty().append('<option value="">No location Available</option>');
+	// 			}
+	// 						}
+	// 	},
+	// 	error: function (xhr, status, error) {
+	// 		console.error("Error:", error);
+	// 		toastr.error("Failed to submit location ", "Error");
+	// 	}
+	// });
+
 
 	$(document).ready(function ()
 	{
-		$("#btnupdate").click(function (e)
+		$("#btnUpdate").click(function (e)
 		{
 			e.preventDefault();
 			debugger;
 			var UserViewModel = {
 				UserId : $('#txtuserid').val(),
-				PersonName : $('#txtname').val(),
-				Corporatename :  $('#txtcorporatename').val(),
-				Password:  $('#txtpassword').val(),
-				LocationId: $('#txtlocation').val(),
-				LoginId: $('#txtloginname').val(),
-				Mobileno: $('#txtmobileno').val(),
-				Emailid: $('#txtemailid').val(),
+				PersonName : $('#txtName').val(),
+				CompanyId :  $('#txtCompanyAndFranchiseName').val(),
+				Password:  $('#txtPassword').val(),
+				LocationId: $('#txtLocation').val(),
+				LoginId: $('#txtLoginName').val(),
+				Mobileno: $('#txtMobileNo').val(),
+				Emailid: $('#txtEmailid').val(),
 		}
-		var edituserlist = '@Url.Action("EditUserList","Home")';
+		var edituserlist = '@Url.Action("EditUserList", "Home")';
 		$.ajax({
 			type:"PUT",
 			url:edituserlist,
@@ -450,7 +460,7 @@
 			{
 				if (result.result == "success")
 				{
-				      $("#adduserdiv").css('display','none')
+					  $("#adduserdiv").css('display','none')
 					 //$("#dataDiv").html("User updated successfully!");
 					 fetchuserlist();
 				}
@@ -458,10 +468,11 @@
 				{
 					$("#dataDiv").html("Failed to update profile.");
 				}
-				$("#btnsaveform").show();
-				$("#btnupdate").hide();
-				$("#btnsavenewform").prop("disabled", false);
-				$("#viewformbutton").click();
+				$("#btnSaveForm").show();
+				$("#btnUpdate").hide();
+				$("#btnSaveAndNewForm").prop("disabled", false);
+				//$("#txtPassword").prop("disabled", true);
+				$("#btnViewForm").click();
 			},
 			error: function (xhr, status, error)
 			{
@@ -472,24 +483,27 @@
 	});
 	function edituserlist(userId)
 	{
-		console.log(userViewModelDtos);
-		var data = userViewModelDtos.filter(x=>x.userId == userId);
+		console.log(userResponseDto);
+		var data = userResponseDto.filter(x=>x.userId == userId);
 		var formdata=data[0];
 		console.log(data);
 		$("#tableDiv").hide();
 		$("#backButton").css('display','none');
 		$("#adduserdiv").css('display','Block');
-		$("#btnsaveform").hide();
-		$("#btnupdate").show();
-		$("#btnsavenewform").prop("disabled", true);
+		$("#btnSaveForm").hide();
+		$("#btnUpdate").show();
+		$("#btnSaveAndNewForm").prop("disabled", true);
 		$('#txtuserid').val(formdata.userId);
-		$("#txtname").val(formdata.personName);
-		$("#txtemailid").val(formdata.emailId);
-		$("#txtcorporatename").val(formdata.corporatename);
-		$("#txtmobileno").val(formdata.mobileNo);
-		$("#txtloginname").val(formdata.loginId);
-		$("#txtlocation").val(formdata.locationId);
-		$('#txtpassword').val(formdata.password);
+		$("#txtName").val(formdata.personName);
+		$("#txtEmailid").val(formdata.emailId);
+		$("#txtCompanyAndFranchiseName").val(formdata.companyId);
+		$("#txtMobileNo").val(formdata.mobileNo);
+		$("#txtLoginName").val(formdata.loginId);
+		$("#txtLocation").val(formdata.locationId);
+		$('#txtPassword').val(formdata.password);
+		//$('#txtPassword').hide();
+		$("#txtPassword").prop("disabled", true);
+
 	}
 
 	function deleteuserlist(userId)
