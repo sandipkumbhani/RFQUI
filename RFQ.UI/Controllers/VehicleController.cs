@@ -190,5 +190,61 @@ namespace RFQ.UI.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllMasterVehicleType()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var vehicleCategoryList = await _vehicleServices.GetAllMasterVehicleType();
+                if (vehicleCategoryList != null && vehicleCategoryList.Count() > 0)
+                {
+                    return Json(vehicleCategoryList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(vehicleCategoryList);
+                }
+                else
+                {
+                    return View(vehicleCategoryList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllOwnerOrVendor()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var OwnerOrVendorList = await _vehicleServices.GetAllOwnerOrVendor();
+                if (OwnerOrVendorList != null && OwnerOrVendorList.Count() > 0)
+                {
+                    return Json(OwnerOrVendorList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(OwnerOrVendorList);
+                }
+                else
+                {
+                    return View(OwnerOrVendorList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }
