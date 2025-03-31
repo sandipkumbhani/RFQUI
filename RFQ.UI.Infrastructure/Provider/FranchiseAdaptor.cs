@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Models;
+using System.Text;
 using static RFQ.UI.Domain.Model.FranchiseViewModel;
 
 namespace RFQ.UI.Infrastructure.Provider

@@ -66,18 +66,9 @@
 							</div>
 						</div>
 						<div class="col-xl-6">
-							<div class="mb-10">
-								<label class="form-label col-form-label required fw-semibold fs-6">City</label>
-
-								<select name="franchise" aria-label="Select a Franchise/Corporate"
-										data-control="select2" data-placeholder="Select a City." id="ddlCity" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-									<option value="0">Select a City</option>
-									<option value="1">Afghanistan</option>
-									<option value="2">Aland Islands</option>
-									<option value="3">Albania</option>
-									<option value="4">Algeria</option>
-
-
+							<div class="mb-5">
+								<label class="form-label col-form-label required fw-semibold fs-6">City </label>
+								<select name="City" aria-label="Select a City" id="selectCity" class="selectpicker" data-live-search="true" data-width="100%">
 								</select>
 							</div>
 							<div class="mb-10">
@@ -449,10 +440,42 @@
 			$("#addCorporateCompanyDiv").css('display', 'Block')
 			$("#backButton").css('display', 'none');
 			 $('#tableDiv').hide();
+					 GetAllCityList();
 		});
 
 
 	});
+
+	function GetAllCityList() {
+		var deleteCustomerUrl = '@Url.Content("~/Customer/GetAllCity")'
+		  $.ajax({
+			 url: deleteCustomerUrl,
+			 type: "GET",
+			 dataType: "json",
+			 success: function (response) {
+				 console.log(response);
+				 BindDropDown(response)
+			 },
+			 error: function (xhr, status, error) {
+				 console.error("Error:", error);
+				 toastr.error("Failed to fetch data!", "Error");
+			 }
+		 });
+	 }
+
+	 function BindDropDown(data) {
+			const select = document.getElementById("selectCity");
+			data.forEach(option => {
+				let opt = document.createElement("option");
+					opt.value = option.cityId;
+				opt.textContent = option.cityName;
+				select.appendChild(opt);
+			});
+
+			$('.selectpicker').selectpicker('refresh');
+	 }
+
+
 
 
 
