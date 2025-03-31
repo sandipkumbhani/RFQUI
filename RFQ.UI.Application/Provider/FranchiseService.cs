@@ -1,12 +1,7 @@
 ﻿using RFQ.UI.Application.Interface;
-using RFQ.UI.Domain.Interfaces;
-using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RFQ.UI.Application.Provider
 {
@@ -17,9 +12,9 @@ namespace RFQ.UI.Application.Provider
         {
             _franchiseAdaptor = franchiseAdaptor;
         }
-        public Task<string> AddFranchise(FranchiseViewModel.FranchiseViewModelDto franchiseViewModelDto)
+        public Task<string> AddFranchise(FranchiseRequestDto franchiseRequestDto)
         {
-            return _franchiseAdaptor.AddFranchise(franchiseViewModelDto);
+            return _franchiseAdaptor.AddFranchise(franchiseRequestDto);
         }
 
         public Task<string> DeleteFranchise(int companyId)
@@ -27,12 +22,12 @@ namespace RFQ.UI.Application.Provider
             return _franchiseAdaptor.DeleteFranchise(companyId);
         }
 
-        public Task<string> EditFranchise(int companyId, FranchiseViewModel.FranchiseViewModelDto franchiseViewModelDto)
+        public Task<string> EditFranchise(int companyId, FranchiseRequestDto franchiseRequestDto)
         {
-            return _franchiseAdaptor.EditFranchise(companyId, franchiseViewModelDto);
+            return _franchiseAdaptor.EditFranchise(companyId, franchiseRequestDto);
         }
 
-        public Task<IEnumerable<FranchiseViewModel.FranchiseViewModelDto>> GetFranchiseAll()
+        public Task<IEnumerable<FranchiseResponseDto>> GetFranchiseAll()
         {
             return _franchiseAdaptor.GetFranchiseAll();
         }

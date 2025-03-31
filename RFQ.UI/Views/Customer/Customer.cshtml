@@ -806,19 +806,12 @@
         });
 
      $("#panEKycButton").on("click",function(){
-             var getUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
-             var panNumber= $("#txtPanNumber").val();
-
-             // Request Body
-             var Body ={
-                 PANNo:panNumber,
-             }
+            var GetUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
                  $.ajax({
-                     url: getUrl,
-                     type: "Post",
+                     url: GetUrl,
+                     type: "GET",
                      contentType: "application/json; charset=utf-8",
                      dataType: "json",
-                     data : JSON.stringify(Body),
                      success: function (response) {
                          var Data =response;
                          var panModel = response.panModel
