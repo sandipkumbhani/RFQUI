@@ -244,6 +244,7 @@
             dataType: "json",
             data: JSON.stringify(vehicleTypeId),
             success: function (response) {
+                 FetchVehicleTypes();
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
