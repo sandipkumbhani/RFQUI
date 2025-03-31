@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
@@ -12,11 +13,13 @@ namespace RFQ.UI.Controllers
     {
         private readonly GlobalClass _globalClass;
         private readonly IMasterAttachmentService _masterAttachmentService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public MasterAttachmentController(IMasterAttachmentService masterAttachmentService, GlobalClass globalClass)
+        public MasterAttachmentController(IMasterAttachmentService masterAttachmentService, GlobalClass globalClass ,IWebHostEnvironment webHostEnvironment)
         {
             _masterAttachmentService = masterAttachmentService;
             _globalClass = globalClass;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -68,6 +71,38 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadAttachment(IFormFile file)
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+
+                string uniqueFileName = "";
+                if (file != null)
+                {
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "AttachmentFiles");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+                    uniqueFileName = DateTime.Now.ToString("MM/dd/yyyy") + "_" + file.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
+                return Json(new { fileName = uniqueFileName });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
             }
         }
     }
