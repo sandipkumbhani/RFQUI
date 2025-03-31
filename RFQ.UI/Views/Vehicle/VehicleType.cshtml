@@ -57,7 +57,7 @@
                         <div class="col-xl-3">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Minimum KMS / Day</label>
-                                <input type="number" class="form-control" id="minKmsPerDay"
+                                <input type="text" class="form-control" id="txtminKmsPerDay"
                                        placeholder="Minimum KMS / Day" />
                             </div>
                         </div>
@@ -83,8 +83,9 @@
                        class="table table-striped align-middle fs-6 mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th>Company ID</th>
+                            <th>Company Name</th>
                             <th>Vehicle Type Name</th>
+                            <th>Minimum KMS / Day</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -104,7 +105,7 @@
         var vehicleTypeViewModelDtos;
         // View Button click Call Api
         $(document).on("click", "#viewButton", function () {
-            fetchVehicleTypes();
+            FetchVehicleTypes();
             $("#addVehicleTypeDiv").css('display', 'none')
             $("#backButton").css('display', 'Block');
         });
@@ -118,19 +119,18 @@
         });
 
         // Set Token in Global Class
-        getAndSetToken("AuthToken");
+        GetAndSetToken("AuthToken");
 
 
         // On form submit
         $("#btnSaveVehicleType").click(function (event) {
             event.preventDefault();
-            saveandsavenew();
+            SaveAndSaveNew();
         });
-
 
         // Reset form fields on button click
         $('#SavenewButton').on('click', function () {
-            saveandsavenew();
+            SaveAndSaveNew();
             $('#VehicleTypeForm')[0].reset();
         });
 
@@ -144,7 +144,7 @@
     });
 
     // Function to set authentication token
-    function getAndSetToken(cookieName) {
+    function GetAndSetToken(cookieName) {
         var globalUrl = '@Url.Content("~/api/global/set-token")';
         let match = document.cookie.match(new RegExp('(^| )' + cookieName + '=([^;]+)'));
         let token = match ? match[2] : null;
@@ -166,7 +166,7 @@
         }
     }
 
-    function fetchVehicleTypes() {
+    function FetchVehicleTypes() {
         $('#tableDiv').show();
         var fetchVehicleTypesUrl = '@Url.Content("~/Vehicle/ViewVehicleType")';
         $.ajax({
@@ -174,9 +174,9 @@
             type: "GET",
             dataType: "json",
             success: function (response) {
-
-                let trlist = response.vehicleTypeViewModelDtos;
-                vehicleTypeViewModelDtos = response.vehicleTypeViewModelDtos;
+                console.log(response);
+                let trlist = response;
+                vehicleTypeViewModelDtos = response;
                 // Destroy existing DataTable if exists
                 if ($.fn.DataTable.isDataTable('#tableVehicleType')) {
                     $('#tableVehicleType').DataTable().clear().destroy();
@@ -199,19 +199,20 @@
                     "data": trlist,
                     "columns": [
 
-                        { "data": "companyId" },
+                        { "data": "companyName" },
                         { "data": "vehicleTypeName" },
+                        { "data": "minimumKms" },
                         {
                             "data": "vehicleTypeId",
-                            "render": function (data, type, row) {
+                            "render": function (data) {
                                 return `
                                                <div class="btn-group" role="group">
                                                    <button type="button" class="btn btn-sm btn-primary"
-                                                       onclick="editVehicleType(${data})">
+                                                       onclick="EditVehicleType(${data})">
                                                        <i class="ti ti-edit"></i> Edit
                                                    </button>
                                                    <button type="button" class="btn btn-sm btn-danger"
-                                                       onclick="deleteVehicleType(${data})">
+                                                       onclick="DeleteVehicleType(${data})">
                                                        <i class="ti ti-trash"></i> Delete
                                                    </button>
                                                </div>`;
@@ -235,7 +236,7 @@
         });
     }
 
-    function deleteVehicleType(vehicleTypeId) {
+    function DeleteVehicleType(vehicleTypeId) {
        var deleteVehicleTypesUrl = '@Url.Content("~/Vehicle/DeleteVehicleType/")' + vehicleTypeId
          $.ajax({
             url: deleteVehicleTypesUrl,
@@ -251,22 +252,23 @@
         });
     }
 
-    function saveandsavenew() {
+    function SaveAndSaveNew() {
         var vehicleTypeName = $("#txtVehicleType").val()
-        var minKmsPerDay = $("#minKmsPerDay").val()
+        var txtminKmsPerDay = $("#txtminKmsPerDay").val()
 
         if (IsNullOrEmpty(vehicleTypeName)) {
             toastr.warning("Please enter a valid Vehicle Type", "Warning");
             return;
         }
 
-        if (isNumeric(minKmsPerDay)) {
+        if (!isNumeric(txtminKmsPerDay)) {
             toastr.warning("Please enter Min Km/Day", "Warning");
             return;
         }
         var saveUrl = '@Url.Content("~/Vehicle/VehicleTypeSave")';
         var formData = {
             VehicleTypeName: vehicleTypeName,
+            MinimumKms :txtminKmsPerDay
         };
 
         $.ajax({
@@ -285,8 +287,9 @@
         });
     }
 
-    function editVehicleType(vehicleTypeId){
+    function EditVehicleType(vehicleTypeId){
         var data = vehicleTypeViewModelDtos.filter(x=>x.vehicleTypeId == vehicleTypeId);
+
           $('#tableDiv').hide();
           $("#backButton").css('display', 'none');
           $("#addVehicleTypeDiv").css('display', 'Block');
@@ -295,26 +298,32 @@
           $("#SavenewButton").css('display', 'none');
           $("#viewButton").css('display', 'none');
           $("#txtVehicleType").val(data[0].vehicleTypeName);
+          $("#txtminKmsPerDay").val(data[0].minimumKms);
 
-          // Calling  Update Api
-          $('#updateButton').on('click', function () {
-            update(vehicleTypeId);
-          });
-
+          // Using one-time event binding with .one()
+             $('#updateButton').one('click', function () {
+                 UpdateVechileType(vehicleTypeId);
+             });     
     }
 
-    function update(vehicleTypeId) {
+    function UpdateVechileType(vehicleTypeId) {
         var vehicleTypeName = $("#txtVehicleType").val()
-        var minKmsPerDay = $("#minKmsPerDay").val()
-
+        var txtminKmsPerDay = $("#txtminKmsPerDay").val()
         if (IsNullOrEmpty(vehicleTypeName)) {
             toastr.warning("Please enter a valid Vehicle Type", "Warning");
             return;
         }
+
+         if (!isNumeric(txtminKmsPerDay)) {
+            toastr.warning("Please enter Min Km/Day", "Warning");
+            return;
+        }
+
         var updateUrl = '@Url.Content("~/Vehicle/UpdateVehicleType")';
         var formData = {
             VehicleTypeId:vehicleTypeId,
-            VehicleTypeName:vehicleTypeName
+            VehicleTypeName:vehicleTypeName,
+            MinimumKms:txtminKmsPerDay
         };
 
         $.ajax({
@@ -325,8 +334,14 @@
             success: function (response) {
                 toastr.success("Vehicle Type submitted successfully!");
                  $("#addVehicleTypeDiv").css('display', 'none'); //hide form
-                 fetchVehicleTypes();
-
+                 FetchVehicleTypes();
+                 // $("#addVehicleTypeDiv").css('display', 'Block'); //hide form
+                 // $("#updateButton").css('display', 'none');
+                 // $("#btnSaveVehicleType").css('display', 'Block');
+                 // $("#SavenewButton").css('display', 'Block');
+                 // $("#viewButton").css('display', 'Block');
+                 // $("#txtVehicleType").val('')
+                 // $("#txtminKmsPerDay").val('')
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
@@ -334,6 +349,5 @@
             }
         });
     }
-
 </script>
 

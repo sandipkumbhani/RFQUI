@@ -343,11 +343,12 @@
             contentType: "application/json",
             success: function (response) {
                     const dropdown = document.getElementById("vehicleCategory");
-                    // Add default option
-                    const defaultOption = document.createElement("option");
-                    defaultOption.value = "";
-                    defaultOption.textContent = "Select Vehicle Category";
-                    dropdown.appendChild(defaultOption);
+                 let placeholderOption = document.createElement("option");
+                        placeholderOption.value = "";
+                        placeholderOption.textContent = "Select Vehicle Type";
+                        placeholderOption.disabled = true;
+                        placeholderOption.selected = true;
+                        dropdown.appendChild(placeholderOption);
                     // Add Other Options
                      response.forEach(category => {
                          const option = document.createElement("option");
@@ -461,11 +462,12 @@
              dataType: "json",
              success: function (response) {
                 const vehicleTypedropdown = document.getElementById("vehicleType");
-                    // Add default option
-                    const defaultOption = document.createElement("option");
-                    defaultOption.value = 0;
-                    defaultOption.textContent = "Select Vehicle Type";
-                    vehicleTypedropdown.appendChild(defaultOption);
+                  let placeholderOption = document.createElement("option");
+                        placeholderOption.value = "";
+                        placeholderOption.textContent = "Select Vehicle Type";
+                        placeholderOption.disabled = true;
+                        placeholderOption.selected = true;
+                        vehicleTypedropdown.appendChild(placeholderOption);
 
                     // Add Other Options
 
@@ -495,14 +497,15 @@
               success: function (response) {
                   debugger;
                  const ownerDropdown = document.getElementById("ownerName");
-                     // Add default option
-                     const defaultOption = document.createElement("option");
-                     defaultOption.value = 0;
-                     defaultOption.textContent = "Select Owner Name ";
-                     ownerDropdown.appendChild(defaultOption);
+
+                      let placeholderOption = document.createElement("option");
+                        placeholderOption.value = "";
+                        placeholderOption.textContent = "Select Owner Name";
+                        placeholderOption.disabled = true;
+                        placeholderOption.selected = true;
+                        ownerDropdown.appendChild(placeholderOption);
      
                      // Add Other Options
-     
                          response.forEach(item => {
                              const option = document.createElement("option");
                                  option.value = item.partyId;

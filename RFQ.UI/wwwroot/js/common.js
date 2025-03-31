@@ -1,6 +1,7 @@
 ﻿function ValidateTextbox(inputId) {
     var value = $(inputId).val();
-    var pattern = /^[A-Za-z0-9]+$/; 
+    //var pattern = /^[A-Za-z0-9]+$/; 
+    var pattern = /^[a-zA-Z0-9 ]*$/; 
 
     if (!pattern.test(value)) {
         alert("Invalid input! Only letters and numbers are allowed.");
