@@ -135,12 +135,11 @@
         });
 
         $('#backButton').click(function () {
-            $("#addVehicleTypeDiv").css('display', 'Block')
-            $("#backButton").css('display', 'none');
-             $('#tableDiv').hide();
+            window.location.reload(true);
+            // $("#addVehicleTypeDiv").css('display', 'Block')
+            // $("#backButton").css('display', 'none');
+            //  $('#tableDiv').hide();
         });
-
-
     });
 
     // Function to set authentication token
@@ -189,12 +188,11 @@
                     "pageLength": 10,
                     "lengthChange": true,
                     "searching": true,
-                    "ordering": true,
+                    "ordering": false,
                     "info": true,
                     "autoWidth": true,
                     "responsive": true,
                     "info": true,
-                    "autoWidth": true,
                     "responsive": true,
                     "data": trlist,
                     "columns": [
@@ -335,14 +333,8 @@
             success: function (response) {
                 toastr.success("Vehicle Type submitted successfully!");
                  $("#addVehicleTypeDiv").css('display', 'none'); //hide form
+                 $("#backButton").show();
                  FetchVehicleTypes();
-                 // $("#addVehicleTypeDiv").css('display', 'Block'); //hide form
-                 // $("#updateButton").css('display', 'none');
-                 // $("#btnSaveVehicleType").css('display', 'Block');
-                 // $("#SavenewButton").css('display', 'Block');
-                 // $("#viewButton").css('display', 'Block');
-                 // $("#txtVehicleType").val('')
-                 // $("#txtminKmsPerDay").val('')
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
