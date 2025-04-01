@@ -2,10 +2,10 @@
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 using System.Text;
-using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
-using static RFQ.UI.Domain.Model.FranchiseViewModel;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -15,21 +15,21 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public FranchiseAdaptor(HttpClient httpClient,GlobalClass globalClass, IConfiguration configuration)
+        public FranchiseAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
-        public async Task<string> AddFranchise(FranchiseViewModelDto franchiseViewModelDto)
+        public async Task<string> AddFranchise(FranchiseRequestDto franchiseRequestDto)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany";
-                var franchise = JsonConvert.SerializeObject(franchiseViewModelDto);
+                var franchise = JsonConvert.SerializeObject(franchiseRequestDto);
                 var requestContent = new StringContent(franchise, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
@@ -39,7 +39,6 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (result == 200)
                     {
-
                         return "Franchise Saved";
                     }
                     else
@@ -79,13 +78,13 @@ namespace RFQ.UI.Infrastructure.Provider
             return "Failed to Delete Franchise";
         }
 
-        public async Task<string> EditFranchise(int companyId, FranchiseViewModelDto franchiseViewModelDto)
+        public async Task<string> EditFranchise(int companyId, FranchiseRequestDto franchiseRequestDto)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
             var baseurl = $"{_fleetLynkApiUrl}/Company/UpdateCompany/{companyId}";
-            var vehicle = JsonConvert.SerializeObject(franchiseViewModelDto);
+            var vehicle = JsonConvert.SerializeObject(franchiseRequestDto);
             var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
             var responseData = await response.Content.ReadAsStringAsync();
@@ -105,7 +104,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return "Failed to update Franchise";
         }
 
-        public async Task<IEnumerable<FranchiseViewModel.FranchiseViewModelDto>> GetFranchiseAll()
+        public async Task<IEnumerable<FranchiseResponseDto>> GetFranchiseAll()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
@@ -115,8 +114,8 @@ namespace RFQ.UI.Infrastructure.Provider
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
             {
-                var Profilelist = JsonConvert.DeserializeObject<List<FranchiseViewModelDto>>(Convert.ToString(responseModel.Data!));
-                return Profilelist;
+                var franchiseList = JsonConvert.DeserializeObject<List<FranchiseResponseDto>>(Convert.ToString(responseModel.Data!));
+                return franchiseList;
             }
             return null;
         }

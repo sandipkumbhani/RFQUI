@@ -47,11 +47,11 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Franchise Name </label>
-                                <input type="text" class="form-control" placeholder="Franchise Name" id="txtFranchiseName" />
+                                <input type="text" class="form-control" placeholder="Franchise Name" id="txtFranchiseName" maxlength="100" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Franchise Code</label>
-                                <input type="text" class="form-control" placeholder="Franchise Code" id="txtFranchiseCode" />
+                                <input type="text" class="form-control" placeholder="Franchise Code" id="txtFranchiseCode" onkeypress="return AllowAlphaNumericOnly(event)" />
                             </div>
                         </div>
                         <div class="col-xl-6">
@@ -69,56 +69,51 @@
                                 </div>
                                 
                             </div>
+                            <input type="text" hidden id="txtUploadedFile" />
                         </div>
                         <div class="col-xl-12">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Address </label>
-                                <input type="text" class="form-control" placeholder="Address" id="txtAddress" />
+                                <input type="text" class="form-control" placeholder="Address" id="txtAddress" maxlength="200"/>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">City</label>
 
-                                <select id="ddlCity" name="franchise" aria-label="Select a Franchise/Corporate"
-                                        data-control="select2" data-placeholder="Select a City." class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select a City</option>
-                                    <option value="0">Afghanistan</option>
-                                    <option value="1">Aland Islands</option>
-                                    <option value="2">Albania</option>
-                                    <option value="3">Algeria</option>
+                                <select id="ddlCity" name="franchise" aria-label="Select a City" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" />
+                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="50"/>
                             </div>
 
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number</label>
-                                <input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber" />
+                                <input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber" onkeypress="return isNumber(event)" maxlength="10"/>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
-                                <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" />
+                                <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="10" />
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
-                                <input type="text" class="form-control" placeholder="Pincode" id="txtPinCode" />
+                                <input type="text" class="form-control" placeholder="Pincode" id="txtPinCode" onkeypress="return isNumber(event)" maxlength="6" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
-                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" />
+                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" onkeypress="return isNumber(event)" maxlength="10" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailId" />
+                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailId"/>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
-                                <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" placeholder="GST Number" id="txtGSTNumber" />
+                                <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" placeholder="GST Number" id="txtGstNumber" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="15" />
                             </div>
                         </div>
                     </div>
@@ -183,8 +178,8 @@
                 <div class="card-footer d-flex justify-content-srtat py-6 px-9">
                     <button id="btnSaveFranchise" type="button" class="btn btn-primary me-2">Save</button>
                     <button id="btnSavenewFranchise" type="button" class="btn btn-primary me-2">Save & New</button>
-                    <button type="button" id="btnupdate" class="btn btn-primary me-2" style="display:none;">Update</button>
-                    <button type="button" class="btn btn-primary" id="viewButton">View</button>
+                    <button type="button" id="btnUpdateFranchise" class="btn btn-primary me-2" style="display:none;">Update</button>
+                    <button type="button" class="btn btn-primary" id="btnViewButton">View</button>
                 </div>
             </form>
         </div>
@@ -234,7 +229,8 @@
         if (Dropzone.instances.length > 0) {
             Dropzone.instances.forEach(dz => dz.destroy());
         }
-
+        let isNewFranchise = false;
+        let isUpdateFranchise = false;
         const myDropzone = new Dropzone("#dropzone",
         {
             url : uploadUrl,
@@ -243,13 +239,51 @@
             parallelUploads : 1, 
             maxFilesize : 1,
             addRemoveLinks : true,
+            autoProcessQueue: false,
             acceptedFiles : "image/*",
+            init : function(){
+                $("#btnSaveFranchise").click(function(event){
+                    event.preventDefault();
+                    isNewFranchise = false;
+                    isUpdateFranchise = false;
+                    if(myDropzone.files.length > 0){
+                        myDropzone.processQueue();
+                    }                
+                });
+                $("#btnSavenewFranchise").click(function(event){
+                    isNewFranchise = true;
+                    isUpdateFranchise = false;
+                    if(myDropzone.files.length > 0){
+                        myDropzone.processQueue();
+                    } 
+                });
+                $("#btnUpdateFranchise").click(function(event){
+                    isNewFranchise = false;
+                    isUpdateFranchise = true;
+                    if(myDropzone.files.length > 0){
+                        myDropzone.processQueue();
+                    }
+                    else{
+                        UpdateFranchise();
+                    }
+                });
+
+            },
             success : function(file,response){
-                const dropzone = document.getElementById('dropzone');
-                if(dropzone.children[1].nodeName === "IMG"){
-                    dropzone.removeChild(dropzone.children[1]);
+                if(isUpdateFranchise){
+                    const dropzone = document.getElementById('dropzone');
+                    if(dropzone.children[1]){
+                        dropzone.removeChild(dropzone.children[1]);
+                    }
+                    UpdateFranchise(response.fileName);
                 }
-                $("#dropzone").val(response.fileName);
+                else{
+                    SaveFranchise(response.fileName);
+                    if(isNewFranchise){
+                        $('#franchiseForm')[0].reset();
+                        myDropzone.removeAllFiles();
+                    }
+                }
             },
             removedfile : function(file){
                 var fileName = $("#dropzone").val();
@@ -282,10 +316,10 @@
                 }
             }
         });
-        
+        GetAllCityList();
 
-        $("#viewButton").on("click",function(){
-            fetchFranchise();
+        $("#btnViewButton").on("click",function(){
+            FetchFranchise();
             $("#addFranchiseDiv").css('display','none');
             $("#backButton").css('display','block');
         });
@@ -297,14 +331,6 @@
             return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(number);
         }
 
-        $("#btnSaveFranchise").click(function(event){
-            event.preventDefault();
-            saveandsavenewFranchise();
-        });
-        $("#btnSavenewFranchise").click(function(event){
-            saveandsavenewFranchise();
-            $('#franchiseForm')[0].reset();
-        });
         $('#backButton').click(function () {
             $("#addFranchiseDiv").css('display', 'Block')
             $("#backButton").css('display', 'none');
@@ -312,62 +338,72 @@
         });
 
         $("#txtFranchiseName").on("change",function(){
-            if(!isAlphaNumeric($(this).val())){
+            if(!isAlphabets($(this).val())){
                 toastr.warning("Please enter a valid Franchise  Name", "Warning");
+                $(this).focus();
                 return;
             }
         });
         $("#txtFranchiseCode").on("change",function(){
             if(!isAlphaNumeric($(this).val())){
                 toastr.warning("Please enter a valid Franchise  Code", "Warning");
+                $(this).focus();
                 return;
             }
         });
         $("#txtAddress").on("change",function(){
             if(IsNullOrEmpty($(this).val())){
                 toastr.warning("Please enter a valid Franchise  Address", "Warning");
+                $(this).focus();
                 return;
             }
         });
         $("#ddlCity").on("change",function(){
-            if(!isValidateSelect($(this).val(),)){
+            if(!isValidateSelect($(this).val())){
                 toastr.warning("Please enter a valid Franchise  City", "Warning");
+                $(this).focus();
                 return;
             }
         });
         $("#txtPinCode").on("change",function(){
-            if(!/^\d{6}$/.test(($(this).val()))){
+            if(!/^\d{6}$/.test($(this).val())){
                 toastr.warning("Please enter a valid Pin Code", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtContactPerson").on("change",function(){
             if(!isAlphabets($(this).val())){
                 toastr.warning("Only letters allowed", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtWhatsAppNumber").on("change",function(){
             if(!isMobile($(this).val())){
                 toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtMobileNumber").on("change",function(){
             if(!isMobile($(this).val())){
                 toastr.warning("Please enter a valid Mobile Number", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtEmailId").on("change",function(){
             if(!isValidateEmail($(this).val())){
                 toastr.warning("Please enter a valid Email", "Warning");
+                $(this).focus();
                 return;
             }
         })
         $("#txtPanNumber").on("change",function(){
             if(!validatePanNumber($(this).val())){
                 toastr.warning("Please enter a valid PAN Number", "Warning");
+                $(this).focus();
                 return;
             }
         })
@@ -378,7 +414,7 @@
             }
         })
 
-        function saveandsavenewFranchise(){
+        function SaveFranchise(fileName){
             
             var franchiseName = $("#txtFranchiseName").val();
             var franchiseCode = $("#txtFranchiseCode").val();
@@ -390,8 +426,8 @@
             var mobileNumber = $("#txtMobileNumber").val();
             var emailId = $("#txtEmailId").val();
             var panNumber = $("#txtPanNumber").val();
-            var gstNumber = $("#txtGSTNumber").val();
-            var franchiseLogo = $("#dropzone").val();
+            var gstNumber = $("#txtGstNumber").val();
+            var franchiseLogo = fileName;
 
             if (IsNullOrEmpty(franchiseName)) {
                 toastr.warning("Please enter a valid Franchise Name", "Warning");
@@ -467,81 +503,118 @@
             });
         };
   
-        function fetchFranchise(){
-            $("#tableDiv").show();
-            var fetchFranchiseUrl = '@Url.Content("~/Franchise/GetFranchiseAll")';
+        
+        function GetAllCityList() {
+            var getcityUrl = '@Url.Content("~/Customer/GetAllCity")'
             $.ajax({
-                url : fetchFranchiseUrl,
-                type : 'GET',
-                dataType : 'json',
-                success : function(response){
-                    let franchiseList = response.franchiseViewModelDtos.filter(x=>x.companyTypeId == 2);
-                    franchiseViewModelDto = response.franchiseViewModelDtos;
-                    if ($.fn.DataTable.isDataTable('#tableFranchise')) {
-                        $('#tableFranchise').DataTable().clear().destroy();
-                    }
-                    $('#tableFranchise').DataTable({
-                        "processing": true,
-                        "serverSide": false,
-                        "paging": true,
-                        "pageLength": 10,
-                        "lengthChange": true,
-                        "searching": true,
-                        "ordering": true,
-                        "info": true,
-                        "autoWidth": true,
-                        "responsive": true,
-                        "info": true,
-                        "autoWidth": true,
-                        "responsive": true,
-                        "scrollX": true,
-                        "data": franchiseList,
-                        "columns": [
-                            { "data": function(row){
-                                    return {LogoImage : row.logoImage,ParentComapanyId : row.parentCompanyId};
-                                },
-                                "render" : function(data){
-                                    return `<img src="../../franchiselogo_${data.ParentComapanyId}/${data.LogoImage}" style="height:40px;width:60px" alt="Logo"/>`
-                                }
-                            },
-                            { "data": "companyName" },
-                            { "data": "addressLine" },
-                            { "data": "cityId" },
-                            { "data": "pinCode" },
-                            { "data": "contactPerson" },
-                            { "data": "contactNo" },
-                            { "data": "mobNo" },
-                            { "data": "whatsAppNo" },
-                            { "data": "email" },
-                            { "data": "panNo" },
-                            { "data": "gstNo" },
-                            { "data": "companyId",
-                                "render":function (data, type, row){
-                                    return `<div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-sm btn-primary" onclick="EditFranchise(${data})">
-                                                    <i class="ti ti-edit"></i> Edit
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-danger" onclick="deleteFranchise(${data})">
-                                                    <i class="ti ti-trash"></i> Delete
-                                                </button>
-                                            </div>`;
-                                }
-                            },
-                        ],
-                        "columnDefs": [
-                            {
-                                "targets": "_all",
-                                "className": "text-center"
-                            }
-                        ]
-                    })
-                },
-                error : function(xhr,status,error){
-                    toastr.error("Failed to fetch data!", "Error");
-                }
+                  url: getcityUrl,
+                  type: "GET",
+                  dataType: "json",
+                  success: function (response) {
+                      BindDropDown(response)
+                  },
+                  error: function (xhr, status, error) {
+                      toastr.error("Failed to fetch data!", "Error");
+                  }
             });
-        };
+        }
+
+        function BindDropDown(data) {
+            const select = document.getElementById("ddlCity");
+            select.innerHTML = "";
+
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a City";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            data.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.cityId;
+                opt.textContent = option.cityName;
+                select.appendChild(opt);
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+        }
     });
+
+    function FetchFranchise(){
+             $("#tableDiv").show();
+             var fetchFranchiseUrl = '@Url.Content("~/Franchise/GetFranchiseAll")';
+             $.ajax({
+                 url : fetchFranchiseUrl,
+                 type : 'GET',
+                 dataType : 'json',
+                 success : function(response){
+                     let franchiseList = response.filter(x=>x.companyTypeId == 2);
+                     franchiseViewModelDto = response;
+                     if ($.fn.DataTable.isDataTable('#tableFranchise')) {
+                         $('#tableFranchise').DataTable().clear().destroy();
+                     }
+                     $('#tableFranchise').DataTable({
+                         "processing": true,
+                         "serverSide": false,
+                         "paging": true,
+                         "pageLength": 10,
+                         "lengthChange": true,
+                         "searching": true,
+                         "ordering": true,
+                         "info": true,
+                         "autoWidth": true,
+                         "responsive": true,
+                         "info": true,
+                         "autoWidth": true,
+                         "responsive": true,
+                         "scrollX": true,
+                         "data": franchiseList,
+                         "columns": [
+                             { "data": "logoImage",
+                                 "render" : function(data){
+                                     return `<img src="../../franchiselogo/${data}" style="height:40px;width:60px" alt="Logo"/>`
+                                 }
+                             },
+                             { "data": "companyName" },
+                             { "data": "addressLine" },
+                             { "data": "cityId" },
+                             { "data": "pinCode" },
+                             { "data": "contactPerson" },
+                             { "data": "contactNo" },
+                             { "data": "mobNo" },
+                             { "data": "whatsAppNo" },
+                             { "data": "email" },
+                             { "data": "panNo" },
+                             { "data": "gstNo" },
+                             { "data": function(row){
+                                     return {CompanyId : row.companyId, Logofile : row.logoImage}
+                                 },
+                                 "render":function (data, type, row){
+                                     return `<div class="btn-group" role="group">
+                                                 <button type="button" class="btn btn-sm btn-primary" onclick="EditFranchise(${data.CompanyId})">
+                                                     <i class="ti ti-edit"></i> Edit
+                                                 </button>
+                                                 <button type="button" class="btn btn-sm btn-danger" onclick="DeleteFranchise(${data.CompanyId},'${data.Logofile}')">
+                                                     <i class="ti ti-trash"></i> Delete
+                                                 </button>
+                                             </div>`;
+                                 }
+                             },
+                         ],
+                         "columnDefs": [
+                             {
+                                 "targets": "_all",
+                                 "className": "text-center"
+                             }
+                         ]
+                     })
+                 },
+                 error : function(xhr,status,error){
+                     toastr.error("Failed to fetch data!", "Error");
+                 }
+             });
+         };
         function EditFranchise(companyId){
             var data = franchiseViewModelDto.filter(x=>x.companyId == companyId);
             var formData = data[0];
@@ -549,28 +622,40 @@
             $("#backButton").css('display', 'none');
             $("#addFranchiseDiv").css('display', 'Block');
             $("#btnSaveFranchise").hide();
-            $("#btnupdate").show();
-            $("#btnSavenewFranchise").prop("disabled", true);
+            $("#btnUpdateFranchise").show();
+            $("#btnSavenewFranchise").hide();
+            $("#btnViewButton").hide();
+            const dropzone = document.getElementById('dropzone');
+                if(dropzone.children[1]){
+                    dropzone.removeChild(dropzone.children[1]);
+            }
             $("#txtCompanyId").val(formData.companyId);
             $("#txtFranchiseName").val(formData.companyName);
             $("#txtFranchiseCode").val(formData.companyTypeId);
             $("#txtAddress").val(formData.addressLine);
-            $("#ddlCity").val(formData.cityId);
+            $("#ddlCity").val(formData.cityId).change();
             $("#txtPinCode").val(formData.pinCode);
             $("#txtContactPerson").val(formData.contactPerson);
             $("#txtWhatsAppNumber").val(formData.whatsAppNo);
             $("#txtMobileNumber").val(formData.mobNo);
             $("#txtEmailId").val(formData.email);
             $("#txtPanNumber").val(formData.panNo);
-            $("#txtGSTNumber").val(formData.gstNo);
+            $("#txtGstNumber").val(formData.gstNo);
             var parentCompanyId = formData.parentCompanyId;
             var logoImage = formData.logoImage;
-            $("#dropzone").append('<img src="../../franchiselogo_'+parentCompanyId+'/'+logoImage+'" style="height:200px;width:200px;">');
+            $("#txtUploadedFile").val(logoImage);
+            $("#dropzone").append('<div class="dz-preview dz-image-preview"><div class="dz-image"><img data-dz-thumbnail style="width: 120px; height: 120px; object-fit: cover;" src="../../franchiselogo/'+logoImage+'"></div></div>');
             $(".dz-message").hide();
         };
 
-        $("#btnupdate").click(function (e) {
-            e.preventDefault();
+        function UpdateFranchise(fileName) {
+            var logoFileName;
+            if(fileName){
+                logoFileName = fileName
+            }
+            else{
+                logoFileName = $("#txtUploadedFile").val();
+            }
             var formData = {
                 CompanyId : $("#txtCompanyId").val(),
                 CompanyName: $("#txtFranchiseName").val(),
@@ -583,8 +668,9 @@
                 WhatsAppNo: $("#txtWhatsAppNumber").val(),
                 Email: $("#txtEmailId").val(),
                 PANNo: $("#txtPanNumber").val(),
-                GSTNo: $("#txtGSTNumber").val(),
-                LogoImage : $("#dropzone").val()
+                GSTNo: $("#txtGstNumber").val(),
+                LogoImage : logoFileName
+                              
             }
             var editFranchiseUrl = '@Url.Content("~/Franchise/EditFranchise")';
             $.ajax({
@@ -593,40 +679,65 @@
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(formData),
                 dataType: "json",
-                success: function (result) {
-                    if (result.result == "success") {
-                        $("#dataDiv").html("Profile updated successfully!");
-                        $("#addFranchiseDiv").css('display', 'none')
-                        fetchFranchise();
+                success: function (response) {
+                    if (response.result == "Success") {
+                        toastr.success("Franchise Updated successfully!");
+                        $("#addFranchiseDiv").css('display', 'none');
+                        FetchFranchise();
+                        $("#backButton").css('display','block');
                     } 
                     else {
-                        $("#dataDiv").html("Failed to update profile.");
+                       toastr.error("Failed to update franchise");
                     }
-                    $("#btnSaveFranchise").show();
-                    $("#btnupdate").hide();
-                    $("#btnSavenewFranchise").prop("disabled", false);
-                    $("#viewprofile").click();
                 },
                 error: function (xhr, status, error) {
-                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                    toastr.error("Failed to update franchise");
                 }
             });
-        });
+            if(fileName){
+                var deleteUploadUrl = '@Url.Content("~/Franchise/DeleteUpload")';
+                var deletefileName = $("#txtUploadedFile").val();
+                $.ajax({
+                    url: deleteUploadUrl,
+                    type: "POST",
+                    dataType: "json",
+                    data: {fileName : deletefileName},
+                    success: function (response) {
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error("Fail	ed to fetch data!", "Error");
+                    }
+                });
+            }
+        }
 
-        function deleteFranchise(companyId){
-            var deleteFranchiseUrl = '@Url.Content("~/Franchise/DeleteFranchise/")' + companyId
+        function DeleteFranchise(companyId,fileName){
+            var deleteFranchiseUrl = '@Url.Content("~/Franchise/DeleteFranchise/")' + companyId;
+            var deleteUploadUrl = '@Url.Content("~/Franchise/DeleteUpload")';
             $.ajax({
                 url: deleteFranchiseUrl,
                 type: "DELETE",
                 dataType: "json",
                 data: JSON.stringify(companyId),
                 success: function (response) {
-                    fetchFranchise();
+                    FetchFranchise();
+                    $("#backButton").css('display','block');
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Fail	ed to fetch data!", "Error");
                 }
             });
+            $.ajax({
+                url: deleteUploadUrl,
+                type: "POST",
+                dataType: "json",
+                data: {fileName : fileName},
+                success: function (response) {
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Fail	ed to fetch data!", "Error");
+                }
+            })
         };
-    
+
 </script>           

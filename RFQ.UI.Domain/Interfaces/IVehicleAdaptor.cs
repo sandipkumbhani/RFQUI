@@ -11,5 +11,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto requestDto);
 
         Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType();
+        Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor();
     }
 }

@@ -806,15 +806,14 @@
         });
 
      $("#panEKycButton").on("click",function(){
-             var getUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
-             var panNumber= $("#txtPanNumber").val();
-
-             // Request Body
+            var getPanKycUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
+            var panNumber= $("#txtPanNumber").val();
+            // Request Body
              var Body ={
                  PANNo:panNumber,
              }
                  $.ajax({
-                     url: getUrl,
+                     url: getPanKycUrl,
                      type: "Post",
                      contentType: "application/json; charset=utf-8",
                      dataType: "json",
@@ -832,12 +831,12 @@
                          toastr.error("Failed to submit Vehicle Type", "Error");
                      }
                  });
-        });
+      });
 
      function GetAllCityList() {
-        var deleteCustomerUrl = '@Url.Content("~/Customer/GetAllCity")'
+        var getAllCityUrl = '@Url.Content("~/Customer/GetAllCity")'
           $.ajax({
-             url: deleteCustomerUrl,
+             url: getAllCityUrl,
              type: "GET",
              dataType: "json",
              success: function (response) {
@@ -864,33 +863,4 @@
      }
 
 </script>
-<script>
-    jQuery(document).ready(function($) {
-    var items = ['Ahmedabad','Mumbai','Baroda','Surat'];
 
-    function split(val) {
-        return val.split(/,\s*/);
-    }
-    function extractLast(term) {
-        return split(term).pop();
-    }
-    $("#selectPartyExecutive").autocomplete({
-        minLength: 1,
-        source: function( request, response ) {
-            response( $.ui.autocomplete.filter(
-                items, extractLast( request.term ) ) );
-          },
-          focus: function() {
-              return false;
-          },
-          select: function( event, ui ) {
-            var terms = split( this.value );
-            terms.pop();
-            terms.push( ui.item.value );
-            terms.push( "" );
-            this.value = terms.join( ", " );
-            return false;
-          }
-        });
-    });
-</script>

@@ -28,7 +28,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/MasterVehicleType/GetAllVehicleCategory");
+                var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/VehicleType/GetAllVehicleCategory");
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
@@ -84,13 +84,35 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/MasterVehicleType/GetAllMasterVehicleType");
+                var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/VehicleType/GetAllVehicleType");
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var vehicleTypelist = JsonConvert.DeserializeObject<List<ComMstVehicleTypeDto>>(Convert.ToString(responseModel.Data!));
                     return vehicleTypelist;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor()
+        {
+            try
+            {
+                var _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/VehicleType/GetAllOwnerOrVendor");
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var ownerOrVendorlist = JsonConvert.DeserializeObject<List<MasterPartyDto>>(Convert.ToString(responseModel.Data!));
+                    return ownerOrVendorlist;
                 }
                 return null;
             }
