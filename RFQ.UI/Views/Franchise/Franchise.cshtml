@@ -332,9 +332,10 @@
         }
 
         $('#backButton').click(function () {
-            $("#addFranchiseDiv").css('display', 'Block')
-            $("#backButton").css('display', 'none');
-             $('#tableDiv').hide();
+            window.location.reload(true);
+            // $("#addFranchiseDiv").css('display', 'Block')
+            // $("#backButton").css('display', 'none');
+            //  $('#tableDiv').hide();
         });
 
         $("#txtFranchiseName").on("change",function(){
@@ -684,7 +685,8 @@
                         toastr.success("Franchise Updated successfully!");
                         $("#addFranchiseDiv").css('display', 'none');
                         FetchFranchise();
-                        $("#backButton").css('display','block');
+                        $("#backButton").show();
+                    
                     } 
                     else {
                        toastr.error("Failed to update franchise");
