@@ -5,6 +5,7 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Controllers
 {
@@ -35,23 +36,19 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult VehicleTypeSave([FromBody] VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        public IActionResult VehicleTypeSave([FromBody] VehicleTypeRequestDto vehicleTypeRequestDto)
         {
-            if (vehicleTypeViewModelDto != null)
+            if (vehicleTypeRequestDto != null)
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
+                vehicleTypeRequestDto.CompanyId = Convert.ToInt32(companyid);
+                vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(profileid);
 
-                var Vehicle = new VehicleTypeViewModelDto()
-                {
-                    CompanyId = Convert.ToInt32(companyid),
-                    VehicleTypeName = vehicleTypeViewModelDto.VehicleTypeName,
-                    CreatedBy = Convert.ToInt32(profileid),
-                    UpdatedBy = Convert.ToInt32(profileid),
-                };
-                var result = _vehicleTypeServices.AddVehicleType(Vehicle);
+                var result = _vehicleTypeServices.AddVehicleType(vehicleTypeRequestDto);
                 return Json(new { result = "success" });
             }
             else
@@ -62,24 +59,20 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateVehicleType([FromBody] VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        public async Task<IActionResult> UpdateVehicleType([FromBody] VehicleTypeRequestDto vehicleTypeRequestDto)
         {
             try
             {
-                int vechicleTypeId = vehicleTypeViewModelDto.VehicleTypeId;
+                int vechicleTypeId = vehicleTypeRequestDto.VehicleTypeId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                var vehicle = new VehicleTypeViewModelDto
-                {
-                    VehicleTypeId = vehicleTypeViewModelDto.VehicleTypeId,
-                    VehicleTypeName = vehicleTypeViewModelDto.VehicleTypeName,
-                    CompanyId = Convert.ToInt32(companyid),
-                    CreatedBy = Convert.ToInt32(profileid),
-                    UpdatedBy = Convert.ToInt32(profileid)
-                };
-                var result = await _vehicleTypeServices.EditVehicleType(vechicleTypeId, vehicle);
+                vehicleTypeRequestDto.CompanyId = Convert.ToInt32(companyid);
+                vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+
+                var result = await _vehicleTypeServices.UpdateVehicleType(vechicleTypeId, vehicleTypeRequestDto);
                 if (result != null)
                 {
                     return Json(new { result = "success" });
@@ -96,28 +89,24 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewVehicleType(VehicleTypeViewModel vehicleTypeViewModel)
+        public async Task<IActionResult> ViewVehicleType()
         {
             try
             {
-                vehicleTypeViewModel ??= new VehicleTypeViewModel();
-                var userlist = await _vehicleTypeServices.GetVehicleTypeAll();
-                if (userlist != null && userlist.Count() > 0)
-                {
-                    vehicleTypeViewModel.vehicleTypeViewModelDtos.AddRange(userlist);
-                }
+                var vehicleTypeViewModel = new VehicleTypeResponseDto();
+                var result = await _vehicleTypeServices.GetVehicleTypeAll();
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(vehicleTypeViewModel);
+                    return Json(result);
                 }
                 else
                 {
-                    return View(vehicleTypeViewModel);
+                    return View(result);
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -171,7 +160,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetVehicleKycDetails([FromBody]VehicleKycRequestDto requestDto)
+        public async Task<IActionResult> GetVehicleKycDetails([FromBody] VehicleKycRequestDto requestDto)
         {
             try
             {
@@ -183,6 +172,62 @@ namespace RFQ.UI.Controllers
                     return NotFound("No vehicle KYC details found.");
                 }
                 return Json(vehicleCategoryList);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllMasterVehicleType()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var vehicleCategoryList = await _vehicleServices.GetAllMasterVehicleType();
+                if (vehicleCategoryList != null && vehicleCategoryList.Count() > 0)
+                {
+                    return Json(vehicleCategoryList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(vehicleCategoryList);
+                }
+                else
+                {
+                    return View(vehicleCategoryList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllOwnerOrVendor()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var OwnerOrVendorList = await _vehicleServices.GetAllOwnerOrVendor();
+                if (OwnerOrVendorList != null && OwnerOrVendorList.Count() > 0)
+                {
+                    return Json(OwnerOrVendorList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(OwnerOrVendorList);
+                }
+                else
+                {
+                    return View(OwnerOrVendorList);
+                }
             }
             catch (Exception ex)
             {

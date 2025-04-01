@@ -41,49 +41,49 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="row align-items-center mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">GST No</label>
+                                <label class="form-label col-form-label required fw-semibold fs-6" >GST No</label>
                                 <div class="col-auto">
-                                    <input type="text" class="form-control" placeholder="" />
+                                    <input type="text" class="form-control" placeholder="" id="txtGstNumber" />
                                 </div>
                                 <div class="col-auto">
-                                    <button class="btn btn-primary me-2">e-KYC</button>
+                                    <button class="btn btn-primary me-2" type="button" id="gstEKycButton">e-KYC</button>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Legal Name</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Legal Name" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="Legal Name" id="txtLegalName" disabled />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Type of Business</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Type of Business" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="Type of Business" id="txtTypeBusiness" disabled />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Status</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="GST Status" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="GST Status" id="txtGstStatus" disabled />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Address</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="GST Address" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="GST Address" id="txtGstAddress" disabled />
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Trade Name</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Trade Name" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="Trade Name" id="txtTradeName" disabled />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Aadhar Verified</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Aadhar Verified" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="Aadhar Verified" id="txtAadharVerified" disabled />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Verified On</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="GST Verified On" disabled />
+                                <input type="date" class="form-control form-control-solid" placeholder="GST Verified On" id="txtGstVerifiedOn" disabled />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label fw-semibold fs-6">Verified GST No</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Verified GST No" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="Verified GST No" id="txtVerifiedGstNo" disabled />
                             </div>
                         </div>
                     </div>
@@ -99,10 +99,10 @@
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">PAN No</label>
                                 <div class="col-auto">
-                                    <input type="text" class="form-control" placeholder="" />
+                                    <input type="text" class="form-control" placeholder="" id="txtPanNumber" />
                                 </div>
                                 <div class="col-auto">
-                                    <button class="btn btn-primary me-2">e-KYC</button>
+                                    <button class="btn btn-primary me-2" type="button" id="panEKycButton">e-KYC</button>
                                 </div>
                             </div>
                         </div>
@@ -629,4 +629,65 @@
         }
         
     })
+
+    $("#gstEKycButton").on("click",function(){
+               var gstNumber= $("#txtGstNumber").val();
+
+               // Request Body
+               var Body ={
+                   GSTNo:gstNumber,
+               }
+               var GetUrl = '@Url.Content("~/Customer/GetGstKycDetails")';
+                    $.ajax({
+                        url: GetUrl,
+                        type: "POST",
+                        contentType: "application/json,charset=utf-8",
+                        data : JSON.stringify(Body),
+                        dataType: "json",
+                        success: function (response) {
+                            var Data =response;
+                            var gstModel  = response.gstModel
+                                $("#txtLegalName").val(gstModel.legalName),
+                                $("#txtTypeBusiness").val(gstModel.constitutionOfBusiness),
+                                $("#txtGstStatus").val(gstModel.gstStatus),
+                                $("#txtGstAddress").val(gstModel.principalAddress),
+                                $("#txtTradeName").val(gstModel.tradeName),
+                                $("#txtAadharVerified").val(gstModel.aadhaarVerified),
+                                $("#txtGstVerifiedOn").val(new Date(gstModel.dateOfRegistration).toISOString().split('T')[0]),
+                                $("#txtVerifiedGstNo").val()
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error:", error);
+                            toastr.error("Failed to submit Vehicle Type", "Error");
+                        }
+                    });
+           });
+
+        $("#panEKycButton").on("click",function(){
+               var getPanKycUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
+               var panNumber= $("#txtPanNumber").val();
+               // Request Body
+                var Body ={
+                    PANNo:panNumber,
+                }
+                    $.ajax({
+                        url: getPanKycUrl,
+                        type: "Post",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data : JSON.stringify(Body),
+                        success: function (response) {
+                            var Data =response;
+                            var panModel = response.panModel
+                                $("#txtPanName").val(panModel.fullName),
+                                $("#txtAadharLinked").val(panModel.aadhaarLinked),
+                                $("#txtPanStatus").val(panModel.message),
+                                $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error:", error);
+                            toastr.error("Failed to submit Vehicle Type", "Error");
+                        }
+                    });
+         });
 </script>

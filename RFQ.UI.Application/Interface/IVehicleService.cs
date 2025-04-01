@@ -6,7 +6,9 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IVehicleService
     {
-        public Task<IEnumerable<InternalMasterDto>> GetAllVehicleCategory();
+         Task<IEnumerable<InternalMasterDto>> GetAllVehicleCategory();
         Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto requestDto);
+        Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType();
+        Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor();
     }
 }
