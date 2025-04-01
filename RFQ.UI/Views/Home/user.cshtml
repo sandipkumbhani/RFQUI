@@ -167,7 +167,6 @@
 			 if(!isMobile(mobileno))
 			 {
 				//$("#txtMobileNo").val('');
-				 $(this).focus();
 				toastr.warning("Please enter a valid MobileNumber", "Warning");
 				return;
 			 }
@@ -232,9 +231,10 @@
 		  });
 		  //
 		  $('#backButton').click(function () {
-			$("#adduserdiv").css('display', 'Block')
-			$("#backButton").css('display', 'none');
-			 $('#tableDiv').hide();
+				window.location.reload(true);
+			// $("#adduserdiv").css('display', 'Block')
+			// $("#backButton").css('display', 'none');
+			//  $('#tableDiv').hide();
 		});
 
 	function fetchuserlist()
@@ -506,6 +506,9 @@
 		$('#txtPassword').val(formdata.password);
 		//$('#txtPassword').hide();
 		$("#txtPassword").prop("disabled", true);
+		$("#btnSaveForm").hide();
+		$("#btnSaveAndNewForm").hide();
+		$("#btnViewForm").hide();
 
 	}
 
@@ -519,6 +522,7 @@
 			data:JSON.stringify(userId),
 			success: function (response)
 			{
+				$("#backButton").show();
 				fetchuserlist();
 				console.log("Deleted successfullyy...")
 			},
