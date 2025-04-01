@@ -179,7 +179,7 @@
                     <button id="btnSaveFranchise" type="button" class="btn btn-primary me-2">Save</button>
                     <button id="btnSavenewFranchise" type="button" class="btn btn-primary me-2">Save & New</button>
                     <button type="button" id="btnUpdateFranchise" class="btn btn-primary me-2" style="display:none;">Update</button>
-                    <button type="button" class="btn btn-primary" id="viewButton">View</button>
+                    <button type="button" class="btn btn-primary" id="btnViewButton">View</button>
                 </div>
             </form>
         </div>
@@ -263,6 +263,9 @@
                     if(myDropzone.files.length > 0){
                         myDropzone.processQueue();
                     }
+                    else{
+                        UpdateFranchise();
+                    }
                 });
 
             },
@@ -315,7 +318,7 @@
         });
         GetAllCityList();
 
-        $("#viewButton").on("click",function(){
+        $("#btnViewButton").on("click",function(){
             FetchFranchise();
             $("#addFranchiseDiv").css('display','none');
             $("#backButton").css('display','block');
@@ -500,81 +503,118 @@
             });
         };
   
-        function FetchFranchise(){
-            $("#tableDiv").show();
-            var fetchFranchiseUrl = '@Url.Content("~/Franchise/GetFranchiseAll")';
+        
+        function GetAllCityList() {
+            var getcityUrl = '@Url.Content("~/Customer/GetAllCity")'
             $.ajax({
-                url : fetchFranchiseUrl,
-                type : 'GET',
-                dataType : 'json',
-                success : function(response){
-                    let franchiseList = response.filter(x=>x.companyTypeId == 2);
-                    franchiseViewModelDto = response;
-                    if ($.fn.DataTable.isDataTable('#tableFranchise')) {
-                        $('#tableFranchise').DataTable().clear().destroy();
-                    }
-                    $('#tableFranchise').DataTable({
-                        "processing": true,
-                        "serverSide": false,
-                        "paging": true,
-                        "pageLength": 10,
-                        "lengthChange": true,
-                        "searching": true,
-                        "ordering": true,
-                        "info": true,
-                        "autoWidth": true,
-                        "responsive": true,
-                        "info": true,
-                        "autoWidth": true,
-                        "responsive": true,
-                        "scrollX": true,
-                        "data": franchiseList,
-                        "columns": [
-                            { "data": "logoImage",
-                                "render" : function(data){
-                                    return `<img src="../../franchiselogo/${data}" style="height:40px;width:60px" alt="Logo"/>`
-                                }
-                            },
-                            { "data": "companyName" },
-                            { "data": "addressLine" },
-                            { "data": "cityId" },
-                            { "data": "pinCode" },
-                            { "data": "contactPerson" },
-                            { "data": "contactNo" },
-                            { "data": "mobNo" },
-                            { "data": "whatsAppNo" },
-                            { "data": "email" },
-                            { "data": "panNo" },
-                            { "data": "gstNo" },
-                            { "data": function(row){
-                                    return {CompanyId : row.companyId, Logofile : row.logoImage}
-                                },
-                                "render":function (data, type, row){
-                                    return `<div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-sm btn-primary" onclick="EditFranchise(${data.CompanyId})">
-                                                    <i class="ti ti-edit"></i> Edit
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-danger" onclick="DeleteFranchise(${data.CompanyId},'${data.Logofile}')">
-                                                    <i class="ti ti-trash"></i> Delete
-                                                </button>
-                                            </div>`;
-                                }
-                            },
-                        ],
-                        "columnDefs": [
-                            {
-                                "targets": "_all",
-                                "className": "text-center"
-                            }
-                        ]
-                    })
-                },
-                error : function(xhr,status,error){
-                    toastr.error("Failed to fetch data!", "Error");
-                }
+                  url: getcityUrl,
+                  type: "GET",
+                  dataType: "json",
+                  success: function (response) {
+                      BindDropDown(response)
+                  },
+                  error: function (xhr, status, error) {
+                      toastr.error("Failed to fetch data!", "Error");
+                  }
             });
-        };
+        }
+
+        function BindDropDown(data) {
+            const select = document.getElementById("ddlCity");
+            select.innerHTML = "";
+
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a City";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            data.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.cityId;
+                opt.textContent = option.cityName;
+                select.appendChild(opt);
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+        }
     });
+
+    function FetchFranchise(){
+             $("#tableDiv").show();
+             var fetchFranchiseUrl = '@Url.Content("~/Franchise/GetFranchiseAll")';
+             $.ajax({
+                 url : fetchFranchiseUrl,
+                 type : 'GET',
+                 dataType : 'json',
+                 success : function(response){
+                     let franchiseList = response.filter(x=>x.companyTypeId == 2);
+                     franchiseViewModelDto = response;
+                     if ($.fn.DataTable.isDataTable('#tableFranchise')) {
+                         $('#tableFranchise').DataTable().clear().destroy();
+                     }
+                     $('#tableFranchise').DataTable({
+                         "processing": true,
+                         "serverSide": false,
+                         "paging": true,
+                         "pageLength": 10,
+                         "lengthChange": true,
+                         "searching": true,
+                         "ordering": true,
+                         "info": true,
+                         "autoWidth": true,
+                         "responsive": true,
+                         "info": true,
+                         "autoWidth": true,
+                         "responsive": true,
+                         "scrollX": true,
+                         "data": franchiseList,
+                         "columns": [
+                             { "data": "logoImage",
+                                 "render" : function(data){
+                                     return `<img src="../../franchiselogo/${data}" style="height:40px;width:60px" alt="Logo"/>`
+                                 }
+                             },
+                             { "data": "companyName" },
+                             { "data": "addressLine" },
+                             { "data": "cityId" },
+                             { "data": "pinCode" },
+                             { "data": "contactPerson" },
+                             { "data": "contactNo" },
+                             { "data": "mobNo" },
+                             { "data": "whatsAppNo" },
+                             { "data": "email" },
+                             { "data": "panNo" },
+                             { "data": "gstNo" },
+                             { "data": function(row){
+                                     return {CompanyId : row.companyId, Logofile : row.logoImage}
+                                 },
+                                 "render":function (data, type, row){
+                                     return `<div class="btn-group" role="group">
+                                                 <button type="button" class="btn btn-sm btn-primary" onclick="EditFranchise(${data.CompanyId})">
+                                                     <i class="ti ti-edit"></i> Edit
+                                                 </button>
+                                                 <button type="button" class="btn btn-sm btn-danger" onclick="DeleteFranchise(${data.CompanyId},'${data.Logofile}')">
+                                                     <i class="ti ti-trash"></i> Delete
+                                                 </button>
+                                             </div>`;
+                                 }
+                             },
+                         ],
+                         "columnDefs": [
+                             {
+                                 "targets": "_all",
+                                 "className": "text-center"
+                             }
+                         ]
+                     })
+                 },
+                 error : function(xhr,status,error){
+                     toastr.error("Failed to fetch data!", "Error");
+                 }
+             });
+         };
         function EditFranchise(companyId){
             var data = franchiseViewModelDto.filter(x=>x.companyId == companyId);
             var formData = data[0];
@@ -583,8 +623,8 @@
             $("#addFranchiseDiv").css('display', 'Block');
             $("#btnSaveFranchise").hide();
             $("#btnUpdateFranchise").show();
-            $("#btnSavenewFranchise").prop("disabled", true);
-            // myDropzone.removeAllFiles();
+            $("#btnSavenewFranchise").hide();
+            $("#btnViewButton").hide();
             const dropzone = document.getElementById('dropzone');
                 if(dropzone.children[1]){
                     dropzone.removeChild(dropzone.children[1]);
@@ -593,7 +633,7 @@
             $("#txtFranchiseName").val(formData.companyName);
             $("#txtFranchiseCode").val(formData.companyTypeId);
             $("#txtAddress").val(formData.addressLine);
-            $("#ddlCity").val(formData.cityId);
+            $("#ddlCity").val(formData.cityId).change();
             $("#txtPinCode").val(formData.pinCode);
             $("#txtContactPerson").val(formData.contactPerson);
             $("#txtWhatsAppNumber").val(formData.whatsAppNo);
@@ -632,7 +672,6 @@
                 LogoImage : logoFileName
                               
             }
-            console.log(formData);
             var editFranchiseUrl = '@Url.Content("~/Franchise/EditFranchise")';
             $.ajax({
                 type: "PUT",
@@ -640,22 +679,19 @@
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(formData),
                 dataType: "json",
-                success: function (result) {
-                    if (result.result == "success") {
-                        $("#dataDiv").html("Profile updated successfully!");
-                        $("#addFranchiseDiv").css('display', 'none')
+                success: function (response) {
+                    if (response.result == "Success") {
+                        toastr.success("Franchise Updated successfully!");
+                        $("#addFranchiseDiv").css('display', 'none');
                         FetchFranchise();
+                        $("#backButton").css('display','block');
                     } 
                     else {
-                        $("#dataDiv").html("Failed to update profile.");
+                       toastr.error("Failed to update franchise");
                     }
-                    $("#btnSaveFranchise").show();
-                    $("#btnUpdateFranchise").hide();
-                    $("#btnSavenewFranchise").prop("disabled", false);
-                    $("#viewprofile").click();
                 },
                 error: function (xhr, status, error) {
-                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                    toastr.error("Failed to update franchise");
                 }
             });
             if(fileName){
@@ -667,7 +703,6 @@
                     dataType: "json",
                     data: {fileName : deletefileName},
                     success: function (response) {
-                        console.log("delete uploaded");
                     },
                     error: function (xhr, status, error) {
                         toastr.error("Fail	ed to fetch data!", "Error");
@@ -686,6 +721,7 @@
                 data: JSON.stringify(companyId),
                 success: function (response) {
                     FetchFranchise();
+                    $("#backButton").css('display','block');
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Fail	ed to fetch data!", "Error");
@@ -697,49 +733,11 @@
                 dataType: "json",
                 data: {fileName : fileName},
                 success: function (response) {
-                    console.log("delete uploaded");
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Fail	ed to fetch data!", "Error");
                 }
             })
         };
-    
-        function GetAllCityList() {
-        var getcityUrl = '@Url.Content("~/Customer/GetAllCity")'
-          $.ajax({
-             url: getcityUrl,
-             type: "GET",
-             dataType: "json",
-             success: function (response) {
-                 console.log(response);
-                 BindDropDown(response)
-             },
-             error: function (xhr, status, error) {
-                 console.error("Error:", error);
-                 toastr.error("Failed to fetch data!", "Error");
-             }
-         });
-     }
 
-     function BindDropDown(data) {
-        const select = document.getElementById("ddlCity");
-        select.innerHTML = ""; 
-
-        let placeholderOption = document.createElement("option");
-        placeholderOption.value = "";
-        placeholderOption.textContent = "Select a City";
-        placeholderOption.disabled = true;
-        placeholderOption.selected = true;
-        select.appendChild(placeholderOption);
-
-        data.forEach(option => {
-            let opt = document.createElement("option");
-            opt.value = option.cityId;
-            opt.textContent = option.cityName;
-            select.appendChild(opt);
-        });
-
-        $('.selectpicker').selectpicker('refresh');
-     }
 </script>           
