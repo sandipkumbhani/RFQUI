@@ -84,10 +84,10 @@
 								<select name="location" aria-label="Select a Location"
 										data-control="select2" data-placeholder="Select a location..." id="txtLocation" class="form-select select2 form-select-solid form-select-lg fw-semibold">
 									<option value="0">Select a location...</option>
-									<option value="1">Afghanistan</option>
-									<option value="2">Aland Islands</option>
-									<option value="3">Albania</option>
-									<option value="4">Algeria</option>
+									@* <option value="1">Afghanistan</option> *@
+									@* <option value="2">Aland Islands</option> *@
+									@* <option value="3">Albania</option> *@
+									@* <option value="4">Algeria</option> *@
 								</select>
 							</div>
 
@@ -114,7 +114,9 @@
 						<tr>
 							<th>UserId</th>
 							<th>UserName</th>
+							<th>MobileNo</th>
 							<th>EmailId</th>
+							@* <th>Location</th>  *@
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -264,11 +266,14 @@
 					"info": true,
 					"autoWidth": true,
 					"responsive": true,
+					// "scrollX": true,
 					"data": trlist,
 					"columns": [
 						{ "data": "userId" },
 						{ "data": "personName" },
+						{ "data": "mobileNo" },
 						{ "data": "emailId" },
+						// { "data": "location" },
 						{
 						"data": "userId",
 						"render": function (data, type, row) {
@@ -402,34 +407,34 @@
 		}
 	});
 	//For Location
-	// var GetUrl = '@Url.Content("~/Home/GetAllLocation")';
-	// $.ajax({
-	// 	url: GetUrl,
-	// 	type: "GET",
-	// 	contentType: "application/json",
-	// 	success: function (response) {
-	// 		debugger;
-	// 		console.log(response);
-	// 		var data = response.filter(x=>x.LocationId)
-	// 		console.log(data);
-	// 			if (data && data.length > 0) {
-	// 				$.each(data, function (index, item) {
-	// 					$('#txtLocation').append($('<option>', {
-	// 						value: item.locationId,
-	// 						text: item.locationName
-	// 				}));
-	// 			});
-	// 			}
-	// 			else {
-	// 				$('#txtLocation').empty().append('<option value="">No location Available</option>');
-	// 			}
-	// 						}
-	// 	},
-	// 	error: function (xhr, status, error) {
-	// 		console.error("Error:", error);
-	// 		toastr.error("Failed to submit location ", "Error");
-	// 	}
-	// });
+	var GetUrl = '@Url.Content("~/Home/GetAllLocation")';
+	$.ajax({
+		url: GetUrl,
+		type: "GET",
+		contentType: "application/json",
+		success: function (response) {
+			debugger;
+			console.log(response);
+			var data = response.filter(x=>x.locationId)
+			console.log(data);
+				if (data && data.length > 0) {
+					$.each(data, function (index, item) {
+						$('#txtLocation').append($('<option>', {
+							value: item.locationId,
+							text: item.locationName
+					}));
+				});
+				}
+				else {
+					$('#txtLocation').empty().append('<option value="">No location Available</option>');
+				}
+							
+		},
+		error: function (xhr, status, error) {
+			console.error("Error:", error);
+			toastr.error("Failed to submit company and franchise ", "Error");
+		}
+	});
 
 
 	$(document).ready(function ()

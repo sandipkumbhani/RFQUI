@@ -44,10 +44,7 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-        public IActionResult Location()
-        {
-            return View();
-        }
+
         public IActionResult user()
         {
             return View();
@@ -55,18 +52,18 @@ namespace RFQ.UI.Controllers
         [HttpPost]
         public IActionResult UserSave([FromBody] UserRequestDto userRequestDto)
         {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-               // string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+            // string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                if (userRequestDto != null)
-                {
-               // userRequestDto.CompanyId = Convert.ToInt32(companyid);
+            if (userRequestDto != null)
+            {
+                // userRequestDto.CompanyId = Convert.ToInt32(companyid);
                 userRequestDto.CreatedBy = Convert.ToInt32(profileid);
                 userRequestDto.UpdatedBy = Convert.ToInt32(profileid);
                 userRequestDto.ProfileId = Convert.ToInt32(profileid);
 
-                
+
                 var result = _usersService.AddUsers(userRequestDto);
                 return Json(new { result = "success" });
             }
@@ -81,7 +78,7 @@ namespace RFQ.UI.Controllers
             try
             {
                 var userlist = await _usersService.GetAllUser();
-                
+
                 if (Request.IsAjaxRequest())
                 {
                     return Json(userlist);
@@ -119,7 +116,7 @@ namespace RFQ.UI.Controllers
                 //userRequestDto.CompanyId = Convert.ToInt32(companyid);
                 userRequestDto.UpdatedBy = Convert.ToInt32(profileid);
                 userRequestDto.ProfileId = Convert.ToInt32(profileid);
-               // };
+                // };
                 var result = await _usersService.EditUsers(userId, userRequestDto);
                 if (result != null)
                 {
@@ -182,35 +179,33 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetAllLocation()
-        //{
-        //    try
-        //    {
-        //        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-        //        string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-        //        int profileID = Convert.ToInt32(profileid);
-        //        var alllist = await _usersService.GetAllLocation();
-        //        if (alllist != null && alllist.Count() > 0)
-        //        {
-        //            return Json(alllist);
-        //        }
-        //        if (Request.IsAjaxRequest())
-        //        {
-        //            return Json(alllist);
-        //        }
-        //        else
-        //        {
-        //            return View(alllist);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { result = "error", message = ex.Message });
-        //    }
-        //}
-
+        [HttpGet]
+        public async Task<IActionResult> GetAllLocation()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var alllist = await _usersService.GetAllLocation();
+                if (alllist != null && alllist.Count() > 0)
+                {
+                    return Json(alllist);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(alllist);
+                }
+                else
+                {
+                    return View(alllist);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
         public IActionResult ResetPassword()
         {
             return View();

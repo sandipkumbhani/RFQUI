@@ -8,7 +8,6 @@ namespace RFQ.UI.Application.Provider
     public class UsersService : IUsersService
     {
         private readonly UsersAdaptor _usersAdaptor;
-
         public UsersService(UsersAdaptor usersAdaptor)
         {
             _usersAdaptor = usersAdaptor;
@@ -17,12 +16,10 @@ namespace RFQ.UI.Application.Provider
         {
             return _usersAdaptor.AddUsers(userRequestDto);
         }
-
         public Task<string> DeleteUsers(int UserId)
         {
             return _usersAdaptor.DeleteUsers(UserId);
         }
-
         public Task<string> EditUsers(int UserId, UserRequestDto userRequestDto)
         {
             return _usersAdaptor.EditUsers(UserId, userRequestDto);
@@ -32,7 +29,6 @@ namespace RFQ.UI.Application.Provider
         {
             return _usersAdaptor.GetAllUser();
         }
-
         public Task<string> GetUsers(int userId)
         {
             throw new NotImplementedException();
@@ -41,9 +37,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _usersAdaptor.GetAllCompanyAndFranchise();
         }
-        //public async Task<IEnumerable<LocationListDto>> GetAllLocation()
-        //{
-        //    return await _usersAdaptor.GetAllLocation();
-        //}
+        public async Task<IEnumerable<LocationListDto>> GetAllLocation()
+        {
+            return await _usersAdaptor.GetAllLocation();
+        }
     }
 }

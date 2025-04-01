@@ -30,7 +30,7 @@ namespace RFQ.UI.Domain.RequestDto
 
         public string Email { get; set; }
 
-        public int LinkId { get; set; }
+        public int LinkId { get; set; } = 1;
 
         public int StatusId { get; set; } = 1;
         public int CreatedBy { get; set; }

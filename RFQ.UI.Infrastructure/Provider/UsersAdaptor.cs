@@ -140,26 +140,26 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        //public async Task<IEnumerable<LocationListDto>> GetAllLocation()
-        //{
-        //    try
-        //    {
-        //        var _httpclient = new HttpClient();
-        //        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-        //        var response = await _httpClient.GetAsync("https://localhost:7272/api/MasterLocation/GetAllMasterLocation");
-        //        var responseData = await response.Content.ReadAsStringAsync();
-        //        var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-        //        if (responseModel != null)
-        //        {
-        //            var alllist = JsonConvert.DeserializeObject<List<LocationListDto>>(Convert.ToString(responseModel.Data!));
-        //            return alllist;
-        //        }
-        //        return null;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw;
-        //    }
-        //}
+        public async Task<IEnumerable<LocationListDto>> GetAllLocation()
+        {
+            try
+            {
+                var _httpclient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync("https://localhost:7272/api/MasterLocation/GetAllMasterLocation");
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var alllist = JsonConvert.DeserializeObject<List<LocationListDto>>(Convert.ToString(responseModel.Data!));
+                    return alllist;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

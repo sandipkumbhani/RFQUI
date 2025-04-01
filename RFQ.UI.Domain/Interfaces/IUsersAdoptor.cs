@@ -11,7 +11,7 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> EditUsers(int UserId, UserRequestDto userRequestDto);
         Task<string> DeleteUsers(int UserId);
         Task<IEnumerable<CompanyAndFranchiseListDto>> GetAllCompanyAndFranchise();
-        //Task<IEnumerable<LocationListDto>> GetAllLocation();
+        Task<IEnumerable<LocationListDto>> GetAllLocation();
 
     }
 }
