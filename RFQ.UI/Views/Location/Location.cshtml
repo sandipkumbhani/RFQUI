@@ -264,6 +264,7 @@
           dataType: "json",
           success: function (response) {
              let trlist = response;
+             console.log(response);
              locationResponseDto = response;
              // Destroy existing DataTable if exists
              if ($.fn.DataTable.isDataTable('#tablelocation')) {
@@ -285,7 +286,7 @@
                 "columns": [
                    { "data": "locationName" },
                    { "data": "addressLine" },
-                   { "data": "cityId" },
+                   { "data": "city" },
                    { "data": "pinCode" },
                    { "data": "contactPerson" },
                    { "data": "contactNo" },

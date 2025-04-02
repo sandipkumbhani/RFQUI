@@ -18,6 +18,8 @@ namespace RFQ.UI.Domain.ResponseDto
 
         public int CityId { get; set; }
 
+        public string? City { get; set; }
+
         public string? PinCode { get; set; }
 
         public string? ContactPerson { get; set; }

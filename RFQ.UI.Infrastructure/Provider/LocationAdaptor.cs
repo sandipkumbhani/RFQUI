@@ -30,7 +30,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer",_globalClass.Token);
 
-            var baseurl = _fleetLynkApiUrl + _config["Location:AddMasterLocation"];
+            var baseurl = _fleetLynkApiUrl + _config["Location:AddLocation"];
             var User = JsonConvert.SerializeObject(locationRequestDto);
             var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -56,7 +56,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = _fleetLynkApiUrl+ _config["Location:DeleteMasterLoction"] + LocationId;
+            var baseurl = _fleetLynkApiUrl+ _config["Location:DeleteLoction"] + LocationId;
             var response = await _httpClient.DeleteAsync(baseurl);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
@@ -76,7 +76,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var baseurl = _fleetLynkApiUrl + _config["Location:UpdateMasterlocation"] + LocationId;
+            var baseurl = _fleetLynkApiUrl + _config["Location:Updatelocation"] + LocationId;
             var user = JsonConvert.SerializeObject(locationRequestDto);
             var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -97,7 +97,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Location:GetAllMasterlocation"]);
+            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Location:GetAllLocation"]);
 
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
