@@ -10,7 +10,9 @@ namespace RFQ.UI.Domain.ResponseDto
     {
         public int UserId { get; set; }
         public int CompanyId { get; set; }
-        public string? LocationId { get; set; }
+        public int? LocationId { get; set; }
+        public string Company { get; set; }
+        public string Location { get; set; }
         public int ProfileId { get; set; }
         public string? PersonName { get; set; }
         public string? LoginId { get; set; }

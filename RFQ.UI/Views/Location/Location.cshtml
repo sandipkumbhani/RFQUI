@@ -444,7 +444,7 @@
        console.log(locationResponseDto);
        var data = locationResponseDto.filter(x => x.locationId == locationId);
        var formdata = data[0];
-       console.log(data);
+       console.log(formdata);
        $("#tableDiv").hide();
        $("#backButton").css('display', 'none');
        $("#AddLocationDiv").css('display', 'Block');
@@ -454,17 +454,17 @@
        $('#txtLocationId').val(formdata.locationId);
        $('#txtLocationName').val(formdata.locationName);
        $('#txtAddress').val(formdata.addressLine);
-       $("#txtCity").val(formdata.cityId);
+       $('#selectCity').selectpicker('val', formdata.cityId);
+       $('#selectCity').selectpicker('refresh');
        $("#txtPinCode").val(formdata.pinCode);
        $("#txtPerson").val(formdata.contactPerson);
        $("#txtContactNumber").val(formdata.contactNo);
        $("#txtMobileNumber").val(formdata.mobNo);
        $("#txtWhatsAppNumber").val(formdata.whatsAppNo);
        $("#txtEmail").val(formdata.email);
-
-    $("#btnSaveForm").hide();
-    $("#btnSaveAndNewForm").hide();
-    $("#btnViewForm").hide();
+       $("#btnSaveForm").hide();
+       $("#btnSaveAndNewForm").hide();
+        $("#btnViewForm").hide();
     }
 
     function deletelocationlist(locationId) {
