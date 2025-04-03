@@ -157,7 +157,7 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">City </label>
-                                <select name="City" aria-label="Select a City" id="selectCity" class="selectpicker"  multiple data-live-search="true" data-width="100%">
+                                <select name="City" aria-label="Select a City" id="selectCity" class="selectpicker"  data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-5">
@@ -806,12 +806,18 @@
         });
 
      $("#panEKycButton").on("click",function(){
-            var GetUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
+            var getPanKycUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
+            var panNumber= $("#txtPanNumber").val();
+            // Request Body
+             var Body ={
+                 PANNo:panNumber,
+             }
                  $.ajax({
-                     url: GetUrl,
-                     type: "GET",
+                     url: getPanKycUrl,
+                     type: "Post",
                      contentType: "application/json; charset=utf-8",
                      dataType: "json",
+                     data : JSON.stringify(Body),
                      success: function (response) {
                          var Data =response;
                          var panModel = response.panModel
@@ -825,12 +831,12 @@
                          toastr.error("Failed to submit Vehicle Type", "Error");
                      }
                  });
-        });
+      });
 
      function GetAllCityList() {
-        var deleteCustomerUrl = '@Url.Content("~/Customer/GetAllCity")'
+        var getAllCityUrl = '@Url.Content("~/Customer/GetAllCity")'
           $.ajax({
-             url: deleteCustomerUrl,
+             url: getAllCityUrl,
              type: "GET",
              dataType: "json",
              success: function (response) {
@@ -845,11 +851,10 @@
      }
 
      function BindDropDown(data) {
-         debugger;
             const select = document.getElementById("selectCity");
             data.forEach(option => {
                 let opt = document.createElement("option");
-                opt.value = 0;
+                    opt.value = option.cityId;
                 opt.textContent = option.cityName;
                 select.appendChild(opt);
             });
@@ -858,33 +863,4 @@
      }
 
 </script>
-<script>
-    jQuery(document).ready(function($) {
-    var items = ['Ahmedabad','Mumbai','Baroda','Surat'];
 
-    function split(val) {
-        return val.split(/,\s*/);
-    }
-    function extractLast(term) {
-        return split(term).pop();
-    }
-    $("#selectPartyExecutive").autocomplete({
-        minLength: 1,
-        source: function( request, response ) {
-            response( $.ui.autocomplete.filter(
-                items, extractLast( request.term ) ) );
-          },
-          focus: function() {
-              return false;
-          },
-          select: function( event, ui ) {
-            var terms = split( this.value );
-            terms.pop();
-            terms.push( ui.item.value );
-            terms.push( "" );
-            this.value = terms.join( ", " );
-            return false;
-          }
-        });
-    });
-</script>

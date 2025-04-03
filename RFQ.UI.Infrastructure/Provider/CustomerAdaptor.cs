@@ -194,7 +194,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = $"{_fleetLynkApiUrl}/MasterParty/GetAllCity";
+                var url = $"{_fleetLynkApiUrl}/CompanyCity/GetAllCity";
 
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
