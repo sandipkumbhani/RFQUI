@@ -257,6 +257,9 @@
                         myDropzone.processQueue();
                     } 
                 });
+                if(dropzone.children.length > 2){
+                    dropzone.removeChild(dropzone.children[1]);
+                }
                 $("#btnUpdateFranchise").click(function(event){
                     isNewFranchise = false;
                     isUpdateFranchise = true;
@@ -267,7 +270,7 @@
                         UpdateFranchise();
                     }
                 });
-
+                
             },
             success : function(file,response){
                 if(isUpdateFranchise){
@@ -316,6 +319,7 @@
                 }
             }
         });
+        
         GetAllCityList();
 
         $("#btnViewButton").on("click",function(){
