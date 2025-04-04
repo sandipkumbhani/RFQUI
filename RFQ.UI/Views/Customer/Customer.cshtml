@@ -783,7 +783,7 @@
                  PANNo:panNumber,
              }
                  $.ajax({
-                     url: getUrl,
+                     url: getPanKycUrl,
                      type: "Post",
                      contentType: "application/json; charset=utf-8",
                      dataType: "json",
@@ -801,12 +801,12 @@
                          toastr.error("Failed to submit Vehicle Type", "Error");
                      }
                  });
-        });
+      });
 
      function GetAllCityList() {
-        var getCityUrl = '@Url.Content("~/Customer/GetAllCity")'
+        var getAllCityUrl = '@Url.Content("~/Customer/GetAllCity")'
           $.ajax({
-             url: getCityUrl,
+             url: getAllCityUrl,
              type: "GET",
              dataType: "json",
              success: function (response) {

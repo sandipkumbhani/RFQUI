@@ -24,8 +24,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var baseurl = $"{_fleetLynkApiUrl}/api/CompanyProfile/AddProfile";
-
+            var baseurl = _fleetLynkApiUrl + _config["Profile:AddProfile"];
             var profile = JsonConvert.SerializeObject(profileViewModelDto);
             var requestContent = new StringContent(profile, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -35,14 +34,9 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var result = responseModel.StatusCode;
                 if (result == 200)
-                {
-
                     return "Profile Saved";
-                }
                 else
-                {
                     return responseModel.ErrorMessage ?? "An error occurred"; ;
-                }
             }
             return string.Empty;
         }
@@ -51,7 +45,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/CompanyProfile/GetProfileAll");
+            var response = await _httpClient.GetAsync(_fleetLynkApiUrl+ _config["Profile:GetProfileAll"]);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
@@ -68,7 +62,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl}/CompanyProfile/UpdateProfile/{profileId}";
+            var baseurl = _fleetLynkApiUrl+ _config["Profile:UpdateProfile"] + profileId;
             var profile = JsonConvert.SerializeObject(profileViewModelDto);
             var requestContent = new StringContent(profile, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -94,7 +88,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl}/CompanyProfile/DeleteProfile/{profileId}";
+            var baseurl = _fleetLynkApiUrl + _config["Profile:DeleteProfile"] + profileId;
             var response = await _httpClient.DeleteAsync(baseurl);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);

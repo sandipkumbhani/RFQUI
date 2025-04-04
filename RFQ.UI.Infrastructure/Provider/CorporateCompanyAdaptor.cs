@@ -33,7 +33,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany";
+                var baseurl = _fleetLynkApiUrl + _config["CorporateCompany:AddCompany"];
                 var company = JsonConvert.SerializeObject(corporateCompanyViewModelDto);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -43,14 +43,10 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
 
                         return "Corporate Company Saved";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
             }
             catch (Exception ex)
@@ -64,8 +60,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/Company/GetAllCompany");
-
+            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["CorporateCompany:GetAllCompany"]);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
@@ -84,7 +79,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync($"https://localhost:7272/api/Company/GetAllCompany");
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["CorporateCompany:GetAllCompany"]);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
@@ -106,7 +101,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl}/Company/UpdateCompany/{companyId}";
+            var baseurl = $"{_fleetLynkApiUrl + _config["CorporateCompany:UpdateCompany"] +companyId}";
             var vehicle = JsonConvert.SerializeObject(corporateCompanyViewModelDto);
             var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -132,7 +127,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl}/Company/DeleteCompany/{companyId}";
+            var baseurl = $"{_fleetLynkApiUrl + _config["CorporateCompany:DeleteCompany"] + companyId}";
             var response = await _httpClient.DeleteAsync(baseurl);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);

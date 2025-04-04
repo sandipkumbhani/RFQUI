@@ -1,18 +1,13 @@
-﻿using RFQ.UI.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static RFQ.UI.Domain.Model.FranchiseViewModel;
+﻿using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Domain.Interfaces
 {
     public interface IFranchiseAdaptor
     {
-        Task<string> AddFranchise(FranchiseViewModelDto franchiseViewModelDto);
-        Task<IEnumerable<FranchiseViewModelDto>> GetFranchiseAll();
-        Task<string> EditFranchise(int companyId, FranchiseViewModelDto franchiseViewModelDto);
+        Task<string> AddFranchise(FranchiseRequestDto franchiseRequestDto);
+        Task<IEnumerable<FranchiseResponseDto>> GetFranchiseAll();
+        Task<string> EditFranchise(int companyId, FranchiseRequestDto franchiseViewModelDto);
         Task<string> DeleteFranchise(int companyId);
     }
 

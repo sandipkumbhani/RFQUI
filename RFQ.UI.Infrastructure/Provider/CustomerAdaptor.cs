@@ -28,7 +28,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}/MasterParty/AddMasterParty";
+                var baseurl = _fleetLynkApiUrl + _config["Customer:AddMasterParty"];
                 var customer = JsonConvert.SerializeObject(customerRequestDto);
                 var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -38,14 +38,10 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
 
                         return "Customer Saved";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
             }
             catch (Exception ex)
@@ -62,7 +58,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}/MasterParty/DeleteMasterParty/{PartyId}";
+                var baseurl = _fleetLynkApiUrl+ _config["Customer:DeleteMasterParty"] + PartyId;
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
@@ -70,13 +66,9 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "Customer Deleted";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
             }
             catch (Exception ex)
@@ -92,7 +84,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}/MasterParty/UpdateMasterParty/{PartyId}";
+                var baseurl = _fleetLynkApiUrl + _config["Customer:UpdateMasterParty"] + PartyId;
                 var customer = JsonConvert.SerializeObject(customerRequestDto);
                 var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -102,13 +94,9 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "Customer Updated";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
             }
             catch (Exception ex)
@@ -122,7 +110,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/MasterParty/GetAllMasterParty");
+            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Customer:GetAllMasterParty"]);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
@@ -194,8 +182,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = $"{_fleetLynkApiUrl}/MasterParty/GetAllCity";
-
+                var url = _fleetLynkApiUrl + _config["Customer:GetAllCity"];
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
