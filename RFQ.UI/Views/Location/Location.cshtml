@@ -162,7 +162,7 @@
     });
 
     //city
-    $("#txtCity").on("blur change", function () {
+    $("#selectCity").on("blur change", function () {
        var city = $(this).val();
        if (!isValidateSelect(city)) {
           toastr.warning("Please enter a City", "Warning");
@@ -324,7 +324,7 @@
     function Save() {
        var locationname = $('#txtLocationName').val();
        var address = $('#txtAddress').val();
-       var city = $("#txtCity").val();
+       var city = $("#selectCity").val();
        var pincode = $("#txtPinCode").val();
        var contactPerson = $("#txtPerson").val();
        var contactNumber = $("#txtContactNumber").val();
@@ -405,7 +405,7 @@
              LocationId: $('#txtLocationId').val(),
              LocationName: $('#txtLocationName').val(),
              AddressLine: $('#txtAddress').val(),
-             CityId: $("#txtCity").val(),
+             CityId: $("#selectCity").val(),
              PinCode: $("#txtPinCode").val(),
              ContactPerson: $("#txtPerson").val(),
              ContactNo: $("#txtContactNumber").val(),
