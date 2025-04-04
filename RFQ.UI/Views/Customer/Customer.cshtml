@@ -294,24 +294,24 @@
 
 
 <script>
-    function isValidAddress(value) {
-        return /^[A-Za-z0-9\s,.\-\/]+$/.test(value);
-    }
-
-    document.getElementById("txtPanNumber").addEventListener("input", function() {
-        const panKyc = this.value.toUpperCase();
-        document.getElementById("numPan").value = panKyc;
-    });
-     document.getElementById("txtGstNumber").addEventListener("input", function() {
-        const gstKyc = this.value.toUpperCase();
-        document.getElementById("numGstNumber").value = gstKyc;
-    });
-
-     $(document).ready(function ()
+    $(document).ready(function ()
     {
         const urlParams = new URLSearchParams(window.location.search);
         const linkId = urlParams.get('LinkId');
         console.log(linkId);
+
+        function isValidAddress(value) {
+            return /^[A-Za-z0-9\s,.\-\/]+$/.test(value);
+        }
+
+        document.getElementById("txtPanNumber").addEventListener("input", function() {
+            const panKyc = this.value.toUpperCase();
+            document.getElementById("numPan").value = panKyc;
+        });
+        document.getElementById("txtGstNumber").addEventListener("input", function() {
+            const gstKyc = this.value.toUpperCase();
+            document.getElementById("numGstNumber").value = gstKyc;
+        });
 
         $(document).on("click", "#btnView", function () {
             FetchCustomerList();
@@ -401,7 +401,6 @@
             }
         });
 
-
         document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
             element.addEventListener("input", function () {
                 this.value = this.value.toUpperCase();
@@ -473,17 +472,14 @@
                         {
                             "data": "partyId",
                             "render": function (data, type, row) {
-                                return `
-                                               <div class="btn-group" role="group">
-                                                   <button type="button" class="btn btn-sm btn-primary"
-                                                       onclick="EditCustomer(${data})">
-                                                       <i class="ti ti-edit"></i> Edit
-                                                   </button>
-                                                   <button type="button" class="btn btn-sm btn-danger"
-                                                       onclick="DeleteCustomer(${data})">
-                                                       <i class="ti ti-trash"></i> Delete
-                                                   </button>
-                                               </div>`;
+                                return `<div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-primary" onclick="EditCustomer(${data})">
+                                        <i class="ti ti-edit"></i> Edit
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="DeleteCustomer(${data})">
+                                         <i class="ti ti-trash"></i> Delete
+                                </button>
+                                </div>`;
                             }
                         },
                     ],
@@ -494,8 +490,6 @@
                         }
                     ]
                 });
-
-
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
@@ -504,7 +498,7 @@
         });
     }
 
-     function SaveAndSaveNew() {
+    function SaveAndSaveNew() {
         var gstKyc = $("#txtGstNumber").val();
         var legalName = $("#txtLegalName").val();
         var typeBusiness = $("#txtTypeBusiness").val();
@@ -547,9 +541,9 @@
             toastr.warning("Please enter a valid Customer Code", "Warning");
             return;
         }
-        if (!isValidAddress(address)) {
-            toastr.warning("Please enter a valid Address", "Warning");
-            return;
+        if (IsNullOrEmpty(address)) {
+           toastr.warning("Please enter a valid Address", "Warning");
+           return;
         }
         if (!isValidateSelect(city,selectedIndex)){
            toastr.warning("Please select a City", "Warning");
@@ -579,6 +573,7 @@
            toastr.warning("Please enter a valid email", "Warning");
            return;
         }
+        
 
 
         var saveUrl = '@Url.Content("~/Customer/CustomerSave")';
@@ -625,7 +620,7 @@
         });
     }
 
-     function EditCustomer(partyId){
+    function EditCustomer(partyId){
         var data = customerViewModelDtos.filter(x=>x.partyId === partyId);
         var formData = data[0];
           $('#tableDiv').hide();
@@ -664,10 +659,10 @@
           $("#numGstNumber").val(formData.gstNo);
     }
 
-     $(document).ready(function ()
-     {
-            $("#btnUpdate").click(function (e) {
-                e.preventDefault();
+    $(document).ready(function ()
+    {
+        $("#btnUpdate").click(function (e) {
+            e.preventDefault();
 
                 var formData = {
                     PartyId: $("#txtPartyId").val(),
@@ -719,8 +714,6 @@
                        }
                 });
             });
-
-
      });
 
      function DeleteCustomer(partyId) {
