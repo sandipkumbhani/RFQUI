@@ -68,6 +68,11 @@ function isMobile(number) {
     return /^[0-9]{10}$/.test(number);
 }
 
+function IsValidAuthKey(key) {
+    const regex = /^[A-Za-z0-9-_]{20,}$/;
+    return regex.test(key);
+}
+
 // set all Input Box and select option is blue Border
 window.addEventListener('DOMContentLoaded', function () {
     // Select all input elements on the page
