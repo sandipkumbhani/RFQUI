@@ -7,7 +7,7 @@ namespace RFQ.UI.Domain.Interfaces
     {
         Task<string> AddFranchise(FranchiseRequestDto franchiseRequestDto);
         Task<IEnumerable<FranchiseResponseDto>> GetFranchiseAll();
-        Task<string> EditFranchise(int companyId, FranchiseRequestDto franchiseViewModelDto);
+        Task<string> EditFranchise(int companyId, FranchiseRequestDto franchiseRequestDto);
         Task<string> DeleteFranchise(int companyId);
     }
 
