@@ -1,6 +1,7 @@
 using RFQ.UI.Application.Extension;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Infrastructure.Extension;
+using RFQ.UI.MapperProfile;
 
 var builder = WebApplication.CreateBuilder(args);
 var globalclass = new GlobalClass();
@@ -11,7 +12,7 @@ builder.Services.AddApplicationService();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton(globalclass);
-
+builder.Services.AddAutoMapper(typeof(AutoMappersRegister));
 
 var app = builder.Build();
 
@@ -35,7 +36,7 @@ app.Use(async (context, next) =>
         globalclass.Token = token;
     }
     await next.Invoke();
-});
+    });
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

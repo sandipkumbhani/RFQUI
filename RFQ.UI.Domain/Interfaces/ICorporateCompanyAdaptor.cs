@@ -1,12 +1,13 @@
 ﻿using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Models;
 
 
 namespace RFQ.UI.Domain.Interfaces
 {
     public interface ICorporateCompanyAdaptor
     {
-        Task<string> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto);
+        Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto);
 
         Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll();
 

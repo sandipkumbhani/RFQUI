@@ -21,19 +21,19 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CorporateCompanySave([FromBody] CorporateCompanyRequestDto corporateCompanyViewModelDto)
+        public async Task<IActionResult> CorporateCompanySave([FromBody] CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
 
             string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+            corporateCompanyViewModelDto.LogoImage = "null";
             if (corporateCompanyViewModelDto != null)
             {
                 corporateCompanyViewModelDto.CreatedBy = Convert.ToInt32(profileid);
                 corporateCompanyViewModelDto.UpdatedBy = Convert.ToInt32(profileid);
 
-                var result = _corporateCompanyService.AddCorporateCompany(corporateCompanyViewModelDto);
-                return Json(new { result = "success" });
+                var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyViewModelDto);
+                return Json(new { result });
             }
             else
             {
@@ -50,7 +50,7 @@ namespace RFQ.UI.Controllers
             {
                 int companyId = corporateCompanyViewModelDto.CompanyId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
+                corporateCompanyViewModelDto.LogoImage = "null";
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
                 corporateCompanyViewModelDto.CreatedBy = Convert.ToInt32(profileid);

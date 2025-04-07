@@ -15,9 +15,9 @@ namespace RFQ.UI.Application.Provider
             _corporateCompanyAdaptor = corporateCompanyAdaptor;
         }
 
-        public Task<string> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto)
+        public async Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
-            return _corporateCompanyAdaptor.AddCorporateCompany(corporateCompanyViewModelDto);
+            return await  _corporateCompanyAdaptor.AddCorporateCompany(corporateCompanyViewModelDto);
         }
 
         public Task<string> DeleteCorporateCompany(int companyId)

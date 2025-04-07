@@ -9,9 +9,11 @@
   <ItemGroup>
     <Folder Include="Infrastructure\" />
     <Folder Include="Views\Profile\" />
+    <Folder Include="wwwroot\AttachmentFiles\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.2" />
   </ItemGroup>

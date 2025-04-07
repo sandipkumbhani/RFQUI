@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using RFQ.UI.Application.Interface;
@@ -19,14 +21,31 @@ namespace RFQ.UI.Application.Provider
         {
             _masterAttachmentAdaptor = masterAttachmentAdaptor;
         }
-        public Task<string> AddMasterAttachment(MasterAttachmentRequestDto masterAttachmentRequestDto)
+        public Task<string> AddMasterAttachment(List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
             return _masterAttachmentAdaptor.AddMasterAttachment(masterAttachmentRequestDto);
+        }
+
+        public Task<IEnumerable<MasterAttachmentRequestDto>> GetAllMasterAttachment()
+        {
+            return _masterAttachmentAdaptor.GetAllMasterAttachment();
         }
 
         public Task<IEnumerable<MasterAttachmentTypeResponseDto>> GetAllMasterAttachmentType()
         {
             return _masterAttachmentAdaptor.GetAllMasterAttachmentType();
         }
+
+        public Task<string> UpdateMasterAttachment(int attachmentId, MasterAttachmentRequestDto masterAttachmentRequestDto)
+        {
+            return _masterAttachmentAdaptor.UpdateMasterAttachment(attachmentId, masterAttachmentRequestDto);
+        }
+
+        public Task<string> DeleteMasterAttachment(int attachmentId)
+        {
+            return _masterAttachmentAdaptor.DeleteMasterAttachment(attachmentId);
+        }
+
+        
     }
 }

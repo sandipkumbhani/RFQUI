@@ -10,8 +10,14 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IMasterAttachmentService
     {
-        Task<string> AddMasterAttachment(MasterAttachmentRequestDto masterAttachmentRequestDto);
-        
+        Task<string> AddMasterAttachment(List<MasterAttachmentRequestDto> masterAttachmentRequestDto);
+
+        Task<IEnumerable<MasterAttachmentRequestDto>> GetAllMasterAttachment();
+
         Task<IEnumerable<MasterAttachmentTypeResponseDto>> GetAllMasterAttachmentType();
+
+        Task<string> UpdateMasterAttachment(int attachmentId, MasterAttachmentRequestDto masterAttachmentRequestDto);
+
+        Task<string> DeleteMasterAttachment(int attachmentId);
     }
 }

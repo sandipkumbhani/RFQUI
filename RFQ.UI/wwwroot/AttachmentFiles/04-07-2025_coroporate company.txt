@@ -1,8 +1,8 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "CorporateCompany"; 
+    ViewData["Title"] = "CorporateCompany";
 }
 
 <div class="app-toolbar  pt-3 px-lg-3">
@@ -66,10 +66,9 @@
                             </div>
                         </div>
                         <div class="col-xl-6">
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">City</label>
-
-                                <select id="ddlCity" name="franchise" aria-label="Select a City" class="selectpicker" data-live-search="true" data-width="100%">
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">City </label>
+                                <select name="City" aria-label="Select a City" id="selectCity" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-10">
@@ -89,8 +88,7 @@
                                 <label class="form-label col-form-label required fw-semibold fs-6">Franchise Name</label>
 
                                 <select name="franchise" aria-label="Select a Franchise/Corporate"
-                                        data-control="select2" id="ddlFranchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    @* <option value="">Select Franchise</option> *@
+                                        data-control="select2" data-placeholder="Select a Franchise Name." id="ddlFranchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
                                 </select>
                             </div>
                         </div>
@@ -127,27 +125,31 @@
                     <div id="kt_docs_repeater_basic">
                         <div class="form-group">
                             <div data-repeater-list="kt_docs_repeater_basic">
-                                <input type="text" hidden id="txtAttachmentId" />
-                                <div data-repeater-item id="attachmentRow">
+                                <div data-repeater-item>
                                     <div class="form-group row">
                                         <div class="col-md-2">
                                             <label class="form-label col-form-label fw-semibold fs-6">File Name</label>
-                                            <input type="email" class="form-control mb-2 mb-md-0" id="txtFileName" placeholder="File Name" />
+                                            <input type="email" class="form-control mb-2 mb-md-0" placeholder="File Name" />
                                         </div>
                                         <div class="col-md-2">
                                             <label class="form-label col-form-label fw-semibold fs-6">Attachment Type  </label>
                                             <select name="franchise" aria-label="Select a Attachment Type"
-                                                    data-control="select2" data-placeholder="Select a Attachment Type" class="ddlAttachment form-select select2 form-select-solid form-select-lg fw-semibold">
+                                                    data-control="select2" data-placeholder="Select a Attachment Type" id="ddlAttachment" class="form-select select2 form-select-solid form-select-lg fw-semibold">
+                                                @* <option value="">Select a Attachment Type</option> *@
+                                                @* <option value="AF">Afghanistan</option> *@
+                                                @* <option value="AX">Aland Islands</option> *@ 
+                                                @* <option value="AL">Albania</option> *@
+                                                @* <option value="DZ">Algeria</option> *@
                                             </select>
                                         </div>
                                         <div class="col-md-2">
                                             <label class="form-label col-form-label fw-semibold fs-6">Choose File </label>
                                             <label class="input-group mb-3">
-                                                <input class="visually-hidden" id="fileUpload" type="file">
+                                                <input class="visually-hidden" type="file">
                                                 <span class="form-control">Choose File</span>
                                             </label>
                                         </div>
-                                        <input type="text" hidden id="txtUplodedFileName">
+
                                         <div class="col-md-2">
                                             <label class="form-label col-form-label fw-semibold fs-6">Upload  </label>
                                             <label class="input-group mb-3">
@@ -229,7 +231,7 @@
 <script>
 
     $(document).ready(function () {
-        GetAllCityList();
+
 
         var GetUrl = '@Url.Content("~/CorporateCompany/GetAllFranchise")';
         $.ajax({
@@ -237,7 +239,7 @@
             type: "GET",
             contentType: "application/json",
             success: function (response) {
-                // console.log(response);
+                console.log(response);
                 var data = response.filter(x=>x.companyTypeId == 2);
                 console.log(data);
                     if (data && data.length > 0) {
@@ -260,32 +262,25 @@
         });
 
         var GetAttachmentUrl = '@Url.Content("~/MasterAttachment/GetAllMasterAttachmentType")';
-        var attachmentType = [];
-        var attachmentList = [];
         $.ajax({
             url: GetAttachmentUrl,
             type: "GET",
             contentType: "application/json",
             success: function (response) {
                 console.log(response);
-                localStorage.setItem('attachmentType',null )
-                     if (response && response.length > 0) {
+                // var data = response.filter(x=>x.companyTypeId == 2);
+                // console.log(data);
+
+                    if (response && response.length > 0) {
                         $.each(response, function (index, item) {
-                            $('.ddlAttachment').append($('<option>', {
+                            $('#ddlAttachment').append($('<option>', {
                                 value: item.attachmentTypeId,
                                 text: item.attachmentTypeName
                         }));
-
-                          attachmentType.push( { value: item.attachmentTypeId, text:  item.attachmentTypeName })
                     });
-                    if (localStorage.getItem("attachmentType") == "null")
-                    {
-
-                        localStorage.setItem('attachmentType', JSON.stringify(attachmentType ));
-                    }
                     }
                     else {
-                        $('.ddlAttachment').empty().append('<option value="">No Attachment Available</option>');
+                        $('#ddlAttachment').empty().append('<option value="">No Attachment Available</option>');
                     }
 
             },
@@ -294,21 +289,13 @@
                 toastr.error("Failed to MasterAttachmentType ", "Error");
             }
         });
-
-        var corporateCompanyViewModelDto
-        var list
-
-
-
+        var corporateCompanyViewModelDto;
         // View Button click Call Api
         $(document).on("click", "#viewButton", function () {
             fetchCorporateCompany();
             $("#addCorporateCompanyDiv").css('display', 'none')
             $("#backButton").css('display', 'Block');
         });
-
-
-
 
         // Check Form Validation
         $("#txtCompanyName").on("change", function () {
@@ -352,6 +339,8 @@
                 return;
             }
         });
+
+
 
         $("#txtAddress").on("change", function () {
             var Address = $(this).val();
@@ -417,9 +406,13 @@
                 return;
             }
         });
+
+
+
         function isValidAddress(value) {
             return /^[A-Za-z0-9\s,.\-\/]+$/.test(value);
         }
+
 
         document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
             element.addEventListener("input", function () {
@@ -427,17 +420,20 @@
             });
         });
 
+
+
+
+
         // On form submit
         $("#btnSaveCompanyType").click(function (event) {
             event.preventDefault();
-            var companyId = SaveAndSaveNew();
-
+            saveandsavenew();
         });
+
 
         // Reset form fields on button click
         $('#btnsaveandnew').on('click', function () {
-            var companyId  =  SaveAndSaveNew();
-
+            saveandsavenew();
             $('#CompanyTypeForm')[0].reset();
         });
 
@@ -447,6 +443,8 @@
              $('#tableDiv').hide();
                      GetAllCityList();
         });
+
+
     });
 
     function GetAllCityList() {
@@ -466,7 +464,7 @@
          });
      }
 
-    function BindDropDown(data) {
+     function BindDropDown(data) {
             const select = document.getElementById("selectCity");
             data.forEach(option => {
                 let opt = document.createElement("option");
@@ -479,21 +477,8 @@
      }
 
 
-    function fetchMasterAttachment(linkid, transactionid) {
-        var fetchMasterAttachmentUrl = '@Url.Content("~/MasterAttachment/GetAllMasterAttachment")';
 
-        $.ajax({
-            url: fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid,
-            type: "GET",
-            dataType: "json",
-            success: function (response) {
-                list = response; // Assign to the global list variable
-                console.log("Updated List:", list);
 
-            }
-        });
-        return list;
-    }
 
 
     function fetchCorporateCompany() {
@@ -505,11 +490,12 @@
             dataType: "json",
             success: function (response) {
                 let trlist = response.filter(x=>x.companyTypeId==3);
+                // let trlist = response.corporateCompanyViewModelDto
                 corporateCompanyViewModelDto = response;
+                // Destroy existing DataTable if exists
                 if ($.fn.DataTable.isDataTable('#tableCorporateCompany')) {
                     $('#tableCorporateCompany').DataTable().clear().destroy();
                 }
-
 
                 $('#tableCorporateCompany').DataTable({
                     "processing": true,
@@ -545,24 +531,22 @@
 
 
                         {
-                            "data": function(row){
-                                return {CompanyId : row.companyId, LinkId : row.linkId }
-                            },
+                            "data": "companyId",
                             "render": function (data, type, row) {
                                 return `
                                                <div class="btn-group" role="group">
 
                                                    <button type="button" class="btn btn-sm btn-primary"
-                                                       onclick="EditCorporateCompany(${data.CompanyId})">
+                                                       onclick="EditCorporateCompany(${data})">
                                                        <i class="ti ti-edit"></i> Edit
                                                    </button>
                                                    <button type="button" class="btn btn-sm btn-danger"
-                                                       onclick="deleteCorporateCompany(${data.CompanyId},${data.LinkId})">
+                                                       onclick="deleteCorporateCompany(${data})">
                                                        <i class="ti ti-trash"></i> Delete
                                                    </button>
                                                </div>`;
-                        },
                             }
+                        },
                     ],
                     "columnDefs": [
                         {
@@ -586,10 +570,12 @@
             $("#btnupdate").click(function (e) {
                 e.preventDefault();
 
-                
+
                 var formData = {
                     CompanyId : $("#txtCompanyId").val(),
                     CompanyName: $("#txtCompanyName").val(),
+
+                    // CompanyTypeId: $("#txtCompanyCode").val(),
                     MobNo: $("#txtMobileNumber").val(),
                     ContactNo : $("#txtContactNumber").val(),
                     AddressLine: $("#txtAddress").val(),
@@ -600,17 +586,7 @@
                     WhatsAppNo: $("#txtWhatsAppNumber").val(),
                     PANNo: $("#txtPanNumber").val(),
                     GSTNo: $("#txtGstNumber").val(),
-                    ParentCompanyId : $("#ddlFranchisename").val(),
-                }
-                
-                var attachmantData = {
-                   
-                    AttachmentId: $("#txtAttachmentId").val(),
-                    AttachmentName: $("#txtFileName").val(),
-                    AttachmentPath: $("#fileUpload").val(),
-                    AttachmentTypeId: $(".ddlAttachment").val(),
-                    ReferenceLinkId : GetQueryParam("LinkId"),
-                    TransactionId : $("#txtCompanyId").val(),
+
 
                 }
 
@@ -637,77 +613,27 @@
                         $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
                     }
                 });
-
-
-                $.ajax({
-                    type: "PUT",
-                    url: "/MasterAttachment/UpdateMasterAttachment",
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(attachmantData),
-                    dataType: "json",
-                    success: function (result) {
-                        
-                        if (result.result == "success") {
-                            $("#dataDiv").html("Profile updated successfully!");
-                            $("#addCorporateCompanyDiv").css('display', 'none')
-                            fetchCorporateCompany();
-                        } else {
-                            $("#dataDiv").html("Failed to update profile.");
-                        }
-                        $("#btnSaveCompanyType").show();
-                        $("#btnupdate").hide();
-                        $("#btnsaveandnew").prop("disabled", false);
-                        $("#viewprofile").click();
-                    },
-                    error: function (xhr, status, error) {
-                        $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-                    }
-                });
             });
         });
 
-    function deleteCorporateCompany(companyId,linkId) {
-        var result;
+    function deleteCorporateCompany(companyId) {
        var deleteCorporateCompanyUrl = '@Url.Content("~/CorporateCompany/DeleteCorporateCompany/")' + companyId
-        fetchMasterAttachment(linkId,companyId,function(){
-            result = list;
-            return result;
-        });
-        console.log(result);
          $.ajax({
             url: deleteCorporateCompanyUrl,
             type: "DELETE",
             dataType: "json",
             data: JSON.stringify(companyId),
             success: function (response) {
-                deleteMasterAttachment(result[0].attachmentId);
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to fetch data!", "Error");
-            }
-        });
-    }
-
-
-
-    function deleteMasterAttachment(attachmentId) {
-       var deleteMasterAttachmentUrl = '@Url.Content("~/MasterAttachment/DeleteMasterAttachment/")' + attachmentId
-       
-         $.ajax({
-            url: deleteMasterAttachmentUrl,
-            type: "DELETE",
-            dataType: "json",
-            data: JSON.stringify(attachmentId),
-            success: function (response) {
                 fetchCorporateCompany();
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to fetch data!", "Error"); 
+                toastr.error("Fail	ed to fetch data!", "Error");
             }
         });
     }
 
-    function SaveAndSaveNew() {
+
+    function saveandsavenew() {
         var companyName = $("#txtCompanyName").val();
         var companyCode = $("#txtCompanyCode").val();
         var mobileNumber = $("#txtMobileNumber").val();
@@ -721,8 +647,7 @@
         var panNumber = $("#txtPanNumber").val();
         var gSTNumber = $("#txtGstNumber").val();
         var franchiseName = $("#ddlFranchisename").val();
-        var linkid = GetQueryParam("LinkId");
-        var companyId = 0;
+
         if (!isAlphabets(companyName)) {
             toastr.warning("Please enter a valid Corporate Company", "Warning");
             return;
@@ -746,10 +671,10 @@
         }
 
 
-        // if (!isValidAddress(address)) {
-        //     toastr.warning("Please enter a Address", "Warning");
-        //     return;
-        // }
+        if (!isValidAddress(address)) {
+            toastr.warning("Please enter a Address", "Warning");
+            return;
+        }
 
         if (!isValidateSelect(city)) {
             toastr.warning("Please enter a City", "Warning");
@@ -782,10 +707,12 @@
             return;
         }
 
+
+
         var saveUrl = '@Url.Content("~/CorporateCompany/CorporateCompanySave")';
-             var formData = {
-             LinkId: linkid,
+        var formData = {
             CompanyName: companyName,
+            // CompanyTypeId: companyCode,
             MobNo: mobileNumber,
             ContactNo : contactNumber,
             AddressLine: address,
@@ -796,8 +723,10 @@
             WhatsAppNo: whatsAppNumber,
             PANNo: panNumber,
             GSTNo: gSTNumber,
-            ParentCompanyId: franchiseName
+            // FranchiseName: franchiseName
         };
+
+
 
         $.ajax({
             url: saveUrl,
@@ -805,10 +734,7 @@
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-
-                companyId = response.result.companyId;
-                Saveattachment(companyId );
-                toastr.success("Corporate Company submitted successfully");
+                toastr.success("Corporate Company submitted successfully!");
 
             },
             error: function (xhr, status, error) {
@@ -816,199 +742,31 @@
                 toastr.error("Failed to submitCompany", "Error");
             }
         });
-        return companyId;
-
     }
 
-    function GetAttachmentList(repeaterItemName, transactionId) {
-        let repeaterItems = document.querySelectorAll("[data-repeater-item]");
-        let attachmentDetails = [];
-        var linkd = GetQueryParam("LinkId");
+    function EditCorporateCompany(companyId){
 
-        repeaterItems.forEach((item, index) => {
-           
-            // let attachmentId = itemquerySelector("#txtAttachmentId")?.value || "N/A";
-            let fileName = item.querySelector("#txtFileName")?.value || "N/A";
-            let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-            // console.log(attachmentType);
-            let fileUpload = item.querySelector("#fileUpload");
-            let filePath = fileUpload?.files.length > 0 ? fileUpload.files[0].name : "No file chosen";
-
-            attachmentDetails.push({
-                // index: index + 1,
-                // AttachmentId : attachmentId,
-                AttachmentName: fileName,
-                AttachmentTypeId: attachmentType,
-                AttachmentPath: filePath,
-                ReferenceLinkId: parseInt(linkd),
-                TransactionId: transactionId
-            });
-        });
-
-        // console.log(attachmentDetails);
-        return attachmentDetails;
-    }
-
-     function Saveattachment(transactionId) {
-        
-        var attachmentListData = GetAttachmentList("[data-repeater-item]", transactionId);
-        var attachmentSaveUrl = '@Url.Content("~/MasterAttachment/MasterAttachmentSave")';
-        $.ajax({
-            url: attachmentSaveUrl,
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(attachmentListData), // Serialize data correctly
-            success: function (response) {
-                toastr.success("Attachment saved successfully");
-            },
-            error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to save attachment", "Error");
-            }
-        });
-    }
-
-        function fetchMasterAttachment(linkid, transactionid, callback) {
-        var fetchMasterAttachmentUrl = '@Url.Content("~/MasterAttachment/GetAllMasterAttachment")';
-        console.log(fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid)
-        $.ajax({
-            url: fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid,
-            type: "GET",
-            dataType: "json",
-            success: function (response) {
-                debugger;
-                list = response; // Assign globally
-                console.log("List updated:", list);
-                if (callback) {
-                    callback(list); // Execute the callback function
-                }
-            }
-        });
-    }
-
-    function EditCorporateCompany(companyId) {
-        var data = corporateCompanyViewModelDto.filter(x => x.companyId == companyId);
-        if (data.length === 0) {
-            console.error("No company data found for companyId:", companyId);
-            return;
-        }
-
+        var data = corporateCompanyViewModelDto.filter(x=>x.companyId == companyId);
         var formData = data[0];
-        debugger;
-        
-        fetchMasterAttachment(formData.linkId, companyId, 
-        function (list) {
-            var attachmantData = list;
-
-            $('#tableDiv').hide();
-            $("#backButton").css('display', 'none');
-            $("#addCorporateCompanyDiv").css('display', 'Block');
-            $("#btnSaveCompanyType").hide();
-            $("#btnupdate").show();
-            $("#btnsaveandnew").prop("disabled", true);
-            $("#txtCompanyId").val(formData.companyId);
-            $("#txtCompanyName").val(formData.companyName);
-            $("#txtPerson").val(formData.contactPerson);
-            $("#txtMobileNumber").val(formData.mobNo);
-            $("#txtContactNumber").val(formData.contactNo);
-            $("#txtAddress").val(formData.addressLine);
-            $("#ddlCity").val(formData.cityId).change();
-            $("#txtPinCode").val(formData.pinCode);
-            $("#txtEmail").val(formData.email);
-            $("#txtWhatsAppNumber").val(formData.whatsAppNo);
-            $("#txtPanNumber").val(formData.panNo);
-            $("#txtGstNumber").val(formData.gstNo);
-            $("#ddlFranchisename").val(formData.parentCompanyId);
-           
-            debugger;
-            if (attachmantData.length > 0) {
-
-                $("#txtAttachmentId").val(attachmantData[0].attachmentId);
-                $("#txtFileName").val(attachmantData[0].attachmentName);
-                $("#fileUpload").val(attachmantData[0].attachmentPath);
-                $(".ddlAttachment").val(attachmantData[0].attachmentTypeId)
-            } else {
-                console.warn("No attachment data found for companyId:", companyId);
-            }
-        });
+          $('#tableDiv').hide();
+          $("#backButton").css('display', 'none');
+          $("#addCorporateCompanyDiv").css('display', 'Block');
+          $("#btnSaveCompanyType").hide();
+          $("#btnupdate").show();
+          $("#btnsaveandnew").prop("disabled", true);
+          $("#txtCompanyId").val(formData.companyId);
+          $("#txtCompanyName").val(formData.companyName);
+          // $("#txtCompanyCode").val(formData.companyTypeId);
+          $("#txtPerson").val(formData.contactPerson);
+          $("#txtMobileNumber").val(formData.mobNo);
+          $("#txtContactNumber").val(formData.contactNo);
+          $("#txtAddress").val(formData.addressLine);
+          $("#ddlCity").val(formData.cityId);
+          $("#txtPinCode").val(formData.pinCode);
+          $("#txtEmail").val(formData.email);
+          $("#txtWhatsAppNumber").val(formData.whatsAppNo);
+          $("#txtPanNumber").val(formData.panNo);
+          $("#txtGstNumber").val(formData.gstNo);
     }
-
-
-    function GetAllCityList() {
-        var getcityUrl = '@Url.Content("~/Customer/GetAllCity")'
-          $.ajax({
-             url: getcityUrl,
-             type: "GET",
-             dataType: "json",
-             success: function (response) {
-                 // console.log(response);
-                 BindDropDown(response)
-             },
-
-             error: function (xhr, status, error) {
-                 console.error("Error:", error);
-                 toastr.error("Failed to fetch data!", "Error");
-             }
-         });
-     }
-
-    function BindDropDown(data) {
-        const select = document.getElementById("ddlCity");
-        select.innerHTML = "";
-
-        let placeholderOption = document.createElement("option");
-        placeholderOption.value = "";
-        placeholderOption.textContent = "Select a City";
-        placeholderOption.disabled = true;
-        placeholderOption.selected = true;
-        select.appendChild(placeholderOption);
-
-        data.forEach(option => {
-            let opt = document.createElement("option");
-            opt.value = option.cityId;
-            opt.textContent = option.cityName;
-            select.appendChild(opt);
-        });
-
-        $('.selectpicker').selectpicker('refresh');
-     }
-
-    $("#btnUplodeAttachment").on('click', function () {
-        var uploadUrl = '@Url.Content("~/MasterAttachment/UploadAttachment")';
-        var formData = new FormData();
-
-        var fileInput = $("#fileUpload")[0].files[0];
-        if (!fileInput) {
-            toastr.error("Please select a file to upload.", "Error");
-            return;
-        }
-
-        formData.append("file", fileInput);
-        formData.append("AttachmentName", $("#txtFileName").val());
-        formData.append("AttachmentTypeId", $(".ddlAttachment").val());
-
-
-
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ": " + pair[1]);
-        }
-
-        $.ajax({
-            url: uploadUrl,
-            type: "POST",
-            processData: false,
-            contentType: false,
-            data: formData,
-            success: function (response) {
-                $("#txtUplodedFileName").val(response.fileName);
-                toastr.success("Master Attachment submitted successfully!");
-
-            },
-            error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to upload Master Attachment", "Error");
-            }
-        });
-    });
 
 </script>

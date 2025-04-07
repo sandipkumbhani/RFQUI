@@ -10,15 +10,17 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface IMasterAttachmentAdaptor
     {
-        Task<string> AddMasterAttachment(MasterAttachmentRequestDto masterAttachmentRequestDto);
+        Task<string> AddMasterAttachment(List<MasterAttachmentRequestDto> masterAttachmentRequestDto);
+
+        Task<IEnumerable<MasterAttachmentRequestDto>> GetAllMasterAttachment();
 
         Task<IEnumerable<MasterAttachmentTypeResponseDto>> GetAllMasterAttachmentType();
 
-        //Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyViewModelDto);
+        Task<string> UpdateMasterAttachment(int attachmentId, MasterAttachmentRequestDto masterAttachmentRequestDto);
 
-        //Task<string> DeleteCorporateCompany(int companyId);
+        Task<string> DeleteMasterAttachment(int attachmentId);
 
-        //Task<IEnumerable<FranchiseListDto>> GetAllFranchise();
+        
 
     }
 }

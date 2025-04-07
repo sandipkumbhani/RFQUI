@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
@@ -16,18 +17,20 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
+        private readonly IMapper _mapper;
 
 
 
-        public CorporateCompanyAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        public CorporateCompanyAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, IMapper mapper)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
+            _mapper = mapper;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
 
-        public async Task<string> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto)
+        public async Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
             try
             {
@@ -44,12 +47,12 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (result == 200)
                     {
-
-                        return "Corporate Company Saved";
+                        return JsonConvert.DeserializeObject<CorporateCompanyRequestDto>(responseModel.Data.ToString());
+                       // return _mapper.Map<CorporateCompanyRequestDto?>(responseModel.Data);
                     }
                     else
                     {
-                        return responseModel.ErrorMessage;
+                        return null;
                     }
                 }
             }
@@ -57,7 +60,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 Console.WriteLine(ex.Message);
             }
-            return string.Empty;
+            return null;
         }
 
         public async Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll()

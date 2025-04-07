@@ -21,12 +21,11 @@ namespace RFQ.UI.Domain.RequestDto
         public string? Email { get; set; }
         public string? PANNo { get; set; }
         public string? GSTNo { get; set; }
-        public string? LogoImage { get; set; } = "Broadsy";
-        public int ParentCompanyId { get; set; } = 1;
+        public string? LogoImage { get; set; } 
+        public int ParentCompanyId { get; set; }
         public int LinkId { get; set; } = 1;
         public int StatusId { get; set; }
         public int CreatedBy { get; set; }
-
         public DateTime CreatedOn { get; set; }
         public int UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }

@@ -5,7 +5,7 @@ namespace RFQ.UI.Application.Interface
 {
     public interface ICorporateCompanyService
     {
-        Task<string> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto);
+        Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto);
 
         Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll();
 

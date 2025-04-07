@@ -24,7 +24,7 @@ namespace RFQ.UI.Controllers
 
 
         [HttpPost]
-        public IActionResult MasterAttachmentSave([FromBody] MasterAttachmentRequestDto masterAttachmentRequestDto)
+        public IActionResult MasterAttachmentSave([FromBody] List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
 
@@ -32,8 +32,10 @@ namespace RFQ.UI.Controllers
 
             if (masterAttachmentRequestDto != null)
             {
+                
                 //masterAttachmentRequestDto.CreatedBy = Convert.ToInt32(profileid);
                 //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+
 
                 var result = _masterAttachmentService.AddMasterAttachment(masterAttachmentRequestDto);
                 return Json(new { result = "success" });
@@ -42,6 +44,38 @@ namespace RFQ.UI.Controllers
             {
                 return Json(new { result = "fail" });
 
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllMasterAttachment(int linkId, int transactionId)
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var attachmentList = await _masterAttachmentService.GetAllMasterAttachment();
+
+
+                if (attachmentList != null && attachmentList.Count() > 0)
+                {
+                    var result = attachmentList.Where(x => x.TransactionId == transactionId && x.ReferenceLinkId == linkId).ToList();
+
+                    return Json(result);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(attachmentList);
+                }
+                else
+                {
+                    return View(attachmentList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
 
@@ -73,6 +107,59 @@ namespace RFQ.UI.Controllers
                 throw;
             }
         }
+
+        [HttpDelete("MasterAttachment/DeleteMasterAttachment/{attachmentId}")]
+        public async Task<IActionResult> DeleteCorporateCompany(int attachmentId)
+        {
+            try
+            {
+                var result = await _masterAttachmentService.DeleteMasterAttachment(attachmentId);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateMasterAttachment([FromBody] MasterAttachmentRequestDto masterAttachmentRequestDto)
+        {
+            try
+            {
+                int attachmentId = masterAttachmentRequestDto.AttachmentId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+                //masterAttachmentRequestDto .CreatedBy = Convert.ToInt32(profileid);
+                //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+
+                var result = await _masterAttachmentService.UpdateMasterAttachment(attachmentId, masterAttachmentRequestDto);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> UploadAttachment(IFormFile file)
