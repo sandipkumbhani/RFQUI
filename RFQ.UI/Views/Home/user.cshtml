@@ -137,10 +137,10 @@
         }
     });
     //FOR SELECT CORPORATENAME
-    $("#txtCompanyAndFranchiseName").on("blur change", function () {
+    $("#CompanyAndFranchise").on("blur change", function () {
         var corporatename = $(this).val();
         if (!isValidateSelect(corporatename)) {
-            //$("#txtCompanyAndFranchiseName").val('');
+            //$("#CompanyAndFranchise").val('');
             toastr.warning("Please select a valid CorporateName", "Warning");
             return;
         }
@@ -165,10 +165,10 @@
         }
     });
     //FOR LOCATION
-    $("#txtLocation").on("blur change", function () {
+    $("#selectLocation").on("blur change", function () {
         var location = $(this).val();
         if (!isValidateSelect(location)) {
-            //$("#txtLocation").val('');
+            //$("#selectLocation").val('');
             toastr.warning("Please select a valid Location", "Warning");
             return;
         }
@@ -282,10 +282,10 @@
 
     function Save() {
         var username = $('#txtName').val();
-        var corporatename = $('#txtCompanyAndFranchiseName').val();
+        var corporatename = $('#CompanyAndFranchise').val();
         var mobileno = $('#txtMobileNo').val();
         var loginname = $('#txtLoginName').val();
-        var location = $('#txtLocation').val();
+        var location = $('#selectLocation').val();
         var emailid = $('#txtEmailid').val();
         var password = $('#txtPassword').val();
 
@@ -368,7 +368,7 @@
         $('#txtuserid').val(formdata.userId);
         $("#txtName").val(formdata.personName);
         $("#txtEmailid").val(formdata.emailId);
-        $("#txtCompanyAndFranchiseName").val(formdata.companyId);
+        $("#CompanyAndFranchise").val(formdata.companyId);
         $("#txtMobileNo").val(formdata.mobileNo);
         $("#txtLoginName").val(formdata.loginId);
         $('#selectLocation').selectpicker('val', formdata.locationId);
@@ -408,9 +408,9 @@
             var UserViewModel = {
                 UserId: $('#txtuserid').val(),
                 PersonName: $('#txtName').val(),
-                CompanyId: $('#txtCompanyAndFranchiseName').val(),
+                CompanyId: $('#CompanyAndFranchise').val(),
                 Password: $('#txtPassword').val(),
-                LocationId: $('#txtLocation').val(),
+                LocationId: $('#selectLocation').val(),
                 LoginId: $('#txtLoginName').val(),
                 Mobileno: $('#txtMobileNo').val(),
                 Emailid: $('#txtEmailid').val(),

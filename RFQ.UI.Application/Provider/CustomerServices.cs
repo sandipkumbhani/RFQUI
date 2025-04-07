@@ -15,9 +15,9 @@ namespace RFQ.UI.Application.Provider
             _customerAdaptor = customerAdaptor;
         }
 
-        public Task<string> AddCustomer(CustomerRequestDto customerViewModelDto)
+        public Task<string> AddCustomer(CustomerRequestDto customerRequestDto)
         {
-            return _customerAdaptor.AddCustomer(customerViewModelDto);
+            return _customerAdaptor.AddCustomer(customerRequestDto);
         }
 
         public Task<string> DeleteCustomer(int PartyId)
@@ -25,9 +25,9 @@ namespace RFQ.UI.Application.Provider
             return _customerAdaptor.DeleteCustomer(PartyId);
         }
 
-        public Task<string> EditCustomer(int PartyId, CustomerRequestDto customerViewModelDto)
+        public Task<string> EditCustomer(int PartyId, CustomerRequestDto customerRequestDto)
         {
-            return _customerAdaptor.EditCustomer(PartyId, customerViewModelDto);
+            return _customerAdaptor.EditCustomer(PartyId, customerRequestDto);
         }
 
         public Task<IEnumerable<CustomerResponseDto>> GetAllCustomer()
