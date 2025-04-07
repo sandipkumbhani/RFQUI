@@ -2,6 +2,7 @@
 $(document).ready(function () {
     SetValidation();
     GetAllCompany();
+    GetAllCompanyConfiguration();
 });
 
 function GetAllCompany() {
@@ -79,3 +80,19 @@ function SetValidation() {
         }
     });
 }
+
+function GetAllCompanyConfiguration() {
+    $("#tableDiv").show();
+    var fetchFranchiseUrl = '/CompanyConfiguration/GetAllCompanyConfiguration';
+    $.ajax({
+        url: fetchFranchiseUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            console.log(response)
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to fetch data!", "Error");
+        }
+    });
+};

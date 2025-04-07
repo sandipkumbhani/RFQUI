@@ -23,7 +23,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCompanyConfigration()
+        public async Task<IActionResult> GetAllCompanyConfiguration()
         {
             try
             {
