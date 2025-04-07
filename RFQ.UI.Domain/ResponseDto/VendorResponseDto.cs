@@ -1,16 +1,16 @@
-﻿namespace RFQ.UI.Domain.RequestDto
+﻿namespace RFQ.UI.Domain.ResponseDto
 {
-    public class CustomerRequestDto
+    public class VendorResponseDto
     {
         public int PartyId { get; set; }
 
         public int CompanyId { get; set; }
 
-        public int PartyTypeId { get; set; } = 1;
+        public int PartyTypeId { get; set; }
 
         public string? PartyName { get; set; }
 
-        public int PartyCategoryId { get; set; } = 1;
+        public int PartyCategoryId { get; set; }
 
         public string? AddressLine { get; set; }
 
@@ -51,9 +51,11 @@
         public DateTime PANVerifiedOn { get; set; }
 
         public int LinkId { get; set; }
-
         public int CreatedBy { get; set; }
 
+        //public DateTime CreatedOn { get; set; }
+
         public int UpdatedBy { get; set; }
+        //public DateTime UpdatedOn { get; set; }
     }
 }

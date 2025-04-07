@@ -27,13 +27,22 @@
 </div>
 <div class="app-content  px-lg-3">
     <div class="app-container  container-fluid">
-        <div class="card">
+        <div class="container my-4">
+            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
+                </svg>
+                Back
+            </button>
+        </div>
+        <div id="addVendorDiv" class="card">
             <div class="card-header border-0 cursor-pointer">
                 <div class="card-title m-0">
                     <h3 class="fw-bold m-0">Vendor</h3>
                 </div>
             </div>
             <form class="form" id="vendorForm">
+                <input type="text" hidden id="txtPartyId"/>
                 <div class="card-body border-top p-9">
                     <div class="card-title m-0 pb-10">
                         <h3 class="fw-bold m-0">GST e-KYC Details</h3>
@@ -43,7 +52,7 @@
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6" >GST No</label>
                                 <div class="col-auto">
-                                    <input type="text" class="form-control" placeholder="" id="txtGstNumber" />
+                                    <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtGstNumber" maxlength="15" />
                                 </div>
                                 <div class="col-auto">
                                     <button class="btn btn-primary me-2" type="button" id="gstEKycButton">e-KYC</button>
@@ -99,7 +108,7 @@
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">PAN No</label>
                                 <div class="col-auto">
-                                    <input type="text" class="form-control" placeholder="" id="txtPanNumber" />
+                                    <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtPanNumber"  maxlength="10" />
                                 </div>
                                 <div class="col-auto">
                                     <button class="btn btn-primary me-2" type="button" id="panEKycButton">e-KYC</button>
@@ -109,21 +118,21 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Name as per PAN </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Name as per PAN" disabled />
+                                <input type="text" class="form-control form-control-solid" id="txtPanName" placeholder="Name as per PAN" disabled />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Aadhar Linked </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Aadhar Linked" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="Aadhar Linked" id="txtAadharLinked" disabled />
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">PAN Status</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="PAN Status" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="PAN Status" id="txtPanStatus" disabled />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">PAN Verified On </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="PAN Verified On" disabled />
+                                <input type="text" class="form-control form-control-solid" placeholder="PAN Verified On" id="txtPanVerifiedOn" disabled />
                             </div>
                         </div>
                     </div>
@@ -132,55 +141,43 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vendor Name</label>
-                                <input type="text" class="form-control" placeholder="Vendor Name" id="txtVendorName" disabled />
+                                <input type="text" class="form-control" placeholder="Vendor Name" id="txtVendorName" maxlength="150"/>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vendor Category </label>
-                                <select name="franchise" aria-label="Select a Vendor Category" id="txtVendorCategory"
-                                        data-control="select2" data-placeholder="Select a Vendor Category" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select a Vendor Category</option>
-                                    <option value="AF">Afghanistan</option>
-                                    <option value="AX">Aland Islands</option>
-                                    <option value="AL">Albania</option>
-                                    <option value="DZ">Algeria</option>
+                                <select name="vendor" aria-label="Select a Vendor Category" id="ddlVendorCategory" class="selectpicker" data-width="100%">
                                 </select>
                             </div>
                         </div>
                         <div class="col-xl-12">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Address </label>
-                                <input type="text" class="form-control" placeholder="Address" id="txtAddress"/>
+                                <input type="text" class="form-control" placeholder="Address" id="txtAddress" maxlength="200"/>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">City </label>
-                                <select name="franchise" aria-label="Select a City" id="txtCity"
-                                        data-control="select2" data-placeholder="Select a City" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select a City</option>
-                                    <option value="AF">Afghanistan</option>
-                                    <option value="AX">Aland Islands</option>
-                                    <option value="AL">Albania</option>
-                                    <option value="DZ">Algeria</option>
+                                <select id="ddlCity" name="vendor" aria-label="Select a City" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson"/>
+                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" maxlength="50"/>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number </label>
-                                <input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber"/>
+                                <input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber" maxlength="10" onkeypress="return isNumber(event)" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">PAN Number </label>
-                                <input type="text" class="form-control" placeholder="PAN Number" id="txtPanNumber"/>
+                                <input type="text" class="form-control" placeholder="PAN Number" id="numPanNumber" disabled/>
                             </div>
                             <div class="mb-5">
                                 <div class="form-check form-check-custom form-check-solid mb-5">
-                                    <input class="form-check-input me-0" name="checkbox_input" type="checkbox" value="" id="createuser" />
+                                    <input class="form-check-input me-0" name="checkbox_input" type="checkbox" value="" id="chkCreateUser" />
 
                                     <label class="form-check-label" for="createuser">
                                         <span class="fw-semibold text-gray-800">Create User</span>
@@ -191,26 +188,26 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
-                                <input type="text" class="form-control" placeholder="Pincode" id="txtPinCode"/>
+                                <input type="text" class="form-control" placeholder="Pincode" id="txtPinCode" onkeypress="return isNumber(event)" maxlength="6"/>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">
                                     WhatsApp Number
                                     <span>{it will be use User ID}</span>
                                 </label>
-                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsappNumber"/>
+                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsappNumber" onkeypress="return isNumber(event)" maxlength="10"/>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Email ID </label>
-                                <input type="email" class="form-control" placeholder="Email ID" id="emailId"/>
+                                <input type="email" class="form-control" placeholder="Email ID" id="txtEmailId" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Number </label>
-                                <input type="text" class="form-control" placeholder="GST Number" id="txtGstNumber"/>
+                                <input type="text" class="form-control" placeholder="GST Number" id="numGstNumber" disabled/>
                             </div>
                             <div class="mb-5">
                                 <div class="form-check form-check-custom form-check-solid mb-5">
-                                    <input class="form-check-input me-0" name="checkbox_input" type="checkbox" value="" id="shareapplink" />
+                                    <input class="form-check-input me-0" name="checkbox_input" type="checkbox" value="" id="chkShareAppLink" />
 
                                     <label class="form-check-label" for="shareapplink">
                                         <span class="fw-semibold text-gray-800">Share App Link</span>
@@ -460,9 +457,39 @@
 
                 <div class="card-footer d-flex justify-content-srtat py-6 px-9">
                     <button type="button" id="btnSaveVendor" class="btn btn-primary me-2">Save</button>
-                    <button type="button" id="btnSavenewVendor" class="btn btn-primary">Save & New</button>
+                    <button type="button" id="btnSavenewVendor" class="btn btn-primary me-2">Save & New</button>
+                    <button type="button" id="btnUpdateVendor" class="btn btn-primary me-2" style="display:none;">Update</button>
+                    <button type="button" class="btn btn-primary" id="btnViewButton">View</button>
                 </div>
             </form>
+        </div>
+        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
+            <div class="card-header p-4">
+                <h4 class="fw-bold m-0 text-lg">Vendor List</h4>
+            </div>
+            <div class="card-body">
+                <table id="tableVendor"
+                       class="table table-striped align-middle fs-6 mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Vendor Name</th>
+                            <th>Vendor Category</th>
+                            <th>Address</th>
+                            <th>PinCode</th>
+                            <th>ContactPerson</th>
+                            <th>Mobile No</th>
+                            <th>WhatsApp No</th>
+                            <th>Email</th>
+                            <th>PAN No</th>
+                            <th>GST No</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic rows go here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -477,26 +504,41 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="~/js/common.js"></script>
 <script>
-    $(document).ready(function(){
-
-        function validatePanNumber(number){
-            return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(number);
-        }
-        function validateGstNumber(number){
-            return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(number);
-        }
-        function validatePinCode(number){
-            return /^\d{6}$/.test(number);
-        }
-
+        document.getElementById("txtPanNumber").addEventListener("input", function() {
+            const panKyc = this.value;
+            document.getElementById("numPanNumber").value = panKyc;
+        });
+        document.getElementById("txtGstNumber").addEventListener("input", function() {
+            const gstKyc = this.value;
+            document.getElementById("numGstNumber").value = gstKyc;
+        });
+        const urlParams = new URLSearchParams(window.location.search);
+        const linkId = urlParams.get('LinkId');
+        
+$(document).ready(function(){
+        GetAllInternalMaster();
+        GetAllCityList();
         $("#btnSaveVendor").click(function(event){
             event.preventDefault();
-            saveandsavenewVendor();
+            SaveVendor();
         })
         $("#btnSavenewVendor").click(function(event){
-            saveandsavenewVendor();
+            SaveVendor();
             $('#vendorForm')[0].reset();
         })
+        $("#btnUpdateVendor").click(function(event){
+            event.preventDefault();
+                UpdateVendor();
+        });
+
+        $("#btnViewButton").on("click",function(){
+            FetchVendor();
+            $("#addVendorDiv").css('display','none');
+            $("#backButton").css('display','block');
+        });
+        $('#backButton').click(function () {
+            window.location.reload(true);
+        });
 
         $("#txtVendorName").on("change",function(){
             if(!isAlphabets($(this).val())){
@@ -504,7 +546,7 @@
                 return;
             }
         });
-        $("#txtVendorCategory").on("change",function(){
+        $("#ddlVendorCategory").on("keypress",function(){
             if(!isValidateSelect($(this).val())){
                 toastr.warning("Please enter a valid Vendor Category", "Warning");
                 return;
@@ -512,19 +554,13 @@
         });
         $("#txtAddress").on("change",function(){
             if(IsNullOrEmpty($(this).val())){
-                toastr.warning("Please enter a valid Vendor Address", "Warning");
+                toastr.warning("Please enter a valid Address", "Warning");
                 return;
             }
         });
-        $("#txtCity").on("change",function(){
+        $("#ddlCity").on("keypress",function(){
             if(!isValidateSelect($(this).val())){
                 toastr.warning("Please enter a valid Vendor City", "Warning");
-                return;
-            }
-        });
-        $("#txtPinCode").on("change",function(){
-            if(!validatePinCode($(this).val())){
-                toastr.warning("Please enter a valid PinCode", "Warning");
                 return;
             }
         });
@@ -534,105 +570,37 @@
                 return;
             }
         });
-        $("#txtWhatsappNumber").on("change",function(){
-            if(!isMobile($(this).val())){
-                toastr.warning("Please enter a valid Whatsapp Number", "Warning");
-                return;
-            }
-        });
-        $("#txtMobileNumber").on("change",function(){
-            if(!isMobile($(this).val())){
-                toastr.warning("Please enter a valid Mobile Number", "Warning");
-                return;
-            }
-        });
-        $("#emailId").on("change",function(){
+        $("#txtEmailId").on("change",function(){
             if(!isValidateEmail($(this).val())){
                 toastr.warning("Please enter a valid Email", "Warning");
                 return;
             }
         });
-        $("#txtPanNumber").on("change",function(){
-            if(!validatePanNumber($(this).val())){
-                toastr.warning("Please enter a valid PAN Nubmer", "Warning");
-                return;
-            }
-        });
-        $("#txtGstNumber").on("change",function(){
-            if(!validateGstNumber($(this).val())){
-                toastr.warning("Please enter a valid GST Number", "Warning");
-                return;
-            }
-        });
-
-        function saveandsavenewVendor(){
-            var vendorName = $("#txtVendorName").val();
-            var vendorCategory = $("#txtVendorCategory").val();
-            var vendorAddress = $("#txtAddress").val();
-            var vendorCity = $("#txtCity").val();
-            var vendorPincode = $("#txtPinCode").val();
-            var contactPerson = $("#txtContactPerson").val();
-            var whatsappNumber = $("#txtWhatsappNumber").val();
-            var mobileNumber = $("#txtMobileNumber").val();
-            var emailId = $("#emailId").val();
-            var panNumber = $("#txtPanNumber").val();
-            var gstNubmer = $("#txtGstNumber").val();
-            var createUser = $("#createuser").is(":checked");
-            var shareAppLink = $("#shareapplink").is(":checked");
-       
-            if(IsNullOrEmpty(vendorName)){
-                toastr.warning("Please enter a valid Vendor Name", "Warning");
-                return false;
-            }
-            if(!isValidateSelect(vendorCategory)){
-                toastr.warning("Please enter a valid Vendor Category", "Warning");
-                return false;
-            }
-            if(IsNullOrEmpty(vendorAddress)){
-                toastr.warning("Please enter a valid Vendor Address", "Warning");
-                return false;
-            }
-            if(!isValidateSelect(vendorCity)){
-                toastr.warning("Please enter a valid Vendor City", "Warning");
-                return false;
-            }
-            if(IsNullOrEmpty(vendorPincode)){
-                toastr.warning("Please enter a valid PinCode", "Warning");
-                return false;
-            }
-            if(IsNullOrEmpty(contactPerson)){
-                toastr.warning("Please enter a valid Contact Person", "Warning");
-                return false;
-            }
-            if(IsNullOrEmpty(whatsappNumber)){
-                toastr.warning("Please enter a valid Whatsapp Number", "Warning");
-                return false;
-            }
-            if(IsNullOrEmpty(mobileNumber)){
+        $("#txtMobileNumber").on("change",function(){
+            if(($(this).val()).length!=10){
                 toastr.warning("Please enter a valid Mobile Number", "Warning");
-                return false;
+                return;
             }
-            if(!isValidateEmail(emailId)){
-                toastr.warning("Please enter a valid Email", "Warning");
-                return false;
+        });
+        $("#txtWhatsappNumber").on("change",function(){
+            if(($(this).val()).length!=10){
+                toastr.warning("Please enter a valid WhatsApp Number", "Warning");
+                return;
             }
-            if(IsNullOrEmpty(panNumber)){
-                toastr.warning("Please enter a valid PAN Nubmer", "Warning");
-                return false;
+        });
+        $("#txtPinCode").on("change",function(){
+                if(($(this).val()).length!=6){
+                toastr.warning("Please enter a valid  PinCode", "Warning");
+                return;
             }
-            if(IsNullOrEmpty(gstNubmer)){
-                toastr.warning("Please enter a valid GST Number", "Warning");
-                return false;
-            }
-            return true;
+        });
 
-        }
-        
-    })
-
-    $("#gstEKycButton").on("click",function(){
+        $("#gstEKycButton").on("click",function(){
                var gstNumber= $("#txtGstNumber").val();
-
+               if(!ValidateGstNumber(gstNumber)){
+                    toastr.warning("Please enter a valid GST Number", "Warning");
+                }
+                else{
                // Request Body
                var Body ={
                    GSTNo:gstNumber,
@@ -657,16 +625,22 @@
                                 $("#txtVerifiedGstNo").val()
                         },
                         error: function (xhr, status, error) {
-                            console.error("Error:", error);
+                            
                             toastr.error("Failed to submit Vehicle Type", "Error");
                         }
                     });
+               }
            });
 
         $("#panEKycButton").on("click",function(){
+            
                var getPanKycUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
-               var panNumber= $("#txtPanNumber").val();
-               // Request Body
+                   var panNumber= $("#txtPanNumber").val();
+               if(!ValidatePanNumber(panNumber)){
+                    toastr.warning("Please enter a valid PAN Nubmer", "Warning");
+               }
+               else{
+               
                 var Body ={
                     PANNo:panNumber,
                 }
@@ -685,9 +659,373 @@
                                 $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
                         },
                         error: function (xhr, status, error) {
-                            console.error("Error:", error);
+                            
                             toastr.error("Failed to submit Vehicle Type", "Error");
                         }
                     });
-         });
+                }
+        });
+       
+        function ValidatePanNumber(number){
+            return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(number);
+        }
+        function ValidateGstNumber(number){
+            return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(number);
+        }
+        function GetAllInternalMaster() {
+            var getInternalMasterUrl = '@Url.Content("~/Vendor/GetAllInternalMaster")'
+            $.ajax({
+                  url: getInternalMasterUrl,
+                  type: "GET",
+                  dataType: "json",
+                  success: function (response) {
+                      BindDropDown(response)
+                  },
+                  error: function (xhr, status, error) {
+                      toastr.error("Failed to fetch data!", "Error");
+                  }
+            });
+        }
+
+        function BindDropDown(data) {
+
+            let internalData = data.filter(x => x.internalMasterTypeId == 3);
+            const select = document.getElementById("ddlVendorCategory");
+            select.innerHTML = "";
+
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Category";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            internalData.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.internalMasterId;
+                opt.textContent = option.internalMasterName;
+                select.appendChild(opt);
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+        }
+
+        function GetAllCityList() {
+            var getcityUrl = '@Url.Content("~/Customer/GetAllCity")'
+            $.ajax({
+                  url: getcityUrl,
+                  type: "GET",
+                  dataType: "json",
+                  success: function (response) {
+                      BindDropDownCity(response)
+                  },
+                  error: function (xhr, status, error) {
+                      toastr.error("Failed to fetch data!", "Error");
+                  }
+            });
+        }
+
+        function BindDropDownCity(data) {
+            const select = document.getElementById("ddlCity");
+            select.innerHTML = "";
+
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a City";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            data.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.cityId;
+                opt.textContent = option.cityName;
+                select.appendChild(opt);
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+        }
+
+        function SaveVendor(){
+            var legalName = $("#txtLegalName").val();
+            var typeBusiness = $("#txtTypeBusiness").val();
+            var gstStatus = $("#txtGstStatus").val();
+            var tradeName = $("#txtTradeName").val();
+            var adharVerified = $("#txtAadharVerified").val();
+            var gstVerifiedOn = $("#txtGstVerifiedOn").val();
+            var adharLinked = $("#txtAadharLinked").val();
+            var panStatus = $("#txtPanStatus").val();
+            var panVerifiedOn = $("#txtPanVerifiedOn").val();
+            var vendorName = $("#txtVendorName").val();
+            var vendorCategory = $("#ddlVendorCategory").val();
+            var vendorAddress = $("#txtAddress").val();
+            var vendorCity = $("#ddlCity").val();
+            var vendorPincode = $("#txtPinCode").val();
+            var contactPerson = $("#txtContactPerson").val();
+            var whatsappNumber = $("#txtWhatsappNumber").val();
+            var mobileNumber = $("#txtMobileNumber").val();
+            var emailId = $("#txtEmailId").val();
+            var panNumber = $("#numPanNumber").val();
+            var gstNubmer = $("#numGstNumber").val();
+            var createUser = $("#createuser").is(":checked");
+            var shareAppLink = $("#shareapplink").is(":checked");
+
+            if(IsNullOrEmpty(vendorName)){
+                toastr.warning("Please enter a valid Vendor Name", "Warning");
+                return ;
+            }
+            if(!isValidateSelect(vendorCategory)){
+                toastr.warning("Please enter a valid Vendor Category", "Warning");
+                return ;
+            }
+            if(IsNullOrEmpty(vendorAddress)){
+                toastr.warning("Please enter a valid Vendor Address", "Warning");
+                return ;
+            }
+            if(!isValidateSelect(vendorCity)){
+                toastr.warning("Please enter a valid Vendor City", "Warning");
+                return ;
+            }
+            if(IsNullOrEmpty(vendorPincode)){
+                toastr.warning("Please enter a valid PinCode", "Warning");
+                return ;
+            }
+            if(IsNullOrEmpty(contactPerson)){
+                toastr.warning("Please enter a valid Contact Person", "Warning");
+                return ;
+            }
+            if(IsNullOrEmpty(whatsappNumber)){
+                toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+                return ;
+            }
+            if(IsNullOrEmpty(mobileNumber)){
+                toastr.warning("Please enter a valid Mobile Number", "Warning");
+                return ;
+            }
+            if(!isValidateEmail(emailId)){
+                toastr.warning("Please enter a valid Email", "Warning");
+                return ;
+            }
+            if(IsNullOrEmpty(panNumber)){
+                toastr.warning("Please enter a valid PAN Nubmer", "Warning");
+                return ;
+            }
+            if(IsNullOrEmpty(gstNubmer)){
+                toastr.warning("Please enter a valid GST Number", "Warning");
+                return ;
+            }
+
+            var saveVendorUrl = '@Url.Content("~/Vendor/VendorSave")';
+            var formData = {
+                    PartyName: vendorName,
+                    PartyCategoryId : vendorCategory,
+                    AddressLine: vendorAddress,
+                    CityId: vendorCity,
+                    PinCode : vendorPincode,
+                    ContactPerson: contactPerson,
+                    ContactNo : mobileNumber,
+                    MobNo : mobileNumber,
+                    WhatsAppNo : whatsappNumber,
+                    Email : emailId,
+                    PANNo: panNumber,
+                    GSTNo : gstNubmer,
+                    LegalName: legalName,
+                    TradeName : tradeName,
+                    TypeOfBusiness : typeBusiness,
+                    AadharVerified : adharVerified,
+                    GSTStatus : gstStatus,
+                    GSTVarifiedOn : gstVerifiedOn,
+                    PANStatus : panStatus,
+                    PANLinkedWithAdhar : adharLinked,
+                    PANVerifiedOn : panVerifiedOn,
+                    LinkId : linkId
+            };
+            $.ajax({
+                url: saveVendorUrl,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    toastr.success("Vendor details submitted successfully!");
+
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to submit Vendor details", "Error");
+                }
+            });
+        }
+        });
+        function FetchVendor(){
+            $("#tableDiv").show();
+            var fetchVendorUrl = '@Url.Content("~/Vendor/GetAllVendor")';
+            $.ajax({
+                url : fetchVendorUrl,
+                type : 'GET',
+                dataType : 'json',
+                success : function(response){
+                    let vendorList = response;
+                    
+                    vendorListDto = response;
+                    if ($.fn.DataTable.isDataTable('#tableVendor')) {
+                        $('#tableVendor').DataTable().clear().destroy();
+                    }
+                    $('#tableVendor').DataTable({
+                        "processing": true,
+                        "serverSide": false,
+                        "paging": true,
+                        "pageLength": 10,
+                        "lengthChange": true,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": true,
+                        "responsive": true,
+                        "info": true,
+                        "autoWidth": true,
+                        "responsive": true,
+                        "scrollX": true,
+                        "data": vendorList,
+                        "columns": [
+                            { "data": "partyName",},
+                            { "data": "partyCategoryId" },
+                            { "data": "addressLine" },
+                            { "data": "pinCode" },
+                            { "data": "contactPerson" },
+                            { "data": "mobNo" },
+                            { "data": "whatsAppNo" },
+                            { "data": "email" },
+                            { "data": "panNo" },
+                            { "data": "gstNo" },
+                            { "data": "partyId",
+                                "render":function (data, type, row){
+                                    return `<div class="btn-group" role="group">
+                                                     <button type="button" class="btn btn-sm btn-primary" onclick="EditVendor(${data})">
+                                                         <i class="ti ti-edit"></i> Edit
+                                                     </button>
+                                                     <button type="button" class="btn btn-sm btn-danger" onclick="DeleteVendor(${data})">
+                                                         <i class="ti ti-trash"></i> Delete
+                                                     </button>
+                                                 </div>`;
+                                }
+                            },
+                        ],
+                        "columnDefs": [
+                            {
+                                "targets": "_all",
+                                "className": "text-center"
+                            }
+                        ]
+                    })
+                },
+                error: function (xhr, status, error) {
+                    
+                    toastr.error("Failed to fetch data!", "Error");
+                }
+            });
+        }
+
+         function EditVendor(partyId){
+                var data = vendorListDto.filter(x => x.partyId == partyId);
+                var formData = data[0];
+                $('#tableDiv').hide();
+                $("#backButton").css('display', 'none');
+                $("#addVendorDiv").css('display', 'Block');
+                $("#btnSaveVendor").hide();
+                $("#btnUpdateVendor").show();
+                $("#btnSavenewVendor").hide();
+                $("#btnViewButton").hide();
+                $("#txtPartyId").val(formData.partyId);
+                $("#txtGstNumber").val(formData.gstNo);
+                $("#txtLegalName").val(formData.legalName);
+                $("#txtTypeBusiness").val(formData.typeOfBusiness);
+                $("#txtGstStatus").val(formData.gstStatus);
+                $("#txtTradeName").val(formData.tradeName);
+                $("#txtAadharVerified").val(formData.aadharVerified);
+                var gstVerifiedDate = new Date(formData.gstVarifiedOn).toISOString().split('T')[0];
+                $("#txtGstVerifiedOn").val(gstVerifiedDate);
+                $("#txtAadharLinked").val(formData.panLinkedWithAdhar);
+                $("#txtPanStatus").val(formData.panStatus);
+                var panVerifiedDate = new Date(formData.panVerifiedOn).toISOString().split('T')[0];
+                $("#txtPanVerifiedOn").val(panVerifiedDate);
+                $("#txtPanNumber").val(formData.panNo);
+                $("#txtVendorName").val(formData.partyName);
+                $("#ddlVendorCategory").val(formData.partyCategoryId).change();
+                $("#txtAddress").val(formData.addressLine);
+                $("#ddlCity").val(formData.cityId).change();
+                $("#txtContactPerson").val(formData.contactPerson);
+                $("#txtMobileNumber").val(formData.mobNo);
+                $("#txtPinCode").val(formData.pinCode);
+                $("#txtWhatsappNumber").val(formData.whatsAppNo);
+                $("#txtEmailId").val(formData.email);
+                $("#numGstNumber").val(formData.gstNo);
+                $("#numPanNumber").val(formData.panNo);
+         }
+
+         function UpdateVendor(){
+
+             var formData = {
+                 PartyId : $("#txtPartyId").val(), 
+                    PartyName: $("#txtVendorName").val(),
+                    PartyCategoryId : $("#ddlVendorCategory").val(),
+                    AddressLine: $("#txtAddress").val(),
+                    CityId: $("#ddlCity").val(),
+                    PinCode :$("#txtPinCode").val(),
+                    ContactPerson: $("#txtContactPerson").val(),
+                    ContactNo : $("#txtMobileNumber").val(),
+                    MobNo : $("#txtMobileNumber").val(),
+                    WhatsAppNo : $("#txtWhatsappNumber").val(),
+                    Email : $("#txtEmailId").val(),
+                    PANNo: $("#numPanNumber").val(),
+                    GSTNo : $("#numGstNumber").val(),
+                    LegalName: $("#txtLegalName").val(),
+                    TradeName : $("#txtTradeName").val(),
+                    TypeOfBusiness : $("#txtTypeBusiness").val(),
+                    AadharVerified : $("#txtAadharVerified").val(),
+                    GSTStatus : $("#txtGstStatus").val(),
+                    GSTVarifiedOn : $("#txtGstVerifiedOn").val(),
+                    PANStatus : $("#txtPanStatus").val(),
+                    PANLinkedWithAdhar : $("#txtAadharLinked").val(),
+                    PANVerifiedOn : $("#txtPanVerifiedOn").val(),
+                    LinkId : linkId
+             }
+             var updateVendorUrl = '@Url.Content("~/Vendor/UpdateVendor")';
+             $.ajax({
+                type: "PUT",
+                url: updateVendorUrl,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(formData),
+                dataType: "json",
+                success: function (result) {
+                    if (result.result == "Success") {
+                        $("#addVendorDiv").css('display', 'none')
+                        toastr.success("Vendor Updated successfully!");
+                        FetchVendor();
+                            $("#backButton").show();
+                    } 
+                    else {
+                            toastr.error("Failed to update Vendor");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to update Vendor");
+                }
+             });
+         }
+         function DeleteVendor(partyId){
+             var deleteVendorUrl = '@Url.Content("/Vendor/DeleteVendor/")' + partyId
+            $.ajax({
+                url: deleteVendorUrl,
+                type: "DELETE",
+                dataType: "json",
+                data: JSON.stringify(partyId),
+                success: function (response) {
+                    toastr.success("Vendor Deleted successfully!");
+                    FetchVendor();
+                    $("#backButton").show();
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to delete Vendor", "Error");
+                }
+            });
+         }
 </script>
