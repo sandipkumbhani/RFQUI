@@ -20,6 +20,7 @@ namespace RFQ.UI.Infrastructure.Extension
             services.AddScoped<LocationAdaptor>();
             services.AddScoped<IVehicleAdaptor,VehicleAdaptor>(); 
             services.AddScoped<FranchiseAdaptor>();
+            services.AddScoped<IVendorAdaptor,VendorAdaptor>();
             return services;
         }
     }
