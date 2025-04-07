@@ -7,6 +7,7 @@ namespace RFQ.UI.Domain.Interfaces
     {
         Task<IEnumerable<CompanyConfigurationResponseDto>> GetAllCompanyConfiguration();
         Task<IEnumerable<FranchiseResponseDto>> GetAllCompany();
+        Task<IEnumerable<ProviderResponseDto>> GetAllProviders();
         Task<string> AddCompanyConfiguration(CompanyConfigrationRequestDto requestDto);
         Task<string> EditCompanyConfiguration(CompanyConfigrationRequestDto requestDto);
     }

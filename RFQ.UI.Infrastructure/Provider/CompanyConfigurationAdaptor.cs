@@ -67,6 +67,28 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
+        public async Task<IEnumerable<ProviderResponseDto>> GetAllProviders()
+        {
+            try
+            {
+                var _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Franchise:GetAllCompany"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var providerList = JsonConvert.DeserializeObject<List<ProviderResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return providerList;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async Task<string> AddCompanyConfiguration(CompanyConfigrationRequestDto requestDto)
         {
             var _httpClient = new HttpClient();

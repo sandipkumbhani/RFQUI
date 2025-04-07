@@ -38,12 +38,30 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllCompany()
         {
             try
             {
                 var companyList = await _companyConfigurationServices.GetAllCompany();
+                if (Request.IsAjaxRequest())
+                    return Json(companyList);
+                else
+                    return View(companyList);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllProviders()
+        {
+            try
+            {
+                var companyList = await _companyConfigurationServices.GetAllProviders();
                 if (Request.IsAjaxRequest())
                     return Json(companyList);
                 else
@@ -106,6 +124,8 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
+
 
     }
 }
