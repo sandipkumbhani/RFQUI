@@ -83,7 +83,6 @@ namespace RFQ.UI.Controllers
                 {
                     franchiseRequestDto.CompanyTypeId = 2;
                     franchiseRequestDto.ParentCompanyId = Convert.ToInt32(companyId);
-                    franchiseRequestDto.LinkId = 1;
                     franchiseRequestDto.CreatedBy = Convert.ToInt32(companyId);
                     franchiseRequestDto.UpdatedBy = Convert.ToInt32(companyId);
                     franchiseRequestDto.CreatedOn = DateTime.Now;
@@ -136,7 +135,6 @@ namespace RFQ.UI.Controllers
 
                 franchiseRequestDto.CompanyTypeId = 2;
                 franchiseRequestDto.ParentCompanyId = Convert.ToInt32(parentId);
-                franchiseRequestDto.LinkId = 1;
                 franchiseRequestDto.CreatedBy = Convert.ToInt32(parentId);
                 franchiseRequestDto.UpdatedBy = Convert.ToInt32(parentId);
                 franchiseRequestDto.CreatedOn = DateTime.Now;

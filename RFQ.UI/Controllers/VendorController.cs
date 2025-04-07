@@ -1,82 +1,159 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Extension;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
     public class VendorController : Controller
     {
-        // GET: VendorController`
+        private readonly IVendorService _vendorService;
+        private readonly GlobalClass _globalClass;
+        public VendorController(IVendorService vendorService, GlobalClass globalClass)
+        {
+            _vendorService = vendorService;
+            _globalClass = globalClass;
+        }
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: VendorController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: VendorController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: VendorController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [HttpGet]
+        public async Task<IActionResult> GetAllInternalMaster()
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var internalMasterList = await _vendorService.GetAllInternalMaster();
+
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(internalMasterList);
+                }
+                else
+                {
+                    return View(internalMasterList);
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                throw new Exception(ex.Message);
             }
         }
 
-        // GET: VendorController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: VendorController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> VendorSave([FromBody] VendorRequestDto vendorRequestDto)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+                if (vendorRequestDto != null)
+                {
+                    vendorRequestDto.CompanyId = Convert.ToInt32(companyId);
+                    vendorRequestDto.CreatedBy = Convert.ToInt32(companyId);
+                    vendorRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                    vendorRequestDto.PartyTypeId = 5;
+
+                    var result = _vendorService.AddVendor(vendorRequestDto);
+                    return Json(new { result = "Success" });
+                }
+                else
+                {
+                    return Json(new { result = "Failed" });
+
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                throw new Exception(ex.Message);
             }
         }
 
-        // GET: VendorController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: VendorController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpGet]
+        public async Task<IActionResult> GetAllVendor()
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var vendorList = await _vendorService.GetAllVendor();
+                if (vendorList != null && vendorList.Count() > 0)
+                {
+                    var result = vendorList.Where(x => x.PartyTypeId == 5).ToList();
+                    if (Request.IsAjaxRequest())
+                    {
+                        return Json(result);
+                    }
+                    else
+                    {
+                        return View(result);
+                    }
+                }
+                return Json(vendorList);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                throw new Exception(ex.Message);
             }
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateVendor([FromBody] VendorRequestDto vendorRequestDto)
+        {
+            try
+            {
+                if (vendorRequestDto.PartyId <= 0)
+                {
+                    return Json(new { result = "error", message = "Invalid PartyId." });
+                }
+                int partyId = vendorRequestDto.PartyId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                vendorRequestDto.CompanyId = Convert.ToInt32(companyId);
+                vendorRequestDto.CreatedBy = Convert.ToInt32(companyId);
+                vendorRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                vendorRequestDto.PartyTypeId = 5;
+                var result = _vendorService.EditVendor(partyId, vendorRequestDto);
+                if (result != null)
+                {
+                    return Json(new { result = "Success" });
+                }
+                else
+                {
+                    return Json(new { result = "Failed" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
+        [HttpDelete("Vendor/DeleteVendor/{partyId}")]
+        public async Task<IActionResult> DeleteVendor(int partyId)
+        {
+            try
+            {
+                var result = await _vendorService.DeleteVendor(partyId);
+                if (result != null)
+                {
+                    return Json(new { result = "Success" });
+                }
+                else
+                {
+                    return Json(new { result = "Failed" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+
     }
 }

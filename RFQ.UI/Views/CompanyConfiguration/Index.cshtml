@@ -1,8 +1,12 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "CompanyConfigration";
+    ViewData["Title"] = "CompanyConfiguration";
 }
+@section Scripts {
+    <script src="~/js/Views/CompanyConfiguration .js"></script>
+}
+
 <div class="app-toolbar  pt-3 px-lg-3">
     <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
         <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
@@ -29,7 +33,7 @@
         <div class="card">
             <div class="card-header border-0 cursor-pointer">
                 <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">CompanyConfigration</h3>
+                    <h3 class="fw-bold m-0">Company configuration</h3>
                 </div>
             </div>
             <div class="card-body">
@@ -37,8 +41,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="company" class="form-label">Company</label>
-                            <select id="company" class="form-select">
-                                <option>Select Company</option>
+                            <select name="company" id="company" class="selectpicker" data-live-search="true" data-width="100%">
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -85,7 +88,8 @@
                         </div>
                     </div>
                     <button type="button" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary">Save & New</button>
+                    <button type="button" class="btn btn-primary">Save & New</button>
+                    <button type="button" class="btn btn-primary">View</button>
                 </form>
             </div>
         </div>
