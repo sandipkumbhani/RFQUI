@@ -1,6 +1,5 @@
 ﻿using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
 namespace RFQ.UI.Application.Interface
 {

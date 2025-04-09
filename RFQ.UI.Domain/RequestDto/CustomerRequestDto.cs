@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RFQ.UI.Domain.RequestDto
+﻿namespace RFQ.UI.Domain.RequestDto
 {
     public class CustomerRequestDto
     {
@@ -56,12 +50,10 @@ namespace RFQ.UI.Domain.RequestDto
 
         public DateTime PANVerifiedOn { get; set; }
 
-        public int LinkId { get; set; } = 1;
+        public int LinkId { get; set; }
+
         public int CreatedBy { get; set; }
 
-        //public DateTime CreatedOn { get; set; }
-
         public int UpdatedBy { get; set; }
-        //public DateTime UpdatedOn { get; set; }
     }
 }

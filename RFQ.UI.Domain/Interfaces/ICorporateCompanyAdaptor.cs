@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.ResponseDto;
-using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
+using static RFQ.UI.Domain.Model.CorporateCompanyModel;
 
 namespace RFQ.UI.Domain.Interfaces
 {
     public interface ICorporateCompanyAdaptor
     {
-        Task<string> AddCorporateCompany(CorporateCompanyViewModelDto corporateCompanyViewModelDto);
+        Task<string> AddCorporateCompany(CorporateCompanyModel requestDto);
 
-        Task<IEnumerable<CorporateCompanyViewModelDto>> GetCorporateCompanyAll();
+        Task<IEnumerable<CorporateCompanyModel>> GetCorporateCompanyAll();
 
-        Task<string> EditCorporateCompany(int companyId, CorporateCompanyViewModelDto corporateCompanyViewModelDto);
+        Task<string> EditCorporateCompany(int companyId, CorporateCompanyModel requestDto);
 
         Task<string> DeleteCorporateCompany(int companyId);
 

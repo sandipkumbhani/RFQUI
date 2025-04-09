@@ -6,7 +6,7 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface IVehicleAdaptor
     {
-        Task<IEnumerable<InternalMasterDto>> GetAllVehicleCategory();
+        Task<IEnumerable<InternalMasterModel>> GetAllVehicleCategory();
 
         Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto requestDto);
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Extension;
 
 namespace RFQ.UI.Controllers
 {
@@ -18,20 +20,24 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Dashboard(DashboardViewModel dashboardViewModel)
+        public async Task<IActionResult> Dashboard(CompanyUserResponseDto responseDto)
         {
             try
             {
-                var userlist = await _dashBoardServices.GetAllUsers();
-                if (userlist != null && userlist.Count() > 0)
+               
+                if (Request.IsAjaxRequest())
                 {
-                    dashboardViewModel.CompanyUserDto.AddRange(userlist);
+                    var userlist = await _dashBoardServices.GetAllUsers();
+                    if (userlist != null && userlist.Count() > 0)
+                    {
+                        responseDto.responseDto.AddRange(userlist);
+                    }
+                    return Json(userlist);
                 }
-                return View(dashboardViewModel);
+                return View();
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

@@ -67,6 +67,7 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPut]
         public async Task<IActionResult> EditLocationList([FromBody] LocationRequestDto locationRequestDto)
         {
@@ -97,6 +98,7 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
         [HttpDelete("Location/Deletelocationlist/{LocationId}")]
         public async Task<IActionResult> Deletelocationlist(int LocationId)
         {

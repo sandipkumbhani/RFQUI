@@ -5,11 +5,11 @@ namespace RFQ.UI.Application.Interface
 {
     public interface ICustomerServices
     {
-        Task<string> AddCustomer(CustomerRequestDto customerViewModelDto);
+        Task<string> AddCustomer(CustomerRequestDto customerRequestDto);
 
         Task<IEnumerable<CustomerResponseDto>> GetAllCustomer();
 
-        Task<string> EditCustomer(int PartyId, CustomerRequestDto customerViewModelDto);
+        Task<string> EditCustomer(int PartyId, CustomerRequestDto customerRequestDto);
 
         Task<string> DeleteCustomer(int PartyId);
 

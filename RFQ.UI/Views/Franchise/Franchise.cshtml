@@ -220,6 +220,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="~/js/common.js"></script>
 <script>
+     const urlParams = new URLSearchParams(window.location.search);
+     const linkId = urlParams.get('LinkId');
     $(document).ready(function(){
 
         Dropzone.autoDiscover = false;
@@ -246,16 +248,109 @@
                     event.preventDefault();
                     isNewFranchise = false;
                     isUpdateFranchise = false;
+                    if(IsNullOrEmpty($("#txtFranchiseName").val())) {
+                        toastr.warning("Please enter a valid Franchise Name", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtFranchiseCode").val())) {
+                        toastr.warning("Please enter a valid Franchise Code", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("txtAddress").val())) {
+                        toastr.warning("Please enter a valid Franchise Address", "Warning");
+                        return;
+                    }
+                    if (!isValidateSelect($("#ddlCity").val())) {
+                        toastr.warning("Please select a valid Franchise City", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtPinCode").val())) {
+                        toastr.warning("Please enter a valid Franchise Pincode", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtContactPerson").val())) {
+                        toastr.warning("Please enter a valid Contact Person", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtEmailId").val())) {
+                        toastr.warning("Please enter a valid Email Id", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtPanNumber").val())) {
+                        toastr.warning("Please enter a valid PAN Number", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtGstNumber").val())) {
+                        toastr.warning("Please enter a valid GST Number", "Warning");
+                        return;
+                    }
+                    if(IsNullOrEmpty($("#txtMobileNumber").val())){
+                        toastr.warning("Please enter a valid Mobile Number", "Warning");
+                        return;
+                    }
+                    if(IsNullOrEmpty($("#txtWhatsAppNumber").val())){
+                        toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+                        return;
+                    }
                     if(myDropzone.files.length > 0){
                         myDropzone.processQueue();
+                    }else{
+                        toastr.warning("Please fill form details ", "Warning");
                     }                
                 });
                 $("#btnSavenewFranchise").click(function(event){
                     isNewFranchise = true;
                     isUpdateFranchise = false;
+                    if(IsNullOrEmpty($("#txtFranchiseName").val())) {
+                        toastr.warning("Please enter a valid Franchise Name", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtFranchiseCode").val())) {
+                        toastr.warning("Please enter a valid Franchise Code", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("txtAddress").val())) {
+                        toastr.warning("Please enter a valid Franchise Address", "Warning");
+                        return;
+                    }
+                    if (!isValidateSelect($("#ddlCity").val())) {
+                        toastr.warning("Please select a valid Franchise City", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtPinCode").val())) {
+                        toastr.warning("Please enter a valid Franchise Pincode", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtContactPerson").val())) {
+                        toastr.warning("Please enter a valid Contact Person", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtEmailId").val())) {
+                        toastr.warning("Please enter a valid Email Id", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtPanNumber").val())) {
+                        toastr.warning("Please enter a valid PAN Number", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtGstNumber").val())) {
+                        toastr.warning("Please enter a valid GST Number", "Warning");
+                        return;
+                    }
+                    if(IsNullOrEmpty($("#txtMobileNumber").val())){
+                        toastr.warning("Please enter a valid Mobile Number", "Warning");
+                        return;
+                    }
+                    if(IsNullOrEmpty($("#txtWhatsAppNumber").val())){
+                        toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+                        return;
+                    }
                     if(myDropzone.files.length > 0){
                         myDropzone.processQueue();
                     } 
+                    else{
+                        toastr.warning("Please fill form details ", "Warning");
+                    }
                 });
                 if(dropzone.children.length > 2){
                     dropzone.removeChild(dropzone.children[1]);
@@ -263,6 +358,50 @@
                 $("#btnUpdateFranchise").click(function(event){
                     isNewFranchise = false;
                     isUpdateFranchise = true;
+                    if(IsNullOrEmpty($("#txtFranchiseName").val())) {
+                        toastr.warning("Please enter a valid Franchise Name", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtFranchiseCode").val())) {
+                        toastr.warning("Please enter a valid Franchise Code", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("txtAddress").val())) {
+                        toastr.warning("Please enter a valid Franchise Address", "Warning");
+                        return;
+                    }
+                    if (!isValidateSelect($("#ddlCity").val())) {
+                        toastr.warning("Please select a valid Franchise City", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtPinCode").val())) {
+                        toastr.warning("Please enter a valid Franchise Pincode", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtContactPerson").val())) {
+                        toastr.warning("Please enter a valid Contact Person", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtEmailId").val())) {
+                        toastr.warning("Please enter a valid Email Id", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtPanNumber").val())) {
+                        toastr.warning("Please enter a valid PAN Number", "Warning");
+                        return;
+                    }
+                    if (IsNullOrEmpty($("#txtGstNumber").val())) {
+                        toastr.warning("Please enter a valid GST Number", "Warning");
+                        return;
+                    }
+                    if(IsNullOrEmpty($("#txtMobileNumber").val())){
+                        toastr.warning("Please enter a valid Mobile Number", "Warning");
+                        return;
+                    }
+                    if(IsNullOrEmpty($("#txtWhatsAppNumber").val())){
+                        toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+                        return;
+                    }
                     if(myDropzone.files.length > 0){
                         myDropzone.processQueue();
                     }
@@ -343,7 +482,7 @@
         });
 
         $("#txtFranchiseName").on("change",function(){
-            if(!isAlphabets($(this).val())){
+            if(!/^[A-Za-z0-9 ]+$/.test($(this).val())){
                 toastr.warning("Please enter a valid Franchise  Name", "Warning");
                 $(this).focus();
                 return;
@@ -361,9 +500,9 @@
                 toastr.warning("Please enter a valid Franchise  Address", "Warning");
                 $(this).focus();
                 return;
-            }
+            }   
         });
-        $("#ddlCity").on("change",function(){
+        $("#ddlCity").on("keypress",function(){
             if(!isValidateSelect($(this).val())){
                 toastr.warning("Please enter a valid Franchise  City", "Warning");
                 $(this).focus();
@@ -420,7 +559,7 @@
         })
 
         function SaveFranchise(fileName){
-            
+
             var franchiseName = $("#txtFranchiseName").val();
             var franchiseCode = $("#txtFranchiseCode").val();
             var franchiseAddress = $("#txtAddress").val();
@@ -434,7 +573,7 @@
             var gstNumber = $("#txtGstNumber").val();
             var franchiseLogo = fileName;
 
-            if (IsNullOrEmpty(franchiseName)) {
+            if(IsNullOrEmpty(franchiseName)) {
                 toastr.warning("Please enter a valid Franchise Name", "Warning");
                 return;
             }
@@ -492,7 +631,8 @@
                 Email: emailId,
                 PANNo: panNumber,
                 GSTNo: gstNumber,
-                LogoImage : franchiseLogo
+                LogoImage : franchiseLogo,
+                LinkId : linkId
             }
             $.ajax({
                 url : saveUrl,
@@ -674,7 +814,8 @@
                 Email: $("#txtEmailId").val(),
                 PANNo: $("#txtPanNumber").val(),
                 GSTNo: $("#txtGstNumber").val(),
-                LogoImage : logoFileName
+                LogoImage : logoFileName,
+                LinkId : linkId
                               
             }
             var editFranchiseUrl = '@Url.Content("~/Franchise/EditFranchise")';

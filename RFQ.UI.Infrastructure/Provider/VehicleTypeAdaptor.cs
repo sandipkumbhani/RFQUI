@@ -6,7 +6,6 @@ using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 using System.Text;
-using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -40,14 +39,9 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var result = responseModel.StatusCode;
                 if (result == 200)
-                {
-
                     return "Vehicle Saved";
-                }
                 else
-                {
                     return responseModel?.ErrorMessage ?? "";
-                }
             }
             return string.Empty;
         }
@@ -81,13 +75,9 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var result = responseModel.StatusCode;
                 if (result == 200)
-                {
                     return "VehicleType Updated";
-                }
                 else
-                {
                     return responseModel?.ErrorMessage ?? "";
-                }
             }
             return "Failed to update VehicleType";
         }
@@ -105,13 +95,9 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var result = responseModel.StatusCode;
                 if (result == 200)
-                {
                     return "Profile Deleted";
-                }
                 else
-                {
                     return responseModel?.ErrorMessage ?? "";
-                }
             }
             return "Failed to Delete profile";
         }

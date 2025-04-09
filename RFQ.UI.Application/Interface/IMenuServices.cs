@@ -4,6 +4,6 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IMenuServices
     {
-        Task<IEnumerable<MenulistDto>> GetMenu(int profileId);
+        Task<IEnumerable<MenulistModel>> GetMenu(int profileId);
     }
 }

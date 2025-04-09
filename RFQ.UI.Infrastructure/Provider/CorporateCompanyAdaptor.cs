@@ -5,7 +5,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 using System.Text;
-using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
+using static RFQ.UI.Domain.Model.CorporateCompanyModel;
 
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -27,7 +27,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
 
-        public async Task<string> AddCorporateCompany(CorporateCompanyViewModelDto corporateCompanyViewModelDto)
+        public async Task<string> AddCorporateCompany(CorporateCompanyModel corporateCompanyViewModelDto)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return string.Empty;
         }
 
-        public async Task<IEnumerable<CorporateCompanyViewModelDto>> GetCorporateCompanyAll()
+        public async Task<IEnumerable<CorporateCompanyModel>> GetCorporateCompanyAll()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
@@ -65,7 +65,7 @@ namespace RFQ.UI.Infrastructure.Provider
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
             {
-                var Profilelist = JsonConvert.DeserializeObject<List<CorporateCompanyViewModelDto>>(Convert.ToString(responseModel.Data!));
+                var Profilelist = JsonConvert.DeserializeObject<List<CorporateCompanyModel>>(Convert.ToString(responseModel.Data!));
                 return Profilelist;
             }
             return null;
@@ -96,13 +96,13 @@ namespace RFQ.UI.Infrastructure.Provider
         }
 
 
-        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyViewModelDto corporateCompanyViewModelDto)
+        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyModel requestDto)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
             var baseurl = $"{_fleetLynkApiUrl + _config["CorporateCompany:UpdateCompany"] +companyId}";
-            var vehicle = JsonConvert.SerializeObject(corporateCompanyViewModelDto);
+            var vehicle = JsonConvert.SerializeObject(requestDto);
             var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
             var responseData = await response.Content.ReadAsStringAsync();
