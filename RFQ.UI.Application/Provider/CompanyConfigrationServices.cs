@@ -35,5 +35,9 @@ namespace RFQ.UI.Application.Provider
         {
             return _companyConfigurationAdaptor.EditCompanyConfiguration(requestDto);
         }
+        public Task<string> DeleteCompanyConfiguration(int companyConfigId)
+        {
+            return _companyConfigurationAdaptor.DeleteCompanyConfiguration(companyConfigId);
+        }
     }
 }

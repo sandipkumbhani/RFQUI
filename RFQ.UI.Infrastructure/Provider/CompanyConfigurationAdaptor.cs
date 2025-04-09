@@ -78,12 +78,36 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
                 {
-                    var providerList = JsonConvert.DeserializeObject<List<ProviderResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return providerList;
+                    List<ProviderResponseDto> providersList = new();
+                    List<InternalMasterDto> internalMasterList = JsonConvert.DeserializeObject<List<InternalMasterDto>>(Convert.ToString(responseModel.Data!));
+                    foreach (var item in internalMasterList)
+                    {
+                        if (item.InternalMasterTypeId == 9)
+                        {
+                            var provider = new ProviderResponseDto()
+                            {
+                                ProviderName = "SMS_PROVIDER",
+                                ProviderValue = item.InternalMasterName,
+                                ProviderTypeId = item.InternalMasterTypeId
+                            };
+                            providersList.Add(provider);
+                        }
+                        else if (item.InternalMasterTypeId == 10)
+                        {
+                            var provider = new ProviderResponseDto()
+                            {
+                                ProviderName = "WHATSAPP_PROVIDER",
+                                ProviderValue = item.InternalMasterName,
+                                ProviderTypeId = item.InternalMasterTypeId
+                            };
+                            providersList.Add(provider);
+                        }
+                    }
+                    return providersList;
                 }
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -109,7 +133,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 else
                 {
-                    return responseModel.ErrorMessage;
+                    return responseModel.ErrorMessage ?? string.Empty;
                 }
             }
             return string.Empty;
@@ -119,7 +143,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             var _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:UpdateCompanyConfiguration"] + requestDto.CompanyConfigrationId;
+            var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:UpdateCompanyConfiguration"] + "/" + requestDto.CompanyConfigId;
             var user = JsonConvert.SerializeObject(requestDto);
             var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -131,9 +155,30 @@ namespace RFQ.UI.Infrastructure.Provider
                 if (result == 200)
                     return "CompanyConfiguration Updated...";
                 else
-                    return responseModel.ErrorMessage;
+                    return responseModel.ErrorMessage ?? string.Empty;
             }
             return "Failed to Update CompanyConfiguration ";
+        }
+
+        public async Task<string> DeleteCompanyConfiguration(int companyConfigId)
+        {
+            var _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+            var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:DeleteCompanyConfiguration"] + "/" + companyConfigId;
+            var response = await _httpClient.DeleteAsync(baseurl);
+            var responseData = await response.Content.ReadAsStringAsync();
+            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+            if (responseModel != null)
+            {
+                var result = responseModel.StatusCode;
+                if (result == 200)
+                    return "Configuration Deleted";
+                else
+                    return responseModel.ErrorMessage ?? string.Empty;
+            }
+            return "Failed to CompanyConfiguration location";
+
         }
     }
 }
