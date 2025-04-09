@@ -1,5 +1,6 @@
 ﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
 
 namespace RFQ.UI.Application.Provider
@@ -13,7 +14,7 @@ namespace RFQ.UI.Application.Provider
             _dashboardAdaptor = dashboardAdaptor;
         }
 
-        public Task<IEnumerable<CompanyUserDto>> GetAllUsers()
+        public Task<IEnumerable<CompanyUserResponseDto>> GetAllUsers()
         {
             return _dashboardAdaptor.GetAllUsers();
         }

@@ -1,15 +1,6 @@
-﻿namespace RFQ.UI.Domain.Model
+﻿namespace RFQ.UI.Domain.ResponseDto
 {
-    public class DashboardViewModel
-    {
-        public DashboardViewModel()
-        {
-            CompanyUserDto = new List<CompanyUserDto>();
-        }
-        public List<CompanyUserDto> CompanyUserDto { get; set; }
-    }
-
-    public class CompanyUserDto
+    public class CompanyUserResponseDto
     {
         public int UserId { get; set; }
         public int CompanyId { get; set; }
