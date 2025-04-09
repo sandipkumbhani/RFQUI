@@ -14,7 +14,7 @@ namespace RFQ.UI.Application.Provider
             _dashboardAdaptor = dashboardAdaptor;
         }
 
-        public Task<IEnumerable<CompanyUserResponseDto>> GetAllUsers()
+        public Task<IEnumerable<UserResponseDto>> GetAllUsers()
         {
             return _dashboardAdaptor.GetAllUsers();
         }

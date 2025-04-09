@@ -2,6 +2,7 @@
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Extension;
 
 namespace RFQ.UI.Controllers
 {
@@ -23,17 +24,20 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                List<CompanyUserResponseDto> companyUserList = new();
-                var userlist = await _dashBoardServices.GetAllUsers();
-                if (userlist != null && userlist.Count() > 0)
+               
+                if (Request.IsAjaxRequest())
                 {
-                    companyUserList.AddRange(userlist);
+                    var userlist = await _dashBoardServices.GetAllUsers();
+                    if (userlist != null && userlist.Count() > 0)
+                    {
+                        responseDto.responseDto.AddRange(userlist);
+                    }
+                    return Json(userlist);
                 }
-                return View(companyUserList);
+                return View();
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

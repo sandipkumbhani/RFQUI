@@ -5,6 +5,6 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IDashboardServices
     {
-        Task<IEnumerable<CompanyUserResponseDto>> GetAllUsers();
+        Task<IEnumerable<UserResponseDto>> GetAllUsers();
     }
 }

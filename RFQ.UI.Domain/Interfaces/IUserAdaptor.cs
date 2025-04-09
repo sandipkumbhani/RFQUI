@@ -5,6 +5,6 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface IUserAdaptor
     {
-        Task<IEnumerable<CompanyUserResponseDto>> GetAllUsers();
+        Task<IEnumerable<UserResponseDto>> GetAllUsers();
     }
 }
