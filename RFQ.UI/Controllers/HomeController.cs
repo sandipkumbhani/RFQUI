@@ -215,10 +215,7 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-        public IActionResult ProfileRight()
-        {
-            return View();
-        }
+     
 
         public IActionResult Privacy()
         {

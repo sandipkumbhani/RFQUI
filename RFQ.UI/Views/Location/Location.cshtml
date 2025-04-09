@@ -81,7 +81,7 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-                                <input type="email" class="form-control" placeholder="email" id="txtEmail" />
+                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmail" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Contact Number</label>
@@ -108,7 +108,6 @@
                        class="table table-striped align-middle fs-6 mb-0">
                     <thead class="bg-light">
                         <tr>
-                            @* <th>LocationId</th> *@
                             <th>LocationName</th>
                             <th>Address</th>
                             <th>City</th>
@@ -136,7 +135,7 @@
     var locationResponseDto;
 
     $(document).on("click", "#btnViewForm", function () {
-       fetchlocationlist();
+       Fetchlocationlist();
        $("#AddLocationDiv").css('display', 'none');
        $("#backButton").css('display', 'Block');
     });
@@ -256,7 +255,7 @@
        // $('#tableDiv').hide();
     });
 
-    function fetchlocationlist() {
+    function Fetchlocationlist() {
        $('#tableDiv').show();
        $.ajax({
           url: '/Location/ViewLocationList',
@@ -298,10 +297,10 @@
                       "render": function (data, type, row) {
                          return `
                             <div class="btn-group" role="group">
-                               <button type="button" class="btn btn-sm btn-primary" onclick="editlocationlist(${data})">
+                               <button type="button" class="btn btn-sm btn-primary" onclick="Editlocationlist(${data})">
                                   <i class="ti ti-edit"></i> Edit
                                </button>
-                               <button type="button" class="btn btn-sm btn-danger" onclick="deletelocationlist(${data})">
+                               <button type="button" class="btn btn-sm btn-danger" onclick="Deletelocationlist(${data})">
                                   <i class="ti ti-trash"></i> Delete
                                </button>
                             </div>`;
@@ -399,6 +398,11 @@
 
     $(document).ready(function () {
        GetAllCityList();
+       UpdateLocationList();
+    });
+
+    function UpdateLocationList() 
+    {
        $("#btnUpdate").click(function (e) {
           e.preventDefault();
           var locationmodel = {
@@ -424,7 +428,7 @@
              success: function (result) {
                 if (result.result == "success") {
                    $("#adduserdiv").css('display', 'none');
-                   fetchlocationlist();
+                   Fetchlocationlist();
                 } else {
                    $("#dataDiv").html("Failed to update profile.");
                 }
@@ -438,9 +442,9 @@
              }
           });
        });
-    });
+    }
 
-    function editlocationlist(locationId) {
+    function Editlocationlist(locationId) {
        console.log(locationResponseDto);
        var data = locationResponseDto.filter(x => x.locationId == locationId);
        var formdata = data[0];
@@ -467,7 +471,7 @@
         $("#btnViewForm").hide();
     }
 
-    function deletelocationlist(locationId) {
+    function Deletelocationlist(locationId) {
        var deletelocationlist = '@Url.Content("~/Location/Deletelocationlist/")' + locationId;
        $.ajax({
           url: deletelocationlist,
@@ -475,7 +479,7 @@
           dataType: "json",
           data: JSON.stringify(locationId),
           success: function (response) {
-             fetchlocationlist();
+             Fetchlocationlist();
              console.log("Deleted successfully...");
           },
           error: function (xhr, status, error) {

@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 using System.Text;
 
@@ -19,13 +21,12 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
-
-        public async Task<string> AddProfile(ProfileViewModelDto profileViewModelDto)
+        public async Task<string> AddProfile(ProfileRequestDto profileRequestDto)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
             var baseurl = _fleetLynkApiUrl + _config["Profile:AddProfile"];
-            var profile = JsonConvert.SerializeObject(profileViewModelDto);
+            var profile = JsonConvert.SerializeObject(profileRequestDto);
             var requestContent = new StringContent(profile, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(baseurl, requestContent);
             var responseData = await response.Content.ReadAsStringAsync();
@@ -34,14 +35,17 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var result = responseModel.StatusCode;
                 if (result == 200)
+                {
                     return "Profile Saved";
+                }
                 else
-                    return responseModel.ErrorMessage ?? "An error occurred"; ;
+                {
+                    return responseModel.ErrorMessage ?? "An error occurred";
+                }
             }
             return string.Empty;
         }
-
-        public async Task<IEnumerable<ProfileViewModelDto>> GetProfileAll()
+        public async Task<IEnumerable<ProfileResponseDto>> GetProfileAll()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
@@ -50,61 +54,31 @@ namespace RFQ.UI.Infrastructure.Provider
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
             {
-                var Profilelist = JsonConvert.DeserializeObject<List<ProfileViewModelDto>>(Convert.ToString(responseModel.Data!));
+                var Profilelist = JsonConvert.DeserializeObject<List<ProfileResponseDto>>(Convert.ToString(responseModel.Data!));
                 return Profilelist;
             }
             return null;
         }
-
-
-        public async Task<string> EditProfile(int profileId, ProfileViewModelDto profileViewModelDto)
+        public async Task<IEnumerable<InternalMasterResponseDto>> GetAllApplicableList()
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = _fleetLynkApiUrl+ _config["Profile:UpdateProfile"] + profileId;
-            var profile = JsonConvert.SerializeObject(profileViewModelDto);
-            var requestContent = new StringContent(profile, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Profile:GetAllInternalMaster"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
                 {
-                    return "Profile Updated";
+                    var alllist = JsonConvert.DeserializeObject<List<InternalMasterResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return alllist;
                 }
-                else
-                {
-                    return responseModel.ErrorMessage;
-                }
+                return null;
             }
-            return "Failed to update profile";
-        }
-
-        public async Task<string> DeleteProfile(int profileId)
-        {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = _fleetLynkApiUrl + _config["Profile:DeleteProfile"] + profileId;
-            var response = await _httpClient.DeleteAsync(baseurl);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            catch (Exception ex)
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
-                {
-                    return "Profile Deleted";
-                }
-                else
-                {
-                    return responseModel.ErrorMessage;
-                }
+                throw;
             }
-            return "Failed to Delete profile";
         }
     }
 }
