@@ -185,7 +185,7 @@ function SaveConfigration() {
         var smtpPassword = $('#smtpPassword').val();
 
         let formData = {
-            CompanyConfigrationId: 0,
+            CompanyConfigId: 0,
             CompanyId: Number(company),
             SMSProvider: smsProvider || null,
             SMSAuthKey: smsAuthKey || null,
@@ -226,27 +226,21 @@ function FetchAllCompConfigList() {
             dataType: 'json',
             success: function (response) {
                 companyConfigResponseDto = response;
-                console.log("response", response);
-                let trlist = response
-                console.log("hello", trlist);
-                var companyList = sessionStorage.getItem("CompanyList")
-                companyList = JSON.parse(companyList);
-                var providersList = sessionStorage.getItem("ProvidersList")
-                providersList = JSON.parse(providersList);
-                $.each(response, function (index, item) {
-                    var company = $.grep(companyList, function (c) {
-                        return c.companyId === item.companyId;
-                    })[0];
-                    item.companyId = !IsNullOrEmpty(company) ? company.companyName : "";
-                    var smsprovider = $.grep(providersList, function (c) {
-                        return c.providerTypeId === item.smsProvider;
-                    })[0];
-                    var smsprovider = $.grep(providersList, function (c) {
-                        return c.providerTypeId === item.smsProvider;
-                    })[0];
-                    item.smsprovider = !IsNullOrEmpty(smsprovider) ? smsprovider.providerName : '';
+                const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");
+                const providersList = JSON.parse(sessionStorage.getItem("ProvidersList") || "[]");
+                const trlist = response.map(item => {
+                    const company = companyList.find(c => c.companyId === item.companyId);
+                    const smsProvider = providersList.find(p => p.providerTypeId === Number(item.smsProvider));
+                    const whatsAppProvider = providersList.find(p => p.providerTypeId === Number(item.whatsAppProvider));
+
+                    return {
+                        ...item,
+                        companyId: company ? company.companyName : "",
+                        smsProvider: smsProvider ? smsProvider.providerName : "",
+                        whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
+                    };
                 });
-                console.log(trlist);
+
                 if ($.fn.DataTable.isDataTable('#tableCmpConfig')) {
                     $('#tableCmpConfig').DataTable().clear().destroy();
                 }
@@ -265,8 +259,8 @@ function FetchAllCompConfigList() {
                     "data": trlist,
                     "columns": [
                         { "data": "companyId" },
-                        { "data": "smsAuthKey" },
                         { "data": "smsProvider" },
+                        { "data": "smsAuthKey" },
                         { "data": "whatsAppAuthKey" },
                         { "data": "whatsAppProvider" },
                         { "data": "smtpHost" },
@@ -342,7 +336,7 @@ function UpdateCompConfig(companyConfigId) {
         CheckValidation();
 
         let formData = {
-            CompanyConfigrationId: Number(companyConfigId),
+            CompanyConfigId: Number(companyConfigId),
             CompanyId: Number(company),
             SMSProvider: smsProvider || null,
             SMSAuthKey: smsAuthKey || null,
