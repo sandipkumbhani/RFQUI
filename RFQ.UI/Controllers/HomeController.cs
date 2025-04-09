@@ -229,25 +229,26 @@ namespace RFQ.UI.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public async Task<IActionResult> GetMenu(MenuViewModel menuViewModel)
+        public async Task<IActionResult> GetMenu(MenulistModel menuViewModel)
         {
             try
             {
+                List<MenulistModel> menulistModels = new List<MenulistModel>();
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 int profileID = Convert.ToInt32(profileid);
                 var menulist = await _menuServices.GetMenu(profileID);
                 if (menulist != null && menulist.Count() > 0)
                 {
-                    menuViewModel.menulistDtos.AddRange(menulist);
+                    menulistModels.AddRange(menulist);
                 }
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(menuViewModel);
+                    return Json(menulistModels);
                 }
                 else
                 {
-                    return View(menuViewModel);
+                    return View(menulistModels);
                 }
             }
             catch (Exception)
