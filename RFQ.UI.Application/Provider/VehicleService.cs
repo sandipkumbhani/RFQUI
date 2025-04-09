@@ -13,7 +13,7 @@ namespace RFQ.UI.Application.Provider
         {
             _vehicleAdaptor = vehicleAdaptor ?? throw new ArgumentNullException(nameof(vehicleAdaptor));
         }
-        public async Task<IEnumerable<InternalMasterDto>> GetAllVehicleCategory()
+        public async Task<IEnumerable<InternalMasterModel>> GetAllVehicleCategory()
         {
             return await _vehicleAdaptor.GetAllVehicleCategory();
         }

@@ -79,7 +79,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 if (responseModel != null)
                 {
                     List<ProviderResponseDto> providersList = new();
-                    List<InternalMasterDto> internalMasterList = JsonConvert.DeserializeObject<List<InternalMasterDto>>(Convert.ToString(responseModel.Data!));
+                    List<InternalMasterModel> internalMasterList = JsonConvert.DeserializeObject<List<InternalMasterModel>>(Convert.ToString(responseModel.Data!));
                     foreach (var item in internalMasterList)
                     {
                         if (item.InternalMasterTypeId == 9)
