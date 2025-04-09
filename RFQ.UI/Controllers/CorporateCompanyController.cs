@@ -1,9 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
-using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
+using System.IdentityModel.Tokens.Jwt;
 
 
 namespace RFQ.UI.Controllers
@@ -21,30 +20,27 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CorporateCompanySave([FromBody] CorporateCompanyViewModelDto corporateCompanyViewModelDto)
+        public IActionResult CorporateCompanySave([FromBody] CorporateCompanyModel requestDto)
         {
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
             string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-            if (corporateCompanyViewModelDto != null)
+            if (requestDto != null)
             {
-                var Company = new CorporateCompanyViewModelDto()
+                var Company = new CorporateCompanyModel()
                 {
                     CompanyTypeId = Convert.ToInt32(profileid),
-
-                    CompanyName = corporateCompanyViewModelDto.CompanyName,
-                    AddressLine = corporateCompanyViewModelDto.AddressLine,
-                    CityId = corporateCompanyViewModelDto.CityId,
-                    PinCode = corporateCompanyViewModelDto.PinCode,
-                    ContactPerson = corporateCompanyViewModelDto.ContactPerson,
-                    ContactNo = corporateCompanyViewModelDto.ContactNo,
-                    MobNo = corporateCompanyViewModelDto.MobNo,
-                    WhatsAppNo = corporateCompanyViewModelDto.WhatsAppNo,
-                    Email = corporateCompanyViewModelDto.Email,
-                    PANNo = corporateCompanyViewModelDto.PANNo,
-                    GSTNo = corporateCompanyViewModelDto.GSTNo,
-
+                    CompanyName = requestDto.CompanyName,
+                    AddressLine = requestDto.AddressLine,
+                    CityId = requestDto.CityId,
+                    PinCode = requestDto.PinCode,
+                    ContactPerson = requestDto.ContactPerson,
+                    ContactNo = requestDto.ContactNo,
+                    MobNo = requestDto.MobNo,
+                    WhatsAppNo = requestDto.WhatsAppNo,
+                    Email = requestDto.Email,
+                    PANNo = requestDto.PANNo,
+                    GSTNo = requestDto.GSTNo,
                     CreatedBy = Convert.ToInt32(profileid),
                     UpdatedBy = Convert.ToInt32(profileid)
                 };
@@ -60,43 +56,39 @@ namespace RFQ.UI.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> EditCorporateCompany([FromBody] CorporateCompanyViewModelDto corporateCompanyViewModelDto)
+        public async Task<IActionResult> EditCorporateCompany([FromBody] CorporateCompanyModel requestDto)
         {
             try
             {
-                int companyId = corporateCompanyViewModelDto.CompanyId;
+                int companyId = requestDto.CompanyId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 //string companyTypeId = jwt.Claims.First(c => c.Type == "companyTypeId").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                var company = new CorporateCompanyViewModelDto
+                var company = new CorporateCompanyModel
                 {
                     CompanyTypeId = 3,
 
-                    CompanyName = corporateCompanyViewModelDto.CompanyName,
-                    AddressLine = corporateCompanyViewModelDto.AddressLine,
-                    CityId = corporateCompanyViewModelDto.CityId,
-                    PinCode = corporateCompanyViewModelDto.PinCode,
-                    ContactPerson = corporateCompanyViewModelDto.ContactPerson,
-                    ContactNo = corporateCompanyViewModelDto.ContactNo,
-                    MobNo = corporateCompanyViewModelDto.MobNo,
-                    WhatsAppNo = corporateCompanyViewModelDto.WhatsAppNo,
-                    Email = corporateCompanyViewModelDto.Email,
-                    PANNo = corporateCompanyViewModelDto.PANNo,
-                    GSTNo = corporateCompanyViewModelDto.GSTNo,
+                    CompanyName = requestDto.CompanyName,
+                    AddressLine = requestDto.AddressLine,
+                    CityId = requestDto.CityId,
+                    PinCode = requestDto.PinCode,
+                    ContactPerson = requestDto.ContactPerson,
+                    ContactNo = requestDto.ContactNo,
+                    MobNo = requestDto.MobNo,
+                    WhatsAppNo = requestDto.WhatsAppNo,
+                    Email = requestDto.Email,
+                    PANNo = requestDto.PANNo,
+                    GSTNo = requestDto.GSTNo,
 
                     CreatedBy = Convert.ToInt32(profileid),
                     UpdatedBy = Convert.ToInt32(profileid)
                 };
                 var result = await _corporateCompanyService.EditCorporateCompany(companyId, company);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -104,27 +96,19 @@ namespace RFQ.UI.Controllers
             }
         }
 
-
-
         [HttpGet]
-        public async Task<IActionResult> ViewCorporateCompany(CorporateCompanyViewModel corporateCompanyViewModel)
+        public async Task<IActionResult> ViewCorporateCompany(CorporateCompanyModel requestDto)
         {
             try
             {
-                corporateCompanyViewModel ??= new CorporateCompanyViewModel();
+                List<CorporateCompanyModel> corporateCompanyModel = new List<CorporateCompanyModel>();
                 var userlist = await _corporateCompanyService.GetCorporateCompanyAll();
                 if (userlist != null && userlist.Count() > 0)
-                {
-                    corporateCompanyViewModel.corporateCompanyViewModelDto.AddRange(userlist);
-                }
+                    corporateCompanyModel.AddRange(userlist);
                 if (Request.IsAjaxRequest())
-                {
-                    return Json(corporateCompanyViewModel);
-                }
+                    return Json(corporateCompanyModel);
                 else
-                {
-                    return View(corporateCompanyViewModel);
-                }
+                    return View(corporateCompanyModel);
             }
             catch (Exception ex)
             {
@@ -139,18 +123,14 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _corporateCompanyService.DeleteCorporateCompany(companyId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
-            }      
+            }
 
         }
 
