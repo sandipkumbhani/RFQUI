@@ -19,8 +19,9 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> UpdateMasterAttachment(List<MasterAttachmentRequestDto> masterAttachmentRequestDto);
 
         Task<string> DeleteMasterAttachment(int attachmentId);
+        Task<string> DeleteMasterAttachmentTable(int attachmentId);
 
-        
+
 
     }
 }

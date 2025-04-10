@@ -109,7 +109,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpDelete("MasterAttachment/DeleteMasterAttachment/{attachmentId}")]
-        public async Task<IActionResult> DeleteCorporateCompany(int attachmentId)
+        public async Task<IActionResult> DeleteMasterAttachment(int attachmentId)
         {
             try
             {
@@ -129,6 +129,29 @@ namespace RFQ.UI.Controllers
             }
 
         }
+
+        [HttpDelete("MasterAttachment/DeleteMasterAttachmentTable/{attachmentId}")]
+        public async Task<IActionResult> DeleteMasterAttachmentTable(int attachmentId)
+        {
+            try
+            {
+                var result = await _masterAttachmentService.DeleteMasterAttachmentTable(attachmentId);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+
+        }
+
 
         [HttpPut]
         public async Task<IActionResult> UpdateMasterAttachment([FromBody] List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
