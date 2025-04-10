@@ -4,9 +4,6 @@
     Layout = "_Layout";
     ViewData["Title"] = "CorporateCompany";
 }
-@section Scripts {
-    <script src="~/js/Views/CorporateCompany.js"></script>
-}
 
 <div class="app-toolbar  pt-3 px-lg-3">
     <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
@@ -93,7 +90,7 @@
 
                                 <select name="franchise" aria-label="Select a Franchise/Corporate"
                                         data-control="select2" id="ddlFranchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                        <option value="">Select Franchise</option> 
+                                    <option value="">Select Franchise</option>
                                 </select>
                             </div>
                         </div>
@@ -175,9 +172,9 @@
                                         @* </div> *@
 
                                         <div class="col-md-2">
-                                        <button type="button" class="btnDeleteAttachment btn btn-sm btn-danger mt-10" data-repeater-delete>
-                                            <i class="bi bi-trash"></i> Delete
-                                        </button>
+                                            <button type="button" class="btnDeleteAttachment btn btn-sm btn-danger mt-10" data-repeater-delete>
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
                                         </div>
 
 
@@ -643,7 +640,7 @@
                 AttachmentTypeId: attachmentType,
                 AttachmentPath: filePath,
                 ReferenceLinkId: parseInt(linkd),
-                TransactionId:  $("#txtCompanyId").val()       
+                TransactionId:  $("#txtCompanyId").val()
             });
             }
             else{
@@ -692,7 +689,7 @@
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(updateAttachmentDetails),
                 dataType: "json",
-                success: function (response) {                    
+                success: function (response) {
                     if (response.result == "success") {
                         $("#dataDiv").html("Profile updated successfully!");
                         $("#addCorporateCompanyDiv").css('display', 'none');
@@ -719,7 +716,7 @@
        var deleteCorporateCompanyUrl = '@Url.Content("~/CorporateCompany/DeleteCorporateCompany/")' + companyId
         fetchMasterAttachment(linkId,companyId,function(list){
             result = list;
-          
+
         console.log(result);
          $.ajax({
             url: deleteCorporateCompanyUrl,
@@ -1066,9 +1063,9 @@
 
     $(document).on('click', '.btnDeleteAttachment', function () {
         var deleteUrl = '@Url.Content("~/MasterAttachment/DeleteAttachment")';
-        var deleteAttachmentUrl = '@Url.Content("~/MasterAttachment/DeleteMasterAttachment/")';
+        var deleteAttachmentUrl = '@Url.Content("~/MasterAttachment/DeleteMasterAttachmentTable/")';
         const $row = $(this).closest('[data-repeater-item]');
-      
+
         const fileName = $row.find("#txtUplodedFileName").val();
         const attachmentId = $row.find("#hdnAttachmentId").val();
         if (!fileName) {
