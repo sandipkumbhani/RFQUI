@@ -36,9 +36,9 @@ namespace RFQ.UI.Application.Provider
             return _masterAttachmentAdaptor.GetAllMasterAttachmentType();
         }
 
-        public Task<string> UpdateMasterAttachment(int attachmentId, MasterAttachmentRequestDto masterAttachmentRequestDto)
+        public Task<string> UpdateMasterAttachment(List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
-            return _masterAttachmentAdaptor.UpdateMasterAttachment(attachmentId, masterAttachmentRequestDto);
+            return _masterAttachmentAdaptor.UpdateMasterAttachment(masterAttachmentRequestDto);
         }
 
         public Task<string> DeleteMasterAttachment(int attachmentId)

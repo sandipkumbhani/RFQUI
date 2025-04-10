@@ -23,7 +23,7 @@ namespace RFQ.UI.Domain.RequestDto
         public string? GSTNo { get; set; }
         public string? LogoImage { get; set; } 
         public int ParentCompanyId { get; set; }
-        public int LinkId { get; set; } = 1;
+        public int LinkId { get; set; }
         public int StatusId { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }

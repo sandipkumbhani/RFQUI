@@ -16,7 +16,7 @@ namespace RFQ.UI.Domain.Interfaces
 
         Task<IEnumerable<MasterAttachmentTypeResponseDto>> GetAllMasterAttachmentType();
 
-        Task<string> UpdateMasterAttachment(int attachmentId, MasterAttachmentRequestDto masterAttachmentRequestDto);
+        Task<string> UpdateMasterAttachment(List<MasterAttachmentRequestDto> masterAttachmentRequestDto);
 
         Task<string> DeleteMasterAttachment(int attachmentId);
 

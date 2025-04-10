@@ -2,7 +2,7 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "CorporateCompany"; 
+    ViewData["Title"] = "CorporateCompany";
 }
 
 <div class="app-toolbar  pt-3 px-lg-3">
@@ -90,7 +90,7 @@
 
                                 <select name="franchise" aria-label="Select a Franchise/Corporate"
                                         data-control="select2" id="ddlFranchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    @* <option value="">Select Franchise</option> *@
+                                        <option value="">Select Franchise</option> 
                                 </select>
                             </div>
                         </div>
@@ -127,10 +127,10 @@
                     <div id="kt_docs_repeater_basic">
                         <div class="form-group">
                             <div data-repeater-list="kt_docs_repeater_basic">
-                                <input type="text" hidden id="txtAttachmentId" />
                                 <div data-repeater-item id="attachmentRow">
                                     <div class="form-group row">
                                         <div class="col-md-2">
+                                            <input type="number" hidden id="hdnAttachmentId" />
                                             <label class="form-label col-form-label fw-semibold fs-6">File Name</label>
                                             <input type="email" class="form-control mb-2 mb-md-0" id="txtFileName" placeholder="File Name" />
                                         </div>
@@ -140,27 +140,43 @@
                                                     data-control="select2" data-placeholder="Select a Attachment Type" class="ddlAttachment form-select select2 form-select-solid form-select-lg fw-semibold">
                                             </select>
                                         </div>
+
                                         <div class="col-md-2">
+                                            <input type="text" hidden id="txtUplodedFileName">
                                             <label class="form-label col-form-label fw-semibold fs-6">Choose File </label>
                                             <label class="input-group mb-3">
-                                                <input class="visually-hidden" id="fileUpload" type="file">
-                                                <span class="form-control">Choose File</span>
-                                            </label>
-                                        </div>
-                                        <input type="text" hidden id="txtUplodedFileName">
-                                        <div class="col-md-2">
-                                            <label class="form-label col-form-label fw-semibold fs-6">Upload  </label>
-                                            <label class="input-group mb-3">
-                                                <button type="button" class="btn btn-primary" id="btnUplodeAttachment">Upload</button>
+                                                <input class="visually-hidden file-upload" id="fileUpload" type="file">
+                                                <span id="spanText" class="form-control">Choose File</span>
                                             </label>
                                         </div>
 
-                                        <div class="col-md-4">
-                                            <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger mt-8 mt-md-8">
-                                                <i class="bi bi-trash"></i>
-                                                Delete
+                                        <div class="col-md-2">
+                                            <label class="form-label col-form-label fw-semibold fs-6">File Link</label>
+                                            <a id="fileLink" class="d-block text-primary mt-2" target="_blank">
+                                                View File
                                             </a>
                                         </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label col-form-label fw-semibold fs-6">Upload  </label>
+                                            <label class="input-group mb-3">
+                                                <button type="button" class="btn btn-primary upload-btn" id="btnUplodeAttachment">Upload</button>
+                                            </label>
+                                        </div>
+
+                                        @* <div class="col-md-2"> *@
+                                        @*     <button type="button" id="btnDeleteAttachment" class="btn btn-sm btn-danger mt-10 " data-repeater-delete> *@
+                                        @*         <i class="bi bi-trash"></i> Delete *@
+                                        @*     </button> *@
+                                        @* </div> *@
+
+                                        <div class="col-md-2">
+                                        <button type="button" class="btnDeleteAttachment btn btn-sm btn-danger mt-10" data-repeater-delete>
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                        </div>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -581,98 +597,125 @@
         });
     }
 
-    $(document).ready(function ()
-        {
-            $("#btnupdate").click(function (e) {
-                e.preventDefault();
 
-                
-                var formData = {
-                    CompanyId : $("#txtCompanyId").val(),
-                    CompanyName: $("#txtCompanyName").val(),
-                    MobNo: $("#txtMobileNumber").val(),
-                    ContactNo : $("#txtContactNumber").val(),
-                    AddressLine: $("#txtAddress").val(),
-                    CityId: $("#ddlCity").val(),
-                    PinCode: $("#txtPinCode").val(),
-                    ContactPerson: $("#txtPerson").val(),
-                    Email: $("#txtEmail").val(),
-                    WhatsAppNo: $("#txtWhatsAppNumber").val(),
-                    PANNo: $("#txtPanNumber").val(),
-                    GSTNo: $("#txtGstNumber").val(),
-                    ParentCompanyId : $("#ddlFranchisename").val(),
-                }
-                
-                var attachmantData = {
-                   
-                    AttachmentId: $("#txtAttachmentId").val(),
-                    AttachmentName: $("#txtFileName").val(),
-                    AttachmentPath: $("#fileUpload").val(),
-                    AttachmentTypeId: $(".ddlAttachment").val(),
-                    ReferenceLinkId : GetQueryParam("LinkId"),
-                    TransactionId : $("#txtCompanyId").val(),
+    $(document).ready(function () {
+        $("#btnupdate").click(function (e) {
+            e.preventDefault();
+             var companyId = 0;
 
-                }
+            var formData = {
+                CompanyId: $("#txtCompanyId").val(),
+                CompanyName: $("#txtCompanyName").val(),
+                MobNo: $("#txtMobileNumber").val(),
+                ContactNo: $("#txtContactNumber").val(),
+                AddressLine: $("#txtAddress").val(),
+                CityId: $("#ddlCity").val(),
+                PinCode: $("#txtPinCode").val(),
+                ContactPerson: $("#txtPerson").val(),
+                Email: $("#txtEmail").val(),
+                WhatsAppNo: $("#txtWhatsAppNumber").val(),
+                PANNo: $("#txtPanNumber").val(),
+                GSTNo: $("#txtGstNumber").val(),
+                ParentCompanyId: $("#ddlFranchisename").val(),
+                LinkId: GetQueryParam("LinkId")
+            };
 
-                $.ajax({
-                    type: "PUT",
-                    url: "/CorporateCompany/EditCorporateCompany",
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(formData),
-                    dataType: "json",
-                    success: function (result) {
-                        if (result.result == "success") {
-                            $("#dataDiv").html("Profile updated successfully!");
-                            $("#addCorporateCompanyDiv").css('display', 'none')
-                            fetchCorporateCompany();
-                        } else {
-                            $("#dataDiv").html("Failed to update profile.");
-                        }
-                        $("#btnSaveCompanyType").show();
-                        $("#btnupdate").hide();
-                        $("#btnsaveandnew").prop("disabled", false);
-                        $("#viewprofile").click();
-                    },
-                    error: function (xhr, status, error) {
-                        $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+            let repeaterItems = document.querySelectorAll("[data-repeater-item]");
+            let updateAttachmentDetails = [];
+            var linkd = GetQueryParam("LinkId");
+
+            repeaterItems.forEach((item, index) => {
+            //let attId = item.querySelector("#hdnAttachmentId").value;
+            let attachmentId = item.querySelector("#hdnAttachmentId").value;
+            let fileName = item.querySelector("#txtFileName")?.value || "N/A";
+            let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
+            let filePath = item.querySelector("#txtUplodedFileName").value;
+
+            if(attachmentId){
+                 updateAttachmentDetails.push({
+                // index: index + 1,
+                AttachmentId : attachmentId,
+                AttachmentName: fileName,
+                AttachmentTypeId: attachmentType,
+                AttachmentPath: filePath,
+                ReferenceLinkId: parseInt(linkd),
+                TransactionId:  $("#txtCompanyId").val()       
+            });
+            }
+            else{
+                updateAttachmentDetails.push({
+                // index: index + 1,
+                // AttachmentId : attachmentId,
+                AttachmentName: fileName,
+                AttachmentTypeId: attachmentType,
+                AttachmentPath: filePath,
+                ReferenceLinkId: parseInt(linkd),
+                TransactionId: $("#txtCompanyId").val()
+            });
+            }
+        });
+
+
+            // First AJAX call
+            $.ajax({
+                type: "PUT",
+                url: "/CorporateCompany/EditCorporateCompany",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(formData),
+                dataType: "json",
+                success: function (result) {
+                    if (result.result == "success") {
+                        $("#dataDiv").html("Profile updated successfully!");
+                        $("#addCorporateCompanyDiv").css('display', 'none');
+                        fetchCorporateCompany();
+                    } else {
+                        $("#dataDiv").html("Failed to update profile.");
                     }
-                });
+                    $("#btnSaveCompanyType").show();
+                    $("#btnupdate").hide();
+                    $("#btnsaveandnew").prop("disabled", false);
+                    $("#viewprofile").click();
+                },
+                error: function (xhr, status, error) {
+                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                }
+            });
 
-
-                $.ajax({
-                    type: "PUT",
-                    url: "/MasterAttachment/UpdateMasterAttachment",
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(attachmantData),
-                    dataType: "json",
-                    success: function (result) {
-                        
-                        if (result.result == "success") {
-                            $("#dataDiv").html("Profile updated successfully!");
-                            $("#addCorporateCompanyDiv").css('display', 'none')
-                            fetchCorporateCompany();
-                        } else {
-                            $("#dataDiv").html("Failed to update profile.");
-                        }
-                        $("#btnSaveCompanyType").show();
-                        $("#btnupdate").hide();
-                        $("#btnsaveandnew").prop("disabled", false);
-                        $("#viewprofile").click();
-                    },
-                    error: function (xhr, status, error) {
-                        $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+            // Second AJAX call
+            $.ajax({
+                type: "PUT",
+                url: "/MasterAttachment/UpdateMasterAttachment",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(updateAttachmentDetails),
+                dataType: "json",
+                success: function (response) {                    
+                    if (response.result == "success") {
+                        $("#dataDiv").html("Profile updated successfully!");
+                        $("#addCorporateCompanyDiv").css('display', 'none');
+                        fetchCorporateCompany();
+                         companyId = $("#txtCompanyId").val();
+                        Saveattachment(companyId);
+                    } else {
+                        $("#dataDiv").html("Failed to update profile.");
                     }
-                });
+                    $("#btnSaveCompanyType").show();
+                    $("#btnupdate").hide();
+                    $("#btnsaveandnew").prop("disabled", false);
+                    $("#viewprofile").click();
+                },
+                error: function (xhr, status, error) {
+                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                }
             });
         });
+    });
 
     function deleteCorporateCompany(companyId,linkId) {
         var result;
        var deleteCorporateCompanyUrl = '@Url.Content("~/CorporateCompany/DeleteCorporateCompany/")' + companyId
-        fetchMasterAttachment(linkId,companyId,function(){
+        fetchMasterAttachment(linkId,companyId,function(list){
             result = list;
-            return result;
-        });
+          
         console.log(result);
          $.ajax({
             url: deleteCorporateCompanyUrl,
@@ -686,13 +729,13 @@
                 toastr.error("Failed to fetch data!", "Error");
             }
         });
+        });
     }
 
 
 
     function deleteMasterAttachment(attachmentId) {
        var deleteMasterAttachmentUrl = '@Url.Content("~/MasterAttachment/DeleteMasterAttachment/")' + attachmentId
-       
          $.ajax({
             url: deleteMasterAttachmentUrl,
             type: "DELETE",
@@ -702,7 +745,7 @@
                 fetchCorporateCompany();
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to fetch data!", "Error"); 
+                toastr.error("Failed to fetch data!", "Error");
             }
         });
     }
@@ -826,13 +869,11 @@
         var linkd = GetQueryParam("LinkId");
 
         repeaterItems.forEach((item, index) => {
-           
-            // let attachmentId = itemquerySelector("#txtAttachmentId")?.value || "N/A";
+
             let fileName = item.querySelector("#txtFileName")?.value || "N/A";
             let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-            // console.log(attachmentType);
             let fileUpload = item.querySelector("#fileUpload");
-            let filePath = fileUpload?.files.length > 0 ? fileUpload.files[0].name : "No file chosen";
+            let filePath = item.querySelector("#txtUplodedFileName")?.value
 
             attachmentDetails.push({
                 // index: index + 1,
@@ -849,8 +890,7 @@
         return attachmentDetails;
     }
 
-     function Saveattachment(transactionId) {
-        
+    function Saveattachment(transactionId) {
         var attachmentListData = GetAttachmentList("[data-repeater-item]", transactionId);
         var attachmentSaveUrl = '@Url.Content("~/MasterAttachment/MasterAttachmentSave")';
         $.ajax({
@@ -876,7 +916,7 @@
             type: "GET",
             dataType: "json",
             success: function (response) {
-                debugger;
+
                 list = response; // Assign globally
                 console.log("List updated:", list);
                 if (callback) {
@@ -886,6 +926,7 @@
         });
     }
 
+
     function EditCorporateCompany(companyId) {
         var data = corporateCompanyViewModelDto.filter(x => x.companyId == companyId);
         if (data.length === 0) {
@@ -894,10 +935,8 @@
         }
 
         var formData = data[0];
-        debugger;
-        
-        fetchMasterAttachment(formData.linkId, companyId, 
-        function (list) {
+
+        fetchMasterAttachment(formData.linkId, companyId, function (list) {
             var attachmantData = list;
 
             $('#tableDiv').hide();
@@ -919,19 +958,35 @@
             $("#txtPanNumber").val(formData.panNo);
             $("#txtGstNumber").val(formData.gstNo);
             $("#ddlFranchisename").val(formData.parentCompanyId);
-           
-            debugger;
-            if (attachmantData.length > 0) {
 
-                $("#txtAttachmentId").val(attachmantData[0].attachmentId);
-                $("#txtFileName").val(attachmantData[0].attachmentName);
-                $("#fileUpload").val(attachmantData[0].attachmentPath);
-                $(".ddlAttachment").val(attachmantData[0].attachmentTypeId)
+            if (attachmantData.length > 0) {
+                const repeaterList = $("[data-repeater-list='kt_docs_repeater_basic']");
+
+                repeaterList.find("[data-repeater-item]").not(":first").remove();
+
+                attachmantData.forEach((attachment, index) => {
+
+                    let currentItem;
+                    if (index === 0) {
+                        currentItem = repeaterList.find("[data-repeater-item]").first();
+                    } else {
+
+                        $("[data-repeater-create]").click();
+                        currentItem = repeaterList.find("[data-repeater-item]").last();
+                    }
+                    currentItem.find("#hdnAttachmentId").val(attachment.attachmentId);
+                    currentItem.find("#txtFileName").val(attachment.attachmentName);
+                    currentItem.find("#fileUpload").text(attachment.attachmentPath);
+                    currentItem.find(".ddlAttachment").val(attachment.attachmentTypeId).trigger("change");
+                    currentItem.find("#txtUplodedFileName").val(attachment.attachmentPath);
+                    currentItem.find("#fileLink").attr("href",`../../AttachmentFiles/${attachment.attachmentPath}`);
+                });
             } else {
                 console.warn("No attachment data found for companyId:", companyId);
             }
         });
     }
+
 
 
     function GetAllCityList() {
@@ -971,44 +1026,140 @@
         });
 
         $('.selectpicker').selectpicker('refresh');
-     }
+    }
 
-    $("#btnUplodeAttachment").on('click', function () {
+
+    $(document).on('click', '.upload-btn', function () {
         var uploadUrl = '@Url.Content("~/MasterAttachment/UploadAttachment")';
-        var formData = new FormData();
-
-        var fileInput = $("#fileUpload")[0].files[0];
+        const $row = $(this).closest('[data-repeater-item]');
+        const fileInput = $row.find('.file-upload')[0].files[0];
+        const spanText = $row.find('#spanText');
         if (!fileInput) {
-            toastr.error("Please select a file to upload.", "Error");
+            alert("Please choose a file.");
             return;
         }
-
+        const formData = new FormData();
         formData.append("file", fileInput);
-        formData.append("AttachmentName", $("#txtFileName").val());
-        formData.append("AttachmentTypeId", $(".ddlAttachment").val());
-
-
-
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ": " + pair[1]);
-        }
-
         $.ajax({
             url: uploadUrl,
-            type: "POST",
-            processData: false,
-            contentType: false,
+            type: 'POST',
             data: formData,
+            contentType: false,
+            processData: false,
             success: function (response) {
-                $("#txtUplodedFileName").val(response.fileName);
+                $row.find('#txtUplodedFileName').val(response.fileName); // Save to hidden input
+                $row.find("#fileLink").attr("href",`../../AttachmentFiles/${response.fileName}`);
+                spanText.text(response.fileName); // Update label
                 toastr.success("Master Attachment submitted successfully!");
-
             },
-            error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to upload Master Attachment", "Error");
+            error: function () {
+                alert("Upload failed. Please try again.");
             }
         });
     });
+
+
+
+    $(document).on('click', '.btnDeleteAttachment', function () {
+        var deleteUrl = '@Url.Content("~/MasterAttachment/DeleteAttachment")';
+        var deleteAttachmentUrl = '@Url.Content("~/MasterAttachment/DeleteMasterAttachment/")';
+        const $row = $(this).closest('[data-repeater-item]');
+      
+        const fileName = $row.find("#txtUplodedFileName").val();
+        const attachmentId = $row.find("#hdnAttachmentId").val();
+        if (!fileName) {
+            toastr.error("No file available to delete.", "Error");
+            return;
+        }
+
+        if (!confirm("Are you sure you want to delete this file?")) {
+            return;
+        }
+        debugger;
+        $.ajax({
+            url: deleteUrl,
+            type: "POST",
+            data: { fileName: fileName },
+            success: function (response) {
+                if (response.result === "Success") {
+                    // toastr.success(response.message);
+                    // $row.find("#txtUplodedFileName").val("");
+                    // $row.find("#fileUpload").val("");
+                    // $row.find("#txtFileName").val("");
+                    // $row.find(".ddlAttachment").val("");
+                    // $row.find(".btnDeleteAttachment").hide();
+                } else {
+                    toastr.error(response.message, "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Delete Error:", error);
+                toastr.error("Failed to delete attachment", "Error");
+            }
+        });
+        if(attachmentId){
+            $.ajax({
+            url: deleteAttachmentUrl+attachmentId,
+            type: "DELETE",
+            success: function (response) {
+                if (response.result === "success") {
+                    toastr.success(response.message);
+
+                    $row.find("#txtUplodedFileName").val("");
+                    $row.find("#fileUpload").val("");
+                    $row.find("#txtFileName").val("");
+                    $row.find(".ddlAttachment").val("");
+                    $row.find(".btnDeleteAttachment").hide();
+                } else {
+                    toastr.error(response.message, "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Delete Error:", error);
+                toastr.error("Failed to delete attachment", "Error");
+            }
+        });
+        }
+    });
+
+
+
+    // var deleteUrl = '@Url.Action("DeleteAttachment", "MasterAttachment")';
+
+    // $("#btnDeleteAttachment").on('click', function () {
+    //     var fileName = $("#txtUplodedFileName").val();
+    //     if (!fileName) {
+    //         toastr.error("No file available to delete.", "Error");
+    //         return;
+    //     }
+
+    //     if (!confirm("Are you sure you want to delete this file?")) {
+    //         return;
+    //     }
+
+    //     $.ajax({
+    //         url: deleteUrl,
+    //         type: "POST",
+    //         data: { fileName: fileName },
+    //         success: function (response) {
+    //             if (response.result === "Success") {
+    //                 toastr.success(response.message);
+
+    //                 $("#txtUplodedFileName").val("");
+    //                 $("#fileUpload").val("");
+    //                 $("#txtFileName").val("");
+    //                 $(".ddlAttachment").val("");
+    //                 $("#btnDeleteAttachment").hide();
+    //             } else {
+    //                 toastr.error(response.message, "Error");
+    //             }
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error("Delete Error:", error);
+    //             toastr.error("Failed to delete attachment", "Error");
+    //         }
+    //     });
+    // });
+
 
 </script>

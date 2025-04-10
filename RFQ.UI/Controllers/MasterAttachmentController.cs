@@ -131,19 +131,19 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateMasterAttachment([FromBody] MasterAttachmentRequestDto masterAttachmentRequestDto)
+        public async Task<IActionResult> UpdateMasterAttachment([FromBody] List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
             try
             {
-                int attachmentId = masterAttachmentRequestDto.AttachmentId;
+                if (masterAttachmentRequestDto == null || !masterAttachmentRequestDto.Any())
+                {
+                    return BadRequest("Request list is empty.");
+                }
+                int attachmentId = masterAttachmentRequestDto.First().AttachmentId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                //masterAttachmentRequestDto .CreatedBy = Convert.ToInt32(profileid);
-                //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(profileid);
-
-                var result = await _masterAttachmentService.UpdateMasterAttachment(attachmentId, masterAttachmentRequestDto);
+                var result = await _masterAttachmentService.UpdateMasterAttachment(masterAttachmentRequestDto);
                 if (result != null)
                 {
                     return Json(new { result = "success" });
@@ -158,7 +158,6 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
 
 
         [HttpPost]
@@ -192,5 +191,36 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "Error", message = ex.Message });
             }
         }
+
+        [HttpPost]
+        public IActionResult DeleteAttachment(string fileName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    return Json(new { result = "Error", message = "File name is required." });
+                }
+
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "AttachmentFiles");
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                    return Json(new { result = "Success", message = "File deleted successfully." });
+                }
+                else
+                {
+                    return Json(new { result = "Error", message = "File not found." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
+
     }
 }

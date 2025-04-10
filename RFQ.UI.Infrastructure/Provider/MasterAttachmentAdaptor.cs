@@ -133,13 +133,12 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             return "Failed to Delete MasterAttachment";
         }
-
-        public async Task<string> UpdateMasterAttachment(int attachmentId, MasterAttachmentRequestDto masterAttachmentRequestDto)
+        public async Task<string> UpdateMasterAttachment(List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/UpdateMasterAttachment/{attachmentId}";    
+            var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/    ";    
             var vehicle = JsonConvert.SerializeObject(masterAttachmentRequestDto);
             var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
