@@ -2,8 +2,8 @@
 
 $(document).ready(function () {
     GetAllCityList();
-    var GetUrl = '/CorporateCompany/GetAllFranchise';
 
+    var GetUrl = '/CorporateCompany/GetAllFranchise';
     $.ajax({
         url: GetUrl,
         type: "GET",
@@ -69,8 +69,6 @@ $(document).ready(function () {
     var corporateCompanyViewModelDto
     var list
 
-
-
     // View Button click Call Api
     $(document).on("click", "#viewButton", function () {
         fetchCorporateCompany();
@@ -82,7 +80,7 @@ $(document).ready(function () {
     $("#txtCompanyName").on("change", function () {
         var CompanyNa = $(this).val();
         if (!isAlphabets(CompanyNa)) {
-            $("#txtCompanyName").val('');
+            $(this).focus();
             toastr.warning("Please enter a valid Corporate Company", "Warning");
             return;
         }
@@ -90,7 +88,7 @@ $(document).ready(function () {
     $("#txtCompanyCode").on("change", function () {
         var CompanyCo = $(this).val();
         if (!isAlphabets(CompanyCo)) {
-            $("#txtCompanyCode").val('');
+            $(this).focus();
             toastr.warning("Please enter a Corporate Company Code", "Warning");
             return;
         }
@@ -98,17 +96,15 @@ $(document).ready(function () {
     $("#txtWhatsAppNumber").on("change", function () {
         var whats = $(this).val();
         if (!isMobile(whats)) {
-            $("#txtWhatsAppNumber").val('');
+            $(this).focus();
             toastr.warning("Please enter a whatsApp number", "Warning");
-
-
             return;
         }
     });
     $("#txtMobileNumber").on("change", function () {
         var MobileNum = $(this).val();
         if (!isMobile(MobileNum)) {
-            $("#txtMobileNumber").val('');
+            $(this).focus();
             toastr.warning("Please enter a valid 10-digit mobile number", "Warning");
             return;
         }
@@ -218,11 +214,10 @@ $(document).ready(function () {
         GetAllCityList();
     });
 
-    ButtonUpdateClick();
+    BouttonUpdateClick();
 });
-
 function GetAllCityList() {
-    var deleteCustomerUrl = '@Url.Content("~/Customer/GetAllCity")'
+    var deleteCustomerUrl = '/Customer/GetAllCity';
     $.ajax({
         url: deleteCustomerUrl,
         type: "GET",
@@ -248,7 +243,106 @@ function BindDropDown(data) {
 
     $('.selectpicker').selectpicker('refresh');
 }
-function ButtonUpdateClick() {
+function fetchMasterAttachment(linkid, transactionid) {
+    var fetchMasterAttachmentUrl = '/MasterAttachment/GetAllMasterAttachment';
+
+    $.ajax({
+        url: fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            list = response; // Assign to the global list variable
+            console.log("Updated List:", list);
+
+        }
+    });
+    return list;
+}
+function fetchCorporateCompany() {
+    $('#tableDiv').show();
+    var fetchCorporateCompanyUrl = '/CorporateCompany/ViewCorporateCompany';
+    $.ajax({
+        url: fetchCorporateCompanyUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            let trlist = response.filter(x => x.companyTypeId == 3);
+            corporateCompanyViewModelDto = response;
+            if ($.fn.DataTable.isDataTable('#tableCorporateCompany')) {
+                $('#tableCorporateCompany').DataTable().clear().destroy();
+            }
+
+
+            $('#tableCorporateCompany').DataTable({
+                "processing": true,
+                "serverSide": false,
+                "paging": true,
+                "pageLength": 10,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "scrollX": true,
+
+                "data": trlist,
+                "columns": [
+
+                    { "data": "companyTypeId" },
+                    { "data": "companyName" },
+                    { "data": "addressLine" },
+                    { "data": "cityId" },
+                    { "data": "pinCode" },
+                    { "data": "contactPerson" },
+                    { "data": "mobNo" },
+                    { "data": "contactNo" },
+                    { "data": "whatsAppNo" },
+                    { "data": "email" },
+                    { "data": "panNo" },
+                    { "data": "gstNo" },
+
+
+                    {
+                        "data": function (row) {
+                            return { CompanyId: row.companyId, LinkId: row.linkId }
+                        },
+                        "render": function (data, type, row) {
+                            return `
+<div class="btn-group" role="group">
+
+    <button type="button" class="btn btn-sm btn-primary"
+        onclick="EditCorporateCompany(${data.CompanyId})">
+        <i class="ti ti-edit"></i> Edit
+    </button>
+    <button type="button" class="btn btn-sm btn-danger"
+        onclick="deleteCorporateCompany(${data.CompanyId},${data.LinkId})">
+        <i class="ti ti-trash"></i> Delete
+    </button>
+</div>`;
+                        },
+                    }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": "_all",
+                        "className": "text-center"
+                    }
+                ]
+            });
+
+
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error);
+            toastr.error("Failed to fetch data!", "Error");
+        }
+    });
+}
+function BouttonUpdateClick() {
     $("#btnupdate").click(function (e) {
         e.preventDefault();
         var companyId = 0;
@@ -359,105 +453,6 @@ function ButtonUpdateClick() {
         });
     });
 };
-function fetchMasterAttachment(linkid, transactionid) {
-    var fetchMasterAttachmentUrl = '@Url.Content("~/MasterAttachment/GetAllMasterAttachment")';
-
-    $.ajax({
-        url: fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            list = response; // Assign to the global list variable
-            console.log("Updated List:", list);
-
-        }
-    });
-    return list;
-}
-function fetchCorporateCompany() {
-    $('#tableDiv').show();
-    var fetchCorporateCompanyUrl = '/CorporateCompany/ViewCorporateCompany';
-    $.ajax({
-        url: fetchCorporateCompanyUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            let trlist = response.filter(x => x.companyTypeId == 3);
-            corporateCompanyViewModelDto = response;
-            if ($.fn.DataTable.isDataTable('#tableCorporateCompany')) {
-                $('#tableCorporateCompany').DataTable().clear().destroy();
-            }
-
-
-            $('#tableCorporateCompany').DataTable({
-                "processing": true,
-                "serverSide": false,
-                "paging": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "scrollX": true,
-
-                "data": trlist,
-                "columns": [
-
-                    { "data": "companyTypeId" },
-                    { "data": "companyName" },
-                    { "data": "addressLine" },
-                    { "data": "cityId" },
-                    { "data": "pinCode" },
-                    { "data": "contactPerson" },
-                    { "data": "mobNo" },
-                    { "data": "contactNo" },
-                    { "data": "whatsAppNo" },
-                    { "data": "email" },
-                    { "data": "panNo" },
-                    { "data": "gstNo" },
-
-
-                    {
-                        "data": function (row) {
-                            return { CompanyId: row.companyId, LinkId: row.linkId }
-                        },
-                        "render": function (data, type, row) {
-                            return `
-    <div class="btn-group" role="group">
-
-        <button type="button" class="btn btn-sm btn-primary"
-            onclick="EditCorporateCompany(${data.CompanyId})">
-            <i class="ti ti-edit"></i> Edit
-        </button>
-        <button type="button" class="btn btn-sm btn-danger"
-            onclick="deleteCorporateCompany(${data.CompanyId},${data.LinkId})">
-            <i class="ti ti-trash"></i> Delete
-        </button>
-    </div>`;
-                        },
-                    }
-                ],
-                "columnDefs": [
-                    {
-                        "targets": "_all",
-                        "className": "text-center"
-                    }
-                ]
-            });
-
-
-        },
-        error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
-        }
-    });
-}
 function deleteCorporateCompany(companyId, linkId) {
     var result;
     var deleteCorporateCompanyUrl = '/CorporateCompany/DeleteCorporateCompany/' + companyId
@@ -531,6 +526,12 @@ function SaveAndSaveNew() {
         toastr.warning("Please enter a valid 10-digit contact number", "Warning");
         return;
     }
+
+
+    // if (!isValidAddress(address)) {
+    //     toastr.warning("Please enter a Address", "Warning");
+    //     return;
+    // }
 
     if (!isValidateSelect(city)) {
         toastr.warning("Please enter a City", "Warning");
@@ -787,8 +788,8 @@ $(document).on('click', '.upload-btn', function () {
 });
 
 $(document).on('click', '.btnDeleteAttachment', function () {
-    var deleteUrl = '/MasterAttachment/DeleteAttachment';
-    var deleteAttachmentUrl = '@Url.Content("~/MasterAttachment/DeleteMasterAttachment/")';
+    var deleteUrl = '/MasterAttachment/DeleteAttachment'
+    var deleteAttachmentUrl = '/MasterAttachment/DeleteMasterAttachmentTable/'
     const $row = $(this).closest('[data-repeater-item]');
 
     const fileName = $row.find("#txtUplodedFileName").val();
@@ -847,4 +848,6 @@ $(document).on('click', '.btnDeleteAttachment', function () {
         });
     }
 });
+
+
 
