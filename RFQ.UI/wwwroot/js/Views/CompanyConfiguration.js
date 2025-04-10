@@ -47,36 +47,6 @@ function GetAllCompany() {
 };
 
 function CheckValidation() {
-
-    var company = $('#company').val();
-    var smsProvider = $('#smsProvider').val();
-    var whatsappProvider = $('#whatsappProvider').val();
-    var smsAuthKey = $('#smsAuthKey').val();
-    var whatsappAuthKey = $('#whatsappAuthKey').val();
-    var smtpHost = $('#smtpHost').val();
-    var smtpUserName = $('#smtpUserName').val();
-    var smtpPort = $('#smtpPort').val();
-    var smtpPassword = $('#smtpPassword').val();
-
-    if (IsNullOrEmpty(company))
-        return toastr.warning("Please enter company");
-    if (IsNullOrEmpty(smsProvider))
-        return toastr.warning("Please enter smsProvider");
-    if (IsNullOrEmpty(whatsappProvider))
-        return toastr.warning("Please enter whatsappProvider");
-    if (IsNullOrEmpty(smsAuthKey))
-        return toastr.warning("Please enter smsAuthKey");
-    if (IsNullOrEmpty(whatsappAuthKey))
-        return toastr.warning("Please enter whatsappAuthKey");
-    if (IsNullOrEmpty(smtpHost))
-        return toastr.warning("Please enter smtpHost");
-    if (IsNullOrEmpty(smtpUserName))
-        return toastr.warning("Please enter smtpUserName");
-    if (IsNullOrEmpty(smtpPort))
-        return toastr.warning("Please enter smtpPort");
-    if (IsNullOrEmpty(smtpPassword))
-        return toastr.warning("Please enter smtpPassword");
-
     $("#smsAuthKey").on("blur change", function () {
         if (!IsValidAuthKey($(this).val())) {
             toastr.warning("Please enter a valid SMS authorization Key", "Warning");
@@ -117,6 +87,37 @@ function CheckValidation() {
             return;
         }
     });
+}
+
+function CheckNullFiled() {
+    var company = $('#company').val();
+    var smsProvider = $('#smsProvider').val();
+    var whatsappProvider = $('#whatsappProvider').val();
+    var smsAuthKey = $('#smsAuthKey').val();
+    var whatsappAuthKey = $('#whatsappAuthKey').val();
+    var smtpHost = $('#smtpHost').val();
+    var smtpUserName = $('#smtpUserName').val();
+    var smtpPort = $('#smtpPort').val();
+    var smtpPassword = $('#smtpPassword').val();
+
+    if (IsNullOrEmpty(company))
+        return toastr.warning("Please enter company");
+    if (IsNullOrEmpty(smsProvider))
+        return toastr.warning("Please enter smsProvider");
+    if (IsNullOrEmpty(whatsappProvider))
+        return toastr.warning("Please enter whatsappProvider");
+    if (IsNullOrEmpty(smsAuthKey))
+        return toastr.warning("Please enter smsAuthKey");
+    if (IsNullOrEmpty(whatsappAuthKey))
+        return toastr.warning("Please enter whatsappAuthKey");
+    if (IsNullOrEmpty(smtpHost))
+        return toastr.warning("Please enter smtpHost");
+    if (IsNullOrEmpty(smtpUserName))
+        return toastr.warning("Please enter smtpUserName");
+    if (IsNullOrEmpty(smtpPort))
+        return toastr.warning("Please enter smtpPort");
+    if (IsNullOrEmpty(smtpPassword))
+        return toastr.warning("Please enter smtpPassword");
 }
 
 function GetAllProviders() {
@@ -174,6 +175,8 @@ function GetAllProviders() {
 function SaveConfigration() {
     var saveConfigrationUrl = '/CompanyConfiguration/CompanyConfigurationSave';
     $('#btnSaveForm').click(function () {
+        CheckNullFiled();
+        CheckValidation();
         var company = $('#company').val();
         var smsProvider = $('#smsProvider').val();
         var whatsappProvider = $('#whatsappProvider').val();
