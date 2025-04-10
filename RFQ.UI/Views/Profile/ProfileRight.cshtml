@@ -130,7 +130,7 @@
              type: "GET",
              dataType: "json",
              success: function (response) {
-                   // debugger;
+                 //debugger;
                  console.log(response);
                  var data = response
                  const selectProfileName = document.getElementById("txtName");
@@ -156,35 +156,59 @@
          });
      }
 
-     function GetAllMenuName() {
+     function GetAllMenuName() 
+     {
         $.ajax({
-             url: 'LinkGroup/GetAllLinkGroup',
+            url: '/Profile/GetAllMenuGroup',
             type: "GET",
             dataType: "json",
-            success: function (response) {
-                //debugger;
+            success: function (response)
+            {
+                debugger;
                 console.log(response);
                 var data = response
-                const selectProfileName = document.getElementById("txtMenu");
+                const selectProfileRightsName = document.getElementById("txtMenu");
                 let placeholderOption = document.createElement("option");
                 placeholderOption.value = "";
-                placeholderOption.textContent = "Select Profile";
+                placeholderOption.textContent = "Select Menu Group Name";
                 placeholderOption.disabled = true;
                 placeholderOption.selected = true;
-                 selectProfileName.appendChild(placeholderOption);
+                 selectProfileRightsName.appendChild(placeholderOption);
                 data.forEach(option => {
                     let opt = document.createElement("option");
-                    opt.value = option.linkgroupId;
-                    opt.textContent = option.linkgroupName;
-                    selectProfileName.appendChild(opt);
+                    opt.value = option.linkGroupId;
+                    opt.textContent = option.linkGroupName;
+                    selectProfileRightsName.appendChild(opt);
                 });
 
                 $('.selectpicker').selectpicker('refresh');
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
+                console.log("Response Text:",xhr.response.Text);
                 toastr.error("Failed to fetch data!", "Error");
             }
         });
     }
+
+     function GetAllLinkItems(linkGroupId) {
+
+        var GetUrl = '@Url.Content("~/Profile/GetAllLinkItems")';
+        $.ajax({
+            url: GetUrl,
+            type: "GET",
+            contentType: "application/json",
+            success: function (response) {
+                console.log(response);
+                deb
+                var data = response.filter(x => x.linkGroupId == Number(linkGroupId));
+               
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                toastr.error("Failed to submit LinkMenu Item ", "Error");
+            }
+        });
+    }
+
 </script>

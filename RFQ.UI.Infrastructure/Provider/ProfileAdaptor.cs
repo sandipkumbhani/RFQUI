@@ -80,5 +80,47 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+        public async Task<IEnumerable<LinkGroupResponseDto>> GetAllMenuGroup()
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["ProfileRight:GetAllLinkGroup"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var alllist = JsonConvert.DeserializeObject<List<LinkGroupResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return alllist;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<IEnumerable<LinkItemResponseDto>> GetAllLinkItems()
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["ProfileRight:GetAllLinkItem"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var alllist = JsonConvert.DeserializeObject<List<LinkItemResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return alllist;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }
