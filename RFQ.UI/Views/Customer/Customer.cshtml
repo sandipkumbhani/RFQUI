@@ -771,7 +771,7 @@
         });
 
      $("#panEKycButton").on("click",function(){
-             var getUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
+             var getPanKycUrl = '@Url.Content("~/Customer/GetPanKycDetails")';
              var panNumber= $("#txtPanNumber").val();
 
              if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panNumber.toUpperCase())) {
