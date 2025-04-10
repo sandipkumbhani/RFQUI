@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
 using RFQ.UI.Models;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using static RFQ.UI.Domain.Model.UserViewModel;
 
 namespace RFQ.UI.Controllers
 {
@@ -50,29 +50,21 @@ namespace RFQ.UI.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult UserSave([FromBody] UserViewModelDto userViewModelDto)
+        public IActionResult UserSave([FromBody] UserRequestDto userRequestDto)
         {
-            if (userViewModelDto != null)
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+            // string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+            if (userRequestDto != null)
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                // userRequestDto.CompanyId = Convert.ToInt32(companyid);
+                userRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                userRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                userRequestDto.ProfileId = Convert.ToInt32(profileid);
 
-                var User = new UserViewModelDto()
-                {
-                    CompanyId = Convert.ToInt32(companyid),
-                    PersonName = userViewModelDto.PersonName,
-                    MobileNo = userViewModelDto.MobileNo,
-                    EmailId = userViewModelDto.EmailId,
-                    LocationId = userViewModelDto.LocationId,
-                    LoginId = userViewModelDto.LoginId,
-                    Password = userViewModelDto.Password,
-                    CreatedBy = Convert.ToInt32(profileid),
-                    UpdatedBy = Convert.ToInt32(profileid),
-                    ProfileId = Convert.ToInt32(profileid),
 
-                };
-                var result = _usersService.AddUsers(User);
+                var result = _usersService.AddUsers(userRequestDto);
                 return Json(new { result = "success" });
             }
             else
@@ -81,55 +73,51 @@ namespace RFQ.UI.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> ViewUserList(UserViewModel userViewModel)
+        public async Task<IActionResult> ViewUserList()
         {
             try
             {
-                userViewModel ??= new UserViewModel();
                 var userlist = await _usersService.GetAllUser();
-                if (userlist != null && userlist.Count() > 0)
-                {
-                    userViewModel.userViewModelDtos.AddRange(userlist);
-                }
+
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(userViewModel);
+                    return Json(userlist);
                 }
                 else
                 {
-                    return Json(userViewModel);
+                    return Json(userlist);
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
         [HttpPut]
-        public async Task<IActionResult> EditUserList([FromBody] UserViewModelDto userViewModelDto)
+        public async Task<IActionResult> EditUserList([FromBody] UserRequestDto userRequestDto)
         {
             try
             {
-                int userId = userViewModelDto.UserId;
+                int userId = userRequestDto.UserId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+                //string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                var user = new UserViewModelDto()
-                {
-                    UserId = userViewModelDto.UserId,
-                    CompanyId = Convert.ToInt32(companyid),
-                    PersonName = userViewModelDto.PersonName,
-                    MobileNo = userViewModelDto.MobileNo,
-                    EmailId = userViewModelDto.EmailId,
-                    LocationId = userViewModelDto.LocationId,
-                    LoginId = userViewModelDto.LoginId,
-                    Password = userViewModelDto.Password,
-                    CreatedBy = Convert.ToInt32(profileid),
-                    UpdatedBy = Convert.ToInt32(profileid),
-                    ProfileId = Convert.ToInt32(profileid),
-                };
-                var result = await _usersService.EditUsers(userId, user);
+                //var user = new UserViewModelDto()
+                //{
+                //UserId = userViewModelDto.UserId,
+                //PersonName = userViewModelDto.PersonName,
+                //MobileNo = userViewModelDto.MobileNo,
+                //EmailId = userViewModelDto.EmailId,
+                //LocationId = userViewModelDto.LocationId,
+                //LoginId = userViewModelDto.LoginId,
+                //Password = userViewModelDto.Password,
+                userRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                //userRequestDto.CompanyId = Convert.ToInt32(companyid);
+                userRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                userRequestDto.ProfileId = Convert.ToInt32(profileid);
+                // };
+                var result = await _usersService.EditUsers(userId, userRequestDto);
                 if (result != null)
                 {
                     return Json(new { result = "success" });
@@ -188,7 +176,34 @@ namespace RFQ.UI.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllLocation()
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                int profileID = Convert.ToInt32(profileid);
+                var alllist = await _usersService.GetAllLocation();
+                if (alllist != null && alllist.Count() > 0)
+                {
+                    return Json(alllist);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(alllist);
+                }
+                else
+                {
+                    return View(alllist);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
             }
         }
         public IActionResult ResetPassword()
@@ -200,10 +215,7 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-        public IActionResult ProfileRight()
-        {
-            return View();
-        }
+     
 
         public IActionResult Privacy()
         {
@@ -214,25 +226,26 @@ namespace RFQ.UI.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public async Task<IActionResult> GetMenu(MenuViewModel menuViewModel)
+        public async Task<IActionResult> GetMenu(MenulistModel menuViewModel)
         {
             try
             {
+                List<MenulistModel> menulistModels = new List<MenulistModel>();
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 int profileID = Convert.ToInt32(profileid);
                 var menulist = await _menuServices.GetMenu(profileID);
                 if (menulist != null && menulist.Count() > 0)
                 {
-                    menuViewModel.menulistDtos.AddRange(menulist);
+                    menulistModels.AddRange(menulist);
                 }
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(menuViewModel);
+                    return Json(menulistModels);
                 }
                 else
                 {
-                    return View(menuViewModel);
+                    return View(menulistModels);
                 }
             }
             catch (Exception)

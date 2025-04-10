@@ -475,8 +475,13 @@ a {
 .menu-item {
     display: block;
     padding: .15rem 0;
+    max-height: 550px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #035ab2;
 }
-.menu-item .menu-link {
+.menu-item .menu-link
+{
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -485,6 +490,8 @@ a {
     padding: .65rem 1rem;
     transition: none;
     outline: 0 !important;
+   
+}
 }
 .menu-rounded .menu-link {
     border-radius: .65rem;

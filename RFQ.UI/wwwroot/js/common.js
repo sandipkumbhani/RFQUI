@@ -1,6 +1,7 @@
 ﻿function ValidateTextbox(inputId) {
     var value = $(inputId).val();
-    var pattern = /^[A-Za-z0-9]+$/; 
+    //var pattern = /^[A-Za-z0-9]+$/; 
+    var pattern = /^[a-zA-Z0-9 ]*$/; 
 
     if (!pattern.test(value)) {
         alert("Invalid input! Only letters and numbers are allowed.");
@@ -65,6 +66,11 @@ function isValidateSelect(value, selectedIndex) {
 // isMobile function (validates a standard 10-digit mobile number)
 function isMobile(number) {
     return /^[0-9]{10}$/.test(number);
+}
+
+function IsValidAuthKey(key) {
+    const regex = /^[A-Za-z0-9-_]{20,}$/;
+    return regex.test(key);
 }
 
 function GetQueryParam(name) {

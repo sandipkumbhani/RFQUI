@@ -1,15 +1,16 @@
 ﻿using RFQ.UI.Domain.RequestDto;
-using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
+using RFQ.UI.Domain.ResponseDto;
+
 
 namespace RFQ.UI.Domain.Interfaces
 {
     public interface IVehicleTypeAdaptor
     {
-        Task<string> AddVehicleType(VehicleTypeViewModelDto vehicleTypeViewModelDto);
+        Task<string> AddVehicleType(VehicleTypeRequestDto vehicleTypeViewModelDto);
 
-        Task<IEnumerable<VehicleTypeViewModelDto>> GetVehicleTypeAll();
+        Task<List<VehicleTypeResponseDto>?> GetVehicleTypeAll();
 
-        Task<string> EditVehicleType(int vehicleTypeId, VehicleTypeViewModelDto vehicleTypeViewModelDto);
+        Task<string> UpdateVehicleType(int vehicleTypeId, VehicleTypeRequestDto vehicleTypeViewModelDto);
 
         Task<string> DeleteVehicleType(int vehicleTypeId);
         

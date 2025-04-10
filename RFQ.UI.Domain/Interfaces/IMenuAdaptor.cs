@@ -4,6 +4,6 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface IMenuAdaptor
     {
-        Task<IEnumerable<MenulistDto>> GetMenu(int profileId);
+        Task<IEnumerable<MenulistModel>> GetMenu(int profileId);
     }
 }

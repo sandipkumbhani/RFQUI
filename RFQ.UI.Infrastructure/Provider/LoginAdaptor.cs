@@ -26,7 +26,7 @@ namespace RFQ.UI.Infrastructure.Provider
             try
             {
                 _httpClient = new HttpClient();
-                var baseUrl = $"{_fleetLynkApiUrl}/Login/Login";
+                var baseUrl = _fleetLynkApiUrl + _config["Login:Login"];
                 var company = JsonConvert.SerializeObject(loginViewModel);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseUrl, requestContent);

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
-using static RFQ.UI.Domain.Model.GetCompanyAndFranchiseModel;
-using static RFQ.UI.Domain.Model.UserViewModel;
+using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -21,22 +16,21 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
 
-        public UsersAdaptor(HttpClient httpClient, GlobalClass globalClass,IConfiguration configuration)
+        public UsersAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
-        
+
         }
-        public async Task<string> AddUsers(UserViewModelDto userViewModelDto)
+        public async Task<string> AddUsers(UserRequestDto userRequestDto)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl}/CompanyUser/AddUser";
-
-            var User = JsonConvert.SerializeObject(userViewModelDto);
+            var baseurl = _fleetLynkApiUrl + _config["Users:AddUser"];
+            var User = JsonConvert.SerializeObject(userRequestDto);
             var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(baseurl, requestContent);
             var responseData = await response.Content.ReadAsStringAsync();
@@ -54,13 +48,13 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
             }
             return string.Empty;
-                }
+        }
         public async Task<string> DeleteUsers(int UserId)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl}/CompanyUser/DeleteUser/{UserId}";
+            var baseurl = _fleetLynkApiUrl + _config["Users:DeleteUser"] + UserId;
             var response = await _httpClient.DeleteAsync(baseurl);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
@@ -79,21 +73,21 @@ namespace RFQ.UI.Infrastructure.Provider
             return "Failed to Delete User";
 
         }
-        public async Task<string> EditUsers(int UserId, UserViewModelDto userViewModelDto)
+        public async Task<string> EditUsers(int UserId, UserRequestDto userRequestDto)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl}/CompanyUser/UpdateUser/{UserId}";
-            var user = JsonConvert.SerializeObject(userViewModelDto);
+            var baseurl = _fleetLynkApiUrl + _config["Users:UpdateUser"] + UserId;
+            var user = JsonConvert.SerializeObject(userRequestDto);
             var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if(responseModel != null)
+            if (responseModel != null)
             {
                 var result = responseModel.StatusCode;
-                if(result == 200)
+                if (result == 200)
                 {
                     return "User Updated...";
                 }
@@ -104,17 +98,16 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             return "Failed to Update User ";
         }
-        public async Task<IEnumerable<UserViewModelDto>> GetAllUser()
+        public async Task<IEnumerable<UserResponseDto>> GetAllUser()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/CompanyUser/GetUserAll");
-
+            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetUserAll"]);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if(responseModel != null)
+            if (responseModel != null)
             {
-                var ProfileList = JsonConvert.DeserializeObject<List<UserViewModelDto>>(Convert.ToString(responseModel.Data!));
+                var ProfileList = JsonConvert.DeserializeObject<List<UserResponseDto>>(Convert.ToString(responseModel.Data!));
                 return ProfileList;
             }
             return null;
@@ -123,18 +116,39 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             throw new NotImplementedException();
         }
-        public async Task<IEnumerable<GetCompanyAndFranchiseModelDto>> GetAllCompanyAndFranchise()
+        public async Task<IEnumerable<CompanyAndFranchiseListDto>> GetAllCompanyAndFranchise()
         {
             try
             {
                 var _httpclient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync("https://localhost:7272/api/Company/GetAllCompany");
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetAllCompany"]);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
                 {
-                    var alllist = JsonConvert.DeserializeObject<List<GetCompanyAndFranchiseModelDto>>(Convert.ToString(responseModel.Data!));
+                    var alllist = JsonConvert.DeserializeObject<List<CompanyAndFranchiseListDto>>(Convert.ToString(responseModel.Data!));
+                    return alllist;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<IEnumerable<LocationListDto>> GetAllLocation()
+        {
+            try
+            {
+                var _httpclient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetAllMasterLocation"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var alllist = JsonConvert.DeserializeObject<List<LocationListDto>>(Convert.ToString(responseModel.Data!));
                     return alllist;
                 }
                 return null;

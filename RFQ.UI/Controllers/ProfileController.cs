@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
 
 namespace RFQ.UI.Controllers
@@ -18,21 +22,23 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-
         public IActionResult Profile()
         {
             return View();
         }
-
-        [HttpPost]
-        public IActionResult Profilesave([FromBody] ProfileViewModelDto profileViewModelDto)
+        public IActionResult ProfileRight()
         {
-            if (profileViewModelDto != null)
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Profilesave([FromBody] ProfileRequestDto profileRequestDto)
+        {
+            if (profileRequestDto != null)
             {
-                var profile = new ProfileViewModelDto()
+                var profile = new ProfileRequestDto()
                 {
-                    ProfileName = profileViewModelDto.ProfileName,
-                    CompanyTypeId = profileViewModelDto.CompanyTypeId,
+                    ProfileName = profileRequestDto.ProfileName,
+                    CompanyTypeId = profileRequestDto.CompanyTypeId,
                 };
                 var result = _profileServices.AddProfile(profile);
                 return Json(new { result = "success" });
@@ -43,79 +49,48 @@ namespace RFQ.UI.Controllers
 
             }
         }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateProfile([FromBody] ProfileViewModelDto profileViewModelDto)
+        public async Task<IActionResult> ViewProfile()
         {
             try
             {
-                int profileId = profileViewModelDto.ProfileId;
-                var result = await _profileServices.EditProfile(profileId, profileViewModelDto);
-                if (result != null)
+                var profilelist = await _profileServices.GetProfileAll();
+
+                if (Request.IsAjaxRequest())
                 {
-                    return Json(new { result = "success" });
+                    return Json(profilelist);
                 }
                 else
                 {
-                    return Json(new { result = "failure" });
+                    return Json(profilelist);
                 }
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                throw new Exception(ex.Message);
             }
         }
-
-        [Route("Home/DeleteProfile/{profileId}")]
-        [HttpDelete("{profileId}")]
-        public async Task<IActionResult> DeleteProfile(int profileId)
+        public async Task<IActionResult> GetAllApplicableList()
         {
             try
             {
-                var result = await _profileServices.DeleteProfile(profileId);
-                if (result != null)
+                var alllist = await _profileServices.GetAllApplicableList();
+                if (alllist != null && alllist.Count() > 0)
                 {
-                    return Json(new { result = "success" });
-                }
-                else
-                {
-                    return Json(new { result = "failure" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "error", message = ex.Message });
-            }
-        }
-        public async Task<IActionResult> ViewProfile(ProfileViewModel profileViewModel)
-        {
-            try
-            {
-                profileViewModel ??= new ProfileViewModel();
-                var userlist = await _profileServices.GetProfileAll();
-                if (userlist != null && userlist.Count() > 0)
-                {
-                    profileViewModel.profileViewModelDtos.AddRange(userlist);
+                    return Json(alllist);
                 }
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(profileViewModel); // Return JSON for AJAX requests
+                    return Json(alllist);
                 }
                 else
                 {
-                    return View(profileViewModel); // Return the view for normal requests
+                    return View(alllist);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return Json(new { result = "error", message = ex.Message });
             }
         }
-
-        public IActionResult ProfileRight()
-        {
-            return View();
-        }
-
     }
 }

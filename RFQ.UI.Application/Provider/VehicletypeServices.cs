@@ -1,6 +1,7 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
-using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 
 namespace RFQ.UI.Application.Provider
 {
@@ -12,24 +13,25 @@ namespace RFQ.UI.Application.Provider
         {
             _vehicleTypeAdaptor = vehicleTypeAdaptor;
         }
-        public Task<string> AddVehicleType(VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        public async Task<string> AddVehicleType(VehicleTypeRequestDto vehicleTypeViewModelDto)
         {
-            return _vehicleTypeAdaptor.AddVehicleType(vehicleTypeViewModelDto);
+            return await  _vehicleTypeAdaptor.AddVehicleType(vehicleTypeViewModelDto);
         }
 
-        public Task<string> DeleteVehicleType(int vehicleTypeId)
+        public  async Task<string> DeleteVehicleType(int vehicleTypeId)
         {
-            return _vehicleTypeAdaptor.DeleteVehicleType(vehicleTypeId);
+            return await _vehicleTypeAdaptor.DeleteVehicleType(vehicleTypeId);
         }
 
-        public Task<string> EditVehicleType(int vehicleTypeId, VehicleTypeViewModelDto vehicleTypeViewModelDto)
+        public async Task<string> UpdateVehicleType(int vehicleTypeId, VehicleTypeRequestDto vehicleTypeViewModelDto)
         {
-            return _vehicleTypeAdaptor.EditVehicleType(vehicleTypeId, vehicleTypeViewModelDto);
+            return await _vehicleTypeAdaptor.UpdateVehicleType(vehicleTypeId, vehicleTypeViewModelDto);
         }
 
-        public Task<IEnumerable<VehicleTypeViewModelDto>> GetVehicleTypeAll()
+        public async Task<List<VehicleTypeResponseDto>> GetVehicleTypeAll()
         {
-            return _vehicleTypeAdaptor.GetVehicleTypeAll();
+            return await _vehicleTypeAdaptor.GetVehicleTypeAll();
         }
+
     }
 }

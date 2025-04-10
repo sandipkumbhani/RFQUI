@@ -28,7 +28,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany";
+                var baseurl = _fleetLynkApiUrl + _config["Franchise:AddCompany"];
                 var franchise = JsonConvert.SerializeObject(franchiseRequestDto);
                 var requestContent = new StringContent(franchise, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -38,13 +38,9 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "Franchise Saved";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
             }
             catch (Exception ex)
@@ -59,7 +55,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl}/Company/DeleteCompany/{companyId}";
+            var baseurl = $"{_fleetLynkApiUrl}{_config["Franchise:DeleteCompany"]}{companyId}";
             var response = await _httpClient.DeleteAsync(baseurl);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
@@ -67,13 +63,9 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var result = responseModel.StatusCode;
                 if (result == 200)
-                {
                     return "Franchise Deleted";
-                }
                 else
-                {
                     return responseModel.ErrorMessage;
-                }
             }
             return "Failed to Delete Franchise";
         }
@@ -82,8 +74,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = $"{_fleetLynkApiUrl}/Company/UpdateCompany/{companyId}";
+            var baseurl = $"{_fleetLynkApiUrl}{_config["Franchise:UpdateCompany"]}{companyId}";
             var vehicle = JsonConvert.SerializeObject(franchiseRequestDto);
             var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -93,13 +84,9 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var result = responseModel.StatusCode;
                 if (result == 200)
-                {
                     return "Franchise Updated";
-                }
                 else
-                {
                     return responseModel.ErrorMessage;
-                }
             }
             return "Failed to update Franchise";
         }
@@ -108,7 +95,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/Company/GetAllCompany");
+            var response = await _httpClient.GetAsync(_fleetLynkApiUrl+ _config["Franchise:GetAllCompany"]);
 
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);

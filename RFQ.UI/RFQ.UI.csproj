@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\" />
+    <Folder Include="Views\CompanyConfiguration\" />
     <Folder Include="Views\Profile\" />
     <Folder Include="wwwroot\AttachmentFiles\" />
   </ItemGroup>
