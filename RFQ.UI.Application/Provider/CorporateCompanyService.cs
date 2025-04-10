@@ -1,5 +1,6 @@
 ﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
 using static RFQ.UI.Domain.Model.CorporateCompanyModel;
@@ -16,7 +17,7 @@ namespace RFQ.UI.Application.Provider
             _corporateCompanyAdaptor = corporateCompanyAdaptor;
         }
 
-        public Task<string> AddCorporateCompany(CorporateCompanyModel requestDto)
+        public Task<string> AddCorporateCompany(CorporateCompanyRequestDto requestDto)
         {
             return _corporateCompanyAdaptor.AddCorporateCompany(requestDto);
         }
@@ -26,7 +27,7 @@ namespace RFQ.UI.Application.Provider
             return _corporateCompanyAdaptor.DeleteCorporateCompany(companyId);
         }
 
-        public Task<string> EditCorporateCompany(int companyId, CorporateCompanyModel requestDto)
+        public Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto requestDto)
         {
             return _corporateCompanyAdaptor.EditCorporateCompany(companyId, requestDto);
         }

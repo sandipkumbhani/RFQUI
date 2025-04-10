@@ -580,7 +580,7 @@ function SaveAndSaveNew() {
         GSTNo: gSTNumber,
         ParentCompanyId: franchiseName
     };
-
+    
     $.ajax({
         url: saveUrl,
         type: "POST",

@@ -31,7 +31,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
 
-        public async Task<string> AddCorporateCompany(CorporateCompanyModel corporateCompanyViewModelDto)
+        public async Task<string> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace RFQ.UI.Infrastructure.Provider
         }
 
 
-        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyModel requestDto)
+        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto requestDto)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);

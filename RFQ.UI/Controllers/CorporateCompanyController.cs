@@ -21,43 +21,26 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CorporateCompanySave([FromBody] CorporateCompanyModel requestDto)
+        public async Task<IActionResult> CorporateCompanySave([FromBody] CorporateCompanyRequestDto requestDto)
         {
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
             string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+            requestDto.LogoImage = "null";
             if (requestDto != null)
             {
-                var Company = new CorporateCompanyModel()
-                {
-                    CompanyTypeId = Convert.ToInt32(profileid),
-                    CompanyName = requestDto.CompanyName,
-                    AddressLine = requestDto.AddressLine,
-                    CityId = requestDto.CityId,
-                    PinCode = requestDto.PinCode,
-                    ContactPerson = requestDto.ContactPerson,
-                    ContactNo = requestDto.ContactNo,
-                    MobNo = requestDto.MobNo,
-                    WhatsAppNo = requestDto.WhatsAppNo,
-                    Email = requestDto.Email,
-                    PANNo = requestDto.PANNo,
-                    GSTNo = requestDto.GSTNo,
-                    CreatedBy = Convert.ToInt32(profileid),
-                    UpdatedBy = Convert.ToInt32(profileid)
-                };
-                var result = _corporateCompanyService.AddCorporateCompany(Company);
-                return Json(new { result = "success" });
+                requestDto.CreatedBy = Convert.ToInt32(profileid);
+                requestDto.UpdatedBy = Convert.ToInt32(profileid);
+                var result = await _corporateCompanyService.AddCorporateCompany(requestDto);
+                return Json(new { result });
             }
             else
             {
                 return Json(new { result = "fail" });
-
             }
         }
 
-
         [HttpPut]
-        public async Task<IActionResult> EditCorporateCompany([FromBody] CorporateCompanyModel requestDto)
+        public async Task<IActionResult> EditCorporateCompany([FromBody] CorporateCompanyRequestDto requestDto)
         {
             try
             {
@@ -95,7 +78,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewCorporateCompany(CorporateCompanyModel requestDto)
+        public async Task<IActionResult> ViewCorporateCompany(CorporateCompanyRequestDto requestDto)
         {
             try
             {
