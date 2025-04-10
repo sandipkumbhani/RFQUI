@@ -63,7 +63,7 @@ namespace RFQ.UI.Controllers
             {
                 int companyId = requestDto.CompanyId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                corporateCompanyViewModelDto.LogoImage = "null";
+                requestDto.LogoImage = "null";
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
                 var company = new CorporateCompanyModel
@@ -81,8 +81,8 @@ namespace RFQ.UI.Controllers
                     Email = requestDto.Email,
                     PANNo = requestDto.PANNo,
                     GSTNo = requestDto.GSTNo,
-
-                var result = await _corporateCompanyService.EditCorporateCompany(companyId, corporateCompanyViewModelDto);
+                };
+                var result = await _corporateCompanyService.EditCorporateCompany(companyId, requestDto);
                 if (result != null)
                     return Json(new { result = "success" });
                 else
