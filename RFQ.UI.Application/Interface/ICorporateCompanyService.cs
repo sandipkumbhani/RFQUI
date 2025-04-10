@@ -1,16 +1,15 @@
-﻿using RFQ.UI.Domain.Model;
-using RFQ.UI.Domain.RequestDto;
+﻿using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Application.Interface
 {
     public interface ICorporateCompanyService
     {
-        Task<string> AddCorporateCompany(CorporateCompanyRequestDto requestDto);
+        Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto);
 
-        Task<IEnumerable<CorporateCompanyModel>> GetCorporateCompanyAll();
+        Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll();
 
-        Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto requestDto);
+        Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyViewModelDto);
 
         Task<string> DeleteCorporateCompany(int companyId);
 
