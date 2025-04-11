@@ -71,9 +71,10 @@ $(document).ready(function () {
 
     // View Button click Call Api
     $(document).on("click", "#viewButton", function () {
-        fetchCorporateCompany();
-        $("#addCorporateCompanyDiv").css('display', 'none')
-        $("#backButton").css('display', 'Block');
+        window.location.reload(true);
+        //fetchCorporateCompany();
+        //$("#addCorporateCompanyDiv").css('display', 'none')
+        //$("#backButton").css('display', 'Block');
     });
 
     // Check Form Validation
