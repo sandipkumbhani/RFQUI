@@ -203,7 +203,7 @@
         });
     });
 
-    jQuery(document).ready(function () {
+    $(document).ready(function () {
         jQuery('#kt_docs_repeater_basic').repeater({
             initEmpty: false,
             defaultValues: {
@@ -211,11 +211,44 @@
             },
             show: function () {
                 jQuery(this).slideDown();
+                populateDropdown($(this).find('.ddlAttachment'));
             },
             hide: function (deleteElement) {
                 jQuery(this).slideUp(deleteElement);
             }
         });
     });
+
+    function fileupload() {
+        // Handle file upload button click
+        $(document).on('click', '#btnUplodeAttachment', function () {
+            var parentRow = $(this).closest('.form-group.row');
+            var fileInput = parentRow.find('input[type="file"]')[0];
+
+            if (fileInput.files.length === 0) {
+                console.log("Please select a file before uploading.");
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            $.ajax({
+                url: "https://localhost:7295/MasterAttachment/UploadAttachment", // Replace with your actual endpoint
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log("File uploaded successfully!");
+                    toastr.success("File uploaded successfully!");
+                },
+                error: function (xhr, status, error) {
+                    console.log("File upload failed: " + error);
+                    toastr.error("File upload failed");
+                }
+            });
+        });
+    } 
 
 })(jQuery);

@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
-using System.IdentityModel.Tokens.Jwt;
 
 
 namespace RFQ.UI.Controllers
@@ -20,32 +21,19 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CorporateCompanySave([FromBody] CorporateCompanyModel requestDto)
+        public async Task<IActionResult> CorporateCompanySave([FromBody] CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-            if (requestDto != null)
+            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+            corporateCompanyViewModelDto.LogoImage = "null";
+            if (corporateCompanyViewModelDto != null)
             {
-                var Company = new CorporateCompanyModel()
-                {
-                    CompanyTypeId = Convert.ToInt32(profileid),
-                    CompanyName = requestDto.CompanyName,
-                    AddressLine = requestDto.AddressLine,
-                    CityId = requestDto.CityId,
-                    PinCode = requestDto.PinCode,
-                    ContactPerson = requestDto.ContactPerson,
-                    ContactNo = requestDto.ContactNo,
-                    MobNo = requestDto.MobNo,
-                    WhatsAppNo = requestDto.WhatsAppNo,
-                    Email = requestDto.Email,
-                    PANNo = requestDto.PANNo,
-                    GSTNo = requestDto.GSTNo,
-                    CreatedBy = Convert.ToInt32(profileid),
-                    UpdatedBy = Convert.ToInt32(profileid)
-                };
-                var result = _corporateCompanyService.AddCorporateCompany(Company);
-                return Json(new { result = "success" });
+                corporateCompanyViewModelDto.CreatedBy = Convert.ToInt32(profileid);
+                corporateCompanyViewModelDto.UpdatedBy = Convert.ToInt32(profileid);
+
+                var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyViewModelDto);
+                return Json(new { result });
             }
             else
             {
@@ -56,39 +44,27 @@ namespace RFQ.UI.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> EditCorporateCompany([FromBody] CorporateCompanyModel requestDto)
+        public async Task<IActionResult> EditCorporateCompany([FromBody] CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
             try
             {
-                int companyId = requestDto.CompanyId;
+                int companyId = corporateCompanyViewModelDto.CompanyId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                //string companyTypeId = jwt.Claims.First(c => c.Type == "companyTypeId").Value;
+                corporateCompanyViewModelDto.LogoImage = "null";
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                var company = new CorporateCompanyModel
-                {
-                    CompanyTypeId = 3,
+                corporateCompanyViewModelDto.CreatedBy = Convert.ToInt32(profileid);
+                corporateCompanyViewModelDto.UpdatedBy = Convert.ToInt32(profileid);
 
-                    CompanyName = requestDto.CompanyName,
-                    AddressLine = requestDto.AddressLine,
-                    CityId = requestDto.CityId,
-                    PinCode = requestDto.PinCode,
-                    ContactPerson = requestDto.ContactPerson,
-                    ContactNo = requestDto.ContactNo,
-                    MobNo = requestDto.MobNo,
-                    WhatsAppNo = requestDto.WhatsAppNo,
-                    Email = requestDto.Email,
-                    PANNo = requestDto.PANNo,
-                    GSTNo = requestDto.GSTNo,
-
-                    CreatedBy = Convert.ToInt32(profileid),
-                    UpdatedBy = Convert.ToInt32(profileid)
-                };
-                var result = await _corporateCompanyService.EditCorporateCompany(companyId, company);
+                var result = await _corporateCompanyService.EditCorporateCompany(companyId, corporateCompanyViewModelDto);
                 if (result != null)
+                {
                     return Json(new { result = "success" });
+                }
                 else
+                {
                     return Json(new { result = "failure" });
+                }
             }
             catch (Exception ex)
             {
@@ -96,23 +72,28 @@ namespace RFQ.UI.Controllers
             }
         }
 
+
+
         [HttpGet]
-        public async Task<IActionResult> ViewCorporateCompany(CorporateCompanyModel requestDto)
+        public async Task<IActionResult> ViewCorporateCompany()
         {
             try
             {
-                List<CorporateCompanyModel> corporateCompanyModel = new List<CorporateCompanyModel>();
-                var userlist = await _corporateCompanyService.GetCorporateCompanyAll();
-                if (userlist != null && userlist.Count() > 0)
-                    corporateCompanyModel.AddRange(userlist);
+
+                var coporateCompanyList = await _corporateCompanyService.GetCorporateCompanyAll();
+
                 if (Request.IsAjaxRequest())
-                    return Json(corporateCompanyModel);
+                {
+                    return Json(coporateCompanyList);
+                }
                 else
-                    return View(corporateCompanyModel);
+                {
+                    return View(coporateCompanyList);
+                }
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -123,9 +104,13 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _corporateCompanyService.DeleteCorporateCompany(companyId);
                 if (result != null)
+                {
                     return Json(new { result = "success" });
+                }
                 else
+                {
                     return Json(new { result = "failure" });
+                }
             }
             catch (Exception ex)
             {
