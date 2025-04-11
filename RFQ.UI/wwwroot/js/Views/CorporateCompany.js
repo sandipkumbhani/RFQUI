@@ -208,10 +208,11 @@ $(document).ready(function () {
     });
 
     $('#backButton').click(function () {
-        $("#addCorporateCompanyDiv").css('display', 'Block')
-        $("#backButton").css('display', 'none');
-        $('#tableDiv').hide();
-        GetAllCityList();
+        window.location.reload(true);
+        //$("#addCorporateCompanyDiv").css('display', 'Block')
+        //$("#backButton").css('display', 'none');
+        //$('#tableDiv').hide();
+        //GetAllCityList();
     });
 
     BouttonUpdateClick();
