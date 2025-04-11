@@ -309,6 +309,7 @@ function EditCompConfigList(companyConfigId) {
     $("#btnSaveAndNewForm").addClass('d-none');
     $("#btnViewForm").addClass('d-none');
     $("#btnUpdate").show();
+    $("#cancleButton").removeClass('d-none');
     $("#company").selectpicker('val', formdata.companyId);
     $("#company").selectpicker('refresh');
     $("#smsProvider").selectpicker('val', formdata.smsProvider);
