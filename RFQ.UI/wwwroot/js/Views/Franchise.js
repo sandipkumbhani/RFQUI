@@ -36,7 +36,7 @@ $(document).ready(function () {
                         toastr.warning("Please enter a valid Franchise Code", "Warning");
                         return;
                     }
-                    if (IsNullOrEmpty($("txtAddress").val())) {
+                    if (IsNullOrEmpty($("#txtAddress").val())) {
                         toastr.warning("Please enter a valid Franchise Address", "Warning");
                         return;
                     }
@@ -146,7 +146,7 @@ $(document).ready(function () {
                         toastr.warning("Please enter a valid Franchise Code", "Warning");
                         return;
                     }
-                    if (IsNullOrEmpty($("txtAddress").val())) {
+                    if (IsNullOrEmpty($("#txtAddress").val())) {
                         toastr.warning("Please enter a valid Franchise Address", "Warning");
                         return;
                     }
@@ -559,7 +559,8 @@ function EditFranchise(companyId) {
     $("#txtFranchiseName").val(formData.companyName);
     $("#txtFranchiseCode").val(formData.companyTypeId);
     $("#txtAddress").val(formData.addressLine);
-    $("#ddlCity").val(formData.cityId).change();
+    $("#ddlCity").selectpicker('val', formData.cityId);
+    $('#ddlCity').selectpicker('refresh');
     $("#txtPinCode").val(formData.pinCode);
     $("#txtContactPerson").val(formData.contactPerson);
     $("#txtWhatsAppNumber").val(formData.whatsAppNo);
