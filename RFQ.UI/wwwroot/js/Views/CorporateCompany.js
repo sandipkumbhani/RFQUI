@@ -181,6 +181,12 @@ $(document).ready(function () {
             return;
         }
     });
+
+    $("#cancleButton").on('click', function () {
+        fetchCorporateCompany();
+        $("#addCorporateCompanyDiv").css('display', 'none')
+        $("#backButton").css('display', 'Block');
+    })
     function isValidAddress(value) {
         return /^[A-Za-z0-9\s,.\-\/]+$/.test(value);
     }
@@ -686,7 +692,9 @@ function EditCorporateCompany(companyId) {
         $("#addCorporateCompanyDiv").css('display', 'Block');
         $("#btnSaveCompanyType").hide();
         $("#btnupdate").show();
-        $("#btnsaveandnew").prop("disabled", true);
+        $("#viewButton").hide();
+        $("#cancleButton").removeClass('d-none');
+        $("#btnsaveandnew").hide();
         $("#txtCompanyId").val(formData.companyId);
         $("#txtCompanyName").val(formData.companyName);
         $("#txtPerson").val(formData.contactPerson);
