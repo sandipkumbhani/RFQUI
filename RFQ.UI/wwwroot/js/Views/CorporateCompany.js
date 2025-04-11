@@ -1,8 +1,10 @@
 ﻿
 
 $(document).ready(function () {
-    GetAllCityList();
+    var corporateCompanyViewModelDto
+    var list
 
+    GetAllCityList();
     var GetUrl = '/CorporateCompany/GetAllFranchise';
     $.ajax({
         url: GetUrl,
@@ -65,10 +67,6 @@ $(document).ready(function () {
             toastr.error("Failed to MasterAttachmentType ", "Error");
         }
     });
-
-    var corporateCompanyViewModelDto
-    var list
-
     // View Button click Call Api
     $(document).on("click", "#viewButton", function () {
         fetchCorporateCompany();
@@ -369,6 +367,7 @@ function BouttonUpdateClick() {
         let updateAttachmentDetails = [];
         var linkd = GetQueryParam("LinkId");
 
+        
         repeaterItems.forEach((item, index) => {
             //let attId = item.querySelector("#hdnAttachmentId").value;
             let attachmentId = item.querySelector("#hdnAttachmentId").value;
@@ -452,6 +451,14 @@ function BouttonUpdateClick() {
                 $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
             }
         });
+
+        // Thired Ajax Call for DeletedAttachments From Table
+        var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
+        $.each(deletedAttachments, function (index,value) {
+            DeleteAttachmentAPI(value);
+            console.log("Value: " + value);
+        });
+        
     });
 };
 function deleteCorporateCompany(companyId, linkId) {
@@ -790,11 +797,19 @@ $(document).on('click', '.upload-btn', function () {
 
 $(document).on('click', '.btnDeleteAttachment', function () {
     var deleteUrl = '/MasterAttachment/DeleteAttachment'
-    var deleteAttachmentUrl = '/MasterAttachment/DeleteMasterAttachmentTable/'
+   
     const $row = $(this).closest('[data-repeater-item]');
 
     const fileName = $row.find("#txtUplodedFileName").val();
     const attachmentId = $row.find("#hdnAttachmentId").val();
+
+    // Delete attachmentId store in session
+    var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
+    if (!deletedAttachments.includes(attachmentId)) {
+        deletedAttachments.push(attachmentId);
+    }
+    sessionStorage.setItem('deletedAttachments', JSON.stringify(deletedAttachments));
+
     if (!fileName) {
         toastr.error("No file available to delete.", "Error");
         return;
@@ -825,22 +840,17 @@ $(document).on('click', '.btnDeleteAttachment', function () {
             toastr.error("Failed to delete attachment", "Error");
         }
     });
+   
+   
+    
+});
+function DeleteAttachmentAPI(attachmentId) {
     if (attachmentId) {
+        var deleteAttachmentUrl = '/MasterAttachment/DeleteMasterAttachmentTable/'
         $.ajax({
             url: deleteAttachmentUrl + attachmentId,
             type: "DELETE",
             success: function (response) {
-                if (response.result === "success") {
-                    toastr.success(response.message);
-
-                    $row.find("#txtUplodedFileName").val("");
-                    $row.find("#fileUpload").val("");
-                    $row.find("#txtFileName").val("");
-                    $row.find(".ddlAttachment").val("");
-                    $row.find(".btnDeleteAttachment").hide();
-                } else {
-                    toastr.error(response.message, "Error");
-                }
             },
             error: function (xhr, status, error) {
                 console.error("Delete Error:", error);
@@ -848,7 +858,6 @@ $(document).on('click', '.btnDeleteAttachment', function () {
             }
         });
     }
-});
-
+}
 
 
