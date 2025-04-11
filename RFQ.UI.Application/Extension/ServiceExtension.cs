@@ -22,6 +22,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<ICompanyConfigurationServices, CompanyConfigrationServices>();
+            services.AddScoped<IProductService, ProductService>();
             return services;
         }
     }
