@@ -129,20 +129,20 @@ function GetLinkItemList(linkGroupId) {
                 html += '<label class="form-check-label me-10">' + item.linkName + '</label>'
                 html += '</div>'
                 html += '<div class="col">'
-                html += '<div class="form-check form-check-inline">'
-                html += '<input class="form-check-input" type="checkbox" id="view1' + item.linkId + '">'
+                html += '<div class="form-check form-check-inline ms-5">'
+                html += '<input class="form-check-input" type="checkbox" id="view1' + item.linkId + '" ' + (item.isView ? 'checked' : '') + '>';
                 html += '<label class="form-check-label" for="view1">View</label>'
                 html += '</div>'
-                html += '<div class="form-check form-check-inline">'
-                html += '<input class="form-check-input" type="checkbox" id="add' + item.linkId + '">'
+                html += '<div class="form-check form-check-inline ms-5">'
+                html += '<input class="form-check-input" type="checkbox" id="add' + item.linkId + '" ' + (item.isAdd ? 'checked' : '') + '>';
                 html += '<label class="form-check-label" for="add1">Add</label>'
                 html += '</div>'
-                html += '<div class="form-check form-check-inline">'
-                html += '<input class="form-check-input" type="checkbox" id="edit' + item.linkId + '">'
+                html += '<div class="form-check form-check-inline ms-5">'
+                html += '<input class="form-check-input" type="checkbox" id="edit' + item.linkId + '" ' + (item.isEdit ? 'checked' : '') + '>';
                 html += '<label class="form-check-label" for="edit1">Edit</label>'
                 html += '</div>'
-                html += '<div class="form-check form-check-inline">'
-                html += '<input class="form-check-input" type="checkbox" id="cancel' + item.linkId + '">'
+                html += '<div class="form-check form-check-inline ms-5">'
+                html += '<input class="form-check-input" type="checkbox" id="cancel' + item.linkId + '" ' + (item.isCancel ? 'checked' : '') + '>';
                 html += '<label class="form-check-label" for="cancel1">Cancel</label>'
                 html += '</div>'
                 html += '</div>'
