@@ -1,28 +1,17 @@
-﻿//(function () {
-//    'use strict';
-
-//    angular
-//        .module('app')
-//        .controller('ProfileRights', ProfileRights);
-
-//    ProfileRights.$inject = ['$location'];
-
-//    function ProfileRights($location) {
-//        /* jshint validthis:true */
-//        var vm = this;
-//        vm.title = 'ProfileRights';
-
-//        activate();
-
-//        function activate() { }
-//    }
-//})();
-$(document).ready(function () {
+﻿$(document).ready(function () {
     GetAllProfileName();
     GetAllMenuName();
     GetAllLinkItem(1)
-    Save();
     OnChangeMenuGroupDropDown();
+});
+
+$("#btnSaveForm").on('click', function (event) {
+    event.preventDefault();
+    Save();
+});
+$('#btnSaveAndNewForm').on('click', function () {
+    Save();
+    $('#userbodyform')[0].reset();
 });
 function Save() {
     var ProfileName = $('#txtName').val();
@@ -119,7 +108,6 @@ function GetAllMenuName() {
     });
 }
 function GetAllLinkItem(linkGroupId) {
-
     var GetUrl = '/Profile/GetAllLinkItem';
     $.ajax({
         url: GetUrl,
