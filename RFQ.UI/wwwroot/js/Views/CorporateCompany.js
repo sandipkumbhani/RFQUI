@@ -375,34 +375,44 @@ function BouttonUpdateClick() {
 
         
         repeaterItems.forEach((item, index) => {
-            //let attId = item.querySelector("#hdnAttachmentId").value;
-            let attachmentId = item.querySelector("#hdnAttachmentId").value;
+            let attId = item.querySelector("#hdnAttachmentId").value;
+            let attachmentId = attId == '' ? 0 : attId;
             let fileName = item.querySelector("#txtFileName")?.value || "N/A";
             let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
             let filePath = item.querySelector("#txtUplodedFileName").value;
+            debugger;
+            updateAttachmentDetails.push({
+                // index: index + 1,
+                AttachmentId: attachmentId,
+                AttachmentName: fileName,
+                AttachmentTypeId: attachmentType,
+                AttachmentPath: filePath,
+                ReferenceLinkId: parseInt(linkd),
+                TransactionId: $("#txtCompanyId").val()
+            });
 
-            if (attachmentId) {
-                updateAttachmentDetails.push({
-                    // index: index + 1,
-                    AttachmentId: attachmentId,
-                    AttachmentName: fileName,
-                    AttachmentTypeId: attachmentType,
-                    AttachmentPath: filePath,
-                    ReferenceLinkId: parseInt(linkd),
-                    TransactionId: $("#txtCompanyId").val()
-                });
-            }
-            else {
-                updateAttachmentDetails.push({
-                    // index: index + 1,
-                    // AttachmentId : attachmentId,
-                    AttachmentName: fileName,
-                    AttachmentTypeId: attachmentType,
-                    AttachmentPath: filePath,
-                    ReferenceLinkId: parseInt(linkd),
-                    TransactionId: $("#txtCompanyId").val()
-                });
-            }
+            //if (attachmentId) {
+            //    updateAttachmentDetails.push({
+            //        // index: index + 1,
+            //        AttachmentId: attachmentId,
+            //        AttachmentName: fileName,
+            //        AttachmentTypeId: attachmentType,
+            //        AttachmentPath: filePath,
+            //        ReferenceLinkId: parseInt(linkd),
+            //        TransactionId: $("#txtCompanyId").val()
+            //    });
+            //}
+            //else {
+            //    updateAttachmentDetails.push({
+            //        // index: index + 1,
+            //        // AttachmentId : attachmentId,
+            //        AttachmentName: fileName,
+            //        AttachmentTypeId: attachmentType,
+            //        AttachmentPath: filePath,
+            //        ReferenceLinkId: parseInt(linkd),
+            //        TransactionId: $("#txtCompanyId").val()
+            //    });
+            //}
         });
 
 
