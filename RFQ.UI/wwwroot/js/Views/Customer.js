@@ -137,6 +137,7 @@ $(document).ready(function () {
     })
     GetAllCityList();
     UpdateCustomer();
+    GstEKycclick();
     PanEKycclick();
 });
 function FetchCustomerList() {
@@ -461,18 +462,22 @@ function GstEKycclick() {
             success: function (response) {
                 var Data = response;
                 var gstModel = response.gstModel
-                $("#txtLegalName").val(gstModel.legalName),
-                    $("#txtTypeBusiness").val(gstModel.constitutionOfBusiness),
-                    $("#txtGstStatus").val(gstModel.gstStatus),
-                    $("#txtGstAddress").val(gstModel.principalAddress),
-                    $("#txtTradeName").val(gstModel.tradeName),
-                    $("#txtAadharVerified").val(gstModel.aadhaarVerified),
-                    $("#txtGstVerifiedOn").val(new Date(gstModel.dateOfRegistration).toISOString().split('T')[0]),
-                    $("#txtVerifiedGstNo").val()
+                if (gstModel != null) {
+                    $("#txtLegalName").val(gstModel.legalName),
+                        $("#txtTypeBusiness").val(gstModel.constitutionOfBusiness),
+                        $("#txtGstStatus").val(gstModel.gstStatus),
+                        $("#txtGstAddress").val(gstModel.principalAddress),
+                        $("#txtTradeName").val(gstModel.tradeName),
+                        $("#txtAadharVerified").val(gstModel.aadhaarVerified),
+                        $("#txtGstVerifiedOn").val(new Date(gstModel.dateOfRegistration).toISOString().split('T')[0]),
+                        $("#txtVerifiedGstNo").val()
+                } else {
+                    toastr.warning("Somthing Went Wrong For Gst E-Kyc Details ", "Error");
+                }
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
-                toastr.error("Failed to submit Vehicle Type", "Error");
+                toastr.error("Failed to Gst E-Kyc Details", "Error");
             }
         });
     });
@@ -499,14 +504,18 @@ function PanEKycclick() {
             success: function (response) {
                 var Data = response;
                 var panModel = response.panModel
-                $("#txtPanName").val(panModel.fullName),
-                    $("#txtAadharLinked").val(panModel.aadhaarLinked),
-                    $("#txtPanStatus").val(panModel.message),
-                    $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
+                if (panModel != null) {
+                    $("#txtPanName").val(panModel.fullName),
+                        $("#txtAadharLinked").val(panModel.aadhaarLinked),
+                        $("#txtPanStatus").val(panModel.message),
+                        $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
+                } else {
+                    toastr.warning("Failed Fetch EKyc Details", "Error");
+                }
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
-                toastr.error("Failed to submit Vehicle Type", "Error");
+                toastr.error("Failed to Fetch EKyc Details", "Error");
             }
         });
     });
