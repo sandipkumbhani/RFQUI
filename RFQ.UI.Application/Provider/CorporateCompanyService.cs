@@ -1,8 +1,8 @@
 ﻿using RFQ.UI.Application.Interface;
-using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
-using static RFQ.UI.Domain.Model.CorporateCompanyModel;
+
 
 
 namespace RFQ.UI.Application.Provider
@@ -15,9 +15,9 @@ namespace RFQ.UI.Application.Provider
             _corporateCompanyAdaptor = corporateCompanyAdaptor;
         }
 
-        public Task<string> AddCorporateCompany(CorporateCompanyModel requestDto)
+        public async Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
-            return _corporateCompanyAdaptor.AddCorporateCompany(requestDto);
+            return await  _corporateCompanyAdaptor.AddCorporateCompany(corporateCompanyViewModelDto);
         }
 
         public Task<string> DeleteCorporateCompany(int companyId)
@@ -25,9 +25,9 @@ namespace RFQ.UI.Application.Provider
             return _corporateCompanyAdaptor.DeleteCorporateCompany(companyId);
         }
 
-        public Task<string> EditCorporateCompany(int companyId, CorporateCompanyModel requestDto)
+        public Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
-            return _corporateCompanyAdaptor.EditCorporateCompany(companyId, requestDto);
+            return _corporateCompanyAdaptor.EditCorporateCompany(companyId, corporateCompanyViewModelDto);
         }
 
         public Task<IEnumerable<FranchiseListDto>> GetAllFranchise()
@@ -35,7 +35,7 @@ namespace RFQ.UI.Application.Provider
             return _corporateCompanyAdaptor.GetAllFranchise();
         }
 
-        public Task<IEnumerable<CorporateCompanyModel>> GetCorporateCompanyAll()
+        public Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll()
         {
             return _corporateCompanyAdaptor.GetCorporateCompanyAll();
         }

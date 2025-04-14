@@ -1,0 +1,121 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "user";
+}
+
+@section Scripts {
+    <script src="~/js/Views/User.js"></script>
+}
+<div class="app-toolbar  pt-3 px-lg-3">
+    <div class="app-container container-fluid d-flex flex-stack flex-wrap">
+        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+            <div class="page-title d-flex align-items-center gap-1 me-3">
+                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
+                    Dashboard
+                </h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
+                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
+                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
+                    <li class="breadcrumb-item text-primary">
+                        User Profile
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="app-content  px-lg-3">
+    <div class="app-container  container-fluid">
+        <div class="container my-4">
+            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
+                </svg>
+                Back
+            </button>
+        </div>
+        <div id="adduserdiv" class="card">
+            <div class="card-header border-0 cursor-pointer">
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">User</h3>
+                </div>
+            </div>
+            <form class="form" id="userbodyform" method="post">
+                <input type="number" hidden id="txtuserid" />
+                <div class="card-body border-top p-9">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">User Name </label>
+                                <input id="txtName" type="text" class="form-control" minlength="4" maxlength="12" placeholder="User Name" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Password</label>
+                                <input type="password" class="form-control" minlength="8" maxlength="12" placeholder="Password" id="txtPassword" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Franchise/Corporate Name</label>
+                                <select name="selectCompanyAndFranchise" aria-label="Franchise/Corporate Name" id="CompanyAndFranchise" class="selectpicker" data-live-search="true" data-width="100%">
+                                </select>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Mobile No</label>
+                                <input type="text" class="form-control" maxlength="10" placeholder="Mobile No" id="txtMobileNo" onkeypress="return isNumber(event)" />
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Login Name</label>
+                                <input type="text" class="form-control" maxlength="12" placeholder="Login Name" id="txtLoginName" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
+                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailid" />
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Location</label>
+                                <select name="Location" aria-label="Select a Location" id="selectLocation" class="selectpicker" data-live-search="true" data-width="100%">
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-srtat py-6 px-9">
+                    <button type="button" id="btnSaveForm" class="btn btn-primary me-2">Save</button>
+                    <button type="button" id="btnSaveAndNewForm" class="btn btn-primary me-2">Save & New</button>
+                    <button type="button" id="btnViewForm" class="btn btn-primary me-2">View</button>
+                    <button type="button" id="btnUpdate" class="btn btn-primary" style="display:none">Update</button>
+                    <button id="cancleButton" type="button" class="btn btn-danger ms-2 d-none">Cancle</button>
+                </div>
+            </form>
+        </div>
+        <div class="my-4"></div>
+        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
+            <div class="card-header p-4">
+                <h4 class="fw-bold m-0 text-lg">User List</h4>
+            </div>
+            <div class="card-body">
+                <table id="tableuser"
+                       class="table table-striped align-middle fs-6 mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>UserName</th>
+                            <th>Company</th>
+                            <th>Location</th>
+                            <th>MobileNo</th>
+                            <th>EmailId</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic rows go here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

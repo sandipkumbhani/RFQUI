@@ -73,6 +73,16 @@ function IsValidAuthKey(key) {
     return regex.test(key);
 }
 
+function GetQueryParam(name) {
+    var url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 // set all Input Box and select option is blue Border
 window.addEventListener('DOMContentLoaded', function () {
     // Select all input elements on the page
@@ -84,3 +94,13 @@ window.addEventListener('DOMContentLoaded', function () {
     //    input.style.setProperty('--placeholder-opacity', '0.0');
     //});
 });
+
+
+function populateDropdown(selectElement) {
+    $(selectElement).empty();
+    var attachmentOptionsString = localStorage.getItem("attachmentType");
+    var attachmentOptions = JSON.parse(attachmentOptionsString);
+    $.each(attachmentOptions, function (index, option) {
+        $(selectElement).append('<option value="' + option.value + '">' + option.text + '</option>');
+    });
+}
