@@ -1,10 +1,11 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Location";
+    ViewData["Title"] = "user";
 }
+
 @section Scripts {
-    <script src="~/js/Views/Location.js"></script>
+    <script src="~/js/Views/User.js"></script>
 }
 <div class="app-toolbar  pt-3 px-lg-3">
     <div class="app-container container-fluid d-flex flex-stack flex-wrap">
@@ -19,7 +20,7 @@
                     </li>
                     <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
                     <li class="breadcrumb-item text-primary">
-                        Location
+                        User Profile
                     </li>
                 </ul>
             </div>
@@ -36,60 +37,50 @@
                 Back
             </button>
         </div>
-        <div id="AddLocationDiv" class="card">
+        <div id="adduserdiv" class="card">
             <div class="card-header border-0 cursor-pointer">
                 <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">Location</h3>
+                    <h3 class="fw-bold m-0">User</h3>
                 </div>
             </div>
-            <form class="form" id="LocationForm" method="post">
-                <input type="number" hidden id="txtLocationId" />
+            <form class="form" id="userbodyform" method="post">
+                <input type="number" hidden id="txtuserid" />
                 <div class="card-body border-top p-9">
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Location Name </label>
-                                <input id="txtLocationName" type="text" class="form-control" maxlength="15" placeholder="Location Name" />
+                                <label class="form-label col-form-label required fw-semibold fs-6">User Name </label>
+                                <input id="txtName" type="text" class="form-control" minlength="4" maxlength="12" placeholder="User Name" />
                             </div>
                             <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Address </label>
-                                <input type="text" class="form-control" placeholder="Map Based Search" id="txtAddress" />
+                                <label class="form-label col-form-label required fw-semibold fs-6">Password</label>
+                                <input type="password" class="form-control" minlength="8" maxlength="12" placeholder="Password" id="txtPassword" />
                             </div>
                             <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">City</label>
-                                <select name="City" aria-label="Select a City" id="selectCity" class="selectpicker" data-live-search="true" data-width="100%">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Franchise/Corporate Name</label>
+                                <select name="selectCompanyAndFranchise" aria-label="Franchise/Corporate Name" id="CompanyAndFranchise" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-                                <input type="text" class="form-control" placeholder="Contact Person" maxlength="12" id="txtPerson" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number</label>
-                                <input type="text" class="form-control" placeholder="Mobile Number" maxlength="10" id="txtMobileNumber" onkeypress="return isNumber(event)" />
+                                <label class="form-label col-form-label required fw-semibold fs-6">Mobile No</label>
+                                <input type="text" class="form-control" maxlength="10" placeholder="Mobile No" id="txtMobileNo" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Location Code</label>
-                                <input type="text" class="form-control" placeholder="Location Code" maxlength="8" id="txtLocationCode" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
-                                <input type="text" class="form-control" placeholder="Pin Code" maxlength="6" id="txtPinCode" onkeypress="return isNumber(event)" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
-                                <input type="text" class="form-control" placeholder="WhatsApp Number" maxlength="10" id="txtWhatsAppNumber" onkeypress="return isNumber(event)" />
+                                <label class="form-label col-form-label required fw-semibold fs-6">Login Name</label>
+                                <input type="text" class="form-control" maxlength="12" placeholder="Login Name" id="txtLoginName" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmail" />
+                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailid" />
                             </div>
                             <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Contact Number</label>
-                                <input type="text" class="form-control" placeholder="Contact Number" maxlength="10" id="txtContactNumber" onkeypress="return isNumber(event)" />
+                                <label class="form-label col-form-label required fw-semibold fs-6">Location</label>
+                                <select name="Location" aria-label="Select a Location" id="selectLocation" class="selectpicker" data-live-search="true" data-width="100%">
+                                </select>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -105,21 +96,17 @@
         <div class="my-4"></div>
         <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
             <div class="card-header p-4">
-                <h4 class="fw-bold m-0 text-lg">Location List</h4>
+                <h4 class="fw-bold m-0 text-lg">User List</h4>
             </div>
             <div class="card-body">
-                <table id="tablelocation"
+                <table id="tableuser"
                        class="table table-striped align-middle fs-6 mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th>LocationName</th>
-                            <th>Address</th>
-                            <th>City</th>
-                            <th>PinCode</th>
-                            <th>ContactPerson</th>
-                            <th>Contact No</th>
-                            <th>MobNo</th>
-                            <th>WhatsAppNo</th>
+                            <th>UserName</th>
+                            <th>Company</th>
+                            <th>Location</th>
+                            <th>MobileNo</th>
                             <th>EmailId</th>
                             <th>Action</th>
                         </tr>
@@ -132,4 +119,3 @@
         </div>
     </div>
 </div>
-
