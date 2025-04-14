@@ -20,7 +20,7 @@
 $(document).ready(function () {
     GetAllProfileName();
     GetAllMenuName();
-    GetAllLinkItem();
+    GetAllLinkItem(1)
     Save();
     OnChangeMenuGroupDropDown();
 });
@@ -131,29 +131,38 @@ function GetAllLinkItem(linkGroupId) {
             var data = $.grep(response, function (x) {
                 return x.linkGroupId == parseInt(linkGroupId);
             });
-            console.log(data);
+            console.log(data, GetAllLinkItem);
+            data.forEach((item, index) => {
+                var html = '';
+                html
+                html += '<div class="mb-3">'
+                html+= '<div class="row">'
+                html += '<div class="col-3 mb-3">'
+                html += '<label class="form-check-label me-10">' + item.linkName + '</label>'
+                html += '</div>'
+                html += '<div class="col">'
+                html += '<div class="form-check form-check-inline">'
+                html += '<input class="form-check-input" type="checkbox" id="view1' + item.linkId + '">'
+                html += '<label class="form-check-label" for="view1">View</label>'
+                html += '</div>'
+                html += '<div class="form-check form-check-inline">'
+                html += '<input class="form-check-input" type="checkbox" id="add' + item.linkId + '">'
+                html += '<label class="form-check-label" for="add1">Add</label>'
+                html += '</div>'
+                html += '<div class="form-check form-check-inline">'
+                html += '<input class="form-check-input" type="checkbox" id="edit' + item.linkId + '">'
+                html += '<label class="form-check-label" for="edit1">Edit</label>'
+                html += '</div>'
+                html += '<div class="form-check form-check-inline">'
+                html += '<input class="form-check-input" type="checkbox" id="cancel' + item.linkId + '">'
+                html += '<label class="form-check-label" for="cancel1">Cancel</label>'
+                html += '</div>'
+                html += '</div>'
+                html += '</div>'
+                html += '</div>'
+                $("#menuItemList").append(html)
+            });
 
-            for (let item in data) {
-                sidebarHtml += '<div class="mb-3">'
-                sidebarHtml += '<label class="form-check-label me-10">' + item.LinkName +'</label>'
-                sidebarHtml += '<div class="form-check form-check-inline">'
-                sidebarHtml += '<input class="form-check-input" type="checkbox" id="view1">'
-                sidebarHtml += '<label class="form-check-label" for="view1">View</label>'
-                sidebarHtml += '</div>'
-                sidebarHtml += '<div class="form-check form-check-inline">'
-                sidebarHtml += '<input class="form-check-input" type="checkbox" id="add1">'
-                sidebarHtml += '<label class="form-check-label" for="add1">Add</label>'
-                sidebarHtml += '</div>'
-                sidebarHtml += '<div class="form-check form-check-inline">'
-                sidebarHtml += '<input class="form-check-input" type="checkbox" id="edit1">'
-                sidebarHtml += '<label class="form-check-label" for="edit1">Edit</label>'
-                sidebarHtml += '</div>'
-                sidebarHtml += '<div class="form-check form-check-inline">'
-                sidebarHtml += '<input class="form-check-input" type="checkbox" id="cancel1">'
-                sidebarHtml += '<label class="form-check-label" for="cancel1">Cancel</label>'
-                sidebarHtml += '</div>'
-                sidebarHtml += '</div>'
-            }
         },
         error: function (xhr, status, error) {
             console.error("Error:", error);
@@ -163,6 +172,7 @@ function GetAllLinkItem(linkGroupId) {
 }
 function OnChangeMenuGroupDropDown() {
     $("#txtMenu").on('change', function () {
+        $("#menuItemList").html('');
         GetAllLinkItem($(this).val())
     });
 }
