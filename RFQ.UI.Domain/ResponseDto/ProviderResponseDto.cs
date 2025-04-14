@@ -8,8 +8,8 @@ namespace RFQ.UI.Domain.ResponseDto
 {
     public class ProviderResponseDto
     {
-        public int ProviderId { get; set; }
+        public int ProviderTypeId { get; set; }
         public string? ProviderName { get; set; }
-        public string? ProviderType { get; set; }
+        public string? ProviderValue { get; set; }
     }
 }

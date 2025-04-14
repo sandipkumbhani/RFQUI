@@ -4,7 +4,7 @@
     ViewData["Title"] = "CompanyConfiguration";
 }
 @section Scripts {
-    <script src="~/js/Views/CompanyConfiguration .js"></script>
+    <script src="~/js/Views/CompanyConfiguration.js"></script>
 }
 
 <div class="app-toolbar  pt-3 px-lg-3">
@@ -30,14 +30,22 @@
 
 <div class="app-content  px-lg-3">
     <div class="app-container  container-fluid">
-        <div class="card">
+        <div class="container my-4">
+            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
+                </svg>
+                Back
+            </button>
+        </div>
+        <div id="AddCompnyConfigDiv" class="card">
             <div class="card-header border-0 cursor-pointer">
                 <div class="card-title m-0">
                     <h3 class="fw-bold m-0">Company configuration</h3>
                 </div>
             </div>
             <div class="card-body">
-                <form>
+                <form method="post">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="company" class="form-label">Company</label>
@@ -46,16 +54,15 @@
                         </div>
                         <div class="col-md-6">
                             <label for="smsProvider" class="form-label">SMS Provider</label>
-                            <select id="smsProvider" class="form-select">
-                                <option>Select SMS Provider</option>
+                            <select name="smsProvider" aria-label="Select a SMS Provider" id="smsProvider" class="selectpicker" data-live-search="true" data-width="100%">
                             </select>
                         </div>
                     </div>
                     <div class="row mb-5">
                         <div class="col-md-6">
                             <label for="whatsappProvider" class="form-label">WhatsApp Provider</label>
-                            <select id="whatsappProvider" class="form-select">
-                                <option>Select WhatsApp Provider</option>
+                          
+                            <select name="whatsappProvider" aria-label="Select a Whatsapp Provider" id="whatsappProvider" class="selectpicker" data-live-search="true" data-width="100%">
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -87,10 +94,39 @@
                             <input type="password" id="smtpPassword" class="form-control">
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-primary">Save & New</button>
-                    <button type="button" class="btn btn-primary">View</button>
+                    <button type="button" id="btnSaveForm" class="btn btn-primary me-2">Save</button>
+                    <button type="button" id="btnSaveAndNewForm" class="btn btn-primary me-2">Save & New</button>
+                    <button type="button" id="btnViewForm" class="btn btn-primary me-2">View</button>
+                    <button type="button" id="btnUpdate" class="btn btn-primary" style="display:none">Update</button>
+                    <button id="cancleButton" type="button" class="btn btn-danger ms-2 d-none">Cancle</button>
                 </form>
+            </div>
+            
+        </div>
+        <div class="my-4"></div>
+        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl d-none">
+            <div class="card-header p-4">
+                <h4 class="fw-bold align-middle m-0 text-lg"> Company Configuration List</h4>
+            </div>
+            <div class="card-body">
+                <table id="tableCmpConfig" class="table table-striped align-middle fs-6 mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Company</th>
+                            <th>SMSProvider</th>
+                            <th>SMSAuthKey</th>
+                            <th>WhatsAppAuthKey</th>
+                            <th>WhatsAppProvider</th>
+                            <th>SMTPHost</th>
+                            <th>SMTPPort</th>
+                            <th>SMTPUsername</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic rows go here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

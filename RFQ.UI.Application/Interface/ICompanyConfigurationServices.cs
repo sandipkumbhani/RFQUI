@@ -12,5 +12,6 @@ namespace RFQ.UI.Application.Interface
         Task<IEnumerable<ProviderResponseDto>> GetAllProviders();
         Task<string> AddCompanyConfiguration(CompanyConfigrationRequestDto requestDto);
         Task<string> EditCompanyConfiguration(CompanyConfigrationRequestDto requestDto);
+        Task<string> DeleteCompanyConfiguration(int companyConfigId);
     }
 }

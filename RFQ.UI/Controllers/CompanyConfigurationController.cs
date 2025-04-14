@@ -61,11 +61,11 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var companyList = await _companyConfigurationServices.GetAllProviders();
+                var providersList = await _companyConfigurationServices.GetAllProviders();
                 if (Request.IsAjaxRequest())
-                    return Json(companyList);
+                    return Json(providersList);
                 else
-                    return View(companyList);
+                    return View(providersList);
             }
             catch (Exception ex)
             {
@@ -104,12 +104,23 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                int locationId = requestDto.CompanyConfigrationId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
                 var result = await _companyConfigurationServices.EditCompanyConfiguration(requestDto);
+                if (result != null)
+                    return Json(new { result = "success" });
+                else
+                    return Json(new { result = "failure" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+        [HttpDelete("CompanyConfiguration/DeleteCompanyConfiguration/{CompanyConfigId}")]
+        public async Task<IActionResult> DeleteCompanyConfiguration(int CompanyConfigId)
+        {
+            try
+            {
+                var result = await _companyConfigurationServices.DeleteCompanyConfiguration(CompanyConfigId);
                 if (result != null)
                 {
                     return Json(new { result = "success" });
@@ -124,8 +135,5 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
-
-
     }
 }

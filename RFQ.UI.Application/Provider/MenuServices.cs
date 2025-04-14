@@ -12,7 +12,7 @@ namespace RFQ.UI.Application.Provider
         {
             _menuAdaptor = menuAdaptor;
         }
-        public async Task<IEnumerable<MenulistDto>> GetMenu(int profileId)
+        public async Task<IEnumerable<MenulistModel>> GetMenu(int profileId)
         {
             return await _menuAdaptor.GetMenu(profileId);
         }

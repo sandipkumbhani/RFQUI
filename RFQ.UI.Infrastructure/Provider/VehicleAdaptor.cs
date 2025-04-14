@@ -22,7 +22,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
 
-        public async Task<IEnumerable<InternalMasterDto>> GetAllVehicleCategory()
+        public async Task<IEnumerable<InternalMasterModel>> GetAllVehicleCategory()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
                 {
-                    var vehiclelist = JsonConvert.DeserializeObject<List<InternalMasterDto>>(Convert.ToString(responseModel.Data!));
+                    var vehiclelist = JsonConvert.DeserializeObject<List<InternalMasterModel>>(Convert.ToString(responseModel.Data!));
                     return vehiclelist;
                 }
                 return null;

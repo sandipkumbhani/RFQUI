@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using static RFQ.UI.Domain.Model.VehicleTypeViewModel;
 using System.IdentityModel.Tokens.Jwt;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;

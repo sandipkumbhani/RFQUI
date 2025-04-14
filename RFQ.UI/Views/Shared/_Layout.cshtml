@@ -284,7 +284,7 @@
                 type: "GET",
                 dataType: 'json',
                 success: function (response) {
-                    let menuList = response.menulistDtos;
+                    let menuList = response;
                     let sidebarHtml = '';
                     let groupedItems = {};
                     menuList.forEach(item => {

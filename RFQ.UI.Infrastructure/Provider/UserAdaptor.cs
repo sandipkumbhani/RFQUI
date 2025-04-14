@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -18,7 +19,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
 
-        public async Task<IEnumerable<CompanyUserDto>> GetAllUsers()
+        public async Task<IEnumerable<UserResponseDto>> GetAllUsers()
         {
             var _httpClient = new HttpClient();
 
@@ -28,8 +29,8 @@ namespace RFQ.UI.Infrastructure.Provider
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
             {
-                var dashboardItems = JsonConvert.DeserializeObject<List<CompanyUserDto>>(Convert.ToString(responseModel.Data!));
-                return dashboardItems;
+                var userList = JsonConvert.DeserializeObject<List<UserResponseDto>>(Convert.ToString(responseModel.Data!));
+                return userList;
             }
             return null;
         }

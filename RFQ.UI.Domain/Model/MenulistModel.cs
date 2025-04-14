@@ -1,17 +1,6 @@
 ﻿namespace RFQ.UI.Domain.Model
 {
-    public class MenuViewModel
-    {
-        public MenuViewModel()
-        {
-            menulistDtos = new List<MenulistDto>();
-         
-        }
-
-        public List<MenulistDto> menulistDtos { get; set; }
-    }
-
-    public class MenulistDto
+    public class MenulistModel
     {
         public int LinkId { get; set; }
         public string? LinkName { get; set; }

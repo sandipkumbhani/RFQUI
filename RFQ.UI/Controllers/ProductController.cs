@@ -1,82 +1,130 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Extension;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
     public class ProductController : Controller
     {
-        // GET: ProductController
+        private readonly IProductService _productService;
+        private readonly GlobalClass _globalClass;
+        public ProductController(IProductService productService, GlobalClass globalClass)
+        {
+            _productService = productService;
+            _globalClass = globalClass;
+        }
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: ProductController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: ProductController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ProductController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> ProductSave([FromBody]ProductRequestDto productRequestDto)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+
+                if (productRequestDto != null)
+                {
+                    productRequestDto.CompanyId = Convert.ToInt32(companyId);
+                    productRequestDto.CreatedBy = Convert.ToInt32(companyId);
+                    productRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                    productRequestDto.CreatedOn = DateTime.Now;
+                    productRequestDto.UpdatedOn = DateTime.Now;
+
+                    var result = await _productService.AddProduct(productRequestDto);
+                    return Json(new { result = "Success" });
+                }
+                else
+                {
+                    return Json(new { result = "Failed" });
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                throw new Exception(ex.Message);
             }
         }
 
-        // GET: ProductController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: ProductController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ProductController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ProductController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpPut]
+        public async Task<IActionResult> EditProduct([FromBody] ProductRequestDto productRequestDto)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                int productId = productRequestDto.ItemId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+
+                productRequestDto.CompanyId= Convert.ToInt32(companyId);
+                productRequestDto.CreatedBy = Convert.ToInt32(companyId);
+                productRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                productRequestDto.CreatedOn = DateTime.Now;
+                productRequestDto.UpdatedOn = DateTime.Now;
+
+                var result = await _productService.EditProduct(productId, productRequestDto);
+                if (result != null)
+                {
+                    return Json(new { result = "Success" });
+                }
+                else
+                {
+                    return Json(new { result = "Failed" });
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpDelete("Product/DeleteProduct/{productId}")]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            try
+            {
+                var result = await _productService.DeleteProduct(productId);
+                if (result != null)
+                {
+                    return Json(new { result = "Success" });
+                }
+                else
+                {
+                    return Json(new { result = "Failed" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllProducts()
+        {
+            try
+            {
+                var productList = await _productService.GetAllProducts();
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(productList);
+                }
+                else
+                {
+                    return View(productList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

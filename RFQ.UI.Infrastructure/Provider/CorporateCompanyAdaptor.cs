@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 using System.Text;
-using static RFQ.UI.Domain.Model.CorporateCompanyViewModel;
 
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -16,24 +17,26 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
+        private readonly IMapper _mapper;
 
 
 
-        public CorporateCompanyAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        public CorporateCompanyAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, IMapper mapper)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
+            _mapper = mapper;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
 
-        public async Task<string> AddCorporateCompany(CorporateCompanyViewModelDto corporateCompanyViewModelDto)
+        public async Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["CorporateCompany:AddCompany"];
+                var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany";
                 var company = JsonConvert.SerializeObject(corporateCompanyViewModelDto);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -43,29 +46,34 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-
-                        return "Corporate Company Saved";
+                    {
+                        return JsonConvert.DeserializeObject<CorporateCompanyRequestDto>(responseModel.Data.ToString());
+                       // return _mapper.Map<CorporateCompanyRequestDto?>(responseModel.Data);
+                    }
                     else
-                        return responseModel.ErrorMessage;
+                    {
+                        return null;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return string.Empty;
+            return null;
         }
 
-        public async Task<IEnumerable<CorporateCompanyViewModelDto>> GetCorporateCompanyAll()
+        public async Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["CorporateCompany:GetAllCompany"]);
+            var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/Company/GetAllCompany");
+
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
             {
-                var Profilelist = JsonConvert.DeserializeObject<List<CorporateCompanyViewModelDto>>(Convert.ToString(responseModel.Data!));
+                var Profilelist = JsonConvert.DeserializeObject<List<CorporateCompanyResponseDto>>(Convert.ToString(responseModel.Data!));
                 return Profilelist;
             }
             return null;
@@ -79,7 +87,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["CorporateCompany:GetAllCompany"]);
+                var response = await _httpClient.GetAsync($"https://localhost:7272/api/Company/GetAllCompany");
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
@@ -96,12 +104,12 @@ namespace RFQ.UI.Infrastructure.Provider
         }
 
 
-        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyViewModelDto corporateCompanyViewModelDto)
+        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl + _config["CorporateCompany:UpdateCompany"] +companyId}";
+            var baseurl = $"{_fleetLynkApiUrl}/Company/UpdateCompany/{companyId}";
             var vehicle = JsonConvert.SerializeObject(corporateCompanyViewModelDto);
             var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -127,7 +135,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = $"{_fleetLynkApiUrl + _config["CorporateCompany:DeleteCompany"] + companyId}";
+            var baseurl = $"{_fleetLynkApiUrl}/Company/DeleteCompany/{companyId}";
             var response = await _httpClient.DeleteAsync(baseurl);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
