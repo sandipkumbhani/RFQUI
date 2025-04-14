@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     GetAllProfileName();
     GetAllMenuName();
-    GetAllLinkItem(1)
+    GetLinkItemList(1)
     OnChangeMenuGroupDropDown();
 });
 
@@ -107,8 +107,8 @@ function GetAllMenuName() {
         }
     });
 }
-function GetAllLinkItem(linkGroupId) {
-    var GetUrl = '/Profile/GetAllLinkItem';
+function GetLinkItemList(linkGroupId) {
+    var GetUrl = '/Profile/GetLinkItemList';
     $.ajax({
         url: GetUrl,
         type: "GET",
@@ -119,7 +119,7 @@ function GetAllLinkItem(linkGroupId) {
             var data = $.grep(response, function (x) {
                 return x.linkGroupId == parseInt(linkGroupId);
             });
-            console.log(data, GetAllLinkItem);
+            console.log(data, GetLinkItemList);
             data.forEach((item, index) => {
                 var html = '';
                 html
@@ -161,7 +161,7 @@ function GetAllLinkItem(linkGroupId) {
 function OnChangeMenuGroupDropDown() {
     $("#txtMenu").on('change', function () {
         $("#menuItemList").html('');
-        GetAllLinkItem($(this).val())
+        GetLinkItemList($(this).val())
     });
 }
 

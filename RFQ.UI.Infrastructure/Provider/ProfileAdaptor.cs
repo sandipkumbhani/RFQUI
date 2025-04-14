@@ -101,13 +101,13 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<IEnumerable<LinkItemResponseDto>> GetAllLinkItem()
+        public async Task<IEnumerable<LinkItemResponseDto>> GetLinkItemList()
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["ProfileRight:GetAllLinkItem"]);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["ProfileRight:GetLinkItemList"]);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)

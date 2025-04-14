@@ -31,9 +31,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _profileAdaptor.GetAllMenuGroup();
         }
-        public async Task<IEnumerable<LinkItemResponseDto>> GetAllLinkItem()
+        public async Task<IEnumerable<LinkItemResponseDto>> GetLinkItemList()
         {
-            return await _profileAdaptor.GetAllLinkItem();
+            return await _profileAdaptor.GetLinkItemList();
         }
     }
 }
