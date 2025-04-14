@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -27,7 +26,7 @@ namespace RFQ.UI.Controllers
             try
             {
                 var driverList = await _driverServices.GetAllDriver();
-                if(Request.IsAjaxRequest())
+                if (Request.IsAjaxRequest())
                 {
                     return Json(driverList);
                 }
@@ -55,7 +54,7 @@ namespace RFQ.UI.Controllers
                     {
                         Directory.CreateDirectory(uploadsFolder);
                     }
-                    uniqueFileName = DateTime.Now.ToString("MM/dd/yyyy") + "_" + file.FileName;
+                    uniqueFileName = DateTime.Now.ToString("dd-MM-yyyy") + "_" + file.FileName;
                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
@@ -137,6 +136,79 @@ namespace RFQ.UI.Controllers
                 throw;
             }
         }
+
+        [HttpPost]
+        public IActionResult DriverSave([FromBody] DriverRequestDto driverRequestDto)
+        {
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+            string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+            if (driverRequestDto != null)
+            {
+                driverRequestDto.CreatedBy = Convert.ToInt32(profileId);
+                driverRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+
+                var result = _driverServices.AddDriver(driverRequestDto);
+                return Json(new { result = "success" });
+            }
+            else
+            {
+                return Json(new { result = "fail" });
+
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateDriver([FromBody] DriverRequestDto driverRequestDto)
+        {
+            try
+            {
+                if (driverRequestDto.DriverId <= 0)
+                {
+                    return Json(new { result = "error", message = "Invalid DriverId." });
+                }
+                int driverId = driverRequestDto.DriverId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                driverRequestDto.CreatedBy = Convert.ToInt32(profileId);
+                driverRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+                var result = await _driverServices.EditDriver(driverId, driverRequestDto);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpDelete("Driver/DeleteDriver/{driverId}")]
+        public async Task<IActionResult> DeleteDriver(int driverId)
+        {
+            try
+            {
+                var result = await _driverServices.DeleteDriver(driverId);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
         // GET: DriverController/Details/5
         public ActionResult Details(int id)
         {
