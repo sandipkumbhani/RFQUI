@@ -101,7 +101,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<IEnumerable<LinkItemResponseDto>> GetAllLinkItems()
+        public async Task<IEnumerable<LinkItemResponseDto>> GetAllLinkItem()
         {
             try
             {

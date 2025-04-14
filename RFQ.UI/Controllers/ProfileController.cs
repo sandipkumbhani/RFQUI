@@ -115,11 +115,11 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-        public async Task<IActionResult> GetAllLinkItems()
+        public async Task<IActionResult> GetAllLinkItem()
         {
             try
             {
-                var alllist = await _profileServices.GetAllLinkItems();
+                var alllist = await _profileServices.GetAllLinkItem();
                 if (alllist != null && alllist.Count() > 0)
                 {
                     return Json(alllist);

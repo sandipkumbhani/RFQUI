@@ -4,6 +4,9 @@
     Layout = "_Layout";
     ViewData["Title"] = "ProfileRight";
 }
+@section Scripts {
+    <script src="~/js/Views/ProfileRights.js"></script>
+}
 
 <div class="app-content px-lg-3">
     <div class="app-container container-fluid">
@@ -81,134 +84,4 @@
         </div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="~/js/common.js"></script>
-<script>
-      $(document).ready(function ()
-      {
-           GetAllProfileName();
-           GetAllMenuName();
-      });
-     function Save()
-     {
-         var ProfileName = $('#txtName').val();
-         var MenuName = $('#txtMenu').val();
-         if (!isValidateSelect(ProfileName))
-         {
-             toastr.warning("Please select a valid Profile Name", "Warning");
-             return;
-         }
-        if (!isValidateSelect(MenuName))
-        {
-            toastr.warning("Please select a valid Menu Name", "Warning");
-            return;
-        }
-         var formdata = {
-          ProfileName : ProfileName,
-          MenuName : MenuName
-         };
-          console.log(formdata)
-         $.ajax({
-             url: '/Profile/Profilerightsave/',
-             type: "POST",
-             contentType: "application/json",
-             dataType: "json",
-             data: JSON.stringify(formdata),
-             success: function (response) {
-                 console.log(response);
-                 toastr.success("Profilerigt submitted successfully!");
-             },
-             error: function (req, status, error) {
-                 console.log(error);
-             }
-         });
-     }
 
-     function GetAllProfileName() {
-         $.ajax({
-              url: '/Profile/ViewProfile',
-             type: "GET",
-             dataType: "json",
-             success: function (response) {
-                 //debugger;
-                 console.log(response);
-                 var data = response
-                 const selectProfileName = document.getElementById("txtName");
-                 let placeholderOption = document.createElement("option");
-                 placeholderOption.value = "";
-                 placeholderOption.textContent = "Select Profile";
-                 placeholderOption.disabled = true;
-                 placeholderOption.selected = true;
-                  selectProfileName.appendChild(placeholderOption);
-                 data.forEach(option => {
-                     let opt = document.createElement("option");
-                     opt.value = option.profileId;
-                     opt.textContent = option.profileName;
-                     selectProfileName.appendChild(opt);
-                 });
-
-                 $('.selectpicker').selectpicker('refresh');
-             },
-             error: function (xhr, status, error) {
-                 console.error("Error:", error);
-                 toastr.error("Failed to fetch data!", "Error");
-             }
-         });
-     }
-
-     function GetAllMenuName() 
-     {
-        $.ajax({
-            url: '/Profile/GetAllMenuGroup',
-            type: "GET",
-            dataType: "json",
-            success: function (response)
-            {
-                debugger;
-                console.log(response);
-                var data = response
-                const selectProfileRightsName = document.getElementById("txtMenu");
-                let placeholderOption = document.createElement("option");
-                placeholderOption.value = "";
-                placeholderOption.textContent = "Select Menu Group Name";
-                placeholderOption.disabled = true;
-                placeholderOption.selected = true;
-                 selectProfileRightsName.appendChild(placeholderOption);
-                data.forEach(option => {
-                    let opt = document.createElement("option");
-                    opt.value = option.linkGroupId;
-                    opt.textContent = option.linkGroupName;
-                    selectProfileRightsName.appendChild(opt);
-                });
-
-                $('.selectpicker').selectpicker('refresh');
-            },
-            error: function (xhr, status, error) {
-                console.error("Error:", error);
-                console.log("Response Text:",xhr.response.Text);
-                toastr.error("Failed to fetch data!", "Error");
-            }
-        });
-    }
-
-     function GetAllLinkItems(linkGroupId) {
-
-        var GetUrl = '@Url.Content("~/Profile/GetAllLinkItems")';
-        $.ajax({
-            url: GetUrl,
-            type: "GET",
-            contentType: "application/json",
-            success: function (response) {
-                console.log(response);
-                deb
-                var data = response.filter(x => x.linkGroupId == Number(linkGroupId));
-               
-            },
-            error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to submit LinkMenu Item ", "Error");
-            }
-        });
-    }
-
-</script>
