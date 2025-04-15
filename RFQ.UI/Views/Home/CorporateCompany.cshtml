@@ -87,14 +87,15 @@
                                 <label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
                                 <input type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" maxlength="10" />
                             </div>
+
                             <div class="mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Franchise Name</label>
 
-                                <select name="franchise" aria-label="Select a Franchise/Corporate"
-                                        data-control="select2" id="ddlFranchisename" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select Franchise</option>
+                                <select id="ddlFranchisename" name="franchise" aria-label="Select a Franchise" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
+
+                           
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-10">
@@ -167,12 +168,7 @@
                                             </label>
                                         </div>
 
-                                        @* <div class="col-md-2"> *@
-                                        @*     <button type="button" id="btnDeleteAttachment" class="btn btn-sm btn-danger mt-10 " data-repeater-delete> *@
-                                        @*         <i class="bi bi-trash"></i> Delete *@
-                                        @*     </button> *@
-                                        @* </div> *@
-
+                                        
                                         <div class="col-md-2">
                                             <button type="button" class="btnDeleteAttachment btn btn-sm btn-danger mt-10" data-repeater-delete>
                                                 <i class="bi bi-trash"></i> Delete
@@ -200,7 +196,7 @@
                     <button type="button" id="btnupdate" class="btn btn-primary" style="display:none;">Update</button>&nbsp;
                     <button type="button" class="btn btn-primary" id="btnsaveandnew">Save & New</button>&nbsp;
                     <button id="viewButton" type="button" class="btn btn-primary">View</button>
-                    <button id="cancleButton" type="button" class="btn btn-danger d-none">Cancle</button>
+                    <button id="cancleButton" type="button" class="btn btn-danger d-none">Cancel</button>.
                 </div>
 
 

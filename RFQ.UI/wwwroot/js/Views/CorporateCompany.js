@@ -4,34 +4,6 @@ $(document).ready(function () {
     var corporateCompanyViewModelDto
     var list
 
-    GetAllCityList();
-    var GetUrl = '/CorporateCompany/GetAllFranchise';
-    $.ajax({
-        url: GetUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            // console.log(response);
-            var data = response.filter(x => x.companyTypeId == 2);
-            console.log(data);
-            if (data && data.length > 0) {
-                $.each(data, function (index, item) {
-                    $('#ddlFranchisename').append($('<option>', {
-                        value: item.companyId,
-                        text: item.companyName
-                    }));
-                });
-            }
-            else {
-                $('#ddlFranchisename').empty().append('<option value="">No Franchise Available</option>');
-            }
-
-        },
-        error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to submit franchise ", "Error");
-        }
-    });
 
     var GetAttachmentUrl = '/MasterAttachment/GetAllMasterAttachmentType';
     var attachmentType = [];
@@ -118,13 +90,13 @@ $(document).ready(function () {
     });
 
     $("#txtAddress").on("change", function () {
-        var Address = $(this).val();
-        if (!isValidAddress(Address)) {
+        if (IsNullOrEmpty($(this).val())) {
+            toastr.warning("Please enter a valid Address", "Warning");
             $(this).focus();
-            toastr.warning("Please enter a Address", "Warning");
             return;
         }
     });
+
     $("#txtPinCode").on("change", function () {
         var pinc = $(this).val();
         if (!/^\d{6}$/.test(pinc)) {
@@ -213,18 +185,58 @@ $(document).ready(function () {
 
     $('#backButton').click(function () {
         window.location.reload(true);
-        //$("#addCorporateCompanyDiv").css('display', 'Block')
-        //$("#backButton").css('display', 'none');
-        //$('#tableDiv').hide();
-        //GetAllCityList();
+        
     });
 
     BouttonUpdateClick();
 });
-function GetAllCityList() {
-    var deleteCustomerUrl = '/Customer/GetAllCity';
+
+
+GetAllFranchiseList();
+function GetAllFranchiseList() {
+    var franchiseUrl = '/CorporateCompany/GetAllFranchise';
     $.ajax({
-        url: deleteCustomerUrl,
+        url: franchiseUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            var data = response.filter(x => x.companyTypeId == 2);
+            BindDropDownData(data)
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error);
+            toastr.error("Failed to fetch data!", "Error");
+        }
+    });
+}
+
+function BindDropDownData(data) {
+    const select = document.getElementById("ddlFranchisename");
+    select.innerHTML = "";
+
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = "";
+    placeholderOption.textContent = "Select a Franchise";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select.appendChild(placeholderOption);
+
+    data.forEach(option => {
+        let opt = document.createElement("option");
+        opt.value = option.companyId;
+        opt.textContent = option.companyName;
+        select.appendChild(opt);
+    });
+
+    $('.selectpicker').selectpicker('refresh');
+}
+
+
+GetAllCityList();
+function GetAllCityList() {
+    var cityUrl = '/Customer/GetAllCity';
+    $.ajax({
+        url: cityUrl,
         type: "GET",
         dataType: "json",
         success: function (response) {
@@ -237,8 +249,18 @@ function GetAllCityList() {
         }
     });
 }
+
 function BindDropDown(data) {
-    const select = document.getElementById("selectCity");
+    const select = document.getElementById("ddlCity");
+    select.innerHTML = "";
+
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = "";
+    placeholderOption.textContent = "Select a City";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select.appendChild(placeholderOption);
+
     data.forEach(option => {
         let opt = document.createElement("option");
         opt.value = option.cityId;
@@ -248,21 +270,7 @@ function BindDropDown(data) {
 
     $('.selectpicker').selectpicker('refresh');
 }
-function fetchMasterAttachment(linkid, transactionid) {
-    var fetchMasterAttachmentUrl = '/MasterAttachment/GetAllMasterAttachment';
 
-    $.ajax({
-        url: fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            list = response; // Assign to the global list variable
-            console.log("Updated List:", list);
-
-        }
-    });
-    return list;
-}
 function fetchCorporateCompany() {
     $('#tableDiv').show();
     var fetchCorporateCompanyUrl = '/CorporateCompany/ViewCorporateCompany';
@@ -317,17 +325,17 @@ function fetchCorporateCompany() {
                         },
                         "render": function (data, type, row) {
                             return `
-<div class="btn-group" role="group">
+                            <div class="btn-group" role="group">
 
-    <button type="button" class="btn btn-sm btn-primary"
-        onclick="EditCorporateCompany(${data.CompanyId})">
-        <i class="ti ti-edit"></i> Edit
-    </button>
-    <button type="button" class="btn btn-sm btn-danger"
-        onclick="deleteCorporateCompany(${data.CompanyId},${data.LinkId})">
-        <i class="ti ti-trash"></i> Delete
-    </button>
-</div>`;
+                                <button type="button" class="btn btn-sm btn-primary"
+                                    onclick="EditCorporateCompany(${data.CompanyId})">
+                                    <i class="ti ti-edit"></i> Edit
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger"
+                                    onclick="deleteCorporateCompany(${data.CompanyId},${data.LinkId})">
+                                    <i class="ti ti-trash"></i> Delete
+                                </button>
+                            </div>`;
                         },
                     }
                 ],
@@ -373,7 +381,7 @@ function BouttonUpdateClick() {
         let updateAttachmentDetails = [];
         var linkd = GetQueryParam("LinkId");
 
-        
+
         repeaterItems.forEach((item, index) => {
             let attId = item.querySelector("#hdnAttachmentId").value;
             let attachmentId = attId == '' ? 0 : attId;
@@ -391,28 +399,6 @@ function BouttonUpdateClick() {
                 TransactionId: $("#txtCompanyId").val()
             });
 
-            //if (attachmentId) {
-            //    updateAttachmentDetails.push({
-            //        // index: index + 1,
-            //        AttachmentId: attachmentId,
-            //        AttachmentName: fileName,
-            //        AttachmentTypeId: attachmentType,
-            //        AttachmentPath: filePath,
-            //        ReferenceLinkId: parseInt(linkd),
-            //        TransactionId: $("#txtCompanyId").val()
-            //    });
-            //}
-            //else {
-            //    updateAttachmentDetails.push({
-            //        // index: index + 1,
-            //        // AttachmentId : attachmentId,
-            //        AttachmentName: fileName,
-            //        AttachmentTypeId: attachmentType,
-            //        AttachmentPath: filePath,
-            //        ReferenceLinkId: parseInt(linkd),
-            //        TransactionId: $("#txtCompanyId").val()
-            //    });
-            //}
         });
 
 
@@ -470,11 +456,11 @@ function BouttonUpdateClick() {
 
         // Thired Ajax Call for DeletedAttachments From Table
         var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
-        $.each(deletedAttachments, function (index,value) {
+        $.each(deletedAttachments, function (index, value) {
             DeleteAttachmentAPI(value);
             console.log("Value: " + value);
         });
-        
+
     });
 };
 function deleteCorporateCompany(companyId, linkId) {
@@ -537,10 +523,17 @@ function SaveAndSaveNew() {
         toastr.warning("Please enter a Corporate Company Code", "Warning");
         return;
     }
+
+    if (IsNullOrEmpty($("#txtAddress").val())) {
+        toastr.warning("Please enter a valid Address", "Warning");
+        return;
+    }
+
     if (!isMobile(whatsAppNumber)) {
         toastr.warning("Please enter a whatsApp number", "Warning");
         return;
     }
+
     if (!isMobile(mobileNumber)) {
         toastr.warning("Please enter a valid 10-digit mobile number", "Warning");
         return;
@@ -550,12 +543,6 @@ function SaveAndSaveNew() {
         toastr.warning("Please enter a valid 10-digit contact number", "Warning");
         return;
     }
-
-
-    // if (!isValidAddress(address)) {
-    //     toastr.warning("Please enter a Address", "Warning");
-    //     return;
-    // }
 
     if (!isValidateSelect(city)) {
         toastr.warning("Please enter a City", "Warning");
@@ -604,7 +591,7 @@ function SaveAndSaveNew() {
         GSTNo: gSTNumber,
         ParentCompanyId: franchiseName
     };
-    
+
     $.ajax({
         url: saveUrl,
         type: "POST",
@@ -638,8 +625,6 @@ function GetAttachmentList(repeaterItemName, transactionId) {
         let filePath = item.querySelector("#txtUplodedFileName")?.value
 
         attachmentDetails.push({
-            // index: index + 1,
-            // AttachmentId : attachmentId,
             AttachmentName: fileName,
             AttachmentTypeId: attachmentType,
             AttachmentPath: filePath,
@@ -648,7 +633,6 @@ function GetAttachmentList(repeaterItemName, transactionId) {
         });
     });
 
-    // console.log(attachmentDetails);
     return attachmentDetails;
 }
 function Saveattachment(transactionId) {
@@ -660,7 +644,8 @@ function Saveattachment(transactionId) {
         contentType: "application/json",
         data: JSON.stringify(attachmentListData), // Serialize data correctly
         success: function (response) {
-            toastr.success("Attachment saved successfully");
+            if (response.result != 'fail')
+                toastr.success("Attachment saved successfully");
         },
         error: function (xhr, status, error) {
             console.error("Error:", error);
@@ -668,6 +653,7 @@ function Saveattachment(transactionId) {
         }
     });
 }
+
 function fetchMasterAttachment(linkid, transactionid, callback) {
     var fetchMasterAttachmentUrl = '/MasterAttachment/GetAllMasterAttachment';
     console.log(fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid)
@@ -696,7 +682,7 @@ function EditCorporateCompany(companyId) {
 
     fetchMasterAttachment(formData.linkId, companyId, function (list) {
         var attachmantData = list;
-
+        console.log(formData);
         $('#tableDiv').hide();
         $("#backButton").css('display', 'none');
         $("#addCorporateCompanyDiv").css('display', 'Block');
@@ -711,13 +697,15 @@ function EditCorporateCompany(companyId) {
         $("#txtMobileNumber").val(formData.mobNo);
         $("#txtContactNumber").val(formData.contactNo);
         $("#txtAddress").val(formData.addressLine);
-        $("#ddlCity").val(formData.cityId).change();
+        $("#ddlCity").selectpicker('val', formData.cityId);
+        $('#ddlCity').selectpicker('refresh');
         $("#txtPinCode").val(formData.pinCode);
         $("#txtEmail").val(formData.email);
         $("#txtWhatsAppNumber").val(formData.whatsAppNo);
         $("#txtPanNumber").val(formData.panNo);
         $("#txtGstNumber").val(formData.gstNo);
-        $("#ddlFranchisename").val(formData.parentCompanyId);
+        $("#ddlFranchisename").selectpicker('val', formData.parentCompanyId);
+        $('#ddlFranchisename').selectpicker('refresh');
 
         if (attachmantData.length > 0) {
             const repeaterList = $("[data-repeater-list='kt_docs_repeater_basic']");
@@ -746,43 +734,8 @@ function EditCorporateCompany(companyId) {
         }
     });
 }
-function GetAllCityList() {
-    var getcityUrl = '/Customer/GetAllCity'
-    $.ajax({
-        url: getcityUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            // console.log(response);
-            BindDropDown(response)
-        },
 
-        error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
-        }
-    });
-}
-function BindDropDown(data) {
-    const select = document.getElementById("ddlCity");
-    select.innerHTML = "";
 
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a City";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-
-    data.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.cityId;
-        opt.textContent = option.cityName;
-        select.appendChild(opt);
-    });
-
-    $('.selectpicker').selectpicker('refresh');
-}
 
 $(document).on('click', '.upload-btn', function () {
     var uploadUrl = '/MasterAttachment/UploadAttachment';
@@ -815,7 +768,7 @@ $(document).on('click', '.upload-btn', function () {
 
 $(document).on('click', '.btnDeleteAttachment', function () {
     var deleteUrl = '/MasterAttachment/DeleteAttachment'
-   
+
     const $row = $(this).closest('[data-repeater-item]');
 
     const fileName = $row.find("#txtUplodedFileName").val();
@@ -836,31 +789,26 @@ $(document).on('click', '.btnDeleteAttachment', function () {
     if (!confirm("Are you sure you want to delete this file?")) {
         return;
     }
-    debugger;
+
     $.ajax({
         url: deleteUrl,
         type: "POST",
         data: { fileName: fileName },
+        dataType: "json",
         success: function (response) {
             if (response.result === "Success") {
-                // toastr.success(response.message);
-                // $row.find("#txtUplodedFileName").val("");
-                // $row.find("#fileUpload").val("");
-                // $row.find("#txtFileName").val("");
-                // $row.find(".ddlAttachment").val("");
-                // $row.find(".btnDeleteAttachment").hide();
+                toastr.success("Attachment deleted successfully", "Success");
+
             } else {
-                toastr.error(response.message, "Error");
+                toastr.error(response.message || "An error occurred while deleting the attachment.", "Error");
             }
         },
         error: function (xhr, status, error) {
-            console.error("Delete Error:", error);
-            toastr.error("Failed to delete attachment", "Error");
+            console.error("Delete Error:", status, error);
+            toastr.error("Failed to delete attachment. Please try again.", "Error");
         }
     });
-   
-   
-    
+
 });
 function DeleteAttachmentAPI(attachmentId) {
     if (attachmentId) {
