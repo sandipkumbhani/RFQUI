@@ -65,7 +65,7 @@ function CheckValidation() {
             return;
         }
     });
-    $("#smtpUserName").on("change", function () {
+    $("#smtpUserName").on("blur change", function () {
         var Textname = $(this).val();
         if (!isAlphabets(Textname)) {
             $("#txtName").val('');
