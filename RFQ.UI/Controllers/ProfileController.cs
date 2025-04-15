@@ -138,5 +138,28 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+        public async Task<IActionResult> GetProfileRightsByProfileId(int profileId)
+        {
+            try
+            {
+                var alllist = await _profileServices.GetProfileRightsByProfileId(profileId);
+                if (alllist != null && alllist.Count() > 0)
+                {
+                    return Json(alllist);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(alllist);
+                }
+                else
+                {
+                    return View(alllist);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
     }
 }

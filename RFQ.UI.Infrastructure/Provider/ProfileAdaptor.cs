@@ -15,7 +15,7 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public ProfileAdaptor(GlobalClass globalClass,IConfiguration configuration)
+        public ProfileAdaptor(GlobalClass globalClass, IConfiguration configuration)
         {
             _globalClass = globalClass;
             _config = configuration;
@@ -49,7 +49,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl+ _config["Profile:GetProfileAll"]);
+            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Profile:GetProfileAll"]);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
@@ -114,6 +114,28 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var alllist = JsonConvert.DeserializeObject<List<LinkItemResponseDto>>(Convert.ToString(responseModel.Data!));
                     return alllist;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<ProfileRightsResponseDto>> GetProfileRightsByProfileId(int profileId)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["ProfileRight:GetProfileRightsByProfileId"] + profileId);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var profileRightslist = JsonConvert.DeserializeObject<List<ProfileRightsResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return profileRightslist;
                 }
                 return null;
             }

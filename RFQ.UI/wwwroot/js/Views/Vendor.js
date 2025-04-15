@@ -509,7 +509,7 @@ function UpdateVendor() {
     });
 }
 function DeleteVendor(partyId) {
-    var deleteVendorUrl = '@Url.Content("/Vendor/DeleteVendor/' + partyId
+    var deleteVendorUrl = '/Vendor/DeleteVendor/' + partyId
     $.ajax({
         url: deleteVendorUrl,
         type: "DELETE",

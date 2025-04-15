@@ -1,13 +1,14 @@
 ﻿$(document).ready(function () {
+
     GetAllProfileName();
     GetAllMenuName();
-    GetLinkItemList(1)
+    GetLinkItemList()
     OnChangeMenuGroupDropDown();
 });
 
 $("#btnSaveForm").on('click', function (event) {
     event.preventDefault();
-    Save();
+    GetAllProfileRightsData();
 });
 $('#btnSaveAndNewForm').on('click', function () {
     Save();
@@ -121,7 +122,7 @@ function GetLinkItemList(linkGroupId) {
                 var html = '';
                 html
                 html += '<div class="mb-3">'
-                html+= '<div class="row">'
+                html += '<div class="row">'
                 html += '<div class="col-3 mb-3">'
                 html += '<label class="form-check-label me-10">' + item.linkName + '</label>'
                 html += '</div>'
@@ -179,23 +180,142 @@ function OnChangeMenuGroupDropDown() {
     });
 }
 
+var ViewCheckboxData = [];
 function OnChangeViewCheckbox(checkbox, item) {
+    var index = ViewCheckboxData.findIndex(obj => obj.linkId === item.linkId);
+    if (index !== -1) {
+        ViewCheckboxData[index] = {
+            "linkId": item.linkId,
+            "linkName": item.linkName,
+            "status": checkbox.checked
+        };
+    } else {
+        ViewCheckboxData.push({
+            "linkId": item.linkId,
+            "linkName": item.linkName,
+            "status": checkbox.checked
+        });
+    }
+    console.log(ViewCheckboxData);
     console.log("Checkbox changed for:", item);
     console.log("Is checked:", checkbox.checked);
 }
 
+var AddCheckboxData = [];
 function OnChangeAddCheckbox(checkbox, item) {
+    var index = AddCheckboxData.findIndex(obj => obj.linkId === item.linkId);
+    if (index !== -1) {
+        AddCheckboxData[index] = {
+            "linkId": item.linkId,
+            "linkName": item.linkName,
+            "status": checkbox.checked
+        };
+    } else {
+        AddCheckboxData.push({
+            "linkId": item.linkId,
+            "linkName": item.linkName,
+            "status": checkbox.checked
+        });
+    }
+    console.log(AddCheckboxData);
     console.log("Add checkbox changed for:", item);
     console.log("Is checked:", checkbox.checked);
 }
 
+var EditCheckboxData = [];
 function OnChangeEditCheckbox(checkbox, item) {
+    var index = EditCheckboxData.findIndex(obj => obj.linkId === item.linkId);
+    if (index !== -1) {
+        EditCheckboxData[index] = {
+            "linkId": item.linkId,
+            "linkName": item.linkName,
+            "status": checkbox.checked
+        };
+    } else {
+        EditCheckboxData.push({
+            "linkId": item.linkId,
+            "linkName": item.linkName,
+            "status": checkbox.checked
+        });
+    }
+    console.log(EditCheckboxData);
     console.log("Edit checkbox changed for:", item);
     console.log("Is checked:", checkbox.checked);
 }
 
+var CancelCheckboxData = [];
 function OnChangeCancelCheckbox(checkbox, item) {
+    var index = CancelCheckboxData.findIndex(obj => obj.linkId === item.linkId);
+    if (index !== -1) {
+        CancelCheckboxData[index] = {
+            "linkId": item.linkId,
+            "linkName": item.linkName,
+            "status": checkbox.checked
+        };
+    } else {
+        CancelCheckboxData.push({
+            "linkId": item.linkId,
+            "linkName": item.linkName,
+            "status": checkbox.checked
+        });
+    }
+    console.log(CancelCheckboxData);
     console.log("Cancel checkbox changed for:", item);
     console.log("Is checked:", checkbox.checked);
 }
+
+function GetAllProfileRightsData() {
+    var AllProfileRightsData = [];
+
+    $("#btnSaveForm").on('click', function () {
+        // Fetch All ProfileRights records
+        var profileId = parseInt($("#txtName").val());
+
+        if (!isNaN(profileId)) {
+            var profileUrl = '/Profile/GetProfileRightsByProfileId/' + profileId;
+
+            $.ajax({
+                url: profileUrl,
+                type: "post", // use lowercase for consistency
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(profileId),
+                success: function (response) {
+                    console.log("Profile Rights Data:", response);
+                    AllProfileRightsData = response;
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching profile rights:", error);
+                    toastr.error("Failed to fetch profile rights", "Error");
+                }
+            });
+        } else {
+            console.warn("Invalid profile ID entered.");
+            toastr.warning("Please enter a valid profile ID", "Warning");
+        }
+
+
+        AllProfileRightsData.forEach((item, index) => {
+            item.profileId = parseInt($("#txtName").val());
+            item.isView = ViewCheckboxData.length > 0
+                ? ViewCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isView
+                : item.isView;
+
+            item.isAdd = AddCheckboxData.length > 0
+                ? AddCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isAdd
+                : item.isAdd;
+
+            item.isEdit = EditCheckboxData.length > 0
+                ? EditCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isEdit
+                : item.isEdit;
+
+            item.isCancel = CancelCheckboxData.length > 0
+                ? CancelCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isCancel
+                : item.isCancel;
+        });
+        console.log(AllProfileRightsData);
+    });
+}
+
+
 

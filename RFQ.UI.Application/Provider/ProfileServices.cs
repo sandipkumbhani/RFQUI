@@ -35,5 +35,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _profileAdaptor.GetLinkItemList();
         }
+        public async Task<IEnumerable<ProfileRightsResponseDto>> GetProfileRightsByProfileId(int profileId)
+        {
+            return await _profileAdaptor.GetProfileRightsByProfileId(profileId);
+        }
     }
 }
