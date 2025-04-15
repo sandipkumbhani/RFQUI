@@ -114,12 +114,9 @@ function GetLinkItemList(linkGroupId) {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            debugger;
-            console.log(response);
             var data = $.grep(response, function (x) {
                 return x.linkGroupId == parseInt(linkGroupId);
             });
-            console.log(data, GetLinkItemList);
             data.forEach((item, index) => {
                 var html = '';
                 html
@@ -129,22 +126,39 @@ function GetLinkItemList(linkGroupId) {
                 html += '<label class="form-check-label me-10">' + item.linkName + '</label>'
                 html += '</div>'
                 html += '<div class="col">'
+
+                //view checkbox
                 html += '<div class="form-check form-check-inline ms-5">'
-                html += '<input class="form-check-input" type="checkbox" id="view1' + item.linkId + '" ' + (item.isView ? 'checked' : '') + '>';
-                html += '<label class="form-check-label" for="view1">View</label>'
+                html += '<input class="form-check-input" type="checkbox" id="view1' + item.linkId + '" ' +
+                    (item.isView ? 'checked' : '') +
+                    ' onchange="OnChangeViewCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
+                html += '<label class="form-check-label" for="view' + item.linkId + '">View</label>';
                 html += '</div>'
+
+                //Add checkbox
                 html += '<div class="form-check form-check-inline ms-5">'
-                html += '<input class="form-check-input" type="checkbox" id="add' + item.linkId + '" ' + (item.isAdd ? 'checked' : '') + '>';
-                html += '<label class="form-check-label" for="add1">Add</label>'
+                html += '<input class="form-check-input" type="checkbox" id="add' + item.linkId + '" ' +
+                    (item.isAdd ? 'checked' : '') +
+                    ' onchange="OnChangeAddCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
+                html += '<label class="form-check-label" for="add' + item.linkId + '">Add</label>';
                 html += '</div>'
+
+                //Edit checkbox
                 html += '<div class="form-check form-check-inline ms-5">'
-                html += '<input class="form-check-input" type="checkbox" id="edit' + item.linkId + '" ' + (item.isEdit ? 'checked' : '') + '>';
-                html += '<label class="form-check-label" for="edit1">Edit</label>'
+                html += '<input class="form-check-input" type="checkbox" id="edit' + item.linkId + '" ' +
+                    (item.isEdit ? 'checked' : '') +
+                    ' onchange="OnChangeEditCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
+                html += '<label class="form-check-label" for="edit' + item.linkId + '">Edit</label>';
                 html += '</div>'
+
+                //Cancel checkbox
                 html += '<div class="form-check form-check-inline ms-5">'
-                html += '<input class="form-check-input" type="checkbox" id="cancel' + item.linkId + '" ' + (item.isCancel ? 'checked' : '') + '>';
-                html += '<label class="form-check-label" for="cancel1">Cancel</label>'
+                html += '<input class="form-check-input" type="checkbox" id="cancel' + item.linkId + '" ' +
+                    (item.isCancel ? 'checked' : '') +
+                    ' onchange="OnChangeCancelCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
+                html += '<label class="form-check-label" for="cancel' + item.linkId + '">Cancel</label>';
                 html += '</div>'
+
                 html += '</div>'
                 html += '</div>'
                 html += '</div>'
@@ -163,5 +177,25 @@ function OnChangeMenuGroupDropDown() {
         $("#menuItemList").html('');
         GetLinkItemList($(this).val())
     });
+}
+
+function OnChangeViewCheckbox(checkbox, item) {
+    console.log("Checkbox changed for:", item);
+    console.log("Is checked:", checkbox.checked);
+}
+
+function OnChangeAddCheckbox(checkbox, item) {
+    console.log("Add checkbox changed for:", item);
+    console.log("Is checked:", checkbox.checked);
+}
+
+function OnChangeEditCheckbox(checkbox, item) {
+    console.log("Edit checkbox changed for:", item);
+    console.log("Is checked:", checkbox.checked);
+}
+
+function OnChangeCancelCheckbox(checkbox, item) {
+    console.log("Cancel checkbox changed for:", item);
+    console.log("Is checked:", checkbox.checked);
 }
 
