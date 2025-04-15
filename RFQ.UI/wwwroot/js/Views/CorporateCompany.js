@@ -682,7 +682,7 @@ function EditCorporateCompany(companyId) {
 
     fetchMasterAttachment(formData.linkId, companyId, function (list) {
         var attachmantData = list;
-
+        console.log(formData);
         $('#tableDiv').hide();
         $("#backButton").css('display', 'none');
         $("#addCorporateCompanyDiv").css('display', 'Block');
@@ -697,13 +697,15 @@ function EditCorporateCompany(companyId) {
         $("#txtMobileNumber").val(formData.mobNo);
         $("#txtContactNumber").val(formData.contactNo);
         $("#txtAddress").val(formData.addressLine);
-        $("#ddlCity").val(formData.cityId).change();
+        $("#ddlCity").selectpicker('val', formData.cityId);
+        $('#ddlCity').selectpicker('refresh');
         $("#txtPinCode").val(formData.pinCode);
         $("#txtEmail").val(formData.email);
         $("#txtWhatsAppNumber").val(formData.whatsAppNo);
         $("#txtPanNumber").val(formData.panNo);
         $("#txtGstNumber").val(formData.gstNo);
-        $("#ddlFranchisename").val(formData.parentCompanyId);
+        $("#ddlFranchisename").selectpicker('val', formData.parentCompanyId);
+        $('#ddlFranchisename').selectpicker('refresh');
 
         if (attachmantData.length > 0) {
             const repeaterList = $("[data-repeater-list='kt_docs_repeater_basic']");
