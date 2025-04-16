@@ -164,7 +164,7 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        public async Task<IActionResult> AddOrUpdateProfileRights(List<ProfileRightsResponseDto> requestDto)
+        public async Task<IActionResult> AddOrUpdateProfileRights([FromBody] List<ProfileRightsResponseDto> requestDto)
         {
             try
             {

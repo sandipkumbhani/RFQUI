@@ -334,26 +334,6 @@ function GetAllProfileRightsData() {
 }
 function AddOrUpdateProfileRights(AllProfileRightsData) {
     var AddOrUpdateProfileRightsUrl = '/Profile/AddOrUpdateProfileRights';
-    //var body = AllProfileRightsData
-     AllProfileRightsData = [
-        {
-            ProfileId: 2,
-            LinkId: 5,
-            IsAdd: true,
-            IsEdit: true,
-            IsView: true,
-            IsCancel: true
-        },
-        {
-            ProfileId: 2,
-            LinkId: 6,
-            IsAdd: true,
-            IsEdit: false,
-            IsView: false,
-            IsCancel: true
-        }
-    ];
-    console.log(AllProfileRightsData)
     $.ajax({
         url: AddOrUpdateProfileRightsUrl,
         type: "post",

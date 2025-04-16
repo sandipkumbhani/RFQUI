@@ -149,7 +149,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var baseurl = _fleetLynkApiUrl + _config["Profile:AddOrUpdateProfileRights"];
+            var baseurl = _fleetLynkApiUrl + _config["ProfileRight:AddOrUpdateProfileRights"];
             var listProfile = JsonConvert.SerializeObject(requestDto);
             var requestContent = new StringContent(listProfile, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(baseurl, requestContent);
