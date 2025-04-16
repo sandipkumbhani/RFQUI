@@ -30,6 +30,7 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult Profilesave([FromBody] ProfileRequestDto profileRequestDto)
         {
@@ -138,11 +139,12 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-        public async Task<IActionResult> GetProfileRightsByProfileId(int profileId)
+
+        public async Task<IActionResult> GetProfileRightsByProfileId(int id)
         {
             try
             {
-                var alllist = await _profileServices.GetProfileRightsByProfileId(profileId);
+                var alllist = await _profileServices.GetProfileRightsByProfileId(id);
                 if (alllist != null && alllist.Count() > 0)
                 {
                     return Json(alllist);
