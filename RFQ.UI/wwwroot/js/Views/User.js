@@ -172,7 +172,7 @@ function Save() {
     var password = $('#txtPassword').val();
 
     if (!isAlphabets(username)) {
-        toastr.warning("Please enter a valid UserName", "Warning");
+        toastr.warning("Please enter a not UserName", "Warning");
         return;
     }
     if (!isValidateSelect(corporatename)) {

@@ -109,14 +109,14 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpDelete("MasterAttachment/DeleteMasterAttachment/{attachmentId}")]
-        public async Task<IActionResult> DeleteMasterAttachment(int attachmentId)
+        public async Task<ActionResult> DeleteMasterAttachment(int attachmentId)
         {
             try
             {
                 var result = await _masterAttachmentService.DeleteMasterAttachment(attachmentId);
                 if (result != null)
                 {
-                    return Json(new { result = "success" });
+                    return Ok(result);
                 }
                 else
                 {
