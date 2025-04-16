@@ -15,7 +15,7 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public ProfileAdaptor(GlobalClass globalClass,IConfiguration configuration)
+        public ProfileAdaptor(GlobalClass globalClass, IConfiguration configuration)
         {
             _globalClass = globalClass;
             _config = configuration;
@@ -49,7 +49,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl+ _config["Profile:GetProfileAll"]);
+            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Profile:GetProfileAll"]);
             var responseData = await response.Content.ReadAsStringAsync();
             var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
             if (responseModel != null)
@@ -101,13 +101,13 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<IEnumerable<LinkItemResponseDto>> GetAllLinkItem()
+        public async Task<IEnumerable<LinkItemResponseDto>> GetLinkItemList()
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["ProfileRight:GetAllLinkItem"]);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["ProfileRight:GetLinkItemList"]);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
@@ -121,6 +121,53 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 throw;
             }
+        }
+
+        public async Task<IEnumerable<ProfileRightsResponseDto>> GetProfileRightsByProfileId(int profileId)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["ProfileRight:GetProfileRightsByProfileId"] + profileId);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var profileRightslist = JsonConvert.DeserializeObject<List<ProfileRightsResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return profileRightslist;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> AddOrUpdateProfileRights(List<ProfileRightsResponseDto> requestDto)
+        {
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+            var baseurl = _fleetLynkApiUrl + _config["ProfileRight:AddOrUpdateProfileRights"];
+            var listProfile = JsonConvert.SerializeObject(requestDto);
+            var requestContent = new StringContent(listProfile, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(baseurl, requestContent);
+            var responseData = await response.Content.ReadAsStringAsync();
+            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+            if (responseModel != null)
+            {
+                var result = responseModel.StatusCode;
+                if (result == 200)
+                {
+                    return "Profile Saved";
+                }
+                else
+                {
+                    return responseModel.ErrorMessage ?? "An error occurred";
+                }
+            }
+            return string.Empty;
         }
     }
 }

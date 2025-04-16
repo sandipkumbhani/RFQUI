@@ -83,7 +83,8 @@
                     <div class="row mb-5">
                         <div class="col-md-6">
                             <label for="smtpUserName" class="form-label">SMTP User Name</label>
-                            <input type="text" id="smtpUserName" class="form-control">
+                            <input type="text" id="smtpUserName" class="form-control " readonly="readonly"
+                                   onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}">
                         </div>
                         <div class="col-md-5">
                             <label for="smtpPort" class="form-label">SMTP Port</label>
@@ -91,7 +92,8 @@
                         </div>
                         <div class="col-md-5">
                             <label for="smtpPassword" class="form-label">SMTP Password</label>
-                            <input type="password" id="smtpPassword" class="form-control">
+                            <input type="password" id="smtpPassword" class="form-control" readonly="readonly"
+                                   onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}">
                         </div>
                     </div>
                     <button type="button" id="btnSaveForm" class="btn btn-primary me-2">Save</button>

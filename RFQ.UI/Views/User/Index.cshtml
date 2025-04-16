@@ -50,11 +50,13 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">User Name </label>
-                                <input id="txtName" type="text" class="form-control" minlength="4" maxlength="12" placeholder="User Name" />
+                                <input id="txtName" type="text" class="form-control" minlength="4" maxlength="12" placeholder="User Name" readonly="readonly"
+                                       onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Password</label>
-                                <input type="password" class="form-control" minlength="8" maxlength="12" placeholder="Password" id="txtPassword" />
+                                <input type="password" class="form-control" minlength="8" maxlength="12" placeholder="Password" id="txtPassword" readonly="readonly"
+                                       onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Franchise/Corporate Name</label>

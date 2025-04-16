@@ -14,6 +14,7 @@ namespace RFQ.UI.Domain.Interfaces
         //Task<string> AddProfileRights(ProfileRightsRequestDto profileRightsRequestDto);
         //Task<IEnumerable<ProfileRightsResponseDto>> GetProfileRightsAll();
         Task<IEnumerable<LinkGroupResponseDto>> GetAllMenuGroup();
-        Task<IEnumerable<LinkItemResponseDto>> GetAllLinkItem();
+        Task<IEnumerable<LinkItemResponseDto>> GetLinkItemList();
+        Task<string> AddOrUpdateProfileRights(List<ProfileRightsResponseDto> requestDto);
     }
 }

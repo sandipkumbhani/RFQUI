@@ -1,0 +1,66 @@
+﻿
+    <div class="card-body border-top p-9">
+        <div class="card-title m-0 pb-10">  
+            <h3 class="fw-bold m-0">Attachment Details</h3>
+        </div>
+
+        <div id="kt_docs_repeater_basic">
+            <div class="form-group">
+                <div data-repeater-list="kt_docs_repeater_basic">
+                    <div data-repeater-item id="attachmentRow">
+                        <div class="form-group row">
+                            <div class="col-md-2">
+                                <input type="number" hidden id="hdnAttachmentId" />
+                                <label class="form-label col-form-label fw-semibold fs-6">File Name</label>
+                                <input type="email" class="form-control mb-2 mb-md-0" id="txtFileName" placeholder="File Name" />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label col-form-label fw-semibold fs-6">Attachment Type  </label>
+                                <select name="franchise" aria-label="Select a Attachment Type"
+                                        data-control="select2" data-placeholder="Select a Attachment Type" class="ddlAttachment form-select select2 form-select-solid form-select-lg fw-semibold">
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <input type="text" hidden id="hdnUplodedFileName">
+                                <label class="form-label col-form-label fw-semibold fs-6">Choose File </label>
+                                <label class="input-group mb-3">
+                                    <input class="visually-hidden file-upload" id="fileUpload" type="file">
+                                    <span id="spanText" class="form-control">Choose File</span>
+                                </label>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label col-form-label fw-semibold fs-6">File Link</label>
+                                <a id="fileLink" class="d-block text-primary mt-2" target="_blank">
+                                    View File
+                                </a>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label col-form-label fw-semibold fs-6">Upload  </label>
+                                <label class="input-group mb-3">
+                                    <button type="button" class="btn btn-primary upload-btn" id="btnUplodeAttachment">Upload</button>
+                                </label>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btnDeleteAttachment btn btn-sm btn-danger mt-10" data-repeater-delete>
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-5">
+                <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+                    <i class="fa-solid fa-plus"></i>
+                    Add
+                </a>
+            </div>
+        </div>
+
+    </div>

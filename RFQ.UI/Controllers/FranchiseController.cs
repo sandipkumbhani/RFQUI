@@ -18,7 +18,7 @@ namespace RFQ.UI.Controllers
             _globalClass = globalClass;
             _webHostEnvironment = webHostEnvironment;
         }
-        public async Task<IActionResult> Franchise()
+        public  IActionResult Franchise()
         {
             return View();
         }
@@ -36,7 +36,7 @@ namespace RFQ.UI.Controllers
                     {
                         Directory.CreateDirectory(uploadsFolder);
                     }
-                    uniqueFileName = DateTime.Now.ToString("MM/dd/yyyy") + "_" + file.FileName;
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + DateTime.Now.ToString("MM/dd/yyyy") + "_" + file.FileName;
                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
@@ -89,7 +89,7 @@ namespace RFQ.UI.Controllers
                     franchiseRequestDto.UpdatedOn = DateTime.Now;
 
                     var result = await _fanchiseService.AddFranchise(franchiseRequestDto);
-                    return Json(new { result = "Success" });
+                    return Json(new { result });
                 }
                 else
                 {
