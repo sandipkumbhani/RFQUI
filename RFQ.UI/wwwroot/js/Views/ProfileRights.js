@@ -267,7 +267,6 @@ function OnChangeCancelCheckbox(checkbox, item) {
     console.log("Is checked:", checkbox.checked);
 }
 function GetAllProfileRightsData() {
-    var listProfileRights = [];
     var AllProfileRightsData = [];
     // Fetch All ProfileRights records
     var profileId = parseInt($("#txtName").val());
@@ -321,6 +320,7 @@ function GetAllProfileRightsData() {
                     });
                     console.log(AllProfileRightsData);
                 }
+                AddOrUpdateProfileRights(AllProfileRightsData);
             },
             error: function (xhr, status, error) {
                 console.error("Error fetching profile rights:", error);
@@ -331,5 +331,42 @@ function GetAllProfileRightsData() {
         console.warn("Invalid profile ID entered.");
         toastr.warning("Please enter a valid profile ID", "Warning");
     }
+}
+function AddOrUpdateProfileRights(AllProfileRightsData) {
+    var AddOrUpdateProfileRightsUrl = '/Profile/AddOrUpdateProfileRights';
+    //var body = AllProfileRightsData
+     AllProfileRightsData = [
+        {
+            ProfileId: 2,
+            LinkId: 5,
+            IsAdd: true,
+            IsEdit: true,
+            IsView: true,
+            IsCancel: true
+        },
+        {
+            ProfileId: 2,
+            LinkId: 6,
+            IsAdd: true,
+            IsEdit: false,
+            IsView: false,
+            IsCancel: true
+        }
+    ];
+    console.log(AllProfileRightsData)
+    $.ajax({
+        url: AddOrUpdateProfileRightsUrl,
+        type: "post",
+        contentType: "application/json,charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(AllProfileRightsData),
+        success: function (response) {
+
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching profile rights:", error);
+            toastr.error("Failed to fetch profile rights", "Error");
+        }
+    });
 }
 

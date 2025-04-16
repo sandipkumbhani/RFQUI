@@ -15,5 +15,6 @@ namespace RFQ.UI.Application.Interface
         Task<IEnumerable<LinkItemResponseDto>> GetLinkItemList();
 
         Task<IEnumerable<ProfileRightsResponseDto>> GetProfileRightsByProfileId(int profileId);
+        Task<string> AddOrUpdateProfileRights(List<ProfileRightsResponseDto> requestDto);
     }
 }

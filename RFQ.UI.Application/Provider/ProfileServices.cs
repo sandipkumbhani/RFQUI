@@ -39,5 +39,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _profileAdaptor.GetProfileRightsByProfileId(profileId);
         }
+        public async Task<string> AddOrUpdateProfileRights(List<ProfileRightsResponseDto> requestDto)
+        {
+            return await _profileAdaptor.AddOrUpdateProfileRights(requestDto);
+        }
     }
 }

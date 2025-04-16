@@ -144,5 +144,30 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<string> AddOrUpdateProfileRights(List<ProfileRightsResponseDto> requestDto)
+        {
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+            var baseurl = _fleetLynkApiUrl + _config["Profile:AddOrUpdateProfileRights"];
+            var listProfile = JsonConvert.SerializeObject(requestDto);
+            var requestContent = new StringContent(listProfile, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(baseurl, requestContent);
+            var responseData = await response.Content.ReadAsStringAsync();
+            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+            if (responseModel != null)
+            {
+                var result = responseModel.StatusCode;
+                if (result == 200)
+                {
+                    return "Profile Saved";
+                }
+                else
+                {
+                    return responseModel.ErrorMessage ?? "An error occurred";
+                }
+            }
+            return string.Empty;
+        }
     }
 }
