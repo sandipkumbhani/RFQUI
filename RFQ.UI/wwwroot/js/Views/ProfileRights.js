@@ -1,19 +1,31 @@
-﻿$(document).ready(function () {
+﻿var linkItemData = [];
+var ViewCheckboxData = []; // set globaly for OnChangeViewCheckbox
+var AddCheckboxData = []; // set globaly for OnChangeAddCheckbox
+var EditCheckboxData = []; // set globaly for OnChangeEditCheckbox
+var CancelCheckboxData = []; // set globaly for OnChangeCancelCheckbox
 
+$(document).ready(function () {
+    initializjquery();
     GetAllProfileName();
     GetAllMenuName();
     GetLinkItemList()
     OnChangeMenuGroupDropDown();
 });
+function initializjquery() {
+    $("#btnSaveForm").on('click', function (event) {
+        event.preventDefault();
+        GetAllProfileRightsData();
+    });
 
-$("#btnSaveForm").on('click', function (event) {
-    event.preventDefault();
-    GetAllProfileRightsData();
-});
-$('#btnSaveAndNewForm').on('click', function () {
-    Save();
-    $('#userbodyform')[0].reset();
-});
+    $('#btnSaveAndNewForm').on('click', function () {
+        Save();
+        $('#userbodyform')[0].reset();
+    });
+
+    $("#txtName").on('change', function () {
+        GetLinkItemList($("#txtMenu").val())
+    })
+}
 function Save() {
     var ProfileName = $('#txtName').val();
     var MenuName = $('#txtMenu').val();
@@ -29,7 +41,6 @@ function Save() {
         ProfileName: ProfileName,
         MenuName: MenuName
     };
-    console.log(formdata)
     $.ajax({
         url: '/Profile/Profilerightsave/',
         type: "POST",
@@ -37,7 +48,6 @@ function Save() {
         dataType: "json",
         data: JSON.stringify(formdata),
         success: function (response) {
-            console.log(response);
             toastr.success("Profilerigt submitted successfully!");
         },
         error: function (req, status, error) {
@@ -52,7 +62,6 @@ function GetAllProfileName() {
         dataType: "json",
         success: function (response) {
             //debugger;
-            console.log(response);
             var data = response
             const selectProfileName = document.getElementById("txtName");
             let placeholderOption = document.createElement("option");
@@ -118,7 +127,9 @@ function GetLinkItemList(linkGroupId) {
             var data = $.grep(response, function (x) {
                 return x.linkGroupId == parseInt(linkGroupId);
             });
-            data.forEach((item, index) => {
+            linkItemData = data;
+            console.log(linkItemData)
+            linkItemData.forEach((item, index) => {
                 var html = '';
                 html
                 html += '<div class="mb-3">'
@@ -179,8 +190,6 @@ function OnChangeMenuGroupDropDown() {
         GetLinkItemList($(this).val())
     });
 }
-
-var ViewCheckboxData = [];
 function OnChangeViewCheckbox(checkbox, item) {
     var index = ViewCheckboxData.findIndex(obj => obj.linkId === item.linkId);
     if (index !== -1) {
@@ -200,8 +209,6 @@ function OnChangeViewCheckbox(checkbox, item) {
     console.log("Checkbox changed for:", item);
     console.log("Is checked:", checkbox.checked);
 }
-
-var AddCheckboxData = [];
 function OnChangeAddCheckbox(checkbox, item) {
     var index = AddCheckboxData.findIndex(obj => obj.linkId === item.linkId);
     if (index !== -1) {
@@ -221,8 +228,6 @@ function OnChangeAddCheckbox(checkbox, item) {
     console.log("Add checkbox changed for:", item);
     console.log("Is checked:", checkbox.checked);
 }
-
-var EditCheckboxData = [];
 function OnChangeEditCheckbox(checkbox, item) {
     var index = EditCheckboxData.findIndex(obj => obj.linkId === item.linkId);
     if (index !== -1) {
@@ -242,8 +247,6 @@ function OnChangeEditCheckbox(checkbox, item) {
     console.log("Edit checkbox changed for:", item);
     console.log("Is checked:", checkbox.checked);
 }
-
-var CancelCheckboxData = [];
 function OnChangeCancelCheckbox(checkbox, item) {
     var index = CancelCheckboxData.findIndex(obj => obj.linkId === item.linkId);
     if (index !== -1) {
@@ -263,59 +266,87 @@ function OnChangeCancelCheckbox(checkbox, item) {
     console.log("Cancel checkbox changed for:", item);
     console.log("Is checked:", checkbox.checked);
 }
-
 function GetAllProfileRightsData() {
     var AllProfileRightsData = [];
+    // Fetch All ProfileRights records
+    var profileId = parseInt($("#txtName").val());
+    if (!isNaN(profileId)) {
+        var profileUrl = '/Profile/GetProfileRightsByProfileId/' + profileId;
 
-    $("#btnSaveForm").on('click', function () {
-        // Fetch All ProfileRights records
-        var profileId = parseInt($("#txtName").val());
-
-        if (!isNaN(profileId)) {
-            var profileUrl = '/Profile/GetProfileRightsByProfileId/' + profileId;
-
-            $.ajax({
-                url: profileUrl,
-                type: "post", // use lowercase for consistency
-                contentType: "application/json",
-                dataType: "json",
-                data: JSON.stringify(profileId),
-                success: function (response) {
-                    console.log("Profile Rights Data:", response);
+        $.ajax({
+            url: profileUrl,
+            type: "post",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(profileId),
+            success: function (response) {
+                if (response.length > 0) {
+                    AllProfileRightsData = [];
                     AllProfileRightsData = response;
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error fetching profile rights:", error);
-                    toastr.error("Failed to fetch profile rights", "Error");
+                    AllProfileRightsData.forEach((item, index) => {
+                        item.profileId = parseInt($("#txtName").val());
+                        item.isView = ViewCheckboxData.length > 0
+                            ? ViewCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isView
+                            : item.isView;
+
+                        item.isAdd = AddCheckboxData.length > 0
+                            ? AddCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isAdd
+                            : item.isAdd;
+
+                        item.isEdit = EditCheckboxData.length > 0
+                            ? EditCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isEdit
+                            : item.isEdit;
+
+                        item.isCancel = CancelCheckboxData.length > 0
+                            ? CancelCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isCancel
+                            : item.isCancel;
+                    });
+                } else {
+                    AllProfileRightsData = [];
+                    linkItemData.forEach(item => {
+                        var rightList = {
+                            "profileId": parseInt($("#txtName").val()),
+                            "linkId": item.linkId,
+                            "isAdd": AddCheckboxData.length > 0.
+                                ? AddCheckboxData.find(x => x.linkId === item.linkId)?.status ?? true : true,
+                            "isEdit": EditCheckboxData.length > 0
+                                ? EditCheckboxData.find(x => x.linkId === item.linkId)?.status ?? true : true,
+                            "isView": ViewCheckboxData.length > 0
+                                ? ViewCheckboxData.find(x => x.linkId === item.linkId)?.status ?? true : true,
+                            "isCancel": CancelCheckboxData.length > 0
+                                ? CancelCheckboxData.find(x => x.linkId === item.linkId)?.status ?? true : true
+                        }
+                        AllProfileRightsData.push(rightList);
+                    });
+                    console.log(AllProfileRightsData);
                 }
-            });
-        } else {
-            console.warn("Invalid profile ID entered.");
-            toastr.warning("Please enter a valid profile ID", "Warning");
-        }
-
-
-        AllProfileRightsData.forEach((item, index) => {
-            item.profileId = parseInt($("#txtName").val());
-            item.isView = ViewCheckboxData.length > 0
-                ? ViewCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isView
-                : item.isView;
-
-            item.isAdd = AddCheckboxData.length > 0
-                ? AddCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isAdd
-                : item.isAdd;
-
-            item.isEdit = EditCheckboxData.length > 0
-                ? EditCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isEdit
-                : item.isEdit;
-
-            item.isCancel = CancelCheckboxData.length > 0
-                ? CancelCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isCancel
-                : item.isCancel;
+                AddOrUpdateProfileRights(AllProfileRightsData);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching profile rights:", error);
+                toastr.error("Failed to fetch profile rights", "Error");
+            }
         });
-        console.log(AllProfileRightsData);
+    } else {
+        console.warn("Invalid profile ID entered.");
+        toastr.warning("Please enter a valid profile ID", "Warning");
+    }
+}
+function AddOrUpdateProfileRights(AllProfileRightsData) {
+    var AddOrUpdateProfileRightsUrl = '/Profile/AddOrUpdateProfileRights';
+    $.ajax({
+        url: AddOrUpdateProfileRightsUrl,
+        type: "post",
+        contentType: "application/json,charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(AllProfileRightsData),
+        success: function (response) {
+
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching profile rights:", error);
+            toastr.error("Failed to fetch profile rights", "Error");
+        }
     });
 }
-
-
 

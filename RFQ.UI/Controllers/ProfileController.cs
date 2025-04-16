@@ -5,6 +5,7 @@ using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 
 namespace RFQ.UI.Controllers
@@ -30,6 +31,7 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult Profilesave([FromBody] ProfileRequestDto profileRequestDto)
         {
@@ -138,11 +140,11 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-        public async Task<IActionResult> GetProfileRightsByProfileId(int profileId)
+        public async Task<IActionResult> GetProfileRightsByProfileId(int id)
         {
             try
             {
-                var alllist = await _profileServices.GetProfileRightsByProfileId(profileId);
+                var alllist = await _profileServices.GetProfileRightsByProfileId(id);
                 if (alllist != null && alllist.Count() > 0)
                 {
                     return Json(alllist);
@@ -161,5 +163,30 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
+        public async Task<IActionResult> AddOrUpdateProfileRights([FromBody] List<ProfileRightsResponseDto> requestDto)
+        {
+            try
+            {
+                var alllist = await _profileServices.AddOrUpdateProfileRights(requestDto);
+                if (alllist != null && alllist.Count() > 0)
+                {
+                    return Json(alllist);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(alllist);
+                }
+                else
+                {
+                    return View(alllist);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
     }
 }
