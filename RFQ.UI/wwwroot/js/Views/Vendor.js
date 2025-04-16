@@ -109,18 +109,21 @@ $(document).ready(function () {
                 success: function (response) {
                     var Data = response;
                     var gstModel = response.gstModel
-                    $("#txtLegalName").val(gstModel.legalName);
-                    $("#txtTypeBusiness").val(gstModel.constitutionOfBusiness);
-                    $("#txtGstStatus").val(gstModel.gstStatus);
-                    $("#txtGstAddress").val(gstModel.principalAddress);
-                    $("#txtTradeName").val(gstModel.tradeName);
-                    $("#txtAadharVerified").val(gstModel.aadhaarVerified);
-                    $("#txtGstVerifiedOn").val(new Date(gstModel.dateOfRegistration).toISOString().split('T')[0]);
-                    $("#txtVerifiedGstNo").val();
+                    if (gstModel != null) {
+                        $("#txtLegalName").val(gstModel.legalName);
+                        $("#txtTypeBusiness").val(gstModel.constitutionOfBusiness);
+                        $("#txtGstStatus").val(gstModel.gstStatus);
+                        $("#txtGstAddress").val(gstModel.principalAddress);
+                        $("#txtTradeName").val(gstModel.tradeName);
+                        $("#txtAadharVerified").val(gstModel.aadhaarVerified);
+                        $("#txtGstVerifiedOn").val(new Date(gstModel.dateOfRegistration).toISOString().split('T')[0]);
+                        $("#txtVerifiedGstNo").val();
+                    } else {
+                        toastr.warning(response.messageDescription, "Warning");
+                    }
                 },
                 error: function (xhr, status, error) {
-
-                    toastr.error("Failed to submit Vehicle Type", "Error");
+                    toastr.error("Failed to Get GstEkyc-Detail", "Error");
                 }
             });
         }
@@ -146,14 +149,18 @@ $(document).ready(function () {
                 success: function (response) {
                     var Data = response;
                     var panModel = response.panModel
-                    $("#txtPanName").val(panModel.fullName);
-                    $("#txtAadharLinked").val(panModel.aadhaarLinked);
-                    $("#txtPanStatus").val(panModel.message);
-                    $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0]);
+                    if (panModel != null) {
+                        $("#txtPanName").val(panModel.fullName);
+                        $("#txtAadharLinked").val(panModel.aadhaarLinked);
+                        $("#txtPanStatus").val(panModel.message);
+                        $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0]);
+                    }
+                    else {
+                        toastr.warning(response.messageDescription, "Warning");
+                    }
                 },
                 error: function (xhr, status, error) {
-
-                    toastr.error("Failed to submit Vehicle Type", "Error");
+                    toastr.error("Failed to Get Pan Ekyc-Detail", "Error");
                 }
             });
         }

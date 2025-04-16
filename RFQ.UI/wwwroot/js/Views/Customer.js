@@ -472,7 +472,7 @@ function GstEKycclick() {
                         $("#txtGstVerifiedOn").val(new Date(gstModel.dateOfRegistration).toISOString().split('T')[0]),
                         $("#txtVerifiedGstNo").val()
                 } else {
-                    toastr.warning("Somthing Went Wrong For Gst E-Kyc Details ", "Error");
+                    toastr.warning(response.messageDescription, "Error");
                 }
             },
             error: function (xhr, status, error) {
@@ -510,7 +510,7 @@ function PanEKycclick() {
                         $("#txtPanStatus").val(panModel.message),
                         $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
                 } else {
-                    toastr.warning("Failed Fetch EKyc Details", "Error");
+                    toastr.warning(response.messageDescription, "Error");
                 }
             },
             error: function (xhr, status, error) {
