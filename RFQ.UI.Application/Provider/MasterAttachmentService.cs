@@ -41,7 +41,7 @@ namespace RFQ.UI.Application.Provider
             return _masterAttachmentAdaptor.UpdateMasterAttachment(masterAttachmentRequestDto);
         }
 
-        public Task<string> DeleteMasterAttachment(int attachmentId)
+        public Task<IEnumerable<MasterAttachmentResponseDto>> DeleteMasterAttachment(int attachmentId)
         {
             return _masterAttachmentAdaptor.DeleteMasterAttachment(attachmentId);
         }

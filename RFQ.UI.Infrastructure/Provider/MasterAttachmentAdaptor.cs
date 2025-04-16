@@ -110,7 +110,7 @@ namespace RFQ.UI.Infrastructure.Provider
 
         
 
-        public async Task<string> DeleteMasterAttachment(int attachmentId)
+        public async Task<IEnumerable<MasterAttachmentResponseDto>> DeleteMasterAttachment(int attachmentId)
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
@@ -124,14 +124,15 @@ namespace RFQ.UI.Infrastructure.Provider
                 var result = responseModel.StatusCode;
                 if (result == 200)
                 {
-                    return "MasterAttachment Deleted";
+                    var attachmentList = JsonConvert.DeserializeObject<List<MasterAttachmentResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return attachmentList;
                 }
                 else
                 {
-                    return responseModel.ErrorMessage;
+                    return null;
                 }
             }
-            return "Failed to Delete MasterAttachment";
+            return null;
         }
 
         public async Task<string> DeleteMasterAttachmentTable(int attachmentId)
