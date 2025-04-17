@@ -22,7 +22,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
-        public async Task<string> AddCustomer(CustomerRequestDto customerRequestDto)
+        public async Task<CustomerRequestDto> AddCustomer(CustomerRequestDto customerRequestDto)
         {
             try
             {
@@ -38,18 +38,20 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-
-                        return "Customer Saved";
+                    {
+                        return JsonConvert.DeserializeObject<CustomerRequestDto>(responseModel.Data.ToString());
+                    }
                     else
-                        return responseModel.ErrorMessage;
+                    {
+                        return null;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
-            return string.Empty;
+            return null;
         }
 
         public async Task<string> DeleteCustomer(int PartyId)
