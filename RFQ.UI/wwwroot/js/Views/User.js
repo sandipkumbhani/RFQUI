@@ -357,7 +357,6 @@ function GetFrenchiseAndcorporateName() {
         success: function (response) {
             console.log(response);
             var data = response.filter(x => x.companyTypeId == 2 || x.companyTypeId == 3);
-            console.log(data, "GetAllCompanyAndFranchise");
             const CompanyAndFranchiseDrp = document.getElementById("CompanyAndFranchise");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
