@@ -48,6 +48,10 @@ $(document).ready(function () {
                     toastr.warning("Please enter a valid Date of Birth", "Warning");
                     return false;
                 }
+                if (!isValidateSelect(city, selectedIndex)) {
+                    toastr.warning("Please select a City", "Warning");
+                    return false;
+                }
                 if (!isAlphaNumeric(driverCode)) {
                     toastr.warning("Please enter a valid Driver Code", "Warning");
                     return false;
@@ -56,10 +60,7 @@ $(document).ready(function () {
                     toastr.warning("Please enter a valid WhatsApp Number", "Warning");
                     return false;
                 }
-                if (!isValidateSelect(city, selectedIndex)) {
-                    toastr.warning("Please select a City", "Warning");
-                    return false;
-                }
+               
                 if (!isMobile(mobileNumber)) {
                     toastr.warning("Please enter a valid Mobile Number", "Warning");
                     return false;

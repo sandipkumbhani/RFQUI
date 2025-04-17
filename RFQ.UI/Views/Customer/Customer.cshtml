@@ -8,7 +8,6 @@
     <script src="~/js/Views/Customer.js"></script>
     <script src="~/js/AttachmentDetails.js"></script>
 }
-
 <div class="app-toolbar  pt-3 px-lg-3">
     <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
         <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
@@ -46,8 +45,7 @@
                 </div>
             </div>
             <form class="form" id="CustomerForm" method="post">
-                <input type="number" hidden id="txtPartyId" />
-                <input type="number" hidden id="txtLinkId" />
+                <input type="hidden" id="hdnPartyId" />
                 <div class="card-body border-top p-9">
                     <div class="card-title m-0 pb-10">
                         <h3 class="fw-bold m-0">GST e-KYC Details</h3>
@@ -106,7 +104,6 @@
                     <div class="card-title m-0 pb-10">
                         <h3 class="fw-bold m-0">PAN e-KYC Details</h3>
                     </div>
-
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="row align-items-center mb-10">
@@ -208,7 +205,7 @@
                     <button type="button" class="btn btn-primary" id="SavenewButton">Save & New</button>&nbsp;
                     <button type="button" id="btnUpdate" class="btn btn-primary" style="display:none; margin-right:05px;">Update</button>
                     <button type="button" class="btn btn-primary" id="btnView">View</button>
-                    <button id="cancleButton" type="button" class="btn btn-danger d-none">Cancle</button>
+                    <button id="cancleButton" type="button" class="btn btn-danger d-none">Cancel</button>
                 </div>
             </form>
         </div>

@@ -23,7 +23,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
 
-        public async Task<string> AddVendor(VendorRequestDto vendorRequestDto)
+        public async Task<VendorRequestDto> AddVendor(VendorRequestDto vendorRequestDto)
         {
             try
             {
@@ -39,10 +39,12 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-
-                        return "Vendor Saved";
+                    {
+                        var savedVendor = JsonConvert.DeserializeObject<VendorRequestDto>(responseModel.Data.ToString());
+                        return savedVendor;
+                    }
                     else
-                        return responseModel.ErrorMessage;
+                        return null;
                 }
             }
             catch (Exception ex)
@@ -50,7 +52,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 Console.WriteLine(ex.Message);
             }
 
-            return string.Empty;
+            return null;
         }
 
         public async Task<string> DeleteVendor(int PartyId)

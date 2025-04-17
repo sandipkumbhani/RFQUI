@@ -23,6 +23,7 @@ function initializjquery() {
     });
 
     $("#txtName").on('change', function () {
+        $("#menuItemList").html("");
         GetLinkItemList($("#txtMenu").val())
     })
 }
@@ -124,6 +125,7 @@ function GetLinkItemList(linkGroupId) {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
+            linkItemData = [];
             var data = $.grep(response, function (x) {
                 return x.linkGroupId == parseInt(linkGroupId);
             });

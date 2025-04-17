@@ -5,7 +5,7 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface ICustomerAdaptor
     {
-        Task<string> AddCustomer(CustomerRequestDto customerRequestDto);
+        Task<CustomerRequestDto> AddCustomer(CustomerRequestDto customerRequestDto);
 
         Task<IEnumerable<CustomerResponseDto>> GetAllCustomer();
 
