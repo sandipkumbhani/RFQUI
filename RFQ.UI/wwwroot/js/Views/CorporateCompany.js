@@ -1,44 +1,11 @@
 ﻿
-
 $(document).ready(function () {
     var corporateCompanyViewModelDto
     var list
 
+    GetAllFranchiseList();
+    GetAllCityList();
 
-    var GetAttachmentUrl = '/MasterAttachment/GetAllMasterAttachmentType';
-    var attachmentType = [];
-    var attachmentList = [];
-    $.ajax({
-        url: GetAttachmentUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            console.log(response);
-            localStorage.setItem('attachmentType', null)
-            if (response && response.length > 0) {
-                $.each(response, function (index, item) {
-                    $('.ddlAttachment').append($('<option>', {
-                        value: item.attachmentTypeId,
-                        text: item.attachmentTypeName
-                    }));
-
-                    attachmentType.push({ value: item.attachmentTypeId, text: item.attachmentTypeName })
-                });
-                if (localStorage.getItem("attachmentType") == "null") {
-
-                    localStorage.setItem('attachmentType', JSON.stringify(attachmentType));
-                }
-            }
-            else {
-                $('.ddlAttachment').empty().append('<option value="">No Attachment Available</option>');
-            }
-
-        },
-        error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to MasterAttachmentType ", "Error");
-        }
-    });
     // View Button click Call Api
     $(document).on("click", "#viewButton", function () {
         fetchCorporateCompany();
@@ -192,7 +159,6 @@ $(document).ready(function () {
 });
 
 
-GetAllFranchiseList();
 function GetAllFranchiseList() {
     var franchiseUrl = '/CorporateCompany/GetAllFranchise';
     $.ajax({
@@ -209,7 +175,6 @@ function GetAllFranchiseList() {
         }
     });
 }
-
 function BindDropDownData(data) {
     const select = document.getElementById("ddlFranchisename");
     select.innerHTML = "";
@@ -231,8 +196,6 @@ function BindDropDownData(data) {
     $('.selectpicker').selectpicker('refresh');
 }
 
-
-GetAllCityList();
 function GetAllCityList() {
     var cityUrl = '/Customer/GetAllCity';
     $.ajax({
@@ -249,7 +212,6 @@ function GetAllCityList() {
         }
     });
 }
-
 function BindDropDown(data) {
     const select = document.getElementById("ddlCity");
     select.innerHTML = "";
@@ -270,7 +232,6 @@ function BindDropDown(data) {
 
     $('.selectpicker').selectpicker('refresh');
 }
-
 function fetchCorporateCompany() {
     $('#tableDiv').show();
     var fetchCorporateCompanyUrl = '/CorporateCompany/ViewCorporateCompany';
@@ -387,7 +348,7 @@ function BouttonUpdateClick() {
             let attachmentId = attId == '' ? 0 : attId;
             let fileName = item.querySelector("#txtFileName")?.value || "N/A";
             let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-            let filePath = item.querySelector("#txtUplodedFileName").value;
+            let filePath = item.querySelector("#hdnUplodedFileName").value;
             debugger;
             updateAttachmentDetails.push({
                 // index: index + 1,
@@ -476,7 +437,10 @@ function deleteCorporateCompany(companyId, linkId) {
             dataType: "json",
             data: JSON.stringify(companyId),
             success: function (response) {
-                deleteMasterAttachment(result[0].attachmentId);
+                DeleteMasterAttachment(result[0].attachmentId);
+                toastr.success("Comporate Company deleted successfully!");
+                fetchCorporateCompany();
+                $("#backButton").css('display', 'block');
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to fetch data!", "Error");
@@ -484,21 +448,7 @@ function deleteCorporateCompany(companyId, linkId) {
         });
     });
 }
-function deleteMasterAttachment(attachmentId) {
-    var deleteMasterAttachmentUrl = '/MasterAttachment/DeleteMasterAttachment/' + attachmentId
-    $.ajax({
-        url: deleteMasterAttachmentUrl,
-        type: "DELETE",
-        dataType: "json",
-        data: JSON.stringify(attachmentId),
-        success: function (response) {
-            fetchCorporateCompany();
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
-        }
-    });
-}
+
 function SaveAndSaveNew() {
     var companyName = $("#txtCompanyName").val();
     var companyCode = $("#txtCompanyCode").val();
@@ -600,7 +550,7 @@ function SaveAndSaveNew() {
         success: function (response) {
 
             companyId = response.result.companyId;
-            Saveattachment(companyId);
+            Saveattachment(companyId);m
             toastr.success("Corporate Company submitted successfully");
 
         },
@@ -612,65 +562,6 @@ function SaveAndSaveNew() {
     return companyId;
 
 }
-function GetAttachmentList(repeaterItemName, transactionId) {
-    let repeaterItems = document.querySelectorAll("[data-repeater-item]");
-    let attachmentDetails = [];
-    var linkd = GetQueryParam("LinkId");
-
-    repeaterItems.forEach((item, index) => {
-
-        let fileName = item.querySelector("#txtFileName")?.value || "N/A";
-        let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-        let fileUpload = item.querySelector("#fileUpload");
-        let filePath = item.querySelector("#txtUplodedFileName")?.value
-
-        attachmentDetails.push({
-            AttachmentName: fileName,
-            AttachmentTypeId: attachmentType,
-            AttachmentPath: filePath,
-            ReferenceLinkId: parseInt(linkd),
-            TransactionId: transactionId
-        });
-    });
-
-    return attachmentDetails;
-}
-function Saveattachment(transactionId) {
-    var attachmentListData = GetAttachmentList("[data-repeater-item]", transactionId);
-    var attachmentSaveUrl = '/MasterAttachment/MasterAttachmentSave';
-    $.ajax({
-        url: attachmentSaveUrl,
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(attachmentListData), // Serialize data correctly
-        success: function (response) {
-            if (response.result != 'fail')
-                toastr.success("Attachment saved successfully");
-        },
-        error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to save attachment", "Error");
-        }
-    });
-}
-
-function fetchMasterAttachment(linkid, transactionid, callback) {
-    var fetchMasterAttachmentUrl = '/MasterAttachment/GetAllMasterAttachment';
-    console.log(fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid)
-    $.ajax({
-        url: fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-
-            list = response; // Assign globally
-            console.log("List updated:", list);
-            if (callback) {
-                callback(list); // Execute the callback function
-            }
-        }
-    });
-}
 function EditCorporateCompany(companyId) {
     var data = corporateCompanyViewModelDto.filter(x => x.companyId == companyId);
     if (data.length === 0) {
@@ -680,7 +571,7 @@ function EditCorporateCompany(companyId) {
 
     var formData = data[0];
 
-    fetchMasterAttachment(formData.linkId, companyId, function (list) {
+    FetchMasterAttachment(formData.linkId, companyId, function (list) {
         var attachmantData = list;
         console.log(formData);
         $('#tableDiv').hide();
@@ -708,122 +599,11 @@ function EditCorporateCompany(companyId) {
         $('#ddlFranchisename').selectpicker('refresh');
 
         if (attachmantData.length > 0) {
-            const repeaterList = $("[data-repeater-list='kt_docs_repeater_basic']");
-
-            repeaterList.find("[data-repeater-item]").not(":first").remove();
-
-            attachmantData.forEach((attachment, index) => {
-
-                let currentItem;
-                if (index === 0) {
-                    currentItem = repeaterList.find("[data-repeater-item]").first();
-                } else {
-
-                    $("[data-repeater-create]").click();
-                    currentItem = repeaterList.find("[data-repeater-item]").last();
-                }
-                currentItem.find("#hdnAttachmentId").val(attachment.attachmentId);
-                currentItem.find("#txtFileName").val(attachment.attachmentName);
-                currentItem.find("#fileUpload").text(attachment.attachmentPath);
-                currentItem.find(".ddlAttachment").val(attachment.attachmentTypeId).trigger("change");
-                currentItem.find("#txtUplodedFileName").val(attachment.attachmentPath);
-                currentItem.find("#fileLink").attr("href", `../../AttachmentFiles/${attachment.attachmentPath}`);
-            });
+            EditMasterAttachment(attachmantData);
         } else {
             console.warn("No attachment data found for companyId:", companyId);
         }
     });
-}
-
-
-
-$(document).on('click', '.upload-btn', function () {
-    var uploadUrl = '/MasterAttachment/UploadAttachment';
-    const $row = $(this).closest('[data-repeater-item]');
-    const fileInput = $row.find('.file-upload')[0].files[0];
-    const spanText = $row.find('#spanText');
-    if (!fileInput) {
-        alert("Please choose a file.");
-        return;
-    }
-    const formData = new FormData();
-    formData.append("file", fileInput);
-    $.ajax({
-        url: uploadUrl,
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function (response) {
-            $row.find('#txtUplodedFileName').val(response.fileName); // Save to hidden input
-            $row.find("#fileLink").attr("href", `../../AttachmentFiles/${response.fileName}`);
-            spanText.text(response.fileName); // Update label
-            toastr.success("Master Attachment submitted successfully!");
-        },
-        error: function () {
-            alert("Upload failed. Please try again.");
-        }
-    });
-});
-
-$(document).on('click', '.btnDeleteAttachment', function () {
-    var deleteUrl = '/MasterAttachment/DeleteAttachment'
-
-    const $row = $(this).closest('[data-repeater-item]');
-
-    const fileName = $row.find("#txtUplodedFileName").val();
-    const attachmentId = $row.find("#hdnAttachmentId").val();
-
-    // Delete attachmentId store in session
-    var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
-    if (!deletedAttachments.includes(attachmentId)) {
-        deletedAttachments.push(attachmentId);
-    }
-    sessionStorage.setItem('deletedAttachments', JSON.stringify(deletedAttachments));
-
-    if (!fileName) {
-        toastr.error("No file available to delete.", "Error");
-        return;
-    }
-
-    if (!confirm("Are you sure you want to delete this file?")) {
-        return;
-    }
-
-    $.ajax({
-        url: deleteUrl,
-        type: "POST",
-        data: { fileName: fileName },
-        dataType: "json",
-        success: function (response) {
-            if (response.result === "Success") {
-                toastr.success("Attachment deleted successfully", "Success");
-
-            } else {
-                toastr.error(response.message || "An error occurred while deleting the attachment.", "Error");
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error("Delete Error:", status, error);
-            toastr.error("Failed to delete attachment. Please try again.", "Error");
-        }
-    });
-
-});
-function DeleteAttachmentAPI(attachmentId) {
-    if (attachmentId) {
-        var deleteAttachmentUrl = '/MasterAttachment/DeleteMasterAttachmentTable/'
-        $.ajax({
-            url: deleteAttachmentUrl + attachmentId,
-            type: "DELETE",
-            success: function (response) {
-            },
-            error: function (xhr, status, error) {
-                console.error("Delete Error:", error);
-                toastr.error("Failed to delete attachment", "Error");
-            }
-        });
-    }
 }
 
 

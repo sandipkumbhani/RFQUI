@@ -59,8 +59,8 @@ namespace RFQ.UI.Controllers
                     vendorRequestDto.UpdatedBy = Convert.ToInt32(companyId);
                     vendorRequestDto.PartyTypeId = 5;
 
-                    var result = _vendorService.AddVendor(vendorRequestDto);
-                    return Json(new { result = "Success" });
+                    var result = await _vendorService.AddVendor(vendorRequestDto);
+                    return Json(new { result });
                 }
                 else
                 {

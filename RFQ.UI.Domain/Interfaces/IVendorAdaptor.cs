@@ -5,7 +5,7 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface IVendorAdaptor
     {
-        Task<string> AddVendor(VendorRequestDto vendorRequestDto);
+        Task<VendorRequestDto> AddVendor(VendorRequestDto vendorRequestDto);
 
         Task<IEnumerable<VendorResponseDto>> GetAllVendor();
 
