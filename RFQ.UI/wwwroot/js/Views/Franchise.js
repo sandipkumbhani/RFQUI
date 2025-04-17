@@ -27,9 +27,10 @@ $(document).ready(function () {
                     event.preventDefault();
                     isNewFranchise = false;
                     isUpdateFranchise = false;
-                    CheckNullValidation();
                     if (myDropzone.files.length > 0) {
-                        myDropzone.processQueue();
+                        if (CheckNullValidation()) {
+                            myDropzone.processQueue();
+                        }
                     } else {
                         toastr.warning("Please fill form details ", "Warning");
                     }
@@ -37,9 +38,10 @@ $(document).ready(function () {
                 $("#btnSavenewFranchise").click(function (event) {
                     isNewFranchise = true;
                     isUpdateFranchise = false;
-                    CheckNullValidation();
                     if (myDropzone.files.length > 0) {
-                        myDropzone.processQueue();
+                        if (CheckNullValidation()) {
+                            myDropzone.processQueue();
+                        }
                     }
                     else {
                         toastr.warning("Please fill form details ", "Warning");
@@ -51,18 +53,18 @@ $(document).ready(function () {
                 $("#btnUpdateFranchise").click(function (event) {
                     isNewFranchise = false;
                     isUpdateFranchise = true;
-                    CheckNullValidation();
-                    //myDropzone.files.lengh = 0;
                     if (myDropzone.files.length > 0) {
-                        if (myDropzone.files[0].status == "queued") {
-                            myDropzone.processQueue();
-                        }
-                        else {
-                            UpdateFranchise(null);
+                        if (CheckNullValidation()) {
+                            if (myDropzone.files[0].status == "queued") {
+                                myDropzone.processQueue();
+                            }
+                            else {
+                                UpdateFranchise(null);
+                            }
                         }
                     }
                     else {
-                        UpdateFranchise(null);
+                        toastr.warning("Please fill form details ", "Warning");
                     }
                 });
 
@@ -79,6 +81,8 @@ $(document).ready(function () {
                     SaveFranchise(response.fileName);
                     if (isNewFranchise) {
                         $('#franchiseForm')[0].reset();
+                        $('#ddlCity').val("").change();
+                        $('#ddlCity').selectpicker('refresh');
                         myDropzone.removeAllFiles();
                         setTimeout(() => {
                             $('#attachmentRow').clear();
@@ -225,48 +229,49 @@ function CheckValidation() {
 function CheckNullValidation() {
     if (IsNullOrEmpty($("#txtFranchiseName").val())) {
         toastr.warning("Please enter a valid Franchise Name", "Warning");
-        return;
+        return false;
     }
     if (IsNullOrEmpty($("#txtFranchiseCode").val())) {
         toastr.warning("Please enter a valid Franchise Code", "Warning");
-        return;
+        return false;
     }
     if (IsNullOrEmpty($("#txtAddress").val())) {
         toastr.warning("Please enter a valid Franchise Address", "Warning");
-        return;
+        return false;
     }
     if (!isValidateSelect($("#ddlCity").val())) {
         toastr.warning("Please select a valid Franchise City", "Warning");
-        return;
+        return false;
     }
     if (IsNullOrEmpty($("#txtPinCode").val())) {
         toastr.warning("Please enter a valid Franchise Pincode", "Warning");
-        return;
+        return false;
     }
     if (IsNullOrEmpty($("#txtContactPerson").val())) {
         toastr.warning("Please enter a valid Contact Person", "Warning");
-        return;
+        return false;
     }
     if (IsNullOrEmpty($("#txtEmailId").val())) {
         toastr.warning("Please enter a valid Email Id", "Warning");
-        return;
+        return false;
     }
     if (IsNullOrEmpty($("#txtPanNumber").val())) {
         toastr.warning("Please enter a valid PAN Number", "Warning");
-        return;
+        return false;
     }
     if (IsNullOrEmpty($("#txtGstNumber").val())) {
         toastr.warning("Please enter a valid GST Number", "Warning");
-        return;
+        return false;
     }
     if (IsNullOrEmpty($("#txtMobileNumber").val())) {
         toastr.warning("Please enter a valid Mobile Number", "Warning");
-        return;
+        return false;
     }
     if (IsNullOrEmpty($("#txtWhatsAppNumber").val())) {
         toastr.warning("Please enter a valid Whatsapp Number", "Warning");
-        return;
+        return false;
     }
+    return true;
 }
 function GetAllCityList() {
     var getcityUrl = '/Customer/GetAllCity'
@@ -600,7 +605,7 @@ function DeleteFranchise(companyId, fileName) {
             $("#backButton").css('display', 'block');
         },
         error: function (xhr, status, error) {
-            toastr.error("Fail	ed to fetch data!", "Error");
+            toastr.error("Failed to delete franchise!", "Error");
         }
     });
     })
