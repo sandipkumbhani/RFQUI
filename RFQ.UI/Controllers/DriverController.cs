@@ -149,7 +149,7 @@ namespace RFQ.UI.Controllers
                 driverRequestDto.UpdatedBy = Convert.ToInt32(profileId);
 
                 var result = _driverServices.AddDriver(driverRequestDto);
-                return Json(new { result = "success" });
+                return Json(new { result });
             }
             else
             {

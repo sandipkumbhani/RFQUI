@@ -23,7 +23,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
-        public async Task<string> AddDriver(DriverRequestDto driverRequestDto)
+        public async Task<DriverRequestDto> AddDriver(DriverRequestDto driverRequestDto)
         {
             try
             {
@@ -39,18 +39,20 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-
-                        return "Driver Saved";
+                    {
+                        return JsonConvert.DeserializeObject<DriverRequestDto>(responseModel.Data.ToString());
+                    }
                     else
-                        return responseModel.ErrorMessage;
+                    {
+                        return null;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
-            return string.Empty;
+            return null;
         }
 
         public async Task<string> DeleteDriver(int DriverId)
@@ -160,7 +162,7 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<IEnumerable<InternalMasterDto>> GetDriverType()
+        public async Task<IEnumerable<InternalMasterResponseDto>> GetDriverType()
         {
             try
             {
@@ -171,7 +173,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
                 {
-                    var driverList = JsonConvert.DeserializeObject<List<InternalMasterDto>>(Convert.ToString(responseModel.Data!));
+                    var driverList = JsonConvert.DeserializeObject<List<InternalMasterResponseDto>>(Convert.ToString(responseModel.Data!));
                     return driverList;
                 }
                 return null;

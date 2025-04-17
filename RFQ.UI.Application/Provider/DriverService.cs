@@ -14,7 +14,7 @@ namespace RFQ.UI.Application.Provider
         {
             _driverAdaptor = driverAdaptor;
         }
-        public Task<string> AddDriver(DriverRequestDto driverRequestDto)
+        public Task<DriverRequestDto> AddDriver(DriverRequestDto driverRequestDto)
         {
             return _driverAdaptor.AddDriver(driverRequestDto);
         }
@@ -39,7 +39,7 @@ namespace RFQ.UI.Application.Provider
             return await _driverAdaptor.GetDlKycDetails(licenseKycDetailsRequestDto);
         }
 
-        public async Task<IEnumerable<InternalMasterDto>> GetDriverType()
+        public async Task<IEnumerable<InternalMasterResponseDto>> GetDriverType()
         {
             return await _driverAdaptor.GetDriverType();
         }

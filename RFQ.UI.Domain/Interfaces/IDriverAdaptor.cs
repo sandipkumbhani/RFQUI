@@ -6,11 +6,11 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface IDriverAdaptor
     {
-        Task<string> AddDriver(DriverRequestDto driverRequestDto);
+        Task<DriverRequestDto> AddDriver(DriverRequestDto driverRequestDto);
         Task<IEnumerable<DriverResponseDto>> GetAllDriver();
         Task<string> EditDriver(int DriverId, DriverRequestDto driverRequestDto);
         Task<string> DeleteDriver(int DriverId);
         Task<LicenseKycDetailsResponseDto> GetDlKycDetails(LicenseKycDetailsRequestDto licenseKycDetailsRequestDto);
-        Task<IEnumerable<InternalMasterDto>> GetDriverType();
+        Task<IEnumerable<InternalMasterResponseDto>> GetDriverType();
     }
 }
