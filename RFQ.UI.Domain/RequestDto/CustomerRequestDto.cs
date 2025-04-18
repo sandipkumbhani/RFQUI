@@ -6,7 +6,7 @@
 
         public int CompanyId { get; set; }
 
-        public int PartyTypeId { get; set; } = 1;
+        public int PartyTypeId { get; set; } = 6;
 
         public string? PartyName { get; set; }
 

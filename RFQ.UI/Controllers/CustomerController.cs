@@ -23,28 +23,34 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CustomerSave([FromBody] CustomerRequestDto customerRequestDto)
+        public async Task<IActionResult> CustomerSave([FromBody] CustomerRequestDto customerRequestDto)
         {
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-            string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-            string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-
-            if (customerRequestDto != null)
+            try
             {
-                customerRequestDto.CompanyId = Convert.ToInt32(companyId);
-                customerRequestDto.CreatedBy = Convert.ToInt32(profileId);
-                customerRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                var result = _customerServices.AddCustomer(customerRequestDto);
-                return Json(new { result = "success" });
+                if (customerRequestDto != null)
+                {
+                    customerRequestDto.CompanyId = Convert.ToInt32(companyId);
+                    customerRequestDto.CreatedBy = Convert.ToInt32(profileId);
+                    customerRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+
+                    var result = await _customerServices.AddCustomer(customerRequestDto);
+                    return Json(new { result });
+                }
+                else
+                {
+                    return Json(new { result = "fail" });
+
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { result = "fail" });
-
+                throw new Exception(ex.Message);
             }
         }
-
         [HttpGet]
         public async Task<IActionResult> ViewCustomer()
         {

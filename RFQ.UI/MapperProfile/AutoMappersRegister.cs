@@ -8,6 +8,7 @@ namespace RFQ.UI.MapperProfile
         public AutoMappersRegister()
         {
             CreateMap<object, CorporateCompanyRequestDto>();
+            CreateMap<object, DriverRequestDto>();
         }
     }
 }
