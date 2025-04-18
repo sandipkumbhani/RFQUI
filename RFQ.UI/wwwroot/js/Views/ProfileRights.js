@@ -24,7 +24,7 @@ function initializjquery() {
 
     $("#txtName").on('change', function () {
         $("#menuItemList").html("");
-        GetLinkItemList($("#txtMenu").val())
+        GetLinkItemList($("#txtMenu").val(), $("#txtName").val())
     })
 }
 function Save() {
@@ -62,7 +62,6 @@ function GetAllProfileName() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            //debugger;
             var data = response
             const selectProfileName = document.getElementById("txtName");
             let placeholderOption = document.createElement("option");
@@ -92,7 +91,6 @@ function GetAllMenuName() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            //debugger;
             console.log(response);
             var data = response
             const selectProfileRightsName = document.getElementById("txtMenu");
@@ -118,7 +116,7 @@ function GetAllMenuName() {
         }
     });
 }
-function GetLinkItemList(linkGroupId) {
+function GetLinkItemList(linkGroupId, profileId) {
     var GetUrl = '/Profile/GetLinkItemList';
     $.ajax({
         url: GetUrl,
@@ -127,8 +125,9 @@ function GetLinkItemList(linkGroupId) {
         success: function (response) {
             linkItemData = [];
             var data = $.grep(response, function (x) {
-                return x.linkGroupId == parseInt(linkGroupId);
+                return (x.profileId == parseInt(profileId) && x.linkGroupId == linkGroupId);
             });
+            debugger;
             linkItemData = data;
             console.log(linkItemData)
             linkItemData.forEach((item, index) => {
@@ -189,7 +188,7 @@ function GetLinkItemList(linkGroupId) {
 function OnChangeMenuGroupDropDown() {
     $("#txtMenu").on('change', function () {
         $("#menuItemList").html('');
-        GetLinkItemList($(this).val())
+        GetLinkItemList($(this).val(), $("#txtName").val())
     });
 }
 function OnChangeViewCheckbox(checkbox, item) {
@@ -343,7 +342,8 @@ function AddOrUpdateProfileRights(AllProfileRightsData) {
         dataType: "json",
         data: JSON.stringify(AllProfileRightsData),
         success: function (response) {
-
+            console.log(response)
+            toastr.success("Profile Rights Saved successfully", "success");
         },
         error: function (xhr, status, error) {
             console.error("Error fetching profile rights:", error);

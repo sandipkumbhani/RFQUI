@@ -19,6 +19,7 @@ namespace RFQ.UI.Domain.ResponseDto
         public string EditUrl { get; set; }
         public string CancelUrl { get; set; }
         public int StatusId { get; set; }
+        public int ProfileId { get; set; }
         public bool? IsAdd { get; set; }
         public bool? IsEdit { get; set; }
         public bool? IsView { get; set; }
