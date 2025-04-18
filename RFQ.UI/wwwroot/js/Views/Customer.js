@@ -1,6 +1,5 @@
 ﻿const urlParams = new URLSearchParams(window.location.search);
 const linkId = urlParams.get('LinkId');
-
 let isGstEKycClicked = false;
 let isPanEKycClicked = false;
 
@@ -133,6 +132,7 @@ $(document).ready(function () {
         event.preventDefault();
         if (isGstEKycClicked && isPanEKycClicked) {
             SaveAndSaveNew();
+            window.location.href = "Dashboard/Dashboard";
         } else {
             toastr.warning("Please complete GST and PAN E-KYC before saving!");
         }
@@ -142,11 +142,11 @@ $(document).ready(function () {
     $('#SavenewButton').on('click', function (event) {
         event.preventDefault();
         if (isGstEKycClicked && isPanEKycClicked) {
-            SaveAndSaveNew(); 
-            $('#CustomerForm')[0].reset(); 
+            SaveAndSaveNew();
+            $('#CustomerForm')[0].reset();
             $("#ddlCity").val("").change();
             $("#ddlCity").selectpicker("refresh");
-            isGstEKycClicked = false; 
+            isGstEKycClicked = false;
             isPanEKycClicked = false;
         } else {
             toastr.warning("Please complete GST and PAN E-KYC before proceeding!");
@@ -423,7 +423,7 @@ function EditCustomer(partyId) {
 function UpdateCustomer() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
-
+        debugger;
         var formData = {
             PartyId: $("#hdnPartyId").val(),
             LegalName: $("#txtLegalName").val(),
@@ -477,17 +477,13 @@ function UpdateCustomer() {
             dataType: "json",
             success: function (result) {
                 if (result.result === "success") {
-                    toastr.success("Customer Updated successfully!");
+                    toastr.success("Customer Updated successfully!","success");
                     $("#addCustomerDiv").css('display', 'none')
                     FetchCustomerList();
                     $("#backButton").css('display', 'block');
                 } else {
-                    $("#dataDiv").html("Failed to update profile.");
+                    toastr.error("Failed to Update Customer", "error");
                 }
-                $("#btnsave").show();
-                $("#btnUpdate").hide();
-                $("#btnsaveandnew").prop("disabled", false);
-                $("#viewprofile").click();
             },
             error: function (xhr, status, error) {
                 $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
@@ -541,7 +537,6 @@ function DeleteCustomer(partyId) {
         });
     });
 }
-
 function GstEKycclick() {
     $("#gstEKycButton").on("click", function () {
         var gstNumber = $("#txtGstNumber").val();
@@ -575,11 +570,26 @@ function GstEKycclick() {
                         $("#txtVerifiedGstNo").val()
                 } else {
                     toastr.warning(response.messageDescription, "Error");
+                    $("#txtLegalName").val('');
+                    $("#txtTypeBusiness").val('');
+                    $("#txtGstStatus").val('');
+                    $("#txtGstAddress").val('');
+                    $("#txtTradeName").val('');
+                    $("#txtAadharVerified").val('');
+                    $("#txtAadharVerified").val('');
+                    $("#txtGstVerifiedOn").val('');
                 }
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
                 toastr.error("Failed to Gst E-Kyc Details", "Error");
+                $("#txtLegalName").val('');
+                $("#txtTypeBusiness").val('');
+                $("#txtGstStatus").val('');
+                $("#txtGstAddress").val('');
+                $("#txtTradeName").val('');
+                $("#txtAadharVerified").val('');
+                $("#txtAadharVerified").val('');
+                $("#txtGstVerifiedOn").val('');
             }
         });
     });
@@ -613,11 +623,19 @@ function PanEKycclick() {
                         $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
                 } else {
                     toastr.warning(response.messageDescription, "Error");
+                    $("#txtPanName").val(''),
+                        $("#txtAadharLinked").val(''),
+                        $("#txtPanStatus").val(''),
+                        $("#txtPanVerifiedOn ").val('')
                 }
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
                 toastr.error("Failed to Fetch EKyc Details", "Error");
+                $("#txtPanName").val(''),
+                    $("#txtAadharLinked").val(''),
+                    $("#txtPanStatus").val(''),
+                    $("#txtPanVerifiedOn ").val('')
             }
         });
     });
