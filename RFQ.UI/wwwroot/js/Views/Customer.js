@@ -41,25 +41,29 @@ $(document).ready(function () {
         }
         $("#numPan").val(PanEValue.toUpperCase());
     });
-    $("#txtCustomerName").on("keypress", function (event) {
+    $("#txtCustomerName").on("blur keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!isAlphabets(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid Customer Name ", "Warning");
+            return;
         }
     });
-    $("#txtCustomerCode").on("keypress", function (event) {
-        var key = String.fromCharCode(event.which);
-        if (!isAlphaNumeric(key)) {
-            event.preventDefault();
-        }
-    });
-    $("#txtaddress").on("keypress", function (event) {
+    //$("#txtCustomerCode").on("keypress", function (event) {
+    //    var key = String.fromCharCode(event.which);
+    //    if (!isAlphaNumeric(key)) {
+    //        event.preventDefault();
+    //    }
+    //});
+    $("#txtaddress").on("blur keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!isValidAddress(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid Address ", "Warning");
+            return;
         }
     });
-    $("#ddlCity").on("change", function () {
+    $("#ddlCity").on("blur change", function () {
         var ddlCity = $(this).val();
         var selectedIndex = $(this).prop("selectedIndex");
         if (!isValidateSelect(ddlCity, selectedIndex)) {
@@ -67,25 +71,29 @@ $(document).ready(function () {
             return;
         }
     });
-    $("#txtContactPerson").on("keypress", function (event) {
+    $("#txtContactPerson").on("blur keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!isAlphabets(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid Contact Person", "Warning");
+            return;
         }
     });
-    $("#numMobile").on("keypress", function (event) {
+    $("#numMobile").on("blur keypress", function (event) {
+        var key = String.fromCharCode(event.which);
+        if (!/^\d$/.test(key)) {
+            event.preventDefault();
+            toastr.warning("Please enter a valid Mobile Number", "Warning");
+            return;
+        }
+    });
+    $("#numContact").on("blur keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!/^\d$/.test(key)) {
             event.preventDefault();
         }
     });
-    $("#numContact").on("keypress", function (event) {
-        var key = String.fromCharCode(event.which);
-        if (!/^\d$/.test(key)) {
-            event.preventDefault();
-        }
-    });
-    $("#numPincode").on("keypress", function (event) {
+    $("#numPincode").on("blur keypress", function (event) {
         var keyCode = event.which || event.keyCode;
         if (keyCode < 48 || keyCode > 57) {
             event.preventDefault();
@@ -94,20 +102,24 @@ $(document).ready(function () {
         var PincodeValue = $(this).val() + String.fromCharCode(keyCode);
         if (PincodeValue.length > 6) {
             event.preventDefault();
+            return;
         }
     });
 
-    $("#numWhatsApp").on("keypress", function (event) {
+    $("#numWhatsApp").on("blur keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!/^\d$/.test(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a WhatsApp Number", "Warning");
+            return;
         }
     });
-    $("#txtEmail").on("keypress", function (event) {
+    $("#txtEmail").on("blur keypress", function (event) {
         var key = String.fromCharCode(event.which);
         var emailValue = $(this).val() + key;
         if (!isValidateEmail(emailValue)) {
-            //toastr.warning("Email is not valid yet", "Warning");
+            toastr.warning("Please enter a valid email address", "Warning");
+            return;
         }
     });
 
@@ -477,7 +489,7 @@ function UpdateCustomer() {
             dataType: "json",
             success: function (result) {
                 if (result.result === "success") {
-                    toastr.success("Customer Updated successfully!","success");
+                    toastr.success("Customer Updated successfully!", "success");
                     $("#addCustomerDiv").css('display', 'none')
                     FetchCustomerList();
                     $("#backButton").css('display', 'block');

@@ -17,7 +17,7 @@ $(document).ready(function () {
     });
 
     // Set Token in Global Class
-    GetAndSetToken("AuthToken");
+    /*GetAndSetToken("AuthToken");*/
 
     // On form submit
     $("#btnSaveVehicleType").click(function (event) {
@@ -44,27 +44,28 @@ $(document).ready(function () {
         $("#backButton").css('display', 'Block');
     })
 });
-function GetAndSetToken(cookieName) {
-    var globalUrl = '/api/global/set-token';
-    let match = document.cookie.match(new RegExp('(^| )' + cookieName + '=([^;]+)'));
-    let token = match ? match[2] : null;
-    if (token) {
-        fetch(globalUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: token }) // Proper JSON format
-        })
-            .then(response => {
-                if (!response.ok) {
-                    console.error("Failed to set token");
-                } else {
-                }
-            })
-            .catch(error => console.error("Error:", error));
-    } else {
-        console.warn("Token not found in cookies");
-    }
-}
+
+//function GetAndSetToken(cookieName) {
+//    var globalUrl = '/api/global/set-token';
+//    let match = document.cookie.match(new RegExp('(^| )' + cookieName + '=([^;]+)'));
+//    let token = match ? match[2] : null;
+//    if (token) {
+//        fetch(globalUrl, {
+//            method: 'POST',
+//            headers: { 'Content-Type': 'application/json' },
+//            body: JSON.stringify({ token: token }) // Proper JSON format
+//        })
+//            .then(response => {
+//                if (!response.ok) {
+//                    console.error("Failed to set token");
+//                } else {
+//                }
+//            })
+//            .catch(error => console.error("Error:", error));
+//    } else {
+//        console.warn("Token not found in cookies");
+//    }
+//}
 function FetchVehicleTypes() {
     $('#tableDiv').show();
     var fetchVehicleTypesUrl = '/Vehicle/ViewVehicleType';
@@ -198,7 +199,7 @@ function EditVehicleType(vehicleTypeId) {
     $("#txtminKmsPerDay").val(data[0].minimumKms);
 
     // Using one-time event binding with .one()
-    $('#updateButton').one('click', function () {
+    $('#updateButton').on('click', function () {
         UpdateVechileType(vehicleTypeId);
     });
 }
