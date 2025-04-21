@@ -125,34 +125,39 @@ function GetAttachmentList(repeaterItemName, transactionId) {
 
         let fileName = item.querySelector("#txtFileName")?.value || "N/A";
         let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-        let fileUpload = item.querySelector("#fileUpload");
-        let filePath = item.querySelector("#hdnUplodedFileName")?.value
-
-        attachmentDetails.push({
-            AttachmentName: fileName,
-            AttachmentTypeId: attachmentType,
-            AttachmentPath: filePath,
-            ReferenceLinkId: parseInt(linkd),
-            TransactionId: transactionId
-        });
+        let filePath = item.querySelector("#hdnUplodedFileName")?.value;
+        if (fileName && attachmentType && filePath) {
+            attachmentDetails.push({
+                AttachmentName: fileName,
+                AttachmentTypeId: attachmentType,
+                AttachmentPath: filePath,
+                ReferenceLinkId: parseInt(linkd),
+                TransactionId: transactionId
+            });
+        }
     });
     return attachmentDetails;
 }
 function Saveattachment(transactionId) {
     var attachmentListData = GetAttachmentList("[data-repeater-item]", transactionId);
     var attachmentSaveUrl = '/MasterAttachment/MasterAttachmentSave';
-    $.ajax({
-        url: attachmentSaveUrl,
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(attachmentListData),
-        success: function (response) {
-            toastr.success("Attachment saved successfully");
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to save attachment", "Error");
-        }
-    });
+    if (attachmentListData.length > 0) {
+        $.ajax({
+            url: attachmentSaveUrl,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(attachmentListData),
+            success: function (response) {
+                toastr.success("Attachment saved successfully");
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to save attachment", "Error");
+            }
+        });
+    }
+    else {
+        return;
+    }
 }
 function FetchMasterAttachment(linkid, transactionid, callback) {
     var fetchMasterAttachmentUrl = '/MasterAttachment/GetAllMasterAttachment';
