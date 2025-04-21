@@ -201,8 +201,8 @@
                 </div>
                 @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
                 <div class="card-footer d-flex justify-content-srtat py-6 px-9">
-                    <button type="button" class="btn btn-primary me-2" id="btnSaveCustomer">Save</button>
-                    <button type="button" class="btn btn-primary" id="SavenewButton">Save & New</button>&nbsp;
+                    <button type="button" class="btn btn-primary me-2" id="btnSaveCustomer" data-action="save">Save</button>
+                    <button type="button" class="btn btn-primary" id="SavenewButton" data-action="saveNew">Save & New</button>&nbsp;
                     <button type="button" id="btnUpdate" class="btn btn-primary" style="display:none; margin-right:05px;">Update</button>
                     <button type="button" class="btn btn-primary" id="btnView">View</button>
                     <button id="cancleButton" type="button" class="btn btn-danger d-none">Cancel</button>

@@ -41,21 +41,16 @@ $(document).ready(function () {
         }
         $("#numPan").val(PanEValue.toUpperCase());
     });
-    $("#txtCustomerName").on("blur keypress", function (event) {
+    $("#txtCustomerName").on("keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!isAlphabets(key)) {
             event.preventDefault();
             toastr.warning("Please enter a valid Customer Name ", "Warning");
+            ClearGstFields();
             return;
         }
     });
-    //$("#txtCustomerCode").on("keypress", function (event) {
-    //    var key = String.fromCharCode(event.which);
-    //    if (!isAlphaNumeric(key)) {
-    //        event.preventDefault();
-    //    }
-    //});
-    $("#txtaddress").on("blur keypress", function (event) {
+    $("#txtaddress").on("keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!isValidAddress(key)) {
             event.preventDefault();
@@ -63,15 +58,16 @@ $(document).ready(function () {
             return;
         }
     });
-    $("#ddlCity").on("blur change", function () {
+    $("#ddlCity").on("change", function () {
         var ddlCity = $(this).val();
+        console.log(isValidateSelect(ddlCity, selectedIndex));
         var selectedIndex = $(this).prop("selectedIndex");
         if (!isValidateSelect(ddlCity, selectedIndex)) {
             toastr.warning("Please select City", "Warning");
             return;
         }
     });
-    $("#txtContactPerson").on("blur keypress", function (event) {
+    $("#txtContactPerson").on("keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!isAlphabets(key)) {
             event.preventDefault();
@@ -79,7 +75,7 @@ $(document).ready(function () {
             return;
         }
     });
-    $("#numMobile").on("blur keypress", function (event) {
+    $("#numMobile").on("keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!/^\d$/.test(key)) {
             event.preventDefault();
@@ -87,13 +83,13 @@ $(document).ready(function () {
             return;
         }
     });
-    $("#numContact").on("blur keypress", function (event) {
+    $("#numContact").on("keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!/^\d$/.test(key)) {
             event.preventDefault();
         }
     });
-    $("#numPincode").on("blur keypress", function (event) {
+    $("#numPincode").on("keypress", function (event) {
         var keyCode = event.which || event.keyCode;
         if (keyCode < 48 || keyCode > 57) {
             event.preventDefault();
@@ -105,8 +101,7 @@ $(document).ready(function () {
             return;
         }
     });
-
-    $("#numWhatsApp").on("blur keypress", function (event) {
+    $("#numWhatsApp").on("keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!/^\d$/.test(key)) {
             event.preventDefault();
@@ -114,7 +109,7 @@ $(document).ready(function () {
             return;
         }
     });
-    $("#txtEmail").on("blur keypress", function (event) {
+    $("#txtEmail").on("keypress", function (event) {
         var key = String.fromCharCode(event.which);
         var emailValue = $(this).val() + key;
         if (!isValidateEmail(emailValue)) {
@@ -131,50 +126,45 @@ $(document).ready(function () {
 
     $("#gstEKycButton").click(function () {
         isGstEKycClicked = true;
-        //toastr.info("GST E-KYC Clicked!");
     });
 
     $("#panEKycButton").click(function () {
         isPanEKycClicked = true;
-        //toastr.info("PAN E-KYC Clicked!");
     });
 
-    // Save Customer Data
-    $("#btnSaveCustomer").click(function (event) {
-        event.preventDefault();
+    $("#btnSaveCustomer, #SavenewButton").on('click', function () {
+        var action = $(this).data('action'); // "save" or "saveNew"
         if (isGstEKycClicked && isPanEKycClicked) {
-            SaveAndSaveNew();
-            window.location.href = "Dashboard/Dashboard";
+            SaveAndSaveNew(action);
         } else {
             toastr.warning("Please complete GST and PAN E-KYC before saving!");
         }
     });
 
-    // Save and Reset Form
-    $('#SavenewButton').on('click', function (event) {
-        event.preventDefault();
-        if (isGstEKycClicked && isPanEKycClicked) {
-            SaveAndSaveNew();
-            $('#CustomerForm')[0].reset();
-            $("#ddlCity").val("").change();
-            $("#ddlCity").selectpicker("refresh");
-            isGstEKycClicked = false;
-            isPanEKycClicked = false;
-        } else {
-            toastr.warning("Please complete GST and PAN E-KYC before proceeding!");
-        }
-    });
-
-    //// On form submit
+    //// Save Customer Data
     //$("#btnSaveCustomer").click(function (event) {
     //    event.preventDefault();
-    //    SaveAndSaveNew();
+    //    if (isGstEKycClicked && isPanEKycClicked) {
+    //        SaveAndSaveNew();
+
+    //    } else {
+    //        toastr.warning("Please complete GST and PAN E-KYC before saving!");
+    //    }
     //});
 
-    //// Reset form fields on button click
-    //$('#SavenewButton').on('click', function () {
-    //    SaveAndSaveNew();
-    //    $('#CustomerForm')[0].reset();
+    //// Save and Reset Form
+    //$('#SavenewButton').on('click', function (event) {
+    //    event.preventDefault();
+    //    if (isGstEKycClicked && isPanEKycClicked) {
+
+    //        //$('#CustomerForm')[0].reset();
+    //        $("#ddlCity").val("");
+    //        $("#ddlCity").selectpicker("refresh");
+    //        isGstEKycClicked = false;
+    //        isPanEKycClicked = false;
+    //    } else {
+    //        toastr.warning("Please complete GST and PAN E-KYC before proceeding!");
+    //    }
     //});
 
     $('#backButton').click(function () {
@@ -216,14 +206,13 @@ function FetchCustomerList() {
                 "pageLength": 10,
                 "lengthChange": true,
                 "searching": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
                 "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "ordering": false,
                 "data": customerList,
                 "columns": [
 
@@ -262,7 +251,7 @@ function FetchCustomerList() {
         }
     });
 }
-function SaveAndSaveNew() {
+function SaveAndSaveNew(action) {
     var gstKyc = $("#txtGstNumber").val();
     var legalName = $("#txtLegalName").val();
     var typeBusiness = $("#txtTypeBusiness").val();
@@ -366,22 +355,54 @@ function SaveAndSaveNew() {
         LinkId: linkId
 
     }
-    $.ajax({
-        url: saveUrl,
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(formData),
-        success: function (response) {
-            partyId = response.result.partyId;
-            Saveattachment(partyId);
-            toastr.success("Customer details submitted successfully!");
 
-        },
-        error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to submit Customer details", "Error");
-        }
-    });
+    if (action == "save") {
+        $.ajax({
+            url: saveUrl,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response != null) {
+                    partyId = response.result.partyId;
+                    Saveattachment(partyId);
+                    window.location.href = "../Dashboard/Dashboard";
+                    toastr.success("Customer details submitted successfully!");
+                } else {
+                    toastr.success("Somthing Went Wrong!");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                toastr.error("Failed to submit Customer details", "Error");
+            }
+        });
+    }
+    else {
+        $.ajax({
+            url: saveUrl,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response != null) {
+                    partyId = response.result.partyId;
+                    Saveattachment(partyId);
+                    toastr.success("Customer details submitted successfully!");
+                    $('#CustomerForm')[0].reset();
+                    $("#ddlCity").val("");
+                    $("#ddlCity").selectpicker("refresh");
+                } else {
+                    toastr.success("Somthing Went Wrong!");
+                }
+                
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                toastr.error("Failed to submit Customer details", "Error");
+            }
+        });
+    }
     return partyId;
 };
 function EditCustomer(partyId) {
@@ -417,7 +438,8 @@ function EditCustomer(partyId) {
         $("#txtCustomerName").val(formData.partyName);
         $("#txtCustomerCode").val(formData.customerCode);
         $("#txtaddress").val(formData.addressLine);
-        $("#ddlCity").val(formData.cityId).change();
+        $('#ddlCity').selectpicker('val', formData.cityId);
+        $('#ddlCity').selectpicker('refresh');
         $("#txtContactPerson").val(formData.contactPerson);
         $("#numMobile").val(formData.mobNo);
         $("#numContact").val(formData.contactNo);
@@ -435,95 +457,98 @@ function EditCustomer(partyId) {
 function UpdateCustomer() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
-        debugger;
-        var formData = {
-            PartyId: $("#hdnPartyId").val(),
-            LegalName: $("#txtLegalName").val(),
-            TypeOfBusiness: $("#txtTypeBusiness").val(),
-            GstStatus: $("#txtGstStatus").val(),
-            TradeName: $("#txtTradeName").val(),
-            AadharVerified: $("#txtAadharVerified").val(),
-            PanStatus: $("#txtPanStatus").val(),
-            GSTVarifiedOn: $("#txtGstVerifiedOn").val(),
-            PANVerifiedOn: $("#txtPanVerifiedOn").val(),
-            PartyName: $("#txtCustomerName").val(),
-            CustomerCode: $("#txtCustomerCode").val(),
-            AddressLine: $("#txtaddress").val(),
-            CityId: $("#ddlCity").val(),
-            ContactPerson: $("#txtContactPerson").val(),
-            MobNo: $("#numMobile").val(),
-            PANNo: $("#numPan").val(),
-            Pincode: $("#numPincode").val(),
-            WhatsAppNo: $("#numWhatsApp").val(),
-            ContactNo: $("#numContact").val(),
-            Email: $("#txtEmail").val(),
-            GSTNo: $("#numGstNumber").val(),
-            PANLinkedWithAdhar: $("#txtAadharLinked").val(),
-            LinkId: linkId
-        };
-        let repeaterItems = document.querySelectorAll("[data-repeater-item]");
-        let updateAttachmentDetails = [];
-        var linkd = GetQueryParam("LinkId");
-        repeaterItems.forEach((item, index) => {
-            let attId = item.querySelector("#hdnAttachmentId").value;
-            let attachmentId = attId == '' ? 0 : attId;
-            let fileName = item.querySelector("#txtFileName")?.value || "N/A";
-            let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-            let filePath = item.querySelector("#hdnUplodedFileName").value;
-            updateAttachmentDetails.push({
-                // index: index + 1,
-                AttachmentId: attachmentId,
-                AttachmentName: fileName,
-                AttachmentTypeId: attachmentType,
-                AttachmentPath: filePath,
-                ReferenceLinkId: parseInt(linkd),
-                TransactionId: $("#hdnPartyId").val()
+        var isvalidate = validateCustomerForm();
+        console.log(isvalidate)
+        if (isvalidate) {
+            var formData = {
+                PartyId: $("#hdnPartyId").val(),
+                LegalName: $("#txtLegalName").val(),
+                TypeOfBusiness: $("#txtTypeBusiness").val(),
+                GstStatus: $("#txtGstStatus").val(),
+                TradeName: $("#txtTradeName").val(),
+                AadharVerified: $("#txtAadharVerified").val(),
+                PanStatus: $("#txtPanStatus").val(),
+                GSTVarifiedOn: $("#txtGstVerifiedOn").val(),
+                PANVerifiedOn: $("#txtPanVerifiedOn").val(),
+                PartyName: $("#txtCustomerName").val(),
+                CustomerCode: $("#txtCustomerCode").val(),
+                AddressLine: $("#txtaddress").val(),
+                CityId: $("#ddlCity").val(),
+                ContactPerson: $("#txtContactPerson").val(),
+                MobNo: $("#numMobile").val(),
+                PANNo: $("#numPan").val(),
+                Pincode: $("#numPincode").val(),
+                WhatsAppNo: $("#numWhatsApp").val(),
+                ContactNo: $("#numContact").val(),
+                Email: $("#txtEmail").val(),
+                GSTNo: $("#numGstNumber").val(),
+                PANLinkedWithAdhar: $("#txtAadharLinked").val(),
+                LinkId: linkId
+            };
+            let repeaterItems = document.querySelectorAll("[data-repeater-item]");
+            let updateAttachmentDetails = [];
+            var linkd = GetQueryParam("LinkId");
+            repeaterItems.forEach((item, index) => {
+                let attId = item.querySelector("#hdnAttachmentId").value;
+                let attachmentId = attId == '' ? 0 : attId;
+                let fileName = item.querySelector("#txtFileName")?.value || "N/A";
+                let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
+                let filePath = item.querySelector("#hdnUplodedFileName").value;
+                updateAttachmentDetails.push({
+                    // index: index + 1,
+                    AttachmentId: attachmentId,
+                    AttachmentName: fileName,
+                    AttachmentTypeId: attachmentType,
+                    AttachmentPath: filePath,
+                    ReferenceLinkId: parseInt(linkd),
+                    TransactionId: $("#hdnPartyId").val()
+                });
             });
-        });
-        var editCustomer = '/Customer/UpdateCustomer';
-        $.ajax({
-            type: "PUT",
-            url: editCustomer,
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(formData),
-            dataType: "json",
-            success: function (result) {
-                if (result.result === "success") {
-                    toastr.success("Customer Updated successfully!", "success");
-                    $("#addCustomerDiv").css('display', 'none')
-                    FetchCustomerList();
-                    $("#backButton").css('display', 'block');
-                } else {
-                    toastr.error("Failed to Update Customer", "error");
+            var editCustomer = '/Customer/UpdateCustomer';
+            $.ajax({
+                type: "PUT",
+                url: editCustomer,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(formData),
+                dataType: "json",
+                success: function (result) {
+                    if (result.result === "success") {
+                        toastr.success("Customer Updated successfully!", "success");
+                        $("#addCustomerDiv").css('display', 'none')
+                        FetchCustomerList();
+                        $("#backButton").css('display', 'block');
+                    } else {
+                        toastr.error("Failed to Update Customer", "error");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
                 }
-            },
-            error: function (xhr, status, error) {
-                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
-            }
-        });
-        $.ajax({
-            type: "PUT",
-            url: '/MasterAttachment/UpdateMasterAttachment',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(updateAttachmentDetails),
-            dataType: "json",
-            success: function (response) {
-                if (response.result == "success") {
-                    partyId = $("#hdnPartyId").val();
-                    Saveattachment(partyId);
-                } else {
-                    $("#dataDiv").html("Failed to update profile.");
+            });
+            $.ajax({
+                type: "PUT",
+                url: '/MasterAttachment/UpdateMasterAttachment',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(updateAttachmentDetails),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result == "success") {
+                        partyId = $("#hdnPartyId").val();
+                        Saveattachment(partyId);
+                    } else {
+                        $("#dataDiv").html("Failed to update profile.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
                 }
-            },
-            error: function (xhr, status, error) {
-                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-            }
-        });
+            });
 
-        var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
-        $.each(deletedAttachments, function (index, value) {
-            DeleteAttachmentAPI(value);
-        });
+            var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
+            $.each(deletedAttachments, function (index, value) {
+                DeleteAttachmentAPI(value);
+            });
+        }
     });
 }
 function DeleteCustomer(partyId) {
@@ -538,7 +563,9 @@ function DeleteCustomer(partyId) {
             dataType: "json",
             data: JSON.stringify(partyId),
             success: function (response) {
-                DeleteMasterAttachment(result[0].attachmentId);
+                if (result.length > 0) {
+                    DeleteMasterAttachment(result[0].attachmentId);
+                }
                 toastr.success("Customer deleted successfully!");
                 FetchCustomerList();
             },
@@ -582,26 +609,12 @@ function GstEKycclick() {
                         $("#txtVerifiedGstNo").val()
                 } else {
                     toastr.warning(response.messageDescription, "Error");
-                    $("#txtLegalName").val('');
-                    $("#txtTypeBusiness").val('');
-                    $("#txtGstStatus").val('');
-                    $("#txtGstAddress").val('');
-                    $("#txtTradeName").val('');
-                    $("#txtAadharVerified").val('');
-                    $("#txtAadharVerified").val('');
-                    $("#txtGstVerifiedOn").val('');
+                    ClearGstFields();
                 }
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Gst E-Kyc Details", "Error");
-                $("#txtLegalName").val('');
-                $("#txtTypeBusiness").val('');
-                $("#txtGstStatus").val('');
-                $("#txtGstAddress").val('');
-                $("#txtTradeName").val('');
-                $("#txtAadharVerified").val('');
-                $("#txtAadharVerified").val('');
-                $("#txtGstVerifiedOn").val('');
+                ClearGstFields();
             }
         });
     });
@@ -613,6 +626,7 @@ function PanEKycclick() {
 
         if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panNumber.toUpperCase())) {
             toastr.warning("Please enter a valid PAN number", "Warning");
+            CleatPanFields();
             return;
         }
         // Request Body
@@ -635,19 +649,13 @@ function PanEKycclick() {
                         $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
                 } else {
                     toastr.warning(response.messageDescription, "Error");
-                    $("#txtPanName").val(''),
-                        $("#txtAadharLinked").val(''),
-                        $("#txtPanStatus").val(''),
-                        $("#txtPanVerifiedOn ").val('')
+                    CleatPanFields();
                 }
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
                 toastr.error("Failed to Fetch EKyc Details", "Error");
-                $("#txtPanName").val(''),
-                    $("#txtAadharLinked").val(''),
-                    $("#txtPanStatus").val(''),
-                    $("#txtPanVerifiedOn ").val('')
+                CleatPanFields();
             }
         });
     });
@@ -686,4 +694,47 @@ function BindDropDown(data) {
     });
 
     $('.selectpicker').selectpicker('refresh');
+}
+function ClearGstFields() {
+    $("#txtLegalName").val('');
+    $("#txtTypeBusiness").val('');
+    $("#txtGstStatus").val('');
+    $("#txtGstAddress").val('');
+    $("#txtTradeName").val('');
+    $("#txtAadharVerified").val('');
+    $("#txtAadharVerified").val('');
+    $("#txtGstVerifiedOn").val('');
+}
+function CleatPanFields() {
+    $("#txtPanName").val(''),
+        $("#txtAadharLinked").val(''),
+        $("#txtPanStatus").val(''),
+        $("#txtPanVerifiedOn ").val('')
+}
+function validateCustomerForm() {
+    let isValid = true;
+
+    const fields = [
+        { id: "#txtGstNumber", name: "GST Number" },
+        { id: "#txtPanNumber", name: "PAN Number" },
+        { id: "#txtCustomerName", name: "Customer Name" },
+        { id: "#txtaddress", name: "Address" },
+        { id: "#ddlCity", name: "City" },
+        { id: "#txtContactPerson", name: "Contact Person" },
+        { id: "#numMobile", name: "Mobile Number" },
+        { id: "#numContact", name: "Contact Number" },
+        { id: "#numPincode", name: "Pincode" },
+        { id: "#numWhatsApp", name: "WhatsApp Number" },
+        { id: "#txtEmail", name: "Email" }
+    ];
+
+    fields.forEach(field => {
+        const value = $(field.id).val();
+        if (!value || value.trim() === "") {
+            toastr.warning(`${field.name} is required`, "Validation Error");
+            isValid = false;
+        }
+    });
+
+    return isValid;
 }
