@@ -131,7 +131,6 @@ function GetLinkItemList(linkGroupId) {
             });
             linkItemData = data;
             console.log(linkItemData)
-            debugger;
             linkItemData.forEach((item, index) => {
                 var html = '';
                 html
