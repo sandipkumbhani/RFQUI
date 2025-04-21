@@ -53,9 +53,15 @@
                                 <label class="form-label col-form-label required fw-semibold fs-6">Franchise Name </label>
                                 <input type="text" class="form-control" placeholder="Franchise Name" id="txtFranchiseName" maxlength="100" />
                             </div>
+                            @* <div class="mb-5"> *@
+                            @*     <label class="form-label col-form-label required fw-semibold fs-6">Franchise Code</label> *@
+                            @*     <input type="text" class="form-control" placeholder="Franchise Code" id="txtFranchiseCode"  /> *@
+                            @* </div> *@
                             <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Franchise Code</label>
-                                <input type="text" class="form-control" placeholder="Franchise Code" id="txtFranchiseCode"  />
+                                <label class="form-label col-form-label required fw-semibold fs-6">City</label>
+
+                                <select id="ddlCity" name="franchise" aria-label="Select a City" class="selectpicker" data-live-search="true" data-width="100%">
+                                </select>
                             </div>
                         </div>
                         <div class="col-xl-6">
@@ -83,14 +89,12 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">City</label>
-
-                                <select id="ddlCity" name="franchise" aria-label="Select a City" class="selectpicker" data-live-search="true" data-width="100%">
-                                </select>
-                            </div>
-                            <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
                                 <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson"  maxlength="50"/>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label col-form-label required fw-semibold fs-6">Contact Number</label>
+                                <input type="text" class="form-control" placeholder="Contact Number" id="txtContactNumber" maxlength="10" onkeypress="return isNumber(event)" />
                             </div>
 
                             <div class="mb-5">
@@ -112,8 +116,8 @@
                                 <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" onkeypress="return isNumber(event)" maxlength="10" />
                             </div>
                             <div class="mb-5">
-                                <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailId"/>
+                                <label class="form-label col-form-label required fw-semibold fs-6">Email ID</label>
+                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailId" maxlength="50"/>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>

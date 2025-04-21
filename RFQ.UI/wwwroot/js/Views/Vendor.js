@@ -20,12 +20,12 @@ $(document).ready(function () {
         if (CheckNullValidation()) {
             SaveVendor();
         }
+       
     })
     $("#btnSavenewVendor").on('click', function (event) {
         if (CheckNullValidation()) {
-            SaveVendor();
+            SavenewVendor();
         }
-        $('#vendorForm')[0].reset();
     })
     $("#btnUpdateVendor").on('click', function (event) {
         event.preventDefault();
@@ -45,6 +45,7 @@ $(document).ready(function () {
         var gstNumber = $("#txtGstNumber").val();
         if (!ValidateGstNumber(gstNumber)) {
             toastr.warning("Please enter a valid GST Number", "Warning");
+            ClearGstFields();
         }
         else {
             // Request Body
@@ -72,10 +73,12 @@ $(document).ready(function () {
                         $("#txtVerifiedGstNo").val();
                     } else {
                         toastr.warning(response.messageDescription, "Warning");
+                        ClearGstFields();
                     }
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Get GstEkyc-Detail", "Error");
+                    ClearGstFields();
                 }
             });
         }
@@ -86,6 +89,7 @@ $(document).ready(function () {
         var panNumber = $("#txtPanNumber").val();
         if (!ValidatePanNumber(panNumber)) {
             toastr.warning("Please enter a valid PAN Nubmer", "Warning");
+            ClearPanFields();
         }
         else {
 
@@ -109,10 +113,12 @@ $(document).ready(function () {
                     }
                     else {
                         toastr.warning(response.messageDescription, "Warning");
+                        ClearPanFields();
                     }
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Get Pan Ekyc-Detail", "Error");
+                    ClearPanFields();
                 }
             });
         }
@@ -137,7 +143,7 @@ function CheckValidation() {
             return;
         }
     });
-    $("#txtVendorName").on("blur change", function () {
+    $("#txtVendorName").on("blur", function () {
         if (!isAlphabets($(this).val())) {
             toastr.warning("Please enter a valid Vendor Name", "Warning");
             return;
@@ -149,7 +155,7 @@ function CheckValidation() {
             return;
         }
     });
-    $("#txtAddress").on("blur change", function () {
+    $("#txtAddress").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a valid Address", "Warning");
             return;
@@ -161,31 +167,31 @@ function CheckValidation() {
             return;
         }
     });
-    $("#txtContactPerson").on("blur change", function () {
+    $("#txtContactPerson").on("blur", function () {
         if (!isAlphabets($(this).val())) {
             toastr.warning("Please enter a valid Contact Person", "Warning");
             return;
         }
     });
-    $("#txtEmailId").on("blur change", function () {
+    $("#txtEmailId").on("blur", function () {
         if (!isValidateEmail($(this).val())) {
             toastr.warning("Please enter a valid Email", "Warning");
             return;
         }
     });
-    $("#txtMobileNumber").on("blur change", function () {
+    $("#txtMobileNumber").on("blur", function () {
         if (!isMobile($(this).val())) {
             toastr.warning("Please enter a valid Mobile Number", "Warning");
             return;
         }
     });
-    $("#txtWhatsappNumber").on("blur change", function () {
+    $("#txtWhatsappNumber").on("blur", function () {
         if (!isMobile($(this).val())) {
             toastr.warning("Please enter a valid WhatsApp Number", "Warning");
             return;
         }
     });
-    $("#txtPinCode").on("blur change", function () {
+    $("#txtPinCode").on("blur", function () {
         if (!/^\d{6}$/.test($(this).val())) {
             toastr.warning("Please enter a valid  PinCode", "Warning");
             return;
@@ -414,11 +420,79 @@ function SaveVendor() {
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
-            debugger;
-            partyId = response.result.partyId;
+            let partyId = response.result.partyId;
             Saveattachment(partyId);
             toastr.success("Vendor details submitted successfully!");
-
+            window.location.href = "../Dashboard/Dashboard";
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to submit Vendor details", "Error");
+        }
+    });
+    return partyId;
+}
+function SavenewVendor() {
+    var legalName = $("#txtLegalName").val();
+    var typeBusiness = $("#txtTypeBusiness").val();
+    var gstStatus = $("#txtGstStatus").val();
+    var tradeName = $("#txtTradeName").val();
+    var adharVerified = $("#txtAadharVerified").val();
+    var gstVerifiedOn = $("#txtGstVerifiedOn").val();
+    var adharLinked = $("#txtAadharLinked").val();
+    var panStatus = $("#txtPanStatus").val();
+    var panVerifiedOn = $("#txtPanVerifiedOn").val();
+    var vendorName = $("#txtVendorName").val();
+    var vendorCategory = $("#ddlVendorCategory").val();
+    var vendorAddress = $("#txtAddress").val();
+    var vendorCity = $("#ddlCity").val();
+    var vendorPincode = $("#txtPinCode").val();
+    var contactPerson = $("#txtContactPerson").val();
+    var whatsappNumber = $("#txtWhatsappNumber").val();
+    var mobileNumber = $("#txtMobileNumber").val();
+    var emailId = $("#txtEmailId").val();
+    var panNumber = $("#numPanNumber").val();
+    var gstNubmer = $("#numGstNumber").val();
+    var createUser = $("#createuser").is(":checked");
+    var shareAppLink = $("#shareapplink").is(":checked");
+    var partyId = 0;
+    var saveVendorUrl = '/Vendor/VendorSave';
+    var formData = {
+        PartyName: vendorName,
+        PartyCategoryId: vendorCategory,
+        AddressLine: vendorAddress,
+        CityId: vendorCity,
+        PinCode: vendorPincode,
+        ContactPerson: contactPerson,
+        ContactNo: mobileNumber,
+        MobNo: mobileNumber,
+        WhatsAppNo: whatsappNumber,
+        Email: emailId,
+        PANNo: panNumber,
+        GSTNo: gstNubmer,
+        LegalName: legalName,
+        TradeName: tradeName,
+        TypeOfBusiness: typeBusiness,
+        AadharVerified: adharVerified,
+        GSTStatus: gstStatus,
+        GSTVarifiedOn: gstVerifiedOn,
+        PANStatus: panStatus,
+        PANLinkedWithAdhar: adharLinked,
+        PANVerifiedOn: panVerifiedOn,
+        LinkId: linkId
+    };
+    $.ajax({
+        url: saveVendorUrl,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(formData),
+        success: function (response) {
+            let partyId = response.result.partyId;
+            Saveattachment(partyId);
+            toastr.success("Vendor details submitted successfully!");
+            $('#vendorForm')[0].reset();
+            $('#ddlCity').val('');
+            $('#ddlVendorCategory').val('');
+            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to submit Vendor details", "Error");
@@ -642,14 +716,32 @@ function DeleteVendor(partyId) {
             dataType: "json",
             data: JSON.stringify(partyId),
             success: function (response) {
+                if (result.length > 0) {
+                    DeleteMasterAttachment(result[0].attachmentId);
+                }
                 toastr.success("Vendor Deleted successfully!");
                 FetchVendor();
                 $("#backButton").css('display', 'block');
-                DeleteMasterAttachment(result[0].attachmentId);
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to delete Vendor", "Error");
-            }
+            }   
         });
     });
+}
+function ClearGstFields() {
+    $("#txtLegalName").val('');
+    $("#txtTypeBusiness").val('');
+    $("#txtGstStatus").val('');
+    $("#txtGstAddress").val('');
+    $("#txtTradeName").val('');
+    $("#txtAadharVerified").val('');
+    $("#txtAadharVerified").val('');
+    $("#txtGstVerifiedOn").val('');
+}
+function ClearPanFields() {
+    $("#txtPanName").val(''),
+        $("#txtAadharLinked").val(''),
+        $("#txtPanStatus").val(''),
+        $("#txtPanVerifiedOn ").val('')
 }
