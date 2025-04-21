@@ -9,26 +9,22 @@ $(document).ready(function () {
     });
 
     // Check Form Validation
-    $("#txtVehicleType").on("change", function () {
+    $("#txtVehicleType").on("blur", function () {
         if (!ValidateTextbox("#txtVehicleType")) {
             $("#txtVehicleType").val('');
             return;
         }
     });
-
-    // Set Token in Global Class
-    /*GetAndSetToken("AuthToken");*/
-
-    // On form submit
-    $("#btnSaveVehicleType").click(function (event) {
-        event.preventDefault();
-        SaveAndSaveNew();
+    $("#txtminKmsPerDay").on("blur", function () {
+        if (!ValidateTextbox("#txtminKmsPerDay")) {
+            $("#txtminKmsPerDay").val('');
+            return;
+        }
     });
 
-    // Reset form fields on button click
-    $('#SavenewButton').on('click', function () {
-        SaveAndSaveNew();
-        $('#VehicleTypeForm')[0].reset();
+    $("#btnSaveVehicleType, #SavenewButton").on('click', function () {
+        var action = $(this).data('action'); // "save" or "saveNew"
+        SaveAndSaveNew(action);
     });
 
     $('#backButton').click(function () {
@@ -45,27 +41,6 @@ $(document).ready(function () {
     })
 });
 
-//function GetAndSetToken(cookieName) {
-//    var globalUrl = '/api/global/set-token';
-//    let match = document.cookie.match(new RegExp('(^| )' + cookieName + '=([^;]+)'));
-//    let token = match ? match[2] : null;
-//    if (token) {
-//        fetch(globalUrl, {
-//            method: 'POST',
-//            headers: { 'Content-Type': 'application/json' },
-//            body: JSON.stringify({ token: token }) // Proper JSON format
-//        })
-//            .then(response => {
-//                if (!response.ok) {
-//                    console.error("Failed to set token");
-//                } else {
-//                }
-//            })
-//            .catch(error => console.error("Error:", error));
-//    } else {
-//        console.warn("Token not found in cookies");
-//    }
-//}
 function FetchVehicleTypes() {
     $('#tableDiv').show();
     var fetchVehicleTypesUrl = '/Vehicle/ViewVehicleType';
@@ -150,7 +125,7 @@ function DeleteVehicleType(vehicleTypeId) {
         }
     });
 }
-function SaveAndSaveNew() {
+function SaveAndSaveNew(action) {
     var vehicleTypeName = $("#txtVehicleType").val()
     var txtminKmsPerDay = $("#txtminKmsPerDay").val()
 
@@ -169,20 +144,38 @@ function SaveAndSaveNew() {
         MinimumKms: txtminKmsPerDay
     };
 
-    $.ajax({
-        url: saveUrl,
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(formData),
-        success: function (response) {
-            toastr.success("Vehicle Type submitted successfully!");
+    if (action === "save") {
+        $.ajax({
+            url: saveUrl,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                toastr.success("Vehicle Type submitted successfully!");
+                window.location.href = "../Dashboard/Dashboard";
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                toastr.error("Failed to submit Vehicle Type", "Error");
+            }
+        });
 
-        },
-        error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to submit Vehicle Type", "Error");
-        }
-    });
+    } else if (action === "saveNew") {
+        $.ajax({
+            url: saveUrl,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                toastr.success("Vehicle Type submitted successfully!");
+                $('#VehicleTypeForm')[0].reset();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                toastr.error("Failed to submit Vehicle Type", "Error");
+            }
+        });
+    }
 }
 function EditVehicleType(vehicleTypeId) {
     var data = vehicleTypeViewModelDtos.filter(x => x.vehicleTypeId == vehicleTypeId);
