@@ -1,31 +1,29 @@
 ﻿$(document).ready(function () {
     var productListDto;
-    InitializeJquery();
-    CheckValidation();  
-})
-$('#btnSaveProduct').click(function (event) {
-    event.preventDefault();
-    SaveProduct();
-});
-$('#btnSavenewProduct').click(function (event) {
-    SaveProduct();
-    $('#productForm')[0].reset();
-});
-$('#btnViewButton').click(function () {
-    FetchProduct();
-    $("#addProductDiv").css('display', 'none');
-    $("#backButton").css('display', 'block');
-});
-$('#btnUpdateProduct').click(function () {
-    UpdateProduct();
-})
-function InitializeJquery() {
+    CheckValidation();
+    $("#btnSaveProduct, #btnSavenewProduct").on('click', function () {
+        var action = $(this).data('action');
+        SaveProduct(action);
+    });
+    $('#btnViewButton').on('click',function () {
+        FetchProduct();
+        $("#addProductDiv").css('display', 'none');
+        $("#backButton").css('display', 'block');
+    });
+    $('#btnUpdateProduct').on('click',function () {
+        UpdateProduct();
+    });
     $('#backButton').on('click', function () {
         window.location.reload(true);
     });
-}
+    $("#btnCancel").on("click", function () {
+        FetchProduct();
+        $("#addProductDiv").css('display', 'none');
+        $("#backButton").css('display', 'block');
+    });
+});
 function CheckValidation() {
-    $("#txtItemName").on('blur change', function () {
+    $("#txtItemName").on('blur', function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter Item Name");
             return;
@@ -40,7 +38,7 @@ function CheckNullValidation() {
     }
     return true;
 }
-function SaveProduct() {
+function SaveProduct(action) {
     if (!CheckNullValidation()) {
         return;
     }
@@ -49,28 +47,53 @@ function SaveProduct() {
     var formData = {
         ItemName: itemName
     };
-    $.ajax({
-        url: saveProductUrl,
-        method: 'POST',
-        contentType: 'application/json',
-        dataType: "json",
-        data: JSON.stringify(formData),
-        success: function (response) {
-            debugger;
-            if (response.result == "Success") {
-                toastr.success("Item save successfully!");
-            }
-            else {
+    if (action == "save") {
+        $.ajax({
+            url: saveProductUrl,
+            method: 'POST',
+            contentType: 'application/json',
+            dataType: "json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                
+                if (response.result == "Success") {
+                    toastr.success("Item save successfully!");
+                    window.location.href = "../Dashboard/Dashboard";
+                }
+                else {
+                    toastr.error("Failed to save Item!");
+                }
+            },
+            error: function (xhr, status, error) {
                 toastr.error("Failed to save Item!");
+
             }
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to save Item!");
+        });
+    }
+    else if (action == "saveNew") {
+        $.ajax({
+            url: saveProductUrl,
+            method: 'POST',
+            contentType: 'application/json',
+            dataType: "json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                
+                if (response.result == "Success") {
+                    toastr.success("Item save successfully!");
+                    $('#productForm')[0].reset();
+                }
+                else {
+                    toastr.error("Failed to save Item!");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to save Item!");
 
-        }
-    });
+            }
+        });
+    }
 }
-
 function FetchProduct() {
     $("#tableDiv").show();
     var fetchProductUrl = "/Product/GetAllProducts";
@@ -126,7 +149,6 @@ function FetchProduct() {
         }
     });
 }
-
 function EditProduct(itemId) {
     var data = productListDto.filter(x => x.itemId == itemId);
     var formData = data[0];
@@ -137,12 +159,14 @@ function EditProduct(itemId) {
     $("#btnUpdateProduct").show();
     $("#btnSavenewProduct").hide();
     $("#btnViewButton").hide();
+    $("#btnCancel").removeClass('d-none');
     $("#txtItemName").val(formData.itemName);
     $("#hdnItemId").val(formData.itemId);
 }
-
 function UpdateProduct() {
-    CheckNullValidation();
+    if (!CheckNullValidation()) {
+        return;
+    }
     var updateProductUrl = '/Product/EditProduct';
     var formData = {
         ItemId: $("#hdnItemId").val(),
@@ -170,7 +194,6 @@ function UpdateProduct() {
         }
     });
 }
-
 function DeleteProduct(itemId) {
     var deleteProductUrl = '/Product/DeleteProduct/' + itemId;
     $.ajax({

@@ -49,15 +49,16 @@
                         <div class="col-md-6">
                             <input type="hidden" id="hdnItemId" />
                             <label for="profileName" class="form-label">Product Name</label>
-                            <input type="text" id="txtItemName" class="form-control" placeholder="Enter Item/Product name">
+                            <input type="text" id="txtItemName" class="form-control" placeholder="Enter Item/Product name" maxlength="50">
                         </div>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-start py-4">
-                    <button type="button" id="btnSaveProduct" class="btn btn-primary me-2">Save</button>
-                    <button type="button" id="btnSavenewProduct" class="btn btn-primary me-2">Save & New</button>
+                    <button type="button" id="btnSaveProduct" class="btn btn-primary me-2" data-action="save">Save</button>
+                    <button type="button" id="btnSavenewProduct" class="btn btn-primary me-2" data-action="saveNew">Save & New</button>
                     <button type="button" class="btn btn-primary" id="btnViewButton">View</button>
-                    <button type="button" id="btnUpdateProduct" class="btn btn-primary" style="display:none">Update</button>
+                    <button type="button" id="btnUpdateProduct" class="btn btn-primary me-2" style="display:none">Update</button>
+                    <button id="btnCancel" type="button" class="btn btn-danger d-none">Cancel</button>
                 </div>
             </form>
         </div>

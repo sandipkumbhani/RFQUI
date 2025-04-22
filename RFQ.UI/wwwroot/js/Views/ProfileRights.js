@@ -127,7 +127,7 @@ function GetLinkItemList(linkGroupId, profileId) {
             var data = $.grep(response, function (x) {
                 return (x.profileId == parseInt(profileId) && x.linkGroupId == linkGroupId);
             });
-            debugger;
+           
             linkItemData = data;
             console.log(linkItemData)
             linkItemData.forEach((item, index) => {

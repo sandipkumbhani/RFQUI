@@ -328,7 +328,7 @@ function UpdateUserList() {
             Mobileno: $('#txtMobileNo').val(),
             Emailid: $('#txtEmailid').val(),
         }
-        debugger;
+       
         //var edituserlist = '@Url.Action("EditUserList", "Home")';
         var edituserlist = '/Home/EditUserList';
         $.ajax({
