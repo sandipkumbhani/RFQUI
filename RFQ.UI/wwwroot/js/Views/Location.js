@@ -82,87 +82,6 @@ $("#txtContactNumber").on("blur", function () {
         return;
     }
 });
-$("#btnSaveForm").on('click', function (event) {
-    event.preventDefault();
-    Save();
-});
-$('#btnSaveAndNewForm').on('click', function () {
-    //Save();
-    var locationname = $('#txtLocationName').val();
-    var address = $('#txtAddress').val();
-    var city = $("#selectCity").val();
-    var pincode = $("#txtPinCode").val();
-    var contactPerson = $("#txtPerson").val();
-    var contactNumber = $("#txtContactNumber").val();
-    var mobileNumber = $("#txtMobileNumber").val();
-    var whatsAppNumber = $("#txtWhatsAppNumber").val();
-    var email = $("#txtEmail").val();
-
-    if (!isAlphabets(locationname)) {
-        toastr.warning("Please enter a valid Location Name", "Warning");
-        return;
-    }
-    if (!isAlphaNumeric(address)) {
-        toastr.warning("Please enter a Address", "Warning");
-        return;
-    }
-    if (!isValidateSelect(city)) {
-        toastr.warning("Please enter a City", "Warning");
-        return;
-    }
-    if (!/^\d{6}$/.test(pincode)) {
-        toastr.warning("Please enter a Valid Pincode", "Warning");
-        return;
-    }
-    if (!isAlphabets(contactPerson)) {
-        toastr.warning("Please enter a Contact Person", "Warning");
-        return;
-    }
-    if (!isValidateEmail(email)) {
-        toastr.warning("Please enter a valid email", "Warning");
-        return;
-    }
-    if (!isMobile(whatsAppNumber)) {
-        toastr.warning("Please enter a whatsApp number", "Warning");
-        return;
-    }
-    if (!isMobile(mobileNumber)) {
-        toastr.warning("Please enter a valid 10-digit mobile number", "Warning");
-        return;
-    }
-    if (!isMobile(contactNumber)) {
-        toastr.warning("Please enter a valid 10-digit contact number", "Warning");
-        return;
-    }
-
-    var formdata = {
-        LocationName: locationname,
-        AddressLine: address,
-        CityId: city,
-        PinCode: pincode,
-        ContactPerson: contactPerson,
-        ContactNo: contactNumber,
-        MobNo: mobileNumber,
-        WhatsAppNo: whatsAppNumber,
-        Email: email
-    };
-    console.log(formdata);
-    $.ajax({
-        url: '/Location/LocationSave/',
-        type: "POST",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify(formdata),
-        success: function (response) {
-            console.log(response);
-            toastr.success("Location submitted successfully!");
-        },
-        error: function (req, status, error) {
-            console.log(error);
-        }
-    });
-    $('#userbodyform')[0].reset();
-});
 $('#backButton').on('click', function () {
     window.location.reload(true);
     // $("#AddLocationDiv").css('display', 'Block');
@@ -173,6 +92,10 @@ $("#cancleButton").on("click", function () {
     Fetchlocationlist();
     $("#AddLocationDiv").css('display', 'none');
     $("#backButton").css('display', 'Block');
+});
+$("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
+    var action = $(this).data('action'); // "save" or "saveNew"
+    Save(action);
 });
 function Fetchlocationlist() {
     $('#tableDiv').show();
@@ -238,7 +161,7 @@ function Fetchlocationlist() {
         }
     });
 }
-function Save() {
+function Save(action) {
     var locationname = $('#txtLocationName').val();
     var address = $('#txtAddress').val();
     var city = $("#selectCity").val();
@@ -297,22 +220,44 @@ function Save() {
         WhatsAppNo: whatsAppNumber,
         Email: email
     };
-    console.log(formdata);
-    $.ajax({
-        url: '/Location/LocationSave/',
-        type: "POST",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify(formdata),
-        success: function (response) {
-            console.log(response);
-            toastr.success("Location submitted successfully!");
-            window.location.href = "../Dashboard/Dashboard";
-        },
-        error: function (req, status, error) {
-            console.log(error);
-        }
-    });
+    console.log(action);
+    if (action === "save") {
+        $.ajax({
+            url: '/Location/LocationSave/',
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(formdata),
+            success: function (response) {
+                console.log(response);
+                toastr.success("Location submitted successfully!");
+                window.location.href = "../Dashboard/Dashboard";
+            },
+            error: function (req, status, error) {
+                console.log(error);
+            }
+        });
+    }
+    else if (action === "saveNew") {
+        $.ajax({
+            url: '/Location/LocationSave/',
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(formdata),
+            success: function (response) {
+                console.log(response);
+                toastr.success("Location submitted successfully!");
+                $('#selectCity').selectpicker('val', '0');
+                $('#selectCity').selectpicker('refresh');
+                $('#LocationForm')[0].reset();
+            },
+            error: function (req, status, error) {
+                toastr.error(error);
+            }
+        });
+    }
+
 }
 
 $(document).ready(function () {
@@ -334,6 +279,9 @@ function UpdateLocationList() {
             WhatsAppNo: $("#txtWhatsAppNumber").val(),
             Email: $("#txtEmail").val()
         };
+        if (!validateLocationForm()) {
+            return;
+        }
 
         var editlocationlist = '/Location/EditLocationList';
         $.ajax({
@@ -438,4 +386,31 @@ function BindDropDown(data) {
     });
 
     $('.selectpicker').selectpicker('refresh');
+}
+
+function validateLocationForm() {
+    let isValid = true;
+    const fields = [
+        { id: "#txtLocationId", name: "Location ID" },
+        { id: "#txtLocationName", name: "Location Name" },
+        { id: "#txtAddress", name: "Address" },
+        { id: "#selectCity", name: "City" },
+        { id: "#txtPinCode", name: "Pincode" },
+        { id: "#txtPerson", name: "Contact Person" },
+        { id: "#txtContactNumber", name: "Contact Number" },
+        { id: "#txtMobileNumber", name: "Mobile Number" },
+        { id: "#txtWhatsAppNumber", name: "WhatsApp Number" },
+        { id: "#txtEmail", name: "Email" }
+    ];
+
+    fields.forEach(({ id, name }) => {
+        var val = $(id).val();
+        console.log(val);
+        if (IsNullOrEmpty(val)) {
+            toastr.warning(`${name} is required`, "Validation Error");
+            isValid = false;
+        }
+    });
+
+    return isValid;
 }
