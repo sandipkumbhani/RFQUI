@@ -1,6 +1,7 @@
 ﻿
 $(document).ready(function () {
     var vehicleTypeViewModelDtos;
+    var EditVehicleTypeModelDtos;
     // View Button click Call Api
     $(document).on("click", "#viewButton", function () {
         FetchVehicleTypes();
@@ -39,6 +40,7 @@ $(document).ready(function () {
         $("#addVehicleTypeDiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     })
+    UpdateVechileType();
 });
 
 function FetchVehicleTypes() {
@@ -179,7 +181,7 @@ function SaveAndSaveNew(action) {
 }
 function EditVehicleType(vehicleTypeId) {
     var data = vehicleTypeViewModelDtos.filter(x => x.vehicleTypeId == vehicleTypeId);
-
+    EditVehicleTypeModelDtos = data[0];
     $('#tableDiv').hide();
     $("#backButton").css('display', 'none');
     $("#addVehicleTypeDiv").css('display', 'Block');
@@ -191,45 +193,43 @@ function EditVehicleType(vehicleTypeId) {
     $("#txtVehicleType").val(data[0].vehicleTypeName);
     $("#txtminKmsPerDay").val(data[0].minimumKms);
 
-    // Using one-time event binding with .one()
-    $('#updateButton').on('click', function () {
-        UpdateVechileType(vehicleTypeId);
-    });
 }
-function UpdateVechileType(vehicleTypeId) {
-    var vehicleTypeName = $("#txtVehicleType").val()
-    var txtminKmsPerDay = $("#txtminKmsPerDay").val()
-    if (IsNullOrEmpty(vehicleTypeName)) {
-        toastr.warning("Please enter a valid Vehicle Type", "Warning");
-        return;
-    }
-
-    if (!isNumeric(txtminKmsPerDay)) {
-        toastr.warning("Please enter Min Km/Day", "Warning");
-        return;
-    }
-
-    var updateUrl = '/Vehicle/UpdateVehicleType';
-    var formData = {
-        VehicleTypeId: vehicleTypeId,
-        VehicleTypeName: vehicleTypeName,
-        MinimumKms: txtminKmsPerDay
-    };
-
-    $.ajax({
-        url: updateUrl,
-        type: "PUT",
-        contentType: "application/json",
-        data: JSON.stringify(formData),
-        success: function (response) {
-            toastr.success("Vehicle Type submitted successfully!");
-            $("#addVehicleTypeDiv").css('display', 'none'); //hide form
-            $("#backButton").show();
-            FetchVehicleTypes();
-        },
-        error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to submit Vehicle Type", "Error");
+function UpdateVechileType() {
+    $("#updateButton").on("click", function (e) {
+        var vehicleTypeName = $("#txtVehicleType").val()
+        var txtminKmsPerDay = $("#txtminKmsPerDay").val()
+        if (IsNullOrEmpty(vehicleTypeName)) {
+            toastr.warning("Please enter a valid Vehicle Type", "Warning");
+            return;
         }
-    });
+
+        if (!isNumeric(txtminKmsPerDay)) {
+            toastr.warning("Please enter Min Km/Day", "Warning");
+            return;
+        }
+
+        var updateUrl = '/Vehicle/UpdateVehicleType';
+        var formData = {
+            VehicleTypeId: EditVehicleTypeModelDtos.vehicleTypeId,
+            VehicleTypeName: vehicleTypeName,
+            MinimumKms: txtminKmsPerDay
+        };
+
+        $.ajax({
+            url: updateUrl,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                toastr.success("Vehicle Type submitted successfully!");
+                $("#addVehicleTypeDiv").css('display', 'none'); //hide form
+                $("#backButton").show();
+                FetchVehicleTypes();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                toastr.error("Failed to submit Vehicle Type", "Error");
+            }
+        });
+    })
 }

@@ -14,7 +14,7 @@ function Initialization() {
         $("#adduserdiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     });
-    $("#txtName").on("blur change", function () {
+    $("#txtName").on("blur", function () {
         var Textname = $(this).val();
         if (!isAlphabets(Textname)) {
             $("#txtName").val('');
@@ -22,7 +22,7 @@ function Initialization() {
             return;
         }
     });
-    $("#CompanyAndFranchise").on("blur change", function () {
+    $("#CompanyAndFranchise").on("blur", function () {
         var corporatename = $(this).val();
         if (!isValidateSelect(corporatename)) {
             //$("#CompanyAndFranchise").val('');
@@ -30,7 +30,7 @@ function Initialization() {
             return;
         }
     });
-    $("#txtMobileNo").on("blur change", function () {
+    $("#txtMobileNo").on("blur", function () {
         var mobileno = $(this).val();
         if (!isMobile(mobileno)) {
             //$("#txtMobileNo").val('');
@@ -38,7 +38,7 @@ function Initialization() {
             return;
         }
     });
-    $("#txtLoginName").on("blur change", function () {
+    $("#txtLoginName").on("blur", function () {
         var loginname = $(this).val();
         //if(!isAlphabets(txtLoginName))
         if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(loginname)) {
@@ -47,7 +47,7 @@ function Initialization() {
             return;
         }
     });
-    $("#selectLocation").on("blur change", function () {
+    $("#selectLocation").on("blur", function () {
         var location = $(this).val();
         if (!isValidateSelect(location)) {
             //$("#selectLocation").val('');
@@ -55,7 +55,7 @@ function Initialization() {
             return;
         }
     });
-    $("#txtEmailid").on("blur change", function () {
+    $("#txtEmailid").on("blur", function () {
         var emailid = $(this).val();
         if (!isValidateEmail(emailid)) {
             $("#txtEmailid").val('');
@@ -63,7 +63,7 @@ function Initialization() {
             return;
         }
     });
-    $("#txtPassword").on("blur change", function () {
+    $("#txtPassword").on("blur", function () {
         var password = $(this).val();
         if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password))
         //if(!isAlphaNumeric(password))
@@ -73,14 +73,14 @@ function Initialization() {
             return;
         }
     });
-    $("#btnSaveForm").on('click', function (event) {
-        event.preventDefault();
-        Save();
-    });
-    $('#btnSaveAndNewForm').on('click', function () {
-        Save();
-        $('#userbodyform')[0].reset();
-    });
+    //$("#btnSaveForm").on('click', function (event) {
+    //    event.preventDefault();
+    //    Save();
+    //});
+    //$('#btnSaveAndNewForm').on('click', function () {
+    //    Save();
+    //    $('#userbodyform')[0].reset();
+    //});
     $('#backButton').on('click', function () {
         window.location.reload(true);
         // $("#adduserdiv").css('display', 'Block')
@@ -91,6 +91,11 @@ function Initialization() {
         Fetchuserlist();
         $("#adduserdiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
+    });
+
+    $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
+        var action = $(this).data('action'); // "save" or "saveNew"
+        Save(action);
     });
 
 }
@@ -162,7 +167,8 @@ function Fetchuserlist() {
         }
     });
 }
-function Save() {
+
+async function Save(action) {
     var username = $('#txtName').val();
     var corporatename = $('#CompanyAndFranchise').val();
     var mobileno = $('#txtMobileNo').val();
@@ -212,21 +218,56 @@ function Save() {
         Emailid: emailid,
         Password: password
     };
-    console.log(formdata)
-    $.ajax({
-        url: '/Home/UserSave/',
-        type: "POST",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify(formdata),
-        success: function (response) {
-            console.log(response);
-            toastr.success("User submitted successfully!");
-        },
-        error: function (req, status, error) {
-            console.log(error);
+
+    if (action === "save") {
+        $.ajax({
+            url: '/Home/UserSave/',
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(formdata),
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                toastr.success("User submitted successfully!");
+                window.location.href = "../Dashboard/Dashboard";
+            },
+            error: function (req, status, error) {
+                console.log(error);
+            }
+        });
+    }
+    else if (action === "saveNew") {
+        try {
+            $.ajax({
+                url: '/Home/UserSave/',
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(formdata),
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.result == "success") {
+                        toastr.success("User submitted successfully!");
+                    } else {
+                        toastr.success("User already exists");
+                    }
+                },
+                error: function (req, status, error) {
+                    console.log(error);
+                }
+            });
+
+            // Uncomment if needed:
+            // toastr.success("User submitted successfully!");
+            // $('#selectLocation').selectpicker('val', 0);
+            // $('#CompanyAndFranchise').selectpicker('val', 0);
+            // $('#selectLocation').selectpicker('refresh');
+            // $('#userbodyform')[0].reset();
+
+        } catch (error) {
+            console.error("Error:", error);
         }
-    });
+    }
 }
 function Edituserlist(userId) {
     console.log(userResponseDto);

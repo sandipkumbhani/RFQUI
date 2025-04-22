@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -49,29 +50,43 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
+
         [HttpPost]
-        public IActionResult UserSave([FromBody] UserRequestDto userRequestDto)
+        public async Task<IActionResult> UserSave([FromBody] UserRequestDto userRequestDto)
         {
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-            // string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
-            if (userRequestDto != null)
+            try
             {
-                // userRequestDto.CompanyId = Convert.ToInt32(companyid);
-                userRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                userRequestDto.UpdatedBy = Convert.ToInt32(profileid);
-                userRequestDto.ProfileId = Convert.ToInt32(profileid);
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
+                if (userRequestDto != null)
+                {
+                    int parsedProfileId = Convert.ToInt32(profileid);
 
-                var result = _usersService.AddUsers(userRequestDto);
-                return Json(new { result = "success" });
+                    userRequestDto.CreatedBy = parsedProfileId;
+                    userRequestDto.UpdatedBy = parsedProfileId;
+                    userRequestDto.ProfileId = parsedProfileId;
+
+                    var result = await _usersService.AddUsers(userRequestDto);
+                    var response = JsonConvert.DeserializeObject<CommanResponseDto>(result);
+                    if (response != null && response.StatusCode == 200)
+                    {
+                        return Json(new { result = "success", data = "User Saved SucsessFully" });
+                    }
+                    else
+                    {
+                        return Json(new { result = "fail", message = response.ErrorMessage });
+                    }
+                }
+                return Json(new { result = "fail", message = "Invalid user data provided" });
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { result = "fail" });
+                // Log the exception here if you have logging set up
+                return Json(new { result = "error", message = ex.Message });
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> ViewUserList()
         {

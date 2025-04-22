@@ -6,6 +6,7 @@ using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -29,22 +30,40 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
+
             var baseurl = _fleetLynkApiUrl + _config["Users:AddUser"];
             var User = JsonConvert.SerializeObject(userRequestDto);
             var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(baseurl, requestContent);
             var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            if (!response.IsSuccessStatusCode)
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
+                string errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode}, Details: {errorContent}");
+
+                var errorResponse = new CommanResponseDto
                 {
-                    return "Users Saved";
-                }
-                else
+                    StatusCode = (int)response.StatusCode,
+                    Data = errorContent,
+                    Message = "An error occurred while processing your request.",
+                    ErrorMessage = errorContent
+                };
+                string json = JsonConvert.SerializeObject(errorResponse);
+                return json;
+            }
+            else
+            {
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
                 {
-                    return responseModel.ErrorMessage;
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        responseModel.Data = "User Saved";
+                    else
+                        responseModel.Data = responseModel.ErrorMessage;
+
+                    string json = JsonConvert.SerializeObject(responseModel);
+                    return json;
                 }
             }
             return string.Empty;
