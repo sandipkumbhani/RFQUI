@@ -191,7 +191,7 @@ $(document).ready(function () {
     PanEKycclick();
 });
 function FetchCustomerList() {
-    $('#tableDiv').show();
+    $("#tableDiv").removeClass('d-none');
     var fetchCustomerUrl = '/Customer/ViewCustomer';
     $.ajax({
         url: fetchCustomerUrl,

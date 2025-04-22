@@ -14,8 +14,9 @@ function initializjquery() {
     });
     $("#cancleButton").on('click', function () {
         FetchAllCompConfigList();
+        $("#tableDiv").removeClass('d-none');
         $("#AddCompnyConfigDiv").addClass('d-none');
-        $("#backButton").css('display', 'Block');
+        $("#backButton").removeClass('d-none');
     })
 }
 
@@ -248,7 +249,7 @@ function FetchAllCompConfigList() {
                         whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
                     };
                 });
-
+                console.log($.fn.DataTable.isDataTable('#tableCmpConfig'));
                 if ($.fn.DataTable.isDataTable('#tableCmpConfig')) {
                     $('#tableCmpConfig').DataTable().clear().destroy();
                 }
@@ -306,7 +307,7 @@ function EditCompConfigList(companyConfigId) {
     var data = companyConfigResponseDto.filter(x => x.companyConfigId == companyConfigId);
 
     var formdata = data[0];
-    $("#tableDiv").hide();
+    $("#tableDiv").addClass('d-none');
     $("#backButton").addClass('d-none');
     $("#AddCompnyConfigDiv").removeClass('d-none');
     $("#btnSaveForm").hide();
