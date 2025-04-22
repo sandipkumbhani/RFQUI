@@ -4,9 +4,10 @@ let isGstEKycClicked = false;
 let isPanEKycClicked = false;
 
 $(document).ready(function () {
-    function isValidAddress(value) {
-        return /^[A-Za-z0-9\s,.\-\/]+$/.test(value);
-    }
+
+    //function isValidAddress(value) {
+    //    return /^[A-Za-z0-9\s,.\-\/]+$/.test(value);
+    //}
 
     document.getElementById("txtPanNumber").addEventListener("input", function () {
         const panKyc = this.value.toUpperCase();
@@ -29,6 +30,7 @@ $(document).ready(function () {
         var validCharacterRegex = /^[0-9A-Z]$/;
         if (!validCharacterRegex.test(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid GST No ", "Warning");
         }
         $("#numGstNumber").val(GstValue.toUpperCase());
     });
@@ -38,6 +40,7 @@ $(document).ready(function () {
         var validCharacterRegex = /^[0-9A-Z]$/;
         if (!validCharacterRegex.test(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid PAN No ", "Warning");
         }
         $("#numPan").val(PanEValue.toUpperCase());
     });
@@ -50,14 +53,14 @@ $(document).ready(function () {
             return;
         }
     });
-    $("#txtaddress").on("keypress", function (event) {
-        var key = String.fromCharCode(event.which);
-        if (!isValidAddress(key)) {
-            event.preventDefault();
-            toastr.warning("Please enter a valid Address ", "Warning");
-            return;
-        }
-    });
+    //$("#txtaddress").on("keypress", function (event) {
+    //    var key = String.fromCharCode(event.which);
+    //    if (!isValidAddress(key)) {
+    //        event.preventDefault();
+    //        toastr.warning("Please enter a valid Address ", "Warning");
+    //        return;
+    //    }
+    //});
     $("#ddlCity").on("change", function () {
         var ddlCity = $(this).val();
         console.log(isValidateSelect(ddlCity, selectedIndex));
@@ -87,17 +90,20 @@ $(document).ready(function () {
         var key = String.fromCharCode(event.which);
         if (!/^\d$/.test(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid Contact Number", "Warning");
         }
     });
     $("#numPincode").on("keypress", function (event) {
         var keyCode = event.which || event.keyCode;
         if (keyCode < 48 || keyCode > 57) {
             event.preventDefault();
+            toastr.warning("Please enter a valid Pincode", "Warning");
             return;
         }
         var PincodeValue = $(this).val() + String.fromCharCode(keyCode);
         if (PincodeValue.length > 6) {
             event.preventDefault();
+            //toastr.warning("Pincode cannot exceed 6 digits", "Warning");
             return;
         }
     });
@@ -105,7 +111,7 @@ $(document).ready(function () {
         var key = String.fromCharCode(event.which);
         if (!/^\d$/.test(key)) {
             event.preventDefault();
-            toastr.warning("Please enter a WhatsApp Number", "Warning");
+            toastr.warning("Please enter a valid WhatsApp Number", "Warning");
             return;
         }
     });
@@ -212,7 +218,8 @@ function FetchCustomerList() {
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,
-                "ordering": true,
+                "scrollX": true,
+                "ordering": false,
                 "data": customerList,
                 "columns": [
 
@@ -395,7 +402,7 @@ function SaveAndSaveNew(action) {
                 } else {
                     toastr.success("Somthing Went Wrong!");
                 }
-                
+
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
@@ -457,100 +464,158 @@ function EditCustomer(partyId) {
 function UpdateCustomer() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
-        var isvalidate = validateCustomerForm();
-        console.log(isvalidate)
-        if (isvalidate) {
-            var formData = {
-                PartyId: $("#hdnPartyId").val(),
-                LegalName: $("#txtLegalName").val(),
-                TypeOfBusiness: $("#txtTypeBusiness").val(),
-                GstStatus: $("#txtGstStatus").val(),
-                TradeName: $("#txtTradeName").val(),
-                AadharVerified: $("#txtAadharVerified").val(),
-                PanStatus: $("#txtPanStatus").val(),
-                GSTVarifiedOn: $("#txtGstVerifiedOn").val(),
-                PANVerifiedOn: $("#txtPanVerifiedOn").val(),
-                PartyName: $("#txtCustomerName").val(),
-                CustomerCode: $("#txtCustomerCode").val(),
-                AddressLine: $("#txtaddress").val(),
-                CityId: $("#ddlCity").val(),
-                ContactPerson: $("#txtContactPerson").val(),
-                MobNo: $("#numMobile").val(),
-                PANNo: $("#numPan").val(),
-                Pincode: $("#numPincode").val(),
-                WhatsAppNo: $("#numWhatsApp").val(),
-                ContactNo: $("#numContact").val(),
-                Email: $("#txtEmail").val(),
-                GSTNo: $("#numGstNumber").val(),
-                PANLinkedWithAdhar: $("#txtAadharLinked").val(),
-                LinkId: linkId
-            };
-            let repeaterItems = document.querySelectorAll("[data-repeater-item]");
-            let updateAttachmentDetails = [];
-            var linkd = GetQueryParam("LinkId");
-            repeaterItems.forEach((item, index) => {
-                let attId = item.querySelector("#hdnAttachmentId").value;
-                let attachmentId = attId == '' ? 0 : attId;
-                let fileName = item.querySelector("#txtFileName")?.value || "N/A";
-                let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-                let filePath = item.querySelector("#hdnUplodedFileName").value;
-                updateAttachmentDetails.push({
-                    // index: index + 1,
-                    AttachmentId: attachmentId,
-                    AttachmentName: fileName,
-                    AttachmentTypeId: attachmentType,
-                    AttachmentPath: filePath,
-                    ReferenceLinkId: parseInt(linkd),
-                    TransactionId: $("#hdnPartyId").val()
-                });
-            });
-            var editCustomer = '/Customer/UpdateCustomer';
-            $.ajax({
-                type: "PUT",
-                url: editCustomer,
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(formData),
-                dataType: "json",
-                success: function (result) {
-                    if (result.result === "success") {
-                        toastr.success("Customer Updated successfully!", "success");
-                        $("#addCustomerDiv").css('display', 'none')
-                        FetchCustomerList();
-                        $("#backButton").css('display', 'block');
-                    } else {
-                        toastr.error("Failed to Update Customer", "error");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
-                }
-            });
-            $.ajax({
-                type: "PUT",
-                url: '/MasterAttachment/UpdateMasterAttachment',
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(updateAttachmentDetails),
-                dataType: "json",
-                success: function (response) {
-                    if (response.result == "success") {
-                        partyId = $("#hdnPartyId").val();
-                        Saveattachment(partyId);
-                    } else {
-                        $("#dataDiv").html("Failed to update profile.");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-                }
-            });
+        var gstKyc = $("#txtGstNumber").val();
+        var panKyc = $("#txtPanNumber").val();
+        var customerName = $("#txtCustomerName").val();
+        var address = $("#txtaddress").val();
+        var city = $("#ddlCity").val();
+        var selectedIndex = $("#ddlCity").prop("selectedIndex");
+        var contactPerson = $("#txtContactPerson").val();
+        var mobileNumber = $("#numMobile").val();
+        var pincode = $("#numPincode").val();
+        var whatsAppNumber = $("#numWhatsApp").val();
+        var contactNo = $("#numContact").val();
+        var email = $("#txtEmail").val();
 
-            var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
-            $.each(deletedAttachments, function (index, value) {
-                DeleteAttachmentAPI(value);
-            });
+        if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(gstKyc.toUpperCase())) {
+            toastr.warning("Please enter a valid GST number", "Warning");
+            return;
         }
+        if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panKyc.toUpperCase())) {
+            toastr.warning("Please enter a valid PAN number", "Warning");
+            return;
+        }
+        if (!isAlphabets(customerName)) {
+            toastr.warning("Please enter a valid Customer Name", "Warning");
+            return;
+        }
+        if (IsNullOrEmpty(address)) {
+            toastr.warning("Please enter a valid Address", "Warning");
+            return;
+        }
+        if (!isValidateSelect(city, selectedIndex)) {
+            toastr.warning("Please select a City", "Warning");
+            return;
+        }
+        if (!isAlphabets(contactPerson)) {
+            toastr.warning("Please enter a valid Contact Person", "Warning");
+            return;
+        }
+        if (!isMobile(mobileNumber)) {
+            toastr.warning("Please enter a valid Mobile Number", "Warning");
+            return;
+        }
+        if (!/^\d{6}$/.test(pincode)) {
+            toastr.warning("Please enter a valid Pincode", "Warning");
+            return;
+        }
+        if (!isMobile(whatsAppNumber)) {
+            toastr.warning("Please enter a valid WhatsApp Number", "Warning");
+            return;
+        }
+        if (!isMobile(contactNo)) {
+            toastr.warning("Please enter a valid Contact No", "Warning");
+            return;
+        }
+        if (!isValidateEmail(email)) {
+            toastr.warning("Please enter a valid email", "Warning");
+            return;
+        }
+        var formData = {
+            PartyId: $("#hdnPartyId").val(),
+            LegalName: $("#txtLegalName").val(),
+            TypeOfBusiness: $("#txtTypeBusiness").val(),
+            GstStatus: $("#txtGstStatus").val(),
+            TradeName: $("#txtTradeName").val(),
+            AadharVerified: $("#txtAadharVerified").val(),
+            PanStatus: $("#txtPanStatus").val(),
+            GSTVarifiedOn: $("#txtGstVerifiedOn").val(),
+            PANVerifiedOn: $("#txtPanVerifiedOn").val(),
+            PartyName: $("#txtCustomerName").val(),
+            CustomerCode: $("#txtCustomerCode").val(),
+            AddressLine: $("#txtaddress").val(),
+            CityId: $("#ddlCity").val(),
+            ContactPerson: $("#txtContactPerson").val(),
+            MobNo: $("#numMobile").val(),
+            PANNo: $("#numPan").val(),
+            Pincode: $("#numPincode").val(),
+            WhatsAppNo: $("#numWhatsApp").val(),
+            ContactNo: $("#numContact").val(),
+            Email: $("#txtEmail").val(),
+            GSTNo: $("#numGstNumber").val(),
+            PANLinkedWithAdhar: $("#txtAadharLinked").val(),
+            LinkId: linkId
+        };
+
+        let repeaterItems = document.querySelectorAll("[data-repeater-item]");
+        let updateAttachmentDetails = [];
+        var linkd = GetQueryParam("LinkId");
+
+        repeaterItems.forEach((item, index) => {
+            let attId = item.querySelector("#hdnAttachmentId").value;
+            let attachmentId = attId == '' ? 0 : attId;
+            let fileName = item.querySelector("#txtFileName")?.value || "N/A";
+            let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
+            let filePath = item.querySelector("#hdnUplodedFileName").value;
+
+            updateAttachmentDetails.push({
+                AttachmentId: attachmentId,
+                AttachmentName: fileName,
+                AttachmentTypeId: attachmentType,
+                AttachmentPath: filePath,
+                ReferenceLinkId: parseInt(linkd),
+                TransactionId: $("#hdnPartyId").val()
+            });
+        });
+
+        var editCustomer = '/Customer/UpdateCustomer';
+        $.ajax({
+            type: "PUT",
+            url: editCustomer,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(formData),
+            dataType: "json",
+            success: function (result) {
+                if (result.result === "success") {
+                    toastr.success("Customer Updated successfully!", "Success");
+                    $("#addCustomerDiv").css('display', 'none');
+                    FetchCustomerList();
+                    $("#backButton").css('display', 'block');
+                } else {
+                    toastr.error("Failed to Update Customer", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
+            }
+        });
+
+        $.ajax({
+            type: "PUT",
+            url: '/MasterAttachment/UpdateMasterAttachment',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(updateAttachmentDetails),
+            dataType: "json",
+            success: function (response) {
+                if (response.result == "success") {
+                    partyId = $("#hdnPartyId").val();
+                    Saveattachment(partyId);
+                } else {
+                    $("#dataDiv").html("Failed to update profile.");
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+            }
+        });
+
+        var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
+        $.each(deletedAttachments, function (index, value) {
+            DeleteAttachmentAPI(value);
+        });
     });
 }
+
 function DeleteCustomer(partyId) {
     var deleteCustomerUrl = '/Customer/DeleteCustomer/' + partyId;
 
@@ -711,30 +776,30 @@ function CleatPanFields() {
         $("#txtPanStatus").val(''),
         $("#txtPanVerifiedOn ").val('')
 }
-function validateCustomerForm() {
-    let isValid = true;
+//function validateCustomerForm() {
+//    let isValid = true;
 
-    const fields = [
-        { id: "#txtGstNumber", name: "GST Number" },
-        { id: "#txtPanNumber", name: "PAN Number" },
-        { id: "#txtCustomerName", name: "Customer Name" },
-        { id: "#txtaddress", name: "Address" },
-        { id: "#ddlCity", name: "City" },
-        { id: "#txtContactPerson", name: "Contact Person" },
-        { id: "#numMobile", name: "Mobile Number" },
-        { id: "#numContact", name: "Contact Number" },
-        { id: "#numPincode", name: "Pincode" },
-        { id: "#numWhatsApp", name: "WhatsApp Number" },
-        { id: "#txtEmail", name: "Email" }
-    ];
+//    const fields = [
+//        { id: "#txtGstNumber", name: "GST Number" },
+//        { id: "#txtPanNumber", name: "PAN Number" },
+//        { id: "#txtCustomerName", name: "Customer Name" },
+//        { id: "#txtaddress", name: "Address" },
+//        { id: "#ddlCity", name: "City" },
+//        { id: "#txtContactPerson", name: "Contact Person" },
+//        { id: "#numMobile", name: "Mobile Number" },
+//        { id: "#numContact", name: "Contact Number" },
+//        { id: "#numPincode", name: "Pincode" },
+//        { id: "#numWhatsApp", name: "WhatsApp Number" },
+//        { id: "#txtEmail", name: "Email" }
+//    ];
 
-    fields.forEach(field => {
-        const value = $(field.id).val();
-        if (!value || value.trim() === "") {
-            toastr.warning(`${field.name} is required`, "Validation Error");
-            isValid = false;
-        }
-    });
+//    fields.forEach(field => {
+//        const value = $(field.id).val();
+//        if (!value || value.trim() === "") {
+//            toastr.warning(`${field.name} is required`, "Validation Error");
+//            isValid = false;
+//        }
+//    });
 
-    return isValid;
-}
+//    return isValid;
+//}

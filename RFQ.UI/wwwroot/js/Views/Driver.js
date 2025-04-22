@@ -218,6 +218,7 @@ $(document).ready(function () {
         var validCharacterRegex = /^[0-9A-Z]$/;
         if (!validCharacterRegex.test(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid License No", "Warning");
             return;
         }
     });
@@ -225,18 +226,24 @@ $(document).ready(function () {
         var key = String.fromCharCode(event.which);
         if (!isAlphaNumeric(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid Driver Code", "Warning");
+            return;
         }
     });
     $("#numWhatsapp").on("keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!/^\d$/.test(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid Whatsapp No", "Warning");
+            return;
         }
     });
     $("#numMobile").on("keypress", function (event) {
         var key = String.fromCharCode(event.which);
         if (!/^\d$/.test(key)) {
             event.preventDefault();
+            toastr.warning("Please enter a valid Mobile No", "Warning");
+            return;
         }
     });
 
