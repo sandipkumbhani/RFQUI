@@ -66,7 +66,7 @@ function FetchVehicleTypes() {
                 "pageLength": 10,
                 "lengthChange": true,
                 "searching": true,
-                "ordering": false,
+                "ordering": true,
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,

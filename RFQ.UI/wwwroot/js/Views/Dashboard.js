@@ -3,7 +3,7 @@
 });
 
 function GetAllUser() {
-    debugger;
+   
     $("#tableDiv").removeClass('d-none');
     var getUrl = '/Dashboard/Dashboard';
     $.ajax({

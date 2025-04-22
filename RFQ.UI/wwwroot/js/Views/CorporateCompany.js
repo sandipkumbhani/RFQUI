@@ -332,7 +332,7 @@ function BouttonUpdateClick() {
                 let fileName = item.querySelector("#txtFileName")?.value || "N/A";
                 let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
                 let filePath = item.querySelector("#hdnUplodedFileName").value;
-                debugger;
+               
                 updateAttachmentDetails.push({
                     // index: index + 1,
                     AttachmentId: attachmentId,

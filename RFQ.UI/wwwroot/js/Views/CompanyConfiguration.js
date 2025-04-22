@@ -12,6 +12,11 @@ function initializjquery() {
     $('#backButton').on('click', function () {
         window.location.reload(true);
     });
+    $("#cancleButton").on('click', function () {
+        FetchAllCompConfigList();
+        $("#AddCompnyConfigDiv").addClass('d-none');
+        $("#backButton").css('display', 'Block');
+    })
 }
 
 function GetAllCompany() {

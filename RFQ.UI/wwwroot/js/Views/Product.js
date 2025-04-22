@@ -55,7 +55,7 @@ function SaveProduct(action) {
             dataType: "json",
             data: JSON.stringify(formData),
             success: function (response) {
-                debugger;
+                
                 if (response.result == "Success") {
                     toastr.success("Item save successfully!");
                     window.location.href = "../Dashboard/Dashboard";
@@ -78,7 +78,7 @@ function SaveProduct(action) {
             dataType: "json",
             data: JSON.stringify(formData),
             success: function (response) {
-                debugger;
+                
                 if (response.result == "Success") {
                     toastr.success("Item save successfully!");
                     $('#productForm')[0].reset();
