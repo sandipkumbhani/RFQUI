@@ -1,13 +1,13 @@
 ﻿function ValidateTextbox(inputId) {
     var value = $(inputId).val();
     //var pattern = /^[A-Za-z0-9]+$/; 
-    var pattern = /^[a-zA-Z0-9 ]*$/; 
+    var pattern = /^[a-zA-Z0-9 ]*$/;
 
     if (!pattern.test(value)) {
         toastr.warning("Invalid input! Only letters and numbers are allowed.");
         return false; // Invalid input
     }
-    return true; 
+    return true;
 }
 
 function ClearControl() {
@@ -42,14 +42,21 @@ function isAlphaNumeric(value) {
 }
 
 function AllowAlphaNumericOnly(e) {
+    // Allow control keys like Shift, Ctrl, Alt, etc.
     if (e.shiftKey || e.ctrlKey || e.altKey) {
-        e.preventDefault();
+        return; // Do not block these combinations
     }
-    else {
-        var key = e.keyCode;
-        if (!((key == 8) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90) || (key >= 48 && key <= 57) || (key >= 96 && key <= 105))) {
-            e.preventDefault();
-        }
+
+    const key = e.keyCode || e.which;
+
+    // Allow: Backspace (8), Delete (46), Arrow keys (35-40), A-Z (65-90), 0-9 (48-57), Numpad 0-9 (96-105)
+    const isControlKey = (key === 8 || key === 46 || (key >= 35 && key <= 40));
+    const isAlphabetKey = (key >= 65 && key <= 90);
+    const isNumberKey = (key >= 48 && key <= 57);
+    const isNumpadKey = (key >= 96 && key <= 105);
+
+    if (!(isControlKey || isAlphabetKey || isNumberKey || isNumpadKey)) {
+        e.preventDefault(); // Block non-alphanumeric keys
     }
 }
 
@@ -94,8 +101,6 @@ window.addEventListener('DOMContentLoaded', function () {
     //    input.style.setProperty('--placeholder-opacity', '0.0');
     //});
 });
-
-
 function populateDropdown(selectElement) {
     $(selectElement).empty();
     var attachmentOptionsString = localStorage.getItem("attachmentType");
