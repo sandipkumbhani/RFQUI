@@ -1,11 +1,14 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
 	Layout = "_Layout";
 	ViewData["Title"] = "Location";
 }
+
 @section Scripts {
 	<script src="~/js/Views/Location.js"></script>
 }
+
 <div class="app-toolbar  pt-3 px-lg-3">
 	<div class="app-container container-fluid d-flex flex-stack flex-wrap">
 		<div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
@@ -49,13 +52,13 @@
 						<div class="col-xl-6">
 							<div class="mb-5">
 								<label class="form-label col-form-label required fw-semibold fs-6">Location Name </label>
-								<input id="txtLocationName" type="text" class="form-control" maxlength="50" placeholder="Location Name" />
+								<input id="txtLocationName" type="text" class="form-control" maxlength="50" placeholder="Location Name" onkeypress="return isAlphabets(event)" />
 							</div>
 						</div>
 						<div class="col-xl-6">
 							<div class="mb-5">
 								<label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-								<input type="text" class="form-control" placeholder="Contact Person" maxlength="50" id="txtPerson" />
+								<input type="text" class="form-control" placeholder="Contact Person" maxlength="50" id="txtPerson" onkeypress="return isAlphabets(event)" />
 							</div>
 						</div>
 						<div class="col-xl-12">
@@ -96,8 +99,8 @@
 					</div>
 				</div>
 				<div class="card-footer d-flex justify-content-srtat py-6 px-9">
-					<button type="button" id="btnSaveForm" class="btn btn-primary me-2">Save</button>
-					<button type="button" id="btnSaveAndNewForm" class="btn btn-primary me-2">Save & New</button>
+					<button type="button" id="btnSaveForm" class="btn btn-primary me-2" data-action="save">Save</button>
+					<button type="button" id="btnSaveAndNewForm" class="btn btn-primary me-2" data-action="saveNew">Save & New</button>
 					<button type="button" id="btnViewForm" class="btn btn-primary me-2">View</button>
 					<button type="button" id="btnUpdate" class="btn btn-primary" style="display:none">Update</button>
 					<button id="cancleButton" type="button" class="btn btn-danger ms-2 d-none">Cancle</button>
