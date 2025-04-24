@@ -3,23 +3,26 @@
     initializjquery();
     CheckValidation();
     GetAllCompany();
-    FetchAllCompConfigList();
     GetAllProviders();
-    SaveConfigration();
 });
-
 function initializjquery() {
+    $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
+        var action = $(this).data('action');
+        SaveConfigration(action);
+    });
+    $('#btnViewForm').on('click', function () {
+        FetchAllCompConfigList();
+    });
     $('#backButton').on('click', function () {
         window.location.reload(true);
     });
-    $("#cancleButton").on('click', function () {
+    $("#btnCancel").on('click', function () {
         FetchAllCompConfigList();
         $("#tableDiv").removeClass('d-none');
         $("#AddCompnyConfigDiv").addClass('d-none');
         $("#backButton").removeClass('d-none');
-    })
+    });
 }
-
 function GetAllCompany() {
     $("#tableDiv").show();
     var fetchFranchiseUrl = '/CompanyConfiguration/GetAllCompany';
@@ -51,81 +54,84 @@ function GetAllCompany() {
         }
     });
 };
-
 function CheckValidation() {
-    $("#smsAuthKey").on("blur change", function () {
+    $("#smsAuthKey").on("blur", function () {
         if (!IsValidAuthKey($(this).val())) {
-            toastr.warning("Please enter a valid SMS authorization Key", "Warning");
+            toastr.warning("Please enter a valid SMS authorization Key", "Validation Error");
             return;
         }
     });
-    $("#whatsappAuthKey").on("blur change", function () {
+    $("#whatsappAuthKey").on("blur", function () {
         if (!IsValidAuthKey($(this).val())) {
-            toastr.warning("Please enter a valid whatsapp authorization Key", "Warning");
+            toastr.warning("Please enter a valid whatsapp authorization Key", "Validation Error");
             return;
         }
     });
-    $("#smtpHost").on("blur change", function () {
+    $("#smtpHost").on("blur", function () {
         if (!isAlphaNumeric($(this).val())) {
-            toastr.warning("Please enter a valid smtp Host", "Warning");
+            toastr.warning("Please enter a valid smtp Host", "Validation Error");
             return;
         }
     });
-    $("#smtpUserName").on("blur change", function () {
-        var Textname = $(this).val();
-        if (!isAlphabets(Textname)) {
-            $("#txtName").val('');
-            toastr.warning("Please enter a valid smtp User Name", "Warning");
+    $("#smtpUserName").on("blur", function () {
+        if (IsNullOrEmpty($(this).val())) {
+            toastr.warning("Please enter a valid smtp User Name", "Validation Error");
             return;
         }
     });
-    $("#smtpPort").on("blur change", function () {
+    $("#smtpPort").on("blur", function () {
         if (!isNumeric($(this).val())) {
-            toastr.warning("Please enter a valid smtp Port", "Warning");
+            toastr.warning("Please enter a valid smtp Port", "Validation Error");
             return;
         }
     });
-    $("#smtpPassword").on("blur change", function () {
-        var password = $(this).val();
-        if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password)) {
+    $("#smtpPassword").on("blur", function () {
+        if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test($(this).val())) {
             $("#txtPassword").val('');
-            toastr.warning("Please enter a valid password", "Warning");
+            toastr.warning("Please enter a valid password", "Validation Error");
             return;
         }
     });
 }
-
-function CheckNullFiled() {
-    var company = $('#company').val();
-    var smsProvider = $('#smsProvider').val();
-    var whatsappProvider = $('#whatsappProvider').val();
-    var smsAuthKey = $('#smsAuthKey').val();
-    var whatsappAuthKey = $('#whatsappAuthKey').val();
-    var smtpHost = $('#smtpHost').val();
-    var smtpUserName = $('#smtpUserName').val();
-    var smtpPort = $('#smtpPort').val();
-    var smtpPassword = $('#smtpPassword').val();
-
-    if (IsNullOrEmpty(company))
-        return toastr.warning("Please enter company");
-    if (IsNullOrEmpty(smsProvider))
-        return toastr.warning("Please enter smsProvider");
-    if (IsNullOrEmpty(whatsappProvider))
-        return toastr.warning("Please enter whatsappProvider");
-    if (IsNullOrEmpty(smsAuthKey))
-        return toastr.warning("Please enter smsAuthKey");
-    if (IsNullOrEmpty(whatsappAuthKey))
-        return toastr.warning("Please enter whatsappAuthKey");
-    if (IsNullOrEmpty(smtpHost))
-        return toastr.warning("Please enter smtpHost");
-    if (IsNullOrEmpty(smtpUserName))
-        return toastr.warning("Please enter smtpUserName");
-    if (IsNullOrEmpty(smtpPort))
-        return toastr.warning("Please enter smtpPort");
-    if (IsNullOrEmpty(smtpPassword))
-        return toastr.warning("Please enter smtpPassword");
+function OnSubmitValidation() {
+    if (!isValidateSelect($('#company').val())) {
+        toastr.warning("Please enter company","Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($('#smsProvider').val())) {
+        toastr.warning("Please enter smsProvider","Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($('#whatsappProvider').val())) {
+        toastr.warning("Please enter whatsappProvider","Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($('#smsAuthKey').val())) {
+        toastr.warning("Please enter a valid SMS authorization Key", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($('#whatsappAuthKey').val())) {
+        toastr.warning("Please enter a valid whatsapp authorization Key", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($('#smtpHost').val())) {
+        toastr.warning("Please enter a valid smtp Host", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($('#smtpUserName').val())) {
+        toastr.warning("Please enter a valid smtp User Name", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($('#smtpPort').val())) {
+        toastr.warning("Please enter a valid smtp Port", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($('#smtpPassword').val())) {
+        toastr.warning("Please enter a valid password", "Validation Error");
+        return false;
+    }
+    return true;
 }
-
 function GetAllProviders() {
     $("#tableDiv").show();
     var getUrl = '/CompanyConfiguration/GetAllProviders';
@@ -177,12 +183,9 @@ function GetAllProviders() {
         }
     });
 };
-
-function SaveConfigration() {
-    var saveConfigrationUrl = '/CompanyConfiguration/CompanyConfigurationSave';
-    $('#btnSaveForm').click(function () {
-        CheckNullFiled();
-        CheckValidation();
+function SaveConfigration(action) {
+    if (OnSubmitValidation()) {
+        var saveConfigrationUrl = '/CompanyConfiguration/CompanyConfigurationSave';
         var company = $('#company').val();
         var smsProvider = $('#smsProvider').val();
         var whatsappProvider = $('#whatsappProvider').val();
@@ -205,26 +208,48 @@ function SaveConfigration() {
             SMTPUsername: smtpUserName || null,
             SMTPPassword: smtpPassword || null
         };
-        $.ajax({
-            url: saveConfigrationUrl,
-            method: 'POST',
-            contentType: 'application/json',
-            dataType: "json",
-            data: JSON.stringify(formData),
-            success: function (response) {
-                console.log('Saved Successfully:', response);
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', error);
-                alert('Failed to save data. Please try again.');
-            }
-        });
-    });
+        if (action == "save") {
+            $.ajax({
+                url: saveConfigrationUrl,
+                method: 'POST',
+                contentType: 'application/json',
+                dataType: "json",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    window.location.href = "../Dashboard/Dashboard";
+                    toastr.success("Company Configuration details submitted successfully!");
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('Failed to save data. Please try again.');
+                }
+            });
+        }
+        else if (action == "saveNew") {
+            $.ajax({
+                url: saveConfigrationUrl,
+                method: 'POST',
+                contentType: 'application/json',
+                dataType: "json",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    toastr.success("Company Configuration details submitted successfully!");
+                    $('#companyConfigurationForm')[0].reset();
+                    $('#smsProvider').val('');
+                    $('#whatsappProvider').val('');
+                    $('#company').val('');
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('Failed to save data. Please try again.');
+                }
+            });
+        }
+    }
 }
-
 function FetchAllCompConfigList() {
-    document.getElementById("btnViewForm").click();
-    $('#btnViewForm').on('click', function () {
+
         $("#tableDiv").removeClass('d-none');
         $("#AddCompnyConfigDiv").addClass('d-none');
         $("#backButton").addClass('d-block')
@@ -300,9 +325,8 @@ function FetchAllCompConfigList() {
                 toastr.error("Failed to fetch data!", "Error");
             }
         });
-    });
+    
 };
-
 function EditCompConfigList(companyConfigId) {
     var data = companyConfigResponseDto.filter(x => x.companyConfigId == companyConfigId);
 
@@ -315,7 +339,7 @@ function EditCompConfigList(companyConfigId) {
     $("#btnSaveAndNewForm").addClass('d-none');
     $("#btnViewForm").addClass('d-none');
     $("#btnUpdate").show();
-    $("#cancleButton").removeClass('d-none');
+    $("#btnCancel").removeClass('d-none');
     $("#company").selectpicker('val', formdata.companyId);
     $("#company").selectpicker('refresh');
     $("#smsProvider").selectpicker('val', formdata.smsProvider);
@@ -327,12 +351,14 @@ function EditCompConfigList(companyConfigId) {
     $("#smtpHost").val(formdata.smtpHost);
     $("#smtpPort").val(formdata.smtpPort)
     $("#smtpUserName").val(formdata.smtpUsername);
-    $('#btnUpdate').on('click', UpdateCompConfig(companyConfigId))
-}
-
-function UpdateCompConfig(companyConfigId) {
-    var updateUrl = '/CompanyConfiguration/EditCompanyConfigurationList';
     $('#btnUpdate').on('click', function () {
+        UpdateCompConfig(companyConfigId);
+    });
+}
+function UpdateCompConfig(companyConfigId) {
+    if (OnSubmitValidation()) {
+        var updateUrl = '/CompanyConfiguration/EditCompanyConfigurationList';
+
         var company = $('#company').val();
         var smsProvider = $('#smsProvider').val();
         var whatsappProvider = $('#whatsappProvider').val();
@@ -342,8 +368,6 @@ function UpdateCompConfig(companyConfigId) {
         var smtpUserName = $('#smtpUserName').val();
         var smtpPort = $('#smtpPort').val();
         var smtpPassword = $('#smtpPassword').val();
-
-        CheckValidation();
 
         let formData = {
             CompanyConfigId: Number(companyConfigId),
@@ -378,9 +402,8 @@ function UpdateCompConfig(companyConfigId) {
                 toastr.error("Failed to submit Vehicle Type", "Error");
             }
         });
-    });
+    }
 }
-
 function DeleteCompConfiglist(CompanyConfigrationId) {
     var deleteCompConfig = '/CompanyConfiguration/DeleteCompanyConfiguration/' + CompanyConfigrationId;
     $.ajax({
@@ -389,6 +412,7 @@ function DeleteCompConfiglist(CompanyConfigrationId) {
         dataType: "json",
         data: JSON.stringify(CompanyConfigrationId),
         success: function (response) {
+            toastr.success("Company Configuration Deleted successfully!");
             FetchAllCompConfigList();
             console.log("Deleted successfully...");
         },
@@ -398,4 +422,3 @@ function DeleteCompConfiglist(CompanyConfigrationId) {
         }
     });
 }
-
