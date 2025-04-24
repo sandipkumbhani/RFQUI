@@ -2,6 +2,7 @@
 let uploadedFileName;
 let driverTypeMap = {};
 let list;
+let isDLEKycClicked = false;
 const urlParams = new URLSearchParams(window.location.search);
 const linkId = urlParams.get('LinkId');
 
@@ -23,49 +24,20 @@ $(document).ready(function () {
         init: function () {
             const dz = this;
 
+            $("#licenseEKycButton").click(function () {
+                isDLEKycClicked = true;
+            });
+
             $("#btnSaveDriver").click(function (event) {
                 event.preventDefault();
-                console.log("Form submission triggered.");
 
-                var driverType = $("#ddlDriverType").val();
-                var licenseNo = $("#numLicenseNo").val();
-                var dateOfBirth = $("#txtDateOfBirth").val();
-                var driverCode = $("#txtDriverCode").val();
-                var whatsappNumber = $("#numWhatsapp").val();
-                var mobileNumber = $("#numMobile").val();
-                var city = $("#ddlCity").val();
-                var selectedIndex = $("#ddlCity").prop("selectedIndex");
-
-                if (IsNullOrEmpty(driverType)) {
-                    toastr.warning("Please enter a valid Driver Type", "Warning");
+                if (!isDLEKycClicked) {
+                    toastr.warning("Please complete DL E-KYC before saving!");
                     return false;
                 }
-                if (!/^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(licenseNo)) {
-                    toastr.warning("Please enter a valid License Number", "Warning");
+                if (!ValidationCheck()) {
                     return false;
                 }
-                if (IsNullOrEmpty(dateOfBirth)) {
-                    toastr.warning("Please enter a valid Date of Birth", "Warning");
-                    return false;
-                }
-                if (!isValidateSelect(city, selectedIndex)) {
-                    toastr.warning("Please select a City", "Warning");
-                    return false;
-                }
-                if (!isAlphaNumeric(driverCode)) {
-                    toastr.warning("Please enter a valid Driver Code", "Warning");
-                    return false;
-                }
-                if (!isMobile(whatsappNumber)) {
-                    toastr.warning("Please enter a valid WhatsApp Number", "Warning");
-                    return false;
-                }
-               
-                if (!isMobile(mobileNumber)) {
-                    toastr.warning("Please enter a valid Mobile Number", "Warning");
-                    return false;
-                }
-
                 if (dz.files.length > 0) {
                     if (dz.getQueuedFiles().length > 0) {
                         dz.processQueue();
@@ -77,13 +49,14 @@ $(document).ready(function () {
                         }
                     }
                 } else {
-                    toastr.warning("Please upload a driver photo", "Warning");
+                    toastr.warning("Please upload a driver photo", "Validation Error");
                 }
             });
             $("#btnUpdateDriver").click(function (event) {
                 event.preventDefault();
-                console.log("Update operation triggered.");
-
+                if (!ValidationCheck()) {
+                    return false;
+                }
                 if (dz.files.length > 0) {
                     if (dz.getQueuedFiles().length > 0) {
                         dz.processQueue();
@@ -99,49 +72,19 @@ $(document).ready(function () {
                     if (existingPhoto) {
                         UpdateDriver(existingPhoto);
                     } else {
-                        toastr.warning("Please upload a driver photo for the update", "Warning");
+                        toastr.warning("Please upload a driver photo for the update", "Validation Error");
                     }
                 }
             });
 
             $("#btnSaveNewDriver").click(function (event) {
                 event.preventDefault();
-                console.log("Save & New submission triggered.");
-                var driverType = $("#ddlDriverType").val();
-                var licenseNo = $("#numLicenseNo").val();
-                var dateOfBirth = $("#txtDateOfBirth").val();
-                var driverCode = $("#txtDriverCode").val();
-                var whatsappNumber = $("#numWhatsapp").val();
-                var mobileNumber = $("#numMobile").val();
-                var city = $("#ddlCity").val();
-                var selectedIndex = $("#ddlCity").prop("selectedIndex");
 
-                if (IsNullOrEmpty(driverType)) {
-                    toastr.warning("Please enter a valid Driver Type", "Warning");
+                if (!isDLEKycClicked) {
+                    toastr.warning("Please complete DL E-KYC before saving!");
                     return false;
                 }
-                if (!/^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(licenseNo)) {
-                    toastr.warning("Please enter a valid License Number", "Warning");
-                    return false;
-                }
-                if (IsNullOrEmpty(dateOfBirth)) {
-                    toastr.warning("Please enter a valid Date of Birth", "Warning");
-                    return false;
-                }
-                if (!isAlphaNumeric(driverCode)) {
-                    toastr.warning("Please enter a valid Driver Code", "Warning");
-                    return false;
-                }
-                if (!isMobile(whatsappNumber)) {
-                    toastr.warning("Please enter a valid WhatsApp Number", "Warning");
-                    return false;
-                }
-                if (!isValidateSelect(city, selectedIndex)) {
-                    toastr.warning("Please select a City", "Warning");
-                    return false;
-                }
-                if (!isMobile(mobileNumber)) {
-                    toastr.warning("Please enter a valid Mobile Number", "Warning");
+                if (!ValidationCheck()) {
                     return false;
                 }
                 if (dz.files.length > 0) {
@@ -156,7 +99,7 @@ $(document).ready(function () {
                         }
                     }
                 } else {
-                    toastr.warning("Please upload a driver photo", "Warning");
+                    toastr.warning("Please upload a driver photo", "Validation Error");
                 }
 
             });
@@ -183,10 +126,7 @@ $(document).ready(function () {
         $(".dz-message").show();
     }
 
-    document.querySelector("#numLicenseNo").addEventListener("input", function () {
-        this.value = this.value.toUpperCase();
-    });
-
+    InitializeFields();
     GetAllCityList();
     GetDriverType();
     DlEKycclick();
@@ -206,141 +146,98 @@ $(document).ready(function () {
         $("#addDriverDiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     })
-
-    $("#ddlDriverType").on("change", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please enter a valid Driver Type", "Warning");
-            return;
-        }
-    });
-    $("#numLicenseNo").on("keypress", function (event) {
-        var key = String.fromCharCode(event.which || event.keyCode).toUpperCase();
-        var validCharacterRegex = /^[0-9A-Z]$/;
-        if (!validCharacterRegex.test(key)) {
-            event.preventDefault();
-            toastr.warning("Please enter a valid License No", "Warning");
-            return;
-        }
-    });
-    $("#txtDriverCode").on("keypress", function (event) {
-        var key = String.fromCharCode(event.which);
-        if (!isAlphaNumeric(key)) {
-            event.preventDefault();
-            toastr.warning("Please enter a valid Driver Code", "Warning");
-            return;
-        }
-    });
-    $("#numWhatsapp").on("keypress", function (event) {
-        var key = String.fromCharCode(event.which);
-        if (!/^\d$/.test(key)) {
-            event.preventDefault();
-            toastr.warning("Please enter a valid Whatsapp No", "Warning");
-            return;
-        }
-    });
-    $("#numMobile").on("keypress", function (event) {
-        var key = String.fromCharCode(event.which);
-        if (!/^\d$/.test(key)) {
-            event.preventDefault();
-            toastr.warning("Please enter a valid Mobile No", "Warning");
-            return;
-        }
-    });
-
-
-    function SaveDriver(uploadedFileName) {
-        var driverType = $("#ddlDriverType").val();
-        var licenseNo = $("#numLicenseNo").val();
-        var driverName = $("#txtDriverName").val();
-        var dlIssueDate = $("#txtDLIssueDate").val();
-        var dlIssueRto = $("#txtDLIssuingRTO").val();
-        var dateOfBirth = $("#txtDateOfBirth").val();
-        var driverCode = $("#txtDriverCode").val();
-        var dlExpiryDate = $("#txtDLExpiryDate").val();
-        var whatsappNumber = $("#numWhatsapp").val();
-        var address = $("#txtAddress").val();
-        var city = $("#ddlCity").val();
-        var mobileNumber = $("#numMobile").val();
-        var pincode = $("#numPincode").val();
-        // var verifiedOn = $("#txtVerifiedOn").val();
-        var uploadPhoto = uploadedFileName;
-        var driverId = 0;
-
-        var saveUrl = '/Driver/DriverSave';
-        var formData = {
-            DriverTypeId: driverType,
-            LicenseNo: licenseNo,
-            DriverName: driverName,
-            LicenseIssueDate: dlIssueDate,
-            LicenseIssueCityId: 1,
-            DateOfBirth: dateOfBirth,
-            DriverCode: driverCode,
-            LicenseExpDate: dlExpiryDate,
-            WhatsAppNo: whatsappNumber,
-            AddressLine: address,
-            CityId: city,
-            MobNo: mobileNumber,
-            PinCode: pincode,
-            LinkId: linkId,
-            DriverImagePath: uploadPhoto
-        };
-        console.log(formData);
-
-        $.ajax({
-            url: saveUrl,
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(formData),
-            success: function (response) {
-                var driverId = response.result.result.driverId;
-                Saveattachment(driverId);
-                console.log(response);
-                toastr.success("Driver details submitted successfully!");
-            },
-            error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to submit Driver details", "Error");
-            }
-        });
-        return driverId;
-    }
-
-    function GetAllCityList() {
-        var getcityUrl = '/Customer/GetAllCity'
-        $.ajax({
-            url: getcityUrl,
-            type: "GET",
-            dataType: "json",
-            success: function (response) {
-                BindDropDown(response)
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to fetch data!", "Error");
-            }
-        });
-    }
-
-    function BindDropDown(data) {
-        const select = document.getElementById("ddlCity");
-        select.innerHTML = "";
-
-        let placeholderOption = document.createElement("option");
-        placeholderOption.value = "";
-        placeholderOption.textContent = "Select a City";
-        placeholderOption.disabled = true;
-        placeholderOption.selected = true;
-        select.appendChild(placeholderOption);
-
-        data.forEach(option => {
-            let opt = document.createElement("option");
-            opt.value = option.cityId;
-            opt.textContent = option.cityName;
-            select.appendChild(opt);
-        });
-
-        $('.selectpicker').selectpicker('refresh');
-    }
 });
+
+function SaveDriver(uploadedFileName) {
+    var driverType = $("#ddlDriverType").val();
+    var licenseNo = $("#numLicenseNo").val();
+    var driverName = $("#txtDriverName").val();
+    var dlIssueDate = $("#txtDLIssueDate").val();
+    var dlIssueRto = $("#txtDLIssuingRTO").val();
+    var dateOfBirth = $("#txtDateOfBirth").val();
+    var driverCode = $("#txtDriverCode").val();
+    var dlExpiryDate = $("#txtDLExpiryDate").val();
+    var whatsappNumber = $("#numWhatsapp").val();
+    var address = $("#txtAddress").val();
+    var city = $("#ddlCity").val();
+    var mobileNumber = $("#numMobile").val();
+    var pincode = $("#numPincode").val();
+    // var verifiedOn = $("#txtVerifiedOn").val();
+    var uploadPhoto = uploadedFileName;
+    var driverId = 0;
+
+    var saveUrl = '/Driver/DriverSave';
+    var formData = {
+        DriverTypeId: driverType,
+        LicenseNo: licenseNo,
+        DriverName: driverName,
+        LicenseIssueDate: dlIssueDate,
+        LicenseIssueCityId: 1,
+        DateOfBirth: dateOfBirth,
+        DriverCode: driverCode,
+        LicenseExpDate: dlExpiryDate,
+        WhatsAppNo: whatsappNumber,
+        AddressLine: address,
+        CityId: city,
+        MobNo: mobileNumber,
+        PinCode: pincode,
+        LinkId: linkId,
+        DriverImagePath: uploadPhoto
+    };
+    console.log(formData);
+
+    $.ajax({
+        url: saveUrl,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(formData),
+        success: function (response) {
+            var driverId = response.result.result.driverId;
+            Saveattachment(driverId);
+            console.log(response);
+            toastr.success("Driver details submitted successfully!");
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error);
+            toastr.error("Failed to submit Driver details", "Validation Error");
+        }
+    });
+    return driverId;
+}
+function GetAllCityList() {
+    var getcityUrl = '/Customer/GetAllCity'
+    $.ajax({
+        url: getcityUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            BindDropDown(response)
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to fetch data!", "Validation Error");
+        }
+    });
+}
+function BindDropDown(data) {
+    const select = document.getElementById("ddlCity");
+    select.innerHTML = "";
+
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = "";
+    placeholderOption.textContent = "Select a City";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select.appendChild(placeholderOption);
+
+    data.forEach(option => {
+        let opt = document.createElement("option");
+        opt.value = option.cityId;
+        opt.textContent = option.cityName;
+        select.appendChild(opt);
+    });
+
+    $('.selectpicker').selectpicker('refresh');
+}
 function FetchDriverList() {
     $('#tableDiv').show();
     var fetchDriverUrl = '/Driver/ViewDriver';
@@ -418,7 +315,7 @@ function FetchDriverList() {
         },
         error: function (xhr, status, error) {
             console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to fetch data!", "Validation Error");
         }
     });
 };
@@ -450,8 +347,8 @@ function EditDriver(driverId) {
 
         $("#hdDriverId").val(formData.driverId);
         $("#ddlDriverType").val(formData.driverTypeId).change();
-        $("#numLicenseNo").val(formData.licenseNo);
-        $("#txtDateOfBirth").val(formatDateToLocal(formData.dateOfBirth));
+        $("#numLicenseNo").val(formData.licenseNo).prop("disabled", true);
+        $("#txtDateOfBirth").val(formatDateToLocal(formData.dateOfBirth)).prop("disabled", true);
         $("#txtDriverCode").val(formData.driverCode);
         $("#txtDLIssueDate").val(formData.licenseIssueDate);
         $("#txtDLExpiryDate").val(formData.licenseExpDate);
@@ -471,43 +368,7 @@ function EditDriver(driverId) {
     });
 }
 function UpdateDriver(fileName) {
-    var driverType = $("#ddlDriverType").val();
-    var licenseNo = $("#numLicenseNo").val();
-    var dateOfBirth = $("#txtDateOfBirth").val();
-    var driverCode = $("#txtDriverCode").val();
-    var whatsappNumber = $("#numWhatsapp").val();
-    var mobileNumber = $("#numMobile").val();
-    var city = $("#ddlCity").val();
-    var selectedIndex = $("#ddlCity").prop("selectedIndex");
 
-    if (IsNullOrEmpty(driverType)) {
-        toastr.warning("Please enter a valid Driver Type", "Warning");
-        return false;
-    }
-    if (!/^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(licenseNo)) {
-        toastr.warning("Please enter a valid License Number", "Warning");
-        return false;
-    }
-    if (IsNullOrEmpty(dateOfBirth)) {
-        toastr.warning("Please enter a valid Date of Birth", "Warning");
-        return false;
-    }
-    if (!isAlphaNumeric(driverCode)) {
-        toastr.warning("Please enter a valid Driver Code", "Warning");
-        return false;
-    }
-    if (!isMobile(whatsappNumber)) {
-        toastr.warning("Please enter a valid WhatsApp Number", "Warning");
-        return false;
-    }
-    if (!isValidateSelect(city, selectedIndex)) {
-        toastr.warning("Please select a City", "Warning");
-        return false;
-    }
-    if (!isMobile(mobileNumber)) {
-        toastr.warning("Please enter a valid Mobile Number", "Warning");
-        return false;
-    }
     var logoFileName = fileName || $("#txtUploadedPhoto").val();
     var formData = {
         DriverId: $("#hdDriverId").val(),
@@ -578,7 +439,7 @@ function UpdateDriver(fileName) {
             success: function (response) {
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to fetch data!", "Error");
+                toastr.error("Failed to fetch data!", "Validation Error");
             }
         });
     }
@@ -617,13 +478,13 @@ function DlEKycclick() {
         var licenseNo = $("#numLicenseNo").val();
         var dateOfBirth = $("#txtDateOfBirth").val();
 
-        if (!/^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(licenseNo)) {
-            toastr.warning("Please enter a valid License Number", "Warning");
+        if (!ValidateLicenseNo(licenseNo)) {
+            toastr.warning("Please enter a valid License No", "Validation Error");
             return false;
         }
 
         if (IsNullOrEmpty(dateOfBirth)) {
-            toastr.warning("Please enter a valid DateOfBirth", "Warning");
+            toastr.warning("Please enter a valid DateOfBirth", "Validation Error");
             return false;
         }
 
@@ -653,9 +514,9 @@ function DlEKycclick() {
                 $("#txtAddress").val(drivingLicenseModel.presentAddress),
                 $("#numPincode").val(drivingLicenseModel.pincode),
 
-                    document.getElementById("txtUploadedPhoto").value = base64String;
+                document.getElementById("txtUploadedPhoto").value = base64String;
                 $("#txtUploadedPhoto").val(drivingLicenseModel.photo),
-                    console.log(Data);
+                console.log(Data);
 
                 function base64ToFile(base64String, filename) {
                     const arr = base64String.split(",");
@@ -688,7 +549,7 @@ function DlEKycclick() {
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
-                toastr.error("Failed to submit Driver", "Error");
+                toastr.error("Failed to submit Driver", "Validation Error");
             }
         });
     });
@@ -724,7 +585,7 @@ function GetDriverType() {
         },
         error: function (xhr, status, error) {
             console.error("Error:", error);
-            toastr.error("Failed to submit Vehicle Type", "Error");
+            toastr.error("Failed to submit Vehicle Type", "Validation Error");
         }
     });
 }
@@ -744,7 +605,7 @@ function DeleteDriver(driverId, fileName) {
                 $("#backButton").css('display', 'block');
             },
             error: function (xhr, status, error) {
-                toastr.error("Fail	ed to fetch data!", "Error");
+                toastr.error("Fail	ed to fetch data!", "Validation Error");
             }
         });
     })
@@ -757,7 +618,106 @@ function DeleteDriver(driverId, fileName) {
             toastr.success("Driver Deleted Successfully.");
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to fetch data!", "Validation Error");
         }
     })
 };
+function ValidateLicenseNo(number) {
+    return /^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(number);
+}
+function InitializeFields() {
+
+    $("#ddlDriverType").on("blur", function () {
+        if (IsNullOrEmpty($(this).val())) {
+            toastr.warning("Please select a valid Driver Type", "Validation Error");
+            return;
+        }
+    });
+
+    $("#numLicenseNo").on("blur", function () {
+        if (!ValidateLicenseNo($(this).val())) {
+            toastr.warning("Please enter a valid License No", "Validation Error");
+            return;
+        }
+    });
+
+    $("#txtDateOfBirth").on("blur", function () {
+        if (IsNullOrEmpty($(this).val())) {
+            toastr.warning("Please enter a valid DateOfBirth", "Validation Error");
+            return;
+        }
+    });
+
+    $("#ddlCity").on("blur", function () {
+        const selectedIndex = $(this).prop("selectedIndex");
+        if (!isValidateSelect($(this).val(), selectedIndex)) {
+            toastr.warning("Please select a valid City", "Validation Error");
+            return;
+        }
+    });
+
+    $("#txtDriverCode").on("blur", function () {
+        if (!isAlphaNumeric($(this).val())) {
+            toastr.warning("Please enter a valid Driver Code", "Validation Error");
+            return;
+        }
+    });
+
+    $("#numWhatsapp").on("blur", function () {
+        if (!isMobile($(this).val())) {
+            toastr.warning("Please enter a valid WhatsApp No", "Validation Error");
+            return;
+        }
+    });
+
+    $("#numMobile").on("blur", function () {
+        if (!isMobile($(this).val())) {
+            toastr.warning("Please enter a valid Mobile No", "Validation Error");
+            return;
+        }
+    });
+}
+
+function ValidationCheck() {
+
+    if (IsNullOrEmpty($("#txtDriverName").val())) {
+        toastr.warning("Please complete DL E-KYC before saving!");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#ddlDriverType").val())) {
+        toastr.warning("Please select a valid Driver Type", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#numLicenseNo").val()) || !ValidateLicenseNo($("#numLicenseNo").val())) {
+        toastr.warning("Please enter a valid License No", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#txtDateOfBirth").val())) {
+        toastr.warning("Please enter a valid DateOfBirth", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#ddlCity").val()) || !isValidateSelect($("#ddlCity").val(), $("#ddlCity").prop("selectedIndex"))) {
+        toastr.warning("Please select a valid City", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#txtDriverCode").val()) || !isAlphaNumeric($("#txtDriverCode").val())) {
+        toastr.warning("Please enter a valid Driver Code", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#numWhatsapp").val()) || !isMobile($("#numWhatsapp").val())) {
+        toastr.warning("Please enter a valid WhatsApp No", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#numMobile").val()) || !isMobile($("#numMobile").val())) {
+        toastr.warning("Please enter a valid Mobile No", "Validation Error");
+        return false;
+    }
+    return true;
+}
