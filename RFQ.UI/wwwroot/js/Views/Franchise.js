@@ -6,7 +6,11 @@ $(document).ready(function () {
     Dropzone.autoDiscover = false;
     var uploadUrl = "/Franchise/Upload";
     var deleteUploadUrl = "/Franchise/DeleteUpload";
-
+    document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
+        element.addEventListener("input", function () {
+            this.value = this.value.toUpperCase();
+        });
+    });
     if (Dropzone.instances.length > 0) {
         Dropzone.instances.forEach(dz => dz.destroy());
     }
@@ -30,7 +34,7 @@ $(document).ready(function () {
                     isNewFranchise = false;
                     isUpdateFranchise = false;
                     if (myDropzone.files.length > 0) {
-                        if (CheckNullValidation()) {
+                        if (OnSubmitValidation()) {
                             myDropzone.processQueue();
                         }
                     } else {
@@ -41,7 +45,7 @@ $(document).ready(function () {
                     isNewFranchise = true;
                     isUpdateFranchise = false;
                     if (myDropzone.files.length > 0) {
-                        if (CheckNullValidation()) {
+                        if (OnSubmitValidation()) {
                             myDropzone.processQueue();
                         }
                     }
@@ -56,7 +60,7 @@ $(document).ready(function () {
                     isNewFranchise = false;
                     isUpdateFranchise = true;
                     if (myDropzone.files.length > 0) {
-                        if (CheckNullValidation()) {
+                        if (OnSubmitValidation()) {
                             if (myDropzone.files[0].status == "queued") {
                                 myDropzone.processQueue();
                             }
@@ -145,135 +149,117 @@ $(document).ready(function () {
         window.location.reload(true);
     });
 });
-function ValidatePanNumber(number) {
-    return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(number);
-}
-function ValidateGstNumber(number) {
-    return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(number);
-}
 function CheckValidation() {
     $("#txtFranchiseName").on("blur", function () {
         if (!/^[A-Za-z0-9 ]+$/.test($(this).val())) {
-            toastr.warning("Please enter a valid Franchise  Name", "Warning");
+            toastr.warning("Please enter a valid Franchise  Name", "Validation Error");
             return;
         }
     });
     $("#txtAddress").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a valid Franchise  Address", "Warning");
+            toastr.warning("Please enter a valid Franchise  Address", "Validation Error");
             return;
         }
     });
     $("#ddlCity").on("keypress", function () {
         if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please enter a valid Franchise City", "Warning");
+            toastr.warning("Please enter a valid Franchise City", "Validation Error");
             return;
         }
     });
     $("#txtPinCode").on("blur", function () {
-        if (!/^\d{6}$/.test($(this).val())) {
-            toastr.warning("Please enter a valid Pin Code", "Warning");
+        if (!ValidatePinCode($(this).val())) {
+            toastr.warning("Please enter a valid Pin Code", "Validation Error");
             return;
         }
     })
     $("#txtContactPerson").on("blur", function () {
         if (!isAlphabets($(this).val())) {
-            toastr.warning("Only Letters allowed", "Warning");
+            toastr.warning("Only Letters allowed", "Validation Error");
             return;
         }
     })
     $("#txtContactNumber").on("blur", function () {
         if (!isMobile($(this).val())) {
-            toastr.warning("Please enter a valid Contact Number", "Warning");
+            toastr.warning("Please enter a valid Contact Number", "Validation Error");
             return;
         }
     })
     $("#txtWhatsAppNumber").on("blur", function () {
         if (!isMobile($(this).val())) {
-            toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+            toastr.warning("Please enter a valid Whatsapp Number", "Validation Error");
             return;
         }
     })
     $("#txtMobileNumber").on("blur", function () {
         if (!isMobile($(this).val())) {
-            toastr.warning("Please enter a valid Mobile Number", "Warning");
+            toastr.warning("Please enter a valid Mobile Number", "Validation Error");
             return;
         }
     })
     $("#txtEmailId").on("blur", function () {
         if (!isValidateEmail($(this).val())) {
-            toastr.warning("Please enter a valid Email", "Warning");
+            toastr.warning("Please enter a valid Email", "Validation Error");
             return;
         }
     })
-    $("#txtPanNumber").on("input", function () {
-        if (!isAlphaNumeric($(this).val())) {
-            toastr.warning("Please enter a valid Pan Number", "Warning");
-            return;
-        }
-    });
-    $("#txtGSTNumber").on("input", function () {
-        if (!isAlphaNumeric($(this).val())) {
-            toastr.warning("Please enter a valid Gst Number", "Warning");
-            return;
-        }
-    });
     $("#txtPanNumber").on("blur", function () {
         if (!ValidatePanNumber($(this).val())) {
-            toastr.warning("Please enter a valid PAN Number", "Warning");
+            toastr.warning("Please enter a valid PAN Number", "Validation Error");
             return;
         }
     })
-    $("#txtGSTNumber").on("blur", function () {
+    $("#txtGstNumber").on("blur", function () {
         if (!ValidateGstNumber($(this).val())) {
-            toastr.warning("Please enter a valid GST Number", "Warning");
+            toastr.warning("Please enter a valid GST Number", "Validation Error");
             return;
         }
     })
 }
-function CheckNullValidation() {
-    if (IsNullOrEmpty($("#txtFranchiseName").val())) {
-        toastr.warning("Please enter a valid Franchise Name", "Warning");
+function OnSubmitValidation() {
+    if (IsNullOrEmpty($("#txtFranchiseName").val()) || !/^[A-Za-z0-9 ]+$/.test($("#txtFranchiseName").val())) {
+        toastr.warning("Please enter a valid Franchise Name", "Validation Error");
         return false;
     }
     if (IsNullOrEmpty($("#txtAddress").val())) {
-        toastr.warning("Please enter a valid Franchise Address", "Warning");
+        toastr.warning("Please enter a valid Franchise Address", "Validation Error");
         return false;
     }
     if (!isValidateSelect($("#ddlCity").val())) {
-        toastr.warning("Please select a valid Franchise City", "Warning");
+        toastr.warning("Please select a valid Franchise City", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtPinCode").val())) {
-        toastr.warning("Please enter a valid Franchise Pincode", "Warning");
+    if (IsNullOrEmpty($("#txtPinCode").val()) || !ValidatePinCode($("#txtPinCode").val())) {
+        toastr.warning("Please enter a valid Franchise Pincode", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtContactPerson").val())) {
-        toastr.warning("Please enter a valid Contact Person", "Warning");
+    if (IsNullOrEmpty($("#txtContactPerson").val()) || !isAlphabets($("#txtContactPerson").val())) {
+        toastr.warning("Please enter a valid Contact Person", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtContactNumber").val())) {
-        toastr.warning("Please enter a valid Contact Number", "Warning");
+    if (IsNullOrEmpty($("#txtContactNumber").val()) || !isMobile($("#txtContactNumber").val())) {
+        toastr.warning("Please enter a valid Contact Number", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtEmailId").val())) {
-        toastr.warning("Please enter a valid Email Id", "Warning");
+    if (IsNullOrEmpty($("#txtEmailId").val()) || !isValidateEmail($("#txtEmailId").val())) {
+        toastr.warning("Please enter a valid Email Id", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtPanNumber").val())) {
-        toastr.warning("Please enter a valid PAN Number", "Warning");
+    if (IsNullOrEmpty($("#txtPanNumber").val()) || !ValidatePanNumber($("#txtPanNumber").val())) {
+        toastr.warning("Please enter a valid PAN Number", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtGstNumber").val())) {
-        toastr.warning("Please enter a valid GST Number", "Warning");
+    if (IsNullOrEmpty($("#txtGstNumber").val()) || !ValidateGstNumber($("#txtGstNumber").val())) {
+        toastr.warning("Please enter a valid GST Number", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtMobileNumber").val())) {
-        toastr.warning("Please enter a valid Mobile Number", "Warning");
+    if (IsNullOrEmpty($("#txtMobileNumber").val()) || !isMobile($("#txtMobileNumber").val())) {
+        toastr.warning("Please enter a valid Mobile Number", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtWhatsAppNumber").val())) {
-        toastr.warning("Please enter a valid Whatsapp Number", "Warning");
+    if (IsNullOrEmpty($("#txtWhatsAppNumber").val()) || !isMobile($("#txtWhatsAppNumber").val())) {
+        toastr.warning("Please enter a valid Whatsapp Number", "Validation Error");
         return false;
     }
     return true;

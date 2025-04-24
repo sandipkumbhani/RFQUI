@@ -33,7 +33,7 @@ function isNumber(evt) {
 
 // isAlphabets function
 function isAlphabets(value) {
-    return /^[A-Za-z\s]+$/.test(value);
+    return /^[A-Za-z\s]+$/.test(value.key);
 }
 
 // isAlphaNumeric function
@@ -43,19 +43,19 @@ function isAlphaNumeric(value) {
 
 function AllowAlphaNumericOnly(e) {
     // Allow control keys like Shift, Ctrl, Alt, etc.
-    if (e.shiftKey || e.ctrlKey || e.altKey) {
-        return; // Do not block these combinations
-    }
+    //if (e.shiftKey || e.ctrlKey || e.altKey) {
+    //    return; // Do not block these combinations
+    //}
 
     const key = e.keyCode || e.which;
 
     // Allow: Backspace (8), Delete (46), Arrow keys (35-40), A-Z (65-90), 0-9 (48-57), Numpad 0-9 (96-105)
-    const isControlKey = (key === 8 || key === 46 || (key >= 35 && key <= 40));
+    //const isControlKey = (key === 8 || key === 46 || (key >= 35 && key <= 40));
     const isAlphabetKey = (key >= 65 && key <= 90);
     const isNumberKey = (key >= 48 && key <= 57);
-    const isNumpadKey = (key >= 96 && key <= 105);
+    const isNumpadKey = (key >= 97 && key <= 122);
 
-    if (!(isControlKey || isAlphabetKey || isNumberKey || isNumpadKey)) {
+    if (!(isAlphabetKey || isNumberKey || isNumpadKey)) {
         e.preventDefault(); // Block non-alphanumeric keys
     }
 }
@@ -108,4 +108,14 @@ function populateDropdown(selectElement) {
     $.each(attachmentOptions, function (index, option) {
         $(selectElement).append('<option value="' + option.value + '">' + option.text + '</option>');
     });
+}
+
+function ValidatePanNumber(number) {
+    return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(number);
+}
+function ValidateGstNumber(number) {
+    return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(number);
+}
+function ValidatePinCode(number) {
+    return /^\d{6}$/.test(number);
 }
