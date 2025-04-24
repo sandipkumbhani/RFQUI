@@ -88,11 +88,11 @@
                             </div>
                             <div class="mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
-                                <input type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" maxlength="10" name="Pan Number"/>
+                                <input type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" maxlength="10" name="Pan Number" onkeypress="return AllowAlphaNumericOnly(event)"/>
                             </div>
                             <div class="mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
-                                <input type="text" class="form-control" placeholder="GST Number" id="txtGstNumber" maxlength="15" name="Gst Number"/>
+                                <input type="text" class="form-control" placeholder="GST Number" id="txtGstNumber" maxlength="15" name="Gst Number" onkeypress="return AllowAlphaNumericOnly(event)"/>
                             </div>
 
                         </div>
@@ -113,20 +113,18 @@
                                 <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
                                 <input type="email" class="form-control" placeholder="email" id="txtEmail" maxlength="50" name="Email"/>
                             </div>
-                            
                         </div>
                     </div>
                 </div>
-
 
                 @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 
                 <div class="card-footer d-flex justify-content-srtat py-6 px-9">
                     <button id="btnSaveCompanyType" type="button" class="btn btn-primary me-2" data-action="save">Save</button>
-                    <button type="button" id="btnupdate" class="btn btn-primary" style="display:none;">Update</button>&nbsp;
-                    <button type="button" class="btn btn-primary" id="btnsaveandnew" data-action="saveNew">Save & New</button>&nbsp;
-                    <button id="viewButton" type="button" class="btn btn-primary">View</button>
-                    <button id="cancleButton" type="button" class="btn btn-danger d-none">Cancel</button>.
+                    <button id="btnupdate" type="button" class="btn btn-primary" style="display:none;">Update</button>&nbsp;
+                    <button id="btnsaveandnew"type="button" class="btn btn-primary"  data-action="saveNew">Save & New</button>&nbsp;
+                    <button id="btnView" type="button" class="btn btn-primary">View</button>
+                    <button id="btnCancel" type="button" class="btn btn-danger d-none">Cancel</button>
                 </div>
 
 
