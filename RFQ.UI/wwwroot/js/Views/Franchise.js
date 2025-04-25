@@ -175,8 +175,8 @@ function CheckValidation() {
         }
     })
     $("#txtContactPerson").on("blur", function () {
-        if (!isAlphabets($(this).val())) {
-            toastr.warning("Only Letters allowed", "Validation Error");
+        if (IsNullOrEmpty($(this).val())) {
+            toastr.warning("Please enter a valid Contact Person", "Validation Error");
             return;
         }
     })
@@ -234,7 +234,7 @@ function OnSubmitValidation() {
         toastr.warning("Please enter a valid Franchise Pincode", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtContactPerson").val()) || !isAlphabets($("#txtContactPerson").val())) {
+    if (IsNullOrEmpty($("#txtContactPerson").val())) {
         toastr.warning("Please enter a valid Contact Person", "Validation Error");
         return false;
     }

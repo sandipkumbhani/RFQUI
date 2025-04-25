@@ -25,7 +25,7 @@
 function CheckValidation() {
     $("#txtItemName").on('blur', function () {
         if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter Item Name");
+            toastr.warning("Please enter Item Name","Validation Error");
             return;
         }
     })
@@ -33,7 +33,7 @@ function CheckValidation() {
 function CheckNullValidation() {
     var itemName = $('#txtItemName').val();
     if (IsNullOrEmpty(itemName)) {
-        toastr.warning("Please enter Item Name");
+        toastr.warning("Please enter Item Name","Validation Error");
         return false;
     }
     return true;

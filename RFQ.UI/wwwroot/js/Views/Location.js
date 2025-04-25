@@ -1,102 +1,108 @@
 ﻿
 var locationResponseDto;
 
-$("#btnViewForm").on('click', function () {
-    Fetchlocationlist();
-    $("#AddLocationDiv").css('display', 'none');
-    $("#backButton").css('display', 'Block');
+
+$(document).ready(function () {
+    Initialization();
+    GetAllCityList();
+    UpdateLocationList();
 });
-$("#txtLocationName").on("blur", function () {
-    var locationname = $(this).val();
-    if (!isAlphabets(locationname)) {
-        $("#txtLocationName").val('');
-        toastr.warning("Please enter a valid LocationName", "Warning");
-        return;
-    }
-});
-$("#txtAddress").on("blur", function () {
-    var Address = $(this).val();
-    if (!isAlphaNumeric(Address)) {
-        $("#txtAddress").val('');
-        toastr.warning("Please enter a Address", "Warning");
-        return;
-    }
-});
-$("#selectCity").on("blur", function () {
-    var city = $(this).val();
-    if (!isValidateSelect(city)) {
-        toastr.warning("Please enter a City", "Warning");
-        return;
-    }
-});
-$("#txtPerson").on("blur", function () {
-    var person = $(this).val();
-    if (!isAlphabets(person)) {
-        $("#txtPerson").val('');
-        toastr.warning("Please enter a Contact Person", "Warning");
-        return;
-    }
-});
-$("#txtMobileNumber").on("blur", function () {
-    var mobileNum = $(this).val();
-    if (!isMobile(mobileNum)) {
-        toastr.warning("Please enter a valid 10-digit Mobile number", "Warning");
-        return;
-    }
-});
-$("#txtLocationCode").on("blur", function () {
-    var locationcode = $(this).val();
-    if (!isAlphabets(locationcode)) {
-        $("#txtLocationCode").val('');
-        toastr.warning("Please enter a Location Code", "Warning");
-        return;
-    }
-});
-$("#txtPinCode").on("blur", function () {
-    var pinc = $(this).val();
-    if (!/^\d{6}$/.test(pinc)) {
-        // $(this).focus();
-        toastr.warning("Please enter a Valid Pincode", "Warning");
-        return;
-    }
-});
-$("#txtWhatsAppNumber").on("blur", function () {
-    var whats = $(this).val();
-    if (!isMobile(whats)) {
-        toastr.warning("Please enter a whatsApp number", "Warning");
-        return;
-    }
-});
-$("#txtEmail").on("blur", function () {
-    var email = $(this).val();
-    if (!isValidateEmail(email)) {
-        $("#txtEmail").val('');
-        toastr.warning("Please enter a valid email", "Warning");
-        return;
-    }
-});
-$("#txtContactNumber").on("blur", function () {
-    var contactnumber = $(this).val();
-    if (!isMobile(contactnumber)) {
-        toastr.warning("Please enter a contact number", "Warning");
-        return;
-    }
-});
-$('#backButton').on('click', function () {
-    window.location.reload(true);
-    // $("#AddLocationDiv").css('display', 'Block');
-    // $("#backButton").css('display', 'none');
-    // $('#tableDiv').hide();
-});
-$("#cancleButton").on("click", function () {
-    Fetchlocationlist();
-    $("#AddLocationDiv").css('display', 'none');
-    $("#backButton").css('display', 'Block');
-});
-$("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
-    var action = $(this).data('action'); // "save" or "saveNew"
-    Save(action);
-});
+function Initialization() {
+    $("#btnViewForm").on('click', function () {
+        Fetchlocationlist();
+        $("#AddLocationDiv").css('display', 'none');
+        $("#backButton").css('display', 'Block');
+    });
+    $("#txtLocationName").on("blur", function () {
+        var locationname = $(this).val();
+        if (IsNullOrEmpty(locationname)) {
+            toastr.warning("Please enter a valid LocationName", "Warning");
+            return;
+        }
+    });
+    $("#txtAddress").on("blur", function () {
+        var Address = $(this).val();
+        if (!isAlphaNumeric(Address)) {
+            $("#txtAddress").val('');
+            toastr.warning("Please enter a Address", "Warning");
+            return;
+        }
+    });
+    $("#selectCity").on("blur", function () {
+        var city = $(this).val();
+        if (!isValidateSelect(city)) {
+            toastr.warning("Please enter a City", "Warning");
+            return;
+        }
+    });
+    $("#txtPerson").on("blur", function () {
+        var person = $(this).val();
+        if (IsNullOrEmpty(person)) {
+            toastr.warning("Please enter a Contact Person", "Warning");
+            return;
+        }
+    });
+    $("#txtMobileNumber").on("blur", function () {
+        var mobileNum = $(this).val();
+        if (!isMobile(mobileNum)) {
+            toastr.warning("Please enter a valid 10-digit Mobile number", "Warning");
+            return;
+        }
+    });
+    $("#txtLocationCode").on("blur", function () {
+        var locationcode = $(this).val();
+        if (!isAlphabets(locationcode)) {
+            $("#txtLocationCode").val('');
+            toastr.warning("Please enter a Location Code", "Warning");
+            return;
+        }
+    });
+    $("#txtPinCode").on("blur", function () {
+        var pinc = $(this).val();
+        if (!/^\d{6}$/.test(pinc)) {
+            // $(this).focus();
+            toastr.warning("Please enter a Valid Pincode", "Warning");
+            return;
+        }
+    });
+    $("#txtWhatsAppNumber").on("blur", function () {
+        var whats = $(this).val();
+        if (!isMobile(whats)) {
+            toastr.warning("Please enter a whatsApp number", "Warning");
+            return;
+        }
+    });
+    $("#txtEmail").on("blur", function () {
+        var email = $(this).val();
+        if (!isValidateEmail(email)) {
+            $("#txtEmail").val('');
+            toastr.warning("Please enter a valid email", "Warning");
+            return;
+        }
+    });
+    $("#txtContactNumber").on("blur", function () {
+        var contactnumber = $(this).val();
+        if (!isMobile(contactnumber)) {
+            toastr.warning("Please enter a contact number", "Warning");
+            return;
+        }
+    });
+    $('#backButton').on('click', function () {
+        window.location.reload(true);
+        // $("#AddLocationDiv").css('display', 'Block');
+        // $("#backButton").css('display', 'none');
+        // $('#tableDiv').hide();
+    });
+    $("#cancleButton").on("click", function () {
+        Fetchlocationlist();
+        $("#AddLocationDiv").css('display', 'none');
+        $("#backButton").css('display', 'Block');
+    });
+    $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
+        var action = $(this).data('action'); // "save" or "saveNew"
+        Save(action);
+    });
+}
 function Fetchlocationlist() {
     $('#tableDiv').show();
     $.ajax({
@@ -162,6 +168,12 @@ function Fetchlocationlist() {
     });
 }
 function Save(action) {
+
+    var isvalid = ValidationCheck();
+    if (!isvalid) {
+        return;
+    }
+
     var locationname = $('#txtLocationName').val();
     var address = $('#txtAddress').val();
     var city = $("#selectCity").val();
@@ -172,42 +184,42 @@ function Save(action) {
     var whatsAppNumber = $("#txtWhatsAppNumber").val();
     var email = $("#txtEmail").val();
 
-    if (!isAlphabets(locationname)) {
-        toastr.warning("Please enter a valid Location Name", "Warning");
-        return;
-    }
-    if (!isAlphaNumeric(address)) {
-        toastr.warning("Please enter a Address", "Warning");
-        return;
-    }
-    if (!isValidateSelect(city)) {
-        toastr.warning("Please enter a City", "Warning");
-        return;
-    }
-    if (!/^\d{6}$/.test(pincode)) {
-        toastr.warning("Please enter a Valid Pincode", "Warning");
-        return;
-    }
-    if (!isAlphabets(contactPerson)) {
-        toastr.warning("Please enter a Contact Person", "Warning");
-        return;
-    }
-    if (!isValidateEmail(email)) {
-        toastr.warning("Please enter a valid email", "Warning");
-        return;
-    }
-    if (!isMobile(whatsAppNumber)) {
-        toastr.warning("Please enter a whatsApp number", "Warning");
-        return;
-    }
-    if (!isMobile(mobileNumber)) {
-        toastr.warning("Please enter a valid 10-digit mobile number", "Warning");
-        return;
-    }
-    if (!isMobile(contactNumber)) {
-        toastr.warning("Please enter a valid 10-digit contact number", "Warning");
-        return;
-    }
+    //if (!isAlphabets(locationname)) {
+    //    toastr.warning("Please enter a valid Location Name", "Warning");
+    //    return;
+    //}
+    //if (!isAlphaNumeric(address)) {
+    //    toastr.warning("Please enter a Address", "Warning");
+    //    return;
+    //}
+    //if (!isValidateSelect(city)) {
+    //    toastr.warning("Please enter a City", "Warning");
+    //    return;
+    //}
+    //if (!/^\d{6}$/.test(pincode)) {
+    //    toastr.warning("Please enter a Valid Pincode", "Warning");
+    //    return;
+    //}
+    //if (!isAlphabets(contactPerson)) {
+    //    toastr.warning("Please enter a Contact Person", "Warning");
+    //    return;
+    //}
+    //if (!isValidateEmail(email)) {
+    //    toastr.warning("Please enter a valid email", "Warning");
+    //    return;
+    //}
+    //if (!isMobile(whatsAppNumber)) {
+    //    toastr.warning("Please enter a whatsApp number", "Warning");
+    //    return;
+    //}
+    //if (!isMobile(mobileNumber)) {
+    //    toastr.warning("Please enter a valid 10-digit mobile number", "Warning");
+    //    return;
+    //}
+    //if (!isMobile(contactNumber)) {
+    //    toastr.warning("Please enter a valid 10-digit contact number", "Warning");
+    //    return;
+    //}
 
     var formdata = {
         LocationName: locationname,
@@ -259,14 +271,15 @@ function Save(action) {
     }
 
 }
-
-$(document).ready(function () {
-    GetAllCityList();
-    UpdateLocationList();
-});
 function UpdateLocationList() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
+
+        var isvalid = ValidationCheck();
+        if (!isvalid) {
+            return;
+        }
+
         var locationmodel = {
             LocationId: $('#txtLocationId').val(),
             LocationName: $('#txtLocationName').val(),
@@ -414,3 +427,48 @@ function validateLocationForm() {
 
     return isValid;
 }
+
+function ValidationCheck() {
+    if (IsNullOrEmpty($("#txtLocationName").val()) || !isAlphabets($("#txtLocationName").val())) {
+        toastr.warning("Please enter a valid Location Name", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtPerson").val()) || !isAlphabets($("#txtPerson").val())) {
+        toastr.warning("Please enter a valid Contact Person", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtAddress").val())) {
+        toastr.warning("Address is Required", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#selectCity").val()) || !isValidateSelect($("#selectCity").val(), $("#selectCity").prop("selectedIndex"))) {
+        toastr.warning("Please select a City", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtEmail").val()) || !isValidateEmail($("#txtEmail").val())) {
+        toastr.warning("Please enter a valid email", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtMobileNumber").val()) || !isMobile($("#txtMobileNumber").val())) {
+        toastr.warning("Please enter a valid Mobile Number", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#txtPinCode").val()) || !/^\d{6}$/.test($("#txtPinCode").val())) {
+        toastr.warning("Please enter a valid Pincode", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#txtWhatsAppNumber").val()) || !isMobile($("#txtWhatsAppNumber").val())) {
+        toastr.warning("Please enter a valid WhatsApp Number", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#txtContactNumber").val()) || !isMobile($("#txtContactNumber").val())) {
+        toastr.warning("Please enter a valid Contact No", "Validation Error");
+        return false;
+    }
+    return true;
+}
+

@@ -33,7 +33,7 @@ function isNumber(evt) {
 
 // isAlphabets function
 function isAlphabets(value) {
-    return /^[A-Za-z\s]+$/.test(value);
+    return /^[A-Za-z\s]+$/.test(value.key);
 }
 
 // isAlphaNumeric function
@@ -55,7 +55,7 @@ function AllowAlphaNumericOnly(e) {
     const isNumberKey = (key >= 48 && key <= 57);
     const isNumpadKey = (key >= 97 && key <= 122);
 
-    if (!(isAlphabetKey || isNumberKey || isNumpadKey )) {
+    if (!(isAlphabetKey || isNumberKey || isNumpadKey)) {
         e.preventDefault(); // Block non-alphanumeric keys
     }
 }

@@ -16,8 +16,7 @@ function Initialization() {
     });
     $("#txtName").on("blur", function () {
         var Textname = $(this).val();
-        if (!isAlphabets(Textname)) {
-            $("#txtName").val('');
+        if (IsNullOrEmpty(Textname)) {
             toastr.warning("Please enter a valid UserName", "Warning");
             return;
         }
@@ -92,7 +91,6 @@ function Initialization() {
         $("#adduserdiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     });
-
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
         var action = $(this).data('action'); // "save" or "saveNew"
         Save(action);
@@ -125,6 +123,7 @@ function Fetchuserlist() {
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,
+                "ordering" :true,
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,
@@ -169,6 +168,11 @@ function Fetchuserlist() {
 }
 
 async function Save(action) {
+
+    var isvalid = ValidationCheck();
+    if (!isvalid) {
+        return;
+    }
     var username = $('#txtName').val();
     var corporatename = $('#CompanyAndFranchise').val();
     var mobileno = $('#txtMobileNo').val();
@@ -177,38 +181,38 @@ async function Save(action) {
     var emailid = $('#txtEmailid').val();
     var password = $('#txtPassword').val();
 
-    if (!isAlphabets(username)) {
-        toastr.warning("Please enter a not UserName", "Warning");
-        return;
-    }
-    if (!isValidateSelect(corporatename)) {
-        toastr.warning("Please select a valid CorporateName", "Warning");
-        return;
-    }
-    if (!isMobile(mobileno)) {
-        toastr.warning("Please enter a valid MobileNumber", "Warning");
-        return;
-    }
-    if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(loginname))
-    //if(!isAlphabets(loginname))
-    {
-        toastr.warning("Please enter a valid LoginName", "Warning");
-        return;
-    }
-    if (!isValidateSelect(location)) {
-        toastr.warning("Please select a valid Location", "Warning");
-        return;
-    }
-    if (!isValidateEmail(emailid)) {
-        toastr.warning("Please enter a valid Email", "Warning");
-        return;
-    }
-    if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password))
-    //if(!isAlphaNumeric(password))
-    {
-        toastr.warning("Please enter a valid password", "Warning");
-        return;
-    }
+    //if (!isAlphabets(username)) {
+    //    toastr.warning("Please enter a not UserName", "Warning");
+    //    return;
+    //}
+    //if (!isValidateSelect(corporatename)) {
+    //    toastr.warning("Please select a valid CorporateeeName", "Warning");
+    //    return;
+    //}
+    //if (!isMobile(mobileno)) {
+    //    toastr.warning("Please enter a valid MobileNumber", "Warning");
+    //    return;
+    //}
+    //if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(loginname))
+    ////if(!isAlphabets(loginname))
+    //{
+    //    toastr.warning("Please enter a valid LoginName", "Warning");
+    //    return;
+    //}
+    //if (!isValidateSelect(location)) {
+    //    toastr.warning("Please select a valid Location", "Warning");
+    //    return;
+    //}
+    //if (!isValidateEmail(emailid)) {
+    //    toastr.warning("Please enter a valid Email", "Warning");
+    //    return;
+    //}
+    //if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password))
+    ////if(!isAlphaNumeric(password))
+    //{
+    //    toastr.warning("Please enter a valid password", "Warning");
+    //    return;
+    //}
     var formdata = {
         PersonName: username,
         LoginId: loginname,
@@ -318,6 +322,10 @@ function Deleteuserlist(userId) {
 function UpdateUserList() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
+        var isvalid = ValidationCheck();
+        if (!isvalid) {
+            return;
+        }
         var UserViewModel = {
             UserId: $('#txtuserid').val(),
             PersonName: $('#txtName').val(),
@@ -328,7 +336,7 @@ function UpdateUserList() {
             Mobileno: $('#txtMobileNo').val(),
             Emailid: $('#txtEmailid').val(),
         }
-       
+
         //var edituserlist = '@Url.Action("EditUserList", "Home")';
         var edituserlist = '/Home/EditUserList';
         $.ajax({
@@ -420,4 +428,36 @@ function GetFrenchiseAndcorporateName() {
         }
     });
 }
+function ValidationCheck() {
+    if (IsNullOrEmpty($("#txtName").val()) || !isAlphabets($("#txtName").val())) {
+        toastr.warning("Please enter a valid User Name", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtPassword").val())) {
+        toastr.warning("Password is Required", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#CompanyAndFranchise").val()) || !isValidateSelect($("#CompanyAndFranchise").val(), $("#CompanyAndFranchise").prop("selectedIndex"))) {
+        toastr.warning("Please select a Corporate Name", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtMobileNo").val()) || !isMobile($("#txtMobileNo").val())) {
+        toastr.warning("Please enter a valid Mobile Number", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtLoginName").val())) {
+        toastr.warning("Login Name is Required", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtEmailid").val()) || !isValidateEmail($("#txtEmailid").val())) {
+        toastr.warning("Please enter a valid email", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#selectLocation").val()) || !isValidateSelect($("#selectLocation").val(), $("#selectLocation").prop("selectedIndex"))) {
+        toastr.warning("Please select a Location", "Validation Error");
+        return false;
+    }
+    return true;
+}
+
 

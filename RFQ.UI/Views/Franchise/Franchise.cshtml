@@ -90,7 +90,7 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson"  maxlength="50"/>
+                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)"/>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Contact Number</label>
@@ -103,7 +103,7 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
-                                <input type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" maxlength="10" />
+                                <input type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
                             </div>
                         </div>
                         <div class="col-xl-6">

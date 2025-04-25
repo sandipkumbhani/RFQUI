@@ -56,7 +56,7 @@
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6" >GST No</label>
                                 <div class="col-auto">
-                                    <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtGstNumber" maxlength="15" />
+                                    <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtGstNumber" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
                                 </div>
                                 <div class="col-auto">
                                     <button class="btn btn-primary me-2" type="button" id="gstEKycButton">e-KYC</button>
@@ -112,7 +112,7 @@
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">PAN No</label>
                                 <div class="col-auto">
-                                    <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtPanNumber"  maxlength="10" />
+                                    <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtPanNumber" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
                                 </div>
                                 <div class="col-auto">
                                     <button class="btn btn-primary me-2" type="button" id="panEKycButton">e-KYC</button>
@@ -145,7 +145,7 @@
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vendor Name</label>
-                                <input type="text" class="form-control" placeholder="Vendor Name" id="txtVendorName" maxlength="150"/>
+                                <input type="text" class="form-control" placeholder="Vendor Name" id="txtVendorName" maxlength="150" onkeypress="return isAlphabets(event)" />
                             </div>
                         </div>
                         <div class="col-xl-6">
@@ -169,7 +169,7 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" maxlength="50"/>
+                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number </label>
@@ -403,8 +403,8 @@
                 </div>
                 @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
                 <div class="card-footer d-flex justify-content-srtat py-6 px-9">
-                    <button type="button" id="btnSaveVendor" class="btn btn-primary me-2">Save</button>
-                    <button type="button" id="btnSavenewVendor" class="btn btn-primary me-2">Save & New</button>
+                    <button type="button" id="btnSaveVendor" class="btn btn-primary me-2"data-action="save">Save</button>
+                    <button type="button" id="btnSavenewVendor" class="btn btn-primary me-2" data-action="saveNew">Save & New</button>
                     <button type="button" id="btnUpdateVendor" class="btn btn-primary me-2" style="display:none;">Update</button>
                     <button type="button" class="btn btn-primary" id="btnViewButton">View</button>
                     <button id="btnCancel" type="button" class="btn btn-danger ms-2 d-none">Cancel</button>
