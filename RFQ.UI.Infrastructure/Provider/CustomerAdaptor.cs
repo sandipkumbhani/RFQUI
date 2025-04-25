@@ -129,14 +129,14 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto requestDto)
+        public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto gstKycDetailsRequestDto)
         {
             try
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = $"{_config["ApiSettings:GstApiUrl"]}GSTNo={requestDto.GSTNo}&ccode={requestDto.CCode}&UserId={requestDto.UserId}";
+                var url = $"{_config["ApiSettings:GstApiUrl"]}GSTNo={gstKycDetailsRequestDto.GSTNo}&ccode={gstKycDetailsRequestDto.CCode}&UserId={gstKycDetailsRequestDto.UserId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                     return null;
@@ -157,14 +157,14 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto requestDto)
+        public async Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto panKycDetailRequestDto)
         {
             try
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = $"{_config["ApiSettings:PanApiUrl"]}PANNo={requestDto.PANNo}&ccode={requestDto.CCode}&UserId={requestDto.UserId}";
+                var url = $"{_config["ApiSettings:PanApiUrl"]}PANNo={panKycDetailRequestDto.PANNo}&ccode={panKycDetailRequestDto.CCode}&UserId={panKycDetailRequestDto.UserId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                     return null;

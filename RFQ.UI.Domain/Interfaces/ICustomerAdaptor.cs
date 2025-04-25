@@ -13,9 +13,9 @@ namespace RFQ.UI.Domain.Interfaces
 
         Task<string> DeleteCustomer(int PartyId);
 
-        Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto requestDto);
+        Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto gstKycDetailsRequestDto);
 
-        Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto requestDto);
+        Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto panKycDetailRequestDto);
 
         Task<IEnumerable<comMstCityDto>> GetAllCity();
     }
