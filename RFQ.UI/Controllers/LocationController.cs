@@ -25,24 +25,31 @@ namespace RFQ.UI.Controllers
         [HttpPost]
         public IActionResult LocationSave([FromBody] LocationRequestDto locationRequestDto)
         {
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-            string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
-            if (locationRequestDto != null)
+            try
             {
-                locationRequestDto.CompanyId = Convert.ToInt32(profileid);
-                locationRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                locationRequestDto.UpdatedBy = Convert.ToInt32(profileid);
-                //locationRequestDto.ProfileId = Convert.ToInt32(profileid);
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+                if (locationRequestDto != null)
+                {
+                    locationRequestDto.CompanyId = Convert.ToInt32(profileid);
+                    locationRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                    locationRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                    //locationRequestDto.ProfileId = Convert.ToInt32(profileid);
 
 
-                var result = _locationService.AddLocation(locationRequestDto);
-                return Json(new { result = "success" });
+                    var result = _locationService.AddLocation(locationRequestDto);
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "fail" });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { result = "fail" });
+                return Json(new { result = "error", message = ex.Message });
             }
         }
 

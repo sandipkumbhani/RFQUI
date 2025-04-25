@@ -21,18 +21,25 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<IEnumerable<UserResponseDto>> GetAllUsers()
         {
-            var _httpClient = new HttpClient();
-
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["User:GetUserAll"]);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var userList = JsonConvert.DeserializeObject<List<UserResponseDto>>(Convert.ToString(responseModel.Data!));
-                return userList;
+                var _httpClient = new HttpClient();
+
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["User:GetUserAll"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var userList = JsonConvert.DeserializeObject<List<UserResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return userList;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

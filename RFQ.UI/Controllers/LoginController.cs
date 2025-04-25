@@ -24,23 +24,30 @@ namespace RFQ.UI.Controllers
 
         public async Task<string> GetToken([FromBody] LoginDto input)
         {
-            if (ModelState.IsValid)
+            try
             {
-                LoginViewModel model = new LoginViewModel
+                if (ModelState.IsValid)
                 {
-                    EmailId = input.emailId,
-                    Password = input.password
-                };
+                    LoginViewModel model = new LoginViewModel
+                    {
+                        EmailId = input.emailId,
+                        Password = input.password
+                    };
 
-                var tokenstring = await _loginServcies.Login(model);
+                    var tokenstring = await _loginServcies.Login(model);
 
-                if (!string.IsNullOrEmpty(tokenstring))
-                {
-                    Response.Cookies.Append("AuthToken", tokenstring);
+                    if (!string.IsNullOrEmpty(tokenstring))
+                    {
+                        Response.Cookies.Append("AuthToken", tokenstring);
+                    }
+                    return tokenstring;
                 }
-                return tokenstring;
+                return string.Empty;
             }
-            return string.Empty;
+            catch (Exception)
+            {
+                throw;
+            }
 
         } 
     }

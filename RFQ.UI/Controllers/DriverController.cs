@@ -154,7 +154,6 @@ namespace RFQ.UI.Controllers
             else
             {
                 return Json(new { result = "fail" });
-
             }
         }
 

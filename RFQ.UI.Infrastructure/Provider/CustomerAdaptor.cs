@@ -110,17 +110,24 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<IEnumerable<CustomerResponseDto>> GetAllCustomer()
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Customer:GetAllMasterParty"]);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var Profilelist = JsonConvert.DeserializeObject<List<CustomerResponseDto>>(Convert.ToString(responseModel.Data!));
-                return Profilelist;
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Customer:GetAllMasterParty"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var Profilelist = JsonConvert.DeserializeObject<List<CustomerResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return Profilelist;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
         public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto requestDto)
         {

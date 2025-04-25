@@ -19,8 +19,6 @@ namespace RFQ.UI.Infrastructure.Provider
         private string _fleetLynkApiUrl;
         private readonly IMapper _mapper;
 
-
-
         public CorporateCompanyAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, IMapper mapper)
         {
             _httpClient = httpClient;
@@ -65,18 +63,26 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll()
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/Company/GetAllCompany");
-
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var Profilelist = JsonConvert.DeserializeObject<List<CorporateCompanyResponseDto>>(Convert.ToString(responseModel.Data!));
-                return Profilelist;
+
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/Company/GetAllCompany");
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var Profilelist = JsonConvert.DeserializeObject<List<CorporateCompanyResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return Profilelist;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
@@ -106,52 +112,68 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = $"{_fleetLynkApiUrl}/Company/UpdateCompany/{companyId}";
-            var vehicle = JsonConvert.SerializeObject(corporateCompanyViewModelDto);
-            var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
+
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}/Company/UpdateCompany/{companyId}";
+                var vehicle = JsonConvert.SerializeObject(corporateCompanyViewModelDto);
+                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
                 {
-                    return "Corporate Company Updated";
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "Corporate Company Updated";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
                 }
-                else
-                {
-                    return responseModel.ErrorMessage;
-                }
+                return "Failed to update Corporate Company";
             }
-            return "Failed to update Corporate Company";
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<string> DeleteCorporateCompany(int companyId)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = $"{_fleetLynkApiUrl}/Company/DeleteCompany/{companyId}";
-            var response = await _httpClient.DeleteAsync(baseurl);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
+
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}/Company/DeleteCompany/{companyId}";
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
                 {
-                    return "Corporate Company Deleted";
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "Corporate Company Deleted";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
                 }
-                else
-                {
-                    return responseModel.ErrorMessage;
-                }
+                return "Failed to Delete Corporate Company";
             }
-            return "Failed to Delete Corporate Company";
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

@@ -27,79 +27,107 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<string> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var baseurl = _fleetLynkApiUrl + _config["VehicleType:AddVehicleType"];
-            var Vehicle = JsonConvert.SerializeObject(vehicleTypeRequestDto);
-            var requestContent = new StringContent(Vehicle, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
-                    return "Vehicle Saved";
-                else
-                    return responseModel?.ErrorMessage ?? "";
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["VehicleType:AddVehicleType"];
+                var Vehicle = JsonConvert.SerializeObject(vehicleTypeRequestDto);
+                var requestContent = new StringContent(Vehicle, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        return "Vehicle Saved";
+                    else
+                        return responseModel?.ErrorMessage ?? "";
+                }
+                return string.Empty;
             }
-            return string.Empty;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<List<VehicleTypeResponseDto>?> GetVehicleTypeAll()
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["VehicleType:GetAllVehicleType"]);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null && responseModel.Data != null)
+            try
             {
-                return JsonConvert.DeserializeObject<List<VehicleTypeResponseDto>>(Convert.ToString(responseModel.Data)!);
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["VehicleType:GetAllVehicleType"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null && responseModel.Data != null)
+                {
+                    return JsonConvert.DeserializeObject<List<VehicleTypeResponseDto>>(Convert.ToString(responseModel.Data)!);
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<string> UpdateVehicleType(int vehicleTypeId, VehicleTypeRequestDto vehicleTypeViewModelDto)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = _fleetLynkApiUrl + _config["VehicleType:UpdateVehicleType"] + vehicleTypeId;
-            var vehicle = JsonConvert.SerializeObject(vehicleTypeViewModelDto);
-            var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
-                    return "VehicleType Updated";
-                else
-                    return responseModel?.ErrorMessage ?? "";
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = _fleetLynkApiUrl + _config["VehicleType:UpdateVehicleType"] + vehicleTypeId;
+                var vehicle = JsonConvert.SerializeObject(vehicleTypeViewModelDto);
+                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        return "VehicleType Updated";
+                    else
+                        return responseModel?.ErrorMessage ?? "";
+                }
+                return "Failed to update VehicleType";
             }
-            return "Failed to update VehicleType";
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<string> DeleteVehicleType(int vehicleTypeId)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = _fleetLynkApiUrl + _config["VehicleType:DeleteVehicleType"] + vehicleTypeId;
-            var response = await _httpClient.DeleteAsync(baseurl);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
-                    return "Profile Deleted";
-                else
-                    return responseModel?.ErrorMessage ?? "";
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = _fleetLynkApiUrl + _config["VehicleType:DeleteVehicleType"] + vehicleTypeId;
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        return "Profile Deleted";
+                    else
+                        return responseModel?.ErrorMessage ?? "";
+                }
+                return "Failed to Delete profile";
             }
-            return "Failed to Delete profile";
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

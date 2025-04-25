@@ -37,23 +37,30 @@ namespace RFQ.UI.Controllers
         [HttpPost]
         public IActionResult VehicleTypeSave([FromBody] VehicleTypeRequestDto vehicleTypeRequestDto)
         {
-            if (vehicleTypeRequestDto != null)
+            try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                if (vehicleTypeRequestDto != null)
+                {
+                    var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                    string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+                    string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                vehicleTypeRequestDto.CompanyId = Convert.ToInt32(companyid);
-                vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                    vehicleTypeRequestDto.CompanyId = Convert.ToInt32(companyid);
+                    vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                    vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(profileid);
 
-                var result = _vehicleTypeServices.AddVehicleType(vehicleTypeRequestDto);
-                return Json(new { result = "success" });
+                    var result = _vehicleTypeServices.AddVehicleType(vehicleTypeRequestDto);
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "fail" });
+
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { result = "fail" });
-
+                return Json(new { result = "error", message = ex.Message });
             }
         }
 

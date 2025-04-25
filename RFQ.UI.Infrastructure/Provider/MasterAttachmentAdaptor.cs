@@ -112,76 +112,97 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<IEnumerable<MasterAttachmentResponseDto>> DeleteMasterAttachment(int attachmentId)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/DeleteMasterAttachment/{attachmentId}";
-            var response = await _httpClient.DeleteAsync(baseurl);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/DeleteMasterAttachment/{attachmentId}";
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
                 {
-                    var attachmentList = JsonConvert.DeserializeObject<List<MasterAttachmentResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return attachmentList;
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        var attachmentList = JsonConvert.DeserializeObject<List<MasterAttachmentResponseDto>>(Convert.ToString(responseModel.Data!));
+                        return attachmentList;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<string> DeleteMasterAttachmentTable(int attachmentId)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/DeleteMasterAttachmentTable/{attachmentId}";
-            var response = await _httpClient.DeleteAsync(baseurl);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/DeleteMasterAttachmentTable/{attachmentId}";
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
                 {
-                    return "MasterAttachment Deleted";
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "MasterAttachment Deleted";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
                 }
-                else
-                {
-                    return responseModel.ErrorMessage;
-                }
+                return "Failed to Delete MasterAttachmentTable";
             }
-            return "Failed to Delete MasterAttachmentTable";
+            catch (Exception)
+            {
+                throw;
+            }
         }
         public async Task<string> UpdateMasterAttachment(List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/UpdateMasterAttachment";    
-            var vehicle = JsonConvert.SerializeObject(masterAttachmentRequestDto);
-            var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/UpdateMasterAttachment";
+                var vehicle = JsonConvert.SerializeObject(masterAttachmentRequestDto);
+                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
                 {
-                    return "Corporate Company Updated";
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "Corporate Company Updated";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
                 }
-                else
-                {
-                    return responseModel.ErrorMessage;
-                }
+                return "Failed to update Corporate Company";
             }
-            return "Failed to update Corporate Company";
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

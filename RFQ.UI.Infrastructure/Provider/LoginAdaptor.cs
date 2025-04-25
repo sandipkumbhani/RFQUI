@@ -20,7 +20,6 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
-
         public async Task<string> PostApiDataAsync(LoginViewModel loginViewModel)
         {
             try

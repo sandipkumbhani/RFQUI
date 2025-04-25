@@ -27,109 +27,138 @@ namespace RFQ.UI.Infrastructure.Provider
         }
         public async Task<string> AddUsers(UserRequestDto userRequestDto)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-
-            var baseurl = _fleetLynkApiUrl + _config["Users:AddUser"];
-            var User = JsonConvert.SerializeObject(userRequestDto);
-            var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                string errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error: {response.StatusCode}, Details: {errorContent}");
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var errorResponse = new CommanResponseDto
+
+                var baseurl = _fleetLynkApiUrl + _config["Users:AddUser"];
+                var User = JsonConvert.SerializeObject(userRequestDto);
+                var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
                 {
-                    StatusCode = (int)response.StatusCode,
-                    Data = errorContent,
-                    Message = "An error occurred while processing your request.",
-                    ErrorMessage = errorContent
-                };
-                string json = JsonConvert.SerializeObject(errorResponse);
-                return json;
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {response.StatusCode}, Details: {errorContent}");
+
+                    var errorResponse = new CommanResponseDto
+                    {
+                        StatusCode = (int)response.StatusCode,
+                        Data = errorContent,
+                        Message = "An error occurred while processing your request.",
+                        ErrorMessage = errorContent
+                    };
+                    string json = JsonConvert.SerializeObject(errorResponse);
+                    return json;
+                }
+                else
+                {
+                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                    if (responseModel != null)
+                    {
+                        var result = responseModel.StatusCode;
+                        if (result == 200)
+                            responseModel.Data = "User Saved";
+                        else
+                            responseModel.Data = responseModel.ErrorMessage;
+
+                        string json = JsonConvert.SerializeObject(responseModel);
+                        return json;
+                    }
+                }
+                return string.Empty;
             }
-            else
+            catch (Exception)
             {
+                throw;
+            }
+        }
+        public async Task<string> DeleteUsers(int UserId)
+        {
+            try
+            {
+
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = _fleetLynkApiUrl + _config["Users:DeleteUser"] + UserId;
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                        responseModel.Data = "User Saved";
+                    {
+                        return "User Deleted";
+                    }
                     else
-                        responseModel.Data = responseModel.ErrorMessage;
-
-                    string json = JsonConvert.SerializeObject(responseModel);
-                    return json;
+                    {
+                        return responseModel.ErrorMessage;
+                    }
                 }
+                return "Failed to Delete User";
             }
-            return string.Empty;
-        }
-        public async Task<string> DeleteUsers(int UserId)
-        {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = _fleetLynkApiUrl + _config["Users:DeleteUser"] + UserId;
-            var response = await _httpClient.DeleteAsync(baseurl);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            catch (Exception)
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
-                {
-                    return "User Deleted";
-                }
-                else
-                {
-                    return responseModel.ErrorMessage;
-                }
+                throw;
             }
-            return "Failed to Delete User";
 
         }
         public async Task<string> EditUsers(int UserId, UserRequestDto userRequestDto)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = _fleetLynkApiUrl + _config["Users:UpdateUser"] + UserId;
-            var user = JsonConvert.SerializeObject(userRequestDto);
-            var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = _fleetLynkApiUrl + _config["Users:UpdateUser"] + UserId;
+                var user = JsonConvert.SerializeObject(userRequestDto);
+                var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
                 {
-                    return "User Updated...";
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "User Updated...";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
                 }
-                else
-                {
-                    return responseModel.ErrorMessage;
-                }
+                return "Failed to Update User ";
             }
-            return "Failed to Update User ";
+            catch (Exception)
+            {
+                throw;
+            }
         }
         public async Task<IEnumerable<UserResponseDto>> GetAllUser()
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetUserAll"]);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var ProfileList = JsonConvert.DeserializeObject<List<UserResponseDto>>(Convert.ToString(responseModel.Data!));
-                return ProfileList;
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetUserAll"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var ProfileList = JsonConvert.DeserializeObject<List<UserResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return ProfileList;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
         public Task<string> GetUsers(int userId)
         {

@@ -56,59 +56,81 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<string> DeleteFranchise(int companyId)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = $"{_fleetLynkApiUrl}{_config["Franchise:DeleteCompany"]}{companyId}";
-            var response = await _httpClient.DeleteAsync(baseurl);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
-                    return "Franchise Deleted";
-                else
-                    return responseModel.ErrorMessage;
+
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}{_config["Franchise:DeleteCompany"]}{companyId}";
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        return "Franchise Deleted";
+                    else
+                        return responseModel.ErrorMessage;
+                }
+                return "Failed to Delete Franchise";
             }
-            return "Failed to Delete Franchise";
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<string> EditFranchise(int companyId, FranchiseRequestDto franchiseRequestDto)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var baseurl = $"{_fleetLynkApiUrl}{_config["Franchise:UpdateCompany"]}{companyId}";
-            var vehicle = JsonConvert.SerializeObject(franchiseRequestDto);
-            var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
-                    return "Franchise Updated";
-                else
-                    return responseModel.ErrorMessage;
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = $"{_fleetLynkApiUrl}{_config["Franchise:UpdateCompany"]}{companyId}";
+                var vehicle = JsonConvert.SerializeObject(franchiseRequestDto);
+                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        return "Franchise Updated";
+                    else
+                        return responseModel.ErrorMessage;
+                }
+                return "Failed to update Franchise";
             }
-            return "Failed to update Franchise";
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<IEnumerable<FranchiseResponseDto>> GetFranchiseAll()
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl+ _config["Franchise:GetAllCompany"]);
-
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var franchiseList = JsonConvert.DeserializeObject<List<FranchiseResponseDto>>(Convert.ToString(responseModel.Data!));
-                return franchiseList;
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Franchise:GetAllCompany"]);
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var franchiseList = JsonConvert.DeserializeObject<List<FranchiseResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return franchiseList;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

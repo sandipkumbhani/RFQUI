@@ -26,24 +26,31 @@ namespace RFQ.UI.Controllers
         [HttpPost]
         public IActionResult MasterAttachmentSave([FromBody] List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
-            if (masterAttachmentRequestDto != null)
+            try
             {
-                
-                //masterAttachmentRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+                if (masterAttachmentRequestDto != null)
+                {
+
+                    //masterAttachmentRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                    //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(profileid);
 
 
-                var result = _masterAttachmentService.AddMasterAttachment(masterAttachmentRequestDto);
-                return Json(new { result = "success" });
+                    var result = _masterAttachmentService.AddMasterAttachment(masterAttachmentRequestDto);
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "fail" });
+
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { result = "fail" });
-
+                return Json(new { result = "error", message = ex.Message });
             }
         }
 

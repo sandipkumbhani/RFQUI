@@ -23,22 +23,29 @@ namespace RFQ.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> CorporateCompanySave([FromBody] CorporateCompanyRequestDto corporateCompanyViewModelDto)
         {
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-            corporateCompanyViewModelDto.LogoImage = "null";
-            if (corporateCompanyViewModelDto != null)
+            try
             {
-                corporateCompanyViewModelDto.CreatedBy = Convert.ToInt32(profileid);
-                corporateCompanyViewModelDto.UpdatedBy = Convert.ToInt32(profileid);
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
 
-                var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyViewModelDto);
-                return Json(new { result });
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                corporateCompanyViewModelDto.LogoImage = "null";
+                if (corporateCompanyViewModelDto != null)
+                {
+                    corporateCompanyViewModelDto.CreatedBy = Convert.ToInt32(profileid);
+                    corporateCompanyViewModelDto.UpdatedBy = Convert.ToInt32(profileid);
+
+                    var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyViewModelDto);
+                    return Json(new { result });
+                }
+                else
+                {
+                    return Json(new { result = "fail" });
+
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { result = "fail" });
-
+                return Json(new { result = "error", message = ex.Message });
             }
         }
 
@@ -71,8 +78,6 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> ViewCorporateCompany()
@@ -118,7 +123,6 @@ namespace RFQ.UI.Controllers
             }
 
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetAllFranchise()
