@@ -7,7 +7,7 @@
 }
 @section Scripts {
     <script src="~/js/Views/Vehicle.js"></script>
-}
+}   
 <div class="app-toolbar  pt-3 px-lg-3">
     <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
         <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
@@ -30,20 +30,29 @@
 </div>
 <div class="app-content  px-lg-3">
     <div class="app-container  container-fluid">
-        <div class="card">
+        <div class="container my-4">
+            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
+                </svg>
+                Back
+            </button>
+        </div>
+        <div id="addVehicleDiv" class="card">
             <div class="card-header border-0 cursor-pointer">
                 <div class="card-title m-0">
                     <h3 class="fw-bold m-0">Vehicle</h3>
                 </div>
             </div>
-            <form class="form">
+            <form class="form" id="vehicleForm" method="post">
+                <input type="hidden" id="hdVehicleId" />
                 <div class="card-body border-top p-9">
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="row align-items-center mb-10">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vehicle No</label>
                                 <div class="col-auto">
-                                    <input type="text" id="vehicleNo" class="form-control" placeholder="" />
+                                    <input type="text" id="vehicleNo" class="form-control" placeholder="" oninput="this.value = this.value.toUpperCase()" onkeypress="return AllowAlphaNumericOnly(event)"  maxlength="10"/>
                                 </div>
                                 <div class="col-auto">
                                     <button id="btnVehicleKyc" type="button" class="btn btn-primary me-2">Get e-KYC</button>
@@ -51,30 +60,28 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
-                                <select name="vehicleType" aria-label="Select Vehicle Type" id="vehicleType" class="selectpicker" data-live-search="true" data-width="100%">
+                                <select aria-label="Select a VehicleType" id="ddlVehicleType" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Owner Name</label>
-                                <select name="OwnerName" aria-label="Select Owner Name" id="ownerName" class="selectpicker" data-live-search="true" data-width="100%">
+                                <select aria-label="Select a OwnerName" id="ddlOwnerName" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Category</label>
-                                <select name="vehicleCategory" aria-label="Select a City" id="vehicleCategory" class="selectpicker" data-live-search="true" data-width="100%">
+                                <select aria-label="Select a VehicleCategory" id="ddlVehicleCategory" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Capacity</label>
-                                <input type="text" id="vehicleCapacity" class="form-control" placeholder="Vehicle Capacity" />
+                                <input type="text" id="vehicleCapacity" class="form-control" placeholder="Vehicle Capacity" onkeypress="return isNumber(event)" />
                             </div>
                             <div class="mb-5">
                                 <label class="form-label col-form-label fw-semibold fs-6">Tracking Provider</label>
-                                <select id="trackingProvider" name="TrackingProvider"
-                                        data-control="select2" data-placeholder="Select Tracking Provider" class="form-select select2 form-select-solid form-select-lg fw-semibold">
-                                    <option value="">Select Tracking Provider</option>
+                                <select aria-label="Select a TrackingProvider" id="ddlTrackingProvider" class="selectpicker" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                         </div>
@@ -129,7 +136,7 @@
                                 <div class="col-lg-6" id="pucExpiryRow">
                                     <div class="mb-5">
                                         <label class="form-label col-form-label required fw-semibold fs-6" for="pucExpiryInput">PUC Expiry Date</label>
-                                        <input type="text" id="pucExpiryInput" class="form-control form-control-solid" placeholder="PUC Expiry Date" disabled />
+                                        <input type="date" id="pucExpiryInput" class="form-control form-control-solid" placeholder="PUC Expiry Date" disabled />
                                     </div>
                                 </div>
                             </div>
@@ -159,7 +166,7 @@
                                 <div class="col-lg-6" id="verifiedOnCol">
                                     <div class="mb-5">
                                         <label class="form-label col-form-label required fw-semibold fs-6" for="verifiedOnInput">Verified On</label>
-                                        <input type="text" id="verifiedOnInput" class="form-control form-control-solid" placeholder="Verified On" disabled />
+                                        <input type="date" id="verifiedOnInput" class="form-control form-control-solid" placeholder="Verified On" disabled />
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +182,7 @@
                                 <div class="col-lg-6" id="registrationDateCol">
                                     <div class="mb-5">
                                         <label class="form-label col-form-label required fw-semibold fs-6" for="registrationDateInput">Registration Date</label>
-                                        <input type="text" id="registrationDateInput" class="form-control form-control-solid" placeholder="Registration Date" disabled />
+                                        <input type="date" id="registrationDateInput" class="form-control form-control-solid" placeholder="Registration Date" disabled />
                                     </div>
                                 </div>
                             </div>
@@ -201,13 +208,13 @@
                                 <div class="col-lg-6" id="fitnessExpiryCol">
                                     <div class="mb-5">
                                         <label class="form-label col-form-label required fw-semibold fs-6" for="fitnessExpiryInput">Fitness Expiry Date</label>
-                                        <input type="text" id="fitnessExpiryInput" class="form-control form-control-solid" placeholder="Fitness Expiry Date" disabled />
+                                        <input type="date" id="fitnessExpiryInput" class="form-control form-control-solid" placeholder="Fitness Expiry Date" disabled />
                                     </div>
                                 </div>
                                 <div class="col-lg-6" id="taxExpiryCol">
                                     <div class="mb-5">
                                         <label class="form-label col-form-label required fw-semibold fs-6" for="taxExpiryInput">Tax Expiry Date</label>
-                                        <input type="text" id="taxExpiryInput" class="form-control form-control-solid" placeholder="Tax Expiry Date" disabled />
+                                        <input type="date" id="taxExpiryInput" class="form-control form-control-solid" placeholder="Tax Expiry Date" disabled />
                                     </div>
                                 </div>
                             </div>
@@ -221,7 +228,7 @@
                                 <div class="col-lg-6" id="permitExpiryCol">
                                     <div class="mb-5">
                                         <label class="form-label col-form-label required fw-semibold fs-6" for="permitExpiryInput">Permit Expiry Date</label>
-                                        <input type="text" id="permitExpiryInput" class="form-control form-control-solid" placeholder="Permit Expiry Date" disabled />
+                                        <input type="date" id="permitExpiryInput" class="form-control form-control-solid" placeholder="Permit Expiry Date" disabled />
                                     </div>
                                 </div>
                             </div>
@@ -229,7 +236,7 @@
                                 <div class="col-lg-6" id="npExpiryCol">
                                     <div class="mb-5">
                                         <label class="form-label col-form-label required fw-semibold fs-6" for="npExpiryInput">NP Expiry Date</label>
-                                        <input type="text" id="npExpiryInput" class="form-control form-control-solid" placeholder="NP Expiry Date" disabled />
+                                        <input type="date" id="npExpiryInput" class="form-control form-control-solid" placeholder="NP Expiry Date" disabled />
                                     </div>
                                 </div>
                                 <div class="col-lg-6" id="vehicleCapacityCol">
@@ -249,23 +256,45 @@
                                 <div class="col-lg-6" id="policyExpiryCol">
                                     <div class="mb-5">
                                         <label class="form-label col-form-label required fw-semibold fs-6" for="policyExpiryInput">Policy Expiry Date</label>
-                                        <input type="text" id="policyExpiryInput" class="form-control form-control-solid" placeholder="Policy Expiry Date" disabled />
+                                        <input type="date" id="policyExpiryInput" class="form-control form-control-solid" placeholder="Policy Expiry Date" disabled />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-                <div class="card-footer d-flex justify-content-srtat py-6 px-9">
-                    <button id="save_click" type="button" class="btn btn-primary me-2">Save</button>
-                    <button id="save&new_click" type="button" class="btn btn-primary">Save & New</button>
-                    <button id="viewButton" type="button" class="btn btn-primary ms-2">View</button>
-                    <button id="updateButton" type="button" class="btn btn-primary" style="display:none;">Update</button>
-                    <button id="cancleButton" type="button" class="btn btn-danger ms-2 d-none">Cancle</button>
+                <div class="card-footer d-flex justify-content-start py-4">
+                    <button type="button" id="btnSaveVehicle" class="btn btn-primary me-2">Save</button>
+                    <button type="button" id="btnSaveNewVehicle" class="btn btn-primary me-2">Save & New</button>
+                    <button type="button" id="btnUpdateVehicle" class="btn btn-primary me-2" style="display:none;">Update</button>
+                    <button type="button" id="btnView" class="btn btn-primary">View</button>
+                    <button type="button" id="cancleButton" class="btn btn-danger d-none">Cancle</button>
                 </div>
             </form>
+        </div>
+        <div class="my-4"></div>
+        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
+            <div class="card-header p-4">
+                <h4 class="fw-bold m-0 text-lg">Vehicle List</h4>
+            </div>
+            <div class="card-body">
+                <table id="tableVehicle" class="table table-striped align-middle fs-6 mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>VehicleNo</th>
+                            <th>VehicleStatus</th>
+                            <th>EngineNo</th>
+                            <th>ChassisNo</th>
+                            <th>VehicleCapacity</th>
+                            <th>RTORegistration</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic rows go here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
