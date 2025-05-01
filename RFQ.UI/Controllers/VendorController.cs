@@ -21,6 +21,11 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
+        public ActionResult VendorRatingForm()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllInternalMaster()
         {
