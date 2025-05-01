@@ -2,11 +2,6 @@
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RFQ.UI.Application.Provider
 {
@@ -15,7 +10,7 @@ namespace RFQ.UI.Application.Provider
         private readonly IProductAdaptor _productAdaptor;
         public ProductService(IProductAdaptor productAdaptor)
         {
-            _productAdaptor = productAdaptor; 
+            _productAdaptor = productAdaptor;
         }
         public Task<string> AddProduct(ProductRequestDto productRequestDto)
         {
@@ -34,7 +29,7 @@ namespace RFQ.UI.Application.Provider
 
         public Task<IEnumerable<ProductResponseDto>> GetAllProducts()
         {
-           return _productAdaptor.GetAllProducts();
+            return _productAdaptor.GetAllProducts();
         }
     }
 }

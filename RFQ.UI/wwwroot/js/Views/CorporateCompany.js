@@ -7,12 +7,12 @@ $(document).ready(function () {
     GetAllCityList();
     CheckValidation();
     $(document).on("click", "#btnView", function () {
-        fetchCorporateCompany();
+        FetchCorporateCompany();
         $("#addCorporateCompanyDiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     });
     $("#btnCancel").on('click', function () {
-        fetchCorporateCompany();
+        FetchCorporateCompany();
         $("#addCorporateCompanyDiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     })
@@ -32,7 +32,7 @@ $(document).ready(function () {
         window.location.reload(true);
         
     });
-    BouttonUpdateClick();
+    ButtonUpdateClick();
 });
 function CheckValidation() {
     $("#txtCompanyName").on("blur", function () {
@@ -73,7 +73,7 @@ function CheckValidation() {
     });
     $("#ddlCity").on("keypress", function () {
         if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please enter a valid City", "Validation Error");
+            toastr.warning("Please select a valid City", "Validation Error");
             return;
         }
     });
@@ -103,7 +103,7 @@ function CheckValidation() {
     });
     $("#ddlFranchisename").on("keypress", function () {
         if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please enter a valid Franchise Name", "Validation Error");
+            toastr.warning("Please select a valid Franchise Name", "Validation Error");
             return;
         }
     });
@@ -116,7 +116,7 @@ function OnSubmitCheckValidation() {
     }
 
     if (!isValidateSelect($("#ddlFranchisename").val())) {
-        toastr.warning("Please enter a Franchise Name", "Validation Error");
+        toastr.warning("Please Select a Franchise Name", "Validation Error");
         return false;
     }
 
@@ -182,8 +182,7 @@ function GetAllFranchiseList() {
             BindDropDownData(data)
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
@@ -214,12 +213,10 @@ function GetAllCityList() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            console.log(response);
             BindDropDown(response)
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
@@ -243,7 +240,7 @@ function BindDropDown(data) {
 
     $('.selectpicker').selectpicker('refresh');
 }
-function fetchCorporateCompany() {
+function FetchCorporateCompany() {
     $('#tableDiv').show();
     var fetchCorporateCompanyUrl = '/CorporateCompany/ViewCorporateCompany';
     $.ajax({
@@ -304,7 +301,7 @@ function fetchCorporateCompany() {
                                     <i class="ti ti-edit"></i> Edit
                                 </button>
                                 <button type="button" class="btn btn-sm btn-danger"
-                                    onclick="deleteCorporateCompany(${data.CompanyId},${data.LinkId})">
+                                    onclick="DeleteCorporateCompany(${data.CompanyId},${data.LinkId})">
                                     <i class="ti ti-trash"></i> Delete
                                 </button>
                             </div>`;
@@ -322,12 +319,11 @@ function fetchCorporateCompany() {
 
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
-function BouttonUpdateClick() {
+function ButtonUpdateClick() {
     $("#btnupdate").click(function (e) {
         e.preventDefault();
         var isValid = OnSubmitCheckValidation();
@@ -384,17 +380,17 @@ function BouttonUpdateClick() {
                 dataType: "json",
                 success: function (result) {
                     if (result.result == "success") {
-                        toastr.success("Company Updated successfully!");
+                        toastr.success("Corporate Company Details Updated Successfully!");
                         $("#addCorporateCompanyDiv").css('display', 'none');
-                        fetchCorporateCompany();
+                        FetchCorporateCompany();
                         $("#backButton").show();
                     } else {
-                        $("#dataDiv").html("Failed to update profile.");
+                        toastr.error("Failed to Update Corporate Company Details!","Error");
                     }
                     
                 },
                 error: function (xhr, status, error) {
-                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                    toastr.error("Failed to Update Corporate Company Details!","Error");
                 }
             });
 
@@ -422,18 +418,16 @@ function BouttonUpdateClick() {
             var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
             $.each(deletedAttachments, function (index, value) {
                 DeleteAttachmentAPI(value);
-                console.log("Value: " + value);
             });
         }
     });
 };
-function deleteCorporateCompany(companyId, linkId) {
+function DeleteCorporateCompany(companyId, linkId) {
     var result;
     var deleteCorporateCompanyUrl = '/CorporateCompany/DeleteCorporateCompany/' + companyId
     FetchMasterAttachment(linkId, companyId, function (list) {
         result = list;
 
-        console.log(result);
         $.ajax({
             url: deleteCorporateCompanyUrl,
             type: "DELETE",
@@ -443,12 +437,12 @@ function deleteCorporateCompany(companyId, linkId) {
                 if (result.length > 0) {
                     DeleteMasterAttachment(result[0].attachmentId);
                 }
-                toastr.success("Comporate Company deleted successfully!");
-                fetchCorporateCompany();
+                toastr.success("Corporate Company Deleted Successfully!");
+                FetchCorporateCompany();
                 $("#backButton").css('display', 'block');
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to fetch data!", "Error");
+                toastr.error("Failed to Delete Corporate Company Details!", "Error");
             }
         });
     });
@@ -498,9 +492,7 @@ function SaveAndSaveNew(action) {
                     window.location.href = "../Dashboard/Dashboard";
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error:", error);
-                    toastr.error("Failed to submitCompany", "Error");
-                }
+                    toastr.error("Failed to Submit Corporate Company Details!", "Error");                }
             });
         }
         else if (action == "saveNew") {
@@ -512,15 +504,14 @@ function SaveAndSaveNew(action) {
                 success: function (response) {
                     let companyId = response.result.companyId;
                     Saveattachment(companyId);
-                    toastr.success("Corporate Company submitted successfully");
+                    toastr.success("Corporate Company Details Submitted Successfully");
                     $('#CompanyTypeForm')[0].reset();
                     $('#ddlFranchisename').val('');
                     $('#ddlCity').val('');
                     $('.selectpicker').selectpicker('refresh');
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error:", error);
-                    toastr.error("Failed to submitCompany", "Error");
+                    toastr.error("Failed to Submit Corporate Company Details!", "Error");
                 }
             });
         }
@@ -530,7 +521,6 @@ function SaveAndSaveNew(action) {
 function EditCorporateCompany(companyId) {
     var data = corporateCompanyViewModelDto.filter(x => x.companyId == companyId);
     if (data.length === 0) {
-        console.error("No company data found for companyId:", companyId);
         return;
     }
 
@@ -538,7 +528,6 @@ function EditCorporateCompany(companyId) {
 
     FetchMasterAttachment(formData.linkId, companyId, function (list) {
         var attachmantData = list;
-        console.log(formData);
         $('#tableDiv').hide();
         $("#backButton").css('display', 'none');
         $("#addCorporateCompanyDiv").css('display', 'Block');
@@ -565,8 +554,6 @@ function EditCorporateCompany(companyId) {
 
         if (attachmantData.length > 0) {
             EditMasterAttachment(attachmantData);
-        } else {
-            console.warn("No attachment data found for companyId:", companyId);
         }
     });
 } 

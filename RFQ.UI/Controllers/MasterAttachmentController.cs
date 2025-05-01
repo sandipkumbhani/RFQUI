@@ -1,11 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -15,7 +13,7 @@ namespace RFQ.UI.Controllers
         private readonly IMasterAttachmentService _masterAttachmentService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public MasterAttachmentController(IMasterAttachmentService masterAttachmentService, GlobalClass globalClass ,IWebHostEnvironment webHostEnvironment)
+        public MasterAttachmentController(IMasterAttachmentService masterAttachmentService, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment)
         {
             _masterAttachmentService = masterAttachmentService;
             _globalClass = globalClass;

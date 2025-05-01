@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -23,7 +22,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProductSave([FromBody]ProductRequestDto productRequestDto)
+        public async Task<IActionResult> ProductSave([FromBody] ProductRequestDto productRequestDto)
         {
             try
             {
@@ -64,7 +63,7 @@ namespace RFQ.UI.Controllers
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
 
-                productRequestDto.CompanyId= Convert.ToInt32(companyId);
+                productRequestDto.CompanyId = Convert.ToInt32(companyId);
                 productRequestDto.CreatedBy = Convert.ToInt32(companyId);
                 productRequestDto.UpdatedBy = Convert.ToInt32(companyId);
                 productRequestDto.CreatedOn = DateTime.Now;

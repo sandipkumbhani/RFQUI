@@ -6,7 +6,6 @@ using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 using System.Text;
-using Newtonsoft.Json;
 
 namespace RFQ.UI.Infrastructure.Provider
 {

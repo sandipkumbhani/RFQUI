@@ -1,23 +1,22 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
+using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
     public class LocationAdaptor : ILocationAdaptor
     {
-        private  HttpClient _httpClient;
+        private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
 
-        public LocationAdaptor(HttpClient httpClient,GlobalClass globalClass,IConfiguration configuration)
+        public LocationAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;

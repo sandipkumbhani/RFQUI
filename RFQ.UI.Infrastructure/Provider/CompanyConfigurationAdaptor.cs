@@ -119,25 +119,30 @@ namespace RFQ.UI.Infrastructure.Provider
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-            var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:AddCompanyConfiguration"];
-            var User = JsonConvert.SerializeObject(companyConfigrationRequestDto);
-            var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
-            {
-                var result = responseModel.StatusCode;
-                if (result == 200)
+                var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:AddCompanyConfiguration"];
+                var User = JsonConvert.SerializeObject(companyConfigrationRequestDto);
+                var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
                 {
-                    return "Company Configuration Saved";
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "Company Configuration Saved";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage ?? string.Empty;
+                    }
                 }
-                else
-                {
-                    return responseModel.ErrorMessage ?? string.Empty;
-                }
+                return string.Empty;
             }
-            return string.Empty;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<string> EditCompanyConfiguration(CompanyConfigrationRequestDto companyConfigrationRequestDto)

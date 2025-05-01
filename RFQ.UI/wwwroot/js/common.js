@@ -4,7 +4,7 @@
     var pattern = /^[a-zA-Z0-9 ]*$/;
 
     if (!pattern.test(value)) {
-        toastr.warning("Invalid input! Only letters and numbers are allowed.");
+        //toastr.warning("Invalid input! Only letters and numbers are allowed.");
         return false; // Invalid input
     }
     return true;
