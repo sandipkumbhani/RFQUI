@@ -24,7 +24,7 @@ $(document).ready(function () {
     $("#btnSaveCompanyType, #btnsaveandnew").on('click', function () {
         var action = $(this).data('action'); // "save" or "saveNew"
         if (OnSubmitCheckValidation()) {
-            SaveAndSaveNew(action);
+            SaveCorporateCompany(action);
         }
         
     });
@@ -447,7 +447,7 @@ function DeleteCorporateCompany(companyId, linkId) {
         });
     });
 }
-function SaveAndSaveNew(action) { 
+function SaveCorporateCompany(action) { 
         var companyName = $("#txtCompanyName").val();
         var franchiseName = $("#ddlFranchisename").val();
         var address = $("#txtAddress").val();

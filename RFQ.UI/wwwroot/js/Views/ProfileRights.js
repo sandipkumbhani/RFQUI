@@ -18,7 +18,7 @@ function initializjquery() {
     });
 
     $('#btnSaveAndNewForm').on('click', function () {
-        Save();
+        SaveProfileRights();
         $('#userbodyform')[0].reset();
     });
 
@@ -27,7 +27,7 @@ function initializjquery() {
         GetLinkItemList($("#txtMenu").val(), $("#txtName").val())
     })
 }
-function Save() {
+function SaveProfileRights() {
     var ProfileName = $('#txtName').val();
     var MenuName = $('#txtMenu').val();
     if (!isValidateSelect(ProfileName)) {
