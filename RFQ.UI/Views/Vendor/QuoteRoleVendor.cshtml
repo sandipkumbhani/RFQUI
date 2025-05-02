@@ -1,0 +1,161 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "QuoteRole-Vendor";
+}
+@section Scripts {
+	<script src="~/js/Views/QuoteRoleVendor.js"></script>
+}
+
+<div class="app-toolbar  pt-3 px-lg-3">
+	<div class="app-container  container-fluid d-flex flex-stack flex-wrap">
+		<div class="page-title d-flex align-items-center gap-1 me-3">
+			<div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+				<h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
+					Vendor
+				</h1>
+				<ul class="breadcrumb breadcrumb-separatorless fw-semibold">
+					<li class="breadcrumb-item text-gray-700 fw-bold lh-1">
+						<a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
+					</li>
+					<li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
+					<li class="breadcrumb-item text-primary">
+						QuoteRole-Vendor
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="app-content  px-lg-3">
+	<div class="app-container  container-fluid">
+		<div class="container my-4">
+		</div>
+		<div id="AddQuoteRoleVendorDiv" class="card">
+			<div class="card-header border-0 cursor-pointer">
+				<div class="card-title m-0">
+					<h3 class="fw-bold m-0">QuoteRole-Vendor</h3>
+				</div>
+			</div>
+			<form class="form" id="QRVendorBodyForm" method="post">
+				<input type="number" hidden id="txtQRVendorId" />
+				<div class="card-body border-top p-9">
+					<div class="row pb-9">
+						<!-- Left Section -->
+						<div class="col-xl-6">
+							<div class="row">
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">RFQ No </label>
+									<input type="text" class="form-control form-control-solid" placeholder="RFQ No" id="txtRFQNo" disabled />
+								</div>
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">RFQ Date</label>
+									<input type="text" class="form-control form-control-solid" placeholder="RFQ Date" id="txtRFQDate" disabled />
+								</div>
+							</div>
+							<div class="mb-4">
+								<label class="form-label col-form-label required fw-semibold fs-6">Vendor Name </label>
+								<input type="text" class="form-control form-control-solid" placeholder="Vendor Name" id="txtVednorName" disabled />
+							</div>
+							<div class="row">
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">Origin/From</label>
+									<input type="text" class="form-control form-control-solid" placeholder="Origin/From" id="txtOriginFrom" disabled />
+								</div>
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">Destination/To</label>
+									<input type="text" class="form-control form-control-solid" placeholder="Destination" id="txtDestination" disabled />
+								</div>
+							</div>
+							<div class="row">
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label fw-semibold fs-6">RFQ On</label>
+									<input type="text" class="form-control form-control-solid" placeholder="RFQ On" id="txtRFQOn" disabled />
+								</div>
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
+									<input type="text" class="form-control form-control-solid" placeholder="Vehicle Type" id="txtVehicleType" disabled />
+								</div>
+							</div>
+							<div class="row">
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label fw-semibold fs-6">Total Hire Cost</label>
+									<input type="number" class="form-control form-control-solid" placeholder="Total Hire Cost" id="txtHireCost" />
+								</div>
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">Detention Per Day</label>
+									<input type="number" class="form-control form-control-solid" placeholder="Detention Per Day" id="txtDetentionDay" />
+								</div>
+							</div>
+						</div>
+
+						<!-- Right Section -->
+						<div class="col-xl-6">
+							<div class="row">
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">RFQ Expire On</label>
+									<input type="text" class="form-control form-control-solid" placeholder="Expire On" id="txtExpireOn" disabled />
+								</div>
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">Vehicle Req On</label>
+									<input type="text" class="form-control form-control-solid" placeholder="Vehicle Req On" id="txtVehicleReqOn" disabled />
+								</div>
+							</div>
+							<div class="row">
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">Item Name</label>
+									<input type="text" class="form-control form-control-solid" placeholder="Item Name" id="txtItemName" disabled />
+								</div>
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label fw-semibold fs-6">Packing Type</label>
+									<input type="text" class="form-control form-control-solid" placeholder="Packing Type" id="txtPackingType" disabled />
+								</div>
+							</div>
+							<div class="row">
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">PAN No</label>
+									<input type="text" class="form-control form-control-solid" placeholder="PAN No" id="txtPANNo" disabled />
+								</div>
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label fw-semibold fs-6">RFQ Priority</label>
+									<input type="text" class="form-control form-control-solid" placeholder="RFQ Priority" id="txtRFQPriority" disabled />
+								</div>
+							</div>
+							<div class="row">
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label required fw-semibold fs-6">No.of Vehicles</label>
+									<input type="text" class="form-control form-control-solid" placeholder="No.of Vehicles" id="txtNoOfVehicles" disabled />
+								</div>
+								<div class="mb-4 col-xl-6">
+									<label class="form-label col-form-label fw-semibold fs-6">Total Qty in Tons</label>
+									<input type="text" class="form-control form-control-solid" placeholder="Total Qty in Tons" id="txtTotalQTY" disabled />
+								</div>
+							</div>
+							<div class="mb-4 col-xl-6">
+								<label class="form-label col-form-label fw-semibold fs-6">Detention Free Days</label>
+								<input type="number" class="form-control form-control-solid" placeholder="Detention Free Days" id="txtDetentionDays" />
+							</div>
+						</div>
+						<div class="col-xl-12">
+							<div class="mb-5">
+								<label class="form-label col-form-label required fw-semibold fs-6">Special Instructions </label>
+								<input type="text" class="form-control form-control-solid" placeholder="Special Instructions" id="txtInstruction" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer d-flex justify-content-start py-4">
+					<button type="button" id="btnSaveForm" class="btn btn-primary me-2">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="app-footer px-lg-3 ">
+	<div class="app-container  container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
+		<div class="text-gray-900 order-2 order-md-1">
+			<span class="text-muted fw-semibold me-1">2025©</span>
+		</div>
+	</div>
+</div>
