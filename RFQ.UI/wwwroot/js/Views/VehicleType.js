@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     $("#btnSaveVehicleType, #SavenewButton").on('click', function () {
         var action = $(this).data('action'); 
-        SaveAndSaveNew(action);
+        SaveVehicleType(action);
     });
 
     $('#backButton').click(function () {
@@ -114,7 +114,7 @@ function FetchVehicleTypes() {
         }
     });
 }
-function SaveAndSaveNew(action) {
+function SaveVehicleType(action) {
     if (OnSubmitValidation()) {
         var vehicleTypeName = $("#txtVehicleType").val()
         var txtminKmsPerDay = $("#txtminKmsPerDay").val()

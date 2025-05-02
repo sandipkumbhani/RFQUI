@@ -32,7 +32,7 @@ $(document).ready(function () {
     $("#btnSaveCustomer, #SavenewButton").on('click', function () {
         var action = $(this).data('action');
         if (isGstEKycClicked && isPanEKycClicked) {
-            SaveAndSaveNew(action);
+            SaveCustomer(action);
         } else {
             toastr.warning("Please complete GST and PAN E-KYC before saving!");
         }
@@ -123,7 +123,7 @@ function FetchCustomerList() {
         }
     });
 }
-function SaveAndSaveNew(action) {
+function SaveCustomer(action) {
 
     var isvalid = ValidationCheck();
     if (!isvalid) {

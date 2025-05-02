@@ -42,7 +42,7 @@ namespace RFQ.UI.Application.Provider
             return await _customerAdaptor.GetPanKycDetails(panKycDetailRequestDto);
         }
 
-        public async Task<IEnumerable<comMstCityDto>> GetAllCity()
+        public async Task<IEnumerable<ComMstCityDto>> GetAllCity()
         {
             return await _customerAdaptor.GetAllCity();
         }

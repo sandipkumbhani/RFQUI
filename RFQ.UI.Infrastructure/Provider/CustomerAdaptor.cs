@@ -185,7 +185,7 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<IEnumerable<comMstCityDto>> GetAllCity()
+        public async Task<IEnumerable<ComMstCityDto>> GetAllCity()
         {
             try
             {
@@ -207,7 +207,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
                 {
-                    var CityList = JsonConvert.DeserializeObject<List<comMstCityDto>>(Convert.ToString(responseModel.Data!));
+                    var CityList = JsonConvert.DeserializeObject<List<ComMstCityDto>>(Convert.ToString(responseModel.Data!));
                     return CityList;
                 }
                 return null;
