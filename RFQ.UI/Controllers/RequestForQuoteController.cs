@@ -5,7 +5,7 @@ namespace RFQ.UI.Controllers
     public class RequestForQuoteController : Controller
     {
         // GET: RequestForQuoteController
-        public ActionResult Index()
+        public ActionResult VendorRequest()
         {
             return View();
         }
