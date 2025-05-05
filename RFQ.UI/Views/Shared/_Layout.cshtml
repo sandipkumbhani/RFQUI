@@ -285,20 +285,32 @@
                 dataType: 'json',
                 success: function (response) {
                     let menuList = response;
+                    console.log(response);
                     let sidebarHtml = '';
                     let groupedItems = {};
-                    menuList.forEach(item => {
-                        if (!groupedItems[item.groupId]) {
-                            groupedItems[item.groupId] = {
-                                groupName: item.linkGroupName,
-                                linkGroupIcon : item.linkGroupIcon,
-                                items: []
-                            };
-                        }
-                        groupedItems[item.groupId].items.push(item);
-                    });
+                    // menuList.forEach(item => {
+                    //     if (!groupedItems[item.groupId]) {
+                    //         groupedItems[item.groupId] = {
+                    //             groupName: item.linkGroupName,
+                    //             linkGroupIcon : item.linkGroupIcon,
+                    //             items: []
+                    //         };
+                    //     }
+                    //     groupedItems[item.groupId].items.push(item);
+                    // });
 
-
+                     groupedItems = menuList.reduce((acc, item) => {
+                       const groupId = item.linkGroupId;
+                       if (!acc[groupId]) {
+                         acc[groupId] = {
+                           groupName: item.linkGroupName,
+                           linkGroupIcon: item.linkGroupIcon,
+                           items: []
+                         };
+                       }
+                       acc[groupId].items.push(item);
+                       return acc;
+                     }, {});
 
                     for (let groupId in groupedItems) {
                         let group = groupedItems[groupId];

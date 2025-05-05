@@ -17,7 +17,7 @@ namespace RFQ.UI.Domain.RequestDto
         public string? Password { get; set; }
         public string? EmailId { get; set; }
         public string? MobileNo { get; set; }
-        public int StatusId { get; set; } = 1;
+        public int StatusId { get; set; } 
         public int CreatedBy { get; set; }
         //public DateTime CreatedOn { get; set; }
         public int UpdatedBy { get; set; }
