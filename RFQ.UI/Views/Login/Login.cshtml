@@ -1,5 +1,4 @@
-﻿@model RFQ.UI.Models.LoginViewModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     Layout = null;
@@ -56,17 +55,17 @@
                                 </div>
                             </div>
                             <div class="fv-row mb-10 fv-plugins-icon-container">
-                                <label asp-for="EmailId" class="form-label fs-6 fw-bold text-gray-900">Email</label>
-                                <input class="form-control form-control-lg form-control-solid"  asp-for="EmailId" id="EmailId" type="text" name="EmailId" autocomplete="off" />
+                                <label class="form-label fs-6 fw-bold text-gray-900">Email</label>
+                                <input class="form-control form-control-lg form-control-solid"  id="EmailId" type="text" name="EmailId" autocomplete="off" />
                             </div>
                             <div class="fv-row mb-10 fv-plugins-icon-container">
                                 <div class="d-flex flex-stack mb-2">
-                                    <label asp-for="Password" class="form-label fw-bold text-gray-900 fs-6 mb-0">Password</label>
+                                    <label class="form-label fw-bold text-gray-900 fs-6 mb-0">Password</label>
                                     <a href="/star-html-pro/authentication/sign-in/password-reset.html" class="link-primary fs-6 fw-bold">
                                         Forgot Password ?
                                     </a>
                                 </div>
-                                <input asp-for="Password" class="form-control form-control-lg form-control-solid" id="Password" type="password" name="password" autocomplete="off" />
+                                <input  class="form-control form-control-lg form-control-solid" id="Password" type="password" name="password" autocomplete="off" />
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">

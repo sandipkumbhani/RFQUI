@@ -12,9 +12,9 @@ namespace RFQ.UI.Application.Provider
         {
             _loginAdaptor = loginAdaptor;
         }
-        public Task<string> Login(LoginViewModel model)
+        public Task<string> Login(LoginDto loginDto)
         {
-            return _loginAdaptor.PostApiDataAsync(model);
+            return _loginAdaptor.PostApiDataAsync(loginDto);
         }
     }
 }

@@ -17,10 +17,10 @@ namespace RFQ.UI.Domain.RequestDto
         public string? Password { get; set; }
         public string? EmailId { get; set; }
         public string? MobileNo { get; set; }
-        public int StatusId { get; set; } 
+        public int StatusId { get; set; } = 30;
         public int CreatedBy { get; set; }
-        //public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
         public int UpdatedBy { get; set; }
-        //  public DateTime UpdatedOn { get; set; }
+        public DateTime UpdatedOn { get; set; } = DateTime.Now;
     }
 }

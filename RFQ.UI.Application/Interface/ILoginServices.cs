@@ -4,6 +4,6 @@ namespace RFQ.UI.Application.Interface
 {
     public interface ILoginServices
     {
-        Task<string> Login(LoginViewModel loginViewModel);
+        Task<string> Login(LoginDto loginDto);
     }
 }
