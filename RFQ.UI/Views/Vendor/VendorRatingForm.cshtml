@@ -4,31 +4,9 @@
     Layout = "_Layout";
     ViewData["Title"] = "Vendor Rating";
 }
-
-<style>
-    .rating-stars {
-        display: inline-flex;
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-    }
-
-        .rating-stars input[type="radio"] {
-            display: none;
-        }
-
-        .rating-stars label {
-            font-size: 1.5rem;
-            color: #ccc;
-            cursor: pointer;
-            margin-left: 4px;
-        }
-
-            .rating-stars input[type="radio"]:checked ~ label,
-            .rating-stars label:hover,
-            .rating-stars label:hover ~ label {
-                color: #ffc107;
-            }
-</style>
+@section Scripts {
+    <script src="~/js/Views/VendorRatingForm.js"></script>
+}
 
 <div class="app-toolbar pt-3 px-lg-3">
     <div class="app-container container-fluid d-flex flex-stack flex-wrap">
@@ -93,27 +71,8 @@
                                         <th>Remarks</th>
                                     </tr>
                                 </thead> *@
-                                <tbody align ="center" >
-                                    @foreach (var criteria in new[] {
-                                    "Cost & Pricing", "Vehicle Conditions", "Vendor Communication",
-                                    "SLA / Delivery Efficiency", "Tracking Enabled Vehicles", "Statutory Compliance" })
-                                    {
-                                        var ratingName = "rating_" + criteria.Replace(" ", "").Replace("/", "").Replace("&", "");
-                                        <tr>
-                                            <td align="left">@criteria</td>
-                                            <td colspan="5">
-                                                <div class="rating-stars text-center">
-                                                    @for (int i = 5; i >= 1; i--)
-                                                    {
-                                                        var id = $"{ratingName}_{i}";
-                                                        <input type="radio" name="@ratingName" id="@id" value="@i" />
-                                                        <label for="@id"><i class="fa fa-star text-center"></i></label>
-                                                    }
-                                                </div>
-                                            </td>
-                                            <td><input type="text" class="form-control" placeholder="Remarks" /></td>
-                                        </tr>
-                                    }
+                                <tbody align ="center" id="tableDiv">
+                                
                                 </tbody>
                             </table>
                         </div>
@@ -125,9 +84,9 @@
                     <input type="text" class="form-control" placeholder="Text" />
                 </div>
 
-                <div class="mt-4 d-flex gap-3">
-                    <button type="button" class="btn btn-primary">SAVE</button>
-                    <button type="button" class="btn btn-primary">SAVE & NEW</button>
+                <div class="d-flex justify-content-start py-6">
+                    <button type="button" class="btn btn-primary me-2">Save</button>
+                    <button type="button" class="btn btn-primary me-2">Save & New</button>
                 </div>
             </div>
         </div>
