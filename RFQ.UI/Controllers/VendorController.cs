@@ -26,6 +26,10 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
+        public ActionResult QuoteRoleVendor()
+        {
+            return View();
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllInternalMaster()
         {
@@ -47,7 +51,6 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
         [HttpPost]
         public async Task<IActionResult> VendorSave([FromBody] VendorRequestDto vendorRequestDto)
         {
@@ -78,7 +81,6 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
         [HttpGet]
         public async Task<IActionResult> GetAllVendor()
         {
@@ -104,7 +106,6 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
         [HttpPut]
         public async Task<IActionResult> UpdateVendor([FromBody] VendorRequestDto vendorRequestDto)
         {
@@ -137,7 +138,6 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "Error", message = ex.Message });
             }
         }
-
         [HttpDelete("Vendor/DeleteVendor/{partyId}")]
         public async Task<IActionResult> DeleteVendor(int partyId)
         {
@@ -158,7 +158,5 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
-
     }
 }
