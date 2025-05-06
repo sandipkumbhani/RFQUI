@@ -28,13 +28,7 @@ namespace RFQ.UI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    LoginViewModel model = new LoginViewModel
-                    {
-                        EmailId = input.emailId,
-                        Password = input.password
-                    };
-
-                    var tokenstring = await _loginServcies.Login(model);
+                    var tokenstring = await _loginServcies.Login(input);
 
                     if (!string.IsNullOrEmpty(tokenstring))
                     {

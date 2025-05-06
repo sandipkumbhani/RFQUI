@@ -1,11 +1,13 @@
 ﻿
 var userResponseDto;
+var allUserList;
 
 $(document).ready(function () {
     Initialization();
     GetAllLocation();
     GetFranchiseAndCorporateName();
     UpdateUser();
+    GetAllUser();
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -56,8 +58,7 @@ function Initialization() {
     });
     $("#txtPassword").on("blur", function () {
         var password = $(this).val();
-        if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password))
-        {
+        if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password)) {
             $("#txtPassword").val('');
             toastr.warning("Please enter a valid PASSWORD", "Validation Error");
             return;
@@ -72,7 +73,7 @@ function Initialization() {
         $("#backButton").css('display', 'Block');
     });
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
-        var action = $(this).data('action'); 
+        var action = $(this).data('action');
         SaveUser(action);
     });
 
@@ -104,7 +105,7 @@ function FetchUser() {
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,
-                "ordering" :true,
+                "ordering": true,
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,
@@ -169,7 +170,12 @@ function SaveUser(action) {
         Emailid: emailid,
         Password: password
     };
-
+    var existuser = allUserList.map(x => x.emailId).includes(emailid)
+    if (existuser) {
+        toastr.warning("User Is already exist update EmailId", "User Exist");
+        $('#txtEmailid').val('');
+        return;
+    }
     if (action === "save") {
         $.ajax({
             url: '/Home/UserSave/',
@@ -198,7 +204,7 @@ function SaveUser(action) {
                     if (response.result == "success") {
                         toastr.success("User Details Submitted Successfully!");
                     } else {
-                        toastr.error("User already exists","Error");
+                        toastr.error("User already exists", "Error");
                     }
                 },
                 error: function (req, status, error) {
@@ -382,4 +388,17 @@ function ValidationCheck() {
     }
     return true;
 }
-
+function GetAllUser() {
+    var getUrl = '/Dashboard/Dashboard';
+    $.ajax({
+        url: getUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            allUserList = response;
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+};

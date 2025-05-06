@@ -1273,3 +1273,25 @@ table.dataTable > thead .dt-ordering-asc:after {
         font-size: calc(0.9rem + .6vw) !important;
     }
 }
+.rating-stars {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.rating-stars input[type="radio"] {
+    display: none
+}
+
+.rating-stars label {
+    font-size: 1.5rem;
+    color: #ccc;
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+.rating-stars input[type="radio"]:checked ~ label,
+.rating-stars label:hover,
+.rating-stars label:hover ~ label {
+    color: #ffc107;
+}
