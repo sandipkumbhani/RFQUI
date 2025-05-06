@@ -13,20 +13,20 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public LoginAdaptor(HttpClient httpClient,GlobalClass globalClass, IConfiguration configuration)
+        public LoginAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
-        public async Task<string> PostApiDataAsync(LoginViewModel loginViewModel)
+        public async Task<string> PostApiDataAsync(LoginDto loginDto)
         {
             try
             {
                 _httpClient = new HttpClient();
                 var baseUrl = _fleetLynkApiUrl + _config["Login:Login"];
-                var company = JsonConvert.SerializeObject(loginViewModel);
+                var company = JsonConvert.SerializeObject(loginDto);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseUrl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
