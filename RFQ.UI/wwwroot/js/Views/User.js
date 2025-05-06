@@ -1,56 +1,48 @@
 ﻿
-// View Button click Call Api
 var userResponseDto;
 
 $(document).ready(function () {
     Initialization();
     GetAllLocation();
-    GetFrenchiseAndcorporateName();
-    UpdateUserList();
+    GetFranchiseAndCorporateName();
+    UpdateUser();
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
-        Fetchuserlist();
-        $("#adduserdiv").css('display', 'none')
-        $("#backButton").css('display', 'Block');
+        FetchUser();
     });
     $("#txtName").on("blur", function () {
         var Textname = $(this).val();
         if (IsNullOrEmpty(Textname)) {
-            toastr.warning("Please enter a valid UserName", "Warning");
+            toastr.warning("Please enter a valid UserName", "Validation Error");
             return;
         }
     });
-    $("#CompanyAndFranchise").on("blur", function () {
+    $("#ddlCompanyAndFranchise").on("blur", function () {
         var corporatename = $(this).val();
         if (!isValidateSelect(corporatename)) {
-            //$("#CompanyAndFranchise").val('');
-            toastr.warning("Please select a valid CorporateName", "Warning");
+            toastr.warning("Please select a valid CorporateName", "Validation Error");
             return;
         }
     });
     $("#txtMobileNo").on("blur", function () {
         var mobileno = $(this).val();
         if (!isMobile(mobileno)) {
-            //$("#txtMobileNo").val('');
-            toastr.warning("Please enter a valid MobileNumber", "Warning");
+            toastr.warning("Please enter a valid MobileNumber", "Validation Error");
             return;
         }
     });
     $("#txtLoginName").on("blur", function () {
         var loginname = $(this).val();
-        //if(!isAlphabets(txtLoginName))
         if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(loginname)) {
-            $("#txtLoginName").val('');
-            toastr.warning("Please enter a valid LoginName", "Warning");
+            toastr.warning("Please enter a valid LoginName", "Validation Error");
             return;
         }
     });
-    $("#selectLocation").on("blur", function () {
+    $("#ddlLocation").on("blur", function () {
         var location = $(this).val();
         if (!isValidateSelect(location)) {
-            //$("#selectLocation").val('');
-            toastr.warning("Please select a valid Location", "Warning");
+            toastr.warning("Please select a valid Location", "Validation Error");
             return;
         }
     });
@@ -58,49 +50,38 @@ function Initialization() {
         var emailid = $(this).val();
         if (!isValidateEmail(emailid)) {
             $("#txtEmailid").val('');
-            toastr.warning("Please enter a valid Email", "Warning");
+            toastr.warning("Please enter a valid Email", "Validation Error");
             return;
         }
     });
     $("#txtPassword").on("blur", function () {
         var password = $(this).val();
         if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password))
-        //if(!isAlphaNumeric(password))
         {
             $("#txtPassword").val('');
-            toastr.warning("Please enter a valid PASSWORD", "Warning");
+            toastr.warning("Please enter a valid PASSWORD", "Validation Error");
             return;
         }
     });
-    //$("#btnSaveForm").on('click', function (event) {
-    //    event.preventDefault();
-    //    Save();
-    //});
-    //$('#btnSaveAndNewForm').on('click', function () {
-    //    Save();
-    //    $('#userbodyform')[0].reset();
-    //});
     $('#backButton').on('click', function () {
         window.location.reload(true);
-        // $("#adduserdiv").css('display', 'Block')
-        // $("#backButton").css('display', 'none');
-        //  $('#tableDiv').hide();
     });
-    $('#cancleButton').on('click', function () {
-        Fetchuserlist();
+    $('#btnCancel').on('click', function () {
+        FetchUser();
         $("#adduserdiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     });
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
-        var action = $(this).data('action'); // "save" or "saveNew"
-        Save(action);
+        var action = $(this).data('action'); 
+        SaveUser(action);
     });
 
 }
-function Fetchuserlist() {
+function FetchUser() {
 
     $('#tableDiv').show();
-    //var fetchuserlistUrl = '/Home/ViewUserList';
+    $("#adduserdiv").css('display', 'none')
+    $("#backButton").css('display', 'Block');
     $.ajax({
         url: '/Home/ViewUserList',
         type: "GET",
@@ -141,11 +122,11 @@ function Fetchuserlist() {
                             return `
                                <div class="btn-group" role="group">
                                <button type="button" class="btn btn-sm btn-primary"
-                               onclick="Edituserlist(${data})">
+                               onclick="EditUser(${data})">
                                <i class="ti ti-edit"></i> Edit
                                </button>
                                <button type="button" class="btn btn-sm btn-danger"
-                               onclick="Deleteuserlist(${data})">
+                               onclick="DeleteUser(${data})">
                                <i class="ti ti-trash"></i> Delete
                                </button>
                               </div>`;
@@ -161,58 +142,24 @@ function Fetchuserlist() {
             });
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
-
-async function Save(action) {
+function SaveUser(action) {
 
     var isvalid = ValidationCheck();
     if (!isvalid) {
         return;
     }
     var username = $('#txtName').val();
-    var corporatename = $('#CompanyAndFranchise').val();
+    var corporatename = $('#ddlCompanyAndFranchise').val();
     var mobileno = $('#txtMobileNo').val();
     var loginname = $('#txtLoginName').val();
-    var location = $('#selectLocation').val();
+    var location = $('#ddlLocation').val();
     var emailid = $('#txtEmailid').val();
     var password = $('#txtPassword').val();
 
-    //if (!isAlphabets(username)) {
-    //    toastr.warning("Please enter a not UserName", "Warning");
-    //    return;
-    //}
-    //if (!isValidateSelect(corporatename)) {
-    //    toastr.warning("Please select a valid CorporateeeName", "Warning");
-    //    return;
-    //}
-    //if (!isMobile(mobileno)) {
-    //    toastr.warning("Please enter a valid MobileNumber", "Warning");
-    //    return;
-    //}
-    //if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(loginname))
-    ////if(!isAlphabets(loginname))
-    //{
-    //    toastr.warning("Please enter a valid LoginName", "Warning");
-    //    return;
-    //}
-    //if (!isValidateSelect(location)) {
-    //    toastr.warning("Please select a valid Location", "Warning");
-    //    return;
-    //}
-    //if (!isValidateEmail(emailid)) {
-    //    toastr.warning("Please enter a valid Email", "Warning");
-    //    return;
-    //}
-    //if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password))
-    ////if(!isAlphaNumeric(password))
-    //{
-    //    toastr.warning("Please enter a valid password", "Warning");
-    //    return;
-    //}
     var formdata = {
         PersonName: username,
         LoginId: loginname,
@@ -231,12 +178,11 @@ async function Save(action) {
             data: JSON.stringify(formdata),
             dataType: "json",
             success: function (response) {
-                console.log(response);
-                toastr.success("User submitted successfully!");
+                toastr.success("User Details Submitted Successfully!");
                 window.location.href = "../Dashboard/Dashboard";
             },
             error: function (req, status, error) {
-                console.log(error);
+                toastr.error("Failed to Save User Details", "Error");
             }
         });
     }
@@ -249,59 +195,49 @@ async function Save(action) {
                 data: JSON.stringify(formdata),
                 dataType: "json",
                 success: function (response) {
-                    console.log(response);
                     if (response.result == "success") {
-                        toastr.success("User submitted successfully!");
+                        toastr.success("User Details Submitted Successfully!");
                     } else {
-                        toastr.success("User already exists");
+                        toastr.error("User already exists","Error");
                     }
                 },
                 error: function (req, status, error) {
-                    console.log(error);
+                    toastr.error("Failed to Save User Details", "Error");
                 }
             });
 
-            // Uncomment if needed:
-            // toastr.success("User submitted successfully!");
-            // $('#selectLocation').selectpicker('val', 0);
-            // $('#CompanyAndFranchise').selectpicker('val', 0);
-            // $('#selectLocation').selectpicker('refresh');
-            // $('#userbodyform')[0].reset();
 
         } catch (error) {
-            console.error("Error:", error);
+            toastr.error("Failed to Save User Details", "Error");
         }
     }
 }
-function Edituserlist(userId) {
-    console.log(userResponseDto);
+function EditUser(userId) {
     var data = userResponseDto.filter(x => x.userId == userId);
     var formdata = data[0];
-    console.log(data);
     $("#tableDiv").hide();
     $("#backButton").css('display', 'Block');
     $("#adduserdiv").css('display', 'Block');
     $("#btnSaveForm").hide();
     $("#btnUpdate").show();
-    $("#cancleButton").removeClass('d-none');
+    $("#btnCancel").removeClass('d-none');
     $("#btnSaveAndNewForm").prop("disabled", true);
-    $('#txtuserid').val(formdata.userId);
+    $('#hdnUserId').val(formdata.userId);
     $("#txtName").val(formdata.personName);
     $("#txtEmailid").val(formdata.emailId);
-    $("#CompanyAndFranchise").val(formdata.companyId);
+    $("#ddlCompanyAndFranchise").val(formdata.companyId);
     $("#txtMobileNo").val(formdata.mobileNo);
     $("#txtLoginName").val(formdata.loginId);
-    $('#selectLocation').selectpicker('val', formdata.locationId);
-    $('#CompanyAndFranchise').selectpicker('val', formdata.companyId);
-    $('#selectLocation').selectpicker('refresh');
+    $('#ddlLocation').selectpicker('val', formdata.locationId);
+    $('#ddlCompanyAndFranchise').selectpicker('val', formdata.companyId);
+    $('#ddlLocation').selectpicker('refresh');
     $('#txtPassword').val(formdata.password);
-    //$('#txtPassword').hide();
     $("#txtPassword").prop("disabled", true);
     $("#btnSaveForm").hide();
     $("#btnSaveAndNewForm").hide();
     $("#btnViewForm").hide();
 }
-function Deleteuserlist(userId) {
+function DeleteUser(userId) {
     var deleteuserlist = '/Home/DeleteUserList/' + userId
     $.ajax({
         url: deleteuserlist,
@@ -309,17 +245,15 @@ function Deleteuserlist(userId) {
         dataType: "json",
         data: JSON.stringify(userId),
         success: function (response) {
-            $("#backButton").show();
-            Fetchuserlist();
-            console.log("Deleted successfullyy...")
+            FetchUser();
+            toastr.success("User Details Deleted Successfully!");
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Delete User Details!", "Error");
         }
     });
 }
-function UpdateUserList() {
+function UpdateUser() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
         var isvalid = ValidationCheck();
@@ -327,17 +261,16 @@ function UpdateUserList() {
             return;
         }
         var UserViewModel = {
-            UserId: $('#txtuserid').val(),
+            UserId: $('#hdnUserId').val(),
             PersonName: $('#txtName').val(),
-            CompanyId: $('#CompanyAndFranchise').val(),
+            CompanyId: $('#ddlCompanyAndFranchise').val(),
             Password: $('#txtPassword').val(),
-            LocationId: $('#selectLocation').val(),
+            LocationId: $('#ddlLocation').val(),
             LoginId: $('#txtLoginName').val(),
             Mobileno: $('#txtMobileNo').val(),
             Emailid: $('#txtEmailid').val(),
         }
 
-        //var edituserlist = '@Url.Action("EditUserList", "Home")';
         var edituserlist = '/Home/EditUserList';
         $.ajax({
             type: "PUT",
@@ -347,22 +280,15 @@ function UpdateUserList() {
             dataType: "json",
             success: function (result) {
                 if (result.result == "success") {
-                    $("#adduserdiv").css('display', 'none')
-                    //$("#dataDiv").html("User updated successfully!");
-                    Fetchuserlist();
-                    toastr.success("User Updated successfully!");
+                    FetchUser();
+                    toastr.success("User Details Updated Successfully!");
 
                 } else {
-                    $("#dataDiv").html("Failed to update User.");
+                    toastr.error("Failed to Update User Details", "Error");
                 }
-                $("#btnSaveForm").show();
-                $("#btnUpdate").hide();
-                $("#btnSaveAndNewForm").prop("disabled", false);
-                //$("#txtPassword").prop("disabled", true);
-                $("#btnViewForm").click();
             },
             error: function (xhr, status, error) {
-                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                toastr.error("Failed to Update User Details", "Error");
             }
         });
     });
@@ -374,7 +300,7 @@ function GetAllLocation() {
         dataType: "json",
         success: function (response) {
             var data = response
-            const selectLocation = document.getElementById("selectLocation");
+            const selectLocation = document.getElementById("ddlLocation");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select Location";
@@ -391,12 +317,11 @@ function GetAllLocation() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
-function GetFrenchiseAndcorporateName() {
+function GetFranchiseAndCorporateName() {
 
     var GetUrl = '/Home/GetAllCompanyAndFranchise';
     $.ajax({
@@ -404,9 +329,8 @@ function GetFrenchiseAndcorporateName() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            console.log(response);
             var data = response.filter(x => x.companyTypeId == 2 || x.companyTypeId == 3);
-            const CompanyAndFranchiseDrp = document.getElementById("CompanyAndFranchise");
+            const CompanyAndFranchiseDrp = document.getElementById("ddlCompanyAndFranchise");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Franchise/Corporate Name";
@@ -423,13 +347,12 @@ function GetFrenchiseAndcorporateName() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to submit company and franchise ", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
 function ValidationCheck() {
-    if (IsNullOrEmpty($("#txtName").val()) || !isAlphabets($("#txtName").val())) {
+    if (IsNullOrEmpty($("#txtName").val())) {
         toastr.warning("Please enter a valid User Name", "Validation Error");
         return false;
     }
@@ -437,7 +360,7 @@ function ValidationCheck() {
         toastr.warning("Password is Required", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#CompanyAndFranchise").val()) || !isValidateSelect($("#CompanyAndFranchise").val(), $("#CompanyAndFranchise").prop("selectedIndex"))) {
+    if (IsNullOrEmpty($("#ddlCompanyAndFranchise").val()) || !isValidateSelect($("#ddlCompanyAndFranchise").val())) {
         toastr.warning("Please select a Corporate Name", "Validation Error");
         return false;
     }
@@ -445,7 +368,7 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid Mobile Number", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtLoginName").val())) {
+    if (IsNullOrEmpty($("#txtLoginName").val()) || !/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test($("#txtLoginName").val())) {
         toastr.warning("Login Name is Required", "Validation Error");
         return false;
     }
@@ -453,11 +376,10 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid email", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#selectLocation").val()) || !isValidateSelect($("#selectLocation").val(), $("#selectLocation").prop("selectedIndex"))) {
+    if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
         toastr.warning("Please select a Location", "Validation Error");
         return false;
     }
     return true;
 }
-
 

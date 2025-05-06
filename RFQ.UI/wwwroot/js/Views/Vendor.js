@@ -290,7 +290,7 @@ function GetAllInternalMaster() {
             BindDropDown(response)
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
@@ -326,7 +326,7 @@ function GetAllCityList() {
             BindDropDownCity(response)
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
@@ -409,11 +409,11 @@ function SaveVendor(action) {
                 success: function (response) {
                     let partyId = response.result.partyId;
                     Saveattachment(partyId);
-                    toastr.success("Vendor details submitted successfully!");
+                    toastr.success("Vendor Details Submitted Successfully!");
                     window.location.href = "../Dashboard/Dashboard";
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Failed to submit Vendor details", "Error");
+                    toastr.error("Failed to Submit Vendor Details!", "Error");
                 }
             });
         }
@@ -426,14 +426,14 @@ function SaveVendor(action) {
                 success: function (response) {
                     let partyId = response.result.partyId;
                     Saveattachment(partyId);
-                    toastr.success("Vendor details submitted successfully!");
+                    toastr.success("Vendor Details Submitted Successfully!");
                     $('#vendorForm')[0].reset();
                     $('#ddlCity').val('');
                     $('#ddlVendorCategory').val('');
                     $('.selectpicker').selectpicker('refresh');
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Failed to submit Vendor details", "Error");
+                    toastr.error("Failed to Submit Vendor Details", "Error");
                 }
             });
         }
@@ -505,7 +505,7 @@ function FetchVendor() {
         },
         error: function (xhr, status, error) {
 
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
@@ -609,16 +609,16 @@ function UpdateVendor() {
         success: function (result) {
             if (result.result == "Success") {
                 $("#addVendorDiv").css('display', 'none')
-                toastr.success("Vendor Updated successfully!");
+                toastr.success("Vendor Details Updated Successfully!");
                 FetchVendor();
                 $("#backButton").show();
             }
             else {
-                toastr.error("Failed to update Vendor");
+                toastr.error("Failed to Update Vendor Details!","Error");
             }
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to update Vendor");
+            toastr.error("Failed to Update Vendor Details!", "Error");
         }
     });
     $.ajax({
@@ -659,12 +659,12 @@ function DeleteVendor(partyId) {
                 if (result.length > 0) {
                     DeleteMasterAttachment(result[0].attachmentId);
                 }
-                toastr.success("Vendor Deleted successfully!");
+                toastr.success("Vendor Details Deleted Successfully!");
                 FetchVendor();
                 $("#backButton").css('display', 'block');
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to delete Vendor", "Error");
+                toastr.error("Failed to Delete Vendor Details", "Error");
             }   
         });
     });

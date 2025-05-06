@@ -74,7 +74,7 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<string> UpdateVehicleType(int vehicleTypeId, VehicleTypeRequestDto vehicleTypeViewModelDto)
+        public async Task<string> UpdateVehicleType(int vehicleTypeId, VehicleTypeRequestDto vehicleTypeRequestDto)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
                 var baseurl = _fleetLynkApiUrl + _config["VehicleType:UpdateVehicleType"] + vehicleTypeId;
-                var vehicle = JsonConvert.SerializeObject(vehicleTypeViewModelDto);
+                var vehicle = JsonConvert.SerializeObject(vehicleTypeRequestDto);
                 var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();

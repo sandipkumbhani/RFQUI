@@ -21,25 +21,25 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CorporateCompanySave([FromBody] CorporateCompanyRequestDto corporateCompanyViewModelDto)
+        public async Task<IActionResult> CorporateCompanySave([FromBody] CorporateCompanyRequestDto corporateCompanyRequestDto)
         {
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
 
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                corporateCompanyViewModelDto.LogoImage = "null";
-                if (corporateCompanyViewModelDto != null)
-                {
-                    corporateCompanyViewModelDto.CreatedBy = Convert.ToInt32(profileid);
-                    corporateCompanyViewModelDto.UpdatedBy = Convert.ToInt32(profileid);
+            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+            corporateCompanyRequestDto.LogoImage = "null";
+            if (corporateCompanyRequestDto != null)
+            {
+                corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(profileid);
 
-                    var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyViewModelDto);
-                    return Json(new { result });
-                }
-                else
-                {
-                    return Json(new { result = "fail" });
+                var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyRequestDto);
+                return Json(new { result });
+            }
+            else
+            {
+                return Json(new { result = "fail" });
 
                 }
             }
@@ -51,19 +51,19 @@ namespace RFQ.UI.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> EditCorporateCompany([FromBody] CorporateCompanyRequestDto corporateCompanyViewModelDto)
+        public async Task<IActionResult> EditCorporateCompany([FromBody] CorporateCompanyRequestDto corporateCompanyRequestDto)
         {
             try
             {
-                int companyId = corporateCompanyViewModelDto.CompanyId;
+                int companyId = corporateCompanyRequestDto.CompanyId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                corporateCompanyViewModelDto.LogoImage = "null";
+                corporateCompanyRequestDto.LogoImage = "null";
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-                corporateCompanyViewModelDto.CreatedBy = Convert.ToInt32(profileid);
-                corporateCompanyViewModelDto.UpdatedBy = Convert.ToInt32(profileid);
+                corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(profileid);
 
-                var result = await _corporateCompanyService.EditCorporateCompany(companyId, corporateCompanyViewModelDto);
+                var result = await _corporateCompanyService.EditCorporateCompany(companyId, corporateCompanyRequestDto);
                 if (result != null)
                 {
                     return Json(new { result = "success" });

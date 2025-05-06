@@ -5,13 +5,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -21,7 +15,7 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public ProductAdaptor(HttpClient httpClient, GlobalClass globalClass,IConfiguration configuration)
+        public ProductAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
@@ -49,7 +43,7 @@ namespace RFQ.UI.Infrastructure.Provider
                         return responseModel.ErrorMessage;
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -128,7 +122,8 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return null;
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }

@@ -1,12 +1,11 @@
-﻿using System.Net.Http;
-using System.Text;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
+using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
 {

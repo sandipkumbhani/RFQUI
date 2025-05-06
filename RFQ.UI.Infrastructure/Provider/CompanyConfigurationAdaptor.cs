@@ -5,7 +5,6 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
-using System.Net.Http;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -113,7 +112,7 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<string> AddCompanyConfiguration(CompanyConfigrationRequestDto requestDto)
+        public async Task<string> AddCompanyConfiguration(CompanyConfigrationRequestDto companyConfigrationRequestDto)
         {
             try
             {
@@ -121,7 +120,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
                 var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:AddCompanyConfiguration"];
-                var User = JsonConvert.SerializeObject(requestDto);
+                var User = JsonConvert.SerializeObject(companyConfigrationRequestDto);
                 var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
@@ -146,33 +145,25 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<string> EditCompanyConfiguration(CompanyConfigrationRequestDto requestDto)
+        public async Task<string> EditCompanyConfiguration(CompanyConfigrationRequestDto companyConfigrationRequestDto)
         {
-            try
+            var _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+            var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:UpdateCompanyConfiguration"] + "/" + companyConfigrationRequestDto.CompanyConfigId;
+            var user = JsonConvert.SerializeObject(companyConfigrationRequestDto);
+            var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync(baseurl, requestContent);
+            var responseData = await response.Content.ReadAsStringAsync();
+            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+            if (responseModel != null)
             {
-
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:UpdateCompanyConfiguration"] + "/" + requestDto.CompanyConfigId;
-                var user = JsonConvert.SerializeObject(requestDto);
-                var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return "CompanyConfiguration Updated...";
-                    else
-                        return responseModel.ErrorMessage ?? string.Empty;
-                }
-                return "Failed to Update CompanyConfiguration ";
+                var result = responseModel.StatusCode;
+                if (result == 200)
+                    return "CompanyConfiguration Updated...";
+                else
+                    return responseModel.ErrorMessage ?? string.Empty;
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return "Failed to Update CompanyConfiguration ";
         }
 
         public async Task<string> DeleteCompanyConfiguration(int companyConfigId)

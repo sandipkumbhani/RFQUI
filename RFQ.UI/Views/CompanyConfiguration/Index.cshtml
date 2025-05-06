@@ -38,23 +38,23 @@
                 Back
             </button>
         </div>
-        <div id="AddCompnyConfigDiv" class="card">
+        <div id="addCompanyConfigDiv" class="card">
             <div class="card-header border-0 cursor-pointer">
                 <div class="card-title m-0">
                     <h3 class="fw-bold m-0">Company configuration</h3>
                 </div>
             </div>
-            <div class="card-body">
-                <form method="post" id="companyConfigurationForm">
+            <form class="form" method="post" id="companyConfigurationForm">
+                <div class="card-body border-top p-9">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="company" class="form-label">Company</label>
-                            <select name="company" id="company" class="selectpicker" data-live-search="true" data-width="100%">
+                            <select name="company" id="ddlCompany" class="selectpicker" data-live-search="true" data-width="100%">
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="smsProvider" class="form-label">SMS Provider</label>
-                            <select name="smsProvider" aria-label="Select a SMS Provider" id="smsProvider" class="selectpicker" data-live-search="true" data-width="100%">
+                            <select name="smsProvider" aria-label="Select a SMS Provider" id="ddlSmsProvider" class="selectpicker" data-live-search="true" data-width="100%">
                             </select>
                         </div>
                     </div>
@@ -62,48 +62,49 @@
                         <div class="col-md-6">
                             <label for="whatsappProvider" class="form-label">WhatsApp Provider</label>
                           
-                            <select name="whatsappProvider" aria-label="Select a Whatsapp Provider" id="whatsappProvider" class="selectpicker" data-live-search="true" data-width="100%">
+                            <select name="whatsappProvider" aria-label="Select a Whatsapp Provider" id="ddlWhatsappProvider" class="selectpicker" data-live-search="true" data-width="100%">
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="smsAuthKey" class="form-label">SMS Authorization Key</label>
-                            <input type="text" id="smsAuthKey" class="form-control" maxlength="200"/>
+                            <input type="text" id="txtSmsAuthKey" class="form-control" maxlength="200"/>
                         </div>
                     </div>
                     <div class="row mb-5">
                         <div class="col-md-6">
                             <label for="whatsappAuthKey" class="form-label">WhatsApp Authorization Key</label>
-                            <input type="text" id="whatsappAuthKey" class="form-control" maxlength="200"/>
+                            <input type="text" id="txtWhatsappAuthKey" class="form-control" maxlength="200"/>
                         </div>
                         <div class="col-md-6">
                             <label for="smtpHost" class="form-label">SMTP Host</label>
-                            <input type="text" id="smtpHost" class="form-control" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="50"/>
+                            <input type="text" id="txtSmtpHost" class="form-control" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="50"/>
                         </div>
                     </div>
                     <div class="row mb-5">
                         <div class="col-md-6">
                             <label for="smtpUserName" class="form-label">SMTP User Name</label>
-                            <input type="text" id="smtpUserName" class="form-control " readonly="readonly" maxlength="50"
+                            <input type="text" id="txtSmtpUserName" class="form-control " readonly="readonly" maxlength="50"
                                    onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}">
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <label for="smtpPort" class="form-label">SMTP Port</label>
-                            <input type="text" id="smtpPort" class="form-control" onkeypress="return isNumber(event)"/>
+                            <input type="text" id="txtSmtpPort" class="form-control" onkeypress="return isNumber(event)"/>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <label for="smtpPassword" class="form-label">SMTP Password</label>
-                            <input type="password" id="smtpPassword" class="form-control" readonly="readonly" maxlength="50"
+                            <input type="password" id="txtSmtpPassword" class="form-control" readonly="readonly" maxlength="50"
                                    onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}">
                         </div>
                     </div>
+                </div>
+                <div class="card-footer d-flex justify-content-srtat py-6 px-9">
                     <button type="button" id="btnSaveForm" class="btn btn-primary me-2" data-action="save">Save</button>
                     <button type="button" id="btnSaveAndNewForm" class="btn btn-primary me-2" data-action="saveNew">Save & New</button>
                     <button type="button" id="btnViewForm" class="btn btn-primary me-2">View</button>
                     <button type="button" id="btnUpdate" class="btn btn-primary" style="display:none">Update</button>
                     <button id="btnCancel" type="button" class="btn btn-danger ms-2 d-none">Cancel</button>
-                </form>
-            </div>
-            
+                </div>
+            </form>
         </div>
         <div class="my-4"></div>
         <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl d-none">

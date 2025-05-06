@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
+using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -108,7 +102,7 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        
+
 
         public async Task<IEnumerable<MasterAttachmentResponseDto>> DeleteMasterAttachment(int attachmentId)
         {

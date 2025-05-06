@@ -28,14 +28,14 @@ namespace RFQ.UI.Infrastructure.Provider
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
 
-        public async Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyViewModelDto)
+        public async Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyRequestDto)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany";
-                var company = JsonConvert.SerializeObject(corporateCompanyViewModelDto);
+                var company = JsonConvert.SerializeObject(corporateCompanyRequestDto);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
@@ -110,7 +110,7 @@ namespace RFQ.UI.Infrastructure.Provider
         }
 
 
-        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyViewModelDto)
+        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyRequestDto)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
                 var baseurl = $"{_fleetLynkApiUrl}/Company/UpdateCompany/{companyId}";
-                var vehicle = JsonConvert.SerializeObject(corporateCompanyViewModelDto);
+                var vehicle = JsonConvert.SerializeObject(corporateCompanyRequestDto);
                 var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
@@ -143,7 +143,6 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
         public async Task<string> DeleteCorporateCompany(int companyId)
         {
             try

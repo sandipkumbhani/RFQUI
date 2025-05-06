@@ -17,9 +17,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehicleAdaptor.GetAllVehicleCategory();
         }
-        public async Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto requestDto)
+        public async Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto vehicleKycRequestDto)
         {
-            return await _vehicleAdaptor.GetVehicleKycDetails(requestDto);
+            return await _vehicleAdaptor.GetVehicleKycDetails(vehicleKycRequestDto);
         }
         public async Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType()
         {

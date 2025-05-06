@@ -279,13 +279,13 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetVehicleKycDetails([FromBody] VehicleKycRequestDto requestDto)
+        public async Task<IActionResult> GetVehicleKycDetails([FromBody] VehicleKycRequestDto vehicleKycRequestDto)
         {
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                var vehicleCategoryList = await _vehicleServices.GetVehicleKycDetails(requestDto);
+                var vehicleCategoryList = await _vehicleServices.GetVehicleKycDetails(vehicleKycRequestDto);
                 if (vehicleCategoryList == null)
                 {
                     return NotFound("No vehicle KYC details found.");

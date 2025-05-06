@@ -38,7 +38,7 @@ $(document).ready(function () {
                             myDropzone.processQueue();
                         }
                     } else {
-                        toastr.warning("Please fill form details ", "Warning");
+                        toastr.warning("Please Fill Form Details ", "Validation Error");
                     }
                 });
                 $("#btnSavenewFranchise").click(function (event) {
@@ -50,7 +50,7 @@ $(document).ready(function () {
                         }
                     }
                     else {
-                        toastr.warning("Please fill form details ", "Warning");
+                        toastr.warning("Please Fill Form Details ", "Validation Error");
                     }
                 });
                 if (dropzone.children.length > 2) {
@@ -70,7 +70,7 @@ $(document).ready(function () {
                         }
                     }
                     else {
-                        toastr.warning("Please fill form details ", "Warning");
+                        toastr.warning("Please Fill Form Details ", "Validation Error");
                     }
                 });
 
@@ -164,7 +164,7 @@ function CheckValidation() {
     });
     $("#ddlCity").on("keypress", function () {
         if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please enter a valid Franchise City", "Validation Error");
+            toastr.warning("Please select a valid Franchise City", "Validation Error");
             return;
         }
     });
@@ -274,7 +274,7 @@ function GetAllCityList() {
             BindDropDown(response)
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
@@ -336,13 +336,13 @@ function SaveFranchise(fileName, callback) {
         success: function (response) {
             let companyId = response.result.companyId;
             Saveattachment(companyId);
-            toastr.success("Franchise submitted successfully!");
+            toastr.success("Franchise Detials Submitted Successfully!");
             if (typeof callback === "function") {
                 callback(companyId);
             }
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to submitFranchise", "Error");
+            toastr.error("Failed to Submit Franchise Details!", "Error");
             if (typeof callback === "function") {
                 callback(null);
             }
@@ -422,7 +422,7 @@ function FetchFranchise() {
             })
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 };
@@ -531,18 +531,18 @@ function UpdateFranchise(fileName) {
         dataType: "json",
         success: function (response) {
             if (response.result == "Success") {
-                toastr.success("Franchise Updated successfully!");
+                toastr.success("Franchise Details Updated Successfully!");
                 $("#addFranchiseDiv").css('display', 'none');
                 FetchFranchise();
                 $("#backButton").show();
 
             }
             else {
-                toastr.error("Failed to update franchise");
+                toastr.error("Failed to Update Franchise Details!","Error");
             }
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to update franchise");
+            toastr.error("Failed to Update Franchise Details!", "Error");
         }
     });
     if (fileName) {
@@ -556,7 +556,6 @@ function UpdateFranchise(fileName) {
             success: function (response) {
             },
             error: function (xhr, status, error) {
-                toastr.error("Fail	ed to fetch data!", "Error");
             }
         });
     }
@@ -600,12 +599,12 @@ function DeleteFranchise(companyId, fileName) {
             if (result.length > 0) {
                 DeleteMasterAttachment(result[0].attachmentId);
             }
-            toastr.success("Franchise deleted successfully!");
+            toastr.success("Franchise Details Deleted Successfully!");
             FetchFranchise();
             $("#backButton").css('display', 'block');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to delete franchise!", "Error");
+            toastr.error("Failed to Delete Franchise Details!", "Error");
         }
     });
     })
@@ -617,7 +616,6 @@ function DeleteFranchise(companyId, fileName) {
         success: function (response) {
         },
         error: function (xhr, status, error) {
-            toastr.error("Fail	ed to fetch data!", "Error");
         }
     })
 };

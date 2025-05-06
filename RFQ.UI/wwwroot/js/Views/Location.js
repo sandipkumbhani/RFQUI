@@ -1,51 +1,47 @@
-﻿
-var locationResponseDto;
-
-
+﻿var locationResponseDto;
 $(document).ready(function () {
     Initialization();
     GetAllCityList();
-    UpdateLocationList();
+    UpdateLocation();
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
-        Fetchlocationlist();
+        FetchLocationList();
         $("#AddLocationDiv").css('display', 'none');
         $("#backButton").css('display', 'Block');
     });
     $("#txtLocationName").on("blur", function () {
-        var locationname = $(this).val();
-        if (IsNullOrEmpty(locationname)) {
-            toastr.warning("Please enter a valid LocationName", "Warning");
+        var locationName = $(this).val();
+        if (IsNullOrEmpty(locationName)) {
+            toastr.warning("Please enter a valid LocationName", "Validation Error");
             return;
         }
     });
     $("#txtAddress").on("blur", function () {
         var Address = $(this).val();
-        if (!isAlphaNumeric(Address)) {
-            $("#txtAddress").val('');
-            toastr.warning("Please enter a Address", "Warning");
+        if (IsNullOrEmpty(Address)) {
+            toastr.warning("Please enter a Address", "Validation Error");
             return;
         }
     });
-    $("#selectCity").on("blur", function () {
+    $("#ddlCity").on("blur", function () {
         var city = $(this).val();
         if (!isValidateSelect(city)) {
-            toastr.warning("Please enter a City", "Warning");
+            toastr.warning("Please enter a City", "Validation Error");
             return;
         }
     });
     $("#txtPerson").on("blur", function () {
         var person = $(this).val();
         if (IsNullOrEmpty(person)) {
-            toastr.warning("Please enter a Contact Person", "Warning");
+            toastr.warning("Please enter a Contact Person", "Validation Error");
             return;
         }
     });
     $("#txtMobileNumber").on("blur", function () {
         var mobileNum = $(this).val();
         if (!isMobile(mobileNum)) {
-            toastr.warning("Please enter a valid 10-digit Mobile number", "Warning");
+            toastr.warning("Please enter a valid 10-digit Mobile number", "Validation Error");
             return;
         }
     });
@@ -53,67 +49,61 @@ function Initialization() {
         var locationcode = $(this).val();
         if (!isAlphabets(locationcode)) {
             $("#txtLocationCode").val('');
-            toastr.warning("Please enter a Location Code", "Warning");
+            toastr.warning("Please enter a Location Code", "Validation Error");
             return;
         }
     });
     $("#txtPinCode").on("blur", function () {
         var pinc = $(this).val();
-        if (!/^\d{6}$/.test(pinc)) {
-            // $(this).focus();
-            toastr.warning("Please enter a Valid Pincode", "Warning");
+        if (!ValidatePinCode(pinc)) {
+            toastr.warning("Please enter a Valid Pincode", "Validation Error");
             return;
         }
     });
     $("#txtWhatsAppNumber").on("blur", function () {
         var whats = $(this).val();
         if (!isMobile(whats)) {
-            toastr.warning("Please enter a whatsApp number", "Warning");
+            toastr.warning("Please enter a whatsApp number", "Validation Error");
             return;
         }
     });
     $("#txtEmail").on("blur", function () {
         var email = $(this).val();
         if (!isValidateEmail(email)) {
-            $("#txtEmail").val('');
-            toastr.warning("Please enter a valid email", "Warning");
+            toastr.warning("Please enter a valid email", "Validation Error");
             return;
         }
     });
     $("#txtContactNumber").on("blur", function () {
         var contactnumber = $(this).val();
         if (!isMobile(contactnumber)) {
-            toastr.warning("Please enter a contact number", "Warning");
+            toastr.warning("Please enter a contact number", "Validation Error");
             return;
         }
     });
     $('#backButton').on('click', function () {
         window.location.reload(true);
-        // $("#AddLocationDiv").css('display', 'Block');
-        // $("#backButton").css('display', 'none');
-        // $('#tableDiv').hide();
     });
-    $("#cancleButton").on("click", function () {
-        Fetchlocationlist();
+    $("#btnCancel").on("click", function () {
+        FetchLocationList();
         $("#AddLocationDiv").css('display', 'none');
         $("#backButton").css('display', 'Block');
     });
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
-        var action = $(this).data('action'); // "save" or "saveNew"
-        Save(action);
+        var action = $(this).data('action'); 
+        SaveLocation(action);
     });
 }
-function Fetchlocationlist() {
+function FetchLocationList() {
     $('#tableDiv').show();
     $.ajax({
         url: '/Location/ViewLocationList',
-        type: "GET",
+        type: "GET",            
         dataType: "json",
         success: function (response) {
             let trlist = response;
-            console.log(response);
             locationResponseDto = response;
-            // Destroy existing DataTable if exists
+            
             if ($.fn.DataTable.isDataTable('#tablelocation')) {
                 $('#tablelocation').DataTable().clear().destroy();
             }
@@ -143,15 +133,15 @@ function Fetchlocationlist() {
                     {
                         "data": "locationId",
                         "render": function (data, type, row) {
-                            return `
-    <div class="btn-group" role="group">
-        <button type="button" class="btn btn-sm btn-primary" onclick="Editlocationlist(${data})">
-            <i class="ti ti-edit"></i> Edit
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="Deletelocationlist(${data})">
-            <i class="ti ti-trash"></i> Delete
-        </button>
-    </div>`;
+                            return `<div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="EditLocation(${data})">
+                                            <i class="ti ti-edit"></i> Edit
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteLocation(${data})">
+                                            <i class="ti ti-trash"></i> Delete
+                                        </button>
+                                    </div>`;
+                                
                         }
                     }
                 ],
@@ -162,12 +152,12 @@ function Fetchlocationlist() {
             });
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
-function Save(action) {
+function SaveLocation(action) {
 
     var isvalid = ValidationCheck();
     if (!isvalid) {
@@ -176,50 +166,13 @@ function Save(action) {
 
     var locationname = $('#txtLocationName').val();
     var address = $('#txtAddress').val();
-    var city = $("#selectCity").val();
+    var city = $("#ddlCity").val();
     var pincode = $("#txtPinCode").val();
     var contactPerson = $("#txtPerson").val();
     var contactNumber = $("#txtContactNumber").val();
     var mobileNumber = $("#txtMobileNumber").val();
     var whatsAppNumber = $("#txtWhatsAppNumber").val();
     var email = $("#txtEmail").val();
-
-    //if (!isAlphabets(locationname)) {
-    //    toastr.warning("Please enter a valid Location Name", "Warning");
-    //    return;
-    //}
-    //if (!isAlphaNumeric(address)) {
-    //    toastr.warning("Please enter a Address", "Warning");
-    //    return;
-    //}
-    //if (!isValidateSelect(city)) {
-    //    toastr.warning("Please enter a City", "Warning");
-    //    return;
-    //}
-    //if (!/^\d{6}$/.test(pincode)) {
-    //    toastr.warning("Please enter a Valid Pincode", "Warning");
-    //    return;
-    //}
-    //if (!isAlphabets(contactPerson)) {
-    //    toastr.warning("Please enter a Contact Person", "Warning");
-    //    return;
-    //}
-    //if (!isValidateEmail(email)) {
-    //    toastr.warning("Please enter a valid email", "Warning");
-    //    return;
-    //}
-    //if (!isMobile(whatsAppNumber)) {
-    //    toastr.warning("Please enter a whatsApp number", "Warning");
-    //    return;
-    //}
-    //if (!isMobile(mobileNumber)) {
-    //    toastr.warning("Please enter a valid 10-digit mobile number", "Warning");
-    //    return;
-    //}
-    //if (!isMobile(contactNumber)) {
-    //    toastr.warning("Please enter a valid 10-digit contact number", "Warning");
-    //    return;
-    //}
 
     var formdata = {
         LocationName: locationname,
@@ -232,7 +185,7 @@ function Save(action) {
         WhatsAppNo: whatsAppNumber,
         Email: email
     };
-    console.log(action);
+
     if (action === "save") {
         $.ajax({
             url: '/Location/LocationSave/',
@@ -241,12 +194,11 @@ function Save(action) {
             dataType: "json",
             data: JSON.stringify(formdata),
             success: function (response) {
-                console.log(response);
-                toastr.success("Location submitted successfully!");
+                toastr.success("Location Details Submitted Successfully!");
                 window.location.href = "../Dashboard/Dashboard";
             },
             error: function (req, status, error) {
-                console.log(error);
+                toastr.error("Failed to Submit Location Details", "Error");
             }
         });
     }
@@ -258,20 +210,19 @@ function Save(action) {
             dataType: "json",
             data: JSON.stringify(formdata),
             success: function (response) {
-                console.log(response);
-                toastr.success("Location submitted successfully!");
-                $('#selectCity').selectpicker('val', '0');
-                $('#selectCity').selectpicker('refresh');
+                toastr.success("Location Details Submitted Successfully!");
+                $('#ddlCity').val('');
+                $('.selectpicker').selectpicker('refresh');
                 $('#LocationForm')[0].reset();
             },
             error: function (req, status, error) {
-                toastr.error(error);
+                toastr.error("Failed to Submit Location Details", "Error");
             }
         });
     }
 
 }
-function UpdateLocationList() {
+function UpdateLocation() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
 
@@ -281,10 +232,10 @@ function UpdateLocationList() {
         }
 
         var locationmodel = {
-            LocationId: $('#txtLocationId').val(),
+            LocationId: $('#hdnLocationId').val(),
             LocationName: $('#txtLocationName').val(),
             AddressLine: $('#txtAddress').val(),
-            CityId: $("#selectCity").val(),
+            CityId: $("#ddlCity").val(),
             PinCode: $("#txtPinCode").val(),
             ContactPerson: $("#txtPerson").val(),
             ContactNo: $("#txtContactNumber").val(),
@@ -292,10 +243,7 @@ function UpdateLocationList() {
             WhatsAppNo: $("#txtWhatsAppNumber").val(),
             Email: $("#txtEmail").val()
         };
-        if (!validateLocationForm()) {
-            return;
-        }
-
+      
         var editlocationlist = '/Location/EditLocationList';
         $.ajax({
             type: "PUT",
@@ -305,12 +253,11 @@ function UpdateLocationList() {
             dataType: "json",
             success: function (result) {
                 if (result.result == "success") {
-                    toastr.success("Location Updated successfully!");
+                    toastr.success("Location Details Updated Successfully!");
                     $("#adduserdiv").css('display', 'none');
-                    Fetchlocationlist();
+                    FetchLocationList();
                 } else {
-                    $("#dataDiv").html("Failed to update Location.");
-                    toastr.error("Failed to Location Updated");
+                    toastr.error("Failed to Update Location Details!","Error");
                 }
                 $("#btnSaveForm").show();
                 $("#btnUpdate").hide();
@@ -318,28 +265,27 @@ function UpdateLocationList() {
                 $("#btnViewForm").click();
             },
             error: function (xhr, status, error) {
-                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+                toastr.error("Failed to Update Location Details!", "Error");
             }
         });
     });
 }
-function Editlocationlist(locationId) {
-    console.log(locationResponseDto);
+function EditLocation(locationId) {
     var data = locationResponseDto.filter(x => x.locationId == locationId);
     var formdata = data[0];
-    console.log(formdata);
+
     $("#tableDiv").hide();
     $("#backButton").css('display', 'none');
     $("#AddLocationDiv").css('display', 'Block');
     $("#btnSaveForm").hide();
     $("#btnUpdate").show();
-    $("#cancleButton").removeClass('d-none');
+    $("#btnCancel").removeClass('d-none');
     $("#btnSaveAndNewForm").hide();
-    $('#txtLocationId').val(formdata.locationId);
+    $('#hdnLocationId').val(formdata.locationId);
     $('#txtLocationName').val(formdata.locationName);
     $('#txtAddress').val(formdata.addressLine);
-    $('#selectCity').selectpicker('val', formdata.cityId);
-    $('#selectCity').selectpicker('refresh');
+    $('#ddlCity').selectpicker('val', formdata.cityId);
+    $('#ddlCity').selectpicker('refresh');
     $("#txtPinCode").val(formdata.pinCode);
     $("#txtPerson").val(formdata.contactPerson);
     $("#txtContactNumber").val(formdata.contactNo);
@@ -350,7 +296,7 @@ function Editlocationlist(locationId) {
     $("#btnSaveAndNewForm").hide();
     $("#btnViewForm").hide();
 }
-function Deletelocationlist(locationId) {
+function DeleteLocation(locationId) {
     var deletelocationlist = '/Location/Deletelocationlist/' + locationId;
     $.ajax({
         url: deletelocationlist,
@@ -358,12 +304,11 @@ function Deletelocationlist(locationId) {
         dataType: "json",
         data: JSON.stringify(locationId),
         success: function (response) {
-            Fetchlocationlist();
-            toastr.success("Location Deleted successfully...");
+            FetchLocationList();
+            toastr.success("Location Details Deleted Successfully!");
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Delete Location Details!", "Error");
         }
     });
 }
@@ -374,17 +319,15 @@ function GetAllCityList() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            console.log(response);
             BindDropDown(response);
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
 function BindDropDown(data) {
-    const selectCity = document.getElementById("selectCity");
+    const selectCity = document.getElementById("ddlCity");
     let placeholderOption = document.createElement("option");
     placeholderOption.value = "";
     placeholderOption.textContent = "Select City";
@@ -400,40 +343,12 @@ function BindDropDown(data) {
 
     $('.selectpicker').selectpicker('refresh');
 }
-
-function validateLocationForm() {
-    let isValid = true;
-    const fields = [
-        { id: "#txtLocationId", name: "Location ID" },
-        { id: "#txtLocationName", name: "Location Name" },
-        { id: "#txtAddress", name: "Address" },
-        { id: "#selectCity", name: "City" },
-        { id: "#txtPinCode", name: "Pincode" },
-        { id: "#txtPerson", name: "Contact Person" },
-        { id: "#txtContactNumber", name: "Contact Number" },
-        { id: "#txtMobileNumber", name: "Mobile Number" },
-        { id: "#txtWhatsAppNumber", name: "WhatsApp Number" },
-        { id: "#txtEmail", name: "Email" }
-    ];
-
-    fields.forEach(({ id, name }) => {
-        var val = $(id).val();
-        console.log(val);
-        if (IsNullOrEmpty(val)) {
-            toastr.warning(`${name} is required`, "Validation Error");
-            isValid = false;
-        }
-    });
-
-    return isValid;
-}
-
 function ValidationCheck() {
-    if (IsNullOrEmpty($("#txtLocationName").val()) || !isAlphabets($("#txtLocationName").val())) {
+    if (IsNullOrEmpty($("#txtLocationName").val())) {
         toastr.warning("Please enter a valid Location Name", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtPerson").val()) || !isAlphabets($("#txtPerson").val())) {
+    if (IsNullOrEmpty($("#txtPerson").val())) {
         toastr.warning("Please enter a valid Contact Person", "Validation Error");
         return false;
     }
@@ -442,11 +357,11 @@ function ValidationCheck() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#selectCity").val()) || !isValidateSelect($("#selectCity").val(), $("#selectCity").prop("selectedIndex"))) {
+    if (!isValidateSelect($("#ddlCity").val())){
         toastr.warning("Please select a City", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtEmail").val()) || !isValidateEmail($("#txtEmail").val())) {
+    if (!isValidateEmail($("#txtEmail").val())) {
         toastr.warning("Please enter a valid email", "Validation Error");
         return false;
     }
@@ -455,7 +370,7 @@ function ValidationCheck() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#txtPinCode").val()) || !/^\d{6}$/.test($("#txtPinCode").val())) {
+    if (IsNullOrEmpty($("#txtPinCode").val()) || !ValidatePinCode($("#txtPinCode").val())) {
         toastr.warning("Please enter a valid Pincode", "Validation Error");
         return false;
     }
@@ -470,5 +385,4 @@ function ValidationCheck() {
         return false;
     }
     return true;
-}
-
+} 

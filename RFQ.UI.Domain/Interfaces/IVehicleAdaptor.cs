@@ -11,7 +11,9 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> EditVehicle(VehicleRequestDto vehicleRequestDto);
         Task<string> DeleteVehicle(int VehicleId);
         Task<IEnumerable<InternalMasterModel>> GetAllVehicleCategory();
-        Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto requestDto);
+
+        Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto vehicleKycRequestDto);
+
         Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType();
         Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor();
     }

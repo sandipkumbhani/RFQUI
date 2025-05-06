@@ -1,0 +1,135 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Vendor Rating";
+}
+
+<style>
+    .rating-stars {
+        display: inline-flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+        .rating-stars input[type="radio"] {
+            display: none;
+        }
+
+        .rating-stars label {
+            font-size: 1.5rem;
+            color: #ccc;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+
+            .rating-stars input[type="radio"]:checked ~ label,
+            .rating-stars label:hover,
+            .rating-stars label:hover ~ label {
+                color: #ffc107;
+            }
+</style>
+
+<div class="app-toolbar pt-3 px-lg-3">
+    <div class="app-container container-fluid d-flex flex-stack flex-wrap">
+        <div class="page-title d-flex align-items-center gap-1 me-3">
+            <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
+                    Overview
+                </h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
+                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
+                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
+                    <li class="breadcrumb-item text-primary">
+                        Vendor Rating
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content px-lg-3">
+    <div class="app-container container-fluid">
+        <div class="card">
+            <div class="card-header border-0 cursor-pointer">
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">Vendor Rating</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label required fw-semibold">Vendor Name</label>
+                        <select class="form-select" id="ddlVendorName">
+                            <option value="">Select Vendor</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">PAN No</label>
+                        <input type="text" class="form-control form-control-solid" readonly value="Auto Display" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Vendor Category</label>
+                        <input type="text" class="form-control form-control-solid" readonly value="Auto Display" />
+                    </div>
+                </div>
+
+                <div class="card mt-5">
+                    <div class="card-header border-0 cursor-pointer">
+                        <div class="card-title m-0">
+                            <h3 class="fw-bold m-0">Vendor Rating</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table align-middle table-bordered">
+                                @* <thead class="table-light">
+                                    <tr align ="center">
+                                        <th>Criteria</th>
+                                        <th colspan="5">Rating</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead> *@
+                                <tbody align ="center" >
+                                    @foreach (var criteria in new[] {
+                                    "Cost & Pricing", "Vehicle Conditions", "Vendor Communication",
+                                    "SLA / Delivery Efficiency", "Tracking Enabled Vehicles", "Statutory Compliance" })
+                                    {
+                                        var ratingName = "rating_" + criteria.Replace(" ", "").Replace("/", "").Replace("&", "");
+                                        <tr>
+                                            <td align="left">@criteria</td>
+                                            <td colspan="5">
+                                                <div class="rating-stars text-center">
+                                                    @for (int i = 5; i >= 1; i--)
+                                                    {
+                                                        var id = $"{ratingName}_{i}";
+                                                        <input type="radio" name="@ratingName" id="@id" value="@i" />
+                                                        <label for="@id"><i class="fa fa-star text-center"></i></label>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td><input type="text" class="form-control" placeholder="Remarks" /></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <label class="form-label fw-semibold">Any Other Comments</label>
+                    <input type="text" class="form-control" placeholder="Text" />
+                </div>
+
+                <div class="mt-4 d-flex gap-3">
+                    <button type="button" class="btn btn-primary">SAVE</button>
+                    <button type="button" class="btn btn-primary">SAVE & NEW</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

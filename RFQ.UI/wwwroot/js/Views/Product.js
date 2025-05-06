@@ -57,15 +57,15 @@ function SaveProduct(action) {
             success: function (response) {
                 
                 if (response.result == "Success") {
-                    toastr.success("Item save successfully!");
+                    toastr.success("Item Save Successfully!");
                     window.location.href = "../Dashboard/Dashboard";
                 }
                 else {
-                    toastr.error("Failed to save Item!");
+                    toastr.error("Failed to Save Item!");
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to save Item!");
+                toastr.error("Failed to Save Item!");
 
             }
         });
@@ -80,15 +80,15 @@ function SaveProduct(action) {
             success: function (response) {
                 
                 if (response.result == "Success") {
-                    toastr.success("Item save successfully!");
+                    toastr.success("Item Save successfully!");
                     $('#productForm')[0].reset();
                 }
                 else {
-                    toastr.error("Failed to save Item!");
+                    toastr.error("Failed to Save Item!");
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to save Item!");
+                toastr.error("Failed to Save Item!");
 
             }
         });
@@ -145,7 +145,7 @@ function FetchProduct() {
             });
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
@@ -179,7 +179,7 @@ function UpdateProduct() {
         data: JSON.stringify(formData),
         success: function (response) {
             if (response.result == 'Success') {
-                toastr.success("Product updated successfully!");
+                toastr.success("Product Updated Successfully!");
                 $("#addProductDiv").hide();
                 $("#backButton").show();
                 $("#tableDiv").show();
@@ -202,11 +202,11 @@ function DeleteProduct(itemId) {
         dataType: "json",
         data: JSON.stringify(itemId),
         success: function (response) {
-            toastr.success("Product deleted successfully!");
+            toastr.success("Product Deleted Successfully!");
             FetchProduct();
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to delete Product", "Error");
+            toastr.error("Failed to Delete Product!", "Error");
         }
     });
 }

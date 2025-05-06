@@ -1,0 +1,242 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "QuoteRate";
+}
+
+<div class="app-toolbar  pt-3 px-lg-3">
+    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
+        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
+            <div class="page-title d-flex align-items-center gap-1 me-3">
+                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
+                    Overview
+                </h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
+                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
+                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
+                    <li class="breadcrumb-item text-primary">
+                        Branch
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content  px-lg-3">
+    <div class="app-container  container-fluid">
+        <div class="card">
+            <div class="card-header border-0 cursor-pointer">
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">Quote Rate - Branch</h3>
+                </div>
+            </div>
+            <form class="form" id="RfqVendorForm">
+                <div class="card-body border-top p-9">
+                    <div class="row">
+                        <!-- Left Section -->
+                        <div class="col-xl-6">
+                            <div class="mb-4">
+                                <div class="row">
+                                    <div class="col-xl-6">
+                                        <div class="mb-4">
+                                            <label class="form-label col-form-label fw-semibold fs-6">RFQ No</label>
+                                            <input type="text" class="form-control form-control-solid" placeholder="Auto Generated" disabled id="txtRfqNo" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div class="mb-4">
+                                            <label class="form-label col-form-label fw-semibold fs-6">RFQ Date</label>
+                                            <input type="datetime-local" class="form-control" id="txtRfqDate" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <label class="form-label col-form-label required fw-semibold fs-6">Customer Name</label>
+                                <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
+                                        data-control="select2" placeholder="Selection Box" id="txtCustomerName">
+                                    <option value="">Select a Customer Name</option>
+                                    <option value="0">Afghanistan</option>
+                                    <option value="1">Aland Islands</option>
+                                    <option value="2">Albania</option>
+                                    <option value="3">Algeria</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Origin/From</label>
+                                        <input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" />
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">Destination/To</label>
+                                        <input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ On</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Qty/Vehicle"
+                                                data-control="select2" placeholder="Qty/Vehicle" id="txtRfqOn">
+                                            <option value="">Select a Option</option>
+                                            <option value="0">Qty</option>
+                                            <option value="1">Vehicle</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Vehicle Type"
+                                                data-control="select2" placeholder="Vehicle type" id="txtVehicleType">
+                                            <option value="">Select a Vehicle Type</option>
+                                            <option value="0">Afghanistan</option>
+                                            <option value="1">Aland Islands</option>
+                                            <option value="2">Albania</option>
+                                            <option value="3">Algeria</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Right Section -->
+                        <div class="col-xl-6">
+                            <div class="row">
+                                <div class="col-xl-6">
+
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ Expired On</label>
+                                        <input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" />
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ Type</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection"
+                                                data-control="select2" placeholder="Selection" id="txtRfqType">
+                                            <option value="">Select a Type</option>
+                                            <option value="0">Contractual</option>
+                                            <option value="1">Adhoc</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label  fw-semibold fs-6">Item Name</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
+                                                data-control="select2" placeholder="Selection Box" id="txtItemName">
+                                            <option value="">Select a Item Name</option>
+                                            <option value="0">Afghanistan</option>
+                                            <option value="1">Aland Islands</option>
+                                            <option value="2">Albania</option>
+                                            <option value="3">Algeria</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">No. of Vehicles</label>
+                                        <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" />
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="mb-4">
+                                        <label class="form-label required col-form-label fw-semibold fs-6">Vehicle Req On</label>
+                                        <input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ Priority</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection"
+                                                data-control="select2" placeholder="Selection" id="txtRfqPriority">
+                                            <option value="">Select a Priority</option>
+                                            <option value="0">High</option>
+                                            <option value="1">Medium</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">Packing Type</label>
+                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
+                                                data-control="select2" placeholder="Selection Box" id="txtPackingType">
+                                            <option value="">Select a Packing Type</option>
+                                            <option value="0">Afghanistan</option>
+                                            <option value="1">Aland Islands</option>
+                                            <option value="2">Albania</option>
+                                            <option value="3">Algeria</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label col-form-label fw-semibold fs-6">Total Qty in Tons</label>
+                                        <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="mb-4">
+                            <label class="form-label col-form-label fw-semibold fs-6">Special Instructions</label>
+                            <input type="text" class="form-control" placeholder="Text" id="txtSpecialInstructions" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RFQ Sent To Vendors Section -->
+                <div class="mt-8">
+                    <div class="card-header p-4">
+                        <h4 class="fw-bold m-0 text-lg">RFQ Sent To Branch</h4>
+                    </div>
+                    <div class="ard-card">
+                        <table id="datatable_ard" class="table table-striped align-middle border rounded fs-6 gy-5 gs-7 dataTable" style="width:100%">
+                            <thead>
+                                <tr class="fw-semibold fs-6 text-gray-800">
+                                    <th>Sr. No.</th>
+                                    <th>Vendor Name</th>
+                                    <th>PAN No Name</th>
+                                    <th>Vendor Rating</th>
+                                    <th>Total Hire Cost</th>
+                                    <th>Detention Per Day</th>
+                                    <th>Detention Free Days</th>
+                                    <th class="text-end">Edit/Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
+                                    <td class="text-end">
+                                        <a href="#" class="btn btn-light btn-active-light-primary btn-sm" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                            Actions
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item" href="#">
+                                                    <i class="ti ti-edit"></i> Edit
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">
+                                                    <i class="ti ti-trash"></i> Delete
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-start py-6 px-9">
+                    <button type="button" id="btnSaveRfqVendor" class="btn btn-primary me-2">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
