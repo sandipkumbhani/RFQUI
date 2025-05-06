@@ -20,6 +20,12 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
+
+        public ActionResult VendorRatingForm()
+        {
+            return View();
+        }
+
         public ActionResult QuoteRoleVendor()
         {
             return View();

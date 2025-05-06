@@ -5,13 +5,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -21,7 +15,7 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public ProductAdaptor(HttpClient httpClient, GlobalClass globalClass,IConfiguration configuration)
+        public ProductAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
@@ -49,7 +43,7 @@ namespace RFQ.UI.Infrastructure.Provider
                         return responseModel.ErrorMessage;
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -58,22 +52,29 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<string> DeleteProduct(int productId)
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-            var baseurl = $"{_fleetLynkApiUrl}{_config["Product:DeleteProduct"]}{productId}";
-            var response = await _httpClient.DeleteAsync(baseurl);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
-                    return "Product Deleted";
-                else
-                    return responseModel.ErrorMessage;
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}{_config["Product:DeleteProduct"]}{productId}";
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        return "Product Deleted";
+                    else
+                        return responseModel.ErrorMessage;
+                }
+                return "Failed to Delete Product";
             }
-            return "Failed to Delete Product";
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<string> EditProduct(int productId, ProductRequestDto productRequestDto)
@@ -121,7 +122,8 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return null;
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }

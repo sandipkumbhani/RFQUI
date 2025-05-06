@@ -20,7 +20,7 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Dashboard(CompanyUserResponseDto responseDto)
+        public async Task<IActionResult> Dashboard(CompanyUserResponseDto companyUserResponseDto)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace RFQ.UI.Controllers
                     var userlist = await _dashBoardServices.GetAllUsers();
                     if (userlist != null && userlist.Count() > 0)
                     {
-                        responseDto.responseDto.AddRange(userlist);
+                        companyUserResponseDto.responseDto.AddRange(userlist);
                     }
                     return Json(userlist);
                 }

@@ -110,26 +110,33 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<IEnumerable<CustomerResponseDto>> GetAllCustomer()
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Customer:GetAllMasterParty"]);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var Profilelist = JsonConvert.DeserializeObject<List<CustomerResponseDto>>(Convert.ToString(responseModel.Data!));
-                return Profilelist;
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Customer:GetAllMasterParty"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var Profilelist = JsonConvert.DeserializeObject<List<CustomerResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return Profilelist;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
-        public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto requestDto)
+        public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto gstKycDetailsRequestDto)
         {
             try
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = $"{_config["ApiSettings:GstApiUrl"]}GSTNo={requestDto.GSTNo}&ccode={requestDto.CCode}&UserId={requestDto.UserId}";
+                var url = $"{_config["ApiSettings:GstApiUrl"]}GSTNo={gstKycDetailsRequestDto.GSTNo}&ccode={gstKycDetailsRequestDto.CCode}&UserId={gstKycDetailsRequestDto.UserId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                     return null;
@@ -150,14 +157,14 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto requestDto)
+        public async Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto panKycDetailRequestDto)
         {
             try
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = $"{_config["ApiSettings:PanApiUrl"]}PANNo={requestDto.PANNo}&ccode={requestDto.CCode}&UserId={requestDto.UserId}";
+                var url = $"{_config["ApiSettings:PanApiUrl"]}PANNo={panKycDetailRequestDto.PANNo}&ccode={panKycDetailRequestDto.CCode}&UserId={panKycDetailRequestDto.UserId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                     return null;
@@ -178,7 +185,7 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<IEnumerable<comMstCityDto>> GetAllCity()
+        public async Task<IEnumerable<ComMstCityDto>> GetAllCity()
         {
             try
             {
@@ -200,7 +207,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)
                 {
-                    var CityList = JsonConvert.DeserializeObject<List<comMstCityDto>>(Convert.ToString(responseModel.Data!));
+                    var CityList = JsonConvert.DeserializeObject<List<ComMstCityDto>>(Convert.ToString(responseModel.Data!));
                     return CityList;
                 }
                 return null;

@@ -35,20 +35,27 @@ namespace RFQ.UI.Controllers
         [HttpPost]
         public IActionResult Profilesave([FromBody] ProfileRequestDto profileRequestDto)
         {
-            if (profileRequestDto != null)
+            try
             {
-                var profile = new ProfileRequestDto()
+                if (profileRequestDto != null)
                 {
-                    ProfileName = profileRequestDto.ProfileName,
-                    CompanyTypeId = profileRequestDto.CompanyTypeId,
-                };
-                var result = _profileServices.AddProfile(profile);
-                return Json(new { result = "success" });
-            }
-            else
-            {
-                return Json(new { result = "fail" });
+                    var profile = new ProfileRequestDto()
+                    {
+                        ProfileName = profileRequestDto.ProfileName,
+                        CompanyTypeId = profileRequestDto.CompanyTypeId,
+                    };
+                    var result = _profileServices.AddProfile(profile);
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "fail" });
 
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
             }
         }
         public async Task<IActionResult> ViewProfile()

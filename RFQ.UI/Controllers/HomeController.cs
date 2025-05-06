@@ -117,21 +117,10 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 //string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
-                //var user = new UserViewModelDto()
-                //{
-                //UserId = userViewModelDto.UserId,
-                //PersonName = userViewModelDto.PersonName,
-                //MobileNo = userViewModelDto.MobileNo,
-                //EmailId = userViewModelDto.EmailId,
-                //LocationId = userViewModelDto.LocationId,
-                //LoginId = userViewModelDto.LoginId,
-                //Password = userViewModelDto.Password,
                 userRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                //userRequestDto.CompanyId = Convert.ToInt32(companyid);
                 userRequestDto.UpdatedBy = Convert.ToInt32(profileid);
                 userRequestDto.ProfileId = Convert.ToInt32(profileid);
-                // };
+
                 var result = await _usersService.EditUsers(userId, userRequestDto);
                 if (result != null)
                 {

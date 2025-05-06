@@ -18,7 +18,7 @@ function initializjquery() {
     });
 
     $('#btnSaveAndNewForm').on('click', function () {
-        Save();
+        SaveProfileRights();
         $('#userbodyform')[0].reset();
     });
 
@@ -27,7 +27,7 @@ function initializjquery() {
         GetLinkItemList($("#txtMenu").val(), $("#txtName").val())
     })
 }
-function Save() {
+function SaveProfileRights() {
     var ProfileName = $('#txtName').val();
     var MenuName = $('#txtMenu').val();
     if (!isValidateSelect(ProfileName)) {
@@ -117,18 +117,47 @@ function GetAllMenuName() {
     });
 }
 function GetLinkItemList(linkGroupId, profileId) {
+
     var GetUrl = '/Profile/GetLinkItemList';
     $.ajax({
         url: GetUrl,
         type: "GET",
         contentType: "application/json",
         success: function (response) {
+            var linkGroupId = parseInt($("#txtMenu").val());
+            var profileId = parseInt($("#txtName").val());
+            if (linkGroupId == undefined || profileId == undefined) {
+                linkGroupId = linkGroupId;
+                profileId = profileId;
+            }
             linkItemData = [];
             var data = $.grep(response, function (x) {
                 return (x.profileId == parseInt(profileId) && x.linkGroupId == linkGroupId);
             });
-           
-            linkItemData = data;
+
+            if (data.length > 0) {
+                linkItemData = data;
+
+            } else {
+                var linkGroupId = parseInt($("#txtMenu").val());
+                var profileId = parseInt($("#txtName").val());
+                if (!isNaN(linkGroupId) && !isNaN(profileId)) {
+                    const filtered = [];
+                    response.forEach(item => {
+                        if (item.linkGroupId == linkGroupId) {
+                            var exists = filtered.some(f => f.linkName === item.linkName);
+                            if (!exists) {
+                                item.isAdd = true
+                                item.isCancel = true
+                                item.isView = true
+                                item.isEdit = true
+                                filtered.push(item);
+                            }
+                        }
+                    });
+                    linkItemData = filtered;
+                }
+            }
             console.log(linkItemData)
             linkItemData.forEach((item, index) => {
                 var html = '';

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -74,7 +73,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CompanyConfigurationSave([FromBody] CompanyConfigrationRequestDto requestDto)
+        public async Task<IActionResult> CompanyConfigurationSave([FromBody] CompanyConfigrationRequestDto companyConfigrationRequestDto)
         {
             try
             {
@@ -83,9 +82,9 @@ namespace RFQ.UI.Controllers
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
 
-                if (requestDto != null)
+                if (companyConfigrationRequestDto != null)
                 {
-                    var result = await _companyConfigurationServices.AddCompanyConfiguration(requestDto);
+                    var result = await _companyConfigurationServices.AddCompanyConfiguration(companyConfigrationRequestDto);
                     return Json(new { result = "Success" });
                 }
                 else
@@ -100,11 +99,11 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditCompanyConfigurationList([FromBody] CompanyConfigrationRequestDto requestDto)
+        public async Task<IActionResult> EditCompanyConfigurationList([FromBody] CompanyConfigrationRequestDto companyConfigrationRequestDto)
         {
             try
             {
-                var result = await _companyConfigurationServices.EditCompanyConfiguration(requestDto);
+                var result = await _companyConfigurationServices.EditCompanyConfiguration(companyConfigrationRequestDto);
                 if (result != null)
                     return Json(new { result = "success" });
                 else

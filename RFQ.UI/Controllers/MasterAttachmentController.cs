@@ -1,11 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -15,7 +13,7 @@ namespace RFQ.UI.Controllers
         private readonly IMasterAttachmentService _masterAttachmentService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public MasterAttachmentController(IMasterAttachmentService masterAttachmentService, GlobalClass globalClass ,IWebHostEnvironment webHostEnvironment)
+        public MasterAttachmentController(IMasterAttachmentService masterAttachmentService, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment)
         {
             _masterAttachmentService = masterAttachmentService;
             _globalClass = globalClass;
@@ -26,24 +24,31 @@ namespace RFQ.UI.Controllers
         [HttpPost]
         public IActionResult MasterAttachmentSave([FromBody] List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
-            if (masterAttachmentRequestDto != null)
+            try
             {
-                
-                //masterAttachmentRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+                if (masterAttachmentRequestDto != null)
+                {
+
+                    //masterAttachmentRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                    //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(profileid);
 
 
-                var result = _masterAttachmentService.AddMasterAttachment(masterAttachmentRequestDto);
-                return Json(new { result = "success" });
+                    var result = _masterAttachmentService.AddMasterAttachment(masterAttachmentRequestDto);
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "fail" });
+
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { result = "fail" });
-
+                return Json(new { result = "error", message = ex.Message });
             }
         }
 

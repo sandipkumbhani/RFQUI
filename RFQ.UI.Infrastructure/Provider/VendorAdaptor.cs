@@ -144,17 +144,24 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<IEnumerable<VendorResponseDto>> GetAllVendor()
         {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Vendor:GetAllMasterParty"]);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            if (responseModel != null)
+            try
             {
-                var vendorList = JsonConvert.DeserializeObject<List<VendorResponseDto>>(Convert.ToString(responseModel.Data!));
-                return vendorList;
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Vendor:GetAllMasterParty"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var vendorList = JsonConvert.DeserializeObject<List<VendorResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return vendorList;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

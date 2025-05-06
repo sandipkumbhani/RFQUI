@@ -60,7 +60,7 @@
                         <div class="col-xl-3">
                             <div class="mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Minimum KMS / Day</label>
-                                <input type="text" inputmode="numeric" class="form-control" id="txtminKmsPerDay"
+                                <input type="text" inputmode="numeric" class="form-control" id="txtminKmsPerDay" onkeypress="return isNumber(event)" 
                                        placeholder="Minimum KMS / Day" />
                             </div>
                         </div>
@@ -69,10 +69,10 @@
                 </div>
                 <div class="card-footer d-flex justify-content-srtat py-6 px-9">
                     <button id="btnSaveVehicleType" type="button" class="btn btn-primary me-2" data-action="save">Save</button>
-                    <button id="SavenewButton" type="button" class="btn btn-primary" data-action="saveNew">Save & New</button>&nbsp;
+                    <button id="SavenewButton" type="button" class="btn btn-primary me-2" data-action="saveNew">Save & New</button>
                     <button id="viewButton" type="button" class="btn btn-primary">View</button>
-                    <button id="updateButton" type="button" class="btn btn-primary" style="display:none;">Update</button>
-                    <button id="cancleButton" type="button" class="btn btn-danger ms-2 d-none">Cancle</button>
+                    <button id="updateButton" type="button" class="btn btn-primary me-2" style="display:none;">Update</button>
+                    <button id="btnCancel" type="button" class="btn btn-danger d-none">Cancel</button>
                 </div>
             </form>
         </div>

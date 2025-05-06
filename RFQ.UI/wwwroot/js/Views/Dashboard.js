@@ -11,7 +11,6 @@ function GetAllUser() {
         type: 'GET',
         dataType: 'json',
         success: function (response) {
-            console.log(response)
             var trlist = response;
             if ($.fn.DataTable.isDataTable('#tableDashboard')) {
                 $('#tableDashboard').DataTable().clear().destroy();
@@ -59,7 +58,7 @@ function GetAllUser() {
             });
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 };

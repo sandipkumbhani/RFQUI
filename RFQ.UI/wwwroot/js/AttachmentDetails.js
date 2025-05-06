@@ -1,49 +1,36 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
     var GetAttachmentUrl = '/MasterAttachment/GetAllMasterAttachmentType';
-    var attachmentType = [{ value: null, text: "Select AttachmentType", disabled: true, selected: true }];
-    var attachmentList = [];
+    var attachmentType = [];
+    // Fetch attachment types via AJAX
     $.ajax({
         url: GetAttachmentUrl,
         type: "GET",
         contentType: "application/json",
         success: function (response) {
             if (response && response.length > 0) {
+                attachmentType.push({ value: null, text: "Select AttachmentType", disabled: true, selected: true });
                 $.each(response, function (index, type) {
-                    attachmentType.push({ value: type.attachmentTypeId, text: type.attachmentTypeName })
+                    attachmentType.push({ value: type.attachmentTypeId, text: type.attachmentTypeName });
                 });
-                //$.each(attachmentType, function (index, item) {
-                //    $('.ddlAttachment').append($('<option>', {
-                //        value: item.value,
-                //        text: item.text
-                //    }));
-
-                //});
-                    $.each(attachmentType, function (index, item) {
-                        const option = $('<option>', {
-                            value: item.value,
-                            text: item.text
-                        });
-
-                        if (item.disabled) option.prop('disabled', true);
-                        if (item.selected) option.prop('selected', true);
-
-                        $('.ddlAttachment').append(option);
-                    });
-            }
-            else {
+                // Store data in localStorage for dynamic use
+                localStorage.setItem("attachmentType", JSON.stringify(attachmentType));
+                // Populate existing dropdowns
+                $('.ddlAttachment').each(function () {
+                    populateDropdown($(this));
+                });
+            } else {
                 $('.ddlAttachment').empty().append('<option value="">No Attachment Available</option>');
             }
-
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to MasterAttachmentType ", "Error");
+            toastr.error("Failed to retrieve attachment types", "Error");
         }
     });
-    
 })
-$(document).on('change blur', '[data-repeater-item] .ddlAttachment', function () {
+$(document).on('blur', '[data-repeater-item] .ddlAttachment', function () {
     const selectedValue = $(this).val();
-    if (selectedValue=="null") {
+    if (selectedValue == "null") {
         toastr.warning("Please select Attachment Type", "Warning");
         return;
     }
@@ -69,10 +56,10 @@ $(document).on('click', '.upload-btn', function () {
             $row.find('#hdnUplodedFileName').val(response.fileName); 
             $row.find("#fileLink").attr("href", `../../AttachmentFiles/${response.fileName}`);
             spanText.text(response.fileName); 
-            toastr.success("Master Attachment submitted successfully!");
+            toastr.success("Attachment File Uploaded Successfully!");
         },
         error: function () {
-            alert("Upload failed. Please try again.");
+            alert("Upload Filed. Please try again.");
         }
     });
 });
@@ -106,13 +93,13 @@ $(document).on('click', '.btnDeleteAttachment', function () {
         dataType: "json",
         success: function (response) {
             if (response.result === "Success") {
-                toastr.success("Attachment deleted successfully", "Success");
+                toastr.success("Attachment File Deleted Successfully!");
             } else {
                 toastr.error(response.message || "An error occurred while deleting the attachment.", "Error");
             }
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to delete attachment. Please try again.", "Error");
+            toastr.error("Failed to Delete Attachment File. Please try again.", "Error");
         }
     });
 });
@@ -148,10 +135,10 @@ function Saveattachment(transactionId) {
             contentType: "application/json",
             data: JSON.stringify(attachmentListData),
             success: function (response) {
-                toastr.success("Attachment saved successfully");
+                toastr.success("Attachment File Saved Successfully!");
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to save attachment", "Error");
+                toastr.error("Failed to Save Attachment File", "Error");
             }
         });
     }
@@ -201,13 +188,13 @@ function DeleteMasterAttachment(attachmentId) {
                         }
                     },
                     error: function (xhr, status, error) {
-                        toastr.error("Failed to delete attachment. Please try again.", "Error");
+                        toastr.error("Failed Delete Attachment. Please try again.", "Error");
                     }
                 });
             })
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Delete Attachment. Please try again.", "Error");
         }
     });
 }
@@ -220,7 +207,7 @@ function DeleteAttachmentAPI(attachmentId) {
             success: function (response) {
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to delete attachment", "Error");
+                toastr.error("Failed to Delete Attachment!", "Error");
             }
         });
     }

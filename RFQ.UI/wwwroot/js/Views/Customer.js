@@ -21,24 +21,24 @@ $(document).ready(function () {
     });
 
 
-    $("#gstEKycButton").click(function () {
+    $("#gstEKycButton").on('click',function () {
         isGstEKycClicked = true;
     });
 
-    $("#panEKycButton").click(function () {
+    $("#panEKycButton").on('click',function () {
         isPanEKycClicked = true;
     });
 
     $("#btnSaveCustomer, #SavenewButton").on('click', function () {
         var action = $(this).data('action');
         if (isGstEKycClicked && isPanEKycClicked) {
-            SaveAndSaveNew(action);
+            SaveCustomer(action);
         } else {
             toastr.warning("Please complete GST and PAN E-KYC before saving!");
         }
     });
 
-    $('#backButton').click(function () {
+    $('#backButton').on('click',function () {
         window.location.reload(true);
         // $("#addCustomerDiv").css('display', 'Block')
         // $("#backButton").css('display', 'none');
@@ -54,8 +54,8 @@ $(document).ready(function () {
     InitializeFields();
     GetAllCityList();
     UpdateCustomer();
-    GstEKycclick();
-    PanEKycclick();
+    GstEKycClick();
+    PanEKycClick();
 });
 function FetchCustomerList() {
     $("#tableDiv").show();
@@ -67,8 +67,6 @@ function FetchCustomerList() {
         success: function (response) {
             let customerList = response.filter(x => x.partyTypeId == 6);
             customerViewModelDtos = response;
-            console.log(customerViewModelDtos);
-            // Destroy existing DataTable if exists
             if ($.fn.DataTable.isDataTable('#tableCustomer')) {
                 $('#tableCustomer').DataTable().clear().destroy();
             }
@@ -95,7 +93,7 @@ function FetchCustomerList() {
                     { "data": "addressLine" },
                     { "data": "pinCode" },
                     { "data": "mobNo" },
-                    { "data": "email" },
+                    { "data": "email" },    
                     { "data": "panNo" },
                     { "data": "gstNo" },
                     {
@@ -121,12 +119,11 @@ function FetchCustomerList() {
             });
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
-function SaveAndSaveNew(action) {
+function SaveCustomer(action) {
 
     var isvalid = ValidationCheck();
     if (!isvalid) {
@@ -198,14 +195,13 @@ function SaveAndSaveNew(action) {
                     partyId = response.result.partyId;
                     Saveattachment(partyId);
                     window.location.href = "../Dashboard/Dashboard";
-                    toastr.success("Customer details submitted successfully!");
+                    toastr.success("Customer Details Submitted Successfully!");
                 } else {
-                    toastr.success("Somthing Went Wrong!");
+                    toastr.error("Failed to Submit Customer Details", "Error");
                 }
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to submit Customer details", "Error");
+                toastr.error("Failed to Submit Customer Details", "Error");
             }
         });
     }
@@ -219,17 +215,16 @@ function SaveAndSaveNew(action) {
                 if (response != null) {
                     partyId = response.result.partyId;
                     Saveattachment(partyId);
-                    toastr.success("Customer details submitted successfully!");
+                    toastr.success("Customer Details Submitted Successfully!");
                     $('#CustomerForm')[0].reset();
                     $("#ddlCity").val("");
                     $("#ddlCity").selectpicker("refresh");
                 } else {
-                    toastr.success("Somthing Went Wrong!");
+                    toastr.error("Failed to Submit Customer Details", "Error");
                 }
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to submit Customer details", "Error");
+                toastr.error("Failed to Submit Customer Details", "Error");
             }
         });
     }
@@ -238,10 +233,8 @@ function SaveAndSaveNew(action) {
 function EditCustomer(partyId) {
     var data = customerViewModelDtos.filter(x => x.partyId === partyId);
     var formData = data[0];
-    console.log(formData);
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
         var attachmentData = list;
-        console.log(list);
         $('#tableDiv').hide();
         $("#backButton").css('display', 'none');
         $("#addCustomerDiv").css('display', 'Block');
@@ -348,12 +341,12 @@ function UpdateCustomer() {
             dataType: "json",
             success: function (result) {
                 if (result.result === "success") {
-                    toastr.success("Customer Updated successfully!", "Success");
+                    toastr.success("Customer Details Updated Successfully!");
                     $("#addCustomerDiv").css('display', 'none');
                     FetchCustomerList();
                     $("#backButton").css('display', 'block');
                 } else {
-                    toastr.error("Failed to Update Customer", "Error");
+                    toastr.error("Failed to Update Customer Details", "Error");
                 }
             },
             error: function (xhr, status, error) {
@@ -401,17 +394,16 @@ function DeleteCustomer(partyId) {
                 if (result.length > 0) {
                     DeleteMasterAttachment(result[0].attachmentId);
                 }
-                toastr.success("Customer deleted successfully!");
+                toastr.success("Customer Details Deleted Successfully!");
                 FetchCustomerList();
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to fetch data!", "Error");
+                toastr.error("Failed to Delete Customer Details!", "Error");
             }
         });
     });
 }
-function GstEKycclick() {
+function GstEKycClick() {
     $("#gstEKycButton").on("click", function () {
         var gstNumber = $("#txtGstNumber").val();
 
@@ -454,7 +446,7 @@ function GstEKycclick() {
         });
     });
 }
-function PanEKycclick() {
+function PanEKycClick() {
     $("#panEKycButton").on("click", function () {
         var getPanKycUrl = '/Customer/GetPanKycDetails';
         var panNumber = $("#txtPanNumber").val();
@@ -488,7 +480,6 @@ function PanEKycclick() {
                 }
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
                 toastr.error("Failed to Fetch EKyc Details", "Error");
                 ClearPanFields();
             }
@@ -505,8 +496,7 @@ function GetAllCityList() {
             BindDropDown(response)
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
@@ -546,7 +536,6 @@ function ClearPanFields() {
         $("#txtPanStatus").val(''),
         $("#txtPanVerifiedOn ").val('')
 }
-
 function InitializeFields() {
     $("#txtGstNumber").on("blur", function () {
         if (!ValidateGstNumber($(this).val())) {

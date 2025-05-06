@@ -1,13 +1,11 @@
 ﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Interfaces;
-using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using RFQ.UI.Infrastructure.Provider;
 
 namespace RFQ.UI.Application.Provider
 {
-    public class CompanyConfigrationServices: ICompanyConfigurationServices
+    public class CompanyConfigrationServices : ICompanyConfigurationServices
     {
         private readonly ICompanyConfigurationAdaptor _companyConfigurationAdaptor;
         public CompanyConfigrationServices(ICompanyConfigurationAdaptor companyConfigrationAdaptor)
@@ -27,13 +25,13 @@ namespace RFQ.UI.Application.Provider
         {
             return await _companyConfigurationAdaptor.GetAllProviders();
         }
-        public Task<string> AddCompanyConfiguration(CompanyConfigrationRequestDto requestDto)
+        public Task<string> AddCompanyConfiguration(CompanyConfigrationRequestDto companyConfigrationRequestDto)
         {
-            return _companyConfigurationAdaptor.AddCompanyConfiguration(requestDto);
+            return _companyConfigurationAdaptor.AddCompanyConfiguration(companyConfigrationRequestDto);
         }
-        public Task<string> EditCompanyConfiguration(CompanyConfigrationRequestDto requestDto)
+        public Task<string> EditCompanyConfiguration(CompanyConfigrationRequestDto companyConfigrationRequestDto)
         {
-            return _companyConfigurationAdaptor.EditCompanyConfiguration(requestDto);
+            return _companyConfigurationAdaptor.EditCompanyConfiguration(companyConfigrationRequestDto);
         }
         public Task<string> DeleteCompanyConfiguration(int companyConfigId)
         {

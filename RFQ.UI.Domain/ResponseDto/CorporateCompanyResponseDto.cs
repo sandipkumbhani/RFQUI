@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RFQ.UI.Domain.ResponseDto
+﻿namespace RFQ.UI.Domain.ResponseDto
 {
     public class CorporateCompanyResponseDto
     {
         public int CompanyId { get; set; }
         public string? CompanyName { get; set; }
-        public int CompanyTypeId { get; set; } 
+        public int CompanyTypeId { get; set; }
         public string? AddressLine { get; set; }
         public int CityId { get; set; }
         public string? PinCode { get; set; }
@@ -23,7 +17,7 @@ namespace RFQ.UI.Domain.ResponseDto
         public string? GSTNo { get; set; }
         public string? LogoImage { get; set; }
         public int ParentCompanyId { get; set; }
-        public int LinkId { get; set; } 
+        public int LinkId { get; set; }
         public int StatusId { get; set; }
         public int CreatedBy { get; set; }
 

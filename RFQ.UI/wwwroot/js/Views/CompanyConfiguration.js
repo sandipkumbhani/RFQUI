@@ -1,25 +1,25 @@
 ﻿$(document).ready(function () {
     var companyConfigResponseDto;
-    initializjquery();
+    Initializejquery();
     CheckValidation();
     GetAllCompany();
     GetAllProviders();
 });
-function initializjquery() {
+function Initializejquery() {
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
         var action = $(this).data('action');
-        SaveConfigration(action);
+        SaveCompanyConfiguration(action);
     });
     $('#btnViewForm').on('click', function () {
-        FetchAllCompConfigList();
+        FetchCompanyConfiguration();
     });
     $('#backButton').on('click', function () {
         window.location.reload(true);
     });
     $("#btnCancel").on('click', function () {
-        FetchAllCompConfigList();
+        FetchCompanyConfiguration();
         $("#tableDiv").removeClass('d-none');
-        $("#AddCompnyConfigDiv").addClass('d-none');
+        $("#addCompanyConfigDiv").addClass('d-none');
         $("#backButton").removeClass('d-none');
     });
 }
@@ -31,9 +31,8 @@ function GetAllCompany() {
         type: 'GET',
         dataType: 'json',
         success: function (response) {
-            console.log(response)
             sessionStorage.setItem("CompanyList", JSON.stringify(response));
-            const companydropdown = document.getElementById("company");
+            const companydropdown = document.getElementById("ddlCompany");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select Company";
@@ -50,42 +49,42 @@ function GetAllCompany() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 };
 function CheckValidation() {
-    $("#smsAuthKey").on("blur", function () {
+    $("#txtSmsAuthKey").on("blur", function () {
         if (!IsValidAuthKey($(this).val())) {
             toastr.warning("Please enter a valid SMS authorization Key", "Validation Error");
             return;
         }
     });
-    $("#whatsappAuthKey").on("blur", function () {
+    $("#txtWhatsappAuthKey").on("blur", function () {
         if (!IsValidAuthKey($(this).val())) {
             toastr.warning("Please enter a valid whatsapp authorization Key", "Validation Error");
             return;
         }
     });
-    $("#smtpHost").on("blur", function () {
+    $("#txtSmtpHost").on("blur", function () {
         if (!isAlphaNumeric($(this).val())) {
             toastr.warning("Please enter a valid smtp Host", "Validation Error");
             return;
         }
     });
-    $("#smtpUserName").on("blur", function () {
+    $("#txtSmtpUserName").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a valid smtp User Name", "Validation Error");
             return;
         }
     });
-    $("#smtpPort").on("blur", function () {
+    $("#txtSmtpPort").on("blur", function () {
         if (!isNumeric($(this).val())) {
             toastr.warning("Please enter a valid smtp Port", "Validation Error");
             return;
         }
     });
-    $("#smtpPassword").on("blur", function () {
+    $("#txtSmtpPassword").on("blur", function () {
         if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test($(this).val())) {
             $("#txtPassword").val('');
             toastr.warning("Please enter a valid password", "Validation Error");
@@ -94,39 +93,39 @@ function CheckValidation() {
     });
 }
 function OnSubmitValidation() {
-    if (!isValidateSelect($('#company').val())) {
-        toastr.warning("Please enter company","Validation Error");
+    if (!isValidateSelect($('#ddlCompany').val())) {
+        toastr.warning("Please enter company", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($('#smsProvider').val())) {
-        toastr.warning("Please enter smsProvider","Validation Error");
+    if (IsNullOrEmpty($('#ddlSmsProvider').val())) {
+        toastr.warning("Please enter smsProvider", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($('#whatsappProvider').val())) {
-        toastr.warning("Please enter whatsappProvider","Validation Error");
+    if (IsNullOrEmpty($('#ddlWhatsappProvider').val())) {
+        toastr.warning("Please enter whatsappProvider", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($('#smsAuthKey').val())) {
+    if (IsNullOrEmpty($('#txtSmsAuthKey').val())) {
         toastr.warning("Please enter a valid SMS authorization Key", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($('#whatsappAuthKey').val())) {
+    if (IsNullOrEmpty($('#txtWhatsappAuthKey').val())) {
         toastr.warning("Please enter a valid whatsapp authorization Key", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($('#smtpHost').val())) {
+    if (IsNullOrEmpty($('#txtSmtpHost').val())) {
         toastr.warning("Please enter a valid smtp Host", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($('#smtpUserName').val())) {
+    if (IsNullOrEmpty($('#txtSmtpUserName').val())) {
         toastr.warning("Please enter a valid smtp User Name", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($('#smtpPort').val())) {
+    if (IsNullOrEmpty($('#txtSmtpPort').val())) {
         toastr.warning("Please enter a valid smtp Port", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($('#smtpPassword').val())) {
+    if (IsNullOrEmpty($('#txtSmtpPassword').val())) {
         toastr.warning("Please enter a valid password", "Validation Error");
         return false;
     }
@@ -147,7 +146,7 @@ function GetAllProviders() {
             var whatsappArray = whatsappData ? [whatsappData] : [];
 
             //SMS Provider DropDown Binding
-            const smsProviderDrop = document.getElementById("smsProvider");
+            const smsProviderDrop = document.getElementById("ddlSmsProvider");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a SMS Provider";
@@ -163,7 +162,7 @@ function GetAllProviders() {
             $('.selectpicker').selectpicker('refresh');
 
             //Whatsapp Provider DropDown Binding
-            const whatsappProviderDrop = document.getElementById("whatsappProvider");
+            const whatsappProviderDrop = document.getElementById("ddlWhatsappProvider");
             let placeholder = document.createElement("option");
             placeholder.value = "";
             placeholder.textContent = "Select a Whatsapp Provider";
@@ -179,22 +178,22 @@ function GetAllProviders() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 };
-function SaveConfigration(action) {
+function SaveCompanyConfiguration(action) {
     if (OnSubmitValidation()) {
         var saveConfigrationUrl = '/CompanyConfiguration/CompanyConfigurationSave';
-        var company = $('#company').val();
-        var smsProvider = $('#smsProvider').val();
-        var whatsappProvider = $('#whatsappProvider').val();
-        var smsAuthKey = $('#smsAuthKey').val();
-        var whatsappAuthKey = $('#whatsappAuthKey').val();
-        var smtpHost = $('#smtpHost').val();
-        var smtpUserName = $('#smtpUserName').val();
-        var smtpPort = $('#smtpPort').val();
-        var smtpPassword = $('#smtpPassword').val();
+        var company = $('#ddlCompany').val();
+        var smsProvider = $('#ddlSmsProvider').val();
+        var whatsappProvider = $('#ddlWhatsappProvider').val();
+        var smsAuthKey = $('#txtSmsAuthKey').val();
+        var whatsappAuthKey = $('#txtWhatsappAuthKey').val();
+        var smtpHost = $('#txtSmtpHost').val();
+        var smtpUserName = $('#txtSmtpUserName').val();
+        var smtpPort = $('#txtSmtpPort').val();
+        var smtpPassword = $('#txtSmtpPassword').val();
 
         let formData = {
             CompanyConfigId: 0,
@@ -217,11 +216,10 @@ function SaveConfigration(action) {
                 data: JSON.stringify(formData),
                 success: function (response) {
                     window.location.href = "../Dashboard/Dashboard";
-                    toastr.success("Company Configuration details submitted successfully!");
+                    toastr.success("Company Configuration Details Submitted Successfully!");
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error:', error);
-                    alert('Failed to save data. Please try again.');
+                    toastr.error("Failed to Save Company Configuration Details!", "Error");
                 }
             });
         }
@@ -233,141 +231,139 @@ function SaveConfigration(action) {
                 dataType: "json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    toastr.success("Company Configuration details submitted successfully!");
+                    toastr.success("Company Configuration Details Submitted Successfully!");
                     $('#companyConfigurationForm')[0].reset();
-                    $('#smsProvider').val('');
-                    $('#whatsappProvider').val('');
-                    $('#company').val('');
+                    $('#ddlSmsProvider').val('');
+                    $('#ddlWhatsappProvider').val('');
+                    $('#ddlCompany').val('');
                     $('.selectpicker').selectpicker('refresh');
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error:', error);
-                    alert('Failed to save data. Please try again.');
+                    toastr.error("Failed to Save Company Configuration Details!", "Error");
                 }
             });
         }
     }
 }
-function FetchAllCompConfigList() {
+function FetchCompanyConfiguration() {
 
-        $("#tableDiv").removeClass('d-none');
-        $("#AddCompnyConfigDiv").addClass('d-none');
-        $("#backButton").addClass('d-block')
-        var getUrl = '/CompanyConfiguration/GetAllCompanyConfiguration';
-        $.ajax({
-            url: getUrl,
-            type: 'GET',
-            dataType: 'json',
-            success: function (response) {
-                companyConfigResponseDto = response;
-                const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");
-                const providersList = JSON.parse(sessionStorage.getItem("ProvidersList") || "[]");
-                const trlist = response.map(item => {
-                    const company = companyList.find(c => c.companyId === item.companyId);
-                    const smsProvider = providersList.find(p => p.providerTypeId === Number(item.smsProvider));
-                    const whatsAppProvider = providersList.find(p => p.providerTypeId === Number(item.whatsAppProvider));
+    $("#tableDiv").removeClass('d-none');
+    $("#addCompanyConfigDiv").addClass('d-none');
+    $("#backButton").removeClass('d-none');
+    var getUrl = '/CompanyConfiguration/GetAllCompanyConfiguration';
+    $.ajax({
+        url: getUrl,
+        type: 'GET',                                                                                                       
+        dataType: 'json',
+        success: function (response) {
+            companyConfigResponseDto = response;
+            const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");
+            const providersList = JSON.parse(sessionStorage.getItem("ProvidersList") || "[]");
+            const trlist = response.map(item => {
+                const company = companyList.find(c => c.companyId === item.companyId);
+                const smsProvider = providersList.find(p => p.providerTypeId === Number(item.smsProvider));
+                const whatsAppProvider = providersList.find(p => p.providerTypeId === Number(item.whatsAppProvider));
 
-                    return {
-                        ...item,
-                        companyId: company ? company.companyName : "",
-                        smsProvider: smsProvider ? smsProvider.providerName : "",
-                        whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
-                    };
-                });
-                console.log($.fn.DataTable.isDataTable('#tableCmpConfig'));
-                if ($.fn.DataTable.isDataTable('#tableCmpConfig')) {
-                    $('#tableCmpConfig').DataTable().clear().destroy();
-                }
-                $('#tableCmpConfig').DataTable({
-                    "processing": true,
-                    "serverSide": false,
-                    "paging": true,
-                    "pageLength": 10,
-                    "lengthChange": true,
-                    "searching": true,
-                    "ordering": false,
-                    "info": true,
-                    "autoWidth": true,
-                    "responsive": true,
-                    "scrollX": true,
-                    "data": trlist,
-                    "columns": [
-                        { "data": "companyId" },
-                        { "data": "smsProvider" },
-                        { "data": "smsAuthKey" },
-                        { "data": "whatsAppAuthKey" },
-                        { "data": "whatsAppProvider" },
-                        { "data": "smtpHost" },
-                        { "data": "smtpPort" },
-                        { "data": "smtpUsername" },
-                        {
-                            "data": "companyConfigId",
-                            "render": function (data, type, row) {
-                                return `
+                return {
+                    ...item,
+                    companyId: company ? company.companyName : "",
+                    smsProvider: smsProvider ? smsProvider.providerName : "",
+                    whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
+                };
+            });
+            if ($.fn.DataTable.isDataTable('#tableCmpConfig')) {
+                $('#tableCmpConfig').DataTable().clear().destroy();
+            }
+            $('#tableCmpConfig').DataTable({
+                "processing": true,
+                "serverSide": false,
+                "paging": true,
+                "pageLength": 10,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": false,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "scrollX": true,
+                "data": trlist,
+                "columns": [
+                    { "data": "companyId" },
+                    { "data": "smsProvider" },
+                    { "data": "smsAuthKey" },
+                    { "data": "whatsAppAuthKey" },
+                    { "data": "whatsAppProvider" },
+                    { "data": "smtpHost" },
+                    { "data": "smtpPort" },
+                    { "data": "smtpUsername" },
+                    {
+                        "data": "companyConfigId",
+                        "render": function (data, type, row) {
+                            return `
                             <div class="btn-group" role="group">
-                               <button type="button" class="btn btn-sm btn-primary" onclick="EditCompConfigList(${data})">
+                               <button type="button" class="btn btn-sm btn-primary" onclick="EditCompanyConfiguration(${data})">
                                   <i class="ti ti-edit"></i> Edit
                                </button>
-                               <button type="button" class="btn btn-sm btn-danger" onclick="DeleteCompConfiglist(${data})">
+                               <button type="button" class="btn btn-sm btn-danger" onclick="DeleteCompanyConfiguration(${data})">
                                   <i class="ti ti-trash"></i> Delete
                                </button>
                             </div>`;
-                            }
                         }
-                    ],
-                    "columnDefs": [{
-                        "targets": "_all",
-                        "className": "text-center"
-                    }]
-                });
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to fetch data!", "Error");
-            }
-        });
-    
+                    }
+                ],
+                "columnDefs": [{
+                    "targets": "_all",
+                    "className": "text-center"
+                }]
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+
 };
-function EditCompConfigList(companyConfigId) {
+function EditCompanyConfiguration(companyConfigId) {
     var data = companyConfigResponseDto.filter(x => x.companyConfigId == companyConfigId);
 
     var formdata = data[0];
     $("#tableDiv").addClass('d-none');
     $("#backButton").addClass('d-none');
-    $("#AddCompnyConfigDiv").removeClass('d-none');
+    $("#addCompanyConfigDiv").removeClass('d-none');
     $("#btnSaveForm").hide();
     $("#btnSaveAndNewForm").addClass('d-none');
     $("#btnSaveAndNewForm").addClass('d-none');
     $("#btnViewForm").addClass('d-none');
     $("#btnUpdate").show();
     $("#btnCancel").removeClass('d-none');
-    $("#company").selectpicker('val', formdata.companyId);
-    $("#company").selectpicker('refresh');
-    $("#smsProvider").selectpicker('val', formdata.smsProvider);
-    $('#smsProvider').selectpicker('refresh');
-    $("#whatsappProvider").selectpicker('val', formdata.whatsAppProvider);
-    $('#whatsappProvider').selectpicker('refresh');
-    $("#smsAuthKey").val(formdata.smsAuthKey);
-    $("#whatsappAuthKey").val(formdata.whatsAppAuthKey);
-    $("#smtpHost").val(formdata.smtpHost);
-    $("#smtpPort").val(formdata.smtpPort)
-    $("#smtpUserName").val(formdata.smtpUsername);
+    $("#ddlCompany").selectpicker('val', formdata.companyId);
+    $("#ddlCompany").selectpicker('refresh');
+    $("#ddlSmsProvider").selectpicker('val', formdata.smsProvider);
+    $('#ddlSmsProvider').selectpicker('refresh');
+    $("#ddlWhatsappProvider").selectpicker('val', formdata.whatsAppProvider);
+    $('#ddlWhatsappProvider').selectpicker('refresh');
+    $("#txtSmsAuthKey").val(formdata.smsAuthKey);
+    $("#txtWhatsappAuthKey").val(formdata.whatsAppAuthKey);
+    $("#txtSmtpHost").val(formdata.smtpHost);
+    $("#txtSmtpPort").val(formdata.smtpPort)
+    $("#txtSmtpUserName").val(formdata.smtpUsername);
     $('#btnUpdate').on('click', function () {
-        UpdateCompConfig(companyConfigId);
+        UpdateCompanyConfiguration(companyConfigId);
     });
 }
-function UpdateCompConfig(companyConfigId) {
+function UpdateCompanyConfiguration(companyConfigId) {
     if (OnSubmitValidation()) {
         var updateUrl = '/CompanyConfiguration/EditCompanyConfigurationList';
 
-        var company = $('#company').val();
-        var smsProvider = $('#smsProvider').val();
-        var whatsappProvider = $('#whatsappProvider').val();
-        var smsAuthKey = $('#smsAuthKey').val();
-        var whatsappAuthKey = $('#whatsappAuthKey').val();
-        var smtpHost = $('#smtpHost').val();
-        var smtpUserName = $('#smtpUserName').val();
-        var smtpPort = $('#smtpPort').val();
-        var smtpPassword = $('#smtpPassword').val();
+        var company = $('#ddlCompany').val();
+        var smsProvider = $('#ddlSmsProvider').val();
+        var whatsappProvider = $('#ddlWhatsappProvider').val();
+        var smsAuthKey = $('#txtSmsAuthKey').val();
+        var whatsappAuthKey = $('#txtWhatsappAuthKey').val();
+        var smtpHost = $('#txtSmtpHost').val();
+        var smtpUserName = $('#txtSmtpUserName').val();
+        var smtpPort = $('#txtSmtpPort').val();
+        var smtpPassword = $('#txtSmtpPassword').val();
 
         let formData = {
             CompanyConfigId: Number(companyConfigId),
@@ -388,23 +384,22 @@ function UpdateCompConfig(companyConfigId) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response.result == 'success') {
-                    toastr.success("Company Configuration updated successfully!");
-                    $("#AddCompnyConfigDiv").addClass('d-none'); //hide form
+                    toastr.success("Company Configuration Details Updated Successfully!");
+                    $("#addCompanyConfigDiv").addClass('d-none'); //hide form
                     $("#backButton").removeClass('d-none');
                     $("#tableDiv").show();
-                    FetchAllCompConfigList();
+                    FetchCompanyConfiguration();
                 }
                 else
                     return
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to submit Vehicle Type", "Error");
+                toastr.error("Failed to Update Company Configuration Details!", "Error");
             }
         });
     }
 }
-function DeleteCompConfiglist(CompanyConfigrationId) {
+function DeleteCompanyConfiguration(CompanyConfigrationId) {
     var deleteCompConfig = '/CompanyConfiguration/DeleteCompanyConfiguration/' + CompanyConfigrationId;
     $.ajax({
         url: deleteCompConfig,
@@ -412,13 +407,11 @@ function DeleteCompConfiglist(CompanyConfigrationId) {
         dataType: "json",
         data: JSON.stringify(CompanyConfigrationId),
         success: function (response) {
-            toastr.success("Company Configuration Deleted successfully!");
-            FetchAllCompConfigList();
-            console.log("Deleted successfully...");
+            toastr.success("Company Configuration Details Deleted Successfully!");
+            FetchCompanyConfiguration();
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Delete Company Configuration Details!", "Error");
         }
     });
 }

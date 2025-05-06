@@ -1,6 +1,4 @@
 ﻿using RFQ.UI.Application.Interface;
-using RFQ.UI.Domain.Interfaces;
-using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
@@ -35,16 +33,16 @@ namespace RFQ.UI.Application.Provider
             return _customerAdaptor.GetAllCustomer();
         }
 
-        public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto requestDto)
+        public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto gstKycDetailsRequestDto)
         {
-            return await _customerAdaptor.GetGstKycDetails(requestDto);
+            return await _customerAdaptor.GetGstKycDetails(gstKycDetailsRequestDto);
         }
-        public async Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto requestDto)
+        public async Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto panKycDetailRequestDto)
         {
-            return await _customerAdaptor.GetPanKycDetails(requestDto);
+            return await _customerAdaptor.GetPanKycDetails(panKycDetailRequestDto);
         }
 
-        public async Task<IEnumerable<comMstCityDto>> GetAllCity()
+        public async Task<IEnumerable<ComMstCityDto>> GetAllCity()
         {
             return await _customerAdaptor.GetAllCity();
         }
