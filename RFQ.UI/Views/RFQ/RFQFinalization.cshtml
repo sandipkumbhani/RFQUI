@@ -41,114 +41,248 @@
 			<form class="form" id="QRVendorBodyForm" method="post">
 				<input type="number" hidden id="txtQRVendorId" />
 				<div class="card-body border-top p-9">
-					<div class="row pb-9">
+					<div class="row">
 						<!-- Left Section -->
-						<div class="col-xl-6">
-							<div class="row">
-								<div class="row align-items-center mb-4">
-									<label class="form-label col-form-label required fw-semibold fs-6">RFQ No</label>
-									<div class="col-auto">
-										<input type="text" id="RFQNo" class="form-control" placeholder="" />
-									</div>
-									<div class="col-auto">
-										<button id="btnShowData" type="button" class="btn btn-primary me-2">Show Data</button>
-									</div>
+						<div class="col-xl-12">
+							<div class="row align-items-center mb-10">
+								<label class="form-label col-form-label required fw-semibold fs-6">RFQ No</label>
+								<div class="col-auto">
+									<input type="text" class="form-control" placeholder="" oninput="this.value = this.value.toUpperCase()" id="txtRfqNO" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
 								</div>
-							</div>
-							<div class="mb-4">
-								<label class="form-label col-form-label required fw-semibold fs-6">Customer Name </label>
-								<input type="text" class="form-control form-control-solid" placeholder="Customer Name" id="txtCustomerName" disabled />
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">RFQ Expired On</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Expired On" id="txtRFQExpiredon" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Vehicle Req On</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Vehicle Req On" id="txtReqOn" disabled />
-								</div>
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">RFQ On</label>
-									<input type="text" class="form-control form-control-solid" placeholder="RFQ On" id="txtRFQOn" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Vehicle Type" id="txtVehicleType" disabled />
-								</div>
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">Item Name</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Item Name" id="txtItemName" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Special Instructions</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Special Instructions" id="txtInstruction" disabled />
+								<div class="col-auto">
+									<button class="btn btn-primary me-2" type="button" id="btnShowData">Show Data</button>
 								</div>
 							</div>
 						</div>
+						<div class="col-xl-6">
+							<div class="mb-4">
+								<div class="row">
+								</div>
+								<label class="form-label col-form-label fw-semibold fs-6">Customer Name</label>
+								<select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
+										data-control="select2" placeholder="Selection Box" id="txtCustomerName">
+									<option value="">Select a Customer Name</option>
+									<option value="0">Afghanistan</option>
+									<option value="1">Aland Islands</option>
+									<option value="2">Albania</option>
+									<option value="3">Algeria</option>
+								</select>
+							</div>
+							<div class="row">
+								<div class="col-xl-6">
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">RFQ Expired On</label>
+										<input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" />
+									</div>
 
+								</div>
+								<div class="col-xl-6">
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">Vehicle Req On</label>
+										<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xl-6">
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">RFQ On</label>
+										<select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Qty/Vehicle"
+												data-control="select2" placeholder="Qty/Vehicle" id="txtRfqOn">
+											<option value="">Select a Option</option>
+											<option value="0">Qty</option>
+											<option value="1">Vehicle</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-xl-6">
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">Vehicle Type</label>
+										<select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Vehicle Type"
+												data-control="select2" placeholder="Vehicle type" id="txtVehicleType">
+											<option value="">Select a Vehicle Type</option>
+											<option value="0">Afghanistan</option>
+											<option value="1">Aland Islands</option>
+											<option value="2">Albania</option>
+											<option value="3">Algeria</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
 						<!-- Right Section -->
 						<div class="col-xl-6">
 							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">RFQ No</label>
-									<input type="text" class="form-control form-control-solid" placeholder="RFQ No" id="txtRFQNo" disabled />
+								<div class="col-xl-6">
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">RFQ No</label>
+										<input type="text" class="form-control form-control-solid" placeholder="Auto Generated" disabled id="txtRfqNo" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">Origin/From</label>
+										<input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" />
+									</div>
+
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">No. of Vehicles</label>
+										<input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" />
+									</div>
 								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">RFQ Date</label>
-									<input type="text" class="form-control form-control-solid" placeholder="RFQ Date" id="txtRFQDate" disabled />
+								<div class="col-xl-6">
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">RFQ Date</label>
+										<input type="datetime-local" class="form-control" id="txtRfqDate" />
+									</div>
+
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">Destination/To</label>
+										<input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label col-form-label fw-semibold fs-6">Totak Qty in Tons</label>
+										<input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" />
+									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Origin/From</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Origin/From" id="txtOrigin" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">Destination/To</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Destination/To" id="txtDestination" disabled />
-								</div>
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">No. Of Vehicles</label>
-									<input type="text" class="form-control form-control-solid" placeholder="No. Of Vehicles" id="txtNoOfVehicle" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">Total QTY in Tones</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Total QTY in Tones" id="txtTotalQTY" disabled />
-								</div>
-							</div>
-							@* <div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">No.of Vehicles</label>
-									<input type="text" class="form-control form-control-solid" placeholder="No.of Vehicles" id="txtNoOfVehicles" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">Total Qty in Tons</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Total Qty in Tons" id="txtTotalQTY" disabled />
-								</div>
-							</div> *@
-							@* <div class="mb-4 col-xl-6">
-								<label class="form-label col-form-label fw-semibold fs-6">Detention Free Days</label>
-								<input type="number" class="form-control form-control-solid" placeholder="Detention Free Days" id="txtDetentionDays" />
 							</div>
 						</div>
-						<div class="col-xl-12">
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">Special Instructions </label>
-								<input type="text" class="form-control form-control-solid" placeholder="Special Instructions" id="txtInstruction" />
+					</div>
+					<div class="row">
+						<div class="col-xl-3">
+							<div class="mb-4">
+								<label class="form-label col-form-label fw-semibold fs-6">Item Name</label>
+								<input type="text" class="form-control" placeholder="Text" id="txtItemName" />
 							</div>
-						</div> *@
+						</div>
+						<div class="col-xl-9">
+							<div class="mb-4">
+								<label class="form-label col-form-label fw-semibold fs-6">Special Instructions</label>
+								<input type="text" class="form-control" placeholder="Special Instructions" id="txtSpecial" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xl-3">
+							<div class="mb-4">
+								<label class="form-label required col-form-label fw-semibold fs-6">RFQ Status</label>
+								<input type="text" class="form-control" placeholder="status" id="txtStatus" />
+							</div>
+						</div>
+						<div class="col-xl-3">
+							<div class="mb-4">
+								<label class="form-label required col-form-label fw-semibold fs-6">Failure Reason</label>
+								<input type="text" class="form-control" placeholder="reason" id="txtReason" />
+							</div>
+						</div>
+						<div class="col-xl-6">
+							<div class="mb-4">
+								<label class="form-label col-form-label required fw-semibold fs-6">Remarks </label>
+								<input type="text" class="form-control form-control-solid" placeholder="remarks" id="txtremarks" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xl-3">
+							<div class="mb-4">
+								<label class="form-label required col-form-label fw-semibold fs-6">Billing Rate </label>
+								<input type="number" class="form-control" placeholder="Numeric" id="txtBillingRate" />
+							</div>
+						</div>
+						<div class="col-xl-3">
+							<div class="mb-4">
+								<label class="form-label required col-form-label fw-semibold fs-6">Detention Per Day</label>
+								<input type="number" class="form-control" placeholder="Per Day" id="txtPerDay" />
+							</div>
+						</div>
+						<div class="col-xl-3">
+							<div class="mb-4">
+								<label class="form-label required col-form-label fw-semibold fs-6">Detention Free Days</label>
+								<input type="number" class="form-control" placeholder="Free Days" id="txtFreeDays" />
+							</div>
+						</div>
+						<div class="col-xl-3">
+							<div class="mb-4">
+								<label class="form-label required col-form-label fw-semibold fs-6">Margin Amount</label>
+								<input type="number" class="form-control" placeholder="Amount" id="txtAmount" />
+							</div>
+						</div>
 					</div>
 				</div>
+				<div class="mt-8">
+					<div class="card-header p-4">
+						<h4 class="fw-bold m-0 text-lg">Awarded Vendor Details</h4>
+					</div>
+					<div class="ard-card">
+						<table id="datatable_ard" class="table table-striped align-middle border rounded fs-6 gy-5 gs-7 dataTable" style="width:100%">
+							<thead>
+								<tr class="fw-semibold fs-6 text-gray-800">
+									<th>Sr. No.</th>
+									<th>Vendor Name</th>
+									<th>PAN No</th>
+									<th>Vendor Rating</th>
+									<th>Mobile No</th>
+									<th>WhatsApp No</th>
+									<th>Email ID</th>
+									<th>Total Hire Cost</th>
+									<th>Detention Per Day</th>
+									<th>Detention Per Days</th>
+									<th>Margin Amount</th>
+									<th>Vendor Position</th>
+									<th>Assign Order</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1</td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
-				<div class="card-footer d-flex justify-content-start py-4">
-					<button type="button" id="btnSaveForm" class="btn btn-primary me-2">Save</button>
+				<div class="card-footer d-flex justify-content-start py-6 px-9">
+					<button type="button" id="btnSave" class="btn btn-primary me-2">Save</button>
+					<button type="button" id="btnSaveAndNew" class="btn btn-primary">Save & New</button>
 				</div>
 			</form>
 		</div>
