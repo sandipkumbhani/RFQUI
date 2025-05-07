@@ -50,6 +50,15 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
+        public IActionResult QuotationToCustomer()
+        {
+            return View("Views/Quotation/QuotationToCustomer.cshtml");
+        }
+        public IActionResult QuotationToAmendment()
+        {
+            return View("Views/Quotation/QuotationToAmendment.cshtml");
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> UserSave([FromBody] UserRequestDto userRequestDto)
