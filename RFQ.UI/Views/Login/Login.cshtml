@@ -1,139 +1,168 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    Layout = null;
-    ViewData["Title"] = "Login";
+	Layout = null;
+	ViewData["Title"] = "Login";
 }
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | User Form</title>
-    <link rel="shortcut icon" href="/star-html-pro/assets/media/logos/favicon.ico" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <link href="~/css/plugins.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/all.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="~/css/common.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/style.css" rel="stylesheet" type="text/css" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Admin | User Form</title>
+	<link rel="shortcut icon" href="/star-html-pro/assets/media/logos/favicon.ico" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+	<link href="~/css/plugins.bundle.css" rel="stylesheet" type="text/css" />
+	<link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="~/css/all.min.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link href="~/css/common.css" rel="stylesheet" type="text/css" />
+	<link href="~/css/style.css" rel="stylesheet" type="text/css" />
+	<!-- Toastr CSS -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 </head>
 <body>
-
-    <div class="d-flex flex-column flex-root">
-        <div class="d-flex flex-column flex-lg-row flex-column-fluid">
-            <div class="d-flex flex-column flex-lg-row-auto bg-primary w-xl-600px positon-xl-relative">
-                <div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-600px scroll-y">
-                    <div class="d-flex flex-row-fluid flex-column text-center p-5 p-lg-10 pt-lg-20">
-                        <a href="#" class="py-2 py-lg-20">
-                            <img alt="Logo" src="~/images/fulllogo_transparent_nobuffer.png" class="h-30px app-sidebar-logo-default theme-light-show">
-                        </a>
-                        <h1 class="d-none d-lg-block fw-bold text-white fs-2qx pb-5 pb-md-10">
-                            Welcome to Logoipsum
-                        </h1>
-                        <p class="d-none d-lg-block fw-semibold fs-2 text-white">
-                            Plan your blog post by choosing a topic creating <br>
-                            an outline and checking facts
-                        </p>
-                    </div>
-                    <div class="d-none d-lg-block d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-350px" style="background-image: url('images/17.png')"></div>
-                </div>
-            </div>
-            <div class="d-flex flex-column flex-lg-row-fluid py-10">
-                <div class="d-flex flex-center flex-column flex-column-fluid">
-                    <div class="w-lg-500px p-10 p-lg-15 mx-auto">
-                        <form id="loginForm" class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework" method="POST">
-                            <div class="text-center mb-10">
-                                <h1 class="text-gray-900 mb-3">
-                                    Sign In to logoipsum
-                                </h1>
-                                <div class="text-gray-500 fw-semibold fs-4">
-                                   @*  New Here?
+	<div class="d-flex flex-column flex-root">
+		<div class="d-flex flex-column flex-lg-row flex-column-fluid">
+			<div class="d-flex flex-column flex-lg-row-auto bg-primary w-xl-600px positon-xl-relative">
+				<div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-600px scroll-y">
+					<div class="d-flex flex-row-fluid flex-column text-center p-5 p-lg-10 pt-lg-20">
+						<a href="#" class="py-2 py-lg-20">
+							<img alt="Logo" src="~/images/fulllogo_transparent_nobuffer.png" class="h-30px app-sidebar-logo-default theme-light-show">
+						</a>
+						<h1 class="d-none d-lg-block fw-bold text-white fs-2qx pb-5 pb-md-10">
+							Welcome to Logoipsum
+						</h1>
+						<p class="d-none d-lg-block fw-semibold fs-2 text-white">
+							Plan your blog post by choosing a topic creating <br>
+							an outline and checking facts
+						</p>
+					</div>
+					<div class="d-none d-lg-block d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-350px" style="background-image: url('images/17.png')"></div>
+				</div>
+			</div>
+			<div class="d-flex flex-column flex-lg-row-fluid py-10">
+				<div class="d-flex flex-center flex-column flex-column-fluid">
+					<div class="w-lg-500px p-10 p-lg-15 mx-auto">
+						<form id="loginForm" class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework" method="POST">
+							<div class="text-center mb-10">
+								<h1 class="text-gray-900 mb-3">
+									Sign In to logoipsum
+								</h1>
+								<div class="text-gray-500 fw-semibold fs-4">
+									@*  New Here?
                                     <a href="@Url.Content("~/Login/Signup")" class="link-primary fw-bold">
                                         Create an Account
                                     </a> *@
-                                </div>
-                            </div>
-                            <div class="fv-row mb-10 fv-plugins-icon-container">
-                                <label class="form-label fs-6 fw-bold text-gray-900">Email</label>
-                                <input class="form-control form-control-lg form-control-solid"  id="EmailId" type="text" name="EmailId" autocomplete="off" />
-                            </div>
-                            <div class="fv-row mb-10 fv-plugins-icon-container">
-                                <div class="d-flex flex-stack mb-2">
-                                    <label class="form-label fw-bold text-gray-900 fs-6 mb-0">Password</label>
-                                    <a href="/star-html-pro/authentication/sign-in/password-reset.html" class="link-primary fs-6 fw-bold">
-                                        Forgot Password ?
-                                    </a>
-                                </div>
-                                <input  class="form-control form-control-lg form-control-solid" id="Password" type="password" name="password" autocomplete="off" />
-                            </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">
-                                    Sign In
-                                </button>
-                            </div>
-                            <br />
-                            <p id="errorMessage"></p>
+								</div>
+							</div>
+							<div class="fv-row mb-10 fv-plugins-icon-container">
+								<label class="form-label fs-6 fw-bold text-gray-900">Email</label>
+								<input class="form-control form-control-lg form-control-solid" id="EmailId" type="text" name="EmailId" autocomplete="off" />
+							</div>
+							<div class="fv-row mb-10 fv-plugins-icon-container">
+								<div class="d-flex flex-stack mb-2">
+									<label class="form-label fw-bold text-gray-900 fs-6 mb-0">Password</label>
+									<a href="/star-html-pro/authentication/sign-in/password-reset.html" class="link-primary fs-6 fw-bold">
+										Forgot Password ?
+									</a>
+								</div>
+								<input class="form-control form-control-lg form-control-solid" id="Password" type="password" name="password" autocomplete="off" />
+							</div>
+							<div class="text-center">
+								<button type="submit" id="loginButton" class="btn btn-lg btn-primary w-100 mb-5">
+									Sign In
+								</button>
+							</div>
+							<br />
+							<p id="errorMessage"></p>
 
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	@* <script src="js/plugins.bundle.js"></script> *@
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+	<script src="js/datatables.bundle.js"></script>
+	<script src="js/script.js"></script>
+	<!-- Toastr JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script>
 
-    @* <script src="js/plugins.bundle.js"></script> *@
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="js/datatables.bundle.js"></script>
-    <script src="js/script.js"></script>
-    <script>
+		$(document).ready(function () {
+			$("#loginForm").submit(function (event) {
+				event.preventDefault(); // Prevent default form submission
+				// Disable the submit button to prevent multiple clicks
+				$("#loginButton").prop("disabled", true).text("Logging in...");
 
-        $(document).ready(function () {
-            $("#loginForm").submit(function (event) {
-                event.preventDefault(); // Prevent default form submission
+				var email = $("#EmailId").val().trim();
+				var password = $("#Password").val().trim();
+				var passwordPattern = /^(?=.*\d).{6,}$/;
+				var emailPattern =  /^[a-zA-Z0-9._%+-]+\x40[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-                // Disable the submit button to prevent multiple clicks
-                $("#loginButton").prop("disabled", true).text("Logging in...");
-                var formData = {
-                    emailId: $("#EmailId").val(),
-                    password: $("#Password").val()
-                };
-                
-                $.ajax({
-                    type: "POST",
-                    url: "https://localhost:7295/Login/GetToken",
-                    contentType: "application/json",
-                    data: JSON.stringify(formData),
-                    dataType: "json",
-                    headers: {
-                        "Accept": "application/json"
-                    },
-                    success: function (response) {
-                        
-                        if (response != null) {
-                            sessionStorage.setItem("authToken", response.data);
-                            window.location.href = window.location.origin + "/Dashboard/Dashboard";
-                        }
-                        else{
-                        $("#errorMessage").val('<strong style="color: red;">Invalid username or password.</strong>');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        let errorMessage = "Login failed. Please check your credentials.";
+				if (!emailPattern.test(email))
+				{
+					toastr.error("Please Enter a Valid Email ID.");
+					$("#loginButton").prop("disabled", false).text("Login");
+					return;
+				}
+				if (!passwordPattern.test(password))
+				{
+					toastr.error("Password Must be at least 6 Characters and contain a Number.");
+					$("#loginButton").prop("disabled", false).text("Login");
+					return;
+				}
 
-                     // Display error message in red and bold
-                     $("#errorMessage").html('<strong style="color: red;">Invalid username or password.</strong>');
+				var formData = {
+					emailId: email,
+					password: password
+				};
 
-                    },
-                    complete: function () {
-                        // Re-enable the submit button
-                        $("#loginButton").prop("disabled", false).text("Login");
-                    }
-                });
-            });
-        });
-    </script>
-
+				$.ajax({
+					type: "POST",
+					url: "https://localhost:7295/Login/GetToken",
+					contentType: "application/json",
+					data: JSON.stringify(formData),
+					dataType: "json",
+					headers: {
+						"Accept": "application/json"
+					},
+					success: function (response)
+					{
+						if (response != null)
+						{
+							sessionStorage.setItem("authToken", response.data);
+							window.location.href = window.location.origin + "/Dashboard/Dashboard";
+						}
+					   else
+					   {
+							toastr.error("Invalid EmailID or Password.");
+					   }
+					},
+					error: function (xhr, status, error)
+					{
+						if (xhr.status === 400 && xhr.responseJSON)
+						{
+							toastr.error(xhr.responseJSON.join("<br>")); // for model validation messages
+						}
+						else if (xhr.status === 401)
+						{
+							toastr.error("Invalid EmailID or Password.");
+						}
+						else
+						{
+							toastr.error("Server Error. Please try again later.");
+						}
+					},
+					complete: function ()
+					{
+						// Re-enable the submit button
+						$("#loginButton").prop("disabled", false).text("Login");
+					}
+				});
+			});
+		});
+	</script>
 </body>
