@@ -29,5 +29,25 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehicleAdaptor.GetAllOwnerOrVendor();
         }
+
+        public async Task<VehicleRequestDto> AddVehicle(VehicleRequestDto vehicleRequestDto)
+        {
+            return await _vehicleAdaptor.AddVehicle(vehicleRequestDto);
+        }
+
+        public Task<IEnumerable<VehicleResponseDto>> GetAllVehicle()
+        {
+            return _vehicleAdaptor.GetAllVehicle();
+        }
+
+        public Task<string> EditVehicle(VehicleRequestDto vehicleRequestDto)
+        {
+           return _vehicleAdaptor.EditVehicle(vehicleRequestDto);
+        }
+
+        public Task<string> DeleteVehicle(int VehicleId)
+        {
+            return _vehicleAdaptor.DeleteVehicle(VehicleId);
+        }
     }
 }

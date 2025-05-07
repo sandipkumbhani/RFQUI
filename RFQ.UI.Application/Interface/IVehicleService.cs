@@ -10,5 +10,9 @@ namespace RFQ.UI.Application.Interface
         Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto vehicleKycRequestDto);
         Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType();
         Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor();
+        Task<VehicleRequestDto> AddVehicle(VehicleRequestDto vehicleRequestDto);
+        Task<IEnumerable<VehicleResponseDto>> GetAllVehicle();
+        Task<string> EditVehicle(VehicleRequestDto vehicleRequestDto);
+        Task<string> DeleteVehicle(int VehicleId);
     }
 }

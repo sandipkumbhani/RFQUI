@@ -5,6 +5,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Application.Provider;
 
 namespace RFQ.UI.Controllers
 {
@@ -122,6 +123,118 @@ namespace RFQ.UI.Controllers
             try
             {
                 var result = await _vehicleTypeServices.DeleteVehicleType(vehicleTypeId);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewVehicle()
+        {
+            try
+            {
+                var VehicleList = await _vehicleServices.GetAllVehicle();
+
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(VehicleList);
+                }
+                else
+                {
+                    return View(VehicleList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> VehicleSave([FromBody] VehicleRequestDto vehicleRequestDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid) 
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (vehicleRequestDto != null)
+                {
+                    var result = await _vehicleServices.AddVehicle(vehicleRequestDto);
+                    return Json(new { result });
+                }
+                else
+                {
+                    return Json(new { result = "fail" });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}"); 
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateVehicle([FromBody] VehicleRequestDto vehicleRequestDto)
+        {   
+            //try
+            //{
+            //    if (vehicleRequestDto.VehicleId <= 0)
+            //    {
+            //        return Json(new { result = "error", message = "Invalid VehicleId." });
+            //    }
+            //    int vehicleId = vehicleRequestDto.VehicleId;
+            //    var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+            //    string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+            //    vehicleRequestDto.CreatedBy = Convert.ToInt32(profileId);
+            //    vehicleRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+            //    var result = await _vehicleServices.EditVehicle(vehicleId, vehicleRequestDto);
+            //    if (result != null)
+            //    {
+            //        return Json(new { result = "success" });
+            //    }
+            //    else
+            //    {
+            //        return Json(new { result = "failure" });
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return Json(new { result = "error", message = ex.Message });
+            //}
+            try
+            {
+                var result = await _vehicleServices.EditVehicle(vehicleRequestDto);
+                if (result != null)
+                    return Json(new { result = "success" });
+                else
+                    return Json(new { result = "failure" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpDelete("Vehicle/DeleteVehicle/{vehicleId}")]
+        public async Task<IActionResult> DeleteVehicle(int vehicleId)
+        {
+            try
+            {
+                var result = await _vehicleServices.DeleteVehicle(vehicleId);
                 if (result != null)
                 {
                     return Json(new { result = "success" });
