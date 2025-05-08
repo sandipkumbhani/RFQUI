@@ -160,8 +160,8 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> VehicleSave([FromBody] VehicleRequestDto vehicleRequestDto)
+        [HttpPost] 
+        public async Task<IActionResult> VehicleSave([FromBody]VehicleRequestDto vehicleRequestDto)
         {
             try
             {
@@ -173,16 +173,19 @@ namespace RFQ.UI.Controllers
                 if (vehicleRequestDto != null)
                 {
                     var result = await _vehicleServices.AddVehicle(vehicleRequestDto);
-                    return Json(new { result });
+                    if (!String.IsNullOrEmpty(result))
+                    {
+                        return Json(new { result = "success" });
+                    }
+                    else
+                    {
+                        return Json(new { result = "fail" });
+                    }
                 }
-                else
-                {
-                    return Json(new { result = "fail" });
-                }
+                return Json(new { result = "fail" });
             }
             catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}"); 
+            { 
                 throw new Exception(ex.Message);
             }
         }
@@ -218,7 +221,7 @@ namespace RFQ.UI.Controllers
             try
             {
                 var result = await _vehicleServices.EditVehicle(vehicleRequestDto);
-                if (result != null)
+                if (!String.IsNullOrEmpty(result))
                     return Json(new { result = "success" });
                 else
                     return Json(new { result = "failure" });
@@ -235,7 +238,7 @@ namespace RFQ.UI.Controllers
             try
             {
                 var result = await _vehicleServices.DeleteVehicle(vehicleId);
-                if (result != null)
+                if (!String.IsNullOrEmpty(result))
                 {
                     return Json(new { result = "success" });
                 }

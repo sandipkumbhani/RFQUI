@@ -125,7 +125,7 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<VehicleRequestDto> AddVehicle(VehicleRequestDto vehicleRequestDto)
+        public async Task<string> AddVehicle(VehicleRequestDto vehicleRequestDto)
         {
             try
             {
@@ -142,19 +142,19 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (result == 200)
                     {
-                        return JsonConvert.DeserializeObject<VehicleRequestDto>(responseModel.Data.ToString());
+                        return responseModel.Message;
                     }
                     else
                     {
-                        return null;
+                        return string.Empty;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return null;
+            return string.Empty;
         }
 
         public async Task<IEnumerable<VehicleResponseDto>> GetAllVehicle()
@@ -172,7 +172,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     return Vehiclelist;
                 }
                 return null;
-            }
+            } 
             catch (Exception)
             {
                 throw;
@@ -210,7 +210,7 @@ namespace RFQ.UI.Infrastructure.Provider
 
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Vehicle:UpdateVehicle"] + "/" + vehicleRequestDto.VehicleId;
+                var baseurl = _fleetLynkApiUrl + _config["Vehicle:UpdateVehicle"] + vehicleRequestDto.VehicleId;
                 var user = JsonConvert.SerializeObject(vehicleRequestDto);
                 var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -220,11 +220,11 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                        return "Vehicle Updated...";
+                        return responseModel.Message;
                     else
-                        return responseModel.ErrorMessage ?? string.Empty;
+                        return string.Empty;
                 }
-                return "Failed to Update Vehicle";
+                return string.Empty;
             }
             catch (Exception)
             {
@@ -246,16 +246,16 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                        return "Vehicle Deleted";
+                        return responseModel.Message;
                     else
-                        return responseModel.ErrorMessage;
+                        return string.Empty;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return "Failed to Delete Vehicle";
+            return string.Empty;
         }
     }
 }
