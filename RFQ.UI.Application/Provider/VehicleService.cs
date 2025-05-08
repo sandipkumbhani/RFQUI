@@ -30,7 +30,7 @@ namespace RFQ.UI.Application.Provider
             return await _vehicleAdaptor.GetAllOwnerOrVendor();
         }
 
-        public async Task<VehicleRequestDto> AddVehicle(VehicleRequestDto vehicleRequestDto)
+        public async Task<String> AddVehicle(VehicleRequestDto vehicleRequestDto)
         {
             return await _vehicleAdaptor.AddVehicle(vehicleRequestDto);
         }

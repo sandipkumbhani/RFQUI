@@ -6,7 +6,7 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface IVehicleAdaptor
     {
-        Task<VehicleRequestDto> AddVehicle(VehicleRequestDto vehicleRequestDto);
+        Task<String> AddVehicle(VehicleRequestDto vehicleRequestDto);
         Task<IEnumerable<VehicleResponseDto>> GetAllVehicle();
         Task<string> EditVehicle(VehicleRequestDto vehicleRequestDto);
         Task<string> DeleteVehicle(int VehicleId);
