@@ -12,7 +12,7 @@ namespace RFQ.UI.Application.Interface
         Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor();
         Task<String> AddVehicle(VehicleRequestDto vehicleRequestDto);
         Task<IEnumerable<VehicleResponseDto>> GetAllVehicle();
-        Task<string> EditVehicle(VehicleRequestDto vehicleRequestDto);
-        Task<string> DeleteVehicle(int VehicleId);
+        Task<string> EditVehicle(int vehicleId, VehicleRequestDto vehicleRequestDto);
+        Task<string> DeleteVehicle(int vehicleId);
     }
 }

@@ -1,6 +1,4 @@
-﻿const urlParams = new URLSearchParams(window.location.search);
-const linkId = urlParams.get('LinkId');
-
+﻿const linkId = GetQueryParam("LinkId");
 $(document).ready(function () {
 
     $(document).on("click", "#btnView", function () {
@@ -110,7 +108,8 @@ function SaveVehicle(action) {
         PermitExpiryDate: permitExpDate ? new Date(permitExpDate).toISOString() : null,
         NPExpiryDate: npExpDate ? new Date(npExpDate).toISOString() : null,
         PolicyNo: policyNo,
-        PolicyExpiryDate: policyExpDate ? new Date(policyExpDate).toISOString() : null
+        PolicyExpiryDate: policyExpDate ? new Date(policyExpDate).toISOString() : null,
+        LinkId: linkId
     };
     debugger;
     console.log(formData);
@@ -287,7 +286,8 @@ function UpdateVehicle() {
             PermitExpiryDate: $("#permitExpiryInput").val() ? new Date($("#permitExpiryInput").val()).toISOString() : null,
             NPExpiryDate: $("#npExpiryInput").val() ? new Date($("#npExpiryInput").val()).toISOString() : null,
             PolicyNo: $("#policyNoInput").val(),
-            PolicyExpiryDate: $("#policyExpiryInput").val() ? new Date($("#policyExpiryInput").val()).toISOString() : null
+            PolicyExpiryDate: $("#policyExpiryInput").val() ? new Date($("#policyExpiryInput").val()).toISOString() : null,
+            LinkId : linkId
         };
         console.log(formData);
         var editVehicle = '/Vehicle/UpdateVehicle';

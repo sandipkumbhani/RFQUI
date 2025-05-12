@@ -5,7 +5,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using RFQ.UI.Application.Provider;
+
 
 namespace RFQ.UI.Controllers
 {
@@ -165,13 +165,17 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) 
-                {
-                    return BadRequest(ModelState);
-                }
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
 
                 if (vehicleRequestDto != null)
                 {
+                    vehicleRequestDto.CreatedBy = Convert.ToInt32(companyId);
+                    vehicleRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                    vehicleRequestDto.CreatedOn = DateTime.Now;
+                    vehicleRequestDto.UpdatedOn = DateTime.Now;
                     var result = await _vehicleServices.AddVehicle(vehicleRequestDto);
                     if (!String.IsNullOrEmpty(result))
                     {
@@ -193,34 +197,18 @@ namespace RFQ.UI.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateVehicle([FromBody] VehicleRequestDto vehicleRequestDto)
         {   
-            //try
-            //{
-            //    if (vehicleRequestDto.VehicleId <= 0)
-            //    {
-            //        return Json(new { result = "error", message = "Invalid VehicleId." });
-            //    }
-            //    int vehicleId = vehicleRequestDto.VehicleId;
-            //    var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-            //    string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-            //    vehicleRequestDto.CreatedBy = Convert.ToInt32(profileId);
-            //    vehicleRequestDto.UpdatedBy = Convert.ToInt32(profileId);
-            //    var result = await _vehicleServices.EditVehicle(vehicleId, vehicleRequestDto);
-            //    if (result != null)
-            //    {
-            //        return Json(new { result = "success" });
-            //    }
-            //    else
-            //    {
-            //        return Json(new { result = "failure" });
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    return Json(new { result = "error", message = ex.Message });
-            //}
             try
             {
-                var result = await _vehicleServices.EditVehicle(vehicleRequestDto);
+                int vehicleId = vehicleRequestDto.VehicleId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                vehicleRequestDto.CreatedBy = Convert.ToInt32(companyId);
+                vehicleRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                vehicleRequestDto.CreatedOn = DateTime.Now;
+                vehicleRequestDto.UpdatedOn = DateTime.Now;
+
+                var result = await _vehicleServices.EditVehicle(vehicleId,vehicleRequestDto);
                 if (!String.IsNullOrEmpty(result))
                     return Json(new { result = "success" });
                 else

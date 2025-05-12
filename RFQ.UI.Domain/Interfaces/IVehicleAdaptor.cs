@@ -8,12 +8,10 @@ namespace RFQ.UI.Domain.Interfaces
     {
         Task<String> AddVehicle(VehicleRequestDto vehicleRequestDto);
         Task<IEnumerable<VehicleResponseDto>> GetAllVehicle();
-        Task<string> EditVehicle(VehicleRequestDto vehicleRequestDto);
-        Task<string> DeleteVehicle(int VehicleId);
+        Task<string> EditVehicle(int vehicleId,VehicleRequestDto vehicleRequestDto);
+        Task<string> DeleteVehicle(int vehicleId);
         Task<IEnumerable<InternalMasterModel>> GetAllVehicleCategory();
-
         Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto vehicleKycRequestDto);
-
         Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType();
         Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor();
     }

@@ -5,7 +5,6 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
-using System.Net.Http;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -172,47 +171,23 @@ namespace RFQ.UI.Infrastructure.Provider
                     return Vehiclelist;
                 }
                 return null;
-            } 
+            }
             catch (Exception)
             {
                 throw;
             }
         }
 
-        public async Task<string> EditVehicle(VehicleRequestDto vehicleRequestDto)
+        public async Task<string> EditVehicle(int vehicleId, VehicleRequestDto vehicleRequestDto)
         {
-            //try
-            //{
-            //    _httpClient = new HttpClient();
-            //    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            //    var baseurl = _fleetLynkApiUrl + _config["Vehicle:UpdateVehicle"] + VehicleId;
-            //    var vehicle = JsonConvert.SerializeObject(vehicleRequestDto);
-            //    var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
-            //    var response = await _httpClient.PutAsync(baseurl, requestContent);
-            //    var responseData = await response.Content.ReadAsStringAsync();
-            //    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-            //    if (responseModel != null)
-            //    {
-            //        var result = responseModel.StatusCode;
-            //        if (result == 200)
-            //            return "Vehicle Updated";
-            //        else
-            //            return responseModel.ErrorMessage;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
-            //return "Failed to update Vehicle";
             try
             {
 
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Vehicle:UpdateVehicle"] + vehicleRequestDto.VehicleId;
-                var user = JsonConvert.SerializeObject(vehicleRequestDto);
-                var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
+                var baseurl = _fleetLynkApiUrl + _config["Vehicle:UpdateVehicle"] + vehicleId;
+                var vehicle = JsonConvert.SerializeObject(vehicleRequestDto);
+                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
@@ -232,13 +207,13 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<string> DeleteVehicle(int VehicleId)
+        public async Task<string> DeleteVehicle(int vehicleId)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Vehicle:DeleteVehicle"] + VehicleId;
+                var baseurl = _fleetLynkApiUrl + _config["Vehicle:DeleteVehicle"] + vehicleId;
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);

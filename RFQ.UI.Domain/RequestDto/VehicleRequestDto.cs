@@ -33,8 +33,11 @@
         public decimal GrossWeight { get; set; }
         public decimal UnladenWeight { get; set; }
         public DateTime? TaxExpiryDate { get; set; }
-        //public int LinkId { get; set; }
-        //public int CreatedBy { get; set; }
-        //public int UpdatedBy { get; set; }
+        public int LinkId { get; set; }
+        public int StatusId { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public int UpdatedBy { get; set; }
+        public DateTime UpdatedOn { get; set; }
     }
 }
