@@ -1,4 +1,5 @@
-﻿var locationResponseDto;
+﻿
+var locationResponseDto;
 $(document).ready(function () {
     Initialization();
     GetAllCityList();
@@ -173,8 +174,10 @@ function SaveLocation(action) {
     var mobileNumber = $("#txtMobileNumber").val();
     var whatsAppNumber = $("#txtWhatsAppNumber").val();
     var email = $("#txtEmail").val();
+    var linkid = GetQueryParam("LinkId");
 
     var formdata = {
+        LinkId: linkid,
         LocationName: locationname,
         AddressLine: address,
         CityId: city,
@@ -230,7 +233,7 @@ function UpdateLocation() {
         if (!isvalid) {
             return;
         }
-
+        debugger
         var locationmodel = {
             LocationId: $('#hdnLocationId').val(),
             LocationName: $('#txtLocationName').val(),
@@ -241,9 +244,9 @@ function UpdateLocation() {
             ContactNo: $("#txtContactNumber").val(),
             MobNo: $("#txtMobileNumber").val(),
             WhatsAppNo: $("#txtWhatsAppNumber").val(),
-            Email: $("#txtEmail").val()
+            Email: $("#txtEmail").val(),
+            LinkId: GetQueryParam("LinkId")
         };
-      
         var editlocationlist = '/Location/EditLocationList';
         $.ajax({
             type: "PUT",
