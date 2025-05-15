@@ -4,6 +4,9 @@
     Layout = "_Layout";
     ViewData["Title"] = "QuoteRate";
 }
+@section Scripts {
+    <script src="~/js/Views/QuoteRate.js"></script>
+}
 
 <div class="app-toolbar  pt-3 px-lg-3">
     <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
@@ -55,13 +58,7 @@
                                     </div>
                                 </div>
                                 <label class="form-label col-form-label required fw-semibold fs-6">Customer Name</label>
-                                <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
-                                        data-control="select2" placeholder="Selection Box" id="txtCustomerName">
-                                    <option value="">Select a Customer Name</option>
-                                    <option value="0">Afghanistan</option>
-                                    <option value="1">Aland Islands</option>
-                                    <option value="2">Albania</option>
-                                    <option value="3">Algeria</option>
+                                <select class="selectpicker" aria-label="Select Customer Name" id="ddlCustomerName" data-live-search="true" data-width="100%">
                                 </select>
                             </div>
                             <div class="row">
@@ -93,13 +90,7 @@
                                 <div class="col-xl-6">
                                     <div class="mb-4">
                                         <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
-                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Vehicle Type"
-                                                data-control="select2" placeholder="Vehicle type" id="txtVehicleType">
-                                            <option value="">Select a Vehicle Type</option>
-                                            <option value="0">Afghanistan</option>
-                                            <option value="1">Aland Islands</option>
-                                            <option value="2">Albania</option>
-                                            <option value="3">Algeria</option>
+                                        <select class="selectpicker" aria-label="Select Vehicle Type" id="ddlVehicleType" data-live-search="true" data-width="100%">
                                         </select>
                                     </div>
                                 </div>
@@ -125,18 +116,12 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label col-form-label  fw-semibold fs-6">Item Name</label>
-                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
-                                                data-control="select2" placeholder="Selection Box" id="txtItemName">
-                                            <option value="">Select a Item Name</option>
-                                            <option value="0">Afghanistan</option>
-                                            <option value="1">Aland Islands</option>
-                                            <option value="2">Albania</option>
-                                            <option value="3">Algeria</option>
+                                        <select class="selectpicker" aria-label="Select Item Name" id="ddlItemName" data-live-search="true" data-width="100%">
                                         </select>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label col-form-label required fw-semibold fs-6">No. of Vehicles</label>
-                                        <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" />
+                                        <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" onkeypress="return isNumber(event)"/>
                                     </div>
                                 </div>
                                 <div class="col-xl-6">
@@ -166,7 +151,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label col-form-label fw-semibold fs-6">Total Qty in Tons</label>
-                                        <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" />
+                                        <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" onkeypress="return isNumber(event)" />
                                     </div>
                                 </div>
                             </div>
