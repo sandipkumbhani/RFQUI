@@ -147,7 +147,7 @@ function SaveVehicleType(action) {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    toastr.success("m Type Details Submitted Successfully!");
+                    toastr.success("Vehicle Type Details Submitted Successfully!");
                     $('#VehicleTypeForm')[0].reset();
                 },
                 error: function (xhr, status, error) {

@@ -49,7 +49,6 @@ namespace RFQ.UI.Controllers
             }
         }
 
-
         [HttpPut]
         public async Task<IActionResult> EditCorporateCompany([FromBody] CorporateCompanyRequestDto corporateCompanyRequestDto)
         {

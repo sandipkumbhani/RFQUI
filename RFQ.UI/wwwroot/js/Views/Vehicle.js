@@ -1,6 +1,4 @@
-﻿const urlParams = new URLSearchParams(window.location.search);
-const linkId = urlParams.get('LinkId');
-
+﻿const linkId = GetQueryParam("LinkId");
 $(document).ready(function () {
 
     $(document).on("click", "#btnView", function () {
@@ -12,7 +10,7 @@ $(document).ready(function () {
 
     $("#btnSaveVehicle, #btnSaveNewVehicle").on('click', function () {
         var action = $(this).data('action');
-        SaveAndSaveNew(action);
+        SaveVehicle(action);
     });
 
     $('#backButton').click(function () {
@@ -20,7 +18,7 @@ $(document).ready(function () {
       
     });
 
-    $("#cancleButton").on('click', function () {
+    $("#btnCancel").on('click', function () {
         FetchVehicleList();
         $("#addVehicleDiv").hide();
         $("#tableDiv").show();
@@ -30,14 +28,15 @@ $(document).ready(function () {
     GetAllOwnerOrVendor();
     GetAllVehicleCategory();
     GetAllVehicleTypeList();
-    InitializeFields();
-    VehicleEKycclick();
+    CheckValidation();
+    VehicleEKycClick();
     UpdateVehicle();
+
+
 });
+function SaveVehicle(action) {
 
-function SaveAndSaveNew(action) {
-
-    var isValid = ValidationCheck();
+    var isValid = OnSubmitValidation();
     if (!isValid) {
         return;
     }
@@ -51,7 +50,7 @@ function SaveAndSaveNew(action) {
     var trackingProvider = 1;
     var vehicleStatus = $("#vehicleStatusInput").val();
     var blacklistStatus = $("#blacklistStatusInput").val();
-    var redgOwner = $("#regdOwnerInput").val();
+    var regdOwner = $("#regdOwnerInput").val();
     var engineNo = $("#engineNoInput").val();
     var chasisNo = $("#chasisNoInput").val();
     var makeModel = $("#makeModelInput").val();
@@ -72,11 +71,11 @@ function SaveAndSaveNew(action) {
     var permitNo = $("#permitNoInput").val();
     var permitExpDate = $("#permitExpiryInput").val();
     var npExpDate = $("#npExpiryInput").val();
-    var vehicleCapacity = $("#vehicleCapacityInput").val();
     var policyNo = $("#policyNoInput").val();
     var policyExpDate = $("#policyExpiryInput").val();
 
-
+    console.log(vehicleType)
+    console.log(vehicleCategory)
 
     var saveUrl = '/Vehicle/VehicleSave';
     var formData = {
@@ -88,30 +87,31 @@ function SaveAndSaveNew(action) {
         TrackingProviderId: trackingProvider,
         VehicleStatus: vehicleStatus,
         BlacklistStatus: blacklistStatus,
-        RegdOwner: redgOwner,
+        RegdOwner: regdOwner,
         EngineNo: engineNo,
         ChassisNo: chasisNo,
         MakeModel: makeModel,
-        PUCExpiryDate: pucExpDate,
+        PUCExpiryDate: pucExpDate ? new Date(pucExpDate).toISOString() : null,
         Financer: financer,
         OwnerSerialNo: ownerSerialNo,
         NPNo: npNo,
         InsuranceCo: insuranceNo,
-        VerifiedOn: verifiedOn,
-
+        VerifiedOn: verifiedOn ? new Date(verifiedOn).toISOString() : null,
         RTORegistration: rtoRegistration,
-        RegistrationDate: registrationDate,
+        RegistrationDate: registrationDate ? new Date(registrationDate).toISOString() : null,
         PermanentAddress: permanentAddress,
-        GrossWeight: grossWeight,
-        UnladenWeight: unladenWeight,
-        FitnessExpiryDate: fitnessExpDate,
-        TaxExpiryDate: taxExpDate,
+        GrossWeight: parseFloat(grossWeight).toFixed(2),
+        UnladenWeight: parseFloat(unladenWeight).toFixed(2),
+        FitnessExpiryDate: fitnessExpDate ? new Date(fitnessExpDate).toISOString() : null,
+        TaxExpiryDate: taxExpDate ? new Date(taxExpDate).toISOString() : null,
         PermitNo: permitNo,
-        PermitExpiryDate: permitExpDate,
-        NPExpiryDate: npExpDate,
+        PermitExpiryDate: permitExpDate ? new Date(permitExpDate).toISOString() : null,
+        NPExpiryDate: npExpDate ? new Date(npExpDate).toISOString() : null,
         PolicyNo: policyNo,
-        PolicyExpiryDate: policyExpDate
+        PolicyExpiryDate: policyExpDate ? new Date(policyExpDate).toISOString() : null,
+        LinkId: linkId
     };
+    debugger;
     console.log(formData);
     if (action === "save") {
         $.ajax({
@@ -120,16 +120,14 @@ function SaveAndSaveNew(action) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response) {
+                if (response.result == "success") {
                     window.location.href = "../Dashboard/Dashboard";
-                    toastr.success("Vehicle details submitted successfully!");
                 } else {
                     toastr.error("Something went wrong!");
                 }
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to submit vehicle details", "Error");
+                toastr.error("Failed to Submit Vehicle Details", "Error");
             }
         });
     } else {
@@ -139,20 +137,24 @@ function SaveAndSaveNew(action) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response) {
-                    toastr.success("Vehicle details submitted successfully!");
+                if (response.result == "success") {
+                    toastr.success("Vehicle Details Submitted Successfully!");
+                    $("#vehicleForm")[0].reset();
+                    $("#ddlVehicleCategory").val("");
+                    $("#ddlVehicleType").val("");
+                    $("#ddlOwnerName").val("");
+                    $("#ddlTrackingProvider").val("");
+                    $(".selectpicker").selectpicker("refresh");
                 } else {
                     toastr.error("Something went wrong!");
                 }
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to submit vehicle details", "Error");
+                toastr.error("Failed to Submit Vehicle Details", "Error");
             }
         });
     }
 }
-
 function EditVehicle(vehicleId) {
     var data = vehicleResponse.filter(x => x.vehicleId === vehicleId);
     var formData = data[0];
@@ -163,7 +165,7 @@ function EditVehicle(vehicleId) {
     $("#addVehicleDiv").css('display', 'Block');
     $("#btnSaveVehicle").hide();
     $("#btnUpdateVehicle").show();
-    $("#cancleButton").removeClass('d-none');
+    $("#btnCancel").removeClass('d-none');
     $("#btnSaveNewVehicle").hide();
     $("#btnView").hide();
 
@@ -212,16 +214,49 @@ function EditVehicle(vehicleId) {
     var poliExpDate = new Date(formData.policyExpiryDate).toLocaleDateString('en-CA');
     $("#policyExpiryInput").val(poliExpDate);
 }
-
 function UpdateVehicle() {
     $("#btnUpdateVehicle").on('click', function (e) {
         e.preventDefault();
-        var isvalid = ValidationCheck();
+        var isvalid = OnSubmitValidation();
         if (!isvalid) {
             return;
         }
 
+        //var formData = {
+        //    VehicleId: $("#hdVehicleId").val(),
+        //    VehicleNo: $("#vehicleNo").val(),
+        //    VehicleCategoryId: $("#ddlVehicleCategory").val(),
+        //    VehicleTypeId: $("#ddlVehicleType").val(),
+        //    VehicleCapacity: $("#vehicleCapacity").val(),
+        //    OwnerVendorId: $("#ddlOwnerName").val(),
+        //    TrackingProviderId: 1,
+        //    VehicleStatus: $("#vehicleStatusInput").val(),
+        //    BlacklistStatus: $("#blacklistStatusInput").val(),
+        //    RegdOwner: $("#regdOwnerInput").val(),
+        //    EngineNo: $("#engineNoInput").val(),
+        //    ChassisNo: $("#chasisNoInput").val(),
+        //    MakeModel: $("#makeModelInput").val(),
+        //    PUCExpiryDate: $("#pucExpiryInput").val(),
+        //    Financer: $("#financerInput").val(),
+        //    OwnerSerialNo: $("#ownerSerialNoInput").val(),
+        //    NPNo: $("#npNoInput").val(),
+        //    InsuranceCo: $("#insuranceCoInput").val(),
+        //    VerifiedOn: $("#verifiedOnInput").val(),
+        //    RTORegistration: $("#rtoRegistrationInput").val(),
+        //    RegistrationDate: $("#registrationDateInput").val(),
+        //    PermanentAddress: $("#permanentAddressInput").val(),
+        //    GrossWeight: $("#grossWeightInput").val(),
+        //    UnladenWeight: $("#unladenWeightInput").val(),
+        //    FitnessExpiryDate: $("#fitnessExpiryInput").val(),
+        //    TaxExpiryDate: $("#taxExpiryInput").val(),
+        //    PermitNo: $("#permitNoInput").val(),
+        //    PermitExpiryDate: $("#permitExpiryInput").val(),
+        //    NPExpiryDate: $("#npExpiryInput").val(),
+        //    PolicyNo: $("#policyNoInput").val(),
+        //    PolicyExpiryDate: $("#policyExpiryInput").val()
+        //};
         var formData = {
+            VehicleId: $("#hdVehicleId").val(),
             VehicleNo: $("#vehicleNo").val(),
             VehicleCategoryId: $("#ddlVehicleCategory").val(),
             VehicleTypeId: $("#ddlVehicleType").val(),
@@ -234,26 +269,27 @@ function UpdateVehicle() {
             EngineNo: $("#engineNoInput").val(),
             ChassisNo: $("#chasisNoInput").val(),
             MakeModel: $("#makeModelInput").val(),
-            PUCExpiryDate: $("#pucExpiryInput").val(),
+            PUCExpiryDate: $("#pucExpiryInput").val() ? new Date($("#pucExpiryInput").val()).toISOString() : null,
             Financer: $("#financerInput").val(),
             OwnerSerialNo: $("#ownerSerialNoInput").val(),
             NPNo: $("#npNoInput").val(),
             InsuranceCo: $("#insuranceCoInput").val(),
-            VerifiedOn: $("#verifiedOnInput").val(),
+            VerifiedOn: $("#verifiedOnInput").val() ? new Date($("#verifiedOnInput").val()).toISOString() : null,
             RTORegistration: $("#rtoRegistrationInput").val(),
-            RegistrationDate: $("#registrationDateInput").val(),
+            RegistrationDate: $("#registrationDateInput").val() ? new Date($("#registrationDateInput").val()).toISOString() : null,
             PermanentAddress: $("#permanentAddressInput").val(),
-            GrossWeight: $("#grossWeightInput").val(),
-            UnladenWeight: $("#unladenWeightInput").val(),
-            FitnessExpiryDate: $("#fitnessExpiryInput").val(),
-            TaxExpiryDate: $("#taxExpiryInput").val(),
+            GrossWeight: parseFloat($("#grossWeightInput").val()).toFixed(2),
+            UnladenWeight: parseFloat($("#unladenWeightInput").val()).toFixed(2),
+            FitnessExpiryDate: $("#fitnessExpiryInput").val() ? new Date($("#fitnessExpiryInput").val()).toISOString() : null,
+            TaxExpiryDate: $("#taxExpiryInput").val() ? new Date($("#taxExpiryInput").val()).toISOString() : null,
             PermitNo: $("#permitNoInput").val(),
-            PermitExpiryDate: $("#permitExpiryInput").val(),
-            NPExpiryDate: $("#npExpiryInput").val(),
+            PermitExpiryDate: $("#permitExpiryInput").val() ? new Date($("#permitExpiryInput").val()).toISOString() : null,
+            NPExpiryDate: $("#npExpiryInput").val() ? new Date($("#npExpiryInput").val()).toISOString() : null,
             PolicyNo: $("#policyNoInput").val(),
-            PolicyExpiryDate: $("#policyExpiryInput").val()
+            PolicyExpiryDate: $("#policyExpiryInput").val() ? new Date($("#policyExpiryInput").val()).toISOString() : null,
+            LinkId : linkId
         };
-
+        console.log(formData);
         var editVehicle = '/Vehicle/UpdateVehicle';
         $.ajax({
             type: "PUT",
@@ -263,21 +299,20 @@ function UpdateVehicle() {
             dataType: "json",
             success: function (result) {
                 if (result.result === "success") {
-                    toastr.success("Vehicle Updated successfully!", "Success");
+                    toastr.success("Vehicle Details Updated Successfully!");
                     $("#addVehicleDiv").css('display', 'none');
                     FetchVehicleList();
                     $("#backButton").css('display', 'block');
                 } else {
-                    toastr.error("Failed to Update Vehicle", "Error");
+                    toastr.error("Failed to Update Vehicle Details", "Error");
                 }
             },
             error: function (xhr, status, error) {
-                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
+                toastr.error("Failed to Update Vehicle Details", "Error");
             }
         });
     });
 }
-
 function DeleteVehicle(vehicleId) {
     var deleteVehicle = `/Vehicle/DeleteVehicle/${vehicleId}`;
 
@@ -287,20 +322,19 @@ function DeleteVehicle(vehicleId) {
         dataType: "json",
         success: function (response) {
             if (response && response.result === "success") {
-                toastr.success("Vehicle Detail Deleted successfully!");
+                toastr.success("Vehicle Details Deleted Successfully!");
+                $("#addVehicleDiv").css('display', 'none');
                 FetchVehicleList();
-                console.log("Deleted successfully...");
+                $("#backButton").css('display', 'block');
             } else {
-                toastr.error("Unexpected response received.", "Error");
+                toastr.error("Failed to Delete Vehicle Details!", "Error");
             }
         },
         error: function (xhr, status, error) {
-            console.error("Error:", xhr.status, xhr.statusText, xhr.responseText);
-            toastr.error("Failed to delete vehicle detail!", "Error");
+            toastr.error("Failed to Delete Vehicle Details!", "Error");
         }
     });
 }
-
 function FetchVehicleList() {
     $("#tableDiv").show();
     var fetchVehicleUrl = '/Vehicle/ViewVehicle';
@@ -356,24 +390,23 @@ function FetchVehicleList() {
             });
         },
         error: function (xhr, status, error) {
-            console.error("Error fetching data:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 
 }
-function isValidVehicleNumber(vehicleNumber) {
+function IsValidVehicleNumber(vehicleNumber) {
     var pattern = /^([A-Z]{2}\d{1,2}[A-Z]{1,2}\d{4})$/;
     return pattern.test(vehicleNumber);
 }
-
-function VehicleEKycclick() {
+function VehicleEKycClick() {
     $("#btnVehicleKyc").on("click", function () {
         var getUrl = '/Vehicle/GetVehicleKycDetails';
         var vehicleNo = $("#vehicleNo").val();
 
-        if (!isValidVehicleNumber(vehicleNo)) {
+        if (!IsValidVehicleNumber(vehicleNo)) {
             toastr.warning("Please enter a valid Vehicle No", "Validation Error");
+            ClearFields();
             return false;
         }
 
@@ -386,47 +419,49 @@ function VehicleEKycclick() {
             contentType: "application/json charset=utf-8",
             data: JSON.stringify(Body),
             success: function (response) {
-                //var Data = response;
                 var rcModel = response.vehicleRCModel;
-                console.log(response);
-
-                $("#vehicleNo").val(rcModel.vehicleNo);
-                //$("#ownerName").val(rcModel.ownerName);
-                //$("#vehicleCategory").val(rcModel.vehicleCategory);
-                $("#vehicleStatusInput").val(rcModel.vehicleRCStatus);
-                $("#blacklistStatusInput").val(rcModel.nonUseStatus);
-                $("#regdOwnerInput").val(rcModel.ownerName);
-                $("#engineNoInput").val(rcModel.vehicleEngineNumber);
-                $("#chasisNoInput").val(rcModel.vehicleChassisNumber);
-                $("#makeModelInput").val(rcModel.vehicleMakerModel);
-                $("#pucExpiryInput").val(new Date(rcModel.pucExpiryDate).toISOString().split('T')[0]);
-                $("#financerInput").val(rcModel.financier);
-                $("#ownerSerialNoInput").val(rcModel.ownerSerialNo);
-                $("#npNoInput").val(rcModel.nationalPermitNumber);
-                $("#insuranceCoInput").val(rcModel.insuranceCompany);
-                $("#verifiedOnInput").val(new Date(rcModel.issueDate).toISOString().split('T')[0]);
-                $("#rtoRegistrationInput").val(rcModel.registeredAt);
-                $("#registrationDateInput").val(new Date(rcModel.issueDate).toISOString().split('T')[0]);
-                $("#permanentAddressInput").val(rcModel.permanentAddress);
-                $("#grossWeightInput").val(rcModel.vehicleGrossWeight);
-                $("#unladenWeightInput").val(rcModel.vehicleUnladenWeight);
-                $("#fitnessExpiryInput").val(new Date(rcModel.expiryDate).toISOString().split('T')[0]);
-                $("#taxExpiryInput").val(new Date(rcModel.taxEndDate).toISOString().split('T')[0]);
-                $("#permitNoInput").val(rcModel.permitNumber);
-                $("#permitExpiryInput").val(new Date(rcModel.permitExpiryDate).toISOString().split('T')[0]);
-                $("#npExpiryInput").val(new Date(rcModel.nationalPermitExpiryDate).toISOString().split('T')[0]);
-                $("#vehicleCapacityInput").val(rcModel.vehicleUnladenWeight);
-                $("#policyNoInput").val(rcModel.pucNumber);
-                $("#policyExpiryInput").val(new Date(rcModel.pucExpiryDate).toISOString().split('T')[0]);
+                console.log(rcModel)
+                if (rcModel != null) {
+                    $("#vehicleNo").val(rcModel.vehicleNo);
+                    $("#vehicleStatusInput").val(rcModel.vehicleRCStatus);
+                    $("#blacklistStatusInput").val(rcModel.nonUseStatus);
+                    $("#regdOwnerInput").val(rcModel.ownerName);
+                    $("#engineNoInput").val(rcModel.vehicleEngineNumber);
+                    $("#chasisNoInput").val(rcModel.vehicleChassisNumber);
+                    $("#makeModelInput").val(rcModel.vehicleMakerModel);
+                    console.log(rcModel.pucExpiryDate)
+                    rcModel.pucExpiryDate ? $("#pucExpiryInput").val(new Date(rcModel.pucExpiryDate).toISOString().split('T')[0]) : "";
+                    $("#financerInput").val(rcModel.financier);
+                    $("#ownerSerialNoInput").val(rcModel.ownerSerialNo);
+                    $("#npNoInput").val(rcModel.nationalPermitNumber);
+                    $("#insuranceCoInput").val(rcModel.insuranceCompany);
+                    rcModel.issueDate ? $("#verifiedOnInput").val(new Date(rcModel.issueDate).toISOString().split('T')[0]) : "";
+                    $("#rtoRegistrationInput").val(rcModel.registeredAt);
+                    rcModel.issueDate ? $("#registrationDateInput").val(new Date(rcModel.issueDate).toISOString().split('T')[0]) : "";
+                    $("#permanentAddressInput").val(rcModel.permanentAddress);
+                    $("#grossWeightInput").val(rcModel.vehicleGrossWeight);
+                    $("#unladenWeightInput").val(rcModel.vehicleUnladenWeight);
+                    rcModel.expiryDate ? $("#fitnessExpiryInput").val(new Date(rcModel.expiryDate).toISOString().split('T')[0]) : "";
+                    rcModel.taxEndDate ? $("#taxExpiryInput").val((([d, m, y]) => new Date(y, m - 1, d,12))(rcModel.taxEndDate.split("-")).toISOString().split('T')[0]) : "";
+                    $("#permitNoInput").val(rcModel.permitNumber);
+                    rcModel.permitExpiryDate ? $("#permitExpiryInput").val(new Date(rcModel.permitExpiryDate).toISOString().split('T')[0]) : "";
+                    rcModel.nationalPermitExpiryDate ? $("#npExpiryInput").val(new Date(rcModel.nationalPermitExpiryDate).toISOString().split('T')[0]) : "";
+                    $("#vehicleCapacityInput").val(rcModel.vehicleCubicCapacity);
+                    $("#policyNoInput").val(rcModel.pucNumber);
+                    rcModel.insuranceExpiryDate ? $("#policyExpiryInput").val(new Date(rcModel.insuranceExpiryDate).toISOString().split('T')[0]) : "";
+                }
+                else {
+                    toastr.warning("Vehicle kyc Details Not Available!", "Warning");
+                    ClearFields();
+                }
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
-                toastr.error("Failed to submit Vehicle Type", "Error");
+                toastr.error("Failed to Fetch Vehicle kyc Details!", "Error");
+                ClearFields();
             }
         });
     });
 }
-
 function GetAllVehicleCategory() {
     var GetUrl = '/Vehicle/GetAllVehicleCategory';
     $.ajax({
@@ -451,8 +486,7 @@ function GetAllVehicleCategory() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to submit Vehicle Type", "Error");
+            toastr.error("Failed to Vehicle Category!", "Error");
         }
     });
 }
@@ -482,12 +516,10 @@ function GetAllVehicleTypeList() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            toastr.error("Failed to fetch data!", "Error");
+            toastr.error("Failed to Fetch Vehicle Type!", "Error");
         }
     });
 }
-
 function GetAllOwnerOrVendor() {
     var getAllOwnerOrVendorUrl = "/Vehicle/GetAllOwnerOrVendor";
 
@@ -515,13 +547,11 @@ function GetAllOwnerOrVendor() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            console.error("Error fetching data:", error);
-            toastr.error("Failed to fetch owner/vendor data!", "Error");
+            toastr.error("Failed to fetch Owner/Vendor Data!", "Error");
         }
     });
 }
-
-function InitializeFields() {
+function CheckValidation() {
 
     $("#vehicleNo").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
@@ -537,15 +567,9 @@ function InitializeFields() {
     });
 
 }
+function OnSubmitValidation() {
 
-function ValidationCheck() {
-
-    //if (IsNullOrEmpty($("#rtoRegistrationInput").val())) {
-    //    toastr.warning("Please complete Vehicle E-KYC before saving!");
-    //    return false;
-    //}
-
-    if (IsNullOrEmpty($("#vehicleNo").val()) || !isValidVehicleNumber($("#vehicleNo").val())) {
+    if (IsNullOrEmpty($("#vehicleNo").val()) || !IsValidVehicleNumber($("#vehicleNo").val())) {
         toastr.warning("Please enter a valid VehicleNo", "Validation Error");
         return false;
     }
@@ -572,4 +596,30 @@ function ValidationCheck() {
 
     return true;
 }
-
+function ClearFields() {
+    $("#vehicleStatusInput").val("");
+    $("#blacklistStatusInput").val("");
+    $("#regdOwnerInput").val("");
+    $("#engineNoInput").val("");
+    $("#chasisNoInput").val("");
+    $("#makeModelInput").val("");
+    $("#pucExpiryInput").val("");
+    $("#financerInput").val("");
+    $("#ownerSerialNoInput").val("");
+    $("#npNoInput").val("");
+    $("#insuranceCoInput").val("");
+    $("#verifiedOnInput").val("");
+    $("#rtoRegistrationInput").val("");
+    $("#registrationDateInput").val("");
+    $("#permanentAddressInput").val("");
+    $("#grossWeightInput").val("");
+    $("#unladenWeightInput").val("");
+    $("#fitnessExpiryInput").val("");
+    $("#taxExpiryInput").val("");
+    $("#permitNoInput").val("");
+    $("#permitExpiryInput").val("");
+    $("#npExpiryInput").val("");
+    $("#vehicleCapacityInput").val("");
+    $("#policyNoInput").val("");
+    $("#policyExpiryInput").val("");
+}

@@ -49,7 +49,7 @@
                 <div class="card-body border-top p-9">
                     <div class="row">
                         <div class="col-xl-6">
-                            <div class="row align-items-center mb-10">
+                            <div class="row align-items-center mb-5">
                                 <label class="form-label col-form-label required fw-semibold fs-6">Vehicle No</label>
                                 <div class="col-auto">
                                     <input type="text" id="vehicleNo" class="form-control" placeholder="" oninput="this.value = this.value.toUpperCase()" onkeypress="return AllowAlphaNumericOnly(event)"  maxlength="10"/>
@@ -264,11 +264,11 @@
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-start py-4">
-                    <button type="button" id="btnSaveVehicle" class="btn btn-primary me-2">Save</button>
-                    <button type="button" id="btnSaveNewVehicle" class="btn btn-primary me-2">Save & New</button>
+                    <button type="button" id="btnSaveVehicle" class="btn btn-primary me-2" data-action="save">Save</button>
+                    <button type="button" id="btnSaveNewVehicle" class="btn btn-primary me-2" date-action="saveNew">Save & New</button>
                     <button type="button" id="btnUpdateVehicle" class="btn btn-primary me-2" style="display:none;">Update</button>
                     <button type="button" id="btnView" class="btn btn-primary">View</button>
-                    <button type="button" id="cancleButton" class="btn btn-danger d-none">Cancle</button>
+                    <button type="button" id="btnCancel" class="btn btn-danger d-none">Cancel</button>
                 </div>
             </form>
         </div>

@@ -49,7 +49,6 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-
         public IActionResult user()
         {
             return View();
