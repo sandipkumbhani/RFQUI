@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -21,7 +22,7 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-        public ActionResult VendorRatingForm()
+        public ActionResult VendorRating()
         {
             return View();
         }
@@ -89,7 +90,7 @@ namespace RFQ.UI.Controllers
                 var vendorList = await _vendorService.GetAllVendor();
                 if (vendorList != null && vendorList.Count() > 0)
                 {
-                    var result = vendorList.Where(x => x.PartyTypeId == 5).ToList();
+                    var result = vendorList.Where(x => x.PartyTypeId == (int)EnumInternalMaster.VENDOR).ToList();
                     if (Request.IsAjaxRequest())
                     {
                         return Json(result);

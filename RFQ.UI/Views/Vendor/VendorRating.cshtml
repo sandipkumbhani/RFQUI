@@ -5,7 +5,7 @@
     ViewData["Title"] = "Vendor Rating";
 }
 @section Scripts {
-    <script src="~/js/Views/VendorRatingForm.js"></script>
+    <script src="~/js/Views/VendorRating.js"></script>
 }
 
 <div class="app-toolbar pt-3 px-lg-3">
@@ -41,8 +41,7 @@
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label class="form-label required fw-semibold">Vendor Name</label>
-                        <select class="form-select" id="ddlVendorName">
-                            <option value="">Select Vendor</option>
+                        <select name="Vendor" aria-label="Select a Vendor" id="drpVendor" class="selectpicker" data-live-search="true" data-width="100%">
                         </select>
                     </div>
                     <div class="col-md-4">
