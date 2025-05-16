@@ -68,23 +68,23 @@ function GetAllItemName() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlItemName");
+            const itemNamedropdown = document.getElementById("ddlItemName");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a Item Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
+            itemNamedropdown.appendChild(placeholderOption);
             response.forEach(item => {
                 const option = document.createElement("option");
                 option.value = item.itemId;
                 option.textContent = item.itemName;
-                vehicleTypedropdown.appendChild(option);
+                itemNamedropdown.appendChild(option);
             });
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle Type!", "Error");
+            toastr.error("Failed to Fetch Item Name!", "Error");
         }
     });
 }
@@ -96,18 +96,18 @@ function GetAllPakingType() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            const vehicleTypedropdown = document.getElementById("txtPakingType");
+            const pakingTypedropdown = document.getElementById("ddlPackingType");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a PakingType";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
+            pakingTypedropdown.appendChild(placeholderOption);
             response.forEach(item => {
                 const option = document.createElement("option");
                 option.value = item.packingId;
                 option.textContent = item.packingName;
-                vehicleTypedropdown.appendChild(option);
+                pakingTypedropdown.appendChild(option);
                 debugger;
             });
             $('.selectpicker').selectpicker('refresh');
