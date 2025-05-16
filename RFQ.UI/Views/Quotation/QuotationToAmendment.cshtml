@@ -4,7 +4,9 @@
     Layout = "_Layout";
     ViewData["Title"] = "Quotation To Customer - Amendment";
 }
-
+@section Scripts {
+    <script src="~/js/views/quotationtoamendment.js"></script>
+}
 <div class="app-toolbar  pt-3 px-lg-3">
     <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
         <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
@@ -55,13 +57,8 @@
                                 <div class="row">
                                 </div>
                                 <label class="form-label col-form-label fw-semibold fs-6">Customer Name</label>
-                                <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
-                                        data-control="select2" placeholder="Selection Box" id="txtCustomerName">
-                                    <option value="">Select a Customer Name</option>
-                                    <option value="0">Afghanistan</option>
-                                    <option value="1">Aland Islands</option>
-                                    <option value="2">Albania</option>
-                                    <option value="3">Algeria</option>
+                                <select class="selectpicker" aria-label="Selection Box" data-control="select2" placeholder="Selection Box" id="ddlCustomerName" data-width="100%">
+                                    
                                 </select>
                             </div>
                             <div class="row">
@@ -92,26 +89,17 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label col-form-label  fw-semibold fs-6">Item Name</label>
-                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Selection Box"
-                                                data-control="select2" placeholder="Selection Box" id="txtItemName">
-                                            <option value="">Select a Item Name</option>
-                                            <option value="0">Afghanistan</option>
-                                            <option value="1">Aland Islands</option>
-                                            <option value="2">Albania</option>
-                                            <option value="3">Algeria</option>
+                                        <select class="selectpicker" aria-label="Selection Box" data-control="select2" placeholder="Selection Box" id="ddlItemName">
+                                            
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-xl-6">
                                     <div class="mb-4">
                                         <label class="form-label col-form-label fw-semibold fs-6">Vehicle Type</label>
-                                        <select class="form-select select2 form-select-solid form-select-lg fw-semibold" aria-label="Vehicle Type"
-                                                data-control="select2" placeholder="Vehicle type" id="txtVehicleType">
-                                            <option value="">Select a Vehicle Type</option>
-                                            <option value="0">Afghanistan</option>
-                                            <option value="1">Aland Islands</option>
-                                            <option value="2">Albania</option>
-                                            <option value="3">Algeria</option>
+                                        <select class="selectpicker" aria-label="Vehicle Type" data-control="select2" placeholder="Vehicle type" id="ddlVehicleType">
+                                                
+                                            
                                         </select>
                                     </div>
                                     <div class="mb-4">
@@ -172,7 +160,9 @@
                         <div class="col-xl-3">
                             <div class="mb-4">
                                 <label class="form-label col-form-label fw-semibold fs-6">Paking Type</label>
-                                <input type="text" class="form-control" placeholder="Text" id="txtPakingType" />
+                                <select class="selectpicker" aria-label="Selection Box" data-control="select2" placeholder="Selection Box" id="txtPakingType">
+
+                                </select>
                             </div>
                         </div>
                         <div class="col-xl-9">
