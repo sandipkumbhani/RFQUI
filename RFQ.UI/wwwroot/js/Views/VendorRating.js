@@ -29,4 +29,38 @@
 
             $('#tableDiv').append($tr);
         });
+        GetAllVendor();
     });
+
+function GetAllVendor() {
+    var getAllOwnerOrVendorUrl = "/Vehicle/GetAllOwnerOrVendor";
+
+    $.ajax({
+        url: getAllOwnerOrVendorUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            const ownerdropdown = document.getElementById("drpVendor");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Vendor";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            ownerdropdown.appendChild(placeholderOption);
+
+
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.partyId;
+                option.textContent = item.partyName;
+                ownerdropdown.appendChild(option);
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to fetch Owner/Vendor Data!", "Error");
+        }
+    });
+}

@@ -38,7 +38,7 @@
         public string VehicleBodyType { get; set; }
         public string VehicleFuelType { get; set; }
         public string VehicleColor { get; set; }
-        public int VehicleCubicCapacity { get; set; }
+        public float VehicleCubicCapacity { get; set; }
         public int VehicleGrossWeight { get; set; }
         public int VehicleNumberOfCylinders { get; set; }
         public int VehicleSeatingCapacity { get; set; }

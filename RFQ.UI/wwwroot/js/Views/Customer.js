@@ -84,7 +84,7 @@ function FetchCustomerList() {
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,
-                "scrollX": true,
+                //"scrollX": true,
                 "ordering": false,
                 "data": customerList,
                 "columns": [
@@ -216,7 +216,7 @@ function SaveCustomer(action) {
                     partyId = response.result.partyId;
                     Saveattachment(partyId);
                     toastr.success("Customer Details Submitted Successfully!");
-                    $('#CustomerForm')[0].reset();
+                    $('#customerForm')[0].reset();
                     $("#ddlCity").val("");
                     $("#ddlCity").selectpicker("refresh");
                 } else {

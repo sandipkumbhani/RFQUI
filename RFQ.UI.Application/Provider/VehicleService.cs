@@ -30,7 +30,7 @@ namespace RFQ.UI.Application.Provider
             return await _vehicleAdaptor.GetAllOwnerOrVendor();
         }
 
-        public async Task<VehicleRequestDto> AddVehicle(VehicleRequestDto vehicleRequestDto)
+        public async Task<String> AddVehicle(VehicleRequestDto vehicleRequestDto)
         {
             return await _vehicleAdaptor.AddVehicle(vehicleRequestDto);
         }
@@ -40,14 +40,14 @@ namespace RFQ.UI.Application.Provider
             return _vehicleAdaptor.GetAllVehicle();
         }
 
-        public Task<string> EditVehicle(VehicleRequestDto vehicleRequestDto)
+        public Task<string> EditVehicle(int vehicleId,VehicleRequestDto vehicleRequestDto)
         {
-           return _vehicleAdaptor.EditVehicle(vehicleRequestDto);
+           return _vehicleAdaptor.EditVehicle(vehicleId,vehicleRequestDto);
         }
 
-        public Task<string> DeleteVehicle(int VehicleId)
+        public Task<string> DeleteVehicle(int vehicleId)
         {
-            return _vehicleAdaptor.DeleteVehicle(VehicleId);
+            return _vehicleAdaptor.DeleteVehicle(vehicleId);
         }
     }
 }
