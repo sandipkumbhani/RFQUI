@@ -6,6 +6,7 @@
             SaveAndSaveNew(action);
         }
     });
+    GetAllPackingType();
     GetAllCustomer();
     GetAllVehicleType();
     GetAllItemName();
@@ -244,23 +245,51 @@ function GetAllItemName() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlItemName");
+            const itemTypedropdown = document.getElementById("ddlItemName");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a Item Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
+            itemTypedropdown.appendChild(placeholderOption);
             response.forEach(item => {
                 const option = document.createElement("option");
                 option.value = item.itemId;
                 option.textContent = item.itemName;
-                vehicleTypedropdown.appendChild(option);
+                itemTypedropdown.appendChild(option);
             });
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle Type!", "Error");
+            toastr.error("Failed to Fetch Item Type!", "Error");
+        }
+    });
+}
+function GetAllPackingType() {
+    var getUrl = '/CompanyMasterPackingType/GetAllMasterPackingType';
+    $.ajax({
+        url: getUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            const packingTypedropdown = document.getElementById("ddlPackingType");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a PackingType";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            packingTypedropdown.appendChild(placeholderOption);
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.packingId;
+                option.textContent = item.packingName;
+                packingTypedropdown.appendChild(option);
+                debugger;
+            });
+            $('.selectpicker').selectpicker('refresh');
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Packing Type!", "Error");
         }
     });
 }
