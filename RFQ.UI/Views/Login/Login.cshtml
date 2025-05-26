@@ -5,114 +5,139 @@
     ViewData["Title"] = "Login";
 }
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | User Form</title>
-    <link rel="shortcut icon" href="/star-html-pro/assets/media/logos/favicon.ico" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <link href="~/css/plugins.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/all.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="~/css/common.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/style.css" rel="stylesheet" type="text/css" />
-    <!-- Toastr CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
-</head>
-<body>
-    <div class="d-flex flex-column flex-root">
-        <div class="d-flex flex-column flex-lg-row flex-column-fluid">
-            <div class="d-flex flex-column flex-lg-row-auto bg-primary w-xl-600px positon-xl-relative">
-                <div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-600px scroll-y">
-                    <div class="d-flex flex-row-fluid flex-column text-center p-5 p-lg-10 pt-lg-20">
-                        <a href="#" class="py-2 py-lg-20">
-                            <img alt="Logo" src="~/images/fulllogo_transparent_nobuffer.png" class="h-30px app-sidebar-logo-default theme-light-show">
-                        </a>
-                        <h1 class="d-none d-lg-block fw-bold text-white fs-2qx pb-5 pb-md-10">
-                            Welcome to Logoipsum
-                        </h1>
-                        <p class="d-none d-lg-block fw-semibold fs-2 text-white">
-                            Plan your blog post by choosing a topic creating <br>
-                            an outline and checking facts
-                        </p>
-                    </div>
-                    <div class="d-none d-lg-block d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-350px" style="background-image: url('images/17.png')"></div>
-                </div>
-            </div>
-            <div class="d-flex flex-column flex-lg-row-fluid py-10">
-                <div class="d-flex flex-center flex-column flex-column-fluid">
-                    <div class="w-lg-500px p-10 p-lg-15 mx-auto">
-                        <form id="loginForm" class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework" method="POST">
-                            <div class="text-center mb-10">
-                                <h1 class="text-gray-900 mb-3">
-                                    Sign In to logoipsum
-                                </h1>
-                                <div class="text-gray-500 fw-semibold fs-4">
-                                    @*  New Here?
-                                    <a href="@Url.Content("~/Login/Signup")" class="link-primary fw-bold">
-                                        Create an Account
-                                    </a> *@
-                                </div>
-                            </div>
-                            <div class="fv-row mb-10 fv-plugins-icon-container">
-                                <label class="form-label fs-6 fw-bold text-gray-900">Email</label>
-                                <input class="form-control form-control-lg form-control-solid" id="EmailId" type="text" name="EmailId" autocomplete="off" />
-                            </div>
-                            <div class="fv-row mb-10 fv-plugins-icon-container">
-                                <div class="d-flex flex-stack mb-2">
-                                    <label class="form-label fw-bold text-gray-900 fs-6 mb-0">Password</label>
-                                    <a href="/star-html-pro/authentication/sign-in/password-reset.html" class="link-primary fs-6 fw-bold">
-                                        Forgot Password ?
-                                    </a>
-                                </div>
-                                <input class="form-control form-control-lg form-control-solid" id="Password" type="password" name="password" autocomplete="off" />
-                            </div>
-                            <div class="text-center">
-                                <button type="submit" id="loginButton" class="btn btn-lg btn-primary w-100 mb-5">
-                                    Sign In
-                                </button>
-                            </div>
-                            <br />
-                            <p id="errorMessage"></p>
+    <title>Fleet Lynk | Sign In</title>
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="FleetLynk" name="author" />
 
-                        </form>
+    <!-- Figtree FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <!-- intl-tel-input CSS -->
+    <link href="~/css/intlTelInput-largeFlags.css" rel="stylesheet" type="text/css" />
+    <!-- Select2 CSS -->
+    <link href="~/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="~/css/buttons.bootstrap5.min.css" />
+    <link rel="stylesheet" href="~/css/responsive.bootstrap5.min.css" />
+    <link href="~/css/dropzone.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/select2-bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/remixicon.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/simplebar.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/app-style.css" rel="stylesheet" type="text/css" />
+</head>
+<body data-sidenav-size="default">
+    <div class="wrapper single-page">
+        <div class="sign-inner">
+            <div class="sign-page-center">
+                <div class="sign-left">
+                    <div class="inner-sign-info">
+                        <div class="single-logo">
+                            <img src="~/images/logo.svg" alt="Logo" />
+                        </div>
+                        <div class="login-main">
+                            <form id="loginForm" class="theme-form all-custom-class requires-validation" novalidate>
+                                <h2>Welcome to FLEET LYNK</h2>
+                                <p>Don’t have an account? <a href="sign-up.html">Create an Account</a></p>
+                             @*    <a href="#" class="google-btn">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_42_761)">
+                                            <path d="M5.31891 14.5036L4.4835 17.6223L1.43011 17.6869C0.517594 15.9944 0 14.0579 0 12.0001C0 10.0102 0.483938 8.13374 1.34175 6.48145H1.34241L4.06078 6.97982L5.25159 9.68188C5.00236 10.4085 4.86652 11.1885 4.86652 12.0001C4.86661 12.881 5.02617 13.725 5.31891 14.5036Z" fill="#FBBB00" />
+                                            <path d="M23.7903 9.7583C23.9282 10.4842 24 11.2339 24 12.0001C24 12.8592 23.9097 13.6972 23.7376 14.5056C23.1535 17.2563 21.6271 19.6583 19.5126 21.3581L19.5119 21.3574L16.088 21.1827L15.6034 18.1576C17.0065 17.3348 18.103 16.0471 18.6805 14.5056H12.2638V9.7583H18.7742H23.7903Z" fill="#518EF8" />
+                                            <path d="M19.5119 21.3572L19.5125 21.3579C17.4561 23.0109 14.8437 23.9999 12 23.9999C7.43011 23.9999 3.45694 21.4456 1.43011 17.6867L5.31891 14.5034C6.3323 17.208 8.94132 19.1333 12 19.1333C13.3147 19.1333 14.5464 18.7779 15.6033 18.1575L19.5119 21.3572Z" fill="#28B446" />
+                                            <path d="M19.6595 2.76262L15.7721 5.94525C14.6782 5.26153 13.3852 4.86656 12 4.86656C8.87206 4.86656 6.21425 6.88017 5.25163 9.68175L1.34239 6.48131H1.34174C3.33889 2.63077 7.36217 0 12 0C14.9116 0 17.5813 1.03716 19.6595 2.76262Z" fill="#F14336" />
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_42_761">
+                                                <rect width="24" height="24" fill="white" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                    Sign in with Google
+                                </a> *@
+                               @*  <div class="login-social-title">
+                                    <h5></h5>
+                                </div> *@
+                                <div class="item-input">
+                                    <label class="form-label">Email</label>
+                                    <input class="form-control" id="EmailId" type="email" name="EmailId" required placeholder="admin@example.com" autocomplete="off" />
+                                    <div class="invalid-feedback"><i class="ri-information-line"></i> Please put valid Email Id</div>
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">Password</label>
+                                    <div class="form-input position-relative">
+                                        <input class="form-control" id="Password" type="password" name="password" required placeholder="*********" autocomplete="off" />
+                                        <div class="show-hide">
+                                            <span class="show"></span>
+                                        </div>
+                                        <div class="invalid-feedback"><i class="ri-information-line"></i> Password field cannot be blank!</div>
+                                    </div>
+                                </div>
+                                <div class="forget-item">
+                                    <a href="forgot-password.html">Forget Password?</a>
+                                </div>
+                                <button type="submit" id="loginButton" class="login-btns">
+                                    Log In
+                                </button>
+                                <br />
+                                <p id="errorMessage"></p>
+                            </form>
+                        </div>
                     </div>
+                </div>
+                <div class="sign-right">
+                    <img src="~/images/truck-driving-city-street-night-bright-lights-tall-buildings-making-its-way-through-with-trailer.jpg" alt="" />
                 </div>
             </div>
         </div>
     </div>
-    @* <script src="js/plugins.bundle.js"></script> *@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/simplebar.min.js"></script>
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/intlTelInput.min.js"></script>
+    <script src="~/js/dropzone.min.js"></script>
+    <script src="~/js/jquery.repeater.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="js/datatables.bundle.js"></script>
-    <script src="js/script.js"></script>
-    <!-- Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="~/js/datatable-init.js"></script>
+    <script src="~/js/script-app.js"></script>
     <script>
-
         $(document).ready(function () {
             $("#loginForm").submit(function (event) {
-                event.preventDefault(); // Prevent default form submission
-                // Disable the submit button to prevent multiple clicks
+                event.preventDefault();
                 $("#loginButton").prop("disabled", true).text("Logging in...");
 
                 var email = $("#EmailId").val().trim();
                 var password = $("#Password").val().trim();
                 var passwordPattern = /^(?=.*\d).{6,}$/;
-                var emailPattern =  /^[a-zA-Z0-9._%+-]+\x40[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                var emailPattern = /^[a-zA-Z0-9._%+-]+\x40[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-                if (!emailPattern.test(email))
-                {
-                    toastr.error("Please Enter a Valid Email ID.");
-                    $("#loginButton").prop("disabled", false).text("Login");
+                if (!emailPattern.test(email)) {
+                    // You can use a toast or show the invalid-feedback
+                    $(".item-input input[type='email']").addClass("is-invalid");
+                    $("#loginButton").prop("disabled", false).text("Log In");
                     return;
+                } else {
+                    $(".item-input input[type='email']").removeClass("is-invalid");
                 }
-                if (!passwordPattern.test(password))
-                {
-                    toastr.error("Password Must be at least 6 Characters and contain a Number.");
-                    $("#loginButton").prop("disabled", false).text("Login");
+                if (!passwordPattern.test(password)) {
+                    $(".item-input input[type='password']").addClass("is-invalid");
+                    $("#loginButton").prop("disabled", false).text("Log In");
                     return;
+                } else {
+                    $(".item-input input[type='password']").removeClass("is-invalid");
                 }
 
                 var formData = {
@@ -129,32 +154,23 @@
                     headers: {
                         "Accept": "application/json"
                     },
-                    success: function (response)
-                    {
-                        if (response != null)
-                        {
+                    success: function (response) {
+                        if (response != null) {
                             sessionStorage.setItem("authToken", response.data);
                             window.location.href = window.location.origin + "/Dashboard/Dashboard";
                         }
-                       else
-                            toastr.error("Something went wrong. Please contact the Administrator");
-                    },
-                    error: function (xhr, status, error)
-                    {
-                        if (xhr.status === 400 && xhr.responseJSON)
-                            toastr.error(xhr.responseJSON.join("<br>")); // for model validation messages
-                        else if (xhr.status === 401)
-                            toastr.error("Invalid EmailID or Password.");
                         else
-                            toastr.error("Server Error. Please try again later.");
+                            $(".item-input input[type='email']").addClass("is-invalid");
                     },
-                    complete: function ()
-                    {
-                        // Re-enable the submit button
-                        $("#loginButton").prop("disabled", false).text("Login");
+                    error: function (xhr, status, error) {
+                        $(".item-input input[type='email']").addClass("is-invalid");
+                    },
+                    complete: function () {
+                        $("#loginButton").prop("disabled", false).text("Log In");
                     }
                 });
             });
         });
     </script>
 </body>
+</html>

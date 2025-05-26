@@ -4,278 +4,418 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RFQ.UI</title>
-    <link rel="shortcut icon" href="/star-html-pro/assets/media/logos/favicon.ico" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <link href="~/css/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="~/css/intlTelInput-largeFlags.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/css/buttons.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/css/responsive.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/css/dropzone.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/select2-bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/remixicon.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/simplebar.css" rel="stylesheet" type="text/css" />
     <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/app-style.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="~/css/common.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/style.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/color.css" rel="stylesheet" type="text/css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css" rel="stylesheet">
 </head>
-<body>
-
-    <div class="d-flex flex-column flex-root app-root">
-        <div class="app-page  flex-column flex-column-fluid ">
-            <div class="app-header">
-                <div class="app-container container-fluid d-flex align-items-stretch flex-stack">
-                    <div class="d-flex align-items-center d-block d-lg-none ms-n3">
-                        <div class="btn btn-icon btn-color-gray-600 btn-active-color-primary show-drawer w-35px h-35px me-1">
-                            <i class="bi bi-list fs-2 fs-md-1"></i>
+<body data-sidenav-size="default">
+    <div class="wrapper">
+        <div class="navbar-custom">
+            <div class="topbar container-fluid">
+                <div class="inner-items-center">
+                    <div class="d-flex align-items-center gap-lg-2 gap-1">
+                        <div class="logo-topbar">
+                            <a href="#">
+                                <img src="~/images/logo-small.svg" alt="small logo">
+                            </a>
                         </div>
-                        <a href="#">
-                            <img src="https://img.logoipsum.com/325.svg" class="h-30px" alt="" />
-                        </a>
+                        <button class="button-toggle-menu">
+                            <i class="ri-menu-line"></i>
+                        </button>
+
+                        <div class="app-search">
+                            <form>
+                                <div class="input-group-search">
+                                    <input type="search" class="form-control" placeholder="Type to Search..." id="top-search">
+                                    <span class="mdi mdi-magnify search-icon"></span>
+                                    <button class="input-group-text btn-btn-primary" type="submit"><i class="ri-search-line"></i></button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="app-navbar flex-lg-grow-1">
-                        <div class="app-navbar-item d-flex align-items-stretch flex-lg-grow-1 me-2 me-lg-0">
-                            <div class="header-search d-flex align-items-center w-lg-350px">
-                                <form class="d-none d-lg-block w-100 position-relative mb-5 mb-lg-0">
-                                    <i class="bi bi-search search-icon fs-2 text-gray-500 position-absolute top-50 translate-middle-y ms-5"></i>
-                                    <input type="text" class="search-input form-control form-control-solid ps-13" name="search" value="" placeholder="Search..." />
+                    <ul class="topbar-menu d-flex align-items-center">
+                        <li class="dropdown search-mobile">
+                            <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                <i class="ri-search-line"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-lg py-0">
+                                <form class="p-2">
+                                    <input type="search" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
                                 </form>
-                                <div class="search-toggle-mobile d-flex d-lg-none align-items-center">
-                                    <a href="#" class="btn btn-icon btn-custom btn-color-gray-600 btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                                        <i class="bi bi-search fs-2x"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end py-7 px-7">
-                                        <form class="w-100 position-relative mb-0 mb-lg-0">
-                                            <i class="bi bi-search search-icon fs-2 text-gray-500 position-absolute top-50 translate-middle-y ms-5"></i>
-                                            <input type="text" class="search-input form-control form-control-solid  ps-13" name="search" value="" placeholder="Search..." />
-                                        </form>
-                                    </div>
-                                </div>
-
                             </div>
-                        </div>
-                        <div class="app-navbar-item ms-1 ms-md-2">
-                            <a href="#" class="btn btn-icon btn-custom btn-color-gray-600 btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                                <i class="bi bi-bell fs-2x"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end p-0 border-0 w-350px w-lg-375px">
-                                <div class="d-flex flex-column bgi-no-repeat rounded-top" style="background-image:url('../../images/menu-header-bg.jpg')">
-                                    <h3 class="text-white fw-semibold px-9 mt-10 mb-6">
-                                        Notifications <span class="fs-8 opacity-75 ps-3">24 reports</span>
-                                    </h3>
-                                </div>
-                                <div class="scroll-sm">
-                                    <div class="header-dropdown-scroll2">
-                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0 relative me-4">
-                                                    <img src="~/images/profile-4.png" alt="" />
-                                                </div>
-                                                <div>
-                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
-                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
-                                                </div>
-                                            </div>
-                                            <div class="shrink-0">
-                                                <span class="badge badge-light fs-8">23 Mins ago</span>
-                                            </div>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0 relative me-4">
-                                                    <img src="~/images/profile-4.png" alt="" />
-                                                </div>
-                                                <div>
-                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
-                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
-                                                </div>
-                                            </div>
-                                            <div class="shrink-0">
-                                                <span class="badge badge-light fs-8">23 Mins ago</span>
-                                            </div>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0 relative me-4">
-                                                    <img src="~/images/profile-4.png" alt="" />
-                                                </div>
-                                                <div>
-                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
-                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
-                                                </div>
-                                            </div>
-                                            <div class="shrink-0">
-                                                <span class="badge badge-light fs-8">23 Mins ago</span>
-                                            </div>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0 relative me-4">
-                                                    <img src="~/images/profile-4.png" alt="" />
-                                                </div>
-                                                <div>
-                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
-                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
-                                                </div>
-                                            </div>
-                                            <div class="shrink-0">
-                                                <span class="badge badge-light fs-8">23 Mins ago</span>
-                                            </div>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0 relative me-4">
-                                                    <img src="~/images/profile-4.png" alt="" />
-                                                </div>
-                                                <div>
-                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
-                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
-                                                </div>
-                                            </div>
-                                            <div class="shrink-0">
-                                                <span class="badge badge-light fs-8">23 Mins ago</span>
-                                            </div>
-                                        </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center position-relative px-4 py-3 gap-1">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0 relative me-4">
-                                                    <img src="~/images/profile-4.png" alt="" />
-                                                </div>
-                                                <div>
-                                                    <h6 class="fs-6 text-gray-800 text-hover-primary fw-bold">Ronald Richards</h6>
-                                                    <p class="text-gray-500 fs-7 mb-0 text-truncate">You can stitch between artboards</p>
-                                                </div>
-                                            </div>
-                                            <div class="shrink-0">
-                                                <span class="badge badge-light fs-8">23 Mins ago</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="py-3 text-center border-top">
-                                    <a href="javascript:void(0)" class="btn btn-color-gray-600 btn-active-color-primary">See All Notification </a>
-                                </div>
-                            </div>
-                        </div>
+                        </li>
 
-                        <div class="app-navbar-item me-2 ms-1 ms-md-2">
-                            <a href="#" class="cursor-pointer symbol symbol-circle symbol-35px ms-3" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                                <img src="~/images/300-3.jpg" alt="user">
+                        <li class="dropdown notification-list">
+                            <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                <i class="ri-mail-open-line"></i>
+                                <span class="noti-icon-badge"></span>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-end border-0  menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px">
-                                <div class="menu-item px-3">
-                                    <div class="menu-content d-flex align-items-center px-3">
-                                        <div class="symbol symbol-50px me-5">
-                                            <img alt="Logo" src="~/images/300-3.jpg">
+                            <div class="dropdown-menu dropdown-menu-end dropdown-lg py-0">
+                                <div class="p-3 border-top-0 border-start-0 border-end-0 border-dashed border">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h6 class="m-0 font-16 fw-semibold"> Messages </h6>
                                         </div>
-                                        <div class="d-flex flex-column">
-                                            <div class="fw-bold d-flex align-items-center fs-5">
-                                                Johnson
-                                                <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
-                                            </div>
-                                            <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
-                                                johnson@kt.com
+                                        <div class="col-auto">
+                                            <a href="javascript: void(0);" class="text-dark text-decoration-underline">
+                                                <small>Clear All</small>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="separator my-2"></div>
-                                <div class="menu-item px-5">
-                                    <a href="#" class="menu-link px-5">
-                                        My Profile
+                                <div class="px-3 custom-scroll" style="max-height: 300px;">
+
+                                    <h5 class="text-muted font-13 fw-normal mt-2">Today</h5>
+                                    <!-- item-->
+
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon bg-primary">
+                                                        <i class="mdi mdi-comment-account-outline"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Datacorp <small class="fw-normal text-muted ms-1">1 min ago</small></h5>
+                                                    <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </a>
-                                </div>
-                                <div class="menu-item px-5">
-                                    <a href="#" class="menu-link px-5">
-                                        My Profile
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon bg-info">
+                                                        <i class="mdi mdi-account-plus"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Admin <small class="fw-normal text-muted ms-1">1 hours ago</small></h5>
+                                                    <small class="noti-item-subtitle text-muted">New user registered</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </a>
-                                </div>
-                                <div class="menu-item px-5">
-                                    <a href="#" class="menu-link px-5">
-                                        My Profile
+
+                                    <h5 class="text-muted font-13 fw-normal mt-0">Yesterday</h5>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon">
+                                                        <img src="~/assets/images/users/avatar-2.jpg" class="img-fluid rounded-circle" alt="" />
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Cristina Pride <small class="fw-normal text-muted ms-1">1 day ago</small></h5>
+                                                    <small class="noti-item-subtitle text-muted">Hi, How are you? What about our next meeting</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </a>
-                                </div>
-                                <div class="menu-item px-5">
-                                    <a href="@Url.Action("Login", "Login")" class="menu-link px-5">
-                                        Sign Out
+
+                                    <h5 class="text-muted font-13 fw-normal mt-0">30 Dec 2021</h5>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon bg-primary">
+                                                        <i class="mdi mdi-comment-account-outline"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Datacorp</h5>
+                                                    <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </a>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon">
+                                                        <img src="~/assets/images/users/avatar-4.jpg" class="img-fluid rounded-circle" alt="" />
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Karen Robinson</h5>
+                                                    <small class="noti-item-subtitle text-muted">Wow ! this admin looks good and awesome design</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <div class="text-center">
+                                        <i class="mdi mdi-dots-circle mdi-spin text-muted h3 mt-0"></i>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="app-wrapper flex-column flex-row-fluid">
-                <div id="app_sidebar" class="app-sidebar flex-column">
-                    <div class="app-sidebar-logo position-relative">
-                        <a href="#">
-                            <img alt="Logo" src="~/images/menu-header-Icon.png" class="h-35px app-sidebar-logo-default theme-light-show">
-                            <img alt="Logo" src="~/images/menu-header2-Icon.png" class="h-30px app-sidebar-logo-minimize">
-                        </a>
-                        <div class="app-sidebar-toggle btn btn-icon btn-sm btn-color-gray-600 btn-active-color-primary border border-gray-300 h-30px w-30px position-absolute rounded-circle top-50 start-100 translate-middle rotate">
-                            <i class="fa-solid fa-chevron-left rotate-180"></i>
-                        </div>
-                    </div>
-                    <div class="app-sidebar-menu overflow-hidden">
-                        <div class="app-sidebar-wrapper my-5">
-                            <div class="hover-scroll-overlay-y my-5 mx-4">
-                                <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold px-1" id="menuitem">
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="vehicle.html">
-                                            <span class="menu-icon"><i class="bi bi-car-front fs-1"></i></span>
-                                            <span class="menu-title">Vehicle</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item menu-accordion">
-                                        <span class="menu-link">
-                                            <span class="menu-icon">
-                                                <i class="bi ti-building fs-1">
-                                                </i>
-                                            </span>
-                                            <span class="menu-title">
-                                                Master
-                                            </span>
-                                            <span class="menu-arrow">
-                                            </span>
-                                        </span>
-                                        <div class="menu-sub menu-sub-accordion">
-                                            <div class="menu-item">
-                                                <a href="../customer/customer" class="menu-link">
-                                                    <span class="menu-bullet">
-                                                        <span class="bullet bullet-dot">
-                                                        </span>
-                                                    </span>
-                                                    <span class="menu-title">
-                                                        Customer
-                                                    </span>
-                                                </a>
-                                            </div>
-                                            <div class="menu-item">
-                                                <a href="../Vehicle/index" class="menu-link">
-                                                    <span class="menu-bullet">
-                                                        <span class="bullet bullet-dot">
-                                                        </span>
-                                                    </span>
-                                                    <span class="menu-title">
-                                                        Vehicle
-                                                    </span>
-                                                </a>
-                                            </div>
+                        </li>
+                        <li class="dropdown notification-list">
+                            <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                <i class="ri-notification-3-line font-22"></i>
+                                <span class="noti-icon-badge"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-lg py-0">
+                                <div class="p-3 border-top-0 border-start-0 border-end-0 border-dashed border">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h6 class="m-0 font-16 fw-semibold"> Notification</h6>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a href="javascript: void(0);" class="text-dark text-decoration-underline">
+                                                <small>Clear All</small>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="px-3 custom-scroll" style="max-height: 300px;">
+
+                                    <h5 class="text-muted font-13 fw-normal mt-2">Today</h5>
+                                    <!-- item-->
+
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon bg-primary">
+                                                        <i class="mdi mdi-comment-account-outline"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Datacorp <small class="fw-normal text-muted ms-1">1 min ago</small></h5>
+                                                    <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon bg-info">
+                                                        <i class="mdi mdi-account-plus"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Admin <small class="fw-normal text-muted ms-1">1 hours ago</small></h5>
+                                                    <small class="noti-item-subtitle text-muted">New user registered</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <h5 class="text-muted font-13 fw-normal mt-0">Yesterday</h5>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon">
+                                                        <img src="~/assets/images/users/avatar-2.jpg" class="img-fluid rounded-circle" alt="" />
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Cristina Pride <small class="fw-normal text-muted ms-1">1 day ago</small></h5>
+                                                    <small class="noti-item-subtitle text-muted">Hi, How are you? What about our next meeting</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <h5 class="text-muted font-13 fw-normal mt-0">30 Dec 2021</h5>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon bg-primary">
+                                                        <i class="mdi mdi-comment-account-outline"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Datacorp</h5>
+                                                    <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                        <div class="card-body">
+                                            <span class="float-end noti-close-btn text-muted"><i class="ri-close-line"></i></span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="notify-icon">
+                                                        <img src="assets/images/users/avatar-4.jpg" class="img-fluid rounded-circle" alt="" />
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 text-truncate ms-2">
+                                                    <h5 class="noti-item-title fw-semibold font-14">Karen Robinson</h5>
+                                                    <small class="noti-item-subtitle text-muted">Wow ! this admin looks good and awesome design</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <div class="text-center">
+                                        <i class="mdi mdi-dots-circle mdi-spin text-muted h3 mt-0"></i>
+                                    </div>
+                                </div>
+                                <!-- All-->
+                                <a href="javascript:void(0);" class="dropdown-item text-center notify-item-all border-top py-2">
+                                    View All
+                                </a>
                             </div>
-                        </div>
+                        </li>
+                        <li class="dropdown user-listitem">
+                            <a class="nav-link dropdown-toggle arrow-none nav-user" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                <span class="account-user-avatar">
+                                    <img src="~/images/avatar-1.png" alt="user-image" width="50" class="rounded-circle">
+                                </span>
+                                <span class="d-lg-flex flex-column gap-1 d-none">
+                                    <h5 class="my-0">Ralph Edwards</h5>
+                                    <h6 class="my-0 fw-normal">ralph_edw@gmai.com</h6>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end profile-dropdown">
+                                <!-- item-->
+                                <div class=" dropdown-header noti-title">
+                                    <h6 class="text-overflow m-0">Welcome !</h6>
+                                </div>
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item">
+                                    <span>My Account</span>
+                                </a>
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item">
+                                    <span>Settings</span>
+                                </a>
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item">
+                                    <span>Support</span>
+                                </a>
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item">
+                                    <span>Logout</span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="leftside-menu" id="leftside-menu">
+            <div class="left-toplogo" id="left-toplogo">
+                <a href="user-profile.html" class="logo logo-light" id="logo-light">
+                    <span class="logo-lg" id="logo-lg">
+                        <img src="~/images/logo.svg" alt="logo" id="logo-img">
+                    </span>
+                    <span class="logo-sm" id="logo-sm">
+                        <img src="~/images/logo-small.svg" alt="small logo" id="logo-small-img">
+                    </span>
+                </a>
+                <button type="button" class="sidebar-toggle" id="sidebar-toggle">
+                    <i class="ri-arrow-left-double-line"></i>
+                </button>
+                <button type="button" class="sidebar-close-btn" id="sidebar-close-btn">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="leftbar custom-scroll" id="leftbar">
+                <div class="left-sidebar-wrap" id="left-sidebar-wrap">
+                    <div class="sidebar-menu-area" id="sidebar-menu-area">
+                        <!--- Sidemenu -->
+                        <ul id="leftside-menu-container" class="side-nav">
+                       
+                            <li class="side-nav-item dropdown" id="side-nav-vehicle-dropdown">
+                                <a href="javascript:void(0)" class="side-nav-link">
+                                    <i class="ri-car-line"></i>
+                                    <i class="ri-car-fill"></i>
+                                    <span> Vehicle </span>
+                                </a>
+                                <ul class="sidebar-submenu" id="sidebar-submenu-vehicle">
+                                    <li>
+                                        <a href="javascript:void(0)" class="sidebar-title" id="sidebar-title-vehicle"> vehicle <i class="ri-arrow-right-s-line"></i></a>
+                                        <ul class="nav-sub-childmenu submenu-content" id="submenu-content-vehicle">
+                                            <li>
+                                                <a href="vehicle.html" id="submenu-vehicle-link">Vehicle</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">text</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">text</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="invoice-preview.html" id="submenu-invoice-preview"> Preview <i class="ri-arrow-right-s-line"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="invoice-add.html" id="submenu-invoice-add"> Add new <i class="ri-arrow-right-s-line"></i></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!--- End Sidemenu -->
+                        <div class="clearfix"></div>
                     </div>
                 </div>
-                <div class="left-sidebar-overlay"></div>
-                <div class="app-main flex-column flex-row-fluid">
+            </div>
+        </div>
+
+        <div class="content-page">
+            <div class="content">
+                <div class="main-inner container-fluid">
                     @RenderBody()
                 </div>
             </div>
         </div>
     </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -285,58 +425,51 @@
                 dataType: 'json',
                 success: function (response) {
                     let menuList = response;
-                    console.log(response);
                     let sidebarHtml = '';
                     let groupedItems = {};
-                    // menuList.forEach(item => {
-                    //     if (!groupedItems[item.groupId]) {
-                    //         groupedItems[item.groupId] = {
-                    //             groupName: item.linkGroupName,
-                    //             linkGroupIcon : item.linkGroupIcon,
-                    //             items: []
-                    //         };
-                    //     }
-                    //     groupedItems[item.groupId].items.push(item);
-                    // });
 
-                     groupedItems = menuList.reduce((acc, item) => {
-                       const groupId = item.linkGroupId;
-                       if (!acc[groupId]) {
-                         acc[groupId] = {
-                           groupName: item.linkGroupName,
-                           linkGroupIcon: item.linkGroupIcon,
-                           items: []
-                         };
-                       }
-                       acc[groupId].items.push(item);
-                       return acc;
-                     }, {});
+                groupedItems = response.reduce((acc, item) => {
+                const groupId = item.linkGroupId;
+                if (!acc[groupId]) {
+                    acc[groupId] = {
+                        groupName: item.linkGroupName,
+                        linkGroupIcon: item.linkGroupIcon,
+                        items: []
+                    };
+                }
+                acc[groupId].items.push(item);
+                return acc;
+            }, {});
 
-                    for (let groupId in groupedItems) {
-                        let group = groupedItems[groupId];
+            for (let groupId in groupedItems) {
+                let group = groupedItems[groupId];
+                let collapseId = 'submenu-' + groupId;
 
-                    sidebarHtml += '<div class="menu-item menu-accordion">';
-                            sidebarHtml += '<span class="menu-link" data-bs-toggle="collapse" data-bs-target="#'+group.groupName+'">';
-                            sidebarHtml += '<span class="menu-icon"><i class="bi '+ group.linkGroupIcon + ' fs-1 "></i></span>';
-                            sidebarHtml += '<span class="menu-title">' + group.groupName + '</span>';
-                            sidebarHtml += '<span class="menu-arrow"></span>';
-                            sidebarHtml += '</span>';
-                            sidebarHtml += '<div class="menu-sub-accordion">';
+                sidebarHtml += `
+                    <li class="side-nav-item dropdown" id="group-${groupId}">
+                        <a href="javascript:void(0)" class="side-nav-link" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+                            <i class="${group.linkGroupIcon}"></i>
+                            <span> ${group.groupName} </span>
+                        </a>
+                        <ul class="sidebar-submenu collapse" id="${collapseId}">
+                `;
 
-                            group.items.forEach(item => {
-                                sidebarHtml += '<div id="'+group.groupName+'"  class="menu-item collapse hide">';
-                                sidebarHtml += '<a href="' + item.linkUrl + '" class="menu-link">';
-                                sidebarHtml += '<span class="menu-bullet"><i class="bi '+ item.linkIcon + ' fs-1 "></i></span>';
-                                sidebarHtml += '<span class="menu-title">' + item.linkName + '</span>';
-                                sidebarHtml += '</a>';
-                                sidebarHtml += '</div>';
-                            });
-                            sidebarHtml += '</div>';
-                            sidebarHtml += '</div>';
+                group.items.forEach((item, idx) => {
+                    sidebarHtml += `
+                        <li id="menuitem-${groupId}-${idx}">
+                            <a href="${item.linkUrl}" class="side-nav-link">
+                                <i class="${item.linkIcon}"></i>
+                                <span> ${item.linkName} </span>
+                            </a>
+                        </li>
+                    `;
+                });
 
-                    }
+                sidebarHtml += '</ul></li>';
+            }
 
-                    $('#menuitem').html(sidebarHtml);
+            $('#leftside-menu-container').html(sidebarHtml);
+
                 },
                 error: function () {
                     console.error("Failed to load menu.");
@@ -358,18 +491,24 @@
             .catch(error => console.error("Error:", error));
         }
     </script>
-
     <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/simplebar.min.js"></script>
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/intlTelInput.min.js"></script>
+    <script src="~/js/dropzone.min.js"></script>
     <script src="~/js/jquery.repeater.min.js"></script>
-    <script src="~/js/script.js"></script>
-    <script src="~/js/common.js"></script>
-    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="~/js/datatable-init.js"></script>
+    <script src="~/js/script-app.js"></script>
+    <script src="~/js/common.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
-    @RenderSection("Scripts", required: false);
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
