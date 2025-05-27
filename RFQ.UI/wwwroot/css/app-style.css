@@ -454,6 +454,7 @@ select:disabled {
 .side-nav-link.active {
     background: var(--ft-primary);
     color: var(--ft-white) !important;
+    margin-top: 5px;
 }
 
 .left-toplogo {
