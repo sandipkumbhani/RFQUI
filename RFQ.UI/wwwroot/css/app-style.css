@@ -450,8 +450,13 @@ select:disabled {
   background: var(--ft-primary);
   color: var(--ft-white);
 }
-.left-toplogo{
-  position: relative;
+.side-nav-link.active {
+    background: var(--ft-primary);
+    color: var(--ft-white);
+}
+
+.left-toplogo {
+    position: relative;
 }
 .left-toplogo .sidebar-toggle{
   position: absolute;
