@@ -549,8 +549,8 @@
 
                         group.items.forEach((item, idx) => {
                             sidebarHtml += `
-                        <li id="menuitem-${groupId}-${idx}">
-                            <a href="${item.linkUrl}" class="side-nav-link">
+                        <li>
+                            <a href="${item.linkUrl}" class="side-nav-link" data-id="menuitem-${groupId}-${idx}">
                                 <i class="${item.linkIcon}"></i>
                                 <span> ${item.linkName} </span>
                             </a>
@@ -566,6 +566,33 @@
                         $('.side-nav-link').removeClass('active');
                         $(this).addClass('active');
                     });
+                            $('#leftside-menu-container').on('click', '.side-nav-link', function (e) {
+            // Remove all active states
+            $('.side-nav-link').removeClass('active');
+            $('.sidebar-submenu').removeClass('show');
+            $('.side-nav-item').removeClass('active-group');
+            $('.side-nav-link').attr('aria-expanded', 'false');
+
+            // Add active to clicked link
+            $(this).addClass('active');
+
+            // If this link is a parent (has a submenu)
+            var $submenu = $(this).next('.sidebar-submenu');
+            if ($submenu.length) {
+                e.preventDefault();
+                $submenu.addClass('show');
+                $(this).attr('aria-expanded', 'true');
+                $(this).closest('.side-nav-item').addClass('active-group');
+            } else {
+                // If it's a child, activate parent and expand submenu
+                var $parentSubmenu = $(this).closest('.sidebar-submenu');
+                $parentSubmenu.addClass('show');
+                var $parentLink = $parentSubmenu.siblings('.side-nav-link');
+                $parentLink.addClass('active').attr('aria-expanded', 'true');
+                $parentSubmenu.closest('.side-nav-item').addClass('active-group');
+            }
+        });
+
                 },
                 error: function () {
                     console.error("Failed to load menu.");
@@ -587,7 +614,35 @@
                 .catch(error => console.error("Error:", error));
         }
     </script>
+     @* This script is For active parent and sub menu are Active on Select*@
+    <script>
+        // This should run after the menu is loaded
+        $(function () {
+            // Wait a tick to ensure menu is rendered
+            setTimeout(function () {
+                var currentUrl = window.location.pathname.toLowerCase();
+                // Find the link that matches the current URL
+                var $activeLink = $('#leftside-menu-container a.side-nav-link[href]')
+                    .filter(function () {
+                        // Compare only the pathname part
+                        return this.pathname.toLowerCase() === currentUrl;
+                    }).first();
 
+                if ($activeLink.length) {
+                    $activeLink.addClass('active');
+                    // Expand parent submenu if exists
+                    var $submenu = $activeLink.closest('.sidebar-submenu');
+                    if ($submenu.length) {
+                        $submenu.addClass('show');
+                        var $parentItem = $submenu.closest('.side-nav-item');
+                        $parentItem.addClass('active-group');
+                        var $parentLink = $parentItem.children('.side-nav-link');
+                        $parentLink.addClass('active').attr('aria-expanded', 'true');
+                    }
+                }
+            }, 100); // Delay to ensure menu is rendered
+        });
+    </script>
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/jquery.repeater.min.js"></script>
     <script src="~/js/script.js"></script>

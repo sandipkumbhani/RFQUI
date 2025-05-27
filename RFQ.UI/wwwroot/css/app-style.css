@@ -1,35 +1,35 @@
 @charset "UTF-8";
 :root {
-  --ft-body-font-family: "Figtree", sans-serif;
-  --ft-body-font-size: 0.9rem;
-  --ft-body-font-weight: 400;
-  --ft-body-line-height: 1.5;
-  --ft-body-color: #121212;
-  --ft-body-bg: #F2F5F9;
-  --ft-topbar-height:102px;
-  --ft-topbar-search-border:#D4DCE6;
-  --ft-logo-lg-height:22px;
-  --ft-logo-sm-height:22px;
-  --ft-leftbar-width:280px;
-  --ft-leftbar-width-md:160px;
-  --ft-leftbar-width-sm:86px;
-  --ft-white:#ffffff;
-  --ft-primary:#0466C8;
-  --ft-secondary:#121212;
-  --ft-tertiary:#61758C;
-  --ft-left-menu-text:#002855;
-  --ft-left-menusub-text:#5F7284;
-  --ft-top-search-icon:#61758C;
-  --ft-menu-bg: #ffffff;
-  --ft-input-text: #61758C;
-  --ft-input-border: #D4DCE6;
-  --ft-input-star: #D73647;
-  --ft-left-border-width: 1px;
-  --ft-icon-green: #1EA957;
-  --ft-icon-red: #F24B5A;
-  --ft-icon-red-rgb: 242, 75, 90;
-  --ft-icon-primary: #0466C8;
-  --ft-icon-primary-rgb: 4, 102, 200;
+    --ft-body-font-family: "Figtree", sans-serif;
+    --ft-body-font-size: 0.9rem;
+    --ft-body-font-weight: 400;
+    --ft-body-line-height: 1.5;
+    --ft-body-color: #121212;
+    --ft-body-bg: #F2F5F9;
+    --ft-topbar-height: 102px;
+    --ft-topbar-search-border: #D4DCE6;
+    --ft-logo-lg-height: 22px;
+    --ft-logo-sm-height: 22px;
+    --ft-leftbar-width: 280px;
+    --ft-leftbar-width-md: 160px;
+    --ft-leftbar-width-sm: 86px;
+    --ft-white: #ffffff;
+    --ft-primary: #0466C8;
+    --ft-secondary: #121212;
+    --ft-tertiary: #61758C;
+    --ft-left-menu-text: #002855;
+    --ft-left-menusub-text: #5F7284;
+    --ft-top-search-icon: #61758C;
+    --ft-menu-bg: #ffffff;
+    --ft-input-text: #61758C;
+    --ft-input-border: #D4DCE6;
+    --ft-input-star: #D73647;
+    --ft-left-border-width: 1px;
+    --ft-icon-green: #1EA957;
+    --ft-icon-red: #F24B5A;
+    --ft-icon-red-rgb: 242, 75, 90;
+    --ft-icon-primary: #0466C8;
+    --ft-icon-primary-rgb: 4, 102, 200;
 }
 
 
@@ -450,9 +450,10 @@ select:disabled {
   background: var(--ft-primary);
   color: var(--ft-white);
 }
+
 .side-nav-link.active {
     background: var(--ft-primary);
-    color: var(--ft-white);
+    color: var(--ft-white) !important;
 }
 
 .left-toplogo {
