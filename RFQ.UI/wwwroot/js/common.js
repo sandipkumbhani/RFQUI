@@ -103,11 +103,28 @@ window.addEventListener('DOMContentLoaded', function () {
 });
 function populateDropdown(selectElement) {
     $(selectElement).empty();
-    var attachmentOptionsString = localStorage.getItem("attachmentType");
-    var attachmentOptions = JSON.parse(attachmentOptionsString);
-    $.each(attachmentOptions, function (index, option) {
-        $(selectElement).append('<option value="' + option.value + '">' + option.text + '</option>');
+
+    const attachmentOptionsString = localStorage.getItem("attachmentType");
+    const attachmentOptions = attachmentOptionsString ? JSON.parse(attachmentOptionsString) : [];
+
+    const placeholderOption = $('<option>', {
+        value: '',
+        text: 'Select an Attachment Type',
+        disabled: true,
+        selected: true
     });
+
+    $(selectElement).append(placeholderOption);
+
+    $.each(attachmentOptions, function (index, option) {
+        $(selectElement).append(
+            $('<option>', {
+                value: option.value,
+                text: option.text
+            })
+        );
+    });
+
 }
 
 function ValidatePanNumber(number) {

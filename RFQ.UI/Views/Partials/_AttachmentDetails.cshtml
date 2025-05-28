@@ -1,63 +1,74 @@
-﻿
-<div class="card-body border-top p-9">
-    <div class="card-title m-0 pb-10">
-        <h3 class="fw-bold m-0">Attachment Details</h3>
-    </div>
-
-    <div id="kt_docs_repeater_basic">
-        <div class="form-group">
-            <div data-repeater-list="kt_docs_repeater_basic">
-                <div data-repeater-item id="attachmentRow">
-                    <div class="form-group row">
-                        <div class="col-md-2">
-                            <input type="number" hidden id="hdnAttachmentId" />
-                            <label class="form-label col-form-label fw-semibold fs-6">File Name</label>
-                            <input type="text" inputmode="text" class="form-control mb-2 mb-md-0" id="txtFileName" placeholder="File Name" maxlength="500" />
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label col-form-label fw-semibold fs-6">Attachment Type  </label>
-                            <select name="franchise" aria-label="Select a Attachment Type"
-                                    data-control="select2" data-placeholder="Select a Attachment Type" class="ddlAttachment form-select select2 form-select-solid form-select-lg fw-semibold">
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="text" hidden id="hdnUplodedFileName">
-                            <label class="form-label col-form-label fw-semibold fs-6">Choose File </label>
-                            <label class="input-group mb-3">
-                                <input class="visually-hidden file-upload" id="fileUpload" type="file" accept=".jpg, .jpeg, .png, .svg, .pdf">
-                                <span id="spanText" class="form-control">Choose File</span>
-                            </label>
-                        </div>
-
-                        <div class="col-md-2">
-                            <label class="form-label col-form-label fw-semibold fs-6">File Link</label>
-                            <a id="fileLink" class="d-block text-primary mt-2" target="_blank">
-                                View File
-                            </a>
-                        </div>
-
-                        <div class="col-md-2">
-                            <label class="form-label col-form-label fw-semibold fs-6">Upload  </label>
-                            <label class="input-group mb-3">
-                                <button type="button" class="btn btn-primary upload-btn" id="btnUplodeAttachment">Upload</button>
-                            </label>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btnDeleteAttachment btn btn-sm btn-danger mt-10" data-repeater-delete>
-                                <i class="bi bi-trash"></i> Delete
-                            </button>
+﻿<div class="document-details">
+    <h2 class="page-form-title">Attachment Details</h2>
+    <div class="all-custom-class document-info">
+        <!--begin::Repeater-->
+        <div id="kt_docs_repeater_basic">
+            <!--begin::Form group-->
+            <div class="form-group">
+                <div data-repeater-list="kt_docs_repeater_basic">
+                    <div data-repeater-item id="attachmentRow">
+                        <div class="form-group row g-3 align-items-end">
+                            <div class="row g-3">
+                                <div class="col-md-2">
+                                    <div class="item-input">
+                                        <label class="form-label">File Name <span>*</span></label>
+                                        <input type="hidden" id="hdnAttachmentId" />
+                                        <input type="text" class="form-control" id="txtFileName" placeholder="Enter File Name" maxlength="500" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="item-input">
+                                        <label class="form-label">Attachment Type <span>*</span></label>
+                                        <select class="select2-custom form-control ddlAttachment" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="file-input">
+                                        <label class="form-label">Choose File <span>*</span></label>
+                                        <div class="input-group custom-file-button">
+                                            <input type="text" hidden id="hdnUplodedFileName" />
+                                            <label class="input-group-text" for="inputGroupFile">Choose File</label>
+                                            <input type="file" class="form-control file-upload" id="inputGroupFile" accept=".jpg, .jpeg, .png, .svg, .pdf">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                    <div class="item-input d-flex flex-column">
+                                        <label class="form-label">File Link <span>*</span></label>
+                                        <a id="fileLink" class="d-block text-primary mt-3" target="_blank">View File</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="item-input">
+                                        <a class="btn-btn-dark-primary upload-btn" id="btnUplodeAttachment" style="margin-top:21px;cursor:pointer;">
+                                            <i class="ri-upload-cloud-2-line"></i>
+                                            Upload
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="item-input">
+                                        <a href="javascript:;" data-repeater-delete class="btn-btn-light-danger btnDeleteAttachment">
+                                            <i class="ri-delete-bin-3-line"></i>
+                                            Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--end::Form group-->
+            <div class="form-group mt-3">
+                <a href="javascript:;" data-repeater-create class="btn-btn-light-primary">
+                    <i class="ri-add-line"></i>
+                    Add New
+                </a>
+            </div>
         </div>
-
-        <div class="form-group mt-5">
-            <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
-                <i class="fa-solid fa-plus"></i>
-                Add
-            </a>
-        </div>
+        <!--end::Repeater-->
     </div>
-
 </div>

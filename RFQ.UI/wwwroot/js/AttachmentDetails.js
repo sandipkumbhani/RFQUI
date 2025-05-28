@@ -1,32 +1,30 @@
 ﻿
 $(document).ready(function () {
-    var GetAttachmentUrl = '/MasterAttachment/GetAllMasterAttachmentType';
-    var attachmentType = [];
-    // Fetch attachment types via AJAX
-    $.ajax({
-        url: GetAttachmentUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            if (response && response.length > 0) {
-                attachmentType.push({ value: null, text: "Select AttachmentType", disabled: true, selected: true });
-                $.each(response, function (index, type) {
-                    attachmentType.push({ value: type.attachmentTypeId, text: type.attachmentTypeName });
-                });
-                // Store data in localStorage for dynamic use
-                localStorage.setItem("attachmentType", JSON.stringify(attachmentType));
-                // Populate existing dropdowns
-                $('.ddlAttachment').each(function () {
-                    populateDropdown($(this));
-                });
-            } else {
-                $('.ddlAttachment').empty().append('<option value="">No Attachment Available</option>');
-            }
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to retrieve attachment types", "Error");
+    
+
+var GetAttachmentUrl = '/MasterAttachment/GetAllMasterAttachmentType';
+var attachmentType = [];
+$.ajax({
+    url: GetAttachmentUrl,
+    type: "GET",
+    contentType: "application/json",
+    success: function (response) {
+        if (response && response.length > 0) {
+            $.each(response, function (index, type) {
+                attachmentType.push({ value: type.attachmentTypeId, text: type.attachmentTypeName });
+            });
+            localStorage.setItem("attachmentType", JSON.stringify(attachmentType));
+            $('.ddlAttachment').each(function () {
+                populateDropdown($(this));
+            });
+        } else {
+            $('.ddlAttachment').empty().append('<option value="">No Attachment Available</option>');
         }
-    });
+    },
+    error: function (xhr, status, error) {
+        toastr.error("Failed to retrieve attachment types", "Error");
+    }
+});
 })
 $(document).on('blur', '[data-repeater-item] .ddlAttachment', function () {
     const selectedValue = $(this).val();

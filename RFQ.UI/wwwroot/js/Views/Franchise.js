@@ -2,24 +2,33 @@
 const linkId = urlParams.get('LinkId');
 var myDropzone;
 $(document).ready(function () {
-
-    Dropzone.autoDiscover = false;
-    var uploadUrl = "/Franchise/Upload";
-    var deleteUploadUrl = "/Franchise/DeleteUpload";
+    GetAllCityList();
+    CheckValidation();
+    FetchFranchise();
     document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
         element.addEventListener("input", function () {
             this.value = this.value.toUpperCase();
         });
     });
+    $("#btnCancel").on("click", function () {
+        window.location.reload(true);
+    });
+    $("#btnAddFranchise").on("click", function () {
+        $("#tableDiv").css('display', 'none ');
+        $("#formDiv").css('display', 'block');
+    });
+});
+Initialize();
+function Initialize() {
+    Dropzone.autoDiscover = false;
+    var uploadUrl = "/Franchise/Upload";
+    var deleteUploadUrl = "/Franchise/DeleteUpload";
     if (Dropzone.instances.length > 0) {
         Dropzone.instances.forEach(dz => dz.destroy());
     }
     let isNewFranchise = false;
     let isUpdateFranchise = false;
-    GetAllCityList();
-    CheckValidation();
-    myDropzone = new Dropzone("#dropzone",
-        {
+    myDropzone = new Dropzone("#dropzone",{
             url: uploadUrl,
             paramName: "file",
             maxFiles: 1,
@@ -29,7 +38,7 @@ $(document).ready(function () {
             autoProcessQueue: false,
             acceptedFiles: "image/*",
             init: function () {
-                $("#btnSaveFranchise").click(function (event) {
+                $("#btnSaveFranchise").on('click', function (event) {
                     event.preventDefault();
                     isNewFranchise = false;
                     isUpdateFranchise = false;
@@ -41,7 +50,7 @@ $(document).ready(function () {
                         toastr.warning("Please Fill Form Details ", "Validation Error");
                     }
                 });
-                $("#btnSavenewFranchise").click(function (event) {
+                $("#btnSavenewFranchise").on('click', function (event) {
                     isNewFranchise = true;
                     isUpdateFranchise = false;
                     if (myDropzone.files.length > 0) {
@@ -56,7 +65,7 @@ $(document).ready(function () {
                 if (dropzone.children.length > 2) {
                     dropzone.removeChild(dropzone.children[1]);
                 }
-                $("#btnUpdateFranchise").click(function (event) {
+                $("#btnUpdateFranchise").on('click', function (event) {
                     isNewFranchise = false;
                     isUpdateFranchise = true;
                     if (myDropzone.files.length > 0) {
@@ -85,13 +94,15 @@ $(document).ready(function () {
                 }
                 else {
                     SaveFranchise(response.fileName, function (companyId) {
-                        if (companyId >0) {
+                        if (companyId > 0) {
                             if (isNewFranchise) {
                                 $('#franchiseForm')[0].reset();
                                 myDropzone.removeAllFiles();
-                                $('#ddlCity').val("");
-                                $('#ddlCity').selectpicker('refresh');
+                                $('#ddlCity').val(null).trigger('change');
                                 setTimeout(() => {
+                                    $('.ddlAttachment').each(function () {
+                                        $(this).val('').trigger('change'); 
+                                    });
                                     $('#attachmentRow').clear();
                                 }, 1000);
                             }
@@ -132,23 +143,8 @@ $(document).ready(function () {
                     done();
                 }
             }
-        });
-    $("#btnViewButton").on("click", function () {
-        FetchFranchise();
-        $("#addFranchiseDiv").css('display', 'none');
-        $("#backButton").css('display', 'block');
     });
-
-    $("#btnCancel").on("click", function () {
-        FetchFranchise();
-        $("#addFranchiseDiv").css('display', 'none');
-        $("#backButton").css('display', 'block');
-    });
-
-    $('#backButton').on('click', function () {
-        window.location.reload(true);
-    });
-});
+}
 function CheckValidation() {
     $("#txtFranchiseName").on("blur", function () {
         if (!/^[A-Za-z0-9 ]+$/.test($(this).val())) {
@@ -216,6 +212,7 @@ function CheckValidation() {
             return;
         }
     })
+
 }
 function OnSubmitValidation() {
     if (IsNullOrEmpty($("#txtFranchiseName").val()) || !/^[A-Za-z0-9 ]+$/.test($("#txtFranchiseName").val())) {
@@ -295,8 +292,6 @@ function BindDropDown(data) {
         opt.textContent = option.cityName;
         select.appendChild(opt);
     });
-
-    $('.selectpicker').selectpicker('refresh');
 }
 function SaveFranchise(fileName, callback) {
     var franchiseName = $("#txtFranchiseName").val();
@@ -351,7 +346,11 @@ function SaveFranchise(fileName, callback) {
     return companyId;
 };
 function FetchFranchise() {
-    $("#tableDiv").show();
+    $("#tableDiv").css('display', 'block');
+    $("#formDiv").css('display', 'none');
+    $('#franchiseForm')[0].reset();
+    myDropzone.removeAllFiles();
+    $('#ddlCity').val(null).trigger('change');
     var fetchFranchiseUrl = '/Franchise/GetFranchiseAll';
     $.ajax({
         url: fetchFranchiseUrl,
@@ -360,85 +359,48 @@ function FetchFranchise() {
         success: function (response) {
             let franchiseList = response.filter(x => x.companyTypeId == 2);
             franchiseViewModelDto = response;
-            if ($.fn.DataTable.isDataTable('#tableFranchise')) {
-                $('#tableFranchise').DataTable().clear().destroy();
+            if ($.fn.DataTable.isDataTable("#franchiseTable")) {
+                $("#franchiseTable").DataTable().clear();
             }
-            $('#tableFranchise').DataTable({
-                "processing": true,
-                "serverSide": false,
-                "paging": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "scrollX": true,
-                "data": franchiseList,
-                "columns": [
-                    {
-                        "data": "logoImage",
-                        "render": function (data) {
-                            return `<img src="../../franchiselogo/${data}" style="height:40px;width:60px" alt="Logo" />`
-                        }
-                    },
-                    { "data": "companyName" },
-                    { "data": "addressLine" },
-                    { "data": "cityId" },
-                    { "data": "pinCode" },
-                    { "data": "contactPerson" },
-                    { "data": "contactNo" },
-                    { "data": "mobNo" },
-                    { "data": "whatsAppNo" },
-                    { "data": "email" },
-                    { "data": "panNo" },
-                    { "data": "gstNo" },
-                    {
-                        "data": function (row) {
-                            return { CompanyId: row.companyId, Logofile: row.logoImage }
-                        },
-                        "render": function (data, type, row) {
-                            return `<div class="btn-group" role="group">
-        <button type="button" class="btn btn-sm btn-primary" onclick="EditFranchise(${data.CompanyId})">
-            <i class="ti ti-edit"></i> Edit
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteFranchise(${data.CompanyId},'${data.Logofile}')">
-            <i class="ti ti-trash"></i> Delete
-        </button>
-    </div>`;
-                        }
-                    },
-                ],
-                "columnDefs": [
-                    {
-                        "targets": "_all",
-                        "className": "text-center"
-                    }
-                ]
-            })
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
+            const table = $("#franchiseTable").DataTable();
+            franchiseList.forEach(item => {
+                table.row.add([
+                    `<img src="../../franchiselogo/${item.logoImage}" alt="Logo" height="40">`,
+                    item.companyName,
+                    item.addressLine,
+                    item.email,
+                    item.contactPerson,
+                    item.contactNo,
+                    item.mobNo,
+                    item.gstNo,
+                    `
+           <div class="action-items" style="cursor:pointer;">
+                    <a class="icon-btn" onclick="EditFranchise(${item.companyId})"><i class="ri-edit-2-line"></i></a>
+                    <a class="icon-btn" onclick="DeleteFranchise(${item.companyId},'${item.logoImage}')"><i class="ri-delete-bin-3-line"></i></a>
+            </div>
+            `
+                ]);
+            });
+
+            // Redraw table with new data
+            table.draw();
+
+            // Update total list count
+            $('#totalList').text(`Total List: ${franchiseList.length}`);
+
         }
     });
-};
+}
 function EditFranchise(companyId) {
     var data = franchiseViewModelDto.filter(x => x.companyId == companyId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, companyId, function (list) {
         var attachmentData = list;
-        $('#tableDiv').hide();
-        $("#backButton").css('display', 'none');
-        $("#addFranchiseDiv").css('display', 'Block');
+        $('#tableDiv').css('display', 'none');
+        $("#formDiv").css('display', 'Block');
         $("#btnSaveFranchise").hide();
         $("#btnUpdateFranchise").show();
         $("#btnSavenewFranchise").hide();
-        $("#btnViewButton").hide();
-        $("#btnCancel").removeClass('d-none')
         $("#hdnCompanyId").val(formData.companyId);
         $("#txtFranchiseName").val(formData.companyName);
         $("#txtFranchiseCode").val(formData.companyTypeId);
@@ -532,13 +494,10 @@ function UpdateFranchise(fileName) {
         success: function (response) {
             if (response.result == "Success") {
                 toastr.success("Franchise Details Updated Successfully!");
-                $("#addFranchiseDiv").css('display', 'none');
                 FetchFranchise();
-                $("#backButton").show();
-
             }
             else {
-                toastr.error("Failed to Update Franchise Details!","Error");
+                toastr.error("Failed to Update Franchise Details!", "Error");
             }
         },
         error: function (xhr, status, error) {
@@ -584,29 +543,29 @@ function UpdateFranchise(fileName) {
     });
 }
 function DeleteFranchise(companyId, fileName) {
+    debugger;
     var deleteFranchiseUrl = '/Franchise/DeleteFranchise/' + companyId;
     var deleteUploadUrl = '/Franchise/DeleteUpload';
     var result;
     FetchMasterAttachment(linkId, companyId, function (list) {
         result = list;
-    
-    $.ajax({
-        url: deleteFranchiseUrl,
-        type: "DELETE",
-        dataType: "json",
-        data: JSON.stringify(companyId),
-        success: function (response) {
-            if (result.length > 0) {
-                DeleteMasterAttachment(result[0].attachmentId);
+
+        $.ajax({
+            url: deleteFranchiseUrl,
+            type: "DELETE",
+            dataType: "json",
+            data: JSON.stringify(companyId),
+            success: function (response) {
+                if (result.length > 0) {
+                    DeleteMasterAttachment(result[0].attachmentId);
+                }
+                toastr.success("Franchise Details Deleted Successfully!");
+                FetchFranchise();
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Delete Franchise Details!", "Error");
             }
-            toastr.success("Franchise Details Deleted Successfully!");
-            FetchFranchise();
-            $("#backButton").css('display', 'block');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Delete Franchise Details!", "Error");
-        }
-    });
+        });
     })
     $.ajax({
         url: deleteUploadUrl,

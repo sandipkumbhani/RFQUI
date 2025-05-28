@@ -8,162 +8,214 @@
     <script src="~/js/AttachmentDetails.js"></script>
     <script src="~/js/Views/Franchise.js"></script>
 }
-<div class="app-toolbar  pt-3 px-lg-3">
-    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
-        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-            <div class="page-title d-flex align-items-center gap-1 me-3">
-                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
-                    Dashboard
-                </h1>
-                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
-                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
-                    </li>
-                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
-                    <li class="breadcrumb-item text-primary">
-                        Franchise
-                    </li>
-                </ul>
+<div id="tableDiv">
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box add">
+            <h1 class="page-title">Franchise</h1>
+
+            <div class="add-btn">
+                <a href="#" id="btnAddFranchise">
+                    <i class="ri-add-line"></i> <span>Add Franchise</span>
+                </a>
             </div>
         </div>
     </div>
 </div>
-<div class="app-content  px-lg-3">
-    <div class="app-container  container-fluid">
-        <div class="container my-4">
-            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
-                </svg>
-                Back
-            </button>
-        </div>
-        <div id="addFranchiseDiv" class="card">
-            <div class="card-header border-0 cursor-pointer">
-                <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">Franchise</h3>
+<div class="row">
+    <div class="col-12">
+        <div class="card com-profile-info">
+            <!-- Top Header -->
+            <div class="table-top-header">
+                <h4>List of Franchise</h4>
+                <div class="d-flex gap-2">
+                    <div class="table-search-box">
+                        <input type="text" id="customFranchiseSearch" class="form-control form-control-sm" placeholder="Search...">
+                        <button type="submit"><i class="ri-search-line"></i></button>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn-btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filter <i class="ri-sound-module-line"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                            <li><a class="dropdown-item filter-option" data-value="">All Status</a></li>
+                            <li><a class="dropdown-item filter-option" data-value="Pending">Pending</a></li>
+                            <li><a class="dropdown-item filter-option" data-value="Done">Done</a></li>
+                        </ul>
+                    </div>
+                    <div id="exportFranchiseButtons" class="btn-group" role="group"></div>
                 </div>
             </div>
-            <form id="franchiseForm" class="form" enctype="multipart/form-data" method="post">
-                <input type="hidden"  id="hdnCompanyId"/>
-                <div class="card-body border-top p-9">
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Franchise Name </label>
-                                <input type="text" class="form-control" placeholder="Franchise Name" id="txtFranchiseName" maxlength="100" />
+
+            <!-- Table -->
+            <div class="table-responsive">
+                    <table id="franchiseTable" class="table dt-responsive nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Franchise Logo</th>
+                                <th>Franchise Name</th>
+                                <th>Address</th>
+                                <th>Email</th>
+                                <th>Contact Person</th>
+                                <th>Contact Number</th>
+                                <th>Mobile Number</th>
+                                <th>GST Number</th>
+                                <th class="no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody> <!-- This will be dynamically filled -->
+                    </table>
+            </div>
+
+            <!-- Bottom Area -->
+            <div class="datatable-footer-bottom">
+                <div class="totle-left">
+                    <span id="totalList">Total List: 3</span>
+                </div>
+                <div id="customFranchisePagination" class="dataTables_paginate paging_simple_numbers"></div>
+                <div class="show-page">
+                    <span>Show per page:</span>
+                    <select id="pageLength" class="form-select">
+                        <option value="5">5 </option>
+                        <option value="10" selected>10 </option>
+                        <option value="25">25</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+<div id="formDiv" style="display:none;">
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box add">
+            <h1 class="page-title">Add Franchise</h1>
+
+            <div class="add-breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="franchise.html">Franchise</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"> Add Franchise</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card com-franchise-info">
+            <form id="franchiseForm" class="" enctype="multipart/form-data" method="post">
+                <input type="hidden" id="hdnCompanyId" />
+                <div class="franchise-details">
+                    <h2 class="page-form-title">Franchise Details</h2>
+                    <div class=" all-custom-class">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Franchise Name <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Enter Franchise Name" id="txtFranchiseName" maxlength="100" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">City <span>*</span></label>
+                                        <select class="select2-custom form-control" style="width: 100%;" id="ddlCity">
+                                        </select>
+                                </div>
                             </div>
-  
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">City</label>
-
-                                <select id="ddlCity" name="franchise" aria-label="Select a City" class="selectpicker" data-live-search="true" data-width="100%">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="fv-row upload-imgs">
-                                <div class="dropzone" id="dropzone">
-
-                                    <div class="dz-message needsclick">
-                                        <i class="bi bi-cloud-upload fs-3x text-primary"></i>
-
-                                        <div class="ms-4">
-                                            <h3 class="fs-5 fw-bold text-gray-900 mb-1">Upload logo</h3>
+                            <div class="col-lg-6">
+                                <div class="file-upload-item">
+                                    <label class="form-label">Franchise Logo <span>*</span></label>
+                                        <div class="dropzone" id="dropzone">
+                                        <div class="dz-message needsclick">
+                                            <i class="ri-upload-cloud-2-fill"></i>
+                                            <h5>Drag & Drop your files here</h5>
+                                            <strong>OR</strong>
+                                            <button>Browse files</button>
                                         </div>
-
                                     </div>
                                 </div>
-                                
-                            </div>
-                            <input type="text" hidden id="hdnUploadedFile" />
-                        </div>
-                        <div class="col-xl-12">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Address </label>
-                                <input type="text" class="form-control" placeholder="Address" id="txtAddress" maxlength="200"/>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)"/>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Contact Number</label>
-                                <input type="text" class="form-control" placeholder="Contact Number" id="txtContactNumber" maxlength="10" onkeypress="return isNumber(event)" />
-                            </div>
+                                <input type="text" hidden id="hdnUploadedFile" />
 
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number</label>
-                                <input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber" onkeypress="return isNumber(event)" maxlength="10"/>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
-                                <input type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
                             </div>
                         </div>
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
-                                <input type="text" class="form-control" placeholder="Pincode" id="txtPinCode" onkeypress="return isNumber(event)" maxlength="6" />
+
+                        <div class="col-lg-12">
+                            <div class="item-input">
+                                <label class="form-label">Address <span>*</span></label>
+                                <input type="text" class="form-control" placeholder="Enter Your Address" id="txtAddress" maxlength="200" />
                             </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
-                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" onkeypress="return isNumber(event)" maxlength="10" />
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Contact Person <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Enter Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">Contact Number <span>*</span></label>
+                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtContactNumber" maxlength="10" onkeypress="return isNumber(event)" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">Mobile Number <span>*</span></label>
+                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtMobileNumber" onkeypress="return isNumber(event)" maxlength="10" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">Pan Number <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="xxxxxxxxxx" id="txtPanNumber" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                </div>
                             </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Email ID</label>
-                                <input type="email" class="form-control" placeholder="name@example.com" id="txtEmailId" maxlength="50"/>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
-                                <input type="text" class="form-control" placeholder="GST Number" id="txtGstNumber" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Pincode <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Enter Your Pincode" id="txtPinCode" onkeypress="return isNumber(event)" maxlength="6" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">WhatsApp Number <span>*</span></label>
+                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtWhatsAppNumber" onkeypress="return isNumber(event)" maxlength="10"/>
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">Email <span>*</span></label>
+                                    <input type="email" class="form-control" placeholder="Enter Your Email" id="txtEmailId" maxlength="50" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">GST Number <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="xxxxx-xxxxx-xxxxx" id="txtGstNumber" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
-                <div class="card-footer d-flex justify-content-srtat py-6 px-9">
-                    <button id="btnSaveFranchise" type="button" class="btn btn-primary me-2">Save</button>
-                    <button id="btnSavenewFranchise" type="button" class="btn btn-primary me-2">Save & New</button>
-                    <button type="button" id="btnUpdateFranchise" class="btn btn-primary me-2" style="display:none;">Update</button>
-                    <button type="button" class="btn btn-primary" id="btnViewButton">View</button>
-                    <button id="btnCancel" type="button" class="btn btn-danger d-none">Cancel</button>
+                <div class="button-main">
+                        <a href="#" class="card-link" id="btnSaveFranchise">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save
+                        </span>
+                        </a>
+                        <a href="#"  class="card-link" id="btnSavenewFranchise">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save & New
+                        </span>
+                    </a>
+                        <a href="#"  class="card-link" id="btnUpdateFranchise" style="display:none;">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Update
+                            </span>
+                        </a>
+                        <a href="#" class="card-link" id="btnCancel">
+                        <i class="ri-close-line"></i>
+                        <span>
+                            Cancel
+                        </span>
+                        </a>
                 </div>
             </form>
         </div>
-
-        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
-            <div class="card-header p-4">
-                <h4 class="fw-bold m-0 text-lg">Franchise List</h4>
-            </div>
-            <div class="card-body">
-                <table id="tableFranchise"
-                       class="table table-striped align-middle fs-6 mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th>Logo</th>
-                            <th>CompanyName</th>
-                            <th>AddressLine</th>
-                            <th>CityId</th>
-                            <th>PinCode</th>
-                            <th>ContactPerson</th>
-                            <th>Contact No</th>
-                            <th>Mobile No</th>
-                            <th>WhatsApp No</th>
-                            <th>Email</th>
-                            <th>PAN No</th>
-                            <th>GST No</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Dynamic rows go here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 </div>
-
+</div>

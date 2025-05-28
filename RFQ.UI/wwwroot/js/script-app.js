@@ -147,35 +147,35 @@ $('#select-all').click(function(event) {
     }
 });
 
-Dropzone.autoDiscover = false;
+//Dropzone.autoDiscover = false;
 
-$(document).ready(function () {
-  let myDropzone = new Dropzone("#my-dropzone", {
-    url: "/upload", // your server upload endpoint
-    addRemoveLinks: false, // disable default remove button
-    init: function () {
-      this.on("addedfile", function (file) {
-        // Add custom close button
-        var removeButton = Dropzone.createElement("<div class='dz-remove-btn'>&times;</div>");
+//$(document).ready(function () {
+//  let myDropzone = new Dropzone("#my-dropzone", {
+//    url: "/upload", // your server upload endpoint
+//    addRemoveLinks: false, // disable default remove button
+//    init: function () {
+//      this.on("addedfile", function (file) {
+//        // Add custom close button
+//        var removeButton = Dropzone.createElement("<div class='dz-remove-btn'>&times;</div>");
 
-        // Append it to the file preview element
-        file.previewElement.appendChild(removeButton);
+//        // Append it to the file preview element
+//        file.previewElement.appendChild(removeButton);
 
-        // Handle remove event
-        $(removeButton).on("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
+//        // Handle remove event
+//        $(removeButton).on("click", function (e) {
+//          e.preventDefault();
+//          e.stopPropagation();
 
-          // Remove file from dropzone
-          myDropzone.removeFile(file);
+//          // Remove file from dropzone
+//          myDropzone.removeFile(file);
           
-          // Optionally: Send request to delete from server if already uploaded
-          // $.post("/delete", { filename: file.name });
-        });
-      });
-    }
-  });
-});
+//          // Optionally: Send request to delete from server if already uploaded
+//          // $.post("/delete", { filename: file.name });
+//        });
+//      });
+//    }
+//  });
+//});
 
 
   $(".show-hide").show();
@@ -330,7 +330,7 @@ $('#kt_docs_repeater_basic').repeater({
 
     show: function () {
         $(this).slideDown();
-
+        populateDropdown($(this).find('.ddlAttachment'));
         // Re-init select2
         $(this).find('.select2-custom').select2({
           theme: 'bootstrap4',
