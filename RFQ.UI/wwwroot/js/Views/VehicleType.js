@@ -33,6 +33,10 @@ $(document).ready(function () {
         $('#addVehicleTypeDiv').removeClass('d-none');
         $('#viewButton').addClass('d-none');
         $('#btnCancel').removeClass('d-none');
+        $('#btnSaveVehicleType').removeClass('d-none');
+        $('#SavenewButton').removeClass('d-none')
+        $('#updateButton').addClass('d-none');
+        $('#VehicleTypeForm')[0].reset();
     });
 
     $("#btnCancel").on('click', function () {
