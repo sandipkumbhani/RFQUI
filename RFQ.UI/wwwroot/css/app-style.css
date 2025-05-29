@@ -519,6 +519,12 @@ select {
     color: var(--ft-white);
 }
 
+.side-nav-link.active {
+    background: var(--ft-primary);
+    color: var(--ft-white) !important;
+    margin-top: 5px;
+}
+
 .left-toplogo {
     position: relative;
 }
@@ -907,34 +913,30 @@ select {
     display: flex;
     align-items: center;
 }
-
-    .button-main .card-link {
-        font-size: 1rem;
-        font-weight: bold;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        color: var(--ft-white);
-        padding: 0.8125rem 1rem;
-        background: var(--ft-primary);
-        border-radius: 8px;
-        max-width: 130px;
-        width: 100%;
-    }
-
-        .button-main .card-link i {
-            font-size: 1.375rem;
-            font-weight: normal;
-            line-height: 22px;
-        }
-
-        .button-main .card-link.outline-bar {
-            border: 1px solid var(--ft-primary);
-            background: transparent;
-            color: var(--ft-primary);
-        }
-
+.button-main .card-link{
+  font-size: 1rem;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--ft-white);
+  padding: 0.8125rem 1rem;
+  background: var(--ft-primary);
+  border-radius: 8px;
+  max-width: 160px;
+  width: 100%;
+}
+.button-main .card-link i{
+  font-size: 1.375rem;
+  font-weight: normal;
+  line-height: 22px;
+}
+.button-main .card-link.outline-bar{
+  border: 1px solid var(--ft-primary);
+  background: transparent;
+  color: var(--ft-primary);
+}
 .user-image {
     width: 73px;
     height: 73px;
@@ -1559,8 +1561,7 @@ table.dataTable thead th.sorting_desc::after {
     display: inline-flex;
     color: var(--ft-primary);
 }
-
-.add-btn a {
+.add-btn a{
     font-size: 1rem;
     font-weight: 600;
     display: flex;
@@ -1571,7 +1572,7 @@ table.dataTable thead th.sorting_desc::after {
     padding: 0.625rem 1rem;
     background: var(--ft-primary);
     border-radius: 8px;
-    max-width: 180px;
+    max-width: 200px;
     width: 100%;
 }
 

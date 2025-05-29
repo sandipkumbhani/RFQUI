@@ -5,100 +5,121 @@
 @section Scripts {
     <script src="~/js/Views/VehicleType.js"></script>
 }
-<div class="app-toolbar pt-3 px-lg-3">
-    <div class="app-container container-fluid d-flex flex-stack flex-wrap">
-        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-            <div class="page-title d-flex align-items-center gap-1 me-3">
-                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
-                    Overview
-                </h1>
-                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
-                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-                        <a href="#" class="text-gray-500">
-                            <i class="fa-solid fa-house"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i>
-                    </li>
-                    <li class="breadcrumb-item text-primary">
-                        Vehicle Type
-                    </li>
-                </ul>
+<!-- Vehicle Type Table Card -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box add">
+            <h1 class="page-title">Vehicle Type Details</h1>
+            <div class="add-btn">
+                <button type="button" id="btnAddVehicleType">
+                    <i class="ri-add-line"></i> <span>Add Vehicle Type</span>
+                </button>
             </div>
         </div>
     </div>
-
 </div>
-
 <div class="app-content  px-lg-3">
     <div class="app-container  container-fluid">
-        <div class="container my-4">
-            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
-                </svg>
-                Back
-            </button>
-        </div>
-        <div id="addVehicleTypeDiv" class="card">
-            <div class="card-header border-0 cursor-pointer">
-                <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">Vehicle Type</h3>
-                </div>
-            </div>
+        <div id="addVehicleTypeDiv" class="card d-none">
             <form class="form" id="VehicleTypeForm" method="post">
-                <div class="card-body border-top p-9">
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
-                                <input type="text"  class="form-control" id="txtVehicleType"
+                <div class="franchise-details">
+                    <h2 class="page-form-title">Vehicle Type Details</h2>
+                    <div class="row all-custom-class">
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Vehicle Type <span>*</span></label>
+                                <input type="text" class="form-control" id="txtVehicleType"
                                        placeholder="Vehicle Type" maxlength="50" />
                             </div>
                         </div>
-                        <div class="col-xl-3">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Minimum KMS / Day</label>
-                                <input type="text" inputmode="numeric" class="form-control" id="txtminKmsPerDay" onkeypress="return isNumber(event)" 
-                                       placeholder="Minimum KMS / Day" />
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Minimum KMS / Day <span>*</span></label>
+                                <input type="text" inputmode="numeric" class="form-control" id="txtminKmsPerDay"
+                                       placeholder="Minimum KMS / Day" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                     </div>
-
                 </div>
-                <div class="card-footer d-flex justify-content-srtat py-6 px-9">
-                    <button id="btnSaveVehicleType" type="button" class="btn btn-primary me-2" data-action="save">Save</button>
-                    <button id="SavenewButton" type="button" class="btn btn-primary me-2" data-action="saveNew">Save & New</button>
-                    <button id="viewButton" type="button" class="btn btn-primary">View</button>
-                    <button id="updateButton" type="button" class="btn btn-primary me-2" style="display:none;">Update</button>
-                    <button id="btnCancel" type="button" class="btn btn-danger d-none">Cancel</button>
+
+                <div class="button-main">
+                    <a href="#" id="btnSaveVehicleType" class="card-link" data-action="save">
+                        <i class="ri-save-line"></i>
+                        <span>Save</span>
+                    </a>
+                    <a href="#" id="SavenewButton" class="card-link" data-action="saveNew">
+                        <i class="ri-save-line"></i>
+                        <span>Save & New</span>
+                    </a>
+                    <a href="#" id="viewButton" class="card-link">
+                        <i class="ri-eye-line"></i>
+                        <span>View</span>
+                    </a>
+                    <a href="#" id="updateButton" class="card-link" style="display:none;">
+                        <i class="ri-edit-line"></i>
+                        <span>Update</span>
+                    </a>
+                    <a href="#" id="btnCancel" class="card-link outline-bar d-none">
+                        <svg width="23" height="22" viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.8166 18.6828L18.6779 12.1172H19.0625C19.3719 12.1172 19.6211 11.868 19.6211 11.5586V7.43359C19.6211 7.12422 19.3719 6.875 19.0625 6.875H13.7773V2.96484C13.7773 2.65547 13.5281 2.40625 13.2188 2.40625H9.78125C9.47188 2.40625 9.22266 2.65547 9.22266 2.96484V6.875H3.9375C3.62813 6.875 3.37891 7.12422 3.37891 7.43359V11.5586C3.37891 11.868 3.62813 12.1172 3.9375 12.1172H4.32207L3.1834 18.6828C3.17695 18.715 3.1748 18.7473 3.1748 18.7773C3.1748 19.0867 3.42402 19.3359 3.7334 19.3359H19.2666C19.2988 19.3359 19.3311 19.3338 19.3611 19.3273C19.6662 19.2758 19.8703 18.9857 19.8166 18.6828ZM4.88281 8.37891H10.7266V3.91016H12.2734V8.37891H18.1172V10.6133H4.88281V8.37891ZM14.9375 17.832V14.4805C14.9375 14.3859 14.8602 14.3086 14.7656 14.3086H13.7344C13.6398 14.3086 13.5625 14.3859 13.5625 14.4805V17.832H9.4375V14.4805C9.4375 14.3859 9.36016 14.3086 9.26562 14.3086H8.23438C8.13984 14.3086 8.0625 14.3859 8.0625 14.4805V17.832H4.85703L5.82598 12.2461H17.1719L18.1408 17.832H14.9375Z" fill="#0466C8" />
+                        </svg>
+                        <span>Cancel</span>
+                    </a>
                 </div>
             </form>
         </div>
-        <div class="my-4"></div>
-        <!-- Vehicle Type Table Card -->
-        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
-            <div class="card-header p-4">
-                <h4 class="fw-bold m-0 text-lg">Vehicle Type List</h4>
-            </div>
-            <div class="card-body">
-                <table id="tableVehicleType"
-                       class="table table-striped align-middle fs-6 mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th>Company Name</th>
-                            <th>Vehicle Type Name</th>
-                            <th>Minimum KMS / Day</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Dynamic rows go here -->
-                    </tbody>
-                </table>
+
+        @* Vehicle Type Table *@
+        <div id="tableDiv" class="card com-profile-info">
+            <!-- Top Header -->
+            <div class="container-fluid">
+                <div class="table-top-header">
+                    <h4>Vehicle Type List</h4>
+                    <div class="d-flex gap-2">
+                        <div id="exportVehicleTypeButtons" class="btn-group" role="group"></div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="vehicleTypesTableSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div id="exportvehicleTypesButtons" class="btn-group" role="group"></div>
+                    </div>
+                </div>
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table id="vehicleTypesTable" class="table dt-responsive nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Vehicle Type Name</th>
+                                <th>Minimum KMS / Day</th>
+                                <th class="no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic rows go here -->
+                        </tbody>
+                    </table>
+                    <!-- Bottom Area -->
+                    <div class="datatable-footer-bottom">
+                        <div class="totle-left">
+                            <span id="totalList">Total List: 3</span>
+                        </div>
+                        <div id="customvehicleTypesPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                        <div class="show-page">
+                            <span>Show per page:</span>
+                            <select id="pageLength" class="form-select">
+                                <option value="5">5 </option>
+                                <option value="10" selected>10 </option>
+                                <option value="25">25</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 

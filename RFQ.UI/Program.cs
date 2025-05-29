@@ -36,7 +36,7 @@ app.Use(async (context, next) =>
         globalclass.Token = token;
     }
     await next.Invoke();
-    });
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
