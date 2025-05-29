@@ -286,7 +286,6 @@ $(document).ready(function () {
     $('#totalVehicleTypesReminders').text(`Total List: ${table.rows().count()}`);
 });
 
-
 $(document).ready(function () {
 
     $.fn.DataTable.ext.pager.numbers_length = 3;
@@ -346,65 +345,6 @@ $(document).ready(function () {
     // Update total reminders
     $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
 });
-
-
-// $(document).ready(function () {
-//     const table = $('#corporateTable').DataTable({
-//         responsive: true,
-//         dom: 'Bfrtip',
-//         buttons: [
-//             {
-//                 text: '<i class="ri-file-excel-line"></i> Export All',
-//             },
-//         ],
-//         paging: true,
-//         info: true,
-//         lengthChange: false,
-//         pageLength: 10,
-//         columnDefs: [
-//             // { orderable: false, targets: [] } // all sortable
-//             { orderable: false, targets: 'no-sort' }
-//         ],
-//         language: {
-//             paginate: {
-//             previous: '<i class="ri-arrow-left-s-line"></i>',
-//             next: '<i class="ri-arrow-right-s-line"></i>'
-//             }
-//         }
-//     });
-
-//     // Move export buttons
-//     table.buttons().container().appendTo('#exportcorporateButtons');
-
-//     // Search
-//     $('#customcorporateSearch').on('keyup', function () {
-//         table.search(this.value).draw();
-//     });
-
-//     // Move pagination to custom div
-//     $('#corporateTable_paginate').appendTo('#customcorporatePagination');
-
-//     // Filter dropdown logic
-//     $('.filter-option-corporate').on('click', function () {
-//         const value = $(this).data('value');
-//         const label = $(this).text();
-
-//         // Update filter label after selection
-//         $('#filterDropdownCorporate').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-//         // Apply DataTables column filter (status is column 2)
-//         table.column(2).search(value).draw();
-//     });
-
-//     // Page length
-//     $('#pageLength').on('change', function () {
-//         table.page.len(this.value).draw();
-//     });
-
-//     // Update total reminders
-//     $('#totalRemindersCorporate').text(`Total List: ${table.rows().count()}`);
-// });
-
 
 $(document).ready(function () {
     const table = $('#corporateTable').DataTable({
@@ -543,11 +483,61 @@ $(document).ready(function () {
     $('#totalRemindersCorporate').text(`Total List: ${table.rows().count()}`);
 });
 
+$(document).ready(function () {
+    $.fn.DataTable.ext.pager.numbers_length = 3;
 
+    const table = $('#tableVehicle').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="ri-file-excel-line"></i> Export All',
+            },
+        ],
+        paging: true,
+        info: true,
+        lengthChange: false,
+        pageLength: 3,
+        columnDefs: [
+            // { orderable: false, targets: [] } // all sortable
+            { orderable: false, targets: 'no-sort' },
+        ],
+        language: {
+            paginate: {
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
+            }
+        }
+    });
 
+    // Move export buttons
+    table.buttons().container().appendTo('#exporttableVehicleButtons');
 
+    // Search
+    $('#vehicleTableSearch').on('keyup', function () {
+        table.search(this.value).draw();
+    });
 
+    // Move pagination to custom div
+    $('#tableVehicle_paginate').appendTo('#customvtableVehiclePagination');
 
+    // Filter dropdown logic
+    $('.filter-option-tableVehicle').on('click', function () {
+        const value = $(this).data('value');
+        const label = $(this).text();
 
+        // Update filter label after selection
+        $('#filtertableVehicleDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
 
+        // Apply DataTables column filter (status is column 2)
+        table.column(2).search(value).draw();
+    });
 
+    // Page length
+    $('#pageLength').on('change', function () {
+        table.page.len(this.value).draw();
+    });
+
+    // Update total reminders
+    $('#totaltableVehicleReminders').text(`Total List: ${table.rows().count()}`);
+});
