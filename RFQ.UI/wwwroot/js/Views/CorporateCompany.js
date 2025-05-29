@@ -6,22 +6,32 @@ $(document).ready(function () {
     GetAllFranchiseList();
     GetAllCityList();
     CheckValidation();
+    FetchCorporateCompany();
     $(document).on("click", "#btnView", function () {
         FetchCorporateCompany();
-        $("#addCorporateCompanyDiv").css('display', 'none')
+        $("#formDiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     });
-    $("#btnCancel").on('click', function () {
-        FetchCorporateCompany();
-        $("#addCorporateCompanyDiv").css('display', 'none')
-        $("#backButton").css('display', 'Block');
-    })
+
+   
+    $('#tableDivLink').on('click', function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        $('#formDiv').hide(); // hide the add/edit form
+        $('#tableDiv').show(); // show the list
+    });
+
+    
+    $("#btnCancel").on("click", function () {
+        window.location.reload(true);
+    });
+
     document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
         element.addEventListener("input", function () {
             this.value = this.value.toUpperCase();
         });
     });
     $("#btnSaveCompanyType, #btnsaveandnew").on('click', function () {
+        debugger;
         var action = $(this).data('action'); // "save" or "saveNew"
         if (OnSubmitCheckValidation()) {
             SaveCorporateCompany(action);
@@ -34,6 +44,11 @@ $(document).ready(function () {
     });
     ButtonUpdateClick();
 });
+$('#addCompany').click(function () {
+    $('#formDiv').css("display", "block");
+    $('#tableDiv').css("display", "none");
+});
+
 function CheckValidation() {
     $("#txtCompanyName").on("blur", function () {
         if (!/^[A-Za-z0-9 ]+$/.test($(this).val())) {
@@ -204,12 +219,11 @@ function BindDropDownData(data) {
         select.appendChild(opt);
     });
 
-    $('.selectpicker').selectpicker('refresh');
 }
 function GetAllCityList() {
-    var cityUrl = '/Customer/GetAllCity';
+    var getcityUrl = '/Customer/GetAllCity'
     $.ajax({
-        url: cityUrl,
+        url: getcityUrl,
         type: "GET",
         dataType: "json",
         success: function (response) {
@@ -223,103 +237,61 @@ function GetAllCityList() {
 function BindDropDown(data) {
     const select = document.getElementById("ddlCity");
     select.innerHTML = "";
-
     let placeholderOption = document.createElement("option");
     placeholderOption.value = "";
     placeholderOption.textContent = "Select a City";
     placeholderOption.disabled = true;
     placeholderOption.selected = true;
     select.appendChild(placeholderOption);
-
     data.forEach(option => {
         let opt = document.createElement("option");
         opt.value = option.cityId;
         opt.textContent = option.cityName;
         select.appendChild(opt);
     });
-
-    $('.selectpicker').selectpicker('refresh');
 }
 function FetchCorporateCompany() {
-    $('#tableDiv').show();
-    var fetchCorporateCompanyUrl = '/CorporateCompany/ViewCorporateCompany';
+    $("#tableDiv").show();
+    ResetAttachmentRepeater();
+    var FetchCorporateCompanyUrl = '/CorporateCompany/ViewCorporateCompany';
     $.ajax({
-        url: fetchCorporateCompanyUrl,
-        type: "GET",
-        dataType: "json",
+        url: FetchCorporateCompanyUrl,
+        type: 'GET',
+        dataType: 'json',
         success: function (response) {
-            let trlist = response.filter(x => x.companyTypeId == 3);
+            let companyList = response.filter(x => x.companyTypeId == 3);
             corporateCompanyViewModelDto = response;
-            if ($.fn.DataTable.isDataTable('#tableCorporateCompany')) {
-                $('#tableCorporateCompany').DataTable().clear().destroy();
+            if ($.fn.DataTable.isDataTable('#corporateTable')) {
+                $('#corporateTable').DataTable().clear();
             }
+            console.log(companyList)
+            const table = $("#corporateTable").DataTable();
+            companyList.forEach(item => {
+                table.row.add([
 
+                    item.companyName,
+                    item.addressLine,
+                    item.pinCode,
+                    item.contactPerson,
+                    item.mobNo,
+                    item.contactNo,
+                    item.whatsAppNo,
+                    item.email,
+                    item.panNo,
+                    item.gstNo,
 
-            $('#tableCorporateCompany').DataTable({
-                "processing": true,
-                "serverSide": false,
-                "paging": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "scrollX": true,
-
-                "data": trlist,
-                "columns": [
-
-                    { "data": "companyTypeId" },
-                    { "data": "companyName" },
-                    { "data": "addressLine" },
-                    { "data": "cityId" },
-                    { "data": "pinCode" },
-                    { "data": "contactPerson" },
-                    { "data": "mobNo" },
-                    { "data": "contactNo" },
-                    { "data": "whatsAppNo" },
-                    { "data": "email" },
-                    { "data": "panNo" },
-                    { "data": "gstNo" },
-
-
-                    {
-                        "data": function (row) {
-                            return { CompanyId: row.companyId, LinkId: row.linkId }
-                        },
-                        "render": function (data, type, row) {
-                            return `
-                            <div class="btn-group" role="group">
-
-                                <button type="button" class="btn btn-sm btn-primary"
-                                    onclick="EditCorporateCompany(${data.CompanyId})">
-                                    <i class="ti ti-edit"></i> Edit
-                                </button>
-                                <button type="button" class="btn btn-sm btn-danger"
-                                    onclick="DeleteCorporateCompany(${data.CompanyId},${data.LinkId})">
-                                    <i class="ti ti-trash"></i> Delete
-                                </button>
-                            </div>`;
-                        },
-                    }
-                ],
-                "columnDefs": [
-                    {
-                        "targets": "_all",
-                        "className": "text-center"
-                    }
-                ]
+                    `
+                    <div class="action-items" style="cursor:pointer;">
+                        <a class="icon-btn" onclick="EditCorporateCompany(${item.companyId})"><i class="ri-edit-2-line"></i></a>
+                        <a class="icon-btn" onclick="DeleteCorporateCompany(${item.companyId})"><i class="ri-delete-bin-3-line"></i></a>
+                    </div>
+                    `
+                ]);
             });
-
-
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
+            // Redraw table with new data
+            table.draw();
+            // Update total list count
+            $('#totalRemindersCorporate').text(`Total List: ${companyList.length}`);
         }
     });
 }
@@ -381,9 +353,15 @@ function ButtonUpdateClick() {
                 success: function (result) {
                     if (result.result == "success") {
                         toastr.success("Corporate Company Details Updated Successfully!");
-                        $("#addCorporateCompanyDiv").css('display', 'none');
+                        $("#formDiv").css('display', 'none');
                         FetchCorporateCompany();
-                        $("#backButton").show();
+                        $('#CompanyTypeForm')[0].reset();
+                        $('#ddlFranchisename').val(null).trigger('change');
+                        $('#ddlCity').val(null).trigger('change');
+                        $("#btnupdate").hide();
+                        $("#btnsaveandnew").show();
+                        $("#btnSaveCompanyType").show();
+                        
                     } else {
                         toastr.error("Failed to Update Corporate Company Details!","Error");
                     }
@@ -447,7 +425,8 @@ function DeleteCorporateCompany(companyId, linkId) {
         });
     });
 }
-function SaveCorporateCompany(action) { 
+function SaveCorporateCompany(action) {
+    debugger;
         var companyName = $("#txtCompanyName").val();
         var franchiseName = $("#ddlFranchisename").val();
         var address = $("#txtAddress").val();
@@ -506,9 +485,11 @@ function SaveCorporateCompany(action) {
                     Saveattachment(companyId);
                     toastr.success("Corporate Company Details Submitted Successfully");
                     $('#CompanyTypeForm')[0].reset();
-                    $('#ddlFranchisename').val('');
-                    $('#ddlCity').val('');
-                    $('.selectpicker').selectpicker('refresh');
+                    $('#ddlFranchisename').val(null).trigger('change');
+                    $('#ddlCity').val(null).trigger('change');
+                    setTimeout(() => {
+                        ResetAttachmentRepeater();
+                    }, 1000);
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Submit Corporate Company Details!", "Error");
@@ -519,6 +500,7 @@ function SaveCorporateCompany(action) {
 
 }
 function EditCorporateCompany(companyId) {
+    debugger;
     var data = corporateCompanyViewModelDto.filter(x => x.companyId == companyId);
     if (data.length === 0) {
         return;
@@ -528,9 +510,11 @@ function EditCorporateCompany(companyId) {
 
     FetchMasterAttachment(formData.linkId, companyId, function (list) {
         var attachmantData = list;
-        $('#tableDiv').hide();
+        $('#tableDiv').css('display', 'none');
+        $("#formDiv").css('display', 'Block');
+
         $("#backButton").css('display', 'none');
-        $("#addCorporateCompanyDiv").css('display', 'Block');
+        $("#formDiv").css('display', 'Block');
         $("#btnSaveCompanyType").hide();
         $("#btnupdate").show();
         $("#btnView").hide();
