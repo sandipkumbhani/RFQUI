@@ -27,8 +27,8 @@ $(document).ready(function () {
         SaveVehicleType(action);
     });
 
-    $('#btnAddVehicleType').click(function () {
-        $(this).hide();
+    $('#btnAddVehicleType').on('click',function () {
+        $('#btnAddVehicleType').addClass('d-none');
         $('#tableDiv').hide();
         $('#addVehicleTypeDiv').removeClass('d-none');
         $('#viewButton').addClass('d-none');
@@ -38,6 +38,7 @@ $(document).ready(function () {
     $("#btnCancel").on('click', function () {
         FetchVehicleTypes();
         $("#addVehicleTypeDiv").addClass('d-none');
+        $("#btnAddVehicleType").removeClass('d-none');
     })
     UpdateVechileType();
     FetchVehicleTypes();
@@ -139,6 +140,7 @@ function EditVehicleType(vehicleTypeId) {
     EditVehicleTypeModelDtos = data[0];
     debugger;
     $('#tableDiv').hide();
+    $('#btnAddVehicleType').addClass('d-none');
     $('#addVehicleTypeDiv').removeClass('d-none');
     $("#updateButton").css('display', 'Block');
     $("#btnSaveVehicleType").css('display', 'none');
@@ -170,6 +172,7 @@ function UpdateVechileType() {
                 success: function (response) {
                     toastr.success("Vehicle Type Details Submitted Successfully!");
                     $("#addVehicleTypeDiv").addClass("d-none");
+                    $('#btnAddVehicleType').removeClass('d-none');
                     FetchVehicleTypes();
                 },
                 error: function (xhr, status, error) {
