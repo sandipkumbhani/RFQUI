@@ -600,51 +600,7 @@
                     }
 
                     $('#leftside-menu-container').html(sidebarHtml);
-                    setTimeout(function () {
-                        var currentUrl = window.location.pathname.toLowerCase();
-                        var $activeLink = $('#leftside-menu-container a.side-nav-link[href]')
-                            .filter(function () {
-                                // Compare only the pathname part
-                                return this.pathname && this.pathname.toLowerCase() === currentUrl;
-                            }).first();
-
-                        if ($activeLink.length) {
-                            $activeLink.addClass('active-page');
-                            // Expand parent submenu if exists
-                            var $submenu = $activeLink.closest('.sidebar-submenu');
-                            if ($submenu.length) {
-                                $submenu.addClass('show').removeClass('collapse');
-                                var $parentItem = $submenu.closest('.side-nav-item.dropdown');
-                                $parentItem.addClass('dropdown-open');
-                                var $parentLink = $parentItem.children('.side-nav-link');
-                                $parentLink.addClass('active-page').attr('aria-expanded', 'true');
-                            }
-                        }
-                    }, 100);
-
-                    // --- Handle click: activate submenu and keep parent expanded ---
-                           $('#leftside-menu-container').on('click', 'a.side-nav-link', function (e) {
-            let href = $(this).attr('href');
-            if (href && href !== 'javascript:void(0)') {
-                // Remove active from all
-                $('#leftside-menu-container a.side-nav-link').removeClass('active-page');
-                $(this).addClass('active-page');
-
-                // Collapse all submenus and remove dropdown-open
-                $('#leftside-menu-container .sidebar-submenu').removeClass('show').addClass('collapse');
-                $('#leftside-menu-container .side-nav-item.dropdown').removeClass('dropdown-open');
-
-                // Expand only the parent submenu and dropdown
-                let submenu = $(this).closest('.sidebar-submenu');
-                if (submenu.length) {
-                    submenu.addClass('show').removeClass('collapse');
-                    submenu.closest('.side-nav-item.dropdown').addClass('dropdown-open');
-                    // Also set parent link as active and aria-expanded
-                    let parentLink = submenu.closest('.side-nav-item.dropdown').children('.side-nav-link');
-                    parentLink.addClass('active-page').attr('aria-expanded', 'true');
-                }
-            }
-        });
+                    DropdownManageScript();
                 },
                 error: function () {
                     console.error("Failed to load menu.");
@@ -667,6 +623,55 @@
         }
         function toggleDropdown(element) {
             element.classList.toggle('dropdown-open');
+        }
+        function DropdownManageScript(){
+            setTimeout(function () {
+                        var currentUrl = window.location.pathname.toLowerCase();
+                        var $activeLink = $('#leftside-menu-container a.side-nav-link[href]')
+                            .filter(function () {
+                                // Compare only the pathname part
+                                return this.pathname && this.pathname.toLowerCase() === currentUrl;
+                            }).first();
+
+                        if ($activeLink.length) {
+                            $activeLink.addClass('active-page');
+                            // Expand parent submenu if exists
+                            var $submenu = $activeLink.closest('.sidebar-submenu');
+                            if ($submenu.length) {
+                                $submenu.addClass('show').removeClass('collapse');
+                                var $parentItem = $submenu.closest('.side-nav-item.dropdown');
+                                $parentItem.addClass('dropdown-open');
+                                var $parentLink = $parentItem.children('.side-nav-link');
+                                $parentLink.addClass('active-page').attr('aria-expanded', 'true');
+                            }
+                        }
+                    }, 100);
+
+                    $('#leftside-menu-container').on('click', 'a.side-nav-link', function (e) {
+                        let href = $(this).attr('href');
+                        if (href && href !== 'javascript:void(0)') {
+                            // Remove active from all links
+                            $('#leftside-menu-container a.side-nav-link').removeClass('active-page');
+                            $(this).addClass('active-page');
+
+                            // Collapse all submenus and remove dropdown-open from all parents
+                            $('#leftside-menu-container .sidebar-submenu').removeClass('show').addClass('collapse');
+                            $('#leftside-menu-container .side-nav-item.dropdown')
+                                .removeClass('dropdown-open')
+                                .children('.side-nav-link').attr('aria-expanded', 'false').removeClass('active-page');
+
+                            // Expand only the parent submenu and dropdown
+                            let submenu = $(this).closest('.sidebar-submenu');
+                            if (submenu.length) {
+                                submenu.addClass('show').removeClass('collapse');
+                                let parentDropdown = submenu.closest('.side-nav-item.dropdown');
+                                parentDropdown.addClass('dropdown-open');
+                                // Set parent link as active and aria-expanded true
+                                let parentLink = parentDropdown.children('.side-nav-link');
+                                parentLink.addClass('active-page').attr('aria-expanded', 'true');
+                            }
+                        }
+                    });
         }
     </script>
 
