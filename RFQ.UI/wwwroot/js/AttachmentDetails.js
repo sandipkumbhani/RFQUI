@@ -232,3 +232,17 @@ function EditMasterAttachment(attachmentData) {
         currentItem.find("#fileLink").attr("href", `../../AttachmentFiles/${attachment.attachmentPath}`);
     });
 }
+function ResetAttachmentRepeater() {
+    let repeaterList = $('[data-repeater-list]');
+    let rows = repeaterList.find('[data-repeater-item]');
+
+    // Remove all rows except the first
+    rows.slice(1).remove();
+
+    // Clear all inputs in the first row
+    let firstRow = rows.eq(0);
+    firstRow.find('input[type="text"], input[type="hidden"], input[type="file"]').val('');
+    firstRow.find('select').val('').trigger('change');
+    firstRow.find('a.filelink').removeAttr('href');
+    firstRow.find('a.filelink').text('View File');
+}

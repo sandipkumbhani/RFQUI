@@ -14,13 +14,6 @@ $(document).ready(function () {
         document.getElementById("numGstNumber").value = gstKyc;
     });
 
-    $(document).on("click", "#btnView", function () {
-        FetchCustomerList();
-        $("#addCustomerDiv").css('display', 'none')
-        $("#backButton").css('display', 'Block');
-    });
-
-
     $("#gstEKycButton").on('click',function () {
         isGstEKycClicked = true;
     });
@@ -37,28 +30,33 @@ $(document).ready(function () {
             toastr.warning("Please complete GST and PAN E-KYC before saving!");
         }
     });
-
-    $('#backButton').on('click',function () {
-        window.location.reload(true);
-        // $("#addCustomerDiv").css('display', 'Block')
-        // $("#backButton").css('display', 'none');
-        //  $('#tableDiv').hide();
-    });
-
-    $("#cancleButton").on('click', function () {
+    $("#btnCancel").on("click", function () {
         FetchCustomerList();
-        $("#addCustomerDiv").css('display', 'none')
-        $("#backButton").css('display', 'Block');
-    })
-
+    });
+    $("#btnAddCustomer").on("click", function () {
+        $("#tableDiv").css('display', 'none ');
+        $("#formDiv").css('display', 'block');
+    });
+    $('#tableDivLink').on('click', function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        FetchCustomerList();
+    });
     InitializeFields();
     GetAllCityList();
     UpdateCustomer();
     GstEKycClick();
     PanEKycClick();
+    FetchCustomerList();
 });
 function FetchCustomerList() {
-    $("#tableDiv").show();
+    $("#tableDiv").css('display', 'block');
+    $("#formDiv").css('display', 'none');
+    $('#customerForm')[0].reset();
+    $('#ddlCity').val(null).trigger('change');
+    $("#btnSaveCustomer").show();
+    $("#btnUpdate").hide();
+    $("#SavenewButton").show();
+    ResetAttachmentRepeater();
     var fetchCustomerUrl = '/Customer/ViewCustomer';
     $.ajax({
         url: fetchCustomerUrl,
@@ -67,56 +65,34 @@ function FetchCustomerList() {
         success: function (response) {
             let customerList = response.filter(x => x.partyTypeId == 6);
             customerViewModelDtos = response;
-            if ($.fn.DataTable.isDataTable('#tableCustomer')) {
-                $('#tableCustomer').DataTable().clear().destroy();
+            if ($.fn.DataTable.isDataTable('#customerTable')) {
+                $('#customerTable').DataTable().clear();
             }
-
-            $('#tableCustomer').DataTable({
-                "processing": true,
-                "serverSide": false,
-                "paging": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "searching": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                //"scrollX": true,
-                "ordering": false,
-                "data": customerList,
-                "columns": [
-
-                    { "data": "partyName" },
-                    { "data": "addressLine" },
-                    { "data": "pinCode" },
-                    { "data": "mobNo" },
-                    { "data": "email" },    
-                    { "data": "panNo" },
-                    { "data": "gstNo" },
-                    {
-                        "data": "partyId",
-                        "render": function (data, type, row) {
-                            return `<div class="btn-group" role="group">
-        <button type="button" class="btn btn-sm btn-primary" onclick="EditCustomer(${data})">
-            <i class="ti ti-edit"></i> Edit
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteCustomer(${data})">
-            <i class="ti ti-trash"></i> Delete
-        </button>
-    </div>`;
-                        }
-                    },
-                ],
-                "columnDefs": [
-                    {
-                        "targets": "_all",
-                        "className": "text-center"
-                    }
-                ]
+            const table = $("#customerTable").DataTable();
+            customerList.forEach(item => {
+                table.row.add([
+                    item.partyName,
+                    item.addressLine,
+                    item.pinCode,
+                    item.mobNo,
+                    item.email,
+                    item.panNo,
+                    item.gstNo,
+                    `
+           <div class="action-items" style="cursor:pointer;">
+                    <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
+                    <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+            </div>
+            `
+                ]);
             });
+
+            // Redraw table with new data
+            table.draw();
+
+            // Update total list count
+            $('#totalList').text(`Total List: ${customerList.length}`);
+
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -217,8 +193,10 @@ function SaveCustomer(action) {
                     Saveattachment(partyId);
                     toastr.success("Customer Details Submitted Successfully!");
                     $('#customerForm')[0].reset();
-                    $("#ddlCity").val("");
-                    $("#ddlCity").selectpicker("refresh");
+                    $('#ddlCity').val(null).trigger('change');
+                    setTimeout(() => {
+                        ResetAttachmentRepeater();
+                    }, 1000);
                 } else {
                     toastr.error("Failed to Submit Customer Details", "Error");
                 }
@@ -235,14 +213,11 @@ function EditCustomer(partyId) {
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
         var attachmentData = list;
-        $('#tableDiv').hide();
-        $("#backButton").css('display', 'none');
-        $("#addCustomerDiv").css('display', 'Block');
+        $('#tableDiv').css('display', 'none');
+        $("#formDiv").css('display', 'Block');
         $("#btnSaveCustomer").hide();
         $("#btnUpdate").show();
-        $("#cancleButton").removeClass('d-none');
         $("#SavenewButton").hide();
-        $("#btnView").hide();
         $("#txtGstNumber").val(formData.gstNo).prop("disabled", true);
         $("#hdnPartyId").val(formData.partyId);
         $("#txtLinkId").val(formData.linkId);
@@ -344,7 +319,6 @@ function UpdateCustomer() {
                     toastr.success("Customer Details Updated Successfully!");
                     $("#addCustomerDiv").css('display', 'none');
                     FetchCustomerList();
-                    $("#backButton").css('display', 'block');
                 } else {
                     toastr.error("Failed to Update Customer Details", "Error");
                 }
@@ -517,8 +491,6 @@ function BindDropDown(data) {
         opt.textContent = option.cityName;
         select.appendChild(opt);
     });
-
-    $('.selectpicker').selectpicker('refresh');
 }
 function ClearGstFields() {
     $("#txtLegalName").val('');

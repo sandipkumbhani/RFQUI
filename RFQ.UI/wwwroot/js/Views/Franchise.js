@@ -11,11 +11,15 @@ $(document).ready(function () {
         });
     });
     $("#btnCancel").on("click", function () {
-        window.location.reload(true);
+        FetchFranchise();
     });
     $("#btnAddFranchise").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
+    });
+    $('#tableDivLink').on('click', function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        FetchFranchise();
     });
 });
 Initialize();
@@ -99,11 +103,11 @@ function Initialize() {
                                 $('#franchiseForm')[0].reset();
                                 myDropzone.removeAllFiles();
                                 $('#ddlCity').val(null).trigger('change');
+                                $("#btnSaveFranchise").show();
+                                $("#btnUpdateFranchise").hide();
+                                $("#btnSavenewFranchise").show();
                                 setTimeout(() => {
-                                    $('.ddlAttachment').each(function () {
-                                        $(this).val('').trigger('change'); 
-                                    });
-                                    $('#attachmentRow').clear();
+                                    ResetAttachmentRepeater();
                                 }, 1000);
                             }
                             else {
@@ -351,6 +355,10 @@ function FetchFranchise() {
     $('#franchiseForm')[0].reset();
     myDropzone.removeAllFiles();
     $('#ddlCity').val(null).trigger('change');
+    $("#btnSaveFranchise").show();
+    $("#btnUpdateFranchise").hide();
+    $("#btnSavenewFranchise").show();
+    ResetAttachmentRepeater();
     var fetchFranchiseUrl = '/Franchise/GetFranchiseAll';
     $.ajax({
         url: fetchFranchiseUrl,

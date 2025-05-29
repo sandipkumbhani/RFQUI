@@ -8,232 +8,294 @@
     <script src="~/js/Views/Customer.js"></script>
     <script src="~/js/AttachmentDetails.js"></script>
 }
-<div class="app-toolbar  pt-3 px-lg-3">
-    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
-        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-            <div class="page-title d-flex align-items-center gap-1 me-3">
-                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
-                    Overview
-                </h1>
-                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
-                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
-                    </li>
-                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
-                    <li class="breadcrumb-item text-primary">
-                        Customer
-                    </li>
-                </ul>
+<div id="formDiv" style="display:none;">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Add Customer</h1>
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a id="tableDivLink" href="">Customer</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Customer</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-franchise-info">
+                <form class="form" id="customerForm" method="post">
+                    <input type="hidden" id="hdnPartyId" />
+                    <div class="franchise-details">
+                        <h2 class="page-form-title">GST e-KYC Details</h2>
+                        <div class="row all-custom-class">
+                            <div class="col-xl-4 col-lg-6 col-md-6">
+                                <div class="item-input">
+                                    <label class="form-label">GST No <span>*</span></label>
+                                    <div class="kyc-input">
+                                        <input type="text" class="form-control" placeholder="Enter GST No" id="txtGstNumber" oninput="this.value = this.value.toUpperCase()" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                        <button type="button" class="kyc-btn" id="gstEKycButton">e-KYC</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-8 col-lg-6 col-md-6">
+                                <div class="item-input">
+                                    <label class="form-label">Legal Name <span>*</span></label>
+                                    <input type="text" class="form-control" id="txtLegalName" placeholder="Enter Legal Name" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="item-input">
+                                    <label class="form-label">Type of Business <span>*</span></label>
+                                    <input type="text" class="form-control" id="txtTypeBusiness" placeholder="Enter Type of Business" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="item-input">
+                                    <label class="form-label">Trade Name <span>*</span></label>
+                                    <input type="text" class="form-control" id="txtTradeName" placeholder="Enter Trade Name" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="item-input">
+                                    <label class="form-label">Aadhar Verified <span>*</span></label>
+                                    <input type="text" class="form-control" id="txtAadharVerified" placeholder="Aadhar Verified" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="item-input">
+                                    <label class="form-label">Verified GST No <span>*</span></label>
+                                    <input type="text" class="form-control" id="txtVerifiedGstNo" placeholder="Verified GST No" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="item-input">
+                                    <label class="form-label">GST Verified On <span>*</span></label>
+                                    <input type="date" class="form-control" id="txtGstVerifiedOn" placeholder="GST Verified On" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="item-input">
+                                    <label class="form-label">GST Status <span>*</span></label>
+                                    <input type="text" class="form-control" id="txtGstStatus" placeholder="GST Status" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="item-input">
+                                    <label class="form-label">GST Address <span>*</span></label>
+                                    <input type="text" class="form-control" id="txtGstAddress" placeholder="GST Address" disabled />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="franchise-details">
+                        <h2 class="page-form-title">PAN e-KYC Details</h2>
+                        <div class="row all-custom-class">
+                            <div class="col-xl-4 col-lg-6 col-md-6">
+                                <div class="item-input">
+                                    <label class="form-label">PAN No <span>*</span></label>
+                                    <div class="kyc-input">
+                                        <input type="text" class="form-control" placeholder="Enter PAN No" id="txtPanNumber" oninput="this.value = this.value.toUpperCase()" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                        <button type="button" class="kyc-btn" id="panEKycButton">e-KYC</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-8 col-lg-6 col-md-6">
+                                <div class="item-input">
+                                    <label class="form-label">Name as per PAN <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Name as per PAN" id="txtPanName" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="item-input">
+                                    <label class="form-label">Aadhar Linked <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Aadhar Linked" id="txtAadharLinked" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="item-input">
+                                    <label class="form-label">PAN Status <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="PAN Status" id="txtPanStatus" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="item-input">
+                                    <label class="form-label">PAN Verified On <span>*</span></label>
+                                    <input type="date" class="form-control" placeholder="PAN Verified On" id="txtPanVerifiedOn" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3"></div>
+                        <div class="row  all-custom-class">
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Customer Name <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Customer Name" id="txtCustomerName" maxlength="150" onkeypress="return isAlphabets(event)" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Email ID <span>*</span></label>
+                                    <input type="email" class="form-control" placeholder="Email ID" id="txtEmail" maxlength="100" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12  all-custom-class">
+                            <div class="item-input">
+                                <label class="form-label">Address <span>*</span></label>
+                                <input type="text" class="form-control" placeholder="Address" id="txtaddress" maxlength="200" />
+                            </div>
+                        </div>
+                        <div class="row  all-custom-class">
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">City <span>*</span></label>
+                                    <select class="select2-custom form-control" style="width: 100%;" id="ddlCity">
+                                    </select>
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">Contact Person <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">Mobile Number <span>*</span></label>
+                                    <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numMobile" onkeypress="return isNumber(event)" maxlength="10" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">PAN Number <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="PAN Number" id="numPan" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Pincode <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Pincode" id="numPincode" maxlength="6" onkeypress="return isNumber(event)" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">Contact Number <span>*</span></label>
+                                    <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numContact" maxlength="10" onkeypress="return isNumber(event)" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">WhatsApp Number <span>*</span></label>
+                                    <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numWhatsApp" onkeypress="return isNumber(event)" maxlength="10" />
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">GST Number <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="GST Number" id="numGstNumber" disabled />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
+                    <div class="button-main">
+                        <a href="#" class="card-link" id="btnSaveCustomer" data-action="save">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save
+                            </span>
+                        </a>
+                        <a href="#" class="card-link" id="SavenewButton" data-action="saveNew">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save & New
+                            </span>
+                        </a>
+                        <a href="#" class="card-link" id="btnUpdate" style="display:none;margin-left:0px;">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Update
+                            </span>
+                        </a>
+                        <a href="#" class="card-link" id="btnCancel">
+                            <i class="ri-close-line"></i>
+                            <span>
+                                Cancel
+                            </span>
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-<div class="app-content  px-lg-3">
-    <div class="app-container  container-fluid">
-        <div class="container my-4">
-            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
-                </svg>
-                Back
-            </button>
-        </div>
-        <div id="addCustomerDiv" class="card">
-            <div class="card-header border-0 cursor-pointer">
-                <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">Customer</h3>
-                </div>
-            </div>
-            <form class="form" id="customerForm" method="post">
-                <input type="hidden" id="hdnPartyId" />
-                <div class="card-body border-top p-9">
-                    <div class="card-title m-0 pb-10">
-                        <h3 class="fw-bold m-0">GST e-KYC Details</h3>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="row align-items-center mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">GST No</label>
-                                <div class="col-auto">
-                                    <input type="text" class="form-control" placeholder="" oninput="this.value = this.value.toUpperCase()" id="txtGstNumber" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
-                                </div>
-                                <div class="col-auto">
-                                    <button class="btn btn-primary me-2" type="button" id="gstEKycButton">e-KYC</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Legal Name</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Legal Name" id="txtLegalName" disabled />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Type of Business</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Type of Business" id="txtTypeBusiness" disabled />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">GST Status</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="GST Status" id="txtGstStatus" disabled />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">GST Address</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="GST Address" id="txtGstAddress" disabled />
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Trade Name</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Trade Name" id="txtTradeName" disabled />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Aadhar Verified</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Aadhar Verified" id="txtAadharVerified" disabled />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">GST Verified On</label>
-                                <input type="date" class="form-control form-control-solid" placeholder="GST Verified On" id="txtGstVerifiedOn" disabled />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label fw-semibold fs-6">Verified GST No</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Verified GST No" id="txtVerifiedGstNo" disabled />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body border-top p-9">
-                    <div class="card-title m-0 pb-10">
-                        <h3 class="fw-bold m-0">PAN e-KYC Details</h3>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="row align-items-center mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">PAN No</label>
-                                <div class="col-auto">
-                                    <input type="text" class="form-control" placeholder="" oninput="this.value = this.value.toUpperCase()" id="txtPanNumber" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
-                                </div>
-                                <div class="col-auto">
-                                    <button class="btn btn-primary me-2" type="button" id="panEKycButton">e-KYC</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Name as per PAN </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Name as per PAN" id="txtPanName" disabled />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Aadhar Linked </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Aadhar Linked" id="txtAadharLinked" disabled />
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">PAN Status</label>
-                                <input type="text" class="form-control form-control-solid" placeholder="PAN Status" id="txtPanStatus" disabled />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">PAN Verified On </label>
-                                <input type="date" class="form-control form-control-solid" placeholder="PAN Verified On" id="txtPanVerifiedOn" disabled />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Customer Name </label>
-                                <input type="text" class="form-control" placeholder="Customer Name" id="txtCustomerName" maxlength="150" onkeypress="return isAlphabets(event)" />
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            @*  <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Customer Code </label>
-                                <input type="text" class="form-control" placeholder="Customer Code" id="txtCustomerCode" />
-                            </div> *@
-                        </div>
-                        <div class="col-xl-12">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Address </label>
-                                <input type="text" class="form-control" placeholder="Address" id="txtaddress" maxlength="200" />
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">City </label>
-                                <select name="City" aria-label="Select a City" id="ddlCity" class="selectpicker" data-live-search="true" data-width="100%">
-                                </select>
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-                                <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number </label>
-                                <input type="text" class="form-control" placeholder="Mobile Number" id="numMobile" maxlength="10" onkeypress="return isNumber(event)" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">PAN Number </label>
-                                <input type="text" class="form-control" placeholder="PAN Number" id="numPan" disabled />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Email ID </label>
-                                <input type="email" class="form-control" placeholder="Email ID" id="txtEmail" maxlength="100" />
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
-                                <input type="text" class="form-control" placeholder="Pincode" id="numPincode" maxlength="6" onkeypress="return isNumber(event)" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number </label>
-                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="numWhatsApp" maxlength="10" onkeypress="return isNumber(event)" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Contact No </label>
-                                <input type="text" class="form-control" placeholder="Contact No" id="numContact" maxlength="10" onkeypress="return isNumber(event)" />
-                            </div>
-                            <div class="mb-5">
-                                <label class="form-label col-form-label required fw-semibold fs-6">GST Number </label>
-                                <input type="text" class="form-control" placeholder="GST Number" id="numGstNumber" disabled />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
-                <div class="card-footer d-flex justify-content-start py-6 px-9">
-                    <button type="button" class="btn btn-primary me-2" id="btnSaveCustomer" data-action="save">Save</button>
-                    <button type="button" class="btn btn-primary me-2" id="SavenewButton" data-action="saveNew">Save & New</button>
-                    <button type="button" id="btnUpdate" class="btn btn-primary me-2" style="display:none; margin-right:05px;">Update</button>
-                    <button type="button" class="btn btn-primary" id="btnView">View</button>
-                    <button id="cancleButton" type="button" class="btn btn-danger d-none">Cancel</button>
-                </div>
-            </form>
-        </div>
-        <div class="my-4"></div>
-        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
-            <div class="card-header p-4">
-                <h4 class="fw-bold m-0 text-lg">Customer List</h4>
-            </div>
-            <div class="card-body">
-                <table id="tableCustomer" class="table table-striped align-middle fs-6 mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th>Customer Name</th>
-                            <th>Address</th>
-                            <th>Pincode</th>
-                            <th>Mobile Number</th>
-                            <th>Email Id</th>
-                            <th>PAN Number</th>
-                            <th>GST Number</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Dynamic rows go here -->
-                    </tbody>
-                </table>
-            </div>
+<div id="tableDiv">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Customer</h1>
 
+                <div class="add-btn">
+                    <a href="#" id="btnAddCustomer">
+                        <i class="ri-add-line"></i> <span>Add Customer</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <!-- Top Header -->
+                <div class="table-top-header">
+                    <h4>List of Customer</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="customCustomerSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn-btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Filter <i class="ri-sound-module-line"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                                <li><a class="dropdown-item filter-option" data-value="">All Status</a></li>
+                                <li><a class="dropdown-item filter-option" data-value="Pending">Pending</a></li>
+                                <li><a class="dropdown-item filter-option" data-value="Done">Done</a></li>
+                            </ul>
+                        </div>
+                        <div id="exportCustomerButtons" class="btn-group" role="group"></div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table id="customerTable" class="table dt-responsive nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Address</th>
+                                <th>Pincode</th>
+                                <th>Mobile Number</th>
+                                <th>Email</th>
+                                <th>PAN Number</th>
+                                <th>GST Number</th>
+                                <th class="no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody> <!-- This will be dynamically filled -->
+                    </table>
+                </div>
+
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
+                    <div id="customCustomerPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
