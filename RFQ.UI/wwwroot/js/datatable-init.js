@@ -131,7 +131,7 @@ $(document).ready(function () {
         pageLength: 3,
         columnDefs: [
             // { orderable: false, targets: [] } // all sortable
-            { orderable: false, targets: 'no-sort' }
+            { orderable: false, targets: 'no-sort' },
         ],
         language: {
             paginate: {
@@ -145,7 +145,7 @@ $(document).ready(function () {
     table.buttons().container().appendTo('#exportvehicleTypesButtons');
 
     // Search
-    $('#customvehicleTypesSearch').on('keyup', function () {
+    $('#vehicleTypesTableSearch').on('keyup', function () {
         table.search(this.value).draw();
     });
 

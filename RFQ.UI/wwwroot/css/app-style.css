@@ -800,7 +800,7 @@ select:disabled {
   padding: 0.8125rem 1rem;
   background: var(--ft-primary);
   border-radius: 8px;
-  max-width: 130px;
+  max-width: 160px;
   width: 100%;
 }
 .button-main .card-link i{
@@ -1332,25 +1332,25 @@ table.dataTable thead th.sorting_desc::after {
   display: inline-flex;
   color: var(--ft-primary);
 }
-.add-btn a{
-  font-size: 1rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--ft-white);
-  padding: 0.625rem 1rem;
-  background: var(--ft-primary);
-  border-radius: 8px;
-  max-width: 180px;
-  width: 100%;
+.add-btn button {
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--ft-white);
+    padding: 0.625rem 1rem;
+    background: var(--ft-primary);
+    border-radius: 8px;
+    max-width: 200px;
+    width: 100%;
 }
-.add-btn a i{
-  line-height: 24px;
-  font-size: 1.5rem;
-  font-weight: normal;
-}
+    .add-btn button i {
+        line-height: 24px;
+        font-size: 1.5rem;
+        font-weight: normal;
+    }
 .add-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
   content: "\ea6e";
   font-family: 'remixicon';
