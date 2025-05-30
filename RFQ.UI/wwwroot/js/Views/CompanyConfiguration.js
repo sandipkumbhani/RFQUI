@@ -268,7 +268,6 @@ function FetchCompanyConfiguration() {
         type: 'GET',
         dataType: 'json',
         success: function (response) {
-            debugger;
             companyConfigResponseDto = response;
             // Get sessionStorage lists
             const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");

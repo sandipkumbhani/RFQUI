@@ -31,7 +31,6 @@ $(document).ready(function () {
         });
     });
     $("#btnSaveCompanyType, #btnsaveandnew").on('click', function () {
-        debugger;
         var action = $(this).data('action'); // "save" or "saveNew"
         if (OnSubmitCheckValidation()) {
             SaveCorporateCompany(action);
@@ -426,7 +425,6 @@ function DeleteCorporateCompany(companyId, linkId) {
     });
 }
 function SaveCorporateCompany(action) {
-    debugger;
         var companyName = $("#txtCompanyName").val();
         var franchiseName = $("#ddlFranchisename").val();
         var address = $("#txtAddress").val();
@@ -500,7 +498,6 @@ function SaveCorporateCompany(action) {
 
 }
 function EditCorporateCompany(companyId) {
-    debugger;
     var data = corporateCompanyViewModelDto.filter(x => x.companyId == companyId);
     if (data.length === 0) {
         return;

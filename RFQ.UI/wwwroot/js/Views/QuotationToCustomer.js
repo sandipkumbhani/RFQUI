@@ -107,7 +107,6 @@ function GetAllPakingType() {
                 option.value = item.packingId;
                 option.textContent = item.packingName;
                 vehicleTypedropdown.appendChild(option);
-                debugger;
             });
             $('.selectpicker').selectpicker('refresh');
         },

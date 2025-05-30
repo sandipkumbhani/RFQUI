@@ -224,7 +224,6 @@ function UpdateLocation() {
         if (!isvalid) {
             return;
         }
-        debugger
         var locationmodel = {
             LocationId: $('#hdnLocationId').val(),
             LocationName: $('#txtLocationName').val(),

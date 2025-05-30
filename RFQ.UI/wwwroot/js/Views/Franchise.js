@@ -551,7 +551,6 @@ function UpdateFranchise(fileName) {
     });
 }
 function DeleteFranchise(companyId, fileName) {
-    debugger;
     var deleteFranchiseUrl = '/Franchise/DeleteFranchise/' + companyId;
     var deleteUploadUrl = '/Franchise/DeleteUpload';
     var result;

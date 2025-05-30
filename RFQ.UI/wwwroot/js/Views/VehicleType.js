@@ -145,7 +145,6 @@ function SaveVehicleType(action) {
 function EditVehicleType(vehicleTypeId) {
     var data = vehicleTypeViewModelDtos.filter(x => x.vehicleTypeId == vehicleTypeId);
     EditVehicleTypeModelDtos = data[0];
-    debugger;
     $('#tableDiv').hide();
     $('#btnAddVehicleType').addClass('d-none');
     $('#addVehicleTypeDiv').removeClass('d-none');

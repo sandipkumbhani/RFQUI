@@ -117,7 +117,6 @@ function SaveVehicle(action) {
         PolicyExpiryDate: policyExpDate ? new Date(policyExpDate).toISOString() : null,
         LinkId: linkId
     };
-    debugger;
     console.log(formData);
     if (action === "save") {
         $.ajax({
