@@ -159,53 +159,93 @@ function GetLinkItemList(linkGroupId, profileId) {
                 }
             }
             console.log(linkItemData)
+            //linkItemData.forEach((item, index) => {
+            //    var html = '';
+            //    html
+            //    html += '<div class="mb-3">'
+            //    html += '<div class="row">'
+            //    html += '<div class="col-3 mb-3">'
+            //    html += '<label class="form-check-label me-10">' + item.linkName + '</label>'
+            //    html += '</div>'
+            //    html += '<div class="col">'
+
+            //    //view checkbox
+            //    html += '<div class="form-check form-check-inline ms-5">'
+            //    html += '<input class="form-check-input" type="checkbox" id="view1' + item.linkId + '" ' +
+            //        (item.isView ? 'checked' : '') +
+            //        ' onchange="OnChangeViewCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
+            //    html += '<label class="form-check-label" for="view' + item.linkId + '">View</label>';
+            //    html += '</div>'
+
+            //    //Add checkbox
+            //    html += '<div class="form-check form-check-inline ms-5">'
+            //    html += '<input class="form-check-input" type="checkbox" id="add' + item.linkId + '" ' +
+            //        (item.isAdd ? 'checked' : '') +
+            //        ' onchange="OnChangeAddCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
+            //    html += '<label class="form-check-label" for="add' + item.linkId + '">Add</label>';
+            //    html += '</div>'
+
+            //    //Edit checkbox
+            //    html += '<div class="form-check form-check-inline ms-5">'
+            //    html += '<input class="form-check-input" type="checkbox" id="edit' + item.linkId + '" ' +
+            //        (item.isEdit ? 'checked' : '') +
+            //        ' onchange="OnChangeEditCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
+            //    html += '<label class="form-check-label" for="edit' + item.linkId + '">Edit</label>';
+            //    html += '</div>'
+
+            //    //Cancel checkbox
+            //    html += '<div class="form-check form-check-inline ms-5">'
+            //    html += '<input class="form-check-input" type="checkbox" id="cancel' + item.linkId + '" ' +
+            //        (item.isCancel ? 'checked' : '') +
+            //        ' onchange="OnChangeCancelCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
+            //    html += '<label class="form-check-label" for="cancel' + item.linkId + '">Cancel</label>';
+            //    html += '</div>'
+
+            //    html += '</div>'
+            //    html += '</div>'
+            //    html += '</div>'
+            //    $("#menuItemList").append(html)
+            //});
             linkItemData.forEach((item, index) => {
                 var html = '';
-                html
-                html += '<div class="mb-3">'
-                html += '<div class="row">'
-                html += '<div class="col-3 mb-3">'
-                html += '<label class="form-check-label me-10">' + item.linkName + '</label>'
-                html += '</div>'
-                html += '<div class="col">'
+                html += '<tr>';
 
-                //view checkbox
-                html += '<div class="form-check form-check-inline ms-5">'
-                html += '<input class="form-check-input" type="checkbox" id="view1' + item.linkId + '" ' +
+                // Link Name
+                html += '<td class="right-text"><label class="form-check-label">' + item.linkName + '</label></td>';
+
+                // View checkbox
+                html += '<td class="text-center">';
+                html += '<input class="checkmark" type="checkbox" id="view' + item.linkId + '" ' +
                     (item.isView ? 'checked' : '') +
                     ' onchange="OnChangeViewCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
-                html += '<label class="form-check-label" for="view' + item.linkId + '">View</label>';
-                html += '</div>'
+                html += '</td>';
 
-                //Add checkbox
-                html += '<div class="form-check form-check-inline ms-5">'
-                html += '<input class="form-check-input" type="checkbox" id="add' + item.linkId + '" ' +
+                // Add checkbox
+                html += '<td class="text-center">';
+                html += '<input class="checkmark" type="checkbox" id="add' + item.linkId + '" ' +
                     (item.isAdd ? 'checked' : '') +
                     ' onchange="OnChangeAddCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
-                html += '<label class="form-check-label" for="add' + item.linkId + '">Add</label>';
-                html += '</div>'
+                html += '</td>';
 
-                //Edit checkbox
-                html += '<div class="form-check form-check-inline ms-5">'
-                html += '<input class="form-check-input" type="checkbox" id="edit' + item.linkId + '" ' +
+                // Edit checkbox
+                html += '<td class="text-center">';
+                html += '<input class="checkmark" type="checkbox" id="edit' + item.linkId + '" ' +
                     (item.isEdit ? 'checked' : '') +
                     ' onchange="OnChangeEditCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
-                html += '<label class="form-check-label" for="edit' + item.linkId + '">Edit</label>';
-                html += '</div>'
+                html += '</td>';
 
-                //Cancel checkbox
-                html += '<div class="form-check form-check-inline ms-5">'
-                html += '<input class="form-check-input" type="checkbox" id="cancel' + item.linkId + '" ' +
+                // Cancel checkbox
+                html += '<td class="text-center">';
+                html += '<input class="checkmark" type="checkbox" id="cancel' + item.linkId + '" ' +
                     (item.isCancel ? 'checked' : '') +
                     ' onchange="OnChangeCancelCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
-                html += '<label class="form-check-label" for="cancel' + item.linkId + '">Cancel</label>';
-                html += '</div>'
+                html += '</td>';
 
-                html += '</div>'
-                html += '</div>'
-                html += '</div>'
-                $("#menuItemList").append(html)
+                html += '</tr>';
+
+                $("#menuItemList").append(html);
             });
+
 
         },
         error: function (xhr, status, error) {
