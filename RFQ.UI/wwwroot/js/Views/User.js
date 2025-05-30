@@ -2,16 +2,33 @@
 var userResponseDto;
 var allUserList;
 
-$(document).ready(function () {
+$(document).ready(function ()
+{ 
+    $("#btnCancel").on("click", function ()
+    {
+        window.location.reload(true);
+    });
+    $('#userListSectionLink').on('click', function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        $('#userFormSection').hide(); // hide the add/edit form
+        $('#userListSection').show(); // show the list
+    });
     Initialization();
     GetAllLocation();
     GetFranchiseAndCorporateName();
     UpdateUser();
     GetAllUser();
+    FetchUser();
+});
+$("#btnAddUser").on("click", function (e) {
+    e.preventDefault();
+    $("#userListSection").hide();
+    $("#userFormSection").show();
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
         FetchUser();
+        $("#adduserdiv").css('display', 'none');
     });
     $("#txtName").on("blur", function () {
         var Textname = $(this).val();
@@ -79,10 +96,7 @@ function Initialization() {
 
 }
 function FetchUser() {
-
-    $('#tableDiv').show();
-    $("#adduserdiv").css('display', 'none')
-    $("#backButton").css('display', 'Block');
+    $('#userListSection').show();
     $.ajax({
         url: '/Home/ViewUserList',
         type: "GET",
@@ -90,60 +104,28 @@ function FetchUser() {
         success: function (response) {
             let trlist = response;
             userResponseDto = response;
-            // Destroy existing DataTable if exists
             if ($.fn.DataTable.isDataTable('#tableuser')) {
-                $('#tableuser').DataTable().clear().destroy();
+                $('#tableuser').DataTable().clear();
             }
-            $('#tableuser').DataTable({
-                "processing": true,
-                "serverSide": false,
-                "paging": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                // "scrollX": true,
-                "data": trlist,
-                "columns": [
-                    { "data": "personName" },
-                    { "data": "company" },
-                    { "data": "location" },
-                    { "data": "mobileNo" },
-                    { "data": "emailId" },
-                    {
-                        "data": "userId",
-                        "render": function (data, type, row) {
-                            return `
-                               <div class="btn-group" role="group">
-                               <button type="button" class="btn btn-sm btn-primary"
-                               onclick="EditUser(${data})">
-                               <i class="ti ti-edit"></i> Edit
-                               </button>
-                               <button type="button" class="btn btn-sm btn-danger"
-                               onclick="DeleteUser(${data})">
-                               <i class="ti ti-trash"></i> Delete
-                               </button>
-                              </div>`;
-                        }
-                    },
-                ],
-                "columnDefs": [
-                    {
-                        "targets": "_all",
-                        "className": "text-center"
-                    }
-                ]
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
+            const table = $('#tableuser').DataTable();
+                trlist.forEach(item => {
+                    table.row.add([
+                        item.personName,
+                        item.company,
+                        item.location,
+                        item.mobileNo,
+                        item.emailId,
+                    `
+                    <div class="action-items" style="cursor:pointer;">
+                        <a class="icon-btn" onclick="EditUser(${item.userId})"><i class="ri-edit-2-line"></i></a>
+                        <a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>
+                    </div>
+                    ` ]);
+                });
+            // Redraw table with new data
+            table.draw();
+            // Update total list count
+            $('#totalList').text(`Total List: ${trlist.length}`);
         }
     });
 }
@@ -203,6 +185,9 @@ function SaveUser(action) {
                 success: function (response) {
                     if (response.result == "success") {
                         toastr.success("User Details Submitted Successfully!");
+                        $('#userbodyform')[0].reset();
+                        $('#ddlCompanyAndFranchise').val(null).trigger('change');
+                        $('#ddlLocation').val(null).trigger('change');
                     } else {
                         toastr.error("User already exists", "Error");
                     }
@@ -221,8 +206,9 @@ function SaveUser(action) {
 function EditUser(userId) {
     var data = userResponseDto.filter(x => x.userId == userId);
     var formdata = data[0];
-    $("#tableDiv").hide();
-    $("#backButton").css('display', 'Block');
+    $('#userListSection').css('display', 'none');
+    $("#userFormSection").css('display', 'Block');
+    $("#backButton").css('display', 'none');
     $("#adduserdiv").css('display', 'Block');
     $("#btnSaveForm").hide();
     $("#btnUpdate").show();
@@ -288,6 +274,13 @@ function UpdateUser() {
                 if (result.result == "success") {
                     FetchUser();
                     toastr.success("User Details Updated Successfully!");
+                    $('#userbodyform')[0].reset();
+                    $('#ddlCompanyAndFranchise').val(null).trigger('change');
+                    $('#ddlLocation').val(null).trigger('change');
+                    $("#btnUpdate").hide();
+                    $("#txtPassword").prop("disabled", false);
+                    $("#btnSaveAndNewForm").show();
+                    $("#btnSaveForm").show();
 
                 } else {
                     toastr.error("Failed to Update User Details", "Error");
@@ -362,28 +355,28 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid User Name", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtPassword").val())) {
-        toastr.warning("Password is Required", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#ddlCompanyAndFranchise").val()) || !isValidateSelect($("#ddlCompanyAndFranchise").val())) {
-        toastr.warning("Please select a Corporate Name", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtMobileNo").val()) || !isMobile($("#txtMobileNo").val())) {
-        toastr.warning("Please enter a valid Mobile Number", "Validation Error");
-        return false;
-    }
     if (IsNullOrEmpty($("#txtLoginName").val()) || !/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test($("#txtLoginName").val())) {
         toastr.warning("Login Name is Required", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtPassword").val())) {
+        toastr.warning("Password is Required", "Validation Error");
         return false;
     }
     if (IsNullOrEmpty($("#txtEmailid").val()) || !isValidateEmail($("#txtEmailid").val())) {
         toastr.warning("Please enter a valid email", "Validation Error");
         return false;
     }
+    if (IsNullOrEmpty($("#ddlCompanyAndFranchise").val()) || !isValidateSelect($("#ddlCompanyAndFranchise").val())) {
+        toastr.warning("Please select a Corporate Name", "Validation Error");
+        return false;
+    }
     if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
         toastr.warning("Please select a Location", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtMobileNo").val()) || !isMobile($("#txtMobileNo").val())) {
+        toastr.warning("Please enter a valid Mobile Number", "Validation Error");
         return false;
     }
     return true;

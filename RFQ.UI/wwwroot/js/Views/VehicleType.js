@@ -33,12 +33,19 @@ $(document).ready(function () {
         $('#addVehicleTypeDiv').removeClass('d-none');
         $('#viewButton').addClass('d-none');
         $('#btnCancel').removeClass('d-none');
+        $('#btnSaveVehicleType').removeClass('d-none');
+        $('#SavenewButton').removeClass('d-none')
+        $('#updateButton').addClass('d-none');
+        $('#VehicleTypeForm')[0].reset();
     });
 
     $("#btnCancel").on('click', function () {
         FetchVehicleTypes();
         $("#addVehicleTypeDiv").addClass('d-none');
         $("#btnAddVehicleType").removeClass('d-none');
+        $('#btnSaveVehicleType').removeClass('d-none');
+        $('#SavenewButton').removeClass('d-none')
+        $('#updateButton').addClass('d-none');
     })
     UpdateVechileType();
     FetchVehicleTypes();
@@ -142,10 +149,10 @@ function EditVehicleType(vehicleTypeId) {
     $('#tableDiv').hide();
     $('#btnAddVehicleType').addClass('d-none');
     $('#addVehicleTypeDiv').removeClass('d-none');
-    $("#updateButton").css('display', 'Block');
-    $("#btnSaveVehicleType").css('display', 'none');
-    $("#SavenewButton").css('display', 'none');
-    $("#viewButton").css('display', 'none');
+    $("#updateButton").removeClass('d-none');
+    $("#btnSaveVehicleType").addClass('d-none');
+    $("#SavenewButton").addClass('d-none');
+    $("#viewButton").addClass('d-none');
     $("#btnCancel").removeClass("d-none");
     $("#txtVehicleType").val(data[0].vehicleTypeName);
     $("#txtminKmsPerDay").val(data[0].minimumKms);
