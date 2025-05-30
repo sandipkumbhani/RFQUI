@@ -6,6 +6,35 @@ let isDLEKycClicked = false;
 const urlParams = new URLSearchParams(window.location.search);
 const linkId = urlParams.get('LinkId');
 $(document).ready(function () {
+    InitializeFields();
+    GetAllCityList();
+    GetDriverType();
+    DlEKycclick();
+    FetchDriverList();
+    $("#btnAddDriver").on("click", function () {
+        $("#tableDiv").css('display', 'none ');
+        $("#formDiv").css('display', 'block');
+    });
+    $("#btnCancel").on("click", function () {
+        FetchDriverList();
+    });
+    $('#tableDivLink').on('click', function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        FetchDriverList();
+    });
+});
+DropzoneInitialize();
+function ResetForm() {
+    $("#driverForm")[0].reset();
+    $("#txtUploadedPhoto").val("");
+    $("#numLicenseNo").prop("disabled", false);
+    $("#txtDateOfBirth").prop("disabled", false);
+    $('#ddlCity').val(null).trigger('change');
+    $('#ddlDriverType').val(null).trigger('change');
+    $(".dz-preview").remove();
+    $(".dz-message").show();
+}
+function DropzoneInitialize() {
     Dropzone.autoDiscover = false;
     var uploadUrl = '/Driver/Upload';
     if (Dropzone.instances.length > 0) {
@@ -23,11 +52,11 @@ $(document).ready(function () {
         init: function () {
             const dz = this;
 
-            $("#licenseEKycButton").click(function () {
+            $("#licenseEKycButton").on('click',function () {
                 isDLEKycClicked = true;
             });
 
-            $("#btnSaveDriver").click(function (event) {
+            $("#btnSaveDriver").on('click',function (event) {
                 event.preventDefault();
 
                 if (!isDLEKycClicked) {
@@ -42,7 +71,11 @@ $(document).ready(function () {
                         dz.processQueue();
                     } else {
                         if (uploadedFileName) {
-                            SaveDriver(uploadedFileName);
+                            SaveDriver(uploadedFileName, function (driverId) {
+                                if (driverId > 0) {
+                                    window.location.href = "../Dashboard/Dashboard";
+                                }
+                            }) 
                         } else {
                             toastr.warning("Please Upload a Driver Photo", "Validation Error");
                         }
@@ -51,7 +84,7 @@ $(document).ready(function () {
                     toastr.warning("Please Upload a Driver Photo", "Validation Error");
                 }
             });
-            $("#btnUpdateDriver").click(function (event) {
+            $("#btnUpdateDriver").on('click',function (event) {
                 event.preventDefault();
                 if (!ValidationCheck()) {
                     return false;
@@ -76,7 +109,7 @@ $(document).ready(function () {
                 }
             });
 
-            $("#btnSaveNewDriver").click(function (event) {
+            $("#btnSaveNewDriver").on('click',function (event) {
                 event.preventDefault();
 
                 if (!isDLEKycClicked) {
@@ -91,8 +124,17 @@ $(document).ready(function () {
                         dz.processQueue();
                     } else {
                         if (uploadedFileName) {
-                            SaveDriver(uploadedFileName);
-                            ResetForm();
+                            SaveDriver(uploadedFileName, function (driverId) {
+                                if (driverId > 0) {
+                                    $("#btnSaveDriver").show();
+                                    $("#btnUpdateDriver").hide();
+                                    $("#btnSaveNewDriver").show();
+                                    ResetForm();
+                                    setTimeout(() => {
+                                        ResetAttachmentRepeater();
+                                    }, 1000);
+                                }
+                            })
                         } else {
                             toastr.warning("Please Upload a Driver Photo", "Validation Error");
                         }
@@ -106,47 +148,30 @@ $(document).ready(function () {
         success: function (file, response) {
             uploadedFileName = response.fileName;
             if ($(this).attr("id") === "btnSaveDriver") {
-                SaveDriver(uploadedFileName);
+                SaveDriver(uploadedFileName, function (driverId) {
+                    if (driverId > 0) {
+                        window.location.href = "../Dashboard/Dashboard";
+                    }
+                }) 
             } else if ($(this).attr("id") === "btnUpdateDriver") {
                 UpdateDriver(uploadedFileName);
             } else if ($(this).attr("id") === "btnSaveNewDriver") {
-                SaveDriver(uploadedFileName);
+                SaveDriver(uploadedFileName, function (driverId) {
+                    if (driverId > 0) {
+                        $("#btnSaveDriver").show();
+                        $("#btnUpdateDriver").hide();
+                        $("#btnSaveNewDriver").show();
+                        ResetForm();
+                        setTimeout(() => {
+                            ResetAttachmentRepeater();
+                        }, 1000);
+                    }
+                })
             }
         }
     });
-    function ResetForm() {
-        $("#driverForm")[0].reset();
-        $("#txtUploadedPhoto").val("");
-        $("#ddlDriverType").val("").change();
-        $("#ddlDriverType").selectpicker("refresh");
-        $("#ddlCity").val("").change();
-        $("#ddlCity").selectpicker("refresh");
-        $(".dz-preview").remove();
-        $(".dz-message").show();
-    }
-
-    InitializeFields();
-    GetAllCityList();
-    GetDriverType();
-    DlEKycclick();
-
-    $(document).on("click", "#btnView", function () {
-        FetchDriverList();
-        $("#addDriverDiv").css('display', 'none')
-        $("#backButton").css('display', 'Block');
-    });
-
-    $('#backButton').click(function () {
-        window.location.reload(true);
-    });
-
-    $("#cancleButton").on('click', function () {
-        FetchDriverList();
-        $("#addDriverDiv").css('display', 'none')
-        $("#backButton").css('display', 'Block');
-    })
-});
-function SaveDriver(uploadedFileName) {
+}
+function SaveDriver(uploadedFileName,callback) {
     var driverType = $("#ddlDriverType").val();
     var licenseNo = $("#numLicenseNo").val();
     var driverName = $("#txtDriverName").val();
@@ -193,11 +218,18 @@ function SaveDriver(uploadedFileName) {
             var driverId = response.result.result.driverId;
             Saveattachment(driverId);
             toastr.success("Driver Details Submitted Successfully!");
+            if (typeof callback === "function") {
+                callback(driverId);
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Submit Driver Details", "Error");
+            if (typeof callback === "function") {
+                callback(null);
+            }
         }
     });
+    console.log(driverId);
     return driverId;
 }
 function GetAllCityList() {
@@ -235,78 +267,112 @@ function BindDropDown(data) {
     $('.selectpicker').selectpicker('refresh');
 }
 function FetchDriverList() {
-    $('#tableDiv').show();
+    $("#tableDiv").css('display', 'block');
+    $("#formDiv").css('display', 'none');
+    $("#btnSaveDriver").show();
+    $("#btnUpdateDriver").hide();
+    $("#btnSaveNewDriver").show();
+    ResetForm();
+    ResetAttachmentRepeater();
     var fetchDriverUrl = '/Driver/ViewDriver';
     $.ajax({
-        url: fetchDriverUrl,
+        url: fetchDriverUrl,    
         type: "GET",
         dataType: "json",
         success: function (response) {
-
-            let trlist = response;
+            let driverList = response;
             driverResponseDtos = response;
-            // Destroy existing DataTable if exists
-            if ($.fn.DataTable.isDataTable('#tableDriver')) {
-                $('#tableDriver').DataTable().clear().destroy();
+            if ($.fn.DataTable.isDataTable("#driverTable")) {
+                $("#driverTable").DataTable().clear();
             }
-
-            $('#tableDriver').DataTable({
-                "processing": true,
-                "serverSide": false,
-                "paging": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "scrollX": true,
-                "ordering": false,
-                "data": trlist,
-                "columns": [
-                    {
-                        "data": "driverImagePath",
-                        "render": function (data) {
-                            return `<img src="../../driverphoto/${data}" style="height:60px;width:60px" alt="Photo"/>`;
-                        }
-                    },
-                    { "data": "licenseNo" },
-                    { "data": "driverName" },
-                    {
-                        "data": "driverTypeId",
-                        "render": function (data) {
-                            return driverTypeMap[data] || "Unknown Type";
-                        }
-                    },
-                    { "data": "mobNo" },
-                    { "data": "addressLine" },
-                    {
-                        "data": function (row) {
-                            return { DriverId: row.driverId, Logofile: row.driverImagePath }
-                        },
-                        "render": function (data, type, row) {
-                            return `<div class="btn-group" role="group">
-                                <button type="button" class="btn btn-sm btn-primary" onclick="EditDriver(${data.DriverId})">
-                                        <i class="ti ti-edit"></i> Edit
-                                </button>
-                                <button type="button" class="btn btn-sm btn-danger" onclick="DeleteDriver(${data.DriverId},'${data.Logofile}')">
-                                         <i class="ti ti-trash"></i> Delete
-                                </button>
-                                </div>`;
-                        }
-                    },
-                ],
-                "columnDefs": [
-                    {
-                        "targets": "_all",
-                        "className": "text-center"
-                    }
-                ]
+            const table = $("#driverTable").DataTable();
+            driverList.forEach(item => {
+                table.row.add([
+                    `<img src="../../driverphoto/${item.driverImagePath}" alt="Photo" height="40">`,
+                    item.licenseNo,
+                    item.driverName,
+                    driverTypeMap[item.driverTypeId] ??'Unknown Type',
+                    item.mobNo,
+                    item.addressLine,
+                    `
+           <div class="action-items" style="cursor:pointer;">
+                    <a class="icon-btn" onclick="EditDriver(${item.driverId})"><i class="ri-edit-2-line"></i></a>
+                    <a class="icon-btn" onclick="DeleteDriver(${item.driverId},'${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>
+            </div>
+            `
+                ]);
             });
+
+            // Redraw table with new data
+            table.draw();
+
+            // Update total list count
+            $('#totalList').text(`Total List: ${driverList.length}`);
+
+            //let trlist = response;
+            //driverResponseDtos = response;
+            //// Destroy existing DataTable if exists
+            //if ($.fn.DataTable.isDataTable('#tableDriver')) {
+            //    $('#tableDriver').DataTable().clear().destroy();
+            //}
+
+            //$('#tableDriver').DataTable({
+            //    "processing": true,
+            //    "serverSide": false,
+            //    "paging": true,
+            //    "pageLength": 10,
+            //    "lengthChange": true,
+            //    "searching": true,
+            //    "ordering": true,
+            //    "info": true,
+            //    "autoWidth": true,
+            //    "responsive": true,
+            //    "info": true,
+            //    "autoWidth": true,
+            //    "responsive": true,
+            //    "scrollX": true,
+            //    "ordering": false,
+            //    "data": trlist,
+            //    "columns": [
+            //        {
+            //            "data": "driverImagePath",
+            //            "render": function (data) {
+            //                return `<img src="../../driverphoto/${data}" style="height:60px;width:60px" alt="Photo"/>`;
+            //            }
+            //        },
+            //        { "data": "licenseNo" },
+            //        { "data": "driverName" },
+            //        {
+            //            "data": "driverTypeId",
+            //            "render": function (data) {
+            //                return driverTypeMap[data] || "Unknown Type";
+            //            }
+            //        },
+            //        { "data": "mobNo" },
+            //        { "data": "addressLine" },
+            //        {
+            //            "data": function (row) {
+            //                return { DriverId: row.driverId, Logofile: row.driverImagePath }
+            //            },
+            //            "render": function (data, type, row) {
+            //                return `<div class="btn-group" role="group">
+            //                    <button type="button" class="btn btn-sm btn-primary" onclick="EditDriver(${data.DriverId})">
+            //                            <i class="ti ti-edit"></i> Edit
+            //                    </button>
+            //                    <button type="button" class="btn btn-sm btn-danger" onclick="DeleteDriver(${data.DriverId},'${data.Logofile}')">
+            //                             <i class="ti ti-trash"></i> Delete
+            //                    </button>
+            //                    </div>`;
+            //            }
+            //        },
+            //    ],
+            //    "columnDefs": [
+            //        {
+            //            "targets": "_all",
+            //            "className": "text-center"
+            //        }
+            //    ]
+            //});
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -323,15 +389,11 @@ function EditDriver(driverId) {
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, driverId, function (list) {
         var attachmentData = list;
-
-        $('#tableDiv').hide();
-        $("#backButton").css('display', 'none');
-        $("#addDriverDiv").css('display', 'Block');
+        $('#tableDiv').css('display', 'none');
+        $("#formDiv").css('display', 'Block');
         $("#btnSaveDriver").hide();
         $("#btnUpdateDriver").show();
-        $("#cancleButton").removeClass('d-none');
         $("#btnSaveNewDriver").hide();
-        $("#btnView").hide();
 
         const dropzone = document.getElementById('dropzone');
         if (dropzone.children[1]) {
@@ -409,9 +471,7 @@ function UpdateDriver(fileName) {
         success: function (response) {
             if (response.result === "success") {
                 toastr.success("Driver Details Updated Successfully!");
-                $("#addDriverDiv").css('display', 'none');
                 FetchDriverList();
-                $("#backButton").show();
             }
             else {
                 toastr.error("Failed to Update Driver Details!","Error");
@@ -494,19 +554,20 @@ function DlEKycclick() {
             data: JSON.stringify(Body),
             success: function (response) {
                 var Data = response;
-                var drivingLicenseModel = response.drivingLicenseModel
+                console.log(Data);
+                var drivingLicenseModel = response.drivingLicenseModel;
                 var base64String = Data.drivingLicenseModel.photo;
 
 
-                $("#txtDriverName").val(drivingLicenseModel.fullName),
+                $("#txtDriverName").val(drivingLicenseModel.fullName);
                 $("#txtDLIssueDate").val(FormatDateForInput(drivingLicenseModel.validityIssueDate));
                 $("#txtDLExpiryDate").val(FormatDateForInput(drivingLicenseModel.validityExpiryDate));
                 // $("#txtDLIssuingRTO").val(drivingLicenseModel.rtoAuthority),
-                $("#txtAddress").val(drivingLicenseModel.presentAddress),
-                $("#numPincode").val(drivingLicenseModel.pincode),
+                $("#txtAddress").val(drivingLicenseModel.presentAddress);
+                    $("#numPincode").val(drivingLicenseModel.pincode);
 
                 document.getElementById("txtUploadedPhoto").value = base64String;
-                $("#txtUploadedPhoto").val(drivingLicenseModel.photo),
+                $("#txtUploadedPhoto").val(drivingLicenseModel.photo);
 
                 function base64ToFile(base64String, filename) {
                     const arr = base64String.split(",");
@@ -551,7 +612,6 @@ function GetDriverType() {
             response.forEach(category => {
                 driverTypeMap[category.internalMasterId] = category.internalMasterName;
             });
-
             const dropdown = document.getElementById("ddlDriverType");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -566,7 +626,6 @@ function GetDriverType() {
                 option.textContent = category.internalMasterName;
                 dropdown.appendChild(option);
             });
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -584,12 +643,14 @@ function DeleteDriver(driverId, fileName) {
             dataType: "json",
             data: JSON.stringify(driverId),
             success: function (response) {
-                DeleteMasterAttachment(result[0].attachmentId);
+                if (result.length > 0) {
+                    DeleteMasterAttachment(result[0].attachmentId);
+                }
+                toastr.success("Driver Details Deleted Successfully!");
                 FetchDriverList();
-                $("#backButton").css('display', 'block');
             },
             error: function (xhr, status, error) {
-                toastr.error("Fail	ed to fetch data!", "Validation Error");
+                toastr.error("Failed to Delete Driver Details!", "Error");
             }
         });
     })
@@ -599,7 +660,6 @@ function DeleteDriver(driverId, fileName) {
         dataType: "json",
         data: { fileName: fileName },
         success: function (response) {
-            toastr.success("Driver Details Deleted Successfully!");
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Delete Driver Details!", "Error");
