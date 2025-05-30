@@ -1,30 +1,36 @@
 ﻿const linkId = GetQueryParam("LinkId");
 $(document).ready(function () {
 
-    $(document).on("click", "#btnView", function () {
-        FetchVehicleList();
-        $("#addVehicleDiv").hide();
-        $("#tableDiv").show();
-        $("#backButton").show();
-    });
-
     $("#btnSaveVehicle, #btnSaveNewVehicle").on('click', function () {
         var action = $(this).data('action');
         SaveVehicle(action);
     });
 
-    $('#backButton').click(function () {
-        window.location.reload(true);
-      
+    $('#btnAddVehicle').click(function () {
+        $('#btnAddVehicle').addClass('d-none');
+        $('#tableDiv').addClass('d-none')
+        $('#addVehicleDiv').removeClass('d-none');
+        $('#btnCancel').removeClass('d-none');
+        $('#vehicleNo').prop('disabled', false);
+        $('#btnSaveVehicle').show();
+        $('#btnSaveNewVehicle').removeClass('d-none')
+        $('#btnUpdateVehicle').addClass('d-none');
+        $('#vehicleForm')[0].reset();
+        $('#ddlOwnerName').val(null).trigger('change');
+        $('#ddlCity').val(null).trigger('change');
+        $('#ddlVehicleCategory').val(null).trigger('change');
+        $('#ddlVehicleType').val(null).trigger('change');
+        $('#vehicleCapacity').val(null).trigger('change');
+        $('#ddlTrackingProvider').val(null).trigger('change');
     });
 
     $("#btnCancel").on('click', function () {
         FetchVehicleList();
-        $("#addVehicleDiv").hide();
-        $("#tableDiv").show();
-        $("#backButton").show();
-    });
-
+        $("#addVehicleDiv").addClass('d-none');
+        $("#tableDiv").removeClass('d-none')
+        $("#btnAddVehicle").removeClass('d-none');
+    });FetchVehicleList
+    FetchVehicleList();
     GetAllOwnerOrVendor();
     GetAllVehicleCategory();
     GetAllVehicleTypeList();
@@ -161,13 +167,12 @@ function EditVehicle(vehicleId) {
     console.log(formData);
 
     $('#tableDiv').hide();
-    $("#backButton").css('display', 'none');
-    $("#addVehicleDiv").css('display', 'Block');
+    $('#btnAddVehicle').addClass('d-none');
+    $("#addVehicleDiv").removeClass('d-none');
     $("#btnSaveVehicle").hide();
-    $("#btnUpdateVehicle").show();
+    $("#btnUpdateVehicle").removeClass('d-none')
     $("#btnCancel").removeClass('d-none');
-    $("#btnSaveNewVehicle").hide();
-    $("#btnView").hide();
+    $("#btnSaveNewVehicle").addClass('d-none')
 
     $("#vehicleNo").val(formData.vehicleNo).prop("disabled", true);
     $("#hdVehicleId").val(formData.vehicleId);
@@ -300,9 +305,9 @@ function UpdateVehicle() {
             success: function (result) {
                 if (result.result === "success") {
                     toastr.success("Vehicle Details Updated Successfully!");
-                    $("#addVehicleDiv").css('display', 'none');
+                    $("#addVehicleDiv").addClass('d-none');
+                    $('#btnAddVehicle').removeClass('d-none');
                     FetchVehicleList();
-                    $("#backButton").css('display', 'block');
                 } else {
                     toastr.error("Failed to Update Vehicle Details", "Error");
                 }
@@ -323,9 +328,8 @@ function DeleteVehicle(vehicleId) {
         success: function (response) {
             if (response && response.result === "success") {
                 toastr.success("Vehicle Details Deleted Successfully!");
-                $("#addVehicleDiv").css('display', 'none');
+                $("#addVehicleDiv").addClass('d-none');
                 FetchVehicleList();
-                $("#backButton").css('display', 'block');
             } else {
                 toastr.error("Failed to Delete Vehicle Details!", "Error");
             }
@@ -337,6 +341,7 @@ function DeleteVehicle(vehicleId) {
 }
 function FetchVehicleList() {
     $("#tableDiv").show();
+    
     var fetchVehicleUrl = '/Vehicle/ViewVehicle';
     $.ajax({
         url: fetchVehicleUrl,
@@ -345,49 +350,30 @@ function FetchVehicleList() {
         success: function (response) {
             let trlist = response;
             vehicleResponse = response;
-
             if ($.fn.DataTable.isDataTable('#tableVehicle')) {
-                $('#tableVehicle').DataTable().clear().destroy();
+                $('#tableVehicle').DataTable().clear();
             }
-
-            $('#tableVehicle').DataTable({
-                processing: true,
-                serverSide: false,
-                paging: true,
-                pageLength: 10,
-                lengthChange: true,
-                searching: true,
-                info: true,
-                autoWidth: false,
-                responsive: true,
-                scrollX: true,
-                ordering: false,
-                data: trlist,
-                columns: [
-                    { data: "vehicleNo" },
-                    { data: "vehicleStatus" },
-                    { data: "engineNo" },
-                    { data: "chassisNo" },
-                    { data: "vehicleCapacity" },
-                    { data: "rtoRegistration" },
-                    {
-                        data: "vehicleId",
-                        render: function (data, type, row) {
-                            return `<div class="btn-group" role="group">
-                            <button type="button" class="btn btn-sm btn-primary" onclick="EditVehicle(${data})">
-                                <i class="ti ti-edit"></i> Edit
-                            </button>
-                            <button type="button" class="btn btn-sm btn-danger" onclick="DeleteVehicle(${data})">
-                                <i class="ti ti-trash"></i> Delete
-                            </button>
-                        </div>`;
-                        }
-                    }
-                ],
-                columnDefs: [
-                    { targets: "_all", className: "text-center" }
-                ]
+            const table = $("#tableVehicle").DataTable();
+            trlist.forEach(item => {
+                table.row.add([
+                    item.vehicleNo,
+                    item.vehicleStatus,
+                    item.engineNo,
+                    item.chassisNo,
+                    item.vehicleCapacity,
+                    item.rtoRegistration,
+                    `
+           <div class="action-items" style="cursor:pointer;">
+                    <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
+                    <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
+            </div>
+            `
+                ]);
             });
+            // Redraw table with new data
+            table.draw();
+            // Update total list count
+            $('#totalList').text(`Total List: ${trlist.length}`);
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");

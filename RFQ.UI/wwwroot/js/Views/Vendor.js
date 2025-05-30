@@ -14,11 +14,25 @@ $(document).ready(function () {
     GetAllInternalMaster();
     GetAllCityList();
     CheckValidation();
-    $("#btnSaveVendor, #btnSavenewVendor").on('click', function () {
+    
+
+    $(document).on("click", "#btnViewButton", function () {
+        FetchVendor();
+        $("#formDiv").css('display', 'none')
+        $("#backButton").css('display', 'Block');
+    });
+
+    $('#tableDivLink').on('click', function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        $('#formDiv').hide(); // hide the add/edit form
+        $('#tableDiv').show(); // show the list
+    });
+
+    $("#btnSaveVendor, #btnsaveandnew").on('click', function () {
         var action = $(this).data('action');
         SaveVendor(action);
     });
-    $("#btnUpdateVendor").on('click', function (event) {
+    $("#btnupdate").on('click', function (event) {
         event.preventDefault();
         if (OnSubmitValidation()) {
             UpdateVendor();
@@ -119,7 +133,11 @@ $(document).ready(function () {
         $("#addVendorDiv").css('display', 'none');
         $("#backButton").css('display', 'block');
     });
-    
+    FetchVendor();
+});
+$('#addVendor').click(function () {
+    $('#formDiv').css("display", "block");
+    $('#tableDiv').css("display", "none");
 });
 function CheckValidation() {
     $("#txtPanNumber").on("blur", function () {
@@ -431,6 +449,9 @@ function SaveVendor(action) {
                     $('#ddlCity').val('');
                     $('#ddlVendorCategory').val('');
                     $('.selectpicker').selectpicker('refresh');
+                    setTimeout(() => {
+                        ResetAttachmentRepeater();
+                    }, 1000);
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Submit Vendor Details", "Error");
@@ -441,70 +462,53 @@ function SaveVendor(action) {
     }
 }
 function FetchVendor() {
-    $("#tableDiv").show();
-    var fetchVendorUrl = '/Vendor/GetAllVendor';
+    $("#tableDiv").css('display', 'block');
+    $("#formDiv").css('display', 'none');
+    $('#vendorForm')[0].reset();
+    $('#ddlCity').val(null).trigger('change');
+    $("#btnSaveVendor").show();
+    $("#btnupdate").hide();
+    $("#btnsaveandnew").show();
+    ResetAttachmentRepeater();
+    var FetchVendorUrl = '/Vendor/GetAllVendor';
     $.ajax({
-        url: fetchVendorUrl,
-        type: 'GET',
-        dataType: 'json',
+        url: FetchVendorUrl,
+        type: "GET",
+        dataType: "json",
         success: function (response) {
-            let vendorList = response;
-
+            let vendorList = response.filter(x => x.partyTypeId == 5);
             vendorListDto = response;
-            if ($.fn.DataTable.isDataTable('#tableVendor')) {
-                $('#tableVendor').DataTable().clear().destroy();
+            if ($.fn.DataTable.isDataTable('#vendorTable')) {
+                $('#vendorTable').DataTable().clear();
             }
-            $('#tableVendor').DataTable({
-                "processing": true,
-                "serverSide": false,
-                "paging": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "scrollX": true,
-                "data": vendorList,
-                "columns": [
-                    { "data": "partyName", },
-                    { "data": "partyCategoryId" },
-                    { "data": "addressLine" },
-                    { "data": "pinCode" },
-                    { "data": "contactPerson" },
-                    { "data": "mobNo" },
-                    { "data": "whatsAppNo" },
-                    { "data": "email" },
-                    { "data": "panNo" },
-                    { "data": "gstNo" },
-                    {
-                        "data": "partyId",
-                        "render": function (data, type, row) {
-                            return `<div class="btn-group" role="group">
-        <button type="button" class="btn btn-sm btn-primary" onclick="EditVendor(${data})">
-            <i class="ti ti-edit"></i> Edit
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteVendor(${data})">
-            <i class="ti ti-trash"></i> Delete
-        </button>
-    </div>`;
-                        }
-                    },
-                ],
-                "columnDefs": [
-                    {
-                        "targets": "_all",
-                        "className": "text-center"
-                    }
-                ]
-            })
+            console.log(vendorList)
+            const table = $("#vendorTable").DataTable();
+            vendorList.forEach(item => {
+                table.row.add([
+                    item.partyName,
+                    item.addressLine,
+                    item.pinCode,
+                    item.contactPerson,
+                    item.mobNo,
+                    item.whatsAppNo,
+                    item.email,
+                    item.panNo,
+                    item.gstNo,
+                    
+                    `
+                    <div class="action-items" style="cursor:pointer;">
+                        <a class="icon-btn" onclick="EditVendor(${item.partyId})"><i class="ri-edit-2-line"></i></a>
+                        <a class="icon-btn" onclick="DeleteVendor(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+                    </div>
+                    `
+                ]);
+            });
+            // Redraw table with new data
+            table.draw();
+            // Update total list count
+            $('#totalList').text(`Total List: ${vendorList.length}`);
         },
         error: function (xhr, status, error) {
-
             toastr.error("Failed to Fetch Data!", "Error");
         }
     });
@@ -514,12 +518,14 @@ function EditVendor(partyId) {
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
         var attachmentData = list;
+        $('#tableDiv').css('display', 'none');
+        $("#formDiv").css('display', 'Block');
         $('#tableDiv').hide();
         $("#backButton").css('display', 'none');
         $("#addVendorDiv").css('display', 'Block');
         $("#btnSaveVendor").hide();
-        $("#btnUpdateVendor").show();
-        $("#btnSavenewVendor").hide();
+        $("#btnupdate").show();
+        $("#btnsaveandnew").hide();
         $("#btnViewButton").hide();
         $("#btnCancel").removeClass("d-none");
         $("#hdnPartyId").val(formData.partyId);

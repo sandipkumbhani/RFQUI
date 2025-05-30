@@ -8,157 +8,253 @@
     <script src="~/js/AttachmentDetails.js"></script>
     <script src="~/js/Views/CorporateCompany.js"></script>
 }
-<div class="app-toolbar  pt-3 px-lg-3">
-    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
-        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-            <div class="page-title d-flex align-items-center gap-1 me-3">
-                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
-                    Overview
-                </h1>
-                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
-                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
-                    </li>
-                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
-                    <li class="breadcrumb-item text-primary">
-                        CorporateCompany
-                    </li>
-                </ul>
+@* <head> *@
+@*     <!-- Latest compiled and minified CSS --> *@
+@*     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"> *@
+@*     <!-- Latest compiled and minified JavaScript --> *@
+@*     <!-- (Optional) Latest compiled and minified JavaScript translation files --> *@
+@*     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script> *@
+@*     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> *@
+@* </head> *@
+
+
+<div id="tableDiv">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Corporate Company</h1>
+
+                <div class="add-btn">
+                    <a href="#" id="addCompany">
+                        <i class="ri-add-line"></i> <span>Add Company</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <!-- Top Header -->
+                <div class="table-top-header">
+                    <h4>List of Corporate Company</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="customcorporateSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn-btn-outline-secondary dropdown-toggle" type="button" id="filterDropdownCorporate" data-bs-toggle="dropdown" aria-expanded="false">
+                                Filter <i class="ri-sound-module-line"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="filterDropdownCorporate">
+                                <li><a class="dropdown-item filter-option-corporate" data-value="">All Status</a></li>
+                                <li><a class="dropdown-item filter-option-corporate" data-value="Pending">Pending</a></li>
+                                <li><a class="dropdown-item filter-option-corporate" data-value="Done">Done</a></li>
+                            </ul>
+                        </div>
+                        <div id="exportcorporateButtons" class="btn-group" role="group"></div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table id="corporateTable" class="table dt-responsive nowrap w-100">
+                        <thead>
+                            <tr>
+
+                                <th>Company Name</th>
+                                <th>Address</th>
+                                <th>Pincode</th>
+                                <th>ContactPerson</th>
+                                <th>MobileNumber</th>
+                                <th>ContactNumber</th>
+                                <th>whatsAppNo</th>
+                                <th>Email</th>
+                                <th>Pan No</th>
+                                <th>GST No</th>
+
+                                <th class="no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example data -->
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalRemindersCorporate">Total List: 3</span>
+                    </div>
+                    <div id="customcorporatePagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<div class="app-content  px-lg-3">
-    <div class="app-container  container-fluid">
-        <div class="container my-4">
-            <button id="backButton" type="button" class="btn btn-primary" style="display:none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
-                </svg>
-                Back
-            </button>
-        </div>
-        <div id="addCorporateCompanyDiv" class="card">
-            <div class="card-header border-0 cursor-pointer">
-                <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">Corporate company</h3>
+
+<div id="formDiv" style="display:none;">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Corporate Company</h1>
+
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#" id="tableDivLink">Corporate Company</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Corporate Company</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
-            <form class="form" id="CompanyTypeForm" method="post">
-                <input type="hidden"  id="txtCompanyId" />
-                <div class="card-body border-top p-9">
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Company Name </label>
-                                <input type="text" class="form-control" placeholder="Company Name" maxlength="100" id="txtCompanyName" name="Company Name" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-franchise-info">
+                <form class="form" id="CompanyTypeForm" method="post">
+                    <input type="hidden" id="txtCompanyId" />
+                    <div class="franchise-details">
+                        <h2 class="page-form-title">Corporate Company Details</h2>
+                        <div class="row all-custom-class">
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+
+                                    <label class="form-label">Company Name <span>*</span> </label>
+                                    <input type="text" class="form-control" placeholder="Company Name" maxlength="100" id="txtCompanyName" name="Company Name" />
+                                </div>
 
                             </div>
-
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Franchise Name</label>
-
-                                <select id="ddlFranchisename" name="franchise" aria-label="Select a Franchise" class="selectpicker" data-live-search="true" data-width="100%">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-12">
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Address </label>
-                                <input type="text" class="form-control" placeholder="Map Based Search" id="txtAddress" maxlength="200" name="address" />
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">City</label>
-
-                                <select id="ddlCity" name="City" aria-label="Select a City" class="selectpicker" data-live-search="true" data-width="100%">
-                                </select>
-                            </div>
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-                                <input type="text" class="form-control" placeholder="Contact Person" id="txtPerson" maxlength="50" name="Contact Person"/>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label ">Franchise Name <span>*</span></label>
+                                    <select class="select2-custom form-control" id="ddlFranchisename" style="width: 100%;">
+                                    </select>
+                                </div>
                             </div>
 
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Mobile Number</label>
-                                <input type="text" class="form-control" placeholder="Mobile Number" id="txtMobileNumber" maxlength="10" onkeypress="return isNumber(event)" name="Mobile Number"/>
-                            </div>
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Pan Number</label>
-                                <input type="text" class="form-control" placeholder="Pan Number" id="txtPanNumber" maxlength="10" name="Pan Number" onkeypress="return AllowAlphaNumericOnly(event)"/>
-                            </div>
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">GST Number</label>
-                                <input type="text" class="form-control" placeholder="GST Number" id="txtGstNumber" maxlength="15" name="Gst Number" onkeypress="return AllowAlphaNumericOnly(event)"/>
+                            <div class="col-lg-12">
+                                <div class="item-input">
+
+                                    <label class="form-label ">Address <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Map Based Search" id="txtAddress" maxlength="200" name="address" />
+                                </div>
                             </div>
 
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
-                                <input type="text" class="form-control" placeholder="Pin Code" id="txtPinCode" maxlength="6" onkeypress="return isNumber(event)" name="Pincode"/>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label ">City <span>*</span></label>
+                                    <select class="select2-custom form-control" id="ddlCity" style="width: 100%;">
+                                    </select>
+                                </div>
                             </div>
-                            <div class="mb-10">
-                                <label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
-                                <input type="text" class="form-control" placeholder="WhatsApp Number" id="txtWhatsAppNumber" maxlength="10" onkeypress="return isNumber(event)" name="Whatsapp Number"/>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label ">Pincode <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Pin Code" id="txtPinCode" maxlength="6" onkeypress="return isNumber(event)" name="Pincode" />
+                                </div>
                             </div>
-                            <div class="mb-10">
-                                <label class="form-label col-form-label fw-semibold fs-6">Contact Number</label>
-                                <input type="text" class="form-control" placeholder="Contact Number" id="txtContactNumber" maxlength="10" onkeypress="return isNumber(event)" name="Contact Number" />
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label ">Contact Person <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Contact Person" id="txtPerson" maxlength="50" name="Contact Person" />
+                                </div>
                             </div>
-                            <div class="mb-10">
-                                <label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-                                <input type="email" class="form-control" placeholder="email" id="txtEmail" maxlength="50" name="Email"/>
+
+                            <div class="col-lg-4">
+                                <div class="item-input">
+                                    <label class="form-label ">WhatsApp Number <span>*</span></label>
+                                    <input type="text" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtWhatsAppNumber" maxlength="10" onkeypress="return isNumber(event)" name="Whatsapp Number" />
+
+                                </div>
                             </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label ">Mobile Number <span>*</span></label>
+                                    <input type="text" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtMobileNumber" maxlength="10" onkeypress="return isNumber(event)" name="Mobile Number" />
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label"> Contact Number <span>*</span></label>
+                                    <input type="text" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtContactNumber" maxlength="10" onkeypress="return isNumber(event)" name="Contact Number" />
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label col-form-label required fw-semibold fs-6">Pan Number <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="xxxxxxxxxx" id="txtPanNumber" maxlength="10" name="Pan Number" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label col-form-label fw-semibold fs-6">Email ID <span>*</span></label>
+                                    <input type="email" class="form-control" placeholder="email" id="txtEmail" maxlength="50" name="Email" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">GST Number <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="xxxxx-xxxxx-xxxxx" id="txtGstNumber" maxlength="15" name="Gst Number" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                </div>
 
-                @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
+                    @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 
-                <div class="card-footer d-flex justify-content-srtat py-6 px-9">
-                    <button id="btnSaveCompanyType" type="button" class="btn btn-primary me-2" data-action="save">Save</button>
-                    <button id="btnupdate" type="button" class="btn btn-primary" style="display:none;">Update</button>
-                    <button id="btnsaveandnew"type="button" class="btn btn-primary me-2"  data-action="saveNew">Save & New</button>
-                    <button id="btnView" type="button" class="btn btn-primary">View</button>
-                    <button id="btnCancel" type="button" class="btn btn-danger d-none">Cancel</button>
-                </div>
+                    <div class="button-main">
+                        <a href="#" class="card-link" id="btnSaveCompanyType" type="button" data-action="save">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save
+                            </span>
 
+                        </a>
 
-            </form>
-        </div>
-        <!-- Corporate Company Table Card -->
-        <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
-            <div class="card-header p-4">
-                <h4 class="fw-bold m-0 text-lg">Corporate Company List</h4>
-            </div>
-            <div class="card-body">
-                <table id="tableCorporateCompany"
-                       class="table table-striped align-middle fs-6 mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th>CompanyTypeId </th>
-                            <th>CompanyName</th>
-                            <th>addressLine</th>
-                            <th>cityid</th>
-                            <th>pinCode</th>
-                            <th>contactPerson</th>
-                            <th>mobNo</th>
-                            <th>ContactNo</th>
-                            <th>whatsAppNo</th>
-                            <th>email</th>
-                            <th>panNo</th>
-                            <th>gstNo</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Dynamic rows go here -->
-                    </tbody>
-                </table>
+                        <a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save & New
+                            </span>
+                        </a>
+                        <a href="#" class="card-link" id="btnupdate" style="display:none;">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Update
+                            </span>
+                        </a>
+                        <a href="#" class="card-link" id="btnCancel">
+                            <i class="ri-close-line"></i>
+                            <span>
+                                Cancel
+                            </span>
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
