@@ -1,4 +1,4 @@
- $(document).ready(function () {
+$(document).ready(function () {
     const table = $('#remindersTable').DataTable({
         responsive: true,
         dom: 'Bfrtip',
@@ -17,8 +17,8 @@
         ],
         language: {
             paginate: {
-            previous: '<i class="ri-arrow-left-s-line"></i>',
-            next: '<i class="ri-arrow-right-s-line"></i>'
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
             }
         }
     });
@@ -55,7 +55,6 @@
     $('#totalReminders').text(`Total Reminders: ${table.rows().count()}`);
 });
 
-
 $(document).ready(function () {
     const table = $('#franchiseTable').DataTable({
         responsive: true,
@@ -75,8 +74,8 @@ $(document).ready(function () {
         ],
         language: {
             paginate: {
-            previous: '<i class="ri-arrow-left-s-line"></i>',
-            next: '<i class="ri-arrow-right-s-line"></i>'
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
             }
         }
     });
@@ -112,6 +111,7 @@ $(document).ready(function () {
     // Update total reminders
     $('#totalList').text(`Total List: ${table.rows().count()}`);
 });
+
 $(document).ready(function () {
     const table = $('#vendorTable').DataTable({
         responsive: true,
@@ -131,8 +131,8 @@ $(document).ready(function () {
         ],
         language: {
             paginate: {
-            previous: '<i class="ri-arrow-left-s-line"></i>',
-            next: '<i class="ri-arrow-right-s-line"></i>'
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
             }
         }
     });
@@ -188,8 +188,8 @@ $(document).ready(function () {
         ],
         language: {
             paginate: {
-            previous: '<i class="ri-arrow-left-s-line"></i>',
-            next: '<i class="ri-arrow-right-s-line"></i>'
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
             }
         }
     });
@@ -226,10 +226,9 @@ $(document).ready(function () {
     $('#totalList').text(`Total List: ${table.rows().count()}`);
 });
 
-
 $(document).ready(function () {
     $.fn.DataTable.ext.pager.numbers_length = 3;
-    
+
     const table = $('#vehicleTypesTable').DataTable({
         responsive: true,
         dom: 'Bfrtip',
@@ -248,8 +247,8 @@ $(document).ready(function () {
         ],
         language: {
             paginate: {
-            previous: '<i class="ri-arrow-left-s-line"></i>',
-            next: '<i class="ri-arrow-right-s-line"></i>'
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
             }
         }
     });
@@ -308,8 +307,8 @@ $(document).ready(function () {
         ],
         language: {
             paginate: {
-            previous: '<i class="ri-arrow-left-s-line"></i>',
-            next: '<i class="ri-arrow-right-s-line"></i>'
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
             }
         }
     });
@@ -346,13 +345,6 @@ $(document).ready(function () {
     $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
 });
 
-
-
-
-
-
-
-
 $(document).ready(function () {
     const table = $('#corporateTable').DataTable({
         responsive: false,
@@ -367,7 +359,7 @@ $(document).ready(function () {
         lengthChange: false,
         pageLength: 10,
         columnDefs: [
-           // { orderable: false, className: 'details-control', targets: 0 }, // Expand control
+            // { orderable: false, className: 'details-control', targets: 0 }, // Expand control
             { orderable: false, targets: 'no-sort' }
         ],
         language: {
@@ -481,246 +473,13 @@ $(document).ready(function () {
         table.column(2).search(value).draw();
     });
 
-});
-
-$(document).ready(function () {
-
-    $.fn.DataTable.ext.pager.numbers_length = 3;
-
-    const table = $('#tablelocation').DataTable({
-        responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                text: '<i class="ri-file-excel-line"></i> Export All',
-            },
-        ],
-        paging: true,
-        info: true,
-        lengthChange: false,
-        pageLength: 10,
-        columnDefs: [
-            // { orderable: false, targets: [] } // all sortable
-            { orderable: false, targets: 'no-sort' }
-        ],
-        language: {
-            paginate: {
-                previous: '<i class="ri-arrow-left-s-line"></i>',
-                next: '<i class="ri-arrow-right-s-line"></i>'
-            }
-        }
-    });
-
-    // Move export buttons
-    table.buttons().container().appendTo('#exporttablelocation');
-
-    // Search
-    $('#customSearch').on('keyup', function () {
-        table.search(this.value).draw();
-    });
-
-    // Move pagination to custom div
-    $('#tablelocation_paginate').appendTo('#customPagination');
-
-    // Filter dropdown logic
-    $('.filter-option-applicableroute').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-
-        // Update filter label after selection
-        $('#filterApplicableRouteDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
-    });
-
     // Page length
     $('#pageLength').on('change', function () {
         table.page.len(this.value).draw();
     });
 
     // Update total reminders
-    $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
-});
-
-$(document).ready(function () {
-
-    $.fn.DataTable.ext.pager.numbers_length = 3;
-
-    const table = $('#tableuser').DataTable({
-        responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                text: '<i class="ri-file-excel-line"></i> Export All',
-            },
-        ],
-        paging: true,
-        info: true,
-        lengthChange: false,
-        pageLength: 10,
-        columnDefs: [
-            // { orderable: false, targets: [] } // all sortable
-            { orderable: false, targets: 'no-sort' }
-        ],
-        language: {
-            paginate: {
-                previous: '<i class="ri-arrow-left-s-line"></i>',
-                next: '<i class="ri-arrow-right-s-line"></i>'
-            }
-        }
-    });
-
-    // Move export buttons
-    table.buttons().container().appendTo('#exporttableuser');
-
-    // Search
-    $('#customSearch').on('keyup', function () {
-        table.search(this.value).draw();
-    });
-
-    // Move pagination to custom div
-    $('#tableuser_paginate').appendTo('#customPagination');
-
-    // Filter dropdown logic
-    $('.filter-option-applicableroute').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-
-        // Update filter label after selection
-        $('#filterApplicableRouteDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
-    });
-
-    // Page length
-    $('#pageLength').on('change', function () {
-        table.page.len(this.value).draw();
-    });
-
-    // Update total reminders
-    $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
-});
-
-$(document).ready(function () {
-
-    $.fn.DataTable.ext.pager.numbers_length = 3;
-
-    const table = $('#tableCmpConfig').DataTable({
-        responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                text: '<i class="ri-file-excel-line"></i> Export All',
-            },
-        ],
-        paging: true,
-        info: true,
-        lengthChange: false,
-        pageLength: 10,
-        columnDefs: [
-            // { orderable: false, targets: [] } // all sortable
-            { orderable: false, targets: 'no-sort' }
-        ],
-        language: {
-            paginate: {
-                previous: '<i class="ri-arrow-left-s-line"></i>',
-                next: '<i class="ri-arrow-right-s-line"></i>'
-            }
-        }
-    });
-
-    // Move export buttons
-    table.buttons().container().appendTo('#exporttableCC');
-
-    // Search
-    $('#customSearch').on('keyup', function () {
-        table.search(this.value).draw();
-    });
-
-    // Move pagination to custom div
-    $('#tableCmpConfig_paginate').appendTo('#customPagination');
-
-    // Filter dropdown logic
-    $('.filter-option-applicableroute').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-
-        // Update filter label after selection
-        $('#filterApplicableRouteDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
-    });
-
-    // Page length
-    $('#pageLength').on('change', function () {
-        table.page.len(this.value).draw();
-    });
-
-    // Update total reminders
-    $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
-});
-$(document).ready(function () {
-
-    $.fn.DataTable.ext.pager.numbers_length = 3;
-
-    const table = $('#tableProduct').DataTable({
-        responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                text: '<i class="ri-file-excel-line"></i> Export All',
-            },
-        ],
-        paging: true,
-        info: true,
-        lengthChange: false,
-        pageLength: 10,
-        columnDefs: [
-            // { orderable: false, targets: [] } // all sortable
-            { orderable: false, targets: 'no-sort' }
-        ],
-        language: {
-            paginate: {
-                previous: '<i class="ri-arrow-left-s-line"></i>',
-                next: '<i class="ri-arrow-right-s-line"></i>'
-            }
-        }
-    });
-
-    // Move export buttons
-    table.buttons().container().appendTo('#exporttableproduct');
-
-    // Search
-    $('#customSearch').on('keyup', function () {
-        table.search(this.value).draw();
-    });
-
-    // Move pagination to custom div
-    $('#tableProduct_paginate').appendTo('#customPagination');
-
-    // Filter dropdown logic
-    $('.filter-option-applicableroute').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-
-        // Update filter label after selection
-        $('#filterApplicableRouteDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
-    });
-
-    // Page length
-    $('#pageLength').on('change', function () {
-        table.page.len(this.value).draw();
-    });
-
-    // Update total reminders
-    $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
-});
+    $('#totalRemindersCorporate').text(`Total List: ${table.rows().count()}`);
 });
 
 $(document).ready(function () {
@@ -780,10 +539,204 @@ $(document).ready(function () {
 
     // Update total reminders
     $('#totaltableVehicleReminders').text(`Total List: ${table.rows().count()}`);
-});    $('#pageLength').on('change', function () {
+});
+
+$(document).ready(function () {
+    $.fn.DataTable.ext.pager.numbers_length = 3;
+    const table = $('#tablelocation').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="ri-file-excel-line"></i> Export All',
+            },
+        ],
+        paging: true,
+        info: true,
+        lengthChange: false,
+        pageLength: 10,
+        columnDefs: [
+            // { orderable: false, targets: [] } // all sortable
+            { orderable: false, targets: 'no-sort' }
+        ],
+        language: {
+            paginate: {
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
+            }
+        }
+    });
+    // Move export buttons
+    table.buttons().container().appendTo('#exporttablelocation');
+    // Search
+    $('#customSearch').on('keyup', function () {
+        table.search(this.value).draw();
+    });
+    // Move pagination to custom div
+    $('#tablelocation_paginate').appendTo('#customPagination');
+    // Filter dropdown logic
+    $('.filter-option-applicableroute').on('click', function () {
+        const value = $(this).data('value');
+        const label = $(this).text();
+        // Update filter label after selection
+        $('#filterApplicableRouteDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
+        // Apply DataTables column filter (status is column 2)
+        table.column(2).search(value).draw();
+    });
+    // Page length
+    $('#pageLength').on('change', function () {
         table.page.len(this.value).draw();
     });
+    // Update total reminders
+    $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
+});
 
+$(document).ready(function () {
+    $.fn.DataTable.ext.pager.numbers_length = 3;
+    const table = $('#tableuser').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="ri-file-excel-line"></i> Export All',
+            },
+        ],
+        paging: true,
+        info: true,
+        lengthChange: false,
+        pageLength: 10,
+        columnDefs: [
+            // { orderable: false, targets: [] } // all sortable
+            { orderable: false, targets: 'no-sort' }
+        ],
+        language: {
+            paginate: {
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
+            }
+        }
+    });
+    // Move export buttons
+    table.buttons().container().appendTo('#exporttableuser');
+    // Search
+    $('#customSearch').on('keyup', function () {
+        table.search(this.value).draw();
+    });
+    // Move pagination to custom div
+    $('#tableuser_paginate').appendTo('#customPagination');
+    // Filter dropdown logic
+    $('.filter-option-applicableroute').on('click', function () {
+        const value = $(this).data('value');
+        const label = $(this).text();
+        // Update filter label after selection
+        $('#filterApplicableRouteDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
+        // Apply DataTables column filter (status is column 2)
+        table.column(2).search(value).draw();
+    });
+    // Page length
+    $('#pageLength').on('change', function () {
+        table.page.len(this.value).draw();
+    });
+    // Update total reminders
+    $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
+});
+
+$(document).ready(function () {
+    $.fn.DataTable.ext.pager.numbers_length = 3;
+    const table = $('#tableCmpConfig').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="ri-file-excel-line"></i> Export All',
+            },
+        ],
+        paging: true,
+        info: true,
+        lengthChange: false,
+        pageLength: 10,
+        columnDefs: [
+            // { orderable: false, targets: [] } // all sortable
+            { orderable: false, targets: 'no-sort' }
+        ],
+        language: {
+            paginate: {
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
+            }
+        }
+    });
+    // Move export buttons
+    table.buttons().container().appendTo('#exporttableCC');
+    // Search
+    $('#customSearch').on('keyup', function () {
+        table.search(this.value).draw();
+    });
+    // Move pagination to custom div
+    $('#tableCmpConfig_paginate').appendTo('#customPagination');
+    // Filter dropdown logic
+    $('.filter-option-applicableroute').on('click', function () {
+        const value = $(this).data('value');
+        const label = $(this).text();
+        // Update filter label after selection
+        $('#filterApplicableRouteDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
+        // Apply DataTables column filter (status is column 2)
+        table.column(2).search(value).draw();
+    });
+    // Page length
+    $('#pageLength').on('change', function () {
+        table.page.len(this.value).draw();
+    });
+    // Update total reminders
+    $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
+});
+
+$(document).ready(function () {
+    $.fn.DataTable.ext.pager.numbers_length = 3;
+    const table = $('#tableProduct').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="ri-file-excel-line"></i> Export All',
+            },
+        ],
+        paging: true,
+        info: true,
+        lengthChange: false,
+        pageLength: 10,
+        columnDefs: [
+            // { orderable: false, targets: [] } // all sortable
+            { orderable: false, targets: 'no-sort' }
+        ],
+        language: {
+            paginate: {
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
+            }
+        }
+    });
+    // Move export buttons
+    table.buttons().container().appendTo('#exporttableproduct');
+    // Search
+    $('#customSearch').on('keyup', function () {
+        table.search(this.value).draw();
+    });
+    // Move pagination to custom div
+    $('#tableProduct_paginate').appendTo('#customPagination');
+    // Filter dropdown logic
+    $('.filter-option-applicableroute').on('click', function () {
+        const value = $(this).data('value');
+        const label = $(this).text();
+        // Update filter label after selection
+        $('#filterApplicableRouteDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
+        // Apply DataTables column filter (status is column 2)
+        table.column(2).search(value).draw();
+    });
+    // Page length
+    $('#pageLength').on('change', function () {
+        table.page.len(this.value).draw();
+    });
     // Update total reminders
     $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
 });
