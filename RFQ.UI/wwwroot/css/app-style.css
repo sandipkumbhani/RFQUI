@@ -1658,7 +1658,7 @@ table.dataTable thead th.sorting_desc::after {
         color: var(--ft-tertiary);
     }
 
-    .file-upload-item .needsclick button {
+    .file-upload-item .needsclick span {
         font-size: 0.875rem;
         font-weight: bold;
         display: inline-flex;
