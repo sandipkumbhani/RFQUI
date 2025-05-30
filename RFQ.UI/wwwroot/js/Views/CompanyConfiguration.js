@@ -1,9 +1,25 @@
-﻿$(document).ready(function () {
-    var companyConfigResponseDto;
+﻿
+var companyConfigResponseDto;
+$(document).ready(function () {
+    // Optionally, add "Cancel" to go back to the list
+    $("#btnCancel").on("click", function () {
+        window.location.reload(true);
+    });
+    $('#listSectionLink').on('click', function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        $('#formSection').hide(); // hide the add/edit form
+        $('#listSection').show(); // show the list
+    });
     Initializejquery();
     CheckValidation();
     GetAllCompany();
     GetAllProviders();
+    FetchCompanyConfiguration();
+});
+$("#btnAddconfiguration").on("click", function (e) {
+    e.preventDefault();
+    $("#listSection").hide();
+    $("#formSection").show();
 });
 function Initializejquery() {
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
@@ -72,15 +88,15 @@ function CheckValidation() {
             return;
         }
     });
-    $("#txtSmtpUserName").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a valid smtp User Name", "Validation Error");
+     $("#txtSmtpPort").on("blur", function () {
+        if (!isNumeric($(this).val())) {
+            toastr.warning("Please enter a valid smtp Port", "Validation Error");
             return;
         }
     });
-    $("#txtSmtpPort").on("blur", function () {
-        if (!isNumeric($(this).val())) {
-            toastr.warning("Please enter a valid smtp Port", "Validation Error");
+    $("#txtSmtpUserName").on("blur", function () {
+        if (IsNullOrEmpty($(this).val())) {
+            toastr.warning("Please enter a valid smtp User Name", "Validation Error");
             return;
         }
     });
@@ -117,12 +133,12 @@ function OnSubmitValidation() {
         toastr.warning("Please enter a valid smtp Host", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($('#txtSmtpUserName').val())) {
-        toastr.warning("Please enter a valid smtp User Name", "Validation Error");
-        return false;
-    }
     if (IsNullOrEmpty($('#txtSmtpPort').val())) {
         toastr.warning("Please enter a valid smtp Port", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($('#txtSmtpUserName').val())) {
+        toastr.warning("Please enter a valid smtp User Name", "Validation Error");
         return false;
     }
     if (IsNullOrEmpty($('#txtSmtpPassword').val())) {
@@ -233,10 +249,9 @@ function SaveCompanyConfiguration(action) {
                 success: function (response) {
                     toastr.success("Company Configuration Details Submitted Successfully!");
                     $('#companyConfigurationForm')[0].reset();
-                    $('#ddlSmsProvider').val('');
-                    $('#ddlWhatsappProvider').val('');
-                    $('#ddlCompany').val('');
-                    $('.selectpicker').selectpicker('refresh');
+                    $('#ddlSmsProvider').val(null).trigger('change');
+                    $('#ddlWhatsappProvider').val(null).trigger('change');
+                    $('#ddlCompany').val(null).trigger('change');
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Save Company Configuration Details!", "Error");
@@ -246,19 +261,19 @@ function SaveCompanyConfiguration(action) {
     }
 }
 function FetchCompanyConfiguration() {
-
-    $("#tableDiv").removeClass('d-none');
-    $("#addCompanyConfigDiv").addClass('d-none');
-    $("#backButton").removeClass('d-none');
+    $("#listSection").show();
     var getUrl = '/CompanyConfiguration/GetAllCompanyConfiguration';
     $.ajax({
         url: getUrl,
-        type: 'GET',                                                                                                       
+        type: 'GET',
         dataType: 'json',
         success: function (response) {
+            debugger;
             companyConfigResponseDto = response;
+            // Get sessionStorage lists
             const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");
             const providersList = JSON.parse(sessionStorage.getItem("ProvidersList") || "[]");
+            // Create processed list
             const trlist = response.map(item => {
                 const company = companyList.find(c => c.companyId === item.companyId);
                 const smsProvider = providersList.find(p => p.providerTypeId === Number(item.smsProvider));
@@ -271,69 +286,45 @@ function FetchCompanyConfiguration() {
                     whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
                 };
             });
+            // Initialize or update DataTable
             if ($.fn.DataTable.isDataTable('#tableCmpConfig')) {
-                $('#tableCmpConfig').DataTable().clear().destroy();
+                $('#tableCmpConfig').DataTable().clear();
             }
-            $('#tableCmpConfig').DataTable({
-                "processing": true,
-                "serverSide": false,
-                "paging": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": false,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "scrollX": true,
-                "data": trlist,
-                "columns": [
-                    { "data": "companyId" },
-                    { "data": "smsProvider" },
-                    { "data": "smsAuthKey" },
-                    { "data": "whatsAppAuthKey" },
-                    { "data": "whatsAppProvider" },
-                    { "data": "smtpHost" },
-                    { "data": "smtpPort" },
-                    { "data": "smtpUsername" },
-                    {
-                        "data": "companyConfigId",
-                        "render": function (data, type, row) {
-                            return `
-                            <div class="btn-group" role="group">
-                               <button type="button" class="btn btn-sm btn-primary" onclick="EditCompanyConfiguration(${data})">
-                                  <i class="ti ti-edit"></i> Edit
-                               </button>
-                               <button type="button" class="btn btn-sm btn-danger" onclick="DeleteCompanyConfiguration(${data})">
-                                  <i class="ti ti-trash"></i> Delete
-                               </button>
-                            </div>`;
-                        }
-                    }
-                ],
-                "columnDefs": [{
-                    "targets": "_all",
-                    "className": "text-center"
-                }]
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
+            const table = $("#tableCmpConfig").DataTable();
+                trlist.forEach(item => {
+                    table.row.add([
+                        item.companyId,
+                        item.smsProvider,
+                        item.smsAuthKey,
+                        item.whatsAppAuthKey,
+                        item.whatsAppProvider,
+                        item.smtpHost,
+                        item.smtpPort,
+                        item.smtpUsername,
+                        `
+                        <div class="action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </div>
+                        `
+                    ]);
+                });
+            // Redraw table with new data
+            table.draw();
+            // Update total list count
+            $('#totalList').text(`Total List: ${trlist.length}`);
         }
     });
-
-};
+}
 function EditCompanyConfiguration(companyConfigId) {
     var data = companyConfigResponseDto.filter(x => x.companyConfigId == companyConfigId);
-
     var formdata = data[0];
-    $("#tableDiv").addClass('d-none');
+    $('#listSection').css('display', 'none');
+    $("#formSection").css('display', 'Block');
     $("#backButton").addClass('d-none');
     $("#addCompanyConfigDiv").removeClass('d-none');
     $("#btnSaveForm").hide();
-    $("#btnSaveAndNewForm").addClass('d-none');
-    $("#btnSaveAndNewForm").addClass('d-none');
-    $("#btnViewForm").addClass('d-none');
+    $("#btnSaveAndNewForm").prop("disabled", true);
     $("#btnUpdate").show();
     $("#btnCancel").removeClass('d-none');
     $("#ddlCompany").selectpicker('val', formdata.companyId);
@@ -347,71 +338,87 @@ function EditCompanyConfiguration(companyConfigId) {
     $("#txtSmtpHost").val(formdata.smtpHost);
     $("#txtSmtpPort").val(formdata.smtpPort)
     $("#txtSmtpUserName").val(formdata.smtpUsername);
+    $('#txtSmtpPassword').val(formdata.smtpPassword);
+    $("#btnSaveForm").hide();
+    $("#btnSaveAndNewForm").hide();
+    $("#btnViewForm").hide();
     $('#btnUpdate').on('click', function () {
         UpdateCompanyConfiguration(companyConfigId);
     });
 }
-function UpdateCompanyConfiguration(companyConfigId) {
-    if (OnSubmitValidation()) {
-        var updateUrl = '/CompanyConfiguration/EditCompanyConfigurationList';
+function UpdateCompanyConfiguration(companyConfigId)
+{
+    $("#btnUpdate").on('click', function (e) {
+        e.preventDefault();
 
-        var company = $('#ddlCompany').val();
-        var smsProvider = $('#ddlSmsProvider').val();
-        var whatsappProvider = $('#ddlWhatsappProvider').val();
-        var smsAuthKey = $('#txtSmsAuthKey').val();
-        var whatsappAuthKey = $('#txtWhatsappAuthKey').val();
-        var smtpHost = $('#txtSmtpHost').val();
-        var smtpUserName = $('#txtSmtpUserName').val();
-        var smtpPort = $('#txtSmtpPort').val();
-        var smtpPassword = $('#txtSmtpPassword').val();
+        if (OnSubmitValidation())
+        {
+            var updateUrl = '/CompanyConfiguration/EditCompanyConfigurationList';
+            var company = $('#ddlCompany').val();
+            var smsProvider = $('#ddlSmsProvider').val();
+            var whatsappProvider = $('#ddlWhatsappProvider').val();
+            var smsAuthKey = $('#txtSmsAuthKey').val();
+            var whatsappAuthKey = $('#txtWhatsappAuthKey').val();
+            var smtpHost = $('#txtSmtpHost').val();
+            var smtpUserName = $('#txtSmtpUserName').val();
+            var smtpPort = $('#txtSmtpPort').val();
+            var smtpPassword = $('#txtSmtpPassword').val();
 
-        let formData = {
-            CompanyConfigId: Number(companyConfigId),
-            CompanyId: Number(company),
-            SMSProvider: smsProvider || null,
-            SMSAuthKey: smsAuthKey || null,
-            WhatsAppProvider: whatsappProvider || null,
-            WhatsAppAuthKey: whatsappAuthKey || null,
-            SMTPHost: smtpHost || null,
-            SMTPPort: Number(smtpPort) || 0,
-            SMTPUsername: smtpUserName || null,
-            SMTPPassword: smtpPassword || null
-        };
-        $.ajax({
-            url: updateUrl,
-            type: "PUT",
-            contentType: "application/json",
-            data: JSON.stringify(formData),
-            success: function (response) {
-                if (response.result == 'success') {
-                    toastr.success("Company Configuration Details Updated Successfully!");
-                    $("#addCompanyConfigDiv").addClass('d-none'); //hide form
-                    $("#backButton").removeClass('d-none');
-                    $("#tableDiv").show();
-                    FetchCompanyConfiguration();
+            let formData = {
+                CompanyConfigId: Number(companyConfigId),
+                CompanyId: Number(company),
+                SMSProvider: smsProvider || null,
+                SMSAuthKey: smsAuthKey || null,
+                WhatsAppProvider: whatsappProvider || null,
+                WhatsAppAuthKey: whatsappAuthKey || null,
+                SMTPHost: smtpHost || null,
+                SMTPPort: Number(smtpPort) || 0,
+                SMTPUsername: smtpUserName || null,
+                SMTPPassword: smtpPassword || null
+            };
+            $.ajax({
+                url: updateUrl,
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    if (response.result == 'success') {
+                        FetchCompanyConfiguration();
+                        toastr.success("Company Configuration Details Updated Successfully!");
+                        
+                        $("#formSection").hide();
+                        $("#listSection").show();
+                        $('#companyConfigurationForm')[0].reset();
+                        $('#ddlSmsProvider').val(null).trigger('change');
+                        $('#ddlWhatsappProvider').val(null).trigger('change');
+                        $('#ddlCompany').val(null).trigger('change');
+                        $("#btnUpdate").hide();
+                        $("#btnSaveAndNewForm").show();
+                        $("#btnSaveForm").show();
+                    }
+                    else
+                        return
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to Update Company Configuration Details!", "Error");
                 }
-                else
-                    return
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Update Company Configuration Details!", "Error");
-            }
-        });
-    }
-}
-function DeleteCompanyConfiguration(CompanyConfigrationId) {
-    var deleteCompConfig = '/CompanyConfiguration/DeleteCompanyConfiguration/' + CompanyConfigrationId;
-    $.ajax({
-        url: deleteCompConfig,
-        type: "DELETE",
-        dataType: "json",
-        data: JSON.stringify(CompanyConfigrationId),
-        success: function (response) {
-            toastr.success("Company Configuration Details Deleted Successfully!");
-            FetchCompanyConfiguration();
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Delete Company Configuration Details!", "Error");
+            });
         }
     });
+}
+function DeleteCompanyConfiguration(CompanyConfigrationId) {
+            var deleteCompConfig = '/CompanyConfiguration/DeleteCompanyConfiguration/' + CompanyConfigrationId;
+            $.ajax({
+                url: deleteCompConfig,
+                type: "DELETE",
+                dataType: "json",
+                data: JSON.stringify(CompanyConfigrationId),
+                success: function (response) {
+                    toastr.success("Company Configuration Details Deleted Successfully!");
+                    FetchCompanyConfiguration();
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to Delete Company Configuration Details!", "Error");
+                }
+            });
 }

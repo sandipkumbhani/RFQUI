@@ -1,11 +1,29 @@
 ﻿
 var locationResponseDto;
 $(document).ready(function () {
+    // Optionally, add "Cancel" to go back to the list
+    $("#btnCancel").on("click", function () {
+        window.location.reload(true);
+    });
+
+    $('#locationListSectionLink').on('click', function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        $('#locationFormSection').hide(); // hide the add/edit form
+        $('#locationListSection').show(); // show the list
+    });
+
     Initialization();
     GetAllCityList();
     UpdateLocation();
+    FetchLocationList();
 });
-function Initialization() {
+$("#btnAddLocation").on("click", function (e) {
+    e.preventDefault();
+    $("#locationListSection").hide();
+    $("#locationFormSection").show();
+});
+function Initialization()
+{
     $("#btnViewForm").on('click', function () {
         FetchLocationList();
         $("#AddLocationDiv").css('display', 'none');
@@ -91,80 +109,55 @@ function Initialization() {
         $("#backButton").css('display', 'Block');
     });
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
-        var action = $(this).data('action'); 
+        var action = $(this).data('action');
         SaveLocation(action);
     });
 }
 function FetchLocationList() {
-    $('#tableDiv').show();
+    $("#FetchLocationList").show();
+    var locationurl = '/Location/ViewLocationList';
     $.ajax({
-        url: '/Location/ViewLocationList',
-        type: "GET",            
-        dataType: "json",
+        url: locationurl,
+        type: 'GET',
+        dataType: 'json',
         success: function (response) {
             let trlist = response;
             locationResponseDto = response;
-            
             if ($.fn.DataTable.isDataTable('#tablelocation')) {
-                $('#tablelocation').DataTable().clear().destroy();
+                $('#tablelocation').DataTable().clear();
             }
-            $('#tablelocation').DataTable({
-                "processing": true,
-                "serverSide": false,
-                "paging": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": false,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "scrollX": true,
-                "data": trlist,
-                "columns": [
-                    { "data": "locationName" },
-                    { "data": "addressLine" },
-                    { "data": "city" },
-                    { "data": "pinCode" },
-                    { "data": "contactPerson" },
-                    { "data": "contactNo" },
-                    { "data": "mobNo" },
-                    { "data": "whatsAppNo" },
-                    { "data": "email" },
-                    {
-                        "data": "locationId",
-                        "render": function (data, type, row) {
-                            return `<div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-sm btn-primary" onclick="EditLocation(${data})">
-                                            <i class="ti ti-edit"></i> Edit
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteLocation(${data})">
-                                            <i class="ti ti-trash"></i> Delete
-                                        </button>
-                                    </div>`;
-                                
-                        }
-                    }
-                ],
-                "columnDefs": [{
-                    "targets": "_all",
-                    "className": "text-center"
-                }]
+            const table = $("#tablelocation").DataTable();
+            trlist.forEach(item => {
+                table.row.add([
+                    item.locationName,
+                    item.addressLine,
+                    item.city,
+                    item.pinCode,
+                    item.contactPerson,
+                    item.mobNo,
+                    item.contactNo,
+                    item.whatsAppNo,
+                    item.email,
+                    `
+                    <div class="action-items" style="cursor:pointer;">
+                        <a class="icon-btn" onclick="EditLocation(${item.locationId})"><i class="ri-edit-2-line"></i></a>
+                        <a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>
+                    </div>
+                    `
+                ]);
             });
-        },
-        error: function (xhr, status, error) {
-
-            toastr.error("Failed to Fetch Data!", "Error");
+            // Redraw table with new data
+            table.draw();
+            // Update total list count
+            $('#totalList').text(`Total List: ${trlist.length}`);
         }
     });
 }
 function SaveLocation(action) {
-
     var isvalid = ValidationCheck();
     if (!isvalid) {
         return;
     }
-
     var locationname = $('#txtLocationName').val();
     var address = $('#txtAddress').val();
     var city = $("#ddlCity").val();
@@ -214,16 +207,14 @@ function SaveLocation(action) {
             data: JSON.stringify(formdata),
             success: function (response) {
                 toastr.success("Location Details Submitted Successfully!");
-                $('#ddlCity').val('');
-                $('.selectpicker').selectpicker('refresh');
                 $('#LocationForm')[0].reset();
+                $('#ddlCity').val(null).trigger('change');
             },
             error: function (req, status, error) {
                 toastr.error("Failed to Submit Location Details", "Error");
             }
         });
     }
-
 }
 function UpdateLocation() {
     $("#btnUpdate").on('click', function (e) {
@@ -256,16 +247,19 @@ function UpdateLocation() {
             dataType: "json",
             success: function (result) {
                 if (result.result == "success") {
-                    toastr.success("Location Details Updated Successfully!");
-                    $("#adduserdiv").css('display', 'none');
                     FetchLocationList();
+                    toastr.success("Location Details Updated Successfully!");
+                    $("#locationFormSection").hide();
+                    $("#locationListSection").show();
+                    $('#LocationForm')[0].reset();
+                    $('#ddlCity').val(null).trigger('change');
+                    $("#btnUpdate").hide();
+                    $("#btnSaveAndNewForm").show();
+                    $("#btnSaveForm").show();
+
                 } else {
-                    toastr.error("Failed to Update Location Details!","Error");
+                    toastr.error("Failed to Update Location Details!", "Error");
                 }
-                $("#btnSaveForm").show();
-                $("#btnUpdate").hide();
-                $("#btnSaveAndNewForm").prop("disabled", false);
-                $("#btnViewForm").click();
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Update Location Details!", "Error");
@@ -276,14 +270,15 @@ function UpdateLocation() {
 function EditLocation(locationId) {
     var data = locationResponseDto.filter(x => x.locationId == locationId);
     var formdata = data[0];
-
-    $("#tableDiv").hide();
+        
+    $('#locationListSection').css('display', 'none');
+    $("#locationFormSection").css('display', 'Block');
     $("#backButton").css('display', 'none');
     $("#AddLocationDiv").css('display', 'Block');
     $("#btnSaveForm").hide();
     $("#btnUpdate").show();
     $("#btnCancel").removeClass('d-none');
-    $("#btnSaveAndNewForm").hide();
+    $("#btnSaveAndNewForm").prop("disabled", true);
     $('#hdnLocationId').val(formdata.locationId);
     $('#txtLocationName').val(formdata.locationName);
     $('#txtAddress').val(formdata.addressLine);
@@ -360,7 +355,7 @@ function ValidationCheck() {
         return false;
     }
 
-    if (!isValidateSelect($("#ddlCity").val())){
+    if (!isValidateSelect($("#ddlCity").val())) {
         toastr.warning("Please select a City", "Validation Error");
         return false;
     }

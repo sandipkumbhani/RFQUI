@@ -8,133 +8,214 @@
 @section Scripts {
 	<script src="~/js/Views/Location.js"></script>
 }
+<head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+	<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+	<style>
+		.item-input {
+			margin-bottom: 0.75rem;
+		}
 
-<div class="app-toolbar  pt-3 px-lg-3">
-	<div class="app-container container-fluid d-flex flex-stack flex-wrap">
-		<div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-			<div class="page-title d-flex align-items-center gap-1 me-3">
-				<h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
-					Dashboard
-				</h1>
-				<ul class="breadcrumb breadcrumb-separatorless fw-semibold">
-					<li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-						<a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
-					</li>
-					<li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
-					<li class="breadcrumb-item text-primary">
-						Location
-					</li>
-				</ul>
+		.form-label span {
+			color: red;
+		}
+	</style>
+</head>
+
+<div id="locationListSection">
+	<div class="row">
+		<div class="col-12">
+			<div class="page-title-box add">
+				<h1 class="page-title">Location</h1>
+				<div class="add-btn">
+					<a href="#" id="btnAddLocation">
+						<i class="ri-add-line"></i> <span>Add </span>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<div class="app-content  px-lg-3">
-	<div class="app-container  container-fluid">
-		<div class="container my-4">
-			<button id="backButton" type="button" class="btn btn-primary" style="display:none">
-				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-					<path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"></path>
-				</svg>
-				Back
-			</button>
-		</div>
-		<div id="AddLocationDiv" class="card">
-			<div class="card-header border-0 cursor-pointer">
-				<div class="card-title m-0">
-					<h3 class="fw-bold m-0">Location</h3>
-				</div>
-			</div>
-			<form class="form" id="LocationForm" method="post">
-				<input type="hidden" id="hdnLocationId" />
-				<div class="card-body border-top p-9">
-					<div class="row">
-						<div class="col-xl-6">
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">Location Name </label>
-								<input id="txtLocationName" type="text" class="form-control" maxlength="50" placeholder="Location Name" onkeypress="return isAlphabets(event)" />
-							</div>
+	<div class="row">
+		<div class="col-12">
+			<div class="card com-profile-info">
+				<!-- Top Header -->
+				<div class="table-top-header">
+					<h4>List of Location</h4>
+					<div class="d-flex gap-2">
+						<div class="table-search-box">
+							<input type="text" id="customSearch" class="form-control form-control-sm" placeholder="Search...">
+							<button type="submit"><i class="ri-search-line"></i></button>
 						</div>
-						<div class="col-xl-6">
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">Contact Person </label>
-								<input type="text" class="form-control" placeholder="Contact Person" maxlength="50" id="txtPerson" onkeypress="return isAlphabets(event)" />
-							</div>
-						</div>
-						<div class="col-xl-12">
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">Address </label>
-								<input type="text" class="form-control" placeholder="Map Based Search" id="txtAddress" maxlength="200" />
-							</div>
-						</div>
-						<div class="col-xl-6">
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">City</label>
-								<select name="City" aria-label="Select a City" id="ddlCity" class="selectpicker" data-live-search="true" data-width="100%">
-								</select>
-							</div>
-							<div class="mb-5">
-								<label class="form-label col-form-label fw-semibold fs-6">Email ID</label>
-								<input type="email" class="form-control" maxlength="200" placeholder="name@example.com" id="txtEmail" />
-							</div>
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">Mobile Number</label>
-								<input type="text" class="form-control" placeholder="Mobile Number" maxlength="10" id="txtMobileNumber" onkeypress="return isNumber(event)" />
-							</div>
-						</div>
-						<div class="col-xl-6">
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">Pincode</label>
-								<input type="text" class="form-control" placeholder="Pin Code" maxlength="6" id="txtPinCode" onkeypress="return isNumber(event)" />
-							</div>
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">WhatsApp Number</label>
-								<input type="text" class="form-control" placeholder="WhatsApp Number" maxlength="10" id="txtWhatsAppNumber" onkeypress="return isNumber(event)" />
-							</div>
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">Contact Number</label>
-								<input type="text" class="form-control" placeholder="Contact Number" maxlength="10" id="txtContactNumber" onkeypress="return isNumber(event)" />
-							</div>
-						</div>
+						@* <div class="dropdown">
+							<button class="btn-btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+								Filter <i class="ri-sound-module-line"></i>
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="filterDropdown">
+								<li><a class="dropdown-item filter-option" data-value="">All Status</a></li>
+								<li><a class="dropdown-item filter-option" data-value="Pending">Pending</a></li>
+								<li><a class="dropdown-item filter-option" data-value="Done">Done</a></li>
+							</ul>
+						</div> *@
+						<div id="exporttablelocation" class="btn-group" role="group"></div>
 					</div>
 				</div>
-				<div class="card-footer d-flex justify-content-srtat py-6 px-9">
-					<button type="button" id="btnSaveForm" class="btn btn-primary me-2" data-action="save">Save</button>
-					<button type="button" id="btnSaveAndNewForm" class="btn btn-primary me-2" data-action="saveNew">Save & New</button>
-					<button type="button" id="btnViewForm" class="btn btn-primary me-2">View</button>
-					<button type="button" id="btnUpdate" class="btn btn-primary" style="display:none">Update</button>
-					<button id="btnCancel" type="button" class="btn btn-danger ms-2 d-none">Cancel</button>
+				<!-- Table -->
+				<div class="table-responsive">
+					<table id="tablelocation"
+						   class="table dt-responsive nowrap w-100">
+						<thead>
+							<tr>
+								<th>LocationName</th>
+								<th>Address</th>
+								<th>City</th>
+								<th>PinCode</th>
+								<th>ContactPerson</th>
+								<th>Contact No</th>
+								<th>MobNo</th>
+								<th>WhatsAppNo</th>
+								<th>EmailId</th>
+								<th class="no-sort">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Dynamic rows go here -->
+						</tbody>
+					</table>
 				</div>
-			</form>
-		</div>
-		<div class="my-4"></div>
-		<div id="tableDiv" class="card card-flush shadow-sm rounded-2xl" style="display:none">
-			<div class="card-header p-4">
-				<h4 class="fw-bold m-0 text-lg">Location List</h4>
-			</div>
-			<div class="card-body">
-				<table id="tablelocation"
-					   class="table table-striped align-middle fs-6 mb-0">
-					<thead class="bg-light">
-						<tr>
-							<th>LocationName</th>
-							<th>Address</th>
-							<th>City</th>
-							<th>PinCode</th>
-							<th>ContactPerson</th>
-							<th>Contact No</th>
-							<th>MobNo</th>
-							<th>WhatsAppNo</th>
-							<th>EmailId</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-						<!-- Dynamic rows go here -->
-					</tbody>
-				</table>
+				<!-- Bottom Area -->
+				<div class="datatable-footer-bottom">
+					<div class="totle-left">
+						<span id="totalList">Total List: 3</span>
+					</div>
+					<div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+					<div class="show-page">
+						<span>Show per page:</span>
+						<select id="pageLength" class="form-select">
+							<option value="5">5 </option>
+							<option value="10" selected>10 </option>
+							<option value="25">25</option>
+						</select>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
+<div id="locationFormSection" style="display: none;">
+	<div class="row">
+		<div class="col-12">
+			<div class="page-title-box add">
+				<h1 class="page-title">Add Location</h1>
+				<div class="add-breadcrumb">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item">
+								<a href="#" id="locationListSectionLink">Location</a>
+							</li>
+							<li class="breadcrumb-item active" aria-current="page"> Add Location</li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+		<div id="AddLocationDiv" class="card com-profile-info">
+			<div class="top-details">
+				<h2 class="page-form-title">Location Details</h2>
+				<form class="row all-custom-class" id="LocationForm" method="post">
+					<input type="hidden" id="hdnLocationId" />
+					<!-- Row 1 -->
+					<div class="col-xl-6 col-lg-6">
+						<div class="item-input">
+							<label class="form-label">Location Name <span>*</span></label>
+							<input id="txtLocationName" type="text" class="form-control" maxlength="50" placeholder="Location Name" onkeypress="return isAlphabets(event)" />
+						</div>
+					</div>
+					<div class="col-xl-6 col-lg-6">
+						<div class="item-input">
+							<label class="form-label">Contact Person <span>*</span></label>
+							<input type="text" class="form-control" placeholder="Contact Person" maxlength="50" id="txtPerson" onkeypress="return isAlphabets(event)" />
+						</div>
+					</div>
+					<!-- Row 2 -->
+					<div class="col-xl-12 col-lg-6">
+						<div class="item-input">
+							<label class="form-label">Address <span>*</span></label>
+							<input type="text" class="form-control" placeholder="Map Based Search" id="txtAddress" maxlength="200" />
+						</div>
+					</div>
+					<div class="col-xl-6 col-lg-6">
+						<div class="item-input">
+							<label class="form-label">City <span>*</span></label>
+							<select class="select2-custom form-control" id="ddlCity" style="width: 100%;">
+							</select>
+						</div>
+					</div>
+					<!-- Row 3 -->
+					<div class="col-xl-6 col-lg-6">
+						<div class="item-input">
+							<label class="form-label">Email ID <span>*</span></label>
+							<input type="email" class="form-control" maxlength="200" placeholder="name@example.com" id="txtEmail" />
+						</div>
+					</div>
+					<div class="col-xl-6 col-lg-6">
+						<div class="item-input">
+							<label class="form-label">Mobile Number <span>*</span></label>
+							<input type="tel" id="txtMobileNumber" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
+						</div>
+					</div>
+					<!-- Row 4 -->
+					<div class="col-xl-6 col-lg-6">
+						<div class="item-input">
+							<label class="form-label">Pincode <span>*</span></label>
+							<input type="text" class="form-control" placeholder="Pin Code" maxlength="6" id="txtPinCode" onkeypress="return isNumber(event)" />
+						</div>
+					</div>
+					<div class="col-xl-6 col-lg-6">
+						<div class="item-input">
+							<label class="form-label">WhatsApp Number <span>*</span></label>
+							<input type="tel" id="txtWhatsAppNumber" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
+						</div>
+					</div>
+					<!-- Row 5 -->
+					<div class="col-xl-6 col-lg-6">
+						<div class="item-input">
+							<label class="form-label">Contact Number <span>*</span></label>
+							<input type="tel" id="txtContactNumber" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="button-main">
+				<a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
+					<i class="ri-save-line"></i>
+					<span>
+						Save
+					</span>
+				</a>
+				<a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
+					<i class="ri-save-line"></i>
+					<span>
+						Save & New
+					</span>
+				</a>
+				<a href="#" class="card-link" id="btnUpdate" style="display:none;">
+					<i class="ri-save-line"></i>
+					<span>
+						Update
+					</span>
+				</a>
+				<a href="#" class="card-link" id="btnCancel">
+					<i class="ri-close-line"></i>
+					<span>
+						Cancel
+					</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
