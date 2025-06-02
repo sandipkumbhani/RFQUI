@@ -83,10 +83,11 @@
   text-decoration: none;
 }
 .iti__selected-country-primary {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: 0 var(--iti-arrow-padding) 0 var(--iti-spacer-horizontal);
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 5px;
+    /*padding: 0 var(--iti-arrow-padding) 0 var(--iti-spacer-horizontal);*/
 }
 .iti__arrow {
   margin-left: var(--iti-arrow-padding);
