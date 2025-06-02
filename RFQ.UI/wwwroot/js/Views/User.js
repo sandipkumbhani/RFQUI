@@ -281,6 +281,7 @@ function UpdateUser() {
                     $("#txtPassword").prop("disabled", false);
                     $("#btnSaveAndNewForm").show();
                     $("#btnSaveForm").show();
+                    $("#userFormSection").hide();
 
                 } else {
                     toastr.error("Failed to Update User Details", "Error");
