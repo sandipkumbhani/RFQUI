@@ -116,7 +116,7 @@ function FetchUser() {
                         item.mobileNo,
                         item.emailId,
                     `
-                    <div class="action-items" style="cursor:pointer;">
+                    <div class="text-center action-items" style="cursor:pointer;">
                         <a class="icon-btn" onclick="EditUser(${item.userId})"><i class="ri-edit-2-line"></i></a>
                         <a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>
                     </div>

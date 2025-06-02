@@ -382,7 +382,7 @@ function FetchFranchise() {
                     item.mobNo,
                     item.gstNo,
                     `
-           <div class="action-items" style="cursor:pointer;">
+           <div class="text-center action-items" style="cursor:pointer;">
                     <a class="icon-btn" onclick="EditFranchise(${item.companyId})"><i class="ri-edit-2-line"></i></a>
                     <a class="icon-btn" onclick="DeleteFranchise(${item.companyId},'${item.logoImage}')"><i class="ri-delete-bin-3-line"></i></a>
             </div>

@@ -82,7 +82,7 @@ function FetchVehicleTypes() {
                     item.vehicleTypeName,
                     item.minimumKms,
                     `
-           <div class="action-items" style="cursor:pointer;">
+           <div class="text-center action-items" style="cursor:pointer;">
                     <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
                     <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
             </div>
