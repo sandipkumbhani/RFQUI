@@ -1237,7 +1237,7 @@ table.dataTable thead th.sorting_desc::after {
 
 .table-responsive .table.dataTable tbody td:last-child {
     padding-right: 1.875rem;
-    text-align: right;
+    text-align: center;
 }
 
 .table-search-box {
