@@ -108,13 +108,16 @@ namespace RFQ.UI.Infrastructure.Provider
             return "Failed to update Customer";
         }
 
-        public async Task<IEnumerable<CustomerResponseDto>> GetAllCustomer()
+        public async Task<IEnumerable<CustomerResponseDto>> GetAllCustomer(DataTableRequest request)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Customer:GetAllMasterParty"]);
+                var requestDto = JsonConvert.SerializeObject(request);
+                var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+                var baseurl = _fleetLynkApiUrl + _config["Customer:GetAllMasterParty"];
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null)

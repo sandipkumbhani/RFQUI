@@ -28,9 +28,9 @@ namespace RFQ.UI.Application.Provider
             return _customerAdaptor.EditCustomer(PartyId, customerRequestDto);
         }
 
-        public Task<IEnumerable<CustomerResponseDto>> GetAllCustomer()
+        public Task<IEnumerable<CustomerResponseDto>> GetAllCustomer(DataTableRequest request)
         {
-            return _customerAdaptor.GetAllCustomer();
+            return _customerAdaptor.GetAllCustomer(request);
         }
 
         public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto gstKycDetailsRequestDto)

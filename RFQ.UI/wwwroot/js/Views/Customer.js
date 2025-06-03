@@ -14,11 +14,11 @@ $(document).ready(function () {
         document.getElementById("numGstNumber").value = gstKyc;
     });
 
-    $("#gstEKycButton").on('click',function () {
+    $("#gstEKycButton").on('click', function () {
         isGstEKycClicked = true;
     });
 
-    $("#panEKycButton").on('click',function () {
+    $("#panEKycButton").on('click', function () {
         isPanEKycClicked = true;
     });
 
@@ -58,45 +58,83 @@ function FetchCustomerList() {
     $("#SavenewButton").show();
     ResetAttachmentRepeater();
     var fetchCustomerUrl = '/Customer/ViewCustomer';
-    $.ajax({
-        url: fetchCustomerUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            let customerList = response.filter(x => x.partyTypeId == 6);
-            customerViewModelDtos = response;
-            if ($.fn.DataTable.isDataTable('#customerTable')) {
-                $('#customerTable').DataTable().clear();
+    //$.ajax({
+    //    url: fetchCustomerUrl,
+    //    type: "GET",
+    //    dataType: "json",
+    //    success: function (response) {
+    //        let customerList = response.filter(x => x.partyTypeId == 6);
+    //        customerViewModelDtos = response;
+    //        if ($.fn.DataTable.isDataTable('#customerTable')) {
+    //            $('#customerTable').DataTable().clear();
+    //        }
+    //        const table = $("#customerTable").DataTable();
+    //        customerList.forEach(item => {
+    //            table.row.add([
+    //                item.partyName,
+    //                item.addressLine,
+    //                item.pinCode,
+    //                item.mobNo,
+    //                item.email,
+    //                item.panNo,
+    //                item.gstNo,
+    //                `
+    //       <div class="text-center action-items" style="cursor:pointer;">
+    //                <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
+    //                <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+    //        </div>
+    //        `
+    //            ]);
+    //        });
+
+    //        // Redraw table with new data
+    //        table.draw();
+
+    //        // Update total list count
+    //        $('#totalList').text(`Total List: ${customerList.length}`);
+
+    //    },
+    //    error: function (xhr, status, error) {
+    //        toastr.error("Failed to Fetch Data!", "Error");
+    //    }
+    //});
+
+    if ($.fn.DataTable.isDataTable('#customerTable')) {
+        $('#customerTable').DataTable().destroy();
+    }
+
+    $('#customerTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: fetchCustomerUrl,
+            type: "post",
+            contentType: 'application/json',
+            data: function (d) {
+                console.log(d);
+                return JSON.stringify(d);
             }
-            const table = $("#customerTable").DataTable();
-            customerList.forEach(item => {
-                table.row.add([
-                    item.partyName,
-                    item.addressLine,
-                    item.pinCode,
-                    item.mobNo,
-                    item.email,
-                    item.panNo,
-                    item.gstNo,
-                    `
-           <div class="text-center action-items" style="cursor:pointer;">
-                    <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
-                    <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
-            </div>
-            `
-                ]);
-            });
-
-            // Redraw table with new data
-            table.draw();
-
-            // Update total list count
-            $('#totalList').text(`Total List: ${customerList.length}`);
-
         },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
+        columns: [
+            { data: 'partyName' },
+            { data: 'addressLine' },
+            { data: 'pinCode' },
+            { data: 'mobNo' },
+            { data: 'email' },
+            { data: 'panNo' },
+            { data: 'gstNo' },
+            {
+                data: 'partyId',
+                render: function (data, type, row) {
+                    return `
+                        <div class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditCustomer(${data})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteCustomer(${data})"><i class="ri-delete-bin-3-line"></i></a>
+                        </div>
+                    `;
+                }
+            }
+        ]
     });
 }
 function SaveCustomer(action) {

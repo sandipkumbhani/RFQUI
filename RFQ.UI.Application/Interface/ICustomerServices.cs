@@ -7,7 +7,7 @@ namespace RFQ.UI.Application.Interface
     {
         Task<CustomerRequestDto> AddCustomer(CustomerRequestDto customerRequestDto);
 
-        Task<IEnumerable<CustomerResponseDto>> GetAllCustomer();
+        Task<IEnumerable<CustomerResponseDto>> GetAllCustomer(DataTableRequest request);
 
         Task<string> EditCustomer(int PartyId, CustomerRequestDto customerRequestDto);
 

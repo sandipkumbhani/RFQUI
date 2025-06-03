@@ -51,12 +51,12 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> ViewCustomer()
+        [HttpPost]
+        public async Task<IActionResult> ViewCustomer([FromBody] DataTableRequest request)
         {
             try
             {
-                var customerList = await _customerServices.GetAllCustomer();
+                var customerList = await _customerServices.GetAllCustomer(request);
 
                 if (Request.IsAjaxRequest())
                 {
