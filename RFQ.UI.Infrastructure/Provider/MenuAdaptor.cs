@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -27,7 +28,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Menu:GetMenu"] + profileId);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<LoginResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var menulist = JsonConvert.DeserializeObject<List<MenulistModel>>(Convert.ToString(responseModel.Data!));
