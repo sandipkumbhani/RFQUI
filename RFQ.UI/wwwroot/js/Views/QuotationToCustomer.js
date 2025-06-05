@@ -101,7 +101,7 @@ function GetAllPakingType() {
             placeholderOption.textContent = "Select a PakingType";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            vehicleTypedropdown.appendCihld(placeholderOption);
+            vehicleTypedropdown.appendChild(placeholderOption);
             response.forEach(item => {
                 const option = document.createElement("option");
                 option.value = item.packingId;
