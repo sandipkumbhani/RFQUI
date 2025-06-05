@@ -19,7 +19,7 @@ namespace RFQ.UI.Models
         public string password { get; set; }
     }
 
-    public class CommanResponseDto
+    public class LoginResponseDto
     {
         public int? StatusCode { get; set; }
 

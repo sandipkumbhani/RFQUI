@@ -61,44 +61,141 @@ function OnSubmitValidation() {
     }
     return true;
 }
-function FetchVehicleTypes() {
-    $('#tableDiv').show();
-    var fetchVehicleTypesUrl = '/Vehicle/ViewVehicleType';
-    $.ajax({
-        url: fetchVehicleTypesUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            let trlist = response;
-            vehicleTypeViewModelDtos = response;
-            if ($.fn.DataTable.isDataTable('#vehicleTypesTable')) {
-                $('#vehicleTypesTable').DataTable().clear();
-            }
+//function FetchVehicleTypes() {
+//    $('#tableDiv').show();
+//    var fetchVehicleTypesUrl = '/Vehicle/ViewVehicleType';
+//    $.ajax({
+//        url: fetchVehicleTypesUrl,
+//        type: "GET",
+//        dataType: "json",
 
-            const table = $("#vehicleTypesTable").DataTable();
-            trlist.forEach(item => {
-                table.row.add([
-                    item.companyName,
-                    item.vehicleTypeName,
-                    item.minimumKms,
-                    `
-           <div class="text-center action-items" style="cursor:pointer;">
-                    <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
-                    <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
-            </div>
-            `
-                ]);
-            });
-            // Redraw table with new data
-            table.draw();
-            // Update total list count
-            $('#totalList').text(`Total List: ${trlist.length}`);
+//        success: function (response) {
+//            let trlist = response;
+//            vehicleTypeViewModelDtos = response;
+//            if ($.fn.DataTable.isDataTable('#vehicleTypesTable')) {
+//                $('#vehicleTypesTable').DataTable().clear();
+//            }
+
+//            const table = $("#vehicleTypesTable").DataTable();
+//            trlist.forEach(item => {
+//                table.row.add([
+//                    item.companyName,
+//                    item.vehicleTypeName,
+//                    item.minimumKms,
+//                    `
+//           <div class="text-center action-items" style="cursor:pointer;">
+//                    <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
+//                    <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
+//            </div>
+//            `
+//                ]);
+//            });
+//            // Redraw table with new data
+//            table.draw();
+//            // Update total list count
+//            $('#totalList').text(`Total List: ${trlist.length}`);
+//        },
+//        error: function (xhr, status, error) {
+//            toastr.error("Failed to Fetch Data!", "Error");
+//        }
+//    });
+//}
+
+function FetchVehicleTypes() {
+    // Destroy DataTable if it exists
+    if ($.fn.DataTable.isDataTable('#vehicleTypesTable')) {
+        $('#vehicleTypesTable').DataTable().clear().destroy();
+    }
+
+    // Clear custom pagination container
+    $('#customvehicleTypesPagination').empty();
+
+    // Set default pagination numbers length
+    $.fn.DataTable.ext.pager.numbers_length = 3;
+
+    // Initialize DataTable
+    const table = $('#vehicleTypesTable').DataTable({
+        responsive: true,
+        serverSide: true,
+        processing: true,
+        ajax: {
+            url: '/Vehicle/ViewVehicleType',
+            type: 'POST',
+            contentType: "application/json",
+            data: function (d) {
+                //d.PageSize = parseInt($("#pageLength").val());
+                //d.searchText = $('#vehicleTypesTableSearch').val() || '';
+                //d.statusFilter = $('#filterVehicleTypesDropdown').data('value') || '';
+                return JSON.stringify(d);
+            }
         },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'csv',
+                text: '<i class="ri-file-excel-line"></i> Export All',
+                exportOptions: { columns: ':visible' }
+            }
+        ],
+        columns: [
+            { data: 'companyName', title: 'Company Name' },
+            { data: 'vehicleTypeName', title: 'Vehicle Type' },
+            { data: 'minimumKms', title: 'Minimum KMs' },
+            {
+                data: 'vehicleTypeId',
+                title: 'Action',
+                orderable: false,
+                render: function (data) {
+                    return `
+                        <div class="text-center action-items">
+                            <a class="icon-btn" onclick="EditVehicleType(${data})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteVehicleType(${data})"><i class="ri-delete-bin-3-line"></i></a>
+                        </div>`;
+                }
+            }
+        ],
+        paging: true,
+        info: true,
+        lengthChange: true,
+        pageLength: parseInt($('#pageLength').val()) || 10,
+        columnDefs: [{ orderable: false, targets: 'no-sort' }],
+        language: {
+            paginate: {
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
+            }
+        },
+        drawCallback: function () {
+            // Show total count
+            $('#totalList').text(`Total List: ${this.api().page.info().recordsTotal}`);
+
+            // Move pagination to custom container after draw
+            $('#vehicleTypesTable_paginate').appendTo('#customvehicleTypesPagination');
         }
     });
+
+    // Bind Export Buttons
+    table.buttons().container().appendTo('#exportvehicleTypesButtons');
+
+    // Clear previous event handlers to avoid multiple triggers
+    $('#vehicleTypesTableSearch').off('keyup').on('keyup', function () {
+        table.draw();
+    });
+
+    $('#pageLength').off('change').on('change', function () {
+        table.page.len(parseInt(this.value)).draw();
+    });
+
+    $('.filter-option-vehicletypes').off('click').on('click', function () {
+        const value = $(this).data('value');
+        const label = $(this).text();
+        $('#filterVehicleTypesDropdown').text(label === 'All Status' ? 'Filter' : label);
+        $('#filterVehicleTypesDropdown').data('value', value);
+        table.draw();
+    });
 }
+
+
 function SaveVehicleType(action) {
     if (OnSubmitValidation()) {
         var vehicleTypeName = $("#txtVehicleType").val()

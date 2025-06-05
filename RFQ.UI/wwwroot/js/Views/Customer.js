@@ -48,6 +48,97 @@ $(document).ready(function () {
     PanEKycClick();
     FetchCustomerList();
 });
+
+//function FetchCustomerList() {
+//    $("#tableDiv").css('display', 'block');
+//    $("#formDiv").css('display', 'none');
+//    $('#customerForm')[0].reset();
+//    $('#ddlCity').val(null).trigger('change');
+//    $("#btnSaveCustomer").show();
+//    $("#btnUpdate").hide();
+//    $("#SavenewButton").show();
+//    ResetAttachmentRepeater();
+//    var fetchCustomerUrl = '/Customer/ViewCustomer';
+//    //$.ajax({
+//    //    url: fetchCustomerUrl,
+//    //    type: "GET",
+//    //    dataType: "json",
+//    //    success: function (response) {
+//    //        let customerList = response.filter(x => x.partyTypeId == 6);
+//    //        customerViewModelDtos = response;
+//    //        if ($.fn.DataTable.isDataTable('#customerTable')) {
+//    //            $('#customerTable').DataTable().clear();
+//    //        }
+//    //        const table = $("#customerTable").DataTable();
+//    //        customerList.forEach(item => {
+//    //            table.row.add([
+//    //                item.partyName,
+//    //                item.addressLine,
+//    //                item.pinCode,
+//    //                item.mobNo,
+//    //                item.email,
+//    //                item.panNo,
+//    //                item.gstNo,
+//    //                `
+//    //       <div class="text-center action-items" style="cursor:pointer;">
+//    //                <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
+//    //                <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+//    //        </div>
+//    //        `
+//    //            ]);
+//    //        });
+
+//    //        // Redraw table with new data
+//    //        table.draw();
+
+//    //        // Update total list count
+//    //        $('#totalList').text(`Total List: ${customerList.length}`);
+
+//    //    },
+//    //    error: function (xhr, status, error) {
+//    //        toastr.error("Failed to Fetch Data!", "Error");
+//    //    }
+//    //});
+
+//    if ($.fn.DataTable.isDataTable('#customerTable')) {
+//        $('#customerTable').DataTable().destroy();
+//    }
+
+//    $('#customerTable').DataTable({
+//        processing: true,
+//        serverSide: true,
+//        ajax: {
+//            url: fetchCustomerUrl,
+//            type: "post",
+//            contentType: 'application/json',
+//            data: function (d) {
+//                console.log(d);
+//                return JSON.stringify(d);
+//            }
+//        },
+//        columns: [
+//            { data: 'partyName' },
+//            { data: 'addressLine' },
+//            { data: 'pinCode' },
+//            { data: 'mobNo' },
+//            { data: 'email' },
+//            { data: 'panNo' },
+//            { data: 'gstNo' },
+//            {
+//                data: 'partyId',
+//                render: function (data, type, row) {
+//                    return `
+//                        <div class="text-center action-items" style="cursor:pointer;">
+//                            <a class="icon-btn" onclick="EditCustomer(${data})"><i class="ri-edit-2-line"></i></a>
+//                            <a class="icon-btn" onclick="DeleteCustomer(${data})"><i class="ri-delete-bin-3-line"></i></a>
+//                        </div>
+//                    `;
+//                }
+//            }
+//        ]
+//    });
+//}
+
 function FetchCustomerList() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
@@ -58,49 +149,9 @@ function FetchCustomerList() {
     $("#SavenewButton").show();
     ResetAttachmentRepeater();
     var fetchCustomerUrl = '/Customer/ViewCustomer';
-    //$.ajax({
-    //    url: fetchCustomerUrl,
-    //    type: "GET",
-    //    dataType: "json",
-    //    success: function (response) {
-    //        let customerList = response.filter(x => x.partyTypeId == 6);
-    //        customerViewModelDtos = response;
-    //        if ($.fn.DataTable.isDataTable('#customerTable')) {
-    //            $('#customerTable').DataTable().clear();
-    //        }
-    //        const table = $("#customerTable").DataTable();
-    //        customerList.forEach(item => {
-    //            table.row.add([
-    //                item.partyName,
-    //                item.addressLine,
-    //                item.pinCode,
-    //                item.mobNo,
-    //                item.email,
-    //                item.panNo,
-    //                item.gstNo,
-    //                `
-    //       <div class="text-center action-items" style="cursor:pointer;">
-    //                <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
-    //                <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
-    //        </div>
-    //        `
-    //            ]);
-    //        });
-
-    //        // Redraw table with new data
-    //        table.draw();
-
-    //        // Update total list count
-    //        $('#totalList').text(`Total List: ${customerList.length}`);
-
-    //    },
-    //    error: function (xhr, status, error) {
-    //        toastr.error("Failed to Fetch Data!", "Error");
-    //    }
-    //});
 
     if ($.fn.DataTable.isDataTable('#customerTable')) {
-        $('#customerTable').DataTable().destroy();
+        $('#customerTable').DataTable().clear().destroy();
     }
 
     $('#customerTable').DataTable({
@@ -108,10 +159,10 @@ function FetchCustomerList() {
         serverSide: true,
         ajax: {
             url: fetchCustomerUrl,
-            type: "post",
-            contentType: 'application/json',
+            type: "POST",
+            contentType: "application/json",
             data: function (d) {
-                console.log(d);
+                // d is the DataTableRequest object, just stringify it
                 return JSON.stringify(d);
             }
         },
@@ -125,6 +176,7 @@ function FetchCustomerList() {
             { data: 'gstNo' },
             {
                 data: 'partyId',
+                orderable: false,
                 render: function (data, type, row) {
                     return `
                         <div class="text-center action-items" style="cursor:pointer;">
@@ -134,7 +186,20 @@ function FetchCustomerList() {
                     `;
                 }
             }
-        ]
+        ],
+        pageLength: parseInt($('#pageLength').val()) || 10,
+        lengthChange: false,
+        searching: false // We'll handle search manually
+    });
+
+    // Custom search box handler
+    $(document).off('input', '#customCustomerSearch').on('input', '#customCustomerSearch', function () {
+        $('#customerTable').DataTable().search(this.value).draw();
+    });
+
+    // Page length change handler
+    $(document).off('change', '#pageLength').on('change', '#pageLength', function () {
+        $('#customerTable').DataTable().page.len($(this).val()).draw();
     });
 }
 function SaveCustomer(action) {

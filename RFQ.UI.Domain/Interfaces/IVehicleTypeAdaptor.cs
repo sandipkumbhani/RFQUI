@@ -8,7 +8,7 @@ namespace RFQ.UI.Domain.Interfaces
     {
         Task<string> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto);
 
-        Task<List<VehicleTypeResponseDto>?> GetVehicleTypeAll();
+        Task<List<VehicleTypeResponseDto>?> GetAllVehicleType(PagingParam pagingParam);
 
         Task<string> UpdateVehicleType(int vehicleTypeId, VehicleTypeRequestDto vehicleTypeRequestDto);
 

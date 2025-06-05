@@ -45,8 +45,8 @@ namespace RFQ.UI.Infrastructure.Provider
                     var errorResponse = new CommanResponseDto
                     {
                         StatusCode = (int)response.StatusCode,
-                        Data = errorContent,
-                        Message = "An error occurred while processing your request.",
+                        Data = null,
+                        Message = errorContent.ToString(),
                         ErrorMessage = errorContent
                     };
                     string json = JsonConvert.SerializeObject(errorResponse);
@@ -59,9 +59,9 @@ namespace RFQ.UI.Infrastructure.Provider
                     {
                         var result = responseModel.StatusCode;
                         if (result == 200)
-                            responseModel.Data = "User Saved";
+                            responseModel.Message = "User Saved";
                         else
-                            responseModel.Data = responseModel.ErrorMessage;
+                            responseModel.Message = responseModel.ErrorMessage;
 
                         string json = JsonConvert.SerializeObject(responseModel);
                         return json;

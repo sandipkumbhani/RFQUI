@@ -53,22 +53,28 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<List<VehicleTypeResponseDto>?> GetVehicleTypeAll()
+        public async Task<List<VehicleTypeResponseDto>?> GetAllVehicleType(PagingParam pagingParam)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["VehicleType:GetAllVehicleType"]);
+                var baseurl = _fleetLynkApiUrl + _config["VehicleType:GetAllVehicleType"];
+                var param = JsonConvert.SerializeObject(pagingParam);
+                var requestContent = new StringContent(param, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null && responseModel.Data != null)
                 {
-                    return JsonConvert.DeserializeObject<List<VehicleTypeResponseDto>>(Convert.ToString(responseModel.Data)!);
+                    var json = JsonConvert.SerializeObject(responseModel.Data.result);
+                    var typedList = JsonConvert.DeserializeObject<List<VehicleTypeResponseDto>>(json);
+
+                    return typedList;
                 }
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

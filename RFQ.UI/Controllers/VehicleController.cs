@@ -95,16 +95,26 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ViewVehicleType()
+        [HttpPost]
+        public async Task<IActionResult> ViewVehicleType([FromQuery] DataTableRequest dataTableRequest)
         {
             try
             {
                 var vehicleTypeViewModel = new VehicleTypeResponseDto();
-                var result = await _vehicleTypeServices.GetVehicleTypeAll();
+                PagingParam pagingParam  = new PagingParam();
+                //string tableName = "Customer"; // Set your actual table name
+                //string sortColumn = dataTableRequest.columns[dataTableRequest.order[0].column].data;
+                //string sortDirection = dataTableRequest.order[0].dir;
+                //string searchText = dataTableRequest.search?.value ?? "";
+                var result = await _vehicleTypeServices.GetVehicleTypeAll(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(result);
+                    return Json(new
+                    {
+                        draw = 1,
+                        recordsTotal = result.Count,
+                        data = result
+                    } );
                 }
                 else
                 {

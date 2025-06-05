@@ -28,9 +28,9 @@ namespace RFQ.UI.Application.Provider
             return await _vehicleTypeAdaptor.UpdateVehicleType(vehicleTypeId, vehicleTypeRequestDto);
         }
 
-        public async Task<List<VehicleTypeResponseDto>> GetVehicleTypeAll()
+        public async Task<List<VehicleTypeResponseDto>> GetVehicleTypeAll(PagingParam pagingParam)
         {
-            return await _vehicleTypeAdaptor.GetVehicleTypeAll();
+            return await _vehicleTypeAdaptor.GetAllVehicleType(pagingParam);
         }
 
     }
