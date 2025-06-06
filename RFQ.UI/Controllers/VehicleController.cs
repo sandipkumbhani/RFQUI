@@ -5,6 +5,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using AutoMapper;
 
 
 namespace RFQ.UI.Controllers
@@ -96,24 +97,19 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewVehicleType([FromQuery] DataTableRequest dataTableRequest)
+        public async Task<IActionResult> ViewVehicleType([FromBody] PagingParam pagingParam)
         {
             try
             {
                 var vehicleTypeViewModel = new VehicleTypeResponseDto();
-                PagingParam pagingParam  = new PagingParam();
-                //string tableName = "Customer"; // Set your actual table name
-                //string sortColumn = dataTableRequest.columns[dataTableRequest.order[0].column].data;
-                //string sortDirection = dataTableRequest.order[0].dir;
-                //string searchText = dataTableRequest.search?.value ?? "";
                 var result = await _vehicleTypeServices.GetVehicleTypeAll(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
                     return Json(new
                     {
-                        draw = 1,
-                        recordsTotal = result.Count,
-                        data = result
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        data = result.Result
                     } );
                 }
                 else

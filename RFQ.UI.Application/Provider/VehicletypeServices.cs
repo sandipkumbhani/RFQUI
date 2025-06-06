@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
@@ -28,7 +29,7 @@ namespace RFQ.UI.Application.Provider
             return await _vehicleTypeAdaptor.UpdateVehicleType(vehicleTypeId, vehicleTypeRequestDto);
         }
 
-        public async Task<List<VehicleTypeResponseDto>> GetVehicleTypeAll(PagingParam pagingParam)
+        public async Task<PageList<VehicleTypeResponseDto>> GetVehicleTypeAll(PagingParam pagingParam)
         {
             return await _vehicleTypeAdaptor.GetAllVehicleType(pagingParam);
         }

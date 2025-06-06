@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
+using System.Diagnostics;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -53,7 +55,7 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<List<VehicleTypeResponseDto>?> GetAllVehicleType(PagingParam pagingParam)
+        public async Task<PageList<VehicleTypeResponseDto>?> GetAllVehicleType(PagingParam pagingParam)
         {
             try
             {
@@ -69,8 +71,13 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var json = JsonConvert.SerializeObject(responseModel.Data.result);
                     var typedList = JsonConvert.DeserializeObject<List<VehicleTypeResponseDto>>(json);
+                    dynamic parsed = JsonConvert.DeserializeObject<dynamic>(responseData);
+                    int pageNumber = parsed.data.pageNumber;
+                    int pageSize = parsed.data.pageSize;
+                    int totalPage = parsed.data.totalPage;
+                    int totalRecordCount = parsed.data.totalRecordCount;
 
-                    return typedList;
+                    return new PageList<VehicleTypeResponseDto>(typedList, totalRecordCount, pageNumber, pageSize);
                 }
                 return null;
             }

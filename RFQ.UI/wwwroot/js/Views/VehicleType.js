@@ -61,139 +61,85 @@ function OnSubmitValidation() {
     }
     return true;
 }
-//function FetchVehicleTypes() {
-//    $('#tableDiv').show();
-//    var fetchVehicleTypesUrl = '/Vehicle/ViewVehicleType';
-//    $.ajax({
-//        url: fetchVehicleTypesUrl,
-//        type: "GET",
-//        dataType: "json",
-
-//        success: function (response) {
-//            let trlist = response;
-//            vehicleTypeViewModelDtos = response;
-//            if ($.fn.DataTable.isDataTable('#vehicleTypesTable')) {
-//                $('#vehicleTypesTable').DataTable().clear();
-//            }
-
-//            const table = $("#vehicleTypesTable").DataTable();
-//            trlist.forEach(item => {
-//                table.row.add([
-//                    item.companyName,
-//                    item.vehicleTypeName,
-//                    item.minimumKms,
-//                    `
-//           <div class="text-center action-items" style="cursor:pointer;">
-//                    <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
-//                    <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
-//            </div>
-//            `
-//                ]);
-//            });
-//            // Redraw table with new data
-//            table.draw();
-//            // Update total list count
-//            $('#totalList').text(`Total List: ${trlist.length}`);
-//        },
-//        error: function (xhr, status, error) {
-//            toastr.error("Failed to Fetch Data!", "Error");
-//        }
-//    });
-//}
 
 function FetchVehicleTypes() {
-    // Destroy DataTable if it exists
+    $('#tableDiv').show();
+
+    $.fn.DataTable.ext.pager.numbers_length = 3;
+    // Destroy previous instance
     if ($.fn.DataTable.isDataTable('#vehicleTypesTable')) {
         $('#vehicleTypesTable').DataTable().clear().destroy();
     }
 
-    // Clear custom pagination container
-    $('#customvehicleTypesPagination').empty();
-
-    // Set default pagination numbers length
-    $.fn.DataTable.ext.pager.numbers_length = 3;
-
-    // Initialize DataTable
     const table = $('#vehicleTypesTable').DataTable({
-        responsive: true,
         serverSide: true,
         processing: true,
+        paging: true,
+        searching: true,
+        lengthChange: false,
+        pageLength: Number($('#pageLength').val()) || 10,  // Default page length
         ajax: {
             url: '/Vehicle/ViewVehicleType',
             type: 'POST',
-            contentType: "application/json",
+            contentType: 'application/json',
             data: function (d) {
-                //d.PageSize = parseInt($("#pageLength").val());
-                //d.searchText = $('#vehicleTypesTableSearch').val() || '';
-                //d.statusFilter = $('#filterVehicleTypesDropdown').data('value') || '';
                 return JSON.stringify(d);
+            },
+            dataFilter: function (data) {
+                var json = jQuery.parseJSON(data);
+                json.recordsTotal = json.recordsTotal || 0;
+                json.recordsFiltered = json.recordsFiltered || json.recordsTotal;
+                return JSON.stringify(json);
             }
         },
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                extend: 'csv',
-                text: '<i class="ri-file-excel-line"></i> Export All',
-                exportOptions: { columns: ':visible' }
-            }
-        ],
         columns: [
-            { data: 'companyName', title: 'Company Name' },
-            { data: 'vehicleTypeName', title: 'Vehicle Type' },
-            { data: 'minimumKms', title: 'Minimum KMs' },
+            { data: 'companyName' },
+            { data: 'vehicleTypeName' },
+            { data: 'minimumKms' },
             {
                 data: 'vehicleTypeId',
-                title: 'Action',
                 orderable: false,
+                searchable: false,
                 render: function (data) {
                     return `
-                        <div class="text-center action-items">
+                        <div class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditVehicleType(${data})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteVehicleType(${data})"><i class="ri-delete-bin-3-line"></i></a>
-                        </div>`;
+                        </div>
+                    `;
                 }
             }
         ],
-        paging: true,
-        info: true,
-        lengthChange: true,
-        pageLength: parseInt($('#pageLength').val()) || 10,
-        columnDefs: [{ orderable: false, targets: 'no-sort' }],
         language: {
             paginate: {
                 previous: '<i class="ri-arrow-left-s-line"></i>',
                 next: '<i class="ri-arrow-right-s-line"></i>'
             }
         },
-        drawCallback: function () {
-            // Show total count
-            $('#totalList').text(`Total List: ${this.api().page.info().recordsTotal}`);
+        initComplete: function () {
+            // Bind search input
+            $('#vehicleTypesTableSearch').keyup(function () {
+                table.search($(this).val()).draw();
+            });
+        },
+        drawCallback: function (settings) {
+            var api = this.api();
+            var json = api.ajax.json();
 
-            // Move pagination to custom container after draw
-            $('#vehicleTypesTable_paginate').appendTo('#customvehicleTypesPagination');
+            if (json) {
+                $('#totalList').text(`Total List: ${json.recordsTotal}`);
+            }
         }
     });
 
-    // Bind Export Buttons
-    table.buttons().container().appendTo('#exportvehicleTypesButtons');
-
-    // Clear previous event handlers to avoid multiple triggers
-    $('#vehicleTypesTableSearch').off('keyup').on('keyup', function () {
-        table.draw();
-    });
-
+    // Rebind page length change
     $('#pageLength').off('change').on('change', function () {
-        table.page.len(parseInt(this.value)).draw();
-    });
-
-    $('.filter-option-vehicletypes').off('click').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-        $('#filterVehicleTypesDropdown').text(label === 'All Status' ? 'Filter' : label);
-        $('#filterVehicleTypesDropdown').data('value', value);
-        table.draw();
+        table.page.len(Number($(this).val())).draw();
     });
 }
+
+
+
 
 
 function SaveVehicleType(action) {
