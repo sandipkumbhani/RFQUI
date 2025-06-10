@@ -290,10 +290,6 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $.fn.DataTable.ext.pager.numbers_length = 3;
-    if ($.fn.DataTable.isDataTable('#vehicleTypesTable')) {
-        $('#vehicleTypesTable').DataTable().clear().destroy();
-    }
 
     const table = $('#vehicleTypesTable').DataTable({
         responsive: true,
@@ -304,50 +300,19 @@ $(document).ready(function () {
                 text: '<i class="ri-file-excel-line"></i> Export All',
             },
         ],
-        serverSide: true,  // Enable server-side processing
-        processing: true,
-        paging: true,
+        paging: false,
         info: true,
         lengthChange: false,
-        pageLength: 3,
-        ajax: {
-            url: '/Vehicle/ViewVehicleType', // <-- Your API route here
-            type: 'POST',
-            contentType: 'application/json',
-            data: function (d) {
-                return JSON.stringify(d); // send full DataTable param object
-            }
-        },
-        columns: [
-            { data: 'companyName' },
-            { data: 'vehicleTypeName' },
-            { data: 'minimumKms' },
-            {
-                data: 'vehicleTypeId',
-                orderable: false,
-                searchable: false,
-                render: function (data) {
-                    return `
-                        <div class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditVehicleType(${data})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteVehicleType(${data})"><i class="ri-delete-bin-3-line"></i></a>
-                        </div>
-                    `;
-                }
-            }
-        ],
+        pageLength: 10,
         columnDefs: [
-            { orderable: false, targets: 'no-sort' },
+            // { orderable: false, targets: [] } // all sortable
+            { orderable: false, targets: 'no-sort' }
         ],
         language: {
             paginate: {
                 previous: '<i class="ri-arrow-left-s-line"></i>',
                 next: '<i class="ri-arrow-right-s-line"></i>'
             }
-        },
-        drawCallback: function (settings) {
-            $('#totalVehicleTypesReminders').text(`Total List: ${settings.json.recordsTotal}`);
-            $('#vehicleTypesTable_paginate').appendTo('#customvehicleTypesPagination');
         }
     });
 

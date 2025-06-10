@@ -101,7 +101,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var vehicleTypeViewModel = new VehicleTypeResponseDto();
+                var vehicleTypeViewModel = new VehicleTypeResponseDto();    
                 var result = await _vehicleTypeServices.GetVehicleTypeAll(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
@@ -109,6 +109,7 @@ namespace RFQ.UI.Controllers
                     {
                         draw = result.PageNumber,
                         recordsTotal = result.TotalRecordCount,
+                        recordsFiltered  = result.TotalRecordCount,
                         data = result.Result
                     } );
                 }

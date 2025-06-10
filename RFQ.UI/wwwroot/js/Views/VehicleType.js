@@ -62,81 +62,112 @@ function OnSubmitValidation() {
     return true;
 }
 
+
 function FetchVehicleTypes() {
     $('#tableDiv').show();
+    $('#vehicleTypesTable tbody').empty();
+    $('#totalList').text('Total List: 0');
+    $('#customvehicleTypesPagination').empty();
 
-    $.fn.DataTable.ext.pager.numbers_length = 3;
-    // Destroy previous instance
-    if ($.fn.DataTable.isDataTable('#vehicleTypesTable')) {
-        $('#vehicleTypesTable').DataTable().clear().destroy();
-    }
+    const pageLength = Number($('#pageLength').val()) || 10;
+    let pageNumber = Number($('#currentPage').val()) || 1;
+    if (pageNumber < 1) pageNumber = 1;
 
-    const table = $('#vehicleTypesTable').DataTable({
-        serverSide: true,
-        processing: true,
-        paging: true,
-        searching: true,
-        lengthChange: false,
-        pageLength: Number($('#pageLength').val()) || 10,  // Default page length
-        ajax: {
-            url: '/Vehicle/ViewVehicleType',
-            type: 'POST',
-            contentType: 'application/json',
-            data: function (d) {
-                return JSON.stringify(d);
-            },
-            dataFilter: function (data) {
-                var json = jQuery.parseJSON(data);
-                json.recordsTotal = json.recordsTotal || 0;
-                json.recordsFiltered = json.recordsFiltered || json.recordsTotal;
-                return JSON.stringify(json);
+    const searchValue = $('#vehicleTypesTableSearch').val() || '';
+
+    $.ajax({
+        url: '/Vehicle/ViewVehicleType',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            Draw: pageNumber,
+            start: (pageNumber - 1) * pageLength,
+            length: pageLength,
+            searchValue: searchValue,
+            orderColumn: 'companyName',
+            orderDir: 'asc'
+        }),
+        success: function (response) {
+            if (!response || !response.data || response.data.length === 0) {
+                $('#vehicleTypesTable tbody').html('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                $('#totalList').text('Total List: 0');
+                $('#customvehicleTypesPagination').empty();
+                return;
             }
-        },
-        columns: [
-            { data: 'companyName' },
-            { data: 'vehicleTypeName' },
-            { data: 'minimumKms' },
-            {
-                data: 'vehicleTypeId',
-                orderable: false,
-                searchable: false,
-                render: function (data) {
-                    return `
-                        <div class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditVehicleType(${data})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteVehicleType(${data})"><i class="ri-delete-bin-3-line"></i></a>
-                        </div>
-                    `;
-                }
-            }
-        ],
-        language: {
-            paginate: {
-                previous: '<i class="ri-arrow-left-s-line"></i>',
-                next: '<i class="ri-arrow-right-s-line"></i>'
-            }
-        },
-        initComplete: function () {
-            // Bind search input
-            $('#vehicleTypesTableSearch').keyup(function () {
-                table.search($(this).val()).draw();
+
+            let rowsHtml = '';
+            response.data.forEach(item => {
+                rowsHtml += `
+                    <tr>
+                        <td>${item.companyName}</td>
+                        <td>${item.vehicleTypeName}</td>
+                        <td>${item.minimumKms}</td>
+                        <td class="text-center">
+                            <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
             });
+            $('#vehicleTypesTable tbody').html(rowsHtml);
+            $('#totalList').text(`Total List: ${response.recordsTotal}`);
+            generatePagination(response.recordsTotal, pageLength, pageNumber);
         },
-        drawCallback: function (settings) {
-            var api = this.api();
-            var json = api.ajax.json();
-
-            if (json) {
-                $('#totalList').text(`Total List: ${json.recordsTotal}`);
-            }
+        error: function () {
+            $('#vehicleTypesTable tbody').html('<tr><td colspan="4" class="text-center text-danger">Error loading data</td></tr>');
+            $('#customvehicleTypesPagination').empty();
         }
     });
+}
 
-    // Rebind page length change
-    $('#pageLength').off('change').on('change', function () {
-        table.page.len(Number($(this).val())).draw();
+function generatePagination(totalRecords, pageSize, currentPage) {
+    const paginationContainer = $('#customvehicleTypesPagination');
+    paginationContainer.empty();
+
+    const totalPages = Math.ceil(totalRecords / pageSize);
+    if (totalPages <= 1) return;
+
+    let paginationHtml = '<ul class="pagination justify-content-center">';
+
+    paginationHtml += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
+
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    if (endPage - startPage < maxPagesToShow - 1) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    }
+
+    paginationHtml += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
+    paginationHtml += '</ul>';
+    paginationContainer.html(paginationHtml);
+
+    paginationContainer.off('click').on('click', 'a.page-link', function (e) {
+        e.preventDefault();
+        const selectedPage = Number($(this).data('page'));
+        if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
+            $('#currentPage').val(selectedPage);
+            FetchVehicleTypes();
+        }
     });
 }
+
+// Bind events
+$('#vehicleTypesTableSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchVehicleTypes();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchVehicleTypes();
+});
 
 
 
