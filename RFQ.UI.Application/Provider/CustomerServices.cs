@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
@@ -28,9 +29,9 @@ namespace RFQ.UI.Application.Provider
             return _customerAdaptor.EditCustomer(PartyId, customerRequestDto);
         }
 
-        public Task<IEnumerable<CustomerResponseDto>> GetAllCustomer(DataTableRequest request)
+        public Task<PageList<CustomerResponseDto>> GetAllCustomer(PagingParam pagingParam )
         {
-            return _customerAdaptor.GetAllCustomer(request);
+            return _customerAdaptor.GetAllCustomer(pagingParam);
         }
 
         public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto gstKycDetailsRequestDto)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -108,30 +109,45 @@ namespace RFQ.UI.Infrastructure.Provider
             return "Failed to update Customer";
         }
 
-        public async Task<IEnumerable<CustomerResponseDto>> GetAllCustomer(DataTableRequest request)
+        public async Task<PageList<CustomerResponseDto>> GetAllCustomer(PagingParam pagingParam)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var requestDto = JsonConvert.SerializeObject(request);
-                var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
-                var baseurl = _fleetLynkApiUrl + _config["Customer:GetAllMasterParty"];
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                using (var httpClient = new HttpClient())
                 {
-                    var Profilelist = JsonConvert.DeserializeObject<List<CustomerResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return Profilelist;
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                    var requestDto = JsonConvert.SerializeObject(pagingParam);
+                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+
+                    var baseUrl = _fleetLynkApiUrl + _config["Customer:GetAllMasterParty"];
+                    var response = await httpClient.PostAsync(baseUrl, requestContent);
+                    var responseData = await response.Content.ReadAsStringAsync();
+
+                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+
+                    if (responseModel?.Data?.result != null)
+                    {
+                        var profileList = JsonConvert.DeserializeObject<List<CustomerResponseDto>>(
+                            JsonConvert.SerializeObject(responseModel.Data.result)
+                        );
+
+                        int pageNumber = responseModel.Data.pageNumber;
+                        int pageSize = responseModel.Data.pageSize;
+                        int totalRecordCount = responseModel.Data.totalRecordCount;
+
+                        return new PageList<CustomerResponseDto>(profileList, totalRecordCount, pageNumber, pageSize);
+                    }
+                    return null;
                 }
-                return null;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
         public async Task<GstKycDetailsDto> GetGstKycDetails(GstKycDetailsRequestDto gstKycDetailsRequestDto)
         {
             try
