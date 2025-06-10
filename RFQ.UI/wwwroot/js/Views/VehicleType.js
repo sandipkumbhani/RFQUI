@@ -128,9 +128,10 @@ function generatePagination(totalRecords, pageSize, currentPage) {
     const totalPages = Math.ceil(totalRecords / pageSize);
     if (totalPages <= 1) return;
 
-    let paginationHtml = '<ul class="pagination justify-content-center">';
+    let paginationHtml = '<div class="dataTables_paginate paging_simple_numbers">';
+    paginationHtml += '<ul class="pagination">';
 
-    paginationHtml += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+    paginationHtml += `<li class="paginate_button page-item ${currentPage === 1 ? 'disabled' : ''} arrow">
         <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="ri-arrow-left-s-line"></i></a></li>`;
 
     const maxPagesToShow = 5;
@@ -141,13 +142,14 @@ function generatePagination(totalRecords, pageSize, currentPage) {
     }
 
     for (let i = startPage; i <= endPage; i++) {
-        paginationHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+        paginationHtml += `<li class="paginate_button page-item ${i === currentPage ? 'active' : ''}">
             <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
     }
 
-    paginationHtml += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+    paginationHtml += `<li class="paginate_button page-item ${currentPage === totalPages ? 'disabled' : ''} arrow">
         <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="ri-arrow-right-s-line"></i></a></li>`;
     paginationHtml += '</ul>';
+    paginationHtml += '</div>';
     paginationContainer.html(paginationHtml);
 
     paginationContainer.off('click').on('click', 'a.page-link', function (e) {
