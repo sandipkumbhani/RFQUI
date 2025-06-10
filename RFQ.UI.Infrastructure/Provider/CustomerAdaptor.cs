@@ -121,7 +121,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     var requestDto = JsonConvert.SerializeObject(pagingParam);
                     var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
 
-                    var baseUrl = _fleetLynkApiUrl + _config["Customer:GetAllMasterParty"];
+                    var baseUrl = _fleetLynkApiUrl + _config["Customer:GetAllCostomer"];
                     var response = await httpClient.PostAsync(baseUrl, requestContent);
                     var responseData = await response.Content.ReadAsStringAsync();
 
