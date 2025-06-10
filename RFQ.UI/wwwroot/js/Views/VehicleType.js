@@ -88,13 +88,15 @@ function FetchVehicleTypes() {
             orderDir: 'asc'
         }),
         success: function (response) {
+
             if (!response || !response.data || response.data.length === 0) {
+                
                 $('#vehicleTypesTable tbody').html('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                 $('#totalList').text('Total List: 0');
                 $('#customvehicleTypesPagination').empty();
                 return;
             }
-
+            vehicleTypeViewModelDtos = response.data;
             let rowsHtml = '';
             response.data.forEach(item => {
                 rowsHtml += `
@@ -102,7 +104,7 @@ function FetchVehicleTypes() {
                         <td>${item.companyName}</td>
                         <td>${item.vehicleTypeName}</td>
                         <td>${item.minimumKms}</td>
-                        <td class="text-center">
+                        <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
                         </td>
@@ -129,7 +131,7 @@ function generatePagination(totalRecords, pageSize, currentPage) {
     let paginationHtml = '<ul class="pagination justify-content-center">';
 
     paginationHtml += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-        <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
+        <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="ri-arrow-left-s-line"></i></a></li>`;
 
     const maxPagesToShow = 5;
     let startPage = Math.max(1, currentPage - 2);
@@ -144,7 +146,7 @@ function generatePagination(totalRecords, pageSize, currentPage) {
     }
 
     paginationHtml += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-        <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
+        <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="ri-arrow-right-s-line"></i></a></li>`;
     paginationHtml += '</ul>';
     paginationContainer.html(paginationHtml);
 

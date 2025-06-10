@@ -293,6 +293,7 @@ $(document).ready(function () {
 
     const table = $('#vehicleTypesTable').DataTable({
         responsive: true,
+        processing: true,
         dom: 'Bfrtip',
         buttons: [
             {
