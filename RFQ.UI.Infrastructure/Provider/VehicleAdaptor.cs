@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -156,27 +157,46 @@ namespace RFQ.UI.Infrastructure.Provider
             return string.Empty;
         }
 
-        public async Task<IEnumerable<VehicleResponseDto>> GetAllVehicle()
+        public async Task<PageList<VehicleResponseDto>> GetAllVehicle(PagingParam pagingParam)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Vehicle:GetAllVehicle"]);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                using (var httpClient = new HttpClient())
                 {
-                    var Vehiclelist = JsonConvert.DeserializeObject<List<VehicleResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return Vehiclelist;
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                    var requestDto = JsonConvert.SerializeObject(pagingParam);
+                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+
+                    var baseUrl = _fleetLynkApiUrl + _config["Vehicle:GetAllVehicle"];
+                    var response = await httpClient.PostAsync(baseUrl, requestContent);
+                    var responseData = await response.Content.ReadAsStringAsync();
+
+                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+
+                    if (responseModel?.Data?.result != null)
+                    {
+                        var vehicleList = JsonConvert.DeserializeObject<List<VehicleResponseDto>>(
+                            JsonConvert.SerializeObject(responseModel.Data.result)
+                        );
+
+                        int pageNumber = responseModel.Data.pageNumber;
+                        int pageSize = responseModel.Data.pageSize;
+                        int totalRecordCount = responseModel.Data.totalRecordCount;
+
+                        return new PageList<VehicleResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize);
+                    }
+
+                    return null;
                 }
-                return null;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
 
         public async Task<string> EditVehicle(int vehicleId, VehicleRequestDto vehicleRequestDto)
         {

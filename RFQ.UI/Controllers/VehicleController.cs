@@ -145,20 +145,26 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ViewVehicle()
+        [HttpPost]
+        public async Task<IActionResult> ViewVehicle([FromBody] PagingParam pagingParam)
         {
             try
             {
-                var VehicleList = await _vehicleServices.GetAllVehicle();
+                var result = await _vehicleServices.GetAllVehicle(pagingParam);
 
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(VehicleList);
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
                 }
                 else
                 {
-                    return View(VehicleList);
+                    return View(result);
                 }
             }
             catch (Exception ex)

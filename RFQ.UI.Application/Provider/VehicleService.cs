@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -35,9 +36,9 @@ namespace RFQ.UI.Application.Provider
             return await _vehicleAdaptor.AddVehicle(vehicleRequestDto);
         }
 
-        public Task<IEnumerable<VehicleResponseDto>> GetAllVehicle()
+        public Task<PageList<VehicleResponseDto>> GetAllVehicle(PagingParam pagingParam)
         {
-            return _vehicleAdaptor.GetAllVehicle();
+            return _vehicleAdaptor.GetAllVehicle(pagingParam);
         }
 
         public Task<string> EditVehicle(int vehicleId,VehicleRequestDto vehicleRequestDto)
