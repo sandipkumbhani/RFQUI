@@ -504,7 +504,7 @@ $(document).ready(function () {
                 text: '<i class="ri-file-excel-line"></i> Export All',
             },
         ],
-        paging: true,
+        paging: false,
         info: true,
         lengthChange: false,
         pageLength: 3,
