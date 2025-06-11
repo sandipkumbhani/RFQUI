@@ -315,6 +315,42 @@ function GetGridHtml(response, gridTableName) {
                     `;
         });
     }
+    if (gridTableName == "tableuser") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                      <tr>
+                        <td>${item.personName}</td>
+                        <td>${item.company}</td>
+                        <td>${item.location}</td>
+                        <td>${item.mobileNo}</td>
+                        <td>${item.emailId}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditUser(${item.userId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "tablelocation") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                      <tr>
+                        <td>${item.locationName}</td>
+                        <td>${item.addressLine}</td>
+                        <td>${item.city}</td>
+                        <td>${item.pinCode}</td>
+                        <td>${item.contactPerson}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.contactNo}</td>
+                        <td>${item.whatsAppNo}</td>
+                        <td>${item.email}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditLocation(${item.locationId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
     return rowsHtml;
 }
 
