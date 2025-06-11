@@ -215,6 +215,7 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.whatsAppAuthKey}</td>
                         <td>${item.smtpHost}</td>
                         <td>${item.smtpPort}</td>
+                        <td>${item.smtpUsername}</td>
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
@@ -293,6 +294,25 @@ function GetGridHtml(response, gridTableName) {
                             <a class="icon-btn" onclick="DeleteDriver(${item.driverId},'${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>
                         </td>
                     </tr>`;
+        });
+    }
+    if (gridTableName == "customerTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                        <tr>
+                            <td>${item.partyName}</td>
+                            <td>${item.addressLine}</td>
+                            <td>${item.pinCode}</td>
+                            <td>${item.mobNo}</td>
+                            <td>${item.email}</td>
+                            <td>${item.panNo}</td>
+                            <td>${item.gstNo}</td>
+                            <td class="text-center action-items" style="cursor:pointer;">
+                                <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
+                                <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+                            </td>
+                        </tr>
+                    `;
         });
     }
     return rowsHtml;

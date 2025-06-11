@@ -1,6 +1,5 @@
 ﻿
 var companyConfigResponseDto;
-var getDataUrl = '/CompanyConfiguration/GetAllCompanyConfiguration';
 $(document).ready(function () {
     // Optionally, add "Cancel" to go back to the list
     $("#btnCancel").on("click", function () {
@@ -23,7 +22,7 @@ async function loadAllData() {
         const providers = await GetAllProviders();
         console.log("Providers loaded:", providers);
 
-        const config = await FetchDataForTable('tableCmpConfig', getDataUrl); 
+        const config = await FetchCompanyConfiguration();
         console.log("Company configuration loaded:", config);
 
         // Continue with logic after all are done
@@ -43,8 +42,7 @@ function Initializejquery() {
         SaveCompanyConfiguration(action);
     });
     $("#btnCancel").on('click', function () {
-        //FetchCompanyConfiguration();
-        FetchDataForTable('tableCmpConfig', getDataUrl);
+        FetchCompanyConfiguration();
         $("#tableDiv").removeClass('d-none');
         $("#addCompanyConfigDiv").addClass('d-none');
         $("#backButton").removeClass('d-none');
@@ -272,96 +270,98 @@ function SaveCompanyConfiguration(action) {
     }
 }
 
-//function FetchCompanyConfiguration() {
-//    $("#listSection").show();
-//    $('#tableCmpConfig tbody').empty();
-//    $('#totalList').text('Total List: 0');
-//    $('#customCompanyConfigPagination').empty();
+function FetchCompanyConfiguration() {
+    $("#listSection").show();
 
-//    const pageLength = Number($('#pageLength').val()) || 10;
-//    let pageNumber = Number($('#currentPage').val()) || 1;
-//    if (pageNumber < 1) pageNumber = 1;
+    FetchDataForTable('tableCmpConfig', '/CompanyConfiguration/GetAllCompanyConfiguration');
+    //$('#tableCmpConfig tbody').empty();
+    //$('#totalList').text('Total List: 0');
+    //$('#customCompanyConfigPagination').empty();
 
-//    const searchValue = $('#companyConfigSearch').val() || '';
+    //const pageLength = Number($('#pageLength').val()) || 10;
+    //let pageNumber = Number($('#currentPage').val()) || 1;
+    //if (pageNumber < 1) pageNumber = 1;
 
-//    $.ajax({
-//        url: '/CompanyConfiguration/GetAllCompanyConfiguration',
-//        type: 'POST',
-//        contentType: 'application/json',
-//        data: JSON.stringify({
-//            Draw: pageNumber,
-//            start: (pageNumber - 1) * pageLength,
-//            length: pageLength,
-//            searchValue: searchValue,
-//            orderColumn: 'companyId',
-//            orderDir: 'asc'
-//        }),
-//        success: function (response) {
-//            if (!response || !response.data || response.data.length === 0) {
-//                $('#tableCmpConfig tbody').html('<tr><td colspan="8" class="text-center">No records found</td></tr>');
-//                $('#totalList').text('Total List: 0');
-//                $('#customCompanyConfigPagination').empty();
-//                return;
-//            }
+    //const searchValue = $('#companyConfigSearch').val() || '';
 
-//            // Get sessionStorage lists
-//            const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");
-//            const providersList = JSON.parse(sessionStorage.getItem("ProvidersList") || "[]");
+    //$.ajax({
+    //    url: '/CompanyConfiguration/GetAllCompanyConfiguration',
+    //    type: 'POST',
+    //    contentType: 'application/json',
+    //    data: JSON.stringify({
+    //        Draw: pageNumber,
+    //        start: (pageNumber - 1) * pageLength,
+    //        length: pageLength,
+    //        searchValue: searchValue,
+    //        orderColumn: 'companyId',
+    //        orderDir: 'asc'
+    //    }),
+    //    success: function (response) {
+    //        if (!response || !response.data || response.data.length === 0) {
+    //            $('#tableCmpConfig tbody').html('<tr><td colspan="8" class="text-center">No records found</td></tr>');
+    //            $('#totalList').text('Total List: 0');
+    //            $('#customCompanyConfigPagination').empty();
+    //            return;
+    //        }
 
-//            // Processed List
-//            const trlist = response.data.map(item => {
-//                const company = companyList.find(c => c.companyId === item.companyId);
-//                const smsProvider = providersList.find(p => p.providerTypeId === Number(item.smsProvider));
-//                const whatsAppProvider = providersList.find(p => p.providerTypeId === Number(item.whatsAppProvider));
+    //        // Get sessionStorage lists
+    //        const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");
+    //        const providersList = JSON.parse(sessionStorage.getItem("ProvidersList") || "[]");
 
-//                return {
-//                    ...item,
-//                    companyId: company ? company.companyName : "",
-//                    smsProvider: smsProvider ? smsProvider.providerName : "",
-//                    whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
-//                };
-//            });
+    //        // Processed List
+    //        const trlist = response.data.map(item => {
+    //            const company = companyList.find(c => c.companyId === item.companyId);
+    //            const smsProvider = providersList.find(p => p.providerTypeId === Number(item.smsProvider));
+    //            const whatsAppProvider = providersList.find(p => p.providerTypeId === Number(item.whatsAppProvider));
 
-//            companyConfigResponseDto = trlist;
+    //            return {
+    //                ...item,
+    //                companyId: company ? company.companyName : "",
+    //                smsProvider: smsProvider ? smsProvider.providerName : "",
+    //                whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
+    //            };
+    //        });
 
-//            let rowsHtml = '';
-//            trlist.forEach(item => {
-//                rowsHtml += `
-//                    <tr>
-//                        <td>${item.companyId}</td>
-//                        <td>${item.smsProvider}</td>
-//                        <td>${item.smsAuthKey}</td>
-//                        <td>${item.whatsAppProvider}</td>
-//                        <td>${item.whatsAppAuthKey}</td>
-//                        <td>${item.smtpHost}</td>
-//                        <td>${item.smtpPort}</td>
-//                        <td class="text-center action-items" style="cursor:pointer;">
-//                            <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
-//                            <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
-//                        </td>
-//                    </tr>`;
-//            });
+    //        companyConfigResponseDto = trlist;
 
-//            $('#tableCmpConfig tbody').html(rowsHtml);
-//            $('#totalList').text(`Total List: ${response.recordsTotal}`);
-//            generatePagination(response.recordsTotal, pageLength, pageNumber);
-//        },
-//        error: function () {
-//            $('#tableCmpConfig tbody').html('<tr><td colspan="8" class="text-center text-danger">Error loading data</td></tr>');
-//            $('#customCompanyConfigPagination').empty();
-//        }
-//    });
-//}
+    //        let rowsHtml = '';
+    //        trlist.forEach(item => {
+    //            rowsHtml += `
+    //                <tr>
+    //                    <td>${item.companyId}</td>
+    //                    <td>${item.smsProvider}</td>
+    //                    <td>${item.smsAuthKey}</td>
+    //                    <td>${item.whatsAppProvider}</td>
+    //                    <td>${item.whatsAppAuthKey}</td>
+    //                    <td>${item.smtpHost}</td>
+    //                    <td>${item.smtpPort}</td>
+    //                    <td class="text-center action-items" style="cursor:pointer;">
+    //                        <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
+    //                        <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
+    //                    </td>
+    //                </tr>`;
+    //        });
+
+    //        $('#tableCmpConfig tbody').html(rowsHtml);
+    //        $('#totalList').text(`Total List: ${response.recordsTotal}`);
+    //        generatePagination(response.recordsTotal, pageLength, pageNumber);
+    //    },
+    //    error: function () {
+    //        $('#tableCmpConfig tbody').html('<tr><td colspan="8" class="text-center text-danger">Error loading data</td></tr>');
+    //        $('#customCompanyConfigPagination').empty();
+    //    }
+    //});
+}
 
 // Bind events
 $('#customSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('tableCmpConfig', getDataUrl);
+    FetchCompanyConfiguration();
 });
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('tableCmpConfig', getDataUrl);
+    FetchCompanyConfiguration();
 });
 
 function EditCompanyConfiguration(companyConfigId) {
@@ -429,8 +429,7 @@ function UpdateCompanyConfiguration(companyConfigId) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response.result == 'success') {
-                    //FetchCompanyConfiguration();
-                    FetchDataForTable('tableCmpConfig', getDataUrl);
+                    FetchCompanyConfiguration();
                     toastr.success("Company Configuration Details Updated Successfully!");
 
                     $("#formSection").hide();
@@ -461,8 +460,7 @@ function DeleteCompanyConfiguration(CompanyConfigrationId) {
         data: JSON.stringify(CompanyConfigrationId),
         success: function (response) {
             toastr.success("Company Configuration Details Deleted Successfully!");
-            //FetchCompanyConfiguration();
-            FetchDataForTable('tableCmpConfig', getDataUrl);
+            FetchCompanyConfiguration();
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Delete Company Configuration Details!", "Error");
