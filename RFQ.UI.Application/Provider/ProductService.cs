@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -27,9 +28,9 @@ namespace RFQ.UI.Application.Provider
             return _productAdaptor.EditProduct(productId, productRequestDto);
         }
 
-        public Task<IEnumerable<ProductResponseDto>> GetAllProducts()
+        public Task<PageList<ProductResponseDto>> GetAllProducts(PagingParam pagingParam)
         {
-            return _productAdaptor.GetAllProducts();
+            return _productAdaptor.GetAllProducts(pagingParam);
         }
     }
 }
