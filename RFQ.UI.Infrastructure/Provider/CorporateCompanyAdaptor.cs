@@ -147,7 +147,6 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 

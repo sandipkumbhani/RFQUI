@@ -1,4 +1,6 @@
 ﻿const linkId = GetQueryParam("LinkId");
+var getDataUrl = '/Vehicle/ViewVehicle';
+
 $(document).ready(function () {
 
     $("#btnSaveVehicle, #btnSaveNewVehicle").on('click', function () {
@@ -25,12 +27,12 @@ $(document).ready(function () {
     });
 
     $("#btnCancel").on('click', function () {
-        FetchVehicleList();
-        $("#addVehicleDiv").addClass('d-none');
+        FetchDataForTable('tableVehicle', getDataUrl);
+                $("#addVehicleDiv").addClass('d-none');
         $("#tableDiv").removeClass('d-none')
         $("#btnAddVehicle").removeClass('d-none');
-    }); FetchVehicleList
-    FetchVehicleList();
+    }); 
+    FetchDataForTable('tableVehicle', getDataUrl);
     GetAllOwnerOrVendor();
     GetAllVehicleCategory();
     GetAllVehicleTypeList();
@@ -161,7 +163,7 @@ function SaveVehicle(action) {
     }
 }
 function EditVehicle(vehicleId) {
-    var data = vehicleResponse.filter(x => x.vehicleId === vehicleId);
+    var data = viewModelDto.filter(x => x.vehicleId === vehicleId);
     var formData = data[0];
     console.log(formData);
 
@@ -306,7 +308,7 @@ function UpdateVehicle() {
                     toastr.success("Vehicle Details Updated Successfully!");
                     $("#addVehicleDiv").addClass('d-none');
                     $('#btnAddVehicle').removeClass('d-none');
-                    FetchVehicleList();
+                    FetchDataForTable('tableVehicle', getDataUrl);
                 } else {
                     toastr.error("Failed to Update Vehicle Details", "Error");
                 }
@@ -328,7 +330,7 @@ function DeleteVehicle(vehicleId) {
             if (response && response.result === "success") {
                 toastr.success("Vehicle Details Deleted Successfully!");
                 $("#addVehicleDiv").addClass('d-none');
-                FetchVehicleList();
+                FetchDataForTable('tableVehicle', getDataUrl);
             } else {
                 toastr.error("Failed to Delete Vehicle Details!", "Error");
             }
@@ -338,117 +340,77 @@ function DeleteVehicle(vehicleId) {
         }
     });
 }
-function FetchVehicleList() {
-    $("#tableDiv").show();
-    $('#tableVehicle tbody').empty();
-    $('#totalList').text('Total List: 0');
-    $('#customVehiclePagination').empty();
 
-    const pageLength = Number($('#pageLength').val()) || 10;
-    let pageNumber = Number($('#currentPage').val()) || 1;
-    if (pageNumber < 1) pageNumber = 1;
+//function FetchVehicleList() {
+//    $("#tableDiv").show();
+//    $('#tableVehicle tbody').empty();
+//    $('#totalList').text('Total List: 0');
+//    $('#customVehiclePagination').empty();
 
-    const searchValue = $('#vehicleTableSearch').val() || '';
+//    const pageLength = Number($('#pageLength').val()) || 10;
+//    let pageNumber = Number($('#currentPage').val()) || 1;
+//    if (pageNumber < 1) pageNumber = 1;
 
-    $.ajax({
-        url: '/Vehicle/ViewVehicle',
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({
-            Draw: pageNumber,
-            start: (pageNumber - 1) * pageLength,
-            length: pageLength,
-            searchValue: searchValue,
-            orderColumn: 'vehicleNo',
-            orderDir: 'asc'
-        }),
-        success: function (response) {
-            if (!response || !response.data || response.data.length === 0) {
-                $('#tableVehicle tbody').html('<tr><td colspan="7" class="text-center">No records found</td></tr>');
-                $('#totalList').text('Total List: 0');
-                $('#customVehiclePagination').empty();
-                return;
-            }
-            vehicleResponse = response.data;
+//    const searchValue = $('#vehicleTableSearch').val() || '';
 
-            let rowsHtml = '';
-            response.data.forEach(item => {
-                rowsHtml += `
-                    <tr>
-                        <td>${item.vehicleNo}</td>
-                        <td>${item.vehicleStatus}</td>
-                        <td>${item.engineNo}</td>
-                        <td>${item.chassisNo}</td>
-                        <td>${item.vehicleCapacity}</td>
-                        <td>${item.rtoRegistration}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
-            });
+//    $.ajax({
+//        url: '/Vehicle/ViewVehicle',
+//        type: "POST",
+//        contentType: "application/json",
+//        data: JSON.stringify({
+//            Draw: pageNumber,
+//            start: (pageNumber - 1) * pageLength,
+//            length: pageLength,
+//            searchValue: searchValue,
+//            orderColumn: 'vehicleNo',
+//            orderDir: 'asc'
+//        }),
+//        success: function (response) {
+//            if (!response || !response.data || response.data.length === 0) {
+//                $('#tableVehicle tbody').html('<tr><td colspan="7" class="text-center">No records found</td></tr>');
+//                $('#totalList').text('Total List: 0');
+//                $('#customVehiclePagination').empty();
+//                return;
+//            }
+//            vehicleResponse = response.data;
 
-            $('#tableVehicle tbody').html(rowsHtml);
-            $('#totalList').text(`Total List: ${response.recordsTotal}`);
-            generatePagination(response.recordsTotal, pageLength, pageNumber);
-        },
-        error: function () {
-            $('#tableVehicle tbody').html('<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>');
-            $('#customVehiclePagination').empty();
-        }
-    });
-}
+//            let rowsHtml = '';
+//            response.data.forEach(item => {
+//                rowsHtml += `
+//                    <tr>
+//                        <td>${item.vehicleNo}</td>
+//                        <td>${item.vehicleStatus}</td>
+//                        <td>${item.engineNo}</td>
+//                        <td>${item.chassisNo}</td>
+//                        <td>${item.vehicleCapacity}</td>
+//                        <td>${item.rtoRegistration}</td>
+//                        <td class="text-center action-items" style="cursor:pointer;">
+//                            <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
+//                            <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
+//                        </td>
+//                    </tr>`;
+//            });
 
-function generatePagination(totalRecords, pageSize, currentPage) {
-    const paginationContainer = $('#customvtableVehiclePagination');
-    paginationContainer.empty();
-
-    const totalPages = Math.ceil(totalRecords / pageSize);
-    if (totalPages <= 1) return;
-
-    let paginationHtml = '<div class="dataTables_paginate paging_simple_numbers">';
-    paginationHtml += '<ul class="pagination">';
-
-    paginationHtml += `<li class="paginate_button page-item ${currentPage === 1 ? 'disabled' : ''} arrow">
-        <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="ri-arrow-left-s-line"></i></a></li>`;
-
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-    if (endPage - startPage < maxPagesToShow - 1) {
-        startPage = Math.max(1, endPage - maxPagesToShow + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-        paginationHtml += `<li class="paginate_button page-item ${i === currentPage ? 'active' : ''}">
-            <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-    }
-
-    paginationHtml += `<li class="paginate_button page-item ${currentPage === totalPages ? 'disabled' : ''} arrow">
-        <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="ri-arrow-right-s-line"></i></a></li>`;
-    paginationHtml += '</ul>';
-    paginationHtml += '</div>';
-    paginationContainer.html(paginationHtml);
-
-    paginationContainer.off('click').on('click', 'a.page-link', function (e) {
-        e.preventDefault();
-        const selectedPage = Number($(this).data('page'));
-        if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
-            $('#currentPage').val(selectedPage);
-            FetchVehicleList();
-        }
-    });
-}
+//            $('#tableVehicle tbody').html(rowsHtml);
+//            $('#totalList').text(`Total List: ${response.recordsTotal}`);
+//            generatePagination(response.recordsTotal, pageLength, pageNumber);
+//        },
+//        error: function () {
+//            $('#tableVehicle tbody').html('<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>');
+//            $('#customVehiclePagination').empty();
+//        }
+//    });
+//}
 
 // Bind events
 $('#tableVehicle').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchVehicleTypes();
+    FetchDataForTable('tableVehicle', getDataUrl);
 });
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchVehicleList();
+    FetchDataForTable('tableVehicle', getDataUrl);
 });
 
 function IsValidVehicleNumber(vehicleNumber) {
