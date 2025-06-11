@@ -142,7 +142,6 @@ function ValidatePinCode(number) {
 }
 
 function FetchDataForTable(gridTableName, url) {
-    debugger;
     $('#tableDiv').show();
     $('#' + gridTableName + ' tbody').empty();
     $('#totalList').text('Total List: 0');
@@ -238,6 +237,62 @@ function GetGridHtml(response, gridTableName) {
                                 <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
                             </td>
                         </tr>`;
+        });
+    }
+    if (gridTableName == "vendorTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                    <tr> 
+                        <td>${item.partyName}</td>
+                        <td>${item.addressLine}</td>
+                        <td>${item.pinCode}</td>
+                        <td>${item.contactPerson}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.whatsAppNo}</td>
+                        <td>${item.email}</td>
+                        <td>${item.panNo}</td>
+                        <td>${item.gstNo}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditVendor(${item.partyId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteVendor(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "franchiseTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                    <tr>
+                        <td><img src="../../franchiselogo/${item.logoImage}" alt="Logo" height="40"></td>  
+                        <td>${item.companyName}</td>
+                        <td>${item.addressLine}</td>
+                        <td>${item.email}</td>
+                        <td>${item.contactPerson}</td>
+                        <td>${item.contactNo}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.gstNo}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditFranchise(${item.companyId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteFranchise(${item.companyId},'${item.logoImage}')"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == 'driverTable') {
+        response.data.forEach(item => {
+            rowsHtml += `
+                    <tr>
+                        <td><img src="../../driverphoto/${item.driverImagePath}" alt="Photo" height="40"></td>  
+                        <td>${item.licenseNo}</td>
+                        <td>${item.driverName}</td>
+                        <td>${driverTypeMap[item.driverTypeId] ?? `Unknown Type`}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.addressLine}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditDriver(${item.driverId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteDriver(${item.driverId},'${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
         });
     }
     return rowsHtml;

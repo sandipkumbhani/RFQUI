@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
@@ -27,9 +28,9 @@ namespace RFQ.UI.Application.Provider
             return _franchiseAdaptor.EditFranchise(companyId, franchiseRequestDto);
         }
 
-        public Task<IEnumerable<FranchiseResponseDto>> GetFranchiseAll()
+        public async Task<PageList<FranchiseResponseDto>> GetAllFranchise(PagingParam pagingParam)
         {
-            return _franchiseAdaptor.GetFranchiseAll();
+            return await _franchiseAdaptor.GetAllFranchise(pagingParam);
         }
     }
 }

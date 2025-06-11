@@ -60,6 +60,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     const table = $('#franchiseTable').DataTable({
         responsive: true,
+        processing: true,
         dom: 'Bfrtip',
         buttons: [
             {
@@ -67,7 +68,7 @@ $(document).ready(function () {
                 text: '<i class="ri-file-excel-line"></i> Export All',
             },
         ],
-        paging: true,
+        paging: false,
         info: true,
         lengthChange: false,
         pageLength: 10,
@@ -91,33 +92,16 @@ $(document).ready(function () {
         table.search(this.value).draw();
     });
 
-    // Move pagination to custom div
-    $('#franchiseTable_paginate').appendTo('#customFranchisePagination');
-
-    // Filter dropdown logic
-    $('.filter-option').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-
-        // Update filter label after selection
-        $('#filterDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
-    });
-
     // Page length
     $('#pageLength').on('change', function () {
         table.page.len(this.value).draw();
     });
-
-    // Update total reminders
-    $('#totalList').text(`Total List: ${table.rows().count()}`);
 });
 
 $(document).ready(function () {
     const table = $('#driverTable').DataTable({
         responsive: true,
+        processing: true,
         dom: 'Bfrtip',
         buttons: [
             {
@@ -125,7 +109,7 @@ $(document).ready(function () {
                 text: '<i class="ri-file-excel-line"></i> Export All',
             },
         ],
-        paging: true,
+        paging: false,
         info: true,
         lengthChange: false,
         pageLength: 10,
@@ -149,33 +133,18 @@ $(document).ready(function () {
         table.search(this.value).draw();
     });
 
-    // Move pagination to custom div
-    $('#driverTable_paginate').appendTo('#customDriverPagination');
-
-    // Filter dropdown logic
-    $('.filter-option').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-
-        // Update filter label after selection
-        $('#filterDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
-    });
-
     // Page length
     $('#pageLength').on('change', function () {
         table.page.len(this.value).draw();
     });
 
-    // Update total reminders
-    $('#totalList').text(`Total List: ${table.rows().count()}`);
+    
 });
 
 $(document).ready(function () {
     const table = $('#vendorTable').DataTable({
         responsive: true,
+        processing: true,
         dom: 'Bfrtip',
         buttons: [
             {
@@ -183,7 +152,7 @@ $(document).ready(function () {
                 text: '<i class="ri-file-excel-line"></i> Export All',
             },
         ],
-        paging: true,
+        paging: false,
         info: true,
         lengthChange: false,
         pageLength: 10,
@@ -207,28 +176,10 @@ $(document).ready(function () {
         table.search(this.value).draw();
     });
 
-    // Move pagination to custom div
-    $('#vendorTable_paginate').appendTo('#customVendorPagination');
-
-    // Filter dropdown logic
-    $('.filter-option').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-
-        // Update filter label after selection
-        $('#filterDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
-    });
-
     // Page length
     $('#pageLength').on('change', function () {
         table.page.len(this.value).draw();
     });
-
-    // Update total reminders
-    $('#totalList').text(`Total List: ${table.rows().count()}`);
 });
 
 $(document).ready(function () {
@@ -340,7 +291,6 @@ $(document).ready(function () {
         table.page.len(this.value).draw();
     });
 });
-
 
 $(document).ready(function () {
 

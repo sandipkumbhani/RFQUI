@@ -19,20 +19,26 @@ namespace RFQ.UI.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        [HttpGet]
+        [HttpPost]
 
-        public async Task<IActionResult> ViewDriver()
+        public async Task<IActionResult> ViewDriver([FromBody]PagingParam pagingParam)
         {
             try
             {
-                var driverList = await _driverServices.GetAllDriver();
+                var result = await _driverServices.GetAllDriver(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(driverList);
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
                 }
                 else
                 {
-                    return View(driverList);
+                    return View(result);
                 }
             }
             catch (Exception ex)

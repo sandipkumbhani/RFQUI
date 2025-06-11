@@ -470,51 +470,21 @@ function FetchVendor() {
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
     ResetAttachmentRepeater();
-    var FetchVendorUrl = '/Vendor/GetAllVendor';
-    $.ajax({
-        url: FetchVendorUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            let vendorList = response.filter(x => x.partyTypeId == 5);
-            vendorListDto = response;
-            if ($.fn.DataTable.isDataTable('#vendorTable')) {
-                $('#vendorTable').DataTable().clear();
-            }
-            console.log(vendorList)
-            const table = $("#vendorTable").DataTable();
-            vendorList.forEach(item => {
-                table.row.add([
-                    item.partyName,
-                    item.addressLine,
-                    item.pinCode,
-                    item.contactPerson,
-                    item.mobNo,
-                    item.whatsAppNo,
-                    item.email,
-                    item.panNo,
-                    item.gstNo,
-                    
-                    `
-                    <div class="text-center action-items" style="cursor:pointer;">
-                        <a class="icon-btn" onclick="EditVendor(${item.partyId})"><i class="ri-edit-2-line"></i></a>
-                        <a class="icon-btn" onclick="DeleteVendor(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
-                    </div>
-                    `
-                ]);
-            });
-            // Redraw table with new data
-            table.draw();
-            // Update total list count
-            $('#totalList').text(`Total List: ${vendorList.length}`);
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
+    var fetchVendorUrl = '/Vendor/GetAllVendor';
+    FetchDataForTable('vendorTable', fetchVendorUrl);
 }
+
+$('#customVendorSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchVendor();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchVendor();
+});
 function EditVendor(partyId) {
-    var data = vendorListDto.filter(x => x.partyId == partyId);
+    var data = viewModelDto.filter(x => x.partyId == partyId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
         var attachmentData = list;

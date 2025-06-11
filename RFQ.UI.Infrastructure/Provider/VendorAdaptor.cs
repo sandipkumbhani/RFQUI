@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -142,21 +143,38 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<IEnumerable<VendorResponseDto>> GetAllVendor()
+        public async Task<PageList<VendorResponseDto>> GetAllVendor(PagingParam pagingParam)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Vendor:GetAllMasterParty"]);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                using (var httpClient = new HttpClient())
                 {
-                    var vendorList = JsonConvert.DeserializeObject<List<VendorResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return vendorList;
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                    var requestDto = JsonConvert.SerializeObject(pagingParam);
+                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+
+                    var baseUrl = _fleetLynkApiUrl + _config["Vendor:GetAllVendor"];
+                    var response = await httpClient.PostAsync(baseUrl, requestContent);
+                    var responseData = await response.Content.ReadAsStringAsync();
+
+                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+
+                    if (responseModel?.Data?.result != null)
+                    {
+                        var vendorList = JsonConvert.DeserializeObject<List<VendorResponseDto>>(
+                            JsonConvert.SerializeObject(responseModel.Data.result)
+                        );
+
+                        int pageNumber = responseModel.Data.pageNumber;
+                        int pageSize = responseModel.Data.pageSize;
+                        int totalRecordCount = responseModel.Data.totalRecordCount;
+
+                        return new PageList<VendorResponseDto>(vendorList, totalRecordCount, pageNumber, pageSize);
+                    }
+                    return null;
                 }
-                return null;
             }
             catch (Exception)
             {

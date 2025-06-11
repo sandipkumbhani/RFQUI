@@ -274,118 +274,26 @@ function FetchDriverList() {
     $("#btnSaveNewDriver").show();
     ResetForm();
     ResetAttachmentRepeater();
+
     var fetchDriverUrl = '/Driver/ViewDriver';
-    $.ajax({
-        url: fetchDriverUrl,    
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            let driverList = response;
-            driverResponseDtos = response;
-            if ($.fn.DataTable.isDataTable("#driverTable")) {
-                $("#driverTable").DataTable().clear();
-            }
-            const table = $("#driverTable").DataTable();
-            driverList.forEach(item => {
-                table.row.add([
-                    `<img src="../../driverphoto/${item.driverImagePath}" alt="Photo" height="40">`,
-                    item.licenseNo,
-                    item.driverName,
-                    driverTypeMap[item.driverTypeId] ??'Unknown Type',
-                    item.mobNo,
-                    item.addressLine,
-                    `
-           <div class="text-center action-items" style="cursor:pointer;">
-                    <a class="icon-btn" onclick="EditDriver(${item.driverId})"><i class="ri-edit-2-line"></i></a>
-                    <a class="icon-btn" onclick="DeleteDriver(${item.driverId},'${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>
-            </div>
-            `
-                ]);
-            });
-
-            // Redraw table with new data
-            table.draw();
-
-            // Update total list count
-            $('#totalList').text(`Total List: ${driverList.length}`);
-
-            //let trlist = response;
-            //driverResponseDtos = response;
-            //// Destroy existing DataTable if exists
-            //if ($.fn.DataTable.isDataTable('#tableDriver')) {
-            //    $('#tableDriver').DataTable().clear().destroy();
-            //}
-
-            //$('#tableDriver').DataTable({
-            //    "processing": true,
-            //    "serverSide": false,
-            //    "paging": true,
-            //    "pageLength": 10,
-            //    "lengthChange": true,
-            //    "searching": true,
-            //    "ordering": true,
-            //    "info": true,
-            //    "autoWidth": true,
-            //    "responsive": true,
-            //    "info": true,
-            //    "autoWidth": true,
-            //    "responsive": true,
-            //    "scrollX": true,
-            //    "ordering": false,
-            //    "data": trlist,
-            //    "columns": [
-            //        {
-            //            "data": "driverImagePath",
-            //            "render": function (data) {
-            //                return `<img src="../../driverphoto/${data}" style="height:60px;width:60px" alt="Photo"/>`;
-            //            }
-            //        },
-            //        { "data": "licenseNo" },
-            //        { "data": "driverName" },
-            //        {
-            //            "data": "driverTypeId",
-            //            "render": function (data) {
-            //                return driverTypeMap[data] || "Unknown Type";
-            //            }
-            //        },
-            //        { "data": "mobNo" },
-            //        { "data": "addressLine" },
-            //        {
-            //            "data": function (row) {
-            //                return { DriverId: row.driverId, Logofile: row.driverImagePath }
-            //            },
-            //            "render": function (data, type, row) {
-            //                return `<div class="btn-group" role="group">
-            //                    <button type="button" class="btn btn-sm btn-primary" onclick="EditDriver(${data.DriverId})">
-            //                            <i class="ti ti-edit"></i> Edit
-            //                    </button>
-            //                    <button type="button" class="btn btn-sm btn-danger" onclick="DeleteDriver(${data.DriverId},'${data.Logofile}')">
-            //                             <i class="ti ti-trash"></i> Delete
-            //                    </button>
-            //                    </div>`;
-            //            }
-            //        },
-            //    ],
-            //    "columnDefs": [
-            //        {
-            //            "targets": "_all",
-            //            "className": "text-center"
-            //        }
-            //    ]
-            //});
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
+    FetchDataForTable('driverTable', fetchDriverUrl);
 };
+
+$('#customDriverSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchDriverList();
+});
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchDriverList();
+});
 function FormatDateToLocal(dateString) {
     const date = new Date(dateString);
     const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
     return localDate.toISOString().split('T')[0];
 }
 function EditDriver(driverId) {
-    var data = driverResponseDtos.filter(x => x.driverId == driverId);
+    var data = viewModelDto.filter(x => x.driverId == driverId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, driverId, function (list) {
         var attachmentData = list;

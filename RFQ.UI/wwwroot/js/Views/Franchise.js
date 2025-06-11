@@ -359,48 +359,23 @@ function FetchFranchise() {
     $("#btnUpdateFranchise").hide();
     $("#btnSavenewFranchise").show();
     ResetAttachmentRepeater();
-    var fetchFranchiseUrl = '/Franchise/GetFranchiseAll';
-    $.ajax({
-        url: fetchFranchiseUrl,
-        type: 'GET',
-        dataType: 'json',
-        success: function (response) {
-            let franchiseList = response.filter(x => x.companyTypeId == 2);
-            franchiseViewModelDto = response;
-            if ($.fn.DataTable.isDataTable("#franchiseTable")) {
-                $("#franchiseTable").DataTable().clear();
-            }
-            const table = $("#franchiseTable").DataTable();
-            franchiseList.forEach(item => {
-                table.row.add([
-                    `<img src="../../franchiselogo/${item.logoImage}" alt="Logo" height="40">`,
-                    item.companyName,
-                    item.addressLine,
-                    item.email,
-                    item.contactPerson,
-                    item.contactNo,
-                    item.mobNo,
-                    item.gstNo,
-                    `
-           <div class="text-center action-items" style="cursor:pointer;">
-                    <a class="icon-btn" onclick="EditFranchise(${item.companyId})"><i class="ri-edit-2-line"></i></a>
-                    <a class="icon-btn" onclick="DeleteFranchise(${item.companyId},'${item.logoImage}')"><i class="ri-delete-bin-3-line"></i></a>
-            </div>
-            `
-                ]);
-            });
 
-            // Redraw table with new data
-            table.draw();
-
-            // Update total list count
-            $('#totalList').text(`Total List: ${franchiseList.length}`);
-
-        }
-    });
+    var fetchFranchiseUrl = '/Franchise/GetAllFranchise';
+    FetchDataForTable('franchiseTable', fetchFranchiseUrl);
 }
+
+
+$('#customFranchiseSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchFranchise();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchFranchise();
+});
 function EditFranchise(companyId) {
-    var data = franchiseViewModelDto.filter(x => x.companyId == companyId);
+    var data = viewModelDto.filter(x => x.companyId == companyId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, companyId, function (list) {
         var attachmentData = list;
