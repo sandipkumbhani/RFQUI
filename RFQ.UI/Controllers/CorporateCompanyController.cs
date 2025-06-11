@@ -1,8 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 
 
@@ -78,27 +80,33 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ViewCorporateCompany()
+        [HttpPost]
+        public async Task<IActionResult> ViewCorporateCompany([FromBody] PagingParam pagingParam)
         {
             try
             {
-
-                var coporateCompanyList = await _corporateCompanyService.GetCorporateCompanyAll();
-
+                var corporateCompanyViewModel = new CorporateCompanyResponseDto();
+                var result = await _corporateCompanyService.GetCorporateCompanyAll(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(coporateCompanyList);
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount, 
+                        data = result.Result
+                    });
                 }
                 else
                 {
-                    return View(coporateCompanyList);
+                    return View(result);
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+        
         }
 
         [HttpDelete("CorporateCompany/DeleteCorporateCompany/{companyId}")]

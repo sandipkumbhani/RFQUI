@@ -86,9 +86,10 @@
                 <!-- Bottom Area -->
                 <div class="datatable-footer-bottom">
                     <div class="totle-left">
-                        <span id="totalRemindersCorporate">Total List: 3</span>
+                        <span id="totalList">Total List: 3</span>
                     </div>
                     <div id="customcorporatePagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
                     <div class="show-page">
                         <span>Show per page:</span>
                         <select id="pageLength" class="form-select">
@@ -175,7 +176,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-4">
+                            <div class="col-lg-6">
                                 <div class="item-input">
                                     <label class="form-label ">WhatsApp Number <span>*</span></label>
                                     <input type="text" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtWhatsAppNumber" maxlength="10" onkeypress="return isNumber(event)" name="Whatsapp Number" />

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -34,7 +35,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany";
+                var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany"; 
                 var company = JsonConvert.SerializeObject(corporateCompanyRequestDto);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -61,23 +62,32 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
-        public async Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll()
+        public async Task<PageList<CorporateCompanyResponseDto>> GetCorporateCompanyAll(PagingParam pagingParam)
         {
             try
             {
-
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/Company/GetAllCompany");
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                using (var httpClient = new HttpClient())
                 {
-                    var Profilelist = JsonConvert.DeserializeObject<List<CorporateCompanyResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return Profilelist;
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                    var requestDto = JsonConvert.SerializeObject(pagingParam);
+                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+                    var baseUrl = _fleetLynkApiUrl + _config["CorporateCompany:GetAllCompany"];
+                    var response = await httpClient.PostAsync(baseUrl, requestContent);
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                    if (responseModel?.Data?.result != null)
+                    {
+                        var vehicleList = JsonConvert.DeserializeObject<List<CorporateCompanyResponseDto>>(
+                            JsonConvert.SerializeObject(responseModel.Data.result)
+                        );
+                        int pageNumber = responseModel.Data.pageNumber;
+                        int pageSize = responseModel.Data.pageSize;
+                        int totalRecordCount = responseModel.Data.totalRecordCount;
+                        return new PageList<CorporateCompanyResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize);
+                    }
+                    return null;
                 }
-                return null;
             }
             catch (Exception)
             {
@@ -93,7 +103,8 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync($"https://localhost:7272/api/Company/GetAllCompany");
+                var baseUrl = _fleetLynkApiUrl + _config["CorporateCompany:GetAllFranchiseList"];
+                var response = await _httpClient.GetAsync(baseUrl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
