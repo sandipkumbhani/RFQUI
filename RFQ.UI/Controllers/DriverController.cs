@@ -21,7 +21,7 @@ namespace RFQ.UI.Controllers
 
         [HttpPost]
 
-        public async Task<IActionResult> ViewDriver([FromBody]PagingParam pagingParam)
+        public async Task<IActionResult> ViewDriver([FromBody] PagingParam pagingParam)
         {
             try
             {
@@ -123,22 +123,16 @@ namespace RFQ.UI.Controllers
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 int profileID = Convert.ToInt32(profileid);
                 var driverTypeList = await _driverServices.GetDriverType();
+
                 if (driverTypeList != null && driverTypeList.Count() > 0)
-                {
                     return Json(driverTypeList);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(driverTypeList);
-                }
                 else
-                {
                     return View(driverTypeList);
-                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred: {ex}");
                 throw;
             }
         }
@@ -179,13 +173,9 @@ namespace RFQ.UI.Controllers
                 driverRequestDto.UpdatedBy = Convert.ToInt32(profileId);
                 var result = await _driverServices.EditDriver(driverId, driverRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -200,13 +190,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _driverServices.DeleteDriver(driverId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {

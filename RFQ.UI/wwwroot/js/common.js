@@ -315,6 +315,42 @@ function GetGridHtml(response, gridTableName) {
                     `;
         });
     }
+    if (gridTableName == "tableProduct") {
+        response.data.forEach(item => {
+            rowsHtml += `
+        <tr>
+            <td>${item.companyName}</td>
+            <td>${item.itemName}</td>
+            <td class="text-center action-items" style="cursor:pointer;">
+                <a class="icon-btn" onclick="EditProduct(${item.itemId})"><i class="ri-edit-2-line"></i></a>
+                <a class="icon-btn" onclick="DeleteProduct(${item.itemId})"><i class="ri-delete-bin-3-line"></i></a>
+            </td>
+        </tr>`;
+        });
+    }
+    if (gridTableName == "corporateTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                        <tr>
+                        <td>${item.companyName}</td>
+                        <td>${item.addressLine}</td>
+                        <td>${item.pinCode}</td>
+                        <td>${item.contactPerson}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.contactNo}</td>
+                        <td>${item.whatsAppNo}</td>
+                        <td>${item.email}</td>
+                        <td>${item.panNo}</td>
+                        <td>${item.gstNo}</td>
+                        
+                        
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditCorporateCompany(${item.companyId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteCorporateCompany(${item.companyId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
     if (gridTableName == "tableuser") {
         response.data.forEach(item => {
             rowsHtml += `

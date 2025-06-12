@@ -1,4 +1,5 @@
-﻿using RFQ.UI.Domain.RequestDto;
+﻿using RFQ.UI.Domain.Helper;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 
 
@@ -8,7 +9,7 @@ namespace RFQ.UI.Domain.Interfaces
     {
         Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyRequestDto);
 
-        Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll();
+        Task<PageList<CorporateCompanyResponseDto>?> GetCorporateCompanyAll(PagingParam pagingParam);
 
         Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyRequestDto);
 

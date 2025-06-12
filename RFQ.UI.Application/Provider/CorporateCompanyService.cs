@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
@@ -35,9 +36,9 @@ namespace RFQ.UI.Application.Provider
             return _corporateCompanyAdaptor.GetAllFranchise();
         }
 
-        public Task<IEnumerable<CorporateCompanyResponseDto>> GetCorporateCompanyAll()
+        public async Task<PageList<CorporateCompanyResponseDto>> GetCorporateCompanyAll(PagingParam pagingParam)
         {
-            return _corporateCompanyAdaptor.GetCorporateCompanyAll();
+            return await _corporateCompanyAdaptor.GetCorporateCompanyAll(pagingParam);
         }
     }
 }
