@@ -35,7 +35,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany"; 
+                var baseurl = $"{_fleetLynkApiUrl}/Company/AddCompany";
                 var company = JsonConvert.SerializeObject(corporateCompanyRequestDto);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -47,7 +47,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     if (result == 200)
                     {
                         return JsonConvert.DeserializeObject<CorporateCompanyRequestDto>(responseModel.Data.ToString());
-                       // return _mapper.Map<CorporateCompanyRequestDto?>(responseModel.Data);
+                        // return _mapper.Map<CorporateCompanyRequestDto?>(responseModel.Data);
                     }
                     else
                     {
@@ -103,13 +103,14 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseUrl = _fleetLynkApiUrl + _config["CorporateCompany:GetAllFranchiseList"];
+                var baseUrl = _fleetLynkApiUrl + _config["CorporateCompany:GetAllCompanyAndFranchise"];
                 var response = await _httpClient.GetAsync(baseUrl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var franchiselist = JsonConvert.DeserializeObject<List<FranchiseListDto>>(Convert.ToString(responseModel.Data!));
+                    franchiselist = franchiselist.Where(x => x.CompanyTypeId == 2).ToList();
                     return franchiselist;
                 }
                 return null;

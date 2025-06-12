@@ -179,7 +179,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpclient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetAllCompany"]);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetAllCompanyAndFranchise"]);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)

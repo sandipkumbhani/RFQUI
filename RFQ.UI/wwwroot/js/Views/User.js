@@ -118,7 +118,7 @@ function SaveUser(action) {
         LoginId: loginname,
         Mobileno: mobileno,
         CompanyId: corporatename,
-        LocationId: location,s
+        LocationId: location,
         Emailid: emailid,
         Password: password
     };
