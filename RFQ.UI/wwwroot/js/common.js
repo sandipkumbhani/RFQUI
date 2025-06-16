@@ -141,7 +141,8 @@ function ValidatePinCode(number) {
     return /^\d{6}$/.test(number);
 }
 
-function FetchDataForTable(gridTableName, url) {
+function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
+
     $('#tableDiv').show();
     $('#' + gridTableName + ' tbody').empty();
     $('#totalList').text('Total List: 0');
@@ -162,8 +163,8 @@ function FetchDataForTable(gridTableName, url) {
             start: (pageNumber - 1) * pageLength,
             length: pageLength,
             searchValue: searchValue,
-            orderColumn: 'companyName',
-            orderDir: 'asc'
+            OrderColumn: orderColumn,
+            OrderDir: orderDir
         }),
         success: function (response) {
 
@@ -187,7 +188,6 @@ function FetchDataForTable(gridTableName, url) {
         }
     });
 }
-
 function GetGridHtml(response, gridTableName) {
     var rowsHtml = "";
     if (gridTableName == "vehicleTypesTable") {
@@ -389,7 +389,6 @@ function GetGridHtml(response, gridTableName) {
     }
     return rowsHtml;
 }
-
 function generatePagination(totalRecords, pageSize, currentPage, gridTableName, url) {
     const paginationContainer = $('#customPagination');
     paginationContainer.empty();

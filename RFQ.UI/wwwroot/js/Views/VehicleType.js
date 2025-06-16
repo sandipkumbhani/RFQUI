@@ -42,6 +42,19 @@ $(document).ready(function () {
         $('#SavenewButton').removeClass('d-none')
         $('#updateButton').addClass('d-none');
     })
+    $(document).on('click', 'th.sortable', function () {
+        const orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        const orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+
+        $(this).data('order', orderDir); // update for next click
+
+        // Optional: reset other headers
+        $('th.sortable').not(this).data('order', 'asc');
+
+        // Call the data fetch with sorting
+        FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir);
+    });
 
     UpdateVechileType();
     FetchVehicleTypes();
@@ -60,7 +73,8 @@ function OnSubmitValidation() {
 
 function FetchVehicleTypes() {
     $('#tableDiv').show();
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType');
+
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType',null,null);
     //$('#vehicleTypesTable tbody').empty();
     //$('#totalList').text('Total List: 0');
     //$('#customvehicleTypesPagination').empty();
