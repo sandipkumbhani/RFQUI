@@ -32,5 +32,9 @@ namespace RFQ.UI.Application.Provider
         {
             return _productAdaptor.GetAllProducts(pagingParam);
         }
+        public Task<IEnumerable<ProductResponseDto>> GetDrpProductList()
+        {
+            return _productAdaptor.GetDrpProductList();
+        }
     }
 }

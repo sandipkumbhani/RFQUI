@@ -154,7 +154,7 @@ function GetAllVehicleType() {
     });
 }
 function GetAllItemName() {
-    var getUrl = '/Product/GetAllProducts';
+    var getUrl = '/Product/GetDrpProductList';
     $.ajax({
         url: getUrl,
         type: "GET",
