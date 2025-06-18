@@ -16,6 +16,7 @@ $("#ddlRfqOn").on('change', function () {
     }
 });
 $(document).ready(function () {
+    Initialization()
     GetAllCustomerName()
     GetAllVehicleType()
     GetAllItemName()
@@ -24,8 +25,38 @@ $(document).ready(function () {
     BindDropDown(rfqPriorityArray, "ddlRfqPriority", "Select a RFQ Priority")
     BindDropDown(rfqOnArray, "ddlRfqOn", "Select a RFQ On")
 });
+function Initialization() {
+    $("#txtNoofVehicles").on("blur", function () {
+        var noofVehicles = $(this).val();
+        if (IsNullOrEmpty(noofVehicles)) {
+            toastr.warning("Please enter No Of Vehicles", "Warning");
+            return;
+        }
+    });
+
+    $("#txtTotalQty").on("blur", function () {
+        var tq = $(this).val();
+        if (IsNullOrEmpty(tq)) {
+            toastr.warning("Please enter Total QTY in Tons ", "Warning");
+            return;
+        }
+    });
+    $("#txtSpecialInstructions").on("blur", function () {
+        var instruction = $(this).val();
+        if (IsNullOrEmpty(instruction)) {
+            $("#txtSpecialInstructions").val('');
+            toastr.warning("Please enter a Special Intruction", "Warning");
+            return;
+        }
+    });
+    //on form submit
+    $("#btnSaveForm").click(function (event) {
+        event.preventDefault();
+        Save();
+    });
+}
 function GetAllCustomerName() {
-    var GetUrl = '/Customer/ViewCustomer';
+    var GetUrl = '/Customer/GetDrpCustomerList';
     $.ajax({
         url: GetUrl,
         type: "GET",
@@ -84,7 +115,7 @@ function GetAllVehicleType() {
     });
 }
 function GetAllItemName() {
-    var getUrl = '/Product/GetAllProducts';
+    var getUrl = '/Product/GetDrpProductList';
     $.ajax({
         url: getUrl,
         type: "GET",
@@ -168,6 +199,13 @@ function OnSubmitValidation() {
     }
     
     return true;
+}
+function Save() {
+
+    var isvalid = OnSubmitValidation();
+    if (!isvalid) {
+        return;
+    }
 }
 function BindDropDown(optionArray,elementId,placeholder) {
     const dropdown = document.getElementById(elementId);

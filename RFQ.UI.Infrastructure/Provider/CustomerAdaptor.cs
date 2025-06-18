@@ -15,7 +15,7 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;    
+        private string _fleetLynkApiUrl;
         public CustomerAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
@@ -61,7 +61,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl+ _config["Customer:DeleteMasterParty"] + PartyId;
+                var baseurl = _fleetLynkApiUrl + _config["Customer:DeleteMasterParty"] + PartyId;
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
@@ -228,6 +228,37 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var CityList = JsonConvert.DeserializeObject<List<ComMstCityDto>>(Convert.ToString(responseModel.Data!));
                     return CityList;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<CustomerRequestDto>> GetDrpCustomerList()
+        {
+            try
+            {
+                var _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var url = _fleetLynkApiUrl + _config["Customer:GetDrpCustomerList"];
+                var response = await _httpClient.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    return null;
+                }
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(responseData))
+                    return null;
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var coustomerList = JsonConvert.DeserializeObject<List<CustomerRequestDto>>(Convert.ToString(responseModel.Data!));
+                    return coustomerList;
                 }
                 return null;
             }

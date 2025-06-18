@@ -1,209 +1,225 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    Layout = "_Layout";
-    ViewData["Title"] = "QuoteRate";
+	Layout = "_Layout";
+	ViewData["Title"] = "QuoteRate";
 }
 @section Scripts {
-    <script src="~/js/Views/QuoteRate.js"></script>
+	<script src="~/js/Views/QuoteRate.js"></script>
 }
 
-<div class="app-toolbar  pt-3 px-lg-3">
-    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
-        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-            <div class="page-title d-flex align-items-center gap-1 me-3">
-                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
-                    Overview
-                </h1>
-                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
-                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
-                    </li>
-                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
-                    <li class="breadcrumb-item text-primary">
-                        Branch
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+
+<div class="row">
+	<div class="col-12">
+		<div class="page-title-box add">
+			<h1 class="page-title">QuoteRate-Branch</h1>
+			<div class="add-breadcrumb">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="#" id="locationListSectionLink">QuoteRate-Branch</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page"> Add QuoteRate-Branch</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+	<div id="addQRBranchDiv" class="card com-profile-info">
+		<div class="top-details">
+			<h2 class="page-form-title">QuoteRate-Branch Details</h2>
+			<form class="row all-custom-class" id="QRBranchForm">
+				<input type="hidden" id="txtQRBranchId" />
+				<!-- Left Section -->
+				<div class="col-xl-6">
+					<div class="mb-4">
+						<div class="row">
+							<div class="col-xl-6">
+								<div class="mb-4">
+									<label class="form-label ">RFQ No</label>
+									<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtRfqNo" />
+								</div>
+							</div>
+							<div class="col-xl-6">
+								<div class="mb-4">
+									<label class="form-label">RFQ Date</label>
+									<input type="datetime-local" class="form-control" id="txtRfqDate" />
+								</div>
+							</div>
+						</div>
+						<label class="form-label ">Customer Name</label>
+						<select class="selectpicker" aria-label="Select Customer Name" id="ddlCustomerName" data-live-search="true" data-width="100%">
+						</select>
+					</div>
+					<div class="row">
+						<div class="col-xl-6">
+							<div class="mb-4">
+								<label class="form-label ">Origin/From</label>
+								<input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" />
+							</div>
+						</div>
+						<div class="col-xl-6">
+							<div class="mb-4">
+								<label class="form-label">Destination/To</label>
+								<input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xl-6">
+							<div class="mb-4">
+								<label class="form-label">RFQ On</label>
+								<select class="selectpicker" id="ddlRfqOn" data-live-search="true" data-width="100%">
+								</select>
+							</div>
+						</div>
+						<div class="col-xl-6">
+							<div class="mb-4">
+								<div class="item-input">
+									<label class="form-label ">Vehicle Type<span>*</span></label>
+									<select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;">
+									</select>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Right Section -->
+				<div class="col-xl-6">
+					<div class="row">
+						<div class="col-xl-6">
+
+							<div class="mb-4">
+								<label class="form-label">RFQ Expired On</label>
+								<input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" />
+							</div>
+							<div class="mb-4">
+								<label class="form-label">RFQ Type</label>
+								<select class="selectpicker" id="ddlRfqType" data-live-search="true" data-width="100%">
+								</select>
+							</div>
+							<div class="mb-4">
+								<div class="item-input">
+									<label class="form-label">Item Name</label>
+									<select class="select2-custom form-control" id="ddlItemName" style="width: 100%;">
+									</select>
+								</div>
+							</div>
+							<div class="mb-4">
+								<label class="form-label">No. of Vehicles</label>
+								<input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" onkeypress="return isNumber(event)" />
+							</div>
+						</div>
+						<div class="col-xl-6">
+							<div class="mb-4">
+								<label class="form-label">Vehicle Req On</label>
+								<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
+							</div>
+							<div class="mb-4">
+								<label class="form-label">RFQ Priority</label>
+								<select class="selectpicker" id="ddlRfqPriority" data-live-search="true" data-width="100%">
+								</select>
+							</div>
+							<div class="mb-4">
+								<div class="item-input">
+									<label class="form-label ">Packing Type</label>
+									<select class="select2-custom form-control" id="ddlPackingType" style="width: 100%;">
+									</select>
+								</div>
+							</div>
+							<div class="mb-4">
+								<label class="form-label">Total Qty in Tons</label>
+								<input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" onkeypress="return isNumber(event)" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-12">
+					<div class="mb-4">
+						<label class="form-label">Special Instructions</label>
+						<input type="text" class="form-control" placeholder="Text" id="txtSpecialInstructions" />
+					</div>
+				</div>
+				<!-- RFQ Sent To Vendors Section -->
+				<div class="mt-8">
+					<div class="card-header p-4">
+						<h4 class="fw-bold m-0 text-lg">RFQ Sent To Branch</h4>
+					</div>
+					<div class="ard-card">
+						<table id="datatable_ard" class="table table-striped align-middle border rounded fs-6 gy-5 gs-7 dataTable" style="width:100%">
+							<thead>
+								<tr class="fw-semibold fs-6 text-gray-800">
+									<th>Sr. No.</th>
+									<th>Vendor Name</th>
+									<th>PAN No Name</th>
+									<th>Vendor Rating</th>
+									<th>Total Hire Cost</th>
+									<th>Detention Per Day</th>
+									<th>Detention Free Days</th>
+									<th class="text-end">Edit/Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1</td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
+									<td class="text-end">
+										<a href="#" class="btn btn-light btn-active-light-primary btn-sm" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+											Actions
+										</a>
+										<ul class="dropdown-menu dropdown-menu-end">
+											<li>
+												<a class="dropdown-item" href="#">
+													<i class="ti ti-edit"></i> Edit
+												</a>
+											</li>
+											<li>
+												<a class="dropdown-item" href="#">
+													<i class="ti ti-trash"></i> Delete
+												</a>
+											</li>
+										</ul>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="button-main">
+			<a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
+				<i class="ri-save-line"></i>
+				<span>
+					Save
+				</span>
+			</a>
+			<a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
+				<i class="ri-save-line"></i>
+				<span>
+					Save & New
+				</span>
+			</a>
+			<a href="#" class="card-link" id="btnUpdate" style="display:none;">
+				<i class="ri-save-line"></i>
+				<span>
+					Update
+				</span>
+			</a>
+			<a href="#" class="card-link" id="btnCancel">
+				<i class="ri-close-line"></i>
+				<span>
+					Cancel
+				</span>
+			</a>
+		</div>
+	</div>
 </div>
 
-<div class="app-content  px-lg-3">
-    <div class="app-container  container-fluid">
-        <div class="card">
-            <div class="card-header border-0 cursor-pointer">
-                <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">Quote Rate - Branch</h3>
-                </div>
-            </div>
-            <form class="form" id="RfqVendorForm">
-                <div class="card-body border-top p-9">
-                    <div class="row">
-                        <!-- Left Section -->
-                        <div class="col-xl-6">
-                            <div class="mb-4">
-                                <div class="row">
-                                    <div class="col-xl-6">
-                                        <div class="mb-4">
-                                            <label class="form-label col-form-label fw-semibold fs-6">RFQ No</label>
-                                            <input type="text" class="form-control form-control-solid" placeholder="Auto Generated" disabled id="txtRfqNo" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6">
-                                        <div class="mb-4">
-                                            <label class="form-label col-form-label fw-semibold fs-6">RFQ Date</label>
-                                            <input type="datetime-local" class="form-control" id="txtRfqDate" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <label class="form-label col-form-label required fw-semibold fs-6">Customer Name</label>
-                                <select class="selectpicker" aria-label="Select Customer Name" id="ddlCustomerName" data-live-search="true" data-width="100%">
-                                </select>
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-6">
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Origin/From</label>
-                                        <input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" />
-                                    </div>
-                                </div>
-                                <div class="col-xl-6">
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label fw-semibold fs-6">Destination/To</label>
-                                        <input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-6">
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ On</label>
-                                        <select class="selectpicker" id="ddlRfqOn" data-live-search="true" data-width="100%">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6">
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
-                                        <select class="selectpicker" aria-label="Select Vehicle Type" id="ddlVehicleType" data-live-search="true" data-width="100%">
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Right Section -->
-                        <div class="col-xl-6">
-                            <div class="row">
-                                <div class="col-xl-6">
-
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ Expired On</label>
-                                        <input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ Type</label>
-                                        <select class="selectpicker" id="ddlRfqType" data-live-search="true" data-width="100%">
-                                        </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label  fw-semibold fs-6">Item Name</label>
-                                        <select class="selectpicker" aria-label="Select Item Name" id="ddlItemName" data-live-search="true" data-width="100%">
-                                        </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">No. of Vehicles</label>
-                                        <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" onkeypress="return isNumber(event)"/>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6">
-                                    <div class="mb-4">
-                                        <label class="form-label required col-form-label fw-semibold fs-6">Vehicle Req On</label>
-                                        <input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label required fw-semibold fs-6">RFQ Priority</label>
-                                        <select class="selectpicker" id="ddlRfqPriority" data-live-search="true" data-width="100%">
-                                        </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label fw-semibold fs-6">Packing Type</label>
-                                        <select class="selectpicker" aria-label="Select a Packing Type" id="ddlPackingType" data-live-search="true" data-width="100%">
-                                        </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label col-form-label fw-semibold fs-6">Total Qty in Tons</label>
-                                        <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" onkeypress="return isNumber(event)" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-xl-12">
-                        <div class="mb-4">
-                            <label class="form-label col-form-label fw-semibold fs-6">Special Instructions</label>
-                            <input type="text" class="form-control" placeholder="Text" id="txtSpecialInstructions" />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- RFQ Sent To Vendors Section -->
-                <div class="mt-8">
-                    <div class="card-header p-4">
-                        <h4 class="fw-bold m-0 text-lg">RFQ Sent To Branch</h4>
-                    </div>
-                    <div class="ard-card">
-                        <table id="datatable_ard" class="table table-striped align-middle border rounded fs-6 gy-5 gs-7 dataTable" style="width:100%">
-                            <thead>
-                                <tr class="fw-semibold fs-6 text-gray-800">
-                                    <th>Sr. No.</th>
-                                    <th>Vendor Name</th>
-                                    <th>PAN No Name</th>
-                                    <th>Vendor Rating</th>
-                                    <th>Total Hire Cost</th>
-                                    <th>Detention Per Day</th>
-                                    <th>Detention Free Days</th>
-                                    <th class="text-end">Edit/Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                    <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-light btn-active-light-primary btn-sm" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                                            Actions
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <a class="dropdown-item" href="#">
-                                                    <i class="ti ti-edit"></i> Edit
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="#">
-                                                    <i class="ti ti-trash"></i> Delete
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card-footer d-flex justify-content-start py-6 px-9">
-                    <button type="button" id="btnSaveRfqVendor" class="btn btn-primary me-2">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
