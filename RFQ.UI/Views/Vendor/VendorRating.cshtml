@@ -8,86 +8,99 @@
     <script src="~/js/Views/VendorRating.js"></script>
 }
 
-<div class="app-toolbar pt-3 px-lg-3">
-    <div class="app-container container-fluid d-flex flex-stack flex-wrap">
-        <div class="page-title d-flex align-items-center gap-1 me-3">
-            <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
-                    Overview
-                </h1>
-                <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
-                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
-                    </li>
-                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
-                    <li class="breadcrumb-item text-primary">
-                        Vendor Rating
-                    </li>
-                </ul>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box add">
+            <h1 class="page-title">Vendor Rating</h1>
+
+            <div class="add-breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" id="tableDivLink">Vendor Rating</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"> Add Vendor Rating</li>
+                    </ol>
+                </nav>
             </div>
         </div>
     </div>
 </div>
 
-<div class="app-content px-lg-3">
-    <div class="app-container container-fluid">
-        <div class="card">
-            <div class="card-header border-0 cursor-pointer">
-                <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">Vendor Rating</h3>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <label class="form-label required fw-semibold">Vendor Name</label>
-                        <select name="Vendor" aria-label="Select a Vendor" id="drpVendor" class="selectpicker" data-live-search="true" data-width="100%">
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">PAN No</label>
-                        <input type="text" class="form-control form-control-solid" readonly value="Auto Display" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">Vendor Category</label>
-                        <input type="text" class="form-control form-control-solid" readonly value="Auto Display" />
-                    </div>
-                </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card com-franchise-info">
+            <form class="form" id="vendorRatingForm" method="post">
+                <input type="hidden" id="txtvendorRatingId" />
+                <div class="franchise-details">
+                    <h2 class="page-form-title">Vendor Rating Details</h2>
+                    <div class="row all-custom-class">
 
-                <div class="card mt-5">
-                    <div class="card-header border-0 cursor-pointer">
-                        <div class="card-title m-0">
-                            <h3 class="fw-bold m-0">Vendor Rating</h3>
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Paking Type</label>
+                                <select class="select2-custom form-control" data-control="select2" id="ddlPakingType" style="width: 100%;">
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table align-middle table-bordered">
-                                @* <thead class="table-light">
-                                    <tr align ="center">
-                                        <th>Criteria</th>
-                                        <th colspan="5">Rating</th>
-                                        <th>Remarks</th>
-                                    </tr>
-                                </thead> *@
-                                <tbody align ="center" id="tableDiv">
-                                
-                                </tbody>
-                            </table>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">PAN No</label>
+                                <input type="text" class="form-control" placeholder="xxxxxxxxxx" id="txtPanNumber" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" disabled />
+                            </div>
                         </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Vendor Category</label>
+                                <select class="select2-custom form-control" aria-label="Select a Vendor Category" id="ddlVendorCategory" style="width: 100%;" disabled>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="card mt-5">
+                            <div class="card-header border-0 cursor-pointer">
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bold m-0">Vendor Rating</h3>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table align-middle table-bordered">
+                                        <tbody align="center" id="tableDiv">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <label class="form-label">Any Other Comments</label>
+                            <input type="text" class="form-control" placeholder="Text" />
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="mt-5">
-                    <label class="form-label fw-semibold">Any Other Comments</label>
-                    <input type="text" class="form-control" placeholder="Text" />
-                </div>
+                <div class="button-main">
+                    <a href="#" class="card-link" id="btnSaveCompanyType" type="button" data-action="save">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save
+                        </span>
 
-                <div class="d-flex justify-content-start py-6">
-                    <button type="button" class="btn btn-primary me-2">Save</button>
-                    <button type="button" class="btn btn-primary me-2">Save & New</button>
+                    </a>
+
+                    <a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save & New
+                        </span>
+                    </a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
+

@@ -1,5 +1,8 @@
 ﻿
-    $(document).ready(function () {
+$(document).ready(function () {
+
+    
+
         const criteriaList = [
             "Cost & Pricing", "Vehicle Conditions", "Vendor Communication",
             "SLA / Delivery Efficiency", "Tracking Enabled Vehicles", "Statutory Compliance"
@@ -29,38 +32,71 @@
 
             $('#tableDiv').append($tr);
         });
-        GetAllVendor();
+        GetAllPakingType();
+        GetAllInternalMaster();
     });
 
-function GetAllVendor() {
-    var getAllOwnerOrVendorUrl = "/Vehicle/GetAllOwnerOrVendor";
-
+function GetAllPakingType() {
+    var getUrl = '/CompanyMasterPackingType/GetAllMasterPackingType';
     $.ajax({
-        url: getAllOwnerOrVendorUrl,
+        url: getUrl,
         type: "GET",
-        dataType: "json",
+        contentType: "application/json",
         success: function (response) {
-            console.log(response);
-            const ownerdropdown = document.getElementById("drpVendor");
+            const vehicleTypedropdown = document.getElementById("ddlPakingType");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Vendor";
+            placeholderOption.textContent = "Select a PakingType";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            ownerdropdown.appendChild(placeholderOption);
-
-
+            vehicleTypedropdown.appendChild(placeholderOption);
             response.forEach(item => {
                 const option = document.createElement("option");
-                option.value = item.partyId;
-                option.textContent = item.partyName;
-                ownerdropdown.appendChild(option);
+                option.value = item.packingId;
+                option.textContent = item.packingName;
+                vehicleTypedropdown.appendChild(option);
             });
-
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to fetch Owner/Vendor Data!", "Error");
+            toastr.error("Failed to Fetch Paking Type!", "Error");
         }
     });
+}
+
+function GetAllInternalMaster() {
+    var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
+    $.ajax({
+        url: getInternalMasterUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            BindDropDown(response)
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
+function BindDropDown(data) {
+
+    let internalData = data.filter(x => x.internalMasterTypeId == 3);
+    const select = document.getElementById("ddlVendorCategory");
+    select.innerHTML = "";
+
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = "";
+    placeholderOption.textContent = "Select a Category";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select.appendChild(placeholderOption);
+
+    internalData.forEach(option => {
+        let opt = document.createElement("option");
+        opt.value = option.internalMasterId;
+        opt.textContent = option.internalMasterName;
+        select.appendChild(opt);
+    });
+
+    $('.selectpicker').selectpicker('refresh');
 }
