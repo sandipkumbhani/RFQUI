@@ -47,7 +47,7 @@
 					<h4>List of Location</h4>
 					<div class="d-flex gap-2">
 						<div class="table-search-box">
-							<input type="text" id="customSearch" class="form-control form-control-sm" placeholder="Search...">
+							<input type="text" id="tablelocationSearch" class="form-control form-control-sm" placeholder="Search...">
 							<button type="submit"><i class="ri-search-line"></i></button>
 						</div>
 						<div id="exporttablelocation" class="btn-group" role="group"></div>
@@ -59,16 +59,16 @@
 						   class="table dt-responsive nowrap w-100">
 						<thead>
 							<tr class ="text-center">
-								<th class ="text-center">LocationName</th>
-								<th class ="text-center">Address</th>
-								<th class ="text-center">City</th>
-								<th class ="text-center">PinCode</th>
-								<th class ="text-center">ContactPerson</th>
-								<th class ="text-center">Contact No</th>
-								<th class ="text-center">MobNo</th>
-								<th class ="text-center">WhatsAppNo</th>
-								<th class ="text-center">EmailId</th>
-								<th class=" text-center no-sort">Action</th>
+								<th class="sortable text-center" data-column="LocationName" data-order="asc">LocationName</th>
+								<th class="sortable text-center" data-column="AddressLine" data-order="asc">Address</th>
+								<th class="sortable text-center" data-column="City" data-order="asc">City</th>
+								<th class="sortable text-center" data-column="PinCode" data-order="asc">PinCode</th>
+								<th class="sortable text-center" data-column="ContactPerson" data-order="asc">ContactPerson</th>
+								<th class="sortable text-center" data-column="ContactNo" data-order="asc">Contact No</th>
+								<th class="sortable text-center" data-column="MobNo" data-order="asc">MobNo</th>
+								<th class="sortable text-center" data-column="WhatsAppNo" data-order="asc">WhatsAppNo</th>
+								<th class="sortable text-center" data-column="Email" data-order="asc">EmailId</th>
+								<th class="text-center no-sort">Action</th>
 							</tr>
 						</thead>
 						<tbody class="text-center">

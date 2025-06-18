@@ -19,5 +19,7 @@ namespace RFQ.UI.Application.Interface
         Task<PanKycDetailModel> GetPanKycDetails(PanKycDetailRequestDto panKycDetailRequestDto);
 
         Task<IEnumerable<ComMstCityDto>> GetAllCity();
+
+        Task<IEnumerable<CustomerRequestDto>> GetDrpCustomerList();
     }
 }

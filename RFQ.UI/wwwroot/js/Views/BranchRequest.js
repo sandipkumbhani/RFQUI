@@ -184,7 +184,7 @@ function OnSubmitValidation() {
 
 }
 function GetAllCustomer() {
-    var GetUrl = '/Customer/ViewCustomer';
+    var GetUrl = '/Customer/GetDrpCustomerList';
     $.ajax({
         url: GetUrl,
         type: "GET",
@@ -212,14 +212,12 @@ function GetAllCustomer() {
     });
 }
 function GetAllVehicleType() {
-    debugger;
     var getVehicleTypeUrl = '/Vehicle/GetAllMasterVehicleType'
     $.ajax({
         url: getVehicleTypeUrl,
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            debugger;
             const vehicleTypedropdown = document.getElementById("ddlVehicleType");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -241,7 +239,7 @@ function GetAllVehicleType() {
     });
 }
 function GetAllItemName() {
-    var getUrl = '/Product/GetAllProducts';
+    var getUrl = '/Product/GetDrpProductList';
     $.ajax({
         url: getUrl,
         type: "GET",
@@ -263,7 +261,7 @@ function GetAllItemName() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle Type!", "Error");
+            toastr.error("Failed to Fetch Product Type!", "Error");
         }
     });
 }

@@ -56,7 +56,7 @@ function Initialization() {
     });
 }
 function GetAllCustomerName() {
-    var GetUrl = '/Customer/ViewCustomer';
+    var GetUrl = '/Customer/GetDrpCustomerList';
     $.ajax({
         url: GetUrl,
         type: "GET",
@@ -115,7 +115,7 @@ function GetAllVehicleType() {
     });
 }
 function GetAllItemName() {
-    var getUrl = '/Product/GetAllProducts';
+    var getUrl = '/Product/GetDrpProductList';
     $.ajax({
         url: getUrl,
         type: "GET",

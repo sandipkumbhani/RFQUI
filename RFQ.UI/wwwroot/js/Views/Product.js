@@ -1,4 +1,5 @@
-﻿
+﻿var orderColumn = '';
+var orderDir = '';
 var productListDto;
 $(document).ready(function () {
     $("#btnCancel").on("click", function () {
@@ -64,6 +65,7 @@ function CheckNullValidation() {
     }
     return true;
 }
+
 //function SaveProduct(action) {
 //    //if (!CheckValidation()) {
 //    //    return;
@@ -120,6 +122,7 @@ function CheckNullValidation() {
 //        });
 //    }
 //}
+
 function SaveProduct(action) {
     if (!CheckNullValidation()) {
         return;
@@ -178,7 +181,7 @@ function SaveProduct(action) {
 }
 function FetchProduct() {
     $("#listSection").show();
-    FetchDataForTable('tableProduct', '/Product/GetAllProducts');
+    FetchDataForTable('tableProduct', '/Product/GetAllProducts', orderColumn, orderDir.toUpperCase());
 
     //var fetchProductUrl = "/Product/GetAllProducts";
     //$.ajax({
