@@ -1,17 +1,27 @@
-﻿
+﻿var orderColumn = '';
+var orderDir = '';
 var locationResponseDto;
 $(document).ready(function () {
     // Optionally, add "Cancel" to go back to the list
     $("#btnCancel").on("click", function () {
         window.location.reload(true);
     });
-
     $('#locationListSectionLink').on('click', function (e) {
         e.preventDefault(); // prevent default anchor behavior
         $('#locationFormSection').hide(); // hide the add/edit form
         $('#locationListSection').show(); // show the list
     });
 
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('tablelocation', '/Location/ViewLocationList', orderColumn, orderDir.toUpperCase());
+    });
     Initialization();
     GetAllCityList();
     UpdateLocation();
@@ -114,7 +124,7 @@ function Initialization() {
 }
 function FetchLocationList() {
     $("#FetchLocationList").show();
-    FetchDataForTable('tablelocation', '/Location/ViewLocationList');
+    FetchDataForTable('tablelocation', '/Location/ViewLocationList', null, null);
 }
 function SaveLocation(action) {
     var isvalid = ValidationCheck();
@@ -346,52 +356,13 @@ function ValidationCheck() {
     }
     return true;
 }
-function generatePagination(totalRecords, pageSize, currentPage) {
-    const paginationContainer = $('#customPagination');
-    paginationContainer.empty();
-
-    const totalPages = Math.ceil(totalRecords / pageSize);
-    if (totalPages <= 1) return;
-
-    let paginationHtml = '<ul class="pagination justify-content-center">';
-
-    paginationHtml += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-        <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="ri-arrow-left-s-line"></i></a></li>`;
-
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-    if (endPage - startPage < maxPagesToShow - 1) {
-        startPage = Math.max(1, endPage - maxPagesToShow + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-        paginationHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-            <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-    }
-
-    paginationHtml += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-        <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="ri-arrow-right-s-line"></i></a></li>`;
-    paginationHtml += '</ul>';
-    paginationContainer.html(paginationHtml);
-
-    paginationContainer.off('click').on('click', 'a.page-link', function (e) {
-        e.preventDefault();
-        const selectedPage = Number($(this).data('page'));
-        if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
-            $('#currentPage').val(selectedPage);
-            FetchLocationList();
-        }
-    });
-}
-
 // Bind events
-$('#customSearch').off('keyup').on('keyup', function () {
+$('#tablelocationSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchLocationList();
+    FetchLocationList('tablelocation', '/Location/ViewLocationList', orderColumn, orderDir.toUpperCase());
 });
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchLocationList();
-});
+    FetchLocationList('tablelocation', '/Location/ViewLocationList', orderColumn, orderDir.toUpperCase());
+})
