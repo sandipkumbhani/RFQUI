@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -102,22 +103,28 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetFranchiseAll(FranchiseRequestDto franchiseRequestDto)
+        [HttpPost]
+        public async Task<IActionResult> GetAllFranchise([FromBody]PagingParam pagingParam)
         {
             try
             {
-                var franchiseUserList = await _fanchiseService.GetFranchiseAll();
+                var result = await _fanchiseService.GetAllFranchise(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(franchiseUserList);
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
                 }
                 else
                 {
-                    return View(franchiseUserList);
+                    return View(result);
                 }
-            }
-            catch (Exception ex)
+            } 
+            catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }

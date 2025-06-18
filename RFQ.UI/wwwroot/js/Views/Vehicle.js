@@ -1,4 +1,5 @@
 ﻿const linkId = GetQueryParam("LinkId");
+
 $(document).ready(function () {
 
     $("#btnSaveVehicle, #btnSaveNewVehicle").on('click', function () {
@@ -29,7 +30,7 @@ $(document).ready(function () {
         $("#addVehicleDiv").addClass('d-none');
         $("#tableDiv").removeClass('d-none')
         $("#btnAddVehicle").removeClass('d-none');
-    });FetchVehicleList
+    });
     FetchVehicleList();
     GetAllOwnerOrVendor();
     GetAllVehicleCategory();
@@ -66,7 +67,7 @@ function SaveVehicle(action) {
     var npNo = $("#npNoInput").val();
     var insuranceNo = $("#insuranceCoInput").val();
     var verifiedOn = $("#verifiedOnInput").val();
-        
+
     var rtoRegistration = $("#rtoRegistrationInput").val();
     var registrationDate = $("#registrationDateInput").val();
     var permanentAddress = $("#permanentAddressInput").val();
@@ -161,7 +162,7 @@ function SaveVehicle(action) {
     }
 }
 function EditVehicle(vehicleId) {
-    var data = vehicleResponse.filter(x => x.vehicleId === vehicleId);
+    var data = viewModelDto.filter(x => x.vehicleId === vehicleId);
     var formData = data[0];
     console.log(formData);
 
@@ -291,7 +292,7 @@ function UpdateVehicle() {
             NPExpiryDate: $("#npExpiryInput").val() ? new Date($("#npExpiryInput").val()).toISOString() : null,
             PolicyNo: $("#policyNoInput").val(),
             PolicyExpiryDate: $("#policyExpiryInput").val() ? new Date($("#policyExpiryInput").val()).toISOString() : null,
-            LinkId : linkId
+            LinkId: linkId
         };
         console.log(formData);
         var editVehicle = '/Vehicle/UpdateVehicle';
@@ -338,48 +339,82 @@ function DeleteVehicle(vehicleId) {
         }
     });
 }
+
 function FetchVehicleList() {
     $("#tableDiv").show();
-    
-    var fetchVehicleUrl = '/Vehicle/ViewVehicle';
-    $.ajax({
-        url: fetchVehicleUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            let trlist = response;
-            vehicleResponse = response;
-            if ($.fn.DataTable.isDataTable('#tableVehicle')) {
-                $('#tableVehicle').DataTable().clear();
-            }
-            const table = $("#tableVehicle").DataTable();
-            trlist.forEach(item => {
-                table.row.add([
-                    item.vehicleNo,
-                    item.vehicleStatus,
-                    item.engineNo,
-                    item.chassisNo,
-                    item.vehicleCapacity,
-                    item.rtoRegistration,
-                    `
-           <div class="text-center action-items" style="cursor:pointer;">
-                    <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
-                    <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
-            </div>
-            `
-                ]);
-            });
-            // Redraw table with new data
-            table.draw();
-            // Update total list count
-            $('#totalList').text(`Total List: ${trlist.length}`);
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
 
+    FetchDataForTable('tableVehicle', '/Vehicle/ViewVehicle');
+    //$('#tableVehicle tbody').empty();
+    //$('#totalList').text('Total List: 0');
+    //$('#customVehiclePagination').empty();
+
+    //const pageLength = Number($('#pageLength').val()) || 10;
+    //let pageNumber = Number($('#currentPage').val()) || 1;
+    //if (pageNumber < 1) pageNumber = 1;
+
+    //const searchValue = $('#vehicleTableSearch').val() || '';
+
+    //$.ajax({
+    //    url: '/Vehicle/ViewVehicle',
+    //    type: "POST",
+    //    contentType: "application/json",
+    //    data: JSON.stringify({
+    //        Draw: pageNumber,
+    //        start: (pageNumber - 1) * pageLength,
+    //        length: pageLength,
+    //        searchValue: searchValue,
+    //        orderColumn: 'vehicleNo',
+    //        orderDir: 'asc'
+    //    }),
+    //    success: function (response) {
+    //        if (!response || !response.data || response.data.length === 0) {
+    //            $('#tableVehicle tbody').html('<tr><td colspan="7" class="text-center">No records found</td></tr>');
+    //            $('#totalList').text('Total List: 0');
+    //            $('#customVehiclePagination').empty();
+    //            return;
+    //        }
+    //        vehicleResponse = response.data;
+
+    //        let rowsHtml = '';
+    //        response.data.forEach(item => {
+    //            rowsHtml += `
+    //                <tr>
+    //                    <td>${item.vehicleNo}</td>
+    //                    <td>${item.vehicleStatus}</td>
+    //                    <td>${item.engineNo}</td>
+    //                    <td>${item.chassisNo}</td>
+    //                    <td>${item.vehicleCapacity}</td>
+    //                    <td>${item.rtoRegistration}</td>
+    //                    <td class="text-center action-items" style="cursor:pointer;">
+    //                        <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
+    //                        <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
+    //                    </td>
+    //                </tr>`;
+    //        });
+
+    //        $('#tableVehicle tbody').html(rowsHtml);
+    //        $('#totalList').text(`Total List: ${response.recordsTotal}`);
+    //        generatePagination(response.recordsTotal, pageLength, pageNumber);
+    //    },
+    //    error: function () {
+    //        $('#tableVehicle tbody').html('<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>');
+    //        $('#customVehiclePagination').empty();
+    //    }
+    //});
 }
+
+
+//Bind events
+$('#tableVehicle').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchVehicleList();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchVehicleList();
+});
+
 function IsValidVehicleNumber(vehicleNumber) {
     var pattern = /^([A-Z]{2}\d{1,2}[A-Z]{1,2}\d{4})$/;
     return pattern.test(vehicleNumber);
@@ -427,7 +462,7 @@ function VehicleEKycClick() {
                     $("#grossWeightInput").val(rcModel.vehicleGrossWeight);
                     $("#unladenWeightInput").val(rcModel.vehicleUnladenWeight);
                     rcModel.expiryDate ? $("#fitnessExpiryInput").val(new Date(rcModel.expiryDate).toISOString().split('T')[0]) : "";
-                    rcModel.taxEndDate ? $("#taxExpiryInput").val((([d, m, y]) => new Date(y, m - 1, d,12))(rcModel.taxEndDate.split("-")).toISOString().split('T')[0]) : "";
+                    rcModel.taxEndDate ? $("#taxExpiryInput").val((([d, m, y]) => new Date(y, m - 1, d, 12))(rcModel.taxEndDate.split("-")).toISOString().split('T')[0]) : "";
                     $("#permitNoInput").val(rcModel.permitNumber);
                     rcModel.permitExpiryDate ? $("#permitExpiryInput").val(new Date(rcModel.permitExpiryDate).toISOString().split('T')[0]) : "";
                     rcModel.nationalPermitExpiryDate ? $("#npExpiryInput").val(new Date(rcModel.nationalPermitExpiryDate).toISOString().split('T')[0]) : "";

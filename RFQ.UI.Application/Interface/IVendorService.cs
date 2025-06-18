@@ -1,4 +1,5 @@
-﻿using RFQ.UI.Domain.RequestDto;
+﻿using RFQ.UI.Domain.Helper;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Application.Interface
@@ -7,7 +8,7 @@ namespace RFQ.UI.Application.Interface
     {
         Task<VendorRequestDto?> AddVendor(VendorRequestDto vendorRequestDto);
 
-        Task<IEnumerable<VendorResponseDto>> GetAllVendor();
+        Task<PageList<VendorResponseDto>> GetAllVendor(PagingParam pagingParam);
 
         Task<string> EditVendor(int PartyId, VendorRequestDto vendorRequestDto);
 

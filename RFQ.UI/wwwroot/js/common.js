@@ -1,4 +1,6 @@
-﻿function ValidateTextbox(inputId) {
+﻿var orderColumnName = '';
+var orderDirName = '';
+function ValidateTextbox(inputId) {
     var value = $(inputId).val();
     //var pattern = /^[A-Za-z0-9]+$/; 
     var pattern = /^[a-zA-Z0-9 ]*$/;
@@ -135,4 +137,297 @@ function ValidateGstNumber(number) {
 }
 function ValidatePinCode(number) {
     return /^\d{6}$/.test(number);
+}
+
+function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
+
+    $('#tableDiv').show();
+    $('#' + gridTableName + ' tbody').empty();
+    $('#totalList').text('Total List: 0');
+    $('#customPagination').empty();
+    const pageLength = Number($('#pageLength').val()) || 10;
+    let pageNumber = Number($('#currentPage').val()) || 1;
+    if (pageNumber < 1) pageNumber = 1;
+    orderColumnName = orderColumn;
+    orderDirName = orderDir;
+    const searchValue = $('#' + gridTableName + 'Search').val() || '';
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            Draw: pageNumber,
+            start: (pageNumber - 1) * pageLength,
+            length: pageLength,
+            searchValue: searchValue,
+            OrderColumn: orderColumn,
+            OrderDir: orderDir
+        }),
+        success: function (response) {
+            if (!response || !response.data || response.data.length === 0) {
+
+                $( '#' + gridTableName + ' tbody').html('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                $('#totalList').text('Total List: 0');
+                $('#customPagination').empty();
+                return;
+            }
+            viewModelDto = response.data;
+            let rowsHtml = '';
+            rowsHtml = GetGridHtml(response, gridTableName);
+            $('#' + gridTableName + ' tbody').html(rowsHtml);
+            $('#totalList').text(`Total List: ${response.recordsTotal}`);
+            generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url);
+        },
+        error: function () {
+            $('#' + gridTableName + ' tbody').html('<tr><td colspan="4" class="text-center text-danger">Error loading data</td></tr>');
+            $('#customvehicleTypesPagination').empty();
+        }
+    });
+}
+function GetGridHtml(response, gridTableName) {
+    var rowsHtml = "";
+    if (gridTableName == "vehicleTypesTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                    <tr>
+                        <td>${item.companyName}</td>
+                        <td>${item.vehicleTypeName}</td>
+                        <td>${item.minimumKms}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "tableCmpConfig") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                      <tr>
+                        <td>${item.companyId}</td>
+                        <td>${item.smsProvider}</td>
+                        <td>${item.smsAuthKey}</td>
+                        <td>${item.whatsAppProvider}</td>
+                        <td>${item.whatsAppAuthKey}</td>
+                        <td>${item.smtpHost}</td>
+                        <td>${item.smtpPort}</td>
+                        <td>${item.smtpUsername}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "tableVehicle") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                        <tr>
+                            <td>${item.vehicleNo}</td>
+                            <td>${item.vehicleStatus}</td>
+                            <td>${item.engineNo}</td>
+                            <td>${item.chassisNo}</td>
+                            <td>${item.vehicleCapacity}</td>
+                            <td>${item.rtoRegistration}</td>
+                            <td class="text-center action-items" style="cursor:pointer;">
+                                <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
+                                <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
+                            </td>
+                        </tr>`;
+        });
+    }
+    if (gridTableName == "vendorTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                    <tr> 
+                        <td>${item.partyName}</td>
+                        <td>${item.addressLine}</td>
+                        <td>${item.pinCode}</td>
+                        <td>${item.contactPerson}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.whatsAppNo}</td>
+                        <td>${item.email}</td>
+                        <td>${item.panNo}</td>
+                        <td>${item.gstNo}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditVendor(${item.partyId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteVendor(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "franchiseTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                    <tr>
+                        <td><img src="../../franchiselogo/${item.logoImage}" alt="Logo" height="40"></td>  
+                        <td>${item.companyName}</td>
+                        <td>${item.addressLine}</td>
+                        <td>${item.email}</td>
+                        <td>${item.contactPerson}</td>
+                        <td>${item.contactNo}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.gstNo}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditFranchise(${item.companyId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteFranchise(${item.companyId},'${item.logoImage}')"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == 'driverTable') {
+        response.data.forEach(item => {
+            rowsHtml += `
+                    <tr>
+                        <td><img src="../../driverphoto/${item.driverImagePath}" alt="Photo" height="40"></td>  
+                        <td>${item.licenseNo}</td>
+                        <td>${item.driverName}</td>
+                        <td>${driverTypeMap[item.driverTypeId] ?? `Unknown Type`}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.addressLine}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditDriver(${item.driverId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteDriver(${item.driverId},'${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "customerTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                        <tr>
+                            <td>${item.partyName}</td>
+                            <td>${item.addressLine}</td>
+                            <td>${item.pinCode}</td>
+                            <td>${item.mobNo}</td>
+                            <td>${item.email}</td>
+                            <td>${item.panNo}</td>
+                            <td>${item.gstNo}</td>
+                            <td class="text-center action-items" style="cursor:pointer;">
+                                <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
+                                <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+                            </td>
+                        </tr>
+                    `;
+        });
+    }
+    if (gridTableName == "tableProduct") {
+        response.data.forEach(item => {
+            rowsHtml += `
+        <tr>
+            <td>${item.companyName}</td>
+            <td>${item.itemName}</td>
+            <td class="text-center action-items" style="cursor:pointer;">
+                <a class="icon-btn" onclick="EditProduct(${item.itemId})"><i class="ri-edit-2-line"></i></a>
+                <a class="icon-btn" onclick="DeleteProduct(${item.itemId})"><i class="ri-delete-bin-3-line"></i></a>
+            </td>
+        </tr>`;
+        });
+    }
+    if (gridTableName == "corporateTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                        <tr>
+                        <td>${item.companyName}</td>
+                        <td>${item.addressLine}</td>
+                        <td>${item.pinCode}</td>
+                        <td>${item.contactPerson}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.contactNo}</td>
+                        <td>${item.whatsAppNo}</td>
+                        <td>${item.email}</td>
+                        <td>${item.panNo}</td>
+                        <td>${item.gstNo}</td>
+                        
+                        
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditCorporateCompany(${item.companyId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteCorporateCompany(${item.companyId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "tableuser") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                      <tr>
+                        <td>${item.personName}</td>
+                        <td>${item.company}</td>
+                        <td>${item.location}</td>
+                        <td>${item.mobileNo}</td>
+                        <td>${item.emailId}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditUser(${item.userId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "tablelocation") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                      <tr>
+                        <td>${item.locationName}</td>
+                        <td>${item.addressLine}</td>
+                        <td>${item.city}</td>
+                        <td>${item.pinCode}</td>
+                        <td>${item.contactPerson}</td>
+                        <td>${item.mobNo}</td>
+                        <td>${item.contactNo}</td>
+                        <td>${item.whatsAppNo}</td>
+                        <td>${item.email}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditLocation(${item.locationId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    return rowsHtml;
+}
+function generatePagination(totalRecords, pageSize, currentPage, gridTableName, url) {
+    const paginationContainer = $('#customPagination');
+    paginationContainer.empty();
+
+    const totalPages = Math.ceil(totalRecords / pageSize);
+    if (totalPages <= 1) return;
+
+    let paginationHtml = '<div class="dataTables_paginate paging_simple_numbers">';
+    paginationHtml += '<ul class="pagination">';
+
+    paginationHtml += `<li class="paginate_button page-item ${currentPage === 1 ? 'disabled' : ''} arrow">
+        <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="ri-arrow-left-s-line"></i></a></li>`;
+
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    if (endPage - startPage < maxPagesToShow - 1) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHtml += `<li class="paginate_button page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    }
+
+    paginationHtml += `<li class="paginate_button page-item ${currentPage === totalPages ? 'disabled' : ''} arrow">
+        <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="ri-arrow-right-s-line"></i></a></li>`;
+    paginationHtml += '</ul>';
+    paginationHtml += '</div>';
+    paginationContainer.html(paginationHtml);
+
+    paginationContainer.off('click').on('click', 'a.page-link', function (e) {
+        e.preventDefault();
+
+        const selectedPage = Number($(this).data('page'));
+        if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
+            $('#currentPage').val(selectedPage);
+            FetchDataForTable(gridTableName, url, orderColumnName, orderDirName);
+        }
+        //$('html,body').animate({
+        //    scrollTop: $("#customvehicleTypesPagination").offset().top
+        //}, 1000);
+        //$("#customvehicleTypesPagination").focus();
+    });
 }

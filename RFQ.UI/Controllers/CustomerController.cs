@@ -51,20 +51,25 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> ViewCustomer()
+        [HttpPost]
+        public async Task<IActionResult> ViewCustomer([FromBody] PagingParam pagingParam)
         {
             try
             {
-                var customerList = await _customerServices.GetAllCustomer();
-
+                var result = await _customerServices.GetAllCustomer(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(customerList);
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
                 }
                 else
                 {
-                    return View(customerList);
+                    return View(result);
                 }
             }
             catch (Exception ex)

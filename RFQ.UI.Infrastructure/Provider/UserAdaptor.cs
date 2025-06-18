@@ -28,7 +28,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["User:GetUserAll"]);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var userList = JsonConvert.DeserializeObject<List<UserResponseDto>>(Convert.ToString(responseModel.Data!));

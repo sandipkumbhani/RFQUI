@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -33,7 +34,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var requestContent = new StringContent(product, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -60,7 +61,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var baseurl = $"{_fleetLynkApiUrl}{_config["Product:DeleteProduct"]}{productId}";
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -88,7 +89,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var requestContent = new StringContent(product, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -104,28 +105,43 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw new Exception(ex.Message);
             }
         }
-
-        public async Task<IEnumerable<ProductResponseDto>> GetAllProducts()
+        public async Task<PageList<ProductResponseDto>?> GetAllProducts(PagingParam pagingParam)
         {
             try
             {
                 _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Product:GetAllProduct"]);
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
+                var baseUrl = _fleetLynkApiUrl + _config["Product:GetAllProduct"];
+                var param = JsonConvert.SerializeObject(pagingParam);
+                var requestContent = new StringContent(param, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync(baseUrl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
+
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.Data != null)
                 {
-                    var productList = JsonConvert.DeserializeObject<List<ProductResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return productList;
+                    var json = JsonConvert.SerializeObject(responseModel.Data.result);
+                    var typedList = JsonConvert.DeserializeObject<List<ProductResponseDto>>(json);
+
+                    dynamic parsed = JsonConvert.DeserializeObject<dynamic>(responseData);
+                    int pageNumber = parsed.data.pageNumber;
+                    int pageSize = parsed.data.pageSize;
+                    int totalPage = parsed.data.totalPage;
+                    int totalRecordCount = parsed.data.totalRecordCount;
+
+                    return new PageList<ProductResponseDto>(typedList, totalRecordCount, pageNumber, pageSize);
                 }
+
                 return null;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
+
     }
 }

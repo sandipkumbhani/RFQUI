@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -33,9 +34,9 @@ namespace RFQ.UI.Application.Provider
             return await _vendorAdaptor.GetAllInternalMaster();
         }
 
-        public async Task<IEnumerable<VendorResponseDto>> GetAllVendor()
+        public async Task<PageList<VendorResponseDto>> GetAllVendor(PagingParam pagingParam)
         {
-            return await _vendorAdaptor.GetAllVendor();
+            return await _vendorAdaptor.GetAllVendor(pagingParam);
         }
     }
 }

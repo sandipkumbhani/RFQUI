@@ -1,4 +1,5 @@
-﻿using RFQ.UI.Domain.RequestDto;
+﻿using RFQ.UI.Domain.Helper;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Application.Interface
@@ -7,7 +8,7 @@ namespace RFQ.UI.Application.Interface
     {
         Task<CustomerRequestDto> AddCustomer(CustomerRequestDto customerRequestDto);
 
-        Task<IEnumerable<CustomerResponseDto>> GetAllCustomer();
+        Task<PageList<CustomerResponseDto>> GetAllCustomer(PagingParam pagingParam);
 
         Task<string> EditCustomer(int PartyId, CustomerRequestDto customerRequestDto);
 

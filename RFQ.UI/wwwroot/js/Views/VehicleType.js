@@ -1,33 +1,27 @@
-﻿
+﻿var orderColumn = '';
+var orderDir = '';
 $(document).ready(function () {
-    var vehicleTypeViewModelDtos;
-    var EditVehicleTypeModelDtos;
-    
+
     $("#txtVehicleType").on("blur", function () {
-        if (!ValidateTextbox("#txtVehicleType")){
+        if (!ValidateTextbox("#txtVehicleType")) {
             toastr.warning("Please Enter a valid Vehicle Type!", "Validation Error");
             return;
         }
     });
+
     $("#txtminKmsPerDay").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())){
+        if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please Enter a valid Minimum Kms/Day!", "Validation Error");
             return;
         }
     });
 
-    //$(document).on("click", "#viewButton", function () {
-    //    FetchVehicleTypes();
-    //    $("#addVehicleTypeDiv").css('display', 'none')
-    //    $("#backButton").css('display', 'Block');
-    //});
-
     $("#btnSaveVehicleType, #SavenewButton").on('click', function () {
-        var action = $(this).data('action'); 
+        var action = $(this).data('action');
         SaveVehicleType(action);
     });
 
-    $('#btnAddVehicleType').on('click',function () {
+    $('#btnAddVehicleType').on('click', function () {
         $('#btnAddVehicleType').addClass('d-none');
         $('#tableDiv').hide();
         $('#addVehicleTypeDiv').removeClass('d-none');
@@ -47,6 +41,16 @@ $(document).ready(function () {
         $('#SavenewButton').removeClass('d-none')
         $('#updateButton').addClass('d-none');
     })
+    $(document).on('click', 'th.sortable', function () {
+       orderColumn = $(this).data('column');
+       let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+        
+        $('th.sortable').not(this).data('order', 'asc');
+       
+       FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+    });
     UpdateVechileType();
     FetchVehicleTypes();
 });
@@ -55,50 +59,29 @@ function OnSubmitValidation() {
         toastr.warning("Please enter a valid Vehicle Type!", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtminKmsPerDay").val())){
+    if (IsNullOrEmpty($("#txtminKmsPerDay").val())) {
         toastr.warning("Please Enter a valid Minimum Kms/Day!", "Validation Error");
         return false;
     }
     return true;
 }
+
 function FetchVehicleTypes() {
     $('#tableDiv').show();
-    var fetchVehicleTypesUrl = '/Vehicle/ViewVehicleType';
-    $.ajax({
-        url: fetchVehicleTypesUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            let trlist = response;
-            vehicleTypeViewModelDtos = response;
-            if ($.fn.DataTable.isDataTable('#vehicleTypesTable')) {
-                $('#vehicleTypesTable').DataTable().clear();
-            }
 
-            const table = $("#vehicleTypesTable").DataTable();
-            trlist.forEach(item => {
-                table.row.add([
-                    item.companyName,
-                    item.vehicleTypeName,
-                    item.minimumKms,
-                    `
-           <div class="text-center action-items" style="cursor:pointer;">
-                    <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
-                    <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
-            </div>
-            `
-                ]);
-            });
-            // Redraw table with new data
-            table.draw();
-            // Update total list count
-            $('#totalList').text(`Total List: ${trlist.length}`);
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType',null,null);
 }
+
+
+$('#vehicleTypesTableSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+})
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+});
 function SaveVehicleType(action) {
     if (OnSubmitValidation()) {
         var vehicleTypeName = $("#txtVehicleType").val()
@@ -143,7 +126,8 @@ function SaveVehicleType(action) {
     }
 }
 function EditVehicleType(vehicleTypeId) {
-    var data = vehicleTypeViewModelDtos.filter(x => x.vehicleTypeId == vehicleTypeId);
+    //var data = vehicleTypeViewModelDtos.filter(x => x.vehicleTypeId == vehicleTypeId);
+    var data = viewModelDto.filter(x => x.vehicleTypeId == vehicleTypeId);
     EditVehicleTypeModelDtos = data[0];
     $('#tableDiv').hide();
     $('#btnAddVehicleType').addClass('d-none');
@@ -174,7 +158,7 @@ function UpdateVechileType() {
                 url: updateUrl,
                 type: "PUT",
                 contentType: "application/json",
-                data: JSON.stringify(formData), 
+                data: JSON.stringify(formData),
                 success: function (response) {
                     toastr.success("Vehicle Type Details Submitted Successfully!");
                     $("#addVehicleTypeDiv").addClass("d-none");
@@ -201,7 +185,7 @@ function DeleteVehicleType(vehicleTypeId) {
             FetchVehicleTypes();
         },
         error: function (xhr, status, error) {
-          
+
             toastr.error("Failed to Delete Vehicle Type Details!", "Error");
         }
     });

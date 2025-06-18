@@ -41,7 +41,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -72,7 +72,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/CompanyMasterPackingType/GetMasterPackingType");
 
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var Profilelist = JsonConvert.DeserializeObject<List<CompanyMasterPackingTypeResponseDto>>(Convert.ToString(responseModel.Data!));

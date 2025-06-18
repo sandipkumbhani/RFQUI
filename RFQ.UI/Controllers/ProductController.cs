@@ -106,19 +106,25 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllProducts()
+        [HttpPost]
+        public async Task<IActionResult> GetAllProducts([FromBody] PagingParam pagingParam)
         {
             try
             {
-                var productList = await _productService.GetAllProducts();
+                var result = await _productService.GetAllProducts(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(productList);
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
                 }
                 else
                 {
-                    return View(productList);
+                    return View(result);
                 }
             }
             catch (Exception ex)

@@ -22,8 +22,7 @@ $("#btnAddLocation").on("click", function (e) {
     $("#locationListSection").hide();
     $("#locationFormSection").show();
 });
-function Initialization()
-{
+function Initialization() {
     $("#btnViewForm").on('click', function () {
         FetchLocationList();
         $("#AddLocationDiv").css('display', 'none');
@@ -115,43 +114,7 @@ function Initialization()
 }
 function FetchLocationList() {
     $("#FetchLocationList").show();
-    var locationurl = '/Location/ViewLocationList';
-    $.ajax({
-        url: locationurl,
-        type: 'GET',
-        dataType: 'json',
-        success: function (response) {
-            let trlist = response;
-            locationResponseDto = response;
-            if ($.fn.DataTable.isDataTable('#tablelocation')) {
-                $('#tablelocation').DataTable().clear();
-            }
-            const table = $("#tablelocation").DataTable();
-            trlist.forEach(item => {
-                table.row.add([
-                    item.locationName,
-                    item.addressLine,
-                    item.city,
-                    item.pinCode,
-                    item.contactPerson,
-                    item.mobNo,
-                    item.contactNo,
-                    item.whatsAppNo,
-                    item.email,
-                    `
-                    <div class="text-center action-items" style="cursor:pointer;">
-                        <a class="icon-btn" onclick="EditLocation(${item.locationId})"><i class="ri-edit-2-line"></i></a>
-                        <a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>
-                    </div>
-                    `
-                ]);
-            });
-            // Redraw table with new data
-            table.draw();
-            // Update total list count
-            $('#totalList').text(`Total List: ${trlist.length}`);
-        }
-    });
+    FetchDataForTable('tablelocation', '/Location/ViewLocationList');
 }
 function SaveLocation(action) {
     var isvalid = ValidationCheck();
@@ -267,9 +230,9 @@ function UpdateLocation() {
     });
 }
 function EditLocation(locationId) {
-    var data = locationResponseDto.filter(x => x.locationId == locationId);
+    var data = viewModelDto.filter(x => x.locationId == locationId);
     var formdata = data[0];
-        
+
     $('#locationListSection').css('display', 'none');
     $("#locationFormSection").css('display', 'Block');
     $("#backButton").css('display', 'none');
@@ -382,4 +345,53 @@ function ValidationCheck() {
         return false;
     }
     return true;
-} 
+}
+function generatePagination(totalRecords, pageSize, currentPage) {
+    const paginationContainer = $('#customPagination');
+    paginationContainer.empty();
+
+    const totalPages = Math.ceil(totalRecords / pageSize);
+    if (totalPages <= 1) return;
+
+    let paginationHtml = '<ul class="pagination justify-content-center">';
+
+    paginationHtml += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="ri-arrow-left-s-line"></i></a></li>`;
+
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    if (endPage - startPage < maxPagesToShow - 1) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    }
+
+    paginationHtml += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="ri-arrow-right-s-line"></i></a></li>`;
+    paginationHtml += '</ul>';
+    paginationContainer.html(paginationHtml);
+
+    paginationContainer.off('click').on('click', 'a.page-link', function (e) {
+        e.preventDefault();
+        const selectedPage = Number($(this).data('page'));
+        if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
+            $('#currentPage').val(selectedPage);
+            FetchLocationList();
+        }
+    });
+}
+
+// Bind events
+$('#customSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchLocationList();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchLocationList();
+});

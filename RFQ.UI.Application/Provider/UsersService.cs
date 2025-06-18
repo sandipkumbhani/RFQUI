@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
@@ -25,9 +26,9 @@ namespace RFQ.UI.Application.Provider
             return _usersAdaptor.EditUsers(UserId, userRequestDto);
         }
 
-        public Task<IEnumerable<UserResponseDto>> GetAllUser()
+        public Task<PageList<UserResponseDto>> GetAllUser(PagingParam pagingParam)
         {
-            return _usersAdaptor.GetAllUser();
+            return _usersAdaptor.GetAllUser(pagingParam);
         }
         public Task<string> GetUsers(int userId)
         {

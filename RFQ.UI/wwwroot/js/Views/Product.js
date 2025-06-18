@@ -16,7 +16,7 @@ $(document).ready(function () {
     });
 
     //$("#btnSaveProduct, #btnSavenewProduct").on('click', function () {
-        
+
     //    var action = $(this).data('action'); // "save" or "saveNew"
     //    if (CheckValidation()) {
     //        SaveProduct(action);
@@ -51,7 +51,7 @@ $("#btnAddProduct").on("click", function (e) {
 function CheckValidation() {
     $("#txtItemName").on('blur', function () {
         if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter Item Name","Validation Error");
+            toastr.warning("Please enter Item Name", "Validation Error");
             return;
         }
     })
@@ -59,7 +59,7 @@ function CheckValidation() {
 function CheckNullValidation() {
     var itemName = $('#txtItemName').val();
     if (IsNullOrEmpty(itemName)) {
-        toastr.warning("Please enter Item Name","Validation Error");
+        toastr.warning("Please enter Item Name", "Validation Error");
         return false;
     }
     return true;
@@ -176,41 +176,54 @@ function SaveProduct(action) {
         });
     }
 }
-function FetchProduct()  {
+function FetchProduct() {
     $("#listSection").show();
-    var fetchProductUrl = "/Product/GetAllProducts";
-    $.ajax({
-        url: fetchProductUrl,
-        type: 'GET',
-        dataType: 'json',
-        success: function (response) {
-            let trlist = response;
-            productListDto = response;
-            if ($.fn.DataTable.isDataTable('#tableProduct')) {
-                $('#tableProduct').DataTable().clear();
-            }
-            const table = $('#tableProduct').DataTable();
-            trlist.forEach(item => {
-                table.row.add([
-                item.companyName,
-                item.itemName,
-                    `
-                    <div class="text-center action-items" style="cursor:pointer;">
-                        <a class="icon-btn" onclick="EditProduct(${item.itemId})"><i class="ri-edit-2-line"></i></a>
-                        <a class="icon-btn" onclick="DeleteProduct(${item.itemId})"><i class="ri-delete-bin-3-line"></i></a>
-                    </div>
-                    `
-                ]);
-            });
-            // Redraw table with new data
-            table.draw();
-            // Update total list count
-            $('#totalList').text(`Total List: ${trlist.length}`);
-        }
-    });
+    FetchDataForTable('tableProduct', '/Product/GetAllProducts');
+
+    //var fetchProductUrl = "/Product/GetAllProducts";
+    //$.ajax({
+    //    url: fetchProductUrl,
+    //    type: 'GET',
+    //    dataType: 'json',
+    //    success: function (response) {
+    //        let trlist = response;
+    //        productListDto = response;
+    //        if ($.fn.DataTable.isDataTable('#tableProduct')) {
+    //            $('#tableProduct').DataTable().clear();
+    //        }
+    //        const table = $('#tableProduct').DataTable();
+    //        trlist.forEach(item => {
+    //            table.row.add([
+    //            item.companyName,
+    //            item.itemName,
+    //                `
+    //                <div class="text-center action-items" style="cursor:pointer;">
+    //                    <a class="icon-btn" onclick="EditProduct(${item.itemId})"><i class="ri-edit-2-line"></i></a>
+    //                    <a class="icon-btn" onclick="DeleteProduct(${item.itemId})"><i class="ri-delete-bin-3-line"></i></a>
+    //                </div>
+    //                `
+    //            ]);
+    //        });
+    //        // Redraw table with new data
+    //        table.draw();
+    //        // Update total list count
+    //        $('#totalList').text(`Total List: ${trlist.length}`);
+    //    }
+    //});
 }
+//Bind events
+$('#tableProduct').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchProduct();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchProduct();
+});
+
 function EditProduct(itemId) {
-    var data = productListDto.filter(x => x.itemId == itemId);
+    var data = viewModelDto.filter(x => x.itemId == itemId);
     var formData = data[0];
     $('#listSection').css('display', 'none');
     $("#formSection").css('display', 'Block');
@@ -228,41 +241,41 @@ function UpdateProduct() {
     $("#btnUpdateProduct").on('click', function (e) {
         e.preventDefault();
 
-    if (!CheckNullValidation()) {
-        return;
-    }
-    var updateProductUrl = '/Product/EditProduct';
-    var formData = {
-        ItemId: $("#hdnItemId").val(),
-        ItemName : $("#txtItemName").val()
-    }
-    $.ajax({
-        url: updateProductUrl,
-        type: "PUT",
-        contentType: "application/json",
-        data: JSON.stringify(formData),
-        success: function (response) {
-            if (response.result == 'Success') {
-                toastr.success("Product Updated Successfully!");
-                //$("#addProductDiv").hide();
-                //$("#backButton").show();
-                //$("#tableDiv").show();
-                FetchProduct();
-                $("#formSection").hide();
-                $("#listSection").show();
-                $('#productForm')[0].reset();
-                $("#btnUpdateProduct").hide();
-                $("#btnSavenewProduct").show();
-                $("#btnSaveProduct").show();
-            }
-            else {
-                toastr.error("Failed to update Product", "Error");
-            }   
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to submit Vehicle Type", "Error");
+        if (!CheckNullValidation()) {
+            return;
         }
-    });
+        var updateProductUrl = '/Product/EditProduct';
+        var formData = {
+            ItemId: $("#hdnItemId").val(),
+            ItemName: $("#txtItemName").val()
+        }
+        $.ajax({
+            url: updateProductUrl,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response.result == 'Success') {
+                    toastr.success("Product Updated Successfully!");
+                    //$("#addProductDiv").hide();
+                    //$("#backButton").show();
+                    //$("#tableDiv").show();
+                    FetchProduct();
+                    $("#formSection").hide();
+                    $("#listSection").show();
+                    $('#productForm')[0].reset();
+                    $("#btnUpdateProduct").hide();
+                    $("#btnSavenewProduct").show();
+                    $("#btnSaveProduct").show();
+                }
+                else {
+                    toastr.error("Failed to update Product", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to submit Vehicle Type", "Error");
+            }
+        });
     });
 }
 function DeleteProduct(itemId) {

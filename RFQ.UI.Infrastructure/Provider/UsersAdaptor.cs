@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -15,7 +16,6 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-
         public UsersAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
@@ -42,11 +42,11 @@ namespace RFQ.UI.Infrastructure.Provider
                     string errorContent = await response.Content.ReadAsStringAsync();
                     Console.WriteLine($"Error: {response.StatusCode}, Details: {errorContent}");
 
-                    var errorResponse = new CommanResponseDto
+                    var errorResponse = new NewCommonResponseDto
                     {
                         StatusCode = (int)response.StatusCode,
-                        Data = errorContent,
-                        Message = "An error occurred while processing your request.",
+                        Data = null,
+                        Message = errorContent.ToString(),
                         ErrorMessage = errorContent
                     };
                     string json = JsonConvert.SerializeObject(errorResponse);
@@ -54,14 +54,14 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 else
                 {
-                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                    var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                     if (responseModel != null)
                     {
                         var result = responseModel.StatusCode;
                         if (result == 200)
-                            responseModel.Data = "User Saved";
+                            responseModel.Message = "User Saved";
                         else
-                            responseModel.Data = responseModel.ErrorMessage;
+                            responseModel.Message = responseModel.ErrorMessage;
 
                         string json = JsonConvert.SerializeObject(responseModel);
                         return json;
@@ -85,7 +85,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var baseurl = _fleetLynkApiUrl + _config["Users:DeleteUser"] + UserId;
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -118,7 +118,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -138,19 +138,29 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<IEnumerable<UserResponseDto>> GetAllUser()
+        public async Task<PageList<UserResponseDto>?> GetAllUser(PagingParam pagingParam)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetUserAll"]);
+                var baseurl = _fleetLynkApiUrl + _config["Users:GetUserAll"];
+                var param = JsonConvert.SerializeObject(pagingParam);
+                var requestContent = new StringContent(param, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.Data != null)
                 {
-                    var ProfileList = JsonConvert.DeserializeObject<List<UserResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return ProfileList;
+                    var json = JsonConvert.SerializeObject(responseModel.Data.result);
+                    var typedList = JsonConvert.DeserializeObject<List<UserResponseDto>>(json);
+                    dynamic parsed = JsonConvert.DeserializeObject<dynamic>(responseData);
+                    int pageNumber = parsed.data.pageNumber;
+                    int pageSize = parsed.data.pageSize;
+                    int totalPage = parsed.data.totalPage;
+                    int totalRecordCount = parsed.data.totalRecordCount;
+
+                    return new PageList<UserResponseDto>(typedList, totalRecordCount, pageNumber, pageSize);
                 }
                 return null;
             }
@@ -169,9 +179,9 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpclient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetAllCompany"]);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetAllCompanyAndFranchise"]);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var alllist = JsonConvert.DeserializeObject<List<CompanyAndFranchiseListDto>>(Convert.ToString(responseModel.Data!));
@@ -192,7 +202,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetAllMasterLocation"]);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var alllist = JsonConvert.DeserializeObject<List<LocationListDto>>(Convert.ToString(responseModel.Data!));

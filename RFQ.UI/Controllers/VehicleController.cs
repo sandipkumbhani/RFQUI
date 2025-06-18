@@ -5,6 +5,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using AutoMapper;
 
 
 namespace RFQ.UI.Controllers
@@ -95,16 +96,22 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ViewVehicleType()
+        [HttpPost]
+        public async Task<IActionResult> ViewVehicleType([FromBody] PagingParam pagingParam)
         {
             try
             {
-                var vehicleTypeViewModel = new VehicleTypeResponseDto();
-                var result = await _vehicleTypeServices.GetVehicleTypeAll();
+                var vehicleTypeViewModel = new VehicleTypeResponseDto();    
+                var result = await _vehicleTypeServices.GetVehicleTypeAll(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(result);
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered  = result.TotalRecordCount,
+                        data = result.Result
+                    } );
                 }
                 else
                 {
@@ -138,20 +145,26 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ViewVehicle()
+        [HttpPost]
+        public async Task<IActionResult> ViewVehicle([FromBody] PagingParam pagingParam)
         {
             try
             {
-                var VehicleList = await _vehicleServices.GetAllVehicle();
+                var result = await _vehicleServices.GetAllVehicle(pagingParam);
 
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(VehicleList);
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
                 }
                 else
                 {
-                    return View(VehicleList);
+                    return View(result);
                 }
             }
             catch (Exception ex)

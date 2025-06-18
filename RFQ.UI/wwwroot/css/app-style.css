@@ -1237,7 +1237,7 @@ table.dataTable thead th.sorting_desc::after {
 
 .table-responsive .table.dataTable tbody td:last-child {
     padding-right: 1.875rem;
-    text-align: right;
+    text-align: center;
 }
 
 .table-search-box {
@@ -1369,25 +1369,25 @@ table.dataTable thead th.sorting_desc::after {
     border-color: var(--ft-primary);
 }
 
-.datatable-footer-bottom .dataTables_paginate ul li.page-item.previous a {
+.datatable-footer-bottom .dataTables_paginate ul li.page-item.arrow a {
     border: none;
     background: transparent;
     font-size: 1.5rem;
     font-weight: normal;
 }
 
-.datatable-footer-bottom .dataTables_paginate ul li.page-item.next a {
+.datatable-footer-bottom .dataTables_paginate ul li.page-item.arrow a {
     border: none;
     background: transparent;
     font-size: 1.5rem;
     font-weight: normal;
 }
 
-.datatable-footer-bottom .dataTables_paginate ul li.page-item.previous a:hover {
+.datatable-footer-bottom .dataTables_paginate ul li.page-item.arrow a:hover {
     color: var(--ft-primary);
 }
 
-.datatable-footer-bottom .dataTables_paginate ul li.page-item.next a:hover {
+.datatable-footer-bottom .dataTables_paginate ul li.page-item.arrow a:hover {
     color: var(--ft-primary);
 }
 

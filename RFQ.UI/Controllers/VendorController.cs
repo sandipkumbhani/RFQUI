@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -82,25 +83,26 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> GetAllVendor()
+        [HttpPost]
+        public async Task<IActionResult> GetAllVendor([FromBody]PagingParam pagingParam)
         {
             try
             {
-                var vendorList = await _vendorService.GetAllVendor();
-                if (vendorList != null && vendorList.Count() > 0)
+                var result = await _vendorService.GetAllVendor(pagingParam);
+                if (Request.IsAjaxRequest())
                 {
-                    var result = vendorList.Where(x => x.PartyTypeId == (int)EnumInternalMaster.VENDOR).ToList();
-                    if (Request.IsAjaxRequest())
+                    return Json(new
                     {
-                        return Json(result);
-                    }
-                    else
-                    {
-                        return View(result);
-                    }
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
                 }
-                return Json(vendorList);
+                else
+                {
+                    return View(result);
+                }
             }
             catch (Exception ex)
             {

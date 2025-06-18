@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Models;
+using System.Diagnostics;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -36,7 +38,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var requestContent = new StringContent(Vehicle, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -53,22 +55,33 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<List<VehicleTypeResponseDto>?> GetVehicleTypeAll()
+        public async Task<PageList<VehicleTypeResponseDto>?> GetAllVehicleType(PagingParam pagingParam)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["VehicleType:GetAllVehicleType"]);
+                var baseurl = _fleetLynkApiUrl + _config["VehicleType:GetAllVehicleType"];
+                var param = JsonConvert.SerializeObject(pagingParam);
+                var requestContent = new StringContent(param, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
                 if (responseModel != null && responseModel.Data != null)
                 {
-                    return JsonConvert.DeserializeObject<List<VehicleTypeResponseDto>>(Convert.ToString(responseModel.Data)!);
+                    var json = JsonConvert.SerializeObject(responseModel.Data.result);
+                    var typedList = JsonConvert.DeserializeObject<List<VehicleTypeResponseDto>>(json);
+                    dynamic parsed = JsonConvert.DeserializeObject<dynamic>(responseData);
+                    int pageNumber = parsed.data.pageNumber;
+                    int pageSize = parsed.data.pageSize;
+                    int totalPage = parsed.data.totalPage;
+                    int totalRecordCount = parsed.data.totalRecordCount;
+
+                    return new PageList<VehicleTypeResponseDto>(typedList, totalRecordCount, pageNumber, pageSize);
                 }
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -86,7 +99,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -113,7 +126,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var baseurl = _fleetLynkApiUrl + _config["VehicleType:DeleteVehicleType"] + vehicleTypeId;
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;

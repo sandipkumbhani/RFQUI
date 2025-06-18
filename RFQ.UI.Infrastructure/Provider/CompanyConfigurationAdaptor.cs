@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -21,28 +22,60 @@ namespace RFQ.UI.Infrastructure.Provider
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
 
-        public async Task<IEnumerable<CompanyConfigurationResponseDto>> GetAllCompanyConfiguration()
+        public async Task<PageList<CompanyConfigurationResponseDto>> GetAllCompanyConfiguration(PagingParam pagingParam)
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:GetAllCompanyConfiguration"];
-                var response = await _httpClient.GetAsync(baseurl);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-                if (responseModel != null)
+                using (var httpClient = new HttpClient())
                 {
-                    var cmpConfiglist = JsonConvert.DeserializeObject<List<CompanyConfigurationResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return cmpConfiglist;
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                    var requestDto = JsonConvert.SerializeObject(pagingParam);
+                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+
+                    var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:GetAllCompanyConfiguration"];
+
+                    if (string.IsNullOrEmpty(baseurl))
+                    {
+                        throw new Exception("API URL is not configured correctly.");
+                    }
+
+                    var response = await httpClient.PostAsync(baseurl, requestContent);
+
+                    // Check API response status
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var errorMessage = await response.Content.ReadAsStringAsync();
+                        throw new Exception($"API call failed: {response.StatusCode} - {errorMessage}");
+                    }
+
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+
+                    if (responseModel?.Data?.result != null)
+                    {
+                        var cmpConfigList = JsonConvert.DeserializeObject<List<CompanyConfigurationResponseDto>>(
+                            JsonConvert.SerializeObject(responseModel.Data.result)
+                        );
+
+                        int pageNumber = responseModel.Data.pageNumber;
+                        int pageSize = responseModel.Data.pageSize;
+                        int totalRecordCount = responseModel.Data.totalRecordCount;
+
+                        return new PageList<CompanyConfigurationResponseDto>(cmpConfigList, totalRecordCount, pageNumber, pageSize);
+                    }
+
+                    return new PageList<CompanyConfigurationResponseDto>(new List<CompanyConfigurationResponseDto>(), 0, pagingParam.Start / pagingParam.Length + 1, pagingParam.Length);
                 }
-                return null;
             }
             catch (Exception ex)
             {
-                throw;
+                Console.WriteLine($"Error fetching company configuration: {ex.Message}");
+                return new PageList<CompanyConfigurationResponseDto>(new List<CompanyConfigurationResponseDto>(), 0, pagingParam.Start / pagingParam.Length + 1, pagingParam.Length);
             }
         }
+
 
         public async Task<IEnumerable<FranchiseResponseDto>> GetAllCompany()
         {
@@ -52,7 +85,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Franchise:GetAllCompany"]);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var companylist = JsonConvert.DeserializeObject<List<FranchiseResponseDto>>(Convert.ToString(responseModel.Data!));
@@ -74,7 +107,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Vendor:GetAllInternalMaster"]);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     List<ProviderResponseDto> providersList = new();
@@ -124,7 +157,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -154,7 +187,7 @@ namespace RFQ.UI.Infrastructure.Provider
             var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(baseurl, requestContent);
             var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+            var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
             if (responseModel != null)
             {
                 var result = responseModel.StatusCode;
@@ -177,7 +210,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:DeleteCompanyConfiguration"] + "/" + companyConfigId;
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;

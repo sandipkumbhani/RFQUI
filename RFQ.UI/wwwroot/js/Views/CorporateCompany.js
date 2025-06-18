@@ -13,14 +13,14 @@ $(document).ready(function () {
         $("#backButton").css('display', 'Block');
     });
 
-   
+
     $('#tableDivLink').on('click', function (e) {
         e.preventDefault(); // prevent default anchor behavior
         $('#formDiv').hide(); // hide the add/edit form
         $('#tableDiv').show(); // show the list
     });
 
-    
+
     $("#btnCancel").on("click", function () {
         window.location.reload(true);
     });
@@ -35,11 +35,11 @@ $(document).ready(function () {
         if (OnSubmitCheckValidation()) {
             SaveCorporateCompany(action);
         }
-        
+
     });
     $('#backButton').click(function () {
         window.location.reload(true);
-        
+
     });
     ButtonUpdateClick();
 });
@@ -47,7 +47,56 @@ $('#addCompany').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
 });
+function generatePagination(totalRecords, pageSize, currentPage) {
+    const paginationContainer = $('#customcorporatePagination');
+    paginationContainer.empty();
 
+    const totalPages = Math.ceil(totalRecords / pageSize);
+    if (totalPages <= 1) return;
+
+    let paginationHtml = '<div class="dataTables_paginate paging_simple_numbers">';
+    paginationHtml += '<ul class="pagination">';
+
+    paginationHtml += `<li class="paginate_button page-item ${currentPage === 1 ? 'disabled' : ''} arrow">
+        <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="ri-arrow-left-s-line"></i></a></li>`;
+
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    if (endPage - startPage < maxPagesToShow - 1) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHtml += `<li class="paginate_button page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    }
+
+    paginationHtml += `<li class="paginate_button page-item ${currentPage === totalPages ? 'disabled' : ''} arrow">
+        <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="ri-arrow-right-s-line"></i></a></li>`;
+    paginationHtml += '</ul>';
+    paginationHtml += '</div>';
+    paginationContainer.html(paginationHtml);
+
+    paginationContainer.off('click').on('click', 'a.page-link', function (e) {
+        e.preventDefault();
+        const selectedPage = Number($(this).data('page'));
+        if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
+            $('#currentPage').val(selectedPage);
+            FetchCorporateCompany();
+        }
+    });
+}
+// Bind events
+$('#customcorporateSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchCorporateCompany();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchCorporateCompany();
+});
 function CheckValidation() {
     $("#txtCompanyName").on("blur", function () {
         if (!/^[A-Za-z0-9 ]+$/.test($(this).val())) {
@@ -251,48 +300,7 @@ function BindDropDown(data) {
 }
 function FetchCorporateCompany() {
     $("#tableDiv").show();
-    ResetAttachmentRepeater();
-    var FetchCorporateCompanyUrl = '/CorporateCompany/ViewCorporateCompany';
-    $.ajax({
-        url: FetchCorporateCompanyUrl,
-        type: 'GET',
-        dataType: 'json',
-        success: function (response) {
-            let companyList = response.filter(x => x.companyTypeId == 3);
-            corporateCompanyViewModelDto = response;
-            if ($.fn.DataTable.isDataTable('#corporateTable')) {
-                $('#corporateTable').DataTable().clear();
-            }
-            console.log(companyList)
-            const table = $("#corporateTable").DataTable();
-            companyList.forEach(item => {
-                table.row.add([
-
-                    item.companyName,
-                    item.addressLine,
-                    item.pinCode,
-                    item.contactPerson,
-                    item.mobNo,
-                    item.contactNo,
-                    item.whatsAppNo,
-                    item.email,
-                    item.panNo,
-                    item.gstNo,
-
-                    `
-                    <div class="text-center action-items" style="cursor:pointer;">
-                        <a class="icon-btn" onclick="EditCorporateCompany(${item.companyId})"><i class="ri-edit-2-line"></i></a>
-                        <a class="icon-btn" onclick="DeleteCorporateCompany(${item.companyId})"><i class="ri-delete-bin-3-line"></i></a>
-                    </div>
-                    `
-                ]);
-            });
-            // Redraw table with new data
-            table.draw();
-            // Update total list count
-            $('#totalRemindersCorporate').text(`Total List: ${companyList.length}`);
-        }
-    });
+    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany');
 }
 function ButtonUpdateClick() {
     $("#btnupdate").click(function (e) {
@@ -329,7 +337,7 @@ function ButtonUpdateClick() {
                 let fileName = item.querySelector("#txtFileName")?.value || "N/A";
                 let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
                 let filePath = item.querySelector("#hdnUplodedFileName").value;
-               
+
                 updateAttachmentDetails.push({
                     // index: index + 1,
                     AttachmentId: attachmentId,
@@ -360,14 +368,14 @@ function ButtonUpdateClick() {
                         $("#btnupdate").hide();
                         $("#btnsaveandnew").show();
                         $("#btnSaveCompanyType").show();
-                        
+
                     } else {
-                        toastr.error("Failed to Update Corporate Company Details!","Error");
+                        toastr.error("Failed to Update Corporate Company Details!", "Error");
                     }
-                    
+
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Failed to Update Corporate Company Details!","Error");
+                    toastr.error("Failed to Update Corporate Company Details!", "Error");
                 }
             });
 
@@ -425,80 +433,81 @@ function DeleteCorporateCompany(companyId, linkId) {
     });
 }
 function SaveCorporateCompany(action) {
-        var companyName = $("#txtCompanyName").val();
-        var franchiseName = $("#ddlFranchisename").val();
-        var address = $("#txtAddress").val();
-        var city = $("#ddlCity").val();
-        var pincode = $("#txtPinCode").val();
-        var contactPerson = $("#txtPerson").val();
-        var whatsAppNumber = $("#txtWhatsAppNumber").val();
-        var mobileNumber = $("#txtMobileNumber").val();
-        var contactNumber = $("#txtContactNumber").val();
-        var panNumber = $("#txtPanNumber").val();
-        var email = $("#txtEmail").val();
-        var gSTNumber = $("#txtGstNumber").val();
+    var companyName = $("#txtCompanyName").val();
+    var franchiseName = $("#ddlFranchisename").val();
+    var address = $("#txtAddress").val();
+    var city = $("#ddlCity").val();
+    var pincode = $("#txtPinCode").val();
+    var contactPerson = $("#txtPerson").val();
+    var whatsAppNumber = $("#txtWhatsAppNumber").val();
+    var mobileNumber = $("#txtMobileNumber").val();
+    var contactNumber = $("#txtContactNumber").val();
+    var panNumber = $("#txtPanNumber").val();
+    var email = $("#txtEmail").val();
+    var gSTNumber = $("#txtGstNumber").val();
 
-        var linkid = GetQueryParam("LinkId");
-        var companyId;
+    var linkid = GetQueryParam("LinkId");
+    var companyId;
 
-        var saveUrl = '/CorporateCompany/CorporateCompanySave';
-        var formData = {
-            LinkId: linkid,
-            CompanyName: companyName,
-            MobNo: mobileNumber,
-            ContactNo: contactNumber,
-            AddressLine: address,
-            CityId: city,
-            PinCode: pincode,
-            ContactPerson: contactPerson,
-            Email: email,
-            WhatsAppNo: whatsAppNumber,
-            PANNo: panNumber,
-            GSTNo: gSTNumber,
-            ParentCompanyId: franchiseName
-        };
-        if (action == "save") {
-            $.ajax({
-                url: saveUrl,
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(formData),
-                success: function (response) {
-                    let companyId = response.result.companyId;
-                    Saveattachment(companyId);
-                    window.location.href = "../Dashboard/Dashboard";
-                },
-                error: function (xhr, status, error) {
-                    toastr.error("Failed to Submit Corporate Company Details!", "Error");                }
-            });
-        }
-        else if (action == "saveNew") {
-            $.ajax({
-                url: saveUrl,
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(formData),
-                success: function (response) {
-                    let companyId = response.result.companyId;
-                    Saveattachment(companyId);
-                    toastr.success("Corporate Company Details Submitted Successfully");
-                    $('#CompanyTypeForm')[0].reset();
-                    $('#ddlFranchisename').val(null).trigger('change');
-                    $('#ddlCity').val(null).trigger('change');
-                    setTimeout(() => {
-                        ResetAttachmentRepeater();
-                    }, 1000);
-                },
-                error: function (xhr, status, error) {
-                    toastr.error("Failed to Submit Corporate Company Details!", "Error");
-                }
-            });
-        }
+    var saveUrl = '/CorporateCompany/CorporateCompanySave';
+    var formData = {
+        LinkId: linkid,
+        CompanyName: companyName,
+        MobNo: mobileNumber,
+        ContactNo: contactNumber,
+        AddressLine: address,
+        CityId: city,
+        PinCode: pincode,
+        ContactPerson: contactPerson,
+        Email: email,
+        WhatsAppNo: whatsAppNumber,
+        PANNo: panNumber,
+        GSTNo: gSTNumber,
+        ParentCompanyId: franchiseName
+    };
+    if (action == "save") {
+        $.ajax({
+            url: saveUrl,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                let companyId = response.result.companyId;
+                Saveattachment(companyId);
+                window.location.href = "../Dashboard/Dashboard";
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Corporate Company Details!", "Error");
+            }
+        });
+    }
+    else if (action == "saveNew") {
+        $.ajax({
+            url: saveUrl,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                let companyId = response.result.companyId;
+                Saveattachment(companyId);
+                toastr.success("Corporate Company Details Submitted Successfully");
+                $('#CompanyTypeForm')[0].reset();
+                $('#ddlFranchisename').val(null).trigger('change');
+                $('#ddlCity').val(null).trigger('change');
+                setTimeout(() => {
+                    ResetAttachmentRepeater();
+                }, 1000);
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Corporate Company Details!", "Error");
+            }
+        });
+    }
     return companyId;
 
 }
 function EditCorporateCompany(companyId) {
-    var data = corporateCompanyViewModelDto.filter(x => x.companyId == companyId);
+    var data = viewModelDto.filter(x => x.companyId == companyId);
     if (data.length === 0) {
         return;
     }

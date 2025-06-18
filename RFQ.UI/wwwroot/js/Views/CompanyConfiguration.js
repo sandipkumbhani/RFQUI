@@ -41,12 +41,6 @@ function Initializejquery() {
         var action = $(this).data('action');
         SaveCompanyConfiguration(action);
     });
-    $('#btnViewForm').on('click', function () {
-        FetchCompanyConfiguration();
-    });
-    $('#backButton').on('click', function () {
-        window.location.reload(true);
-    });
     $("#btnCancel").on('click', function () {
         FetchCompanyConfiguration();
         $("#tableDiv").removeClass('d-none');
@@ -275,63 +269,103 @@ function SaveCompanyConfiguration(action) {
         }
     }
 }
+
 function FetchCompanyConfiguration() {
     $("#listSection").show();
-    var getUrl = '/CompanyConfiguration/GetAllCompanyConfiguration';
-    $.ajax({
-        url: getUrl,
-        type: 'GET',
-        dataType: 'json',
-        success: function (response) {
-            companyConfigResponseDto = response;
-            // Get sessionStorage lists
-            const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");
-            const providersList = JSON.parse(sessionStorage.getItem("ProvidersList") || "[]");
-            // Create processed list
-            const trlist = response.map(item => {
-                const company = companyList.find(c => c.companyId === item.companyId);
-                const smsProvider = providersList.find(p => p.providerTypeId === Number(item.smsProvider));
-                const whatsAppProvider = providersList.find(p => p.providerTypeId === Number(item.whatsAppProvider));
 
-                return {
-                    ...item,
-                    companyId: company ? company.companyName : "",
-                    smsProvider: smsProvider ? smsProvider.providerName : "",
-                    whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
-                };
-            });
-            // Initialize or update DataTable
-            if ($.fn.DataTable.isDataTable('#tableCmpConfig')) {
-                $('#tableCmpConfig').DataTable().clear();
-            }
-            const table = $("#tableCmpConfig").DataTable();
-            trlist.forEach(item => {
-                table.row.add([
-                    item.companyId,
-                    item.smsProvider,
-                    item.smsAuthKey,
-                    item.whatsAppAuthKey,
-                    item.whatsAppProvider,
-                    item.smtpHost,
-                    item.smtpPort,
-                    item.smtpUsername,
-                    `
-                        <div class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </div>
-                        `
-                ]);
-            });
-            // Redraw table with new data
-            table.draw();
-            // Update total list count
-            $('#totalList').text(`Total List: ${trlist.length}`);
-        }
-    });
+    FetchDataForTable('tableCmpConfig', '/CompanyConfiguration/GetAllCompanyConfiguration');
+    //$('#tableCmpConfig tbody').empty();
+    //$('#totalList').text('Total List: 0');
+    //$('#customCompanyConfigPagination').empty();
+
+    //const pageLength = Number($('#pageLength').val()) || 10;
+    //let pageNumber = Number($('#currentPage').val()) || 1;
+    //if (pageNumber < 1) pageNumber = 1;
+
+    //const searchValue = $('#companyConfigSearch').val() || '';
+
+    //$.ajax({
+    //    url: '/CompanyConfiguration/GetAllCompanyConfiguration',
+    //    type: 'POST',
+    //    contentType: 'application/json',
+    //    data: JSON.stringify({
+    //        Draw: pageNumber,
+    //        start: (pageNumber - 1) * pageLength,
+    //        length: pageLength,
+    //        searchValue: searchValue,
+    //        orderColumn: 'companyId',
+    //        orderDir: 'asc'
+    //    }),
+    //    success: function (response) {
+    //        if (!response || !response.data || response.data.length === 0) {
+    //            $('#tableCmpConfig tbody').html('<tr><td colspan="8" class="text-center">No records found</td></tr>');
+    //            $('#totalList').text('Total List: 0');
+    //            $('#customCompanyConfigPagination').empty();
+    //            return;
+    //        }
+
+    //        // Get sessionStorage lists
+    //        const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");
+    //        const providersList = JSON.parse(sessionStorage.getItem("ProvidersList") || "[]");
+
+    //        // Processed List
+    //        const trlist = response.data.map(item => {
+    //            const company = companyList.find(c => c.companyId === item.companyId);
+    //            const smsProvider = providersList.find(p => p.providerTypeId === Number(item.smsProvider));
+    //            const whatsAppProvider = providersList.find(p => p.providerTypeId === Number(item.whatsAppProvider));
+
+    //            return {
+    //                ...item,
+    //                companyId: company ? company.companyName : "",
+    //                smsProvider: smsProvider ? smsProvider.providerName : "",
+    //                whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
+    //            };
+    //        });
+
+    //        companyConfigResponseDto = trlist;
+
+    //        let rowsHtml = '';
+    //        trlist.forEach(item => {
+    //            rowsHtml += `
+    //                <tr>
+    //                    <td>${item.companyId}</td>
+    //                    <td>${item.smsProvider}</td>
+    //                    <td>${item.smsAuthKey}</td>
+    //                    <td>${item.whatsAppProvider}</td>
+    //                    <td>${item.whatsAppAuthKey}</td>
+    //                    <td>${item.smtpHost}</td>
+    //                    <td>${item.smtpPort}</td>
+    //                    <td class="text-center action-items" style="cursor:pointer;">
+    //                        <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
+    //                        <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
+    //                    </td>
+    //                </tr>`;
+    //        });
+
+    //        $('#tableCmpConfig tbody').html(rowsHtml);
+    //        $('#totalList').text(`Total List: ${response.recordsTotal}`);
+    //        generatePagination(response.recordsTotal, pageLength, pageNumber);
+    //    },
+    //    error: function () {
+    //        $('#tableCmpConfig tbody').html('<tr><td colspan="8" class="text-center text-danger">Error loading data</td></tr>');
+    //        $('#customCompanyConfigPagination').empty();
+    //    }
+    //});
 }
+
+// Bind events
+$('#customSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchCompanyConfiguration();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchCompanyConfiguration();
+});
+
 function EditCompanyConfiguration(companyConfigId) {
-    var data = companyConfigResponseDto.filter(x => x.companyConfigId == companyConfigId);
+    var data = viewModelDto.filter(x => x.companyConfigId == companyConfigId);
     var formdata = data[0];
     $('#listSection').css('display', 'none');
     $("#formSection").css('display', 'Block');

@@ -1,4 +1,5 @@
-﻿using RFQ.UI.Domain.Model;
+﻿using RFQ.UI.Domain.Helper;
+using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 
@@ -11,7 +12,7 @@ namespace RFQ.UI.Application.Interface
         Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType();
         Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor();
         Task<String> AddVehicle(VehicleRequestDto vehicleRequestDto);
-        Task<IEnumerable<VehicleResponseDto>> GetAllVehicle();
+        Task<PageList<VehicleResponseDto>> GetAllVehicle(PagingParam pagingParam);
         Task<string> EditVehicle(int vehicleId, VehicleRequestDto vehicleRequestDto);
         Task<string> DeleteVehicle(int vehicleId);
     }

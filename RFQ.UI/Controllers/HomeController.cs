@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 using RFQ.UI.Models;
 using System.Diagnostics;
@@ -99,20 +101,26 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ViewUserList()
+        [HttpPost]
+        public async Task<IActionResult> ViewUserList([FromBody] PagingParam pagingParam)
         {
             try
             {
-                var userlist = await _usersService.GetAllUser();
-
+                var UserViewModel = new UserResponseDto();
+                var result = await _usersService.GetAllUser(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(userlist);
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
                 }
                 else
                 {
-                    return Json(userlist);
+                    return View(result);
                 }
             }
             catch (Exception ex)

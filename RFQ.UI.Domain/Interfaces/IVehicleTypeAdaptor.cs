@@ -1,4 +1,5 @@
-﻿using RFQ.UI.Domain.RequestDto;
+﻿using RFQ.UI.Domain.Helper;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 
 
@@ -8,7 +9,7 @@ namespace RFQ.UI.Domain.Interfaces
     {
         Task<string> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto);
 
-        Task<List<VehicleTypeResponseDto>?> GetVehicleTypeAll();
+        Task<PageList<VehicleTypeResponseDto>?> GetAllVehicleType(PagingParam pagingParam);
 
         Task<string> UpdateVehicleType(int vehicleTypeId, VehicleTypeRequestDto vehicleTypeRequestDto);
 

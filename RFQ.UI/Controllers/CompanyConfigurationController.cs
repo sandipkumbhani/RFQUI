@@ -21,16 +21,26 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllCompanyConfiguration()
+        [HttpPost]
+        public async Task<IActionResult> GetAllCompanyConfiguration([FromBody]PagingParam pagingParam)
         {
             try
             {
-                var customerList = await _companyConfigurationServices.GetAllCompanyConfiguration();
+                var result = await _companyConfigurationServices.GetAllCompanyConfiguration(pagingParam);
                 if (Request.IsAjaxRequest())
-                    return Json(customerList);
+                {
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
+                }
                 else
-                    return View(customerList);
+                {
+                    return View(result);
+                }
             }
             catch (Exception ex)
             {

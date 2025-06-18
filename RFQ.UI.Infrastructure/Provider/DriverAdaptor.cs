@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -33,7 +34,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var requestContent = new StringContent(driver, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -63,7 +64,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var baseurl = _fleetLynkApiUrl + _config["Driver:DeleteDriver"] + DriverId;
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -91,7 +92,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var requestContent = new StringContent(driver, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -108,24 +109,33 @@ namespace RFQ.UI.Infrastructure.Provider
             return "Failed to update Driver";
         }
 
-        public async Task<IEnumerable<DriverResponseDto>> GetAllDriver()
+        public async Task<PageList<DriverResponseDto>?> GetAllDriver(PagingParam pagingParam)
         {
             try
             {
-
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Driver:GetAllDriver"]);
+                var baseurl = _fleetLynkApiUrl + _config["Driver:GetAllDriver"];
+                var param = JsonConvert.SerializeObject(pagingParam);
+                var requestContent = new StringContent(param, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.Data != null)
                 {
-                    var Driverlist = JsonConvert.DeserializeObject<List<DriverResponseDto>>(Convert.ToString(responseModel.Data!));
-                    return Driverlist;
+                    var json = JsonConvert.SerializeObject(responseModel.Data.result);
+                    var typedList = JsonConvert.DeserializeObject<List<DriverResponseDto>>(json);
+                    dynamic parsed = JsonConvert.DeserializeObject<dynamic>(responseData);
+                    int pageNumber = parsed.data.pageNumber;
+                    int pageSize = parsed.data.pageSize;
+                    int totalPage = parsed.data.totalPage;
+                    int totalRecordCount = parsed.data.totalRecordCount;
+
+                    return new PageList<DriverResponseDto>(typedList, totalRecordCount, pageNumber, pageSize);
                 }
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -177,7 +187,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Driver:GetDriverType"]);
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
                     var driverList = JsonConvert.DeserializeObject<List<InternalMasterResponseDto>>(Convert.ToString(responseModel.Data!));

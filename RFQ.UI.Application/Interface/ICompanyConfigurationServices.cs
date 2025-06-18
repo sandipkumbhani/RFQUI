@@ -1,11 +1,12 @@
-﻿using RFQ.UI.Domain.RequestDto;
+﻿using RFQ.UI.Domain.Helper;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Application.Interface
 {
     public interface ICompanyConfigurationServices
     {
-        Task<IEnumerable<CompanyConfigurationResponseDto>> GetAllCompanyConfiguration();
+        Task<PageList<CompanyConfigurationResponseDto>> GetAllCompanyConfiguration(PagingParam pagingParam);
         Task<IEnumerable<FranchiseResponseDto>> GetAllCompany();
         Task<IEnumerable<ProviderResponseDto>> GetAllProviders();
         Task<string> AddCompanyConfiguration(CompanyConfigrationRequestDto companyConfigrationRequestDto);
