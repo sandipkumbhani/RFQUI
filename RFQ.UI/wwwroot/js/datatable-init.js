@@ -260,7 +260,7 @@ $(document).ready(function () {
             // { orderable: false, targets: [] } // all sortable
             { orderable: false, targets: 'no-sort' }
         ],
-        ordering: false,
+        ordering: true,
         language: {
             paginate: {
                 previous: '<i class="ri-arrow-left-s-line"></i>',

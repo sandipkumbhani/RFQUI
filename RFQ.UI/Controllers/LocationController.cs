@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -11,7 +13,6 @@ namespace RFQ.UI.Controllers
     {
         private readonly GlobalClass _globalClass;
         private readonly ILocationService _locationService;
-
         public LocationController(GlobalClass globalClass, ILocationService locationService)
         {
             _globalClass = globalClass;
@@ -21,7 +22,6 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public IActionResult LocationSave([FromBody] LocationRequestDto locationRequestDto)
         {
@@ -52,13 +52,12 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
         [HttpGet]
-        public async Task<IActionResult> ViewLocationList()
+        public async Task<IActionResult> GetAllLocationList()
         {
             try
             {
-                var locationlist = await _locationService.GetAllLocation();
+                var locationlist = await _locationService.GetAllLocationList();
 
                 if (Request.IsAjaxRequest())
                 {
@@ -74,7 +73,34 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
+        [HttpPost]
+        public async Task<IActionResult> ViewLocationList([FromBody] PagingParam pagingParam)
+        {
+            try
+            {
+                
+                var locationViewModel = new LocationResponseDto();
+                var result = await _locationService.GetAllLocation(pagingParam);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
+                }
+                else
+                {
+                    return View(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         [HttpPut]
         public async Task<IActionResult> EditLocationList([FromBody] LocationRequestDto locationRequestDto)
         {
@@ -89,7 +115,7 @@ namespace RFQ.UI.Controllers
                 locationRequestDto.CreatedBy = Convert.ToInt32(profileid);
                 locationRequestDto.UpdatedBy = Convert.ToInt32(profileid);
                 locationRequestDto.CompanyId = Convert.ToInt32(profileid);
-                // };
+               
                 var result = await _locationService.EditLocation(locationId, locationRequestDto);
                 if (result != null)
                 {
@@ -105,7 +131,6 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
         [HttpDelete("Location/Deletelocationlist/{LocationId}")]
         public async Task<IActionResult> Deletelocationlist(int LocationId)
         {

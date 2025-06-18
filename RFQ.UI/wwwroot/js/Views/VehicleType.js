@@ -1,7 +1,6 @@
-﻿
+﻿var orderColumn = '';
+var orderDir = '';
 $(document).ready(function () {
-    var vehicleTypeViewModelDtos;
-    var EditVehicleTypeModelDtos;
 
     $("#txtVehicleType").on("blur", function () {
         if (!ValidateTextbox("#txtVehicleType")) {
@@ -42,7 +41,16 @@ $(document).ready(function () {
         $('#SavenewButton').removeClass('d-none')
         $('#updateButton').addClass('d-none');
     })
-
+    $(document).on('click', 'th.sortable', function () {
+       orderColumn = $(this).data('column');
+       let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+        
+        $('th.sortable').not(this).data('order', 'asc');
+       
+       FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+    });
     UpdateVechileType();
     FetchVehicleTypes();
 });
@@ -60,73 +68,19 @@ function OnSubmitValidation() {
 
 function FetchVehicleTypes() {
     $('#tableDiv').show();
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType');
-    //$('#vehicleTypesTable tbody').empty();
-    //$('#totalList').text('Total List: 0');
-    //$('#customvehicleTypesPagination').empty();
 
-    //const pageLength = Number($('#pageLength').val()) || 10;
-    //let pageNumber = Number($('#currentPage').val()) || 1;
-    //if (pageNumber < 1) pageNumber = 1;
-
-    //const searchValue = $('#vehicleTypesTableSearch').val() || '';
-
-    //$.ajax({
-    //    url: '/Vehicle/ViewVehicleType',
-    //    type: 'POST',
-    //    contentType: 'application/json',
-    //    data: JSON.stringify({
-    //        Draw: pageNumber,
-    //        start: (pageNumber - 1) * pageLength,
-    //        length: pageLength,
-    //        searchValue: searchValue,
-    //        orderColumn: 'companyName',
-    //        orderDir: 'asc'
-    //    }),
-    //    success: function (response) {
-
-    //        if (!response || !response.data || response.data.length === 0) {
-
-    //            $('#vehicleTypesTable tbody').html('<tr><td colspan="4" class="text-center">No records found</td></tr>');
-    //            $('#totalList').text('Total List: 0');
-    //            $('#customvehicleTypesPagination').empty();
-    //            return;
-    //        }
-    //        vehicleTypeViewModelDtos = response.data;
-    //        let rowsHtml = '';
-    //        response.data.forEach(item => {
-    //            rowsHtml += `
-    //                <tr>
-    //                    <td>${item.companyName}</td>
-    //                    <td>${item.vehicleTypeName}</td>
-    //                    <td>${item.minimumKms}</td>
-    //                    <td class="text-center action-items" style="cursor:pointer;">
-    //                        <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
-    //                        <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
-    //                    </td>
-    //                </tr>`;
-    //        });
-    //        $('#vehicleTypesTable tbody').html(rowsHtml);
-    //        $('#totalList').text(`Total List: ${response.recordsTotal}`);
-    //        generatePagination(response.recordsTotal, pageLength, pageNumber);
-    //    },
-    //    error: function () {
-    //        $('#vehicleTypesTable tbody').html('<tr><td colspan="4" class="text-center text-danger">Error loading data</td></tr>');
-    //        $('#customvehicleTypesPagination').empty();
-    //    }
-    //});
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType',null,null);
 }
 
 
 $('#vehicleTypesTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchVehicleTypes();
-});
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+})
 
-// Bind events
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchVehicleTypes();
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
 });
 function SaveVehicleType(action) {
     if (OnSubmitValidation()) {

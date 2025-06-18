@@ -1,7 +1,7 @@
 ﻿
 var userResponseDto;
-var allUserList;
-
+//var allUserList;
+var allUserList = [];
 $(document).ready(function ()
 { 
     $("#btnCancel").on("click", function ()
@@ -97,37 +97,7 @@ function Initialization() {
 }
 function FetchUser() {
     $('#userListSection').show();
-    $.ajax({
-        url: '/Home/ViewUserList',
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            let trlist = response;
-            userResponseDto = response;
-            if ($.fn.DataTable.isDataTable('#tableuser')) {
-                $('#tableuser').DataTable().clear();
-            }
-            const table = $('#tableuser').DataTable();
-                trlist.forEach(item => {
-                    table.row.add([
-                        item.personName,
-                        item.company,
-                        item.location,
-                        item.mobileNo,
-                        item.emailId,
-                    `
-                    <div class="text-center action-items" style="cursor:pointer;">
-                        <a class="icon-btn" onclick="EditUser(${item.userId})"><i class="ri-edit-2-line"></i></a>
-                        <a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>
-                    </div>
-                    ` ]);
-                });
-            // Redraw table with new data
-            table.draw();
-            // Update total list count
-            $('#totalList').text(`Total List: ${trlist.length}`);
-        }
-    });
+    FetchDataForTable('tableuser', '/Home/ViewUserList');
 }
 function SaveUser(action) {
 
@@ -152,12 +122,15 @@ function SaveUser(action) {
         Emailid: emailid,
         Password: password
     };
-    var existuser = allUserList.map(x => x.emailId).includes(emailid)
-    if (existuser) {
-        toastr.warning("User Is already exist update EmailId", "User Exist");
-        $('#txtEmailid').val('');
-        return;
-    }
+
+   // var existuser = allUserList.filter(x => x.emailId).includes(emailid)
+    //var existuser = allUserList.some(x => x.emailId?.trim().toLowerCase() === emailid.trim().toLowerCase());
+    //if (existuser) {
+    //    toastr.warning("User already exists. Please update Email ID.", "Duplicate Email");
+    //    $('#txtEmailid').val('');
+    //    return;
+    //}
+    
     if (action === "save") {
         $.ajax({
             url: '/Home/UserSave/',
@@ -204,7 +177,7 @@ function SaveUser(action) {
     }
 }
 function EditUser(userId) {
-    var data = userResponseDto.filter(x => x.userId == userId);
+    var data = viewModelDto.filter(x => x.userId == userId);
     var formdata = data[0];
     $('#userListSection').css('display', 'none');
     $("#userFormSection").css('display', 'Block');
@@ -295,7 +268,7 @@ function UpdateUser() {
 }
 function GetAllLocation() {
     $.ajax({
-        url: '/Location/ViewLocationList',
+        url: '/Location/GetAllLocationList',
         type: "GET",
         dataType: "json",
         success: function (response) {
@@ -390,9 +363,60 @@ function GetAllUser() {
         dataType: 'json',
         success: function (response) {
             allUserList = response;
+            console.log("All Users Loaded:", allUserList);
         },
         error: function (xhr, status, error) {
+            console.log(error);
             toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 };
+function generatePagination(totalRecords, pageSize, currentPage) {
+    const paginationContainer = $('#customPagination');
+    paginationContainer.empty();
+
+    const totalPages = Math.ceil(totalRecords / pageSize);
+    if (totalPages <= 1) return;
+
+    let paginationHtml = '<ul class="pagination justify-content-center">';
+
+    paginationHtml += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="ri-arrow-left-s-line"></i></a></li>`;
+
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    if (endPage - startPage < maxPagesToShow - 1) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    }
+
+    paginationHtml += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="ri-arrow-right-s-line"></i></a></li>`;
+    paginationHtml += '</ul>';
+    paginationContainer.html(paginationHtml);
+
+    paginationContainer.off('click').on('click', 'a.page-link', function (e) {
+        e.preventDefault();
+        const selectedPage = Number($(this).data('page'));
+        if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
+            $('#currentPage').val(selectedPage);
+            FetchUser();
+        }
+    });
+}
+
+// Bind events
+$('#customSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchUser();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchUser();
+});
