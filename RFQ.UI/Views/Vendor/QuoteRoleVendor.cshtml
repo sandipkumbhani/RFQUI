@@ -7,154 +7,181 @@
 @section Scripts {
 	<script src="~/js/Views/QuoteRoleVendor.js"></script>
 }
+<head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+	<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+	<style>
+		.item-input {
+			margin-bottom: 0.75rem;
+		}
 
-<div class="app-toolbar  pt-3 px-lg-3">
-	<div class="app-container  container-fluid d-flex flex-stack flex-wrap">
-		<div class="page-title d-flex align-items-center gap-1 me-3">
-			<div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-				<h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
-					Vendor
-				</h1>
-				<ul class="breadcrumb breadcrumb-separatorless fw-semibold">
-					<li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-						<a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
-					</li>
-					<li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
-					<li class="breadcrumb-item text-primary">
-						QuoteRole-Vendor
-					</li>
-				</ul>
+		.form-label span {
+			color: red;
+		}
+	</style>
+</head>
+
+
+<div class="row">
+	<div class="col-12">
+		<div class="page-title-box add">
+			<h1 class="page-title">Vendor</h1>
+			<div class="add-breadcrumb">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="#" id="locationListSectionLink">QuoteRate-Vendor</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page"> Add QuoteRate-Vendor</li>
+					</ol>
+				</nav>
 			</div>
 		</div>
 	</div>
-</div>
-<div class="app-content  px-lg-3">
-	<div class="app-container  container-fluid">
-		<div class="container my-4">
-		</div>
-		<div id="AddQuoteRoleVendorDiv" class="card">
-			<div class="card-header border-0 cursor-pointer">
-				<div class="card-title m-0">
-					<h3 class="fw-bold m-0">QuoteRole-Vendor</h3>
-				</div>
-			</div>
-			<form class="form" id="QRVendorBodyForm" method="post">
-				<input type="number" hidden id="txtQRVendorId" />
-				<div class="card-body border-top p-9">
-					<div class="row pb-9">
-						<!-- Left Section -->
-						<div class="col-xl-6">
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">RFQ No </label>
-									<input type="text" class="form-control form-control-solid" placeholder="RFQ No" id="txtRFQNo" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">RFQ Date</label>
-									<input type="datetime-local" class="form-control form-control-solid" placeholder="RFQ Date" id="txtRFQDate" disabled />
-								</div>
-							</div>
-							<div class="mb-4">
-								<label class="form-label col-form-label required fw-semibold fs-6">Vendor Name </label>
-								<input type="text" class="form-control form-control-solid" placeholder="Vendor Name" id="txtVednorName" disabled />
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Origin/From</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Origin/From" id="txtOriginFrom" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Destination/To</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Map Based Search" id="txtDestination" disabled />
-								</div>
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">RFQ On</label>
-									<input type="text" class="form-control form-control-solid" placeholder="RFQ On" id="txtRFQOn" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Vehicle Type</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Vehicle Type" id="txtVehicleType" disabled />
-								</div>
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">Total Hire Cost</label>
-									<input type="number" class="form-control form-control-solid" placeholder="Total Hire Cost" id="txtHireCost" />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Detention Per Day</label>
-									<input type="number" class="form-control form-control-solid" placeholder="Detention Per Day" id="txtDetentionDay" />
-								</div>
-							</div>
+	<div id="AddQuoteRoleVendorDiv" class="card com-profile-info">
+		<div class="top-details">
+			<h2 class="page-form-title">QuoteRate-Vendor Details</h2>
+			<form class="row all-custom-class" id="QRVendorBodyForm" method="post">
+				<input type="hidden" id="txtQRVendorId" />
+				<div class="col-xl-6">
+					<div class="row">
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">RFQ NO </label>
+							<input type="text" class="form-control" placeholder="RFQ No" id="txtRFQNo" disabled />
 						</div>
-						<!-- Right Section -->
-						<div class="col-xl-6">
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">RFQ Expire On</label>
-									<input type="datetime-local" class="form-control form-control-solid" placeholder="Expire On" id="txtExpireOn" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Vehicle Req On</label>
-									<input type="datetime-local" class="form-control form-control-solid" placeholder="Vehicle Req On" id="txtVehicleReqOn" disabled />
-								</div>
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">Item Name</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Item Name" id="txtItemName" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">Packing Type</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Packing Type" id="txtPackingType" disabled />
-								</div>
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">PAN No</label>
-									<input type="text" class="form-control form-control-solid" placeholder="PAN No" id="txtPANNo" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">RFQ Priority</label>
-									<input type="text" class="form-control form-control-solid" placeholder="RFQ Priority" id="txtRFQPriority" disabled />
-								</div>
-							</div>
-							<div class="row">
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label required fw-semibold fs-6">No.of Vehicles</label>
-									<input type="text" class="form-control form-control-solid" placeholder="No.of Vehicles" id="txtNoOfVehicles" disabled />
-								</div>
-								<div class="mb-4 col-xl-6">
-									<label class="form-label col-form-label fw-semibold fs-6">Total Qty in Tons</label>
-									<input type="text" class="form-control form-control-solid" placeholder="Total Qty in Tons" id="txtTotalQTY" disabled />
-								</div>
-							</div>
-							<div class="mb-4 col-xl-6">
-								<label class="form-label col-form-label fw-semibold fs-6">Detention Free Days</label>
-								<input type="number" class="form-control form-control-solid" placeholder="Detention Free Days" id="txtDetentionDays" />
-							</div>
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">RFQ Date</label>
+							<input type="datetime-local" class="form-control" placeholder="RFQ Date" id="txtRFQDate" disabled />
 						</div>
-						<div class="col-xl-12">
-							<div class="mb-5">
-								<label class="form-label col-form-label required fw-semibold fs-6">Special Instructions </label>
-								<input type="text" class="form-control form-control-solid" placeholder="Special Instructions" id="txtInstruction" />
+					</div>
+					<div class="mb-4">
+						<label class="form-label">Vendor Name</label>
+						<input type="text" class="form-control" placeholder="Vendor Name" id="txtVednorName" disabled />
+					</div>
+					<div class="row">
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">Origin/From</label>
+							<input type="text" class="form-control" placeholder="Origin/From" id="txtOriginFrom" disabled />
+						</div>
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">Destination/To</label>
+							<input type="text" class="form-control" placeholder="Map Based Search" id="txtDestination" disabled />
+						</div>
+					</div>
+					<div class="row">
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">RFQ On</label>
+							<input type="text" class="form-control" placeholder="RFQ On" id="txtRFQOn" disabled />
+						</div>
+						<div class="mb-4 col-xl-6">
+							<div class="item-input">
+								<label class="form-label ">Vehicle Type<span>*</span></label>
+								<select class="select2-custom form-control" id="ddlVehicleType" style="width: 100%;" disabled>
+								</select>
 							</div>
 						</div>
 					</div>
+					<div class="row">
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">Total Hire Cost<span>*</span></label>
+							<input type="number" class="form-control" placeholder="Total Hire Cost" id="txtHireCost" />
+						</div>
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">Detention Per Day <span>*</span></label>
+							<input type="number" class="form-control" placeholder="Detention Per Day" id="txtDetentionDay" />
+						</div>
+					</div>
 				</div>
-				<div class="card-footer d-flex justify-content-start py-4">
-					<button type="button" id="btnSaveForm" class="btn btn-primary me-2">Save</button>
+				<!-- Right Section -->
+				<div class="col-xl-6">
+					<div class="row">
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">RFQ Expire On</label>
+							<input type="datetime-local" class="form-control" placeholder="Expire On" id="txtExpireOn" disabled />
+						</div>
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">Vehicle Req On</label>
+							<input type="datetime-local" class="form-control" placeholder="Vehicle Req On" id="txtVehicleReqOn" disabled />
+						</div>
+					</div>
+					<div class="row">
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">PAN No </label>
+							<input type="text" class="form-control" placeholder="PAN No" id="txtPANNo" disabled />
+						</div>
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">RFQ Priority </label>
+							<input type="text" class="form-control" placeholder="RFQ Priority" id="txtRFQPriority" disabled />
+						</div>
+					</div>
+					<div class="row">
+						<div class="mb-4 col-xl-6">
+							<div class="item-input">
+								<label class="form-label">Item Name</label>
+								<select class="select2-custom form-control" id="ddlItemName" style="width: 100%;" disabled>
+								</select>
+							</div>
+						</div>
+						<div class="mb-4 col-xl-6">
+							<div class="item-input">
+								<label class="form-label">Packing Type</label>
+								<select class="select2-custom form-control" id="ddlPackingType" style="width: 100%;" disabled>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">No.of Vehicles</label>
+							<input type="text" class="form-control" placeholder="No.of Vehicles" id="txtNoOfVehicles" disabled />
+						</div>
+						<div class="mb-4 col-xl-6">
+							<label class="form-label">Total Qty in Tons</label>
+							<input type="text" class="form-control" placeholder="Total Qty in Tons" id="txtTotalQTY" disabled />
+						</div>
+					</div>
+					<div class="mb-4 col-xl-6">
+						<label class="form-label">Detention Free Days <span>*</span></label>
+						<input type="number" class="form-control" placeholder="Detention Free Days" id="txtDetentionDays" />
+					</div>
+				</div>
+				<div class="col-xl-12">
+					<div class="mb-5">
+						<label class="form-label">Special Instructions </label>
+						<input type="text" class="form-control" placeholder="Special Instructions" id="txtInstruction" />
+					</div>
 				</div>
 			</form>
 		</div>
-	</div>
-</div>
-<div class="app-footer px-lg-3 ">
-	<div class="app-container  container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-		<div class="text-gray-900 order-2 order-md-1">
-			<span class="text-muted fw-semibold me-1">2025©</span>
+		<div class="button-main">
+			<a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
+				<i class="ri-save-line"></i>
+				<span>
+					Save
+				</span>
+			</a>
+			<a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
+				<i class="ri-save-line"></i>
+				<span>
+					Save & New
+				</span>
+			</a>
+			<a href="#" class="card-link" id="btnUpdate" style="display:none;">
+				<i class="ri-save-line"></i>
+				<span>
+					Update
+				</span>
+			</a>
+			<a href="#" class="card-link" id="btnCancel">
+				<i class="ri-close-line"></i>
+				<span>
+					Cancel
+				</span>
+			</a>
 		</div>
 	</div>
 </div>
