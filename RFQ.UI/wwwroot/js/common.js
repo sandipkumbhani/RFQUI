@@ -1,7 +1,5 @@
-﻿$(document).ready(function () {
-    var viewModelDto;
-});
-
+﻿var orderColumnName = '';
+var orderDirName = '';
 function ValidateTextbox(inputId) {
     var value = $(inputId).val();
     //var pattern = /^[A-Za-z0-9]+$/; 
@@ -147,11 +145,11 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
     $('#' + gridTableName + ' tbody').empty();
     $('#totalList').text('Total List: 0');
     $('#customPagination').empty();
-
     const pageLength = Number($('#pageLength').val()) || 10;
     let pageNumber = Number($('#currentPage').val()) || 1;
     if (pageNumber < 1) pageNumber = 1;
-
+    orderColumnName = orderColumn;
+    orderDirName = orderDir;
     const searchValue = $('#' + gridTableName + 'Search').val() || '';
 
     $.ajax({
@@ -167,10 +165,9 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
             OrderDir: orderDir
         }),
         success: function (response) {
-
             if (!response || !response.data || response.data.length === 0) {
 
-                $('#' + '#' + gridTableName + ' tbody').html('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                $( '#' + gridTableName + ' tbody').html('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                 $('#totalList').text('Total List: 0');
                 $('#customPagination').empty();
                 return;
@@ -426,11 +423,11 @@ function generatePagination(totalRecords, pageSize, currentPage, gridTableName, 
         const selectedPage = Number($(this).data('page'));
         if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
             $('#currentPage').val(selectedPage);
-            FetchDataForTable(gridTableName, url);
+            FetchDataForTable(gridTableName, url, orderColumnName, orderDirName);
         }
-        $('html,body').animate({
-            scrollTop: $("#customvehicleTypesPagination").offset().top
-        }, 1000);
+        //$('html,body').animate({
+        //    scrollTop: $("#customvehicleTypesPagination").offset().top
+        //}, 1000);
         //$("#customvehicleTypesPagination").focus();
     });
 }
