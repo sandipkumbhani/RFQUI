@@ -69,7 +69,8 @@ function OnSubmitValidation() {
 function FetchVehicleTypes() {
     $('#tableDiv').show();
 
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType',null,null);
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', null, null);
+    console.log($('th.sortable'));
 }
 
 
@@ -182,6 +183,7 @@ function DeleteVehicleType(vehicleTypeId) {
         data: JSON.stringify(vehicleTypeId),
         success: function (response) {
             $("#addVehicleTypeDiv").addClass("d-none");
+            $('#currentPage').val(1);
             FetchVehicleTypes();
         },
         error: function (xhr, status, error) {

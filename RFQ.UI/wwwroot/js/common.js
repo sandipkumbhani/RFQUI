@@ -146,12 +146,12 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
     $('#totalList').text('Total List: 0');
     $('#customPagination').empty();
     const pageLength = Number($('#pageLength').val()) || 10;
+    //const pageLength = 1;
     let pageNumber = Number($('#currentPage').val()) || 1;
     if (pageNumber < 1) pageNumber = 1;
     orderColumnName = orderColumn;
     orderDirName = orderDir;
     const searchValue = $('#' + gridTableName + 'Search').val() || '';
-
     $.ajax({
         url: url,
         type: 'POST',
@@ -166,7 +166,6 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
         }),
         success: function (response) {
             if (!response || !response.data || response.data.length === 0) {
-
                 $( '#' + gridTableName + ' tbody').html('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                 $('#totalList').text('Total List: 0');
                 $('#customPagination').empty();
@@ -220,7 +219,7 @@ function GetGridHtml(response, gridTableName) {
                     </tr>`;
         });
     }
-    if (gridTableName == "tableVehicle") {
+    if (gridTableName == "vehicleTable") {
         response.data.forEach(item => {
             rowsHtml += `
                         <tr>
@@ -312,7 +311,7 @@ function GetGridHtml(response, gridTableName) {
                     `;
         });
     }
-    if (gridTableName == "tableProduct") {
+    if (gridTableName == "productTable") {
         response.data.forEach(item => {
             rowsHtml += `
         <tr>

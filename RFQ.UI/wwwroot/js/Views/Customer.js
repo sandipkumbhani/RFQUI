@@ -2,8 +2,21 @@
 const linkId = urlParams.get('LinkId');
 let isGstEKycClicked = false;
 let isPanEKycClicked = false;
-
+var orderColumn = '';
+var orderDir = '';
+var fetchCustomerUrl = '/Customer/ViewCustomer';
 $(document).ready(function () {
+
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase());
+    });
 
     document.getElementById("txtPanNumber").addEventListener("input", function () {
         const panKyc = this.value;
@@ -49,96 +62,6 @@ $(document).ready(function () {
     FetchCustomerList();
 });
 
-//function FetchCustomerList() {
-//    $("#tableDiv").css('display', 'block');
-//    $("#formDiv").css('display', 'none');
-//    $('#customerForm')[0].reset();
-//    $('#ddlCity').val(null).trigger('change');
-//    $("#btnSaveCustomer").show();
-//    $("#btnUpdate").hide();
-//    $("#SavenewButton").show();
-//    ResetAttachmentRepeater();
-//    var fetchCustomerUrl = '/Customer/ViewCustomer';
-//    //$.ajax({
-//    //    url: fetchCustomerUrl,
-//    //    type: "GET",
-//    //    dataType: "json",
-//    //    success: function (response) {
-//    //        let customerList = response.filter(x => x.partyTypeId == 6);
-//    //        customerViewModelDtos = response;
-//    //        if ($.fn.DataTable.isDataTable('#customerTable')) {
-//    //            $('#customerTable').DataTable().clear();
-//    //        }
-//    //        const table = $("#customerTable").DataTable();
-//    //        customerList.forEach(item => {
-//    //            table.row.add([
-//    //                item.partyName,
-//    //                item.addressLine,
-//    //                item.pinCode,
-//    //                item.mobNo,
-//    //                item.email,
-//    //                item.panNo,
-//    //                item.gstNo,
-//    //                `
-//    //       <div class="text-center action-items" style="cursor:pointer;">
-//    //                <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
-//    //                <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
-//    //        </div>
-//    //        `
-//    //            ]);
-//    //        });
-
-//    //        // Redraw table with new data
-//    //        table.draw();
-
-//    //        // Update total list count
-//    //        $('#totalList').text(`Total List: ${customerList.length}`);
-
-//    //    },
-//    //    error: function (xhr, status, error) {
-//    //        toastr.error("Failed to Fetch Data!", "Error");
-//    //    }
-//    //});
-
-//    if ($.fn.DataTable.isDataTable('#customerTable')) {
-//        $('#customerTable').DataTable().destroy();
-//    }
-
-//    $('#customerTable').DataTable({
-//        processing: true,
-//        serverSide: true,
-//        ajax: {
-//            url: fetchCustomerUrl,
-//            type: "post",
-//            contentType: 'application/json',
-//            data: function (d) {
-//                console.log(d);
-//                return JSON.stringify(d);
-//            }
-//        },
-//        columns: [
-//            { data: 'partyName' },
-//            { data: 'addressLine' },
-//            { data: 'pinCode' },
-//            { data: 'mobNo' },
-//            { data: 'email' },
-//            { data: 'panNo' },
-//            { data: 'gstNo' },
-//            {
-//                data: 'partyId',
-//                render: function (data, type, row) {
-//                    return `
-//                        <div class="text-center action-items" style="cursor:pointer;">
-//                            <a class="icon-btn" onclick="EditCustomer(${data})"><i class="ri-edit-2-line"></i></a>
-//                            <a class="icon-btn" onclick="DeleteCustomer(${data})"><i class="ri-delete-bin-3-line"></i></a>
-//                        </div>
-//                    `;
-//                }
-//            }
-//        ]
-//    });
-//}
-
 function FetchCustomerList() {
     $("#tableDiv").show();
     $("#formDiv").hide();
@@ -149,71 +72,11 @@ function FetchCustomerList() {
     $("#SavenewButton").show();
     ResetAttachmentRepeater();
 
-    FetchDataForTable('customerTable', '/Customer/ViewCustomer');
-
-    //$('#customerTable tbody').empty();
-    //$('#totalList').text('Total List: 0');
-    //$('#customCustomerPagination').empty();
-
-    //const pageLength = Number($('#pageLength').val()) || 10;
-    //let pageNumber = Number($('#currentPage').val()) || 1;
-    //if (pageNumber < 1) pageNumber = 1;
-
-    //const searchValue = $('#customCustomerSearch').val() || '';
-
-    //$.ajax({
-    //    url: '/Customer/ViewCustomer',
-    //    type: 'POST',
-    //    contentType: 'application/json',
-    //    data: JSON.stringify({
-    //        Draw: pageNumber,
-    //        start: (pageNumber - 1) * pageLength,
-    //        length: pageLength,
-    //        searchValue: searchValue,
-    //        orderColumn: 'partyName',
-    //        orderDir: 'asc'
-    //    }),
-    //    success: function (response) {
-    //        if (!response || !response.data || response.data.length === 0) {
-    //            $('#customerTable tbody').html('<tr><td colspan="8" class="text-center">No records found</td></tr>');
-    //            $('#totalList').text('Total List: 0');
-    //            $('#customCustomerPagination').empty();
-    //            return;
-    //        }
-    //        customerViewModelDtos = response.data;
-
-    //        let rowsHtml = '';
-    //        response.data.forEach(item => {
-    //            rowsHtml += `
-    //                <tr>
-    //                    <td>${item.partyName}</td>
-    //                    <td>${item.addressLine}</td>
-    //                    <td>${item.pinCode}</td>
-    //                    <td>${item.mobNo}</td>
-    //                    <td>${item.email}</td>
-    //                    <td>${item.panNo}</td>
-    //                    <td>${item.gstNo}</td>
-    //                    <td class="text-center action-items" style="cursor:pointer;">
-    //                        <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
-    //                        <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
-    //                    </td>
-    //                </tr>
-    //            `;
-    //        });
-
-    //        $('#customerTable tbody').html(rowsHtml);
-    //        $('#totalList').text(`Total List: ${response.recordsTotal}`);
-    //        generatePagination(response.recordsTotal, pageLength, pageNumber, 'customer');
-    //    },
-    //    error: function () {
-    //        $('#customerTable tbody').html('<tr><td colspan="8" class="text-center text-danger">Error loading data</td></tr>');
-    //        $('#customCustomerPagination').empty();
-    //    }
-    //});
+    FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase());
 }
 
 // Bind events
-$('#customerTable').off('keyup').on('keyup', function () {
+$('#customerTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchCustomerList();
 });
@@ -493,6 +356,7 @@ function DeleteCustomer(partyId) {
                     DeleteMasterAttachment(result[0].attachmentId);
                 }
                 toastr.success("Customer Details Deleted Successfully!");
+                $('#currentPage').val(1);
                 FetchCustomerList();
             },
             error: function (xhr, status, error) {

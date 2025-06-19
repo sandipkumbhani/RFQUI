@@ -163,12 +163,24 @@ namespace RFQ.UI.Infrastructure.Provider
                     return null;
                 }
 
-                var dlKycDetails = JsonConvert.DeserializeObject<LicenseKycDetailsResponseDto>(responseData);
+                var settings = new JsonSerializerSettings
+                {
+                    DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind
+                };
+
+                var dlKycDetails = JsonConvert.DeserializeObject<LicenseKycDetailsResponseDto>(responseData, settings);
                 if (dlKycDetails == null)
                 {
                     Console.WriteLine("Deserialization resulted in null");
                     return null;
                 }
+
+                // Adjust DateTime fields to correct the 1-day discrepancy  
+                if (dlKycDetails.DrivingLicenseModel != null)
+                {
+                    dlKycDetails.DrivingLicenseModel.ValidityIssueDate = dlKycDetails.DrivingLicenseModel.ValidityIssueDate.AddDays(1);
+                    dlKycDetails.DrivingLicenseModel.ValidityExpiryDate = dlKycDetails.DrivingLicenseModel.ValidityExpiryDate.AddDays(1);
+                }   
 
                 return dlKycDetails;
             }

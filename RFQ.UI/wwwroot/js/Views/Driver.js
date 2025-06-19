@@ -5,7 +5,22 @@ let list;
 let isDLEKycClicked = false;
 const urlParams = new URLSearchParams(window.location.search);
 const linkId = urlParams.get('LinkId');
+var orderColumn = '';
+var orderDir = '';
+var fetchDriverUrl = '/Driver/ViewDriver';
 $(document).ready(function () {
+
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase());
+    });
+
     InitializeFields();
     GetAllCityList();
     GetDriverType();
@@ -274,12 +289,10 @@ function FetchDriverList() {
     $("#btnSaveNewDriver").show();
     ResetForm();
     ResetAttachmentRepeater();
-
-    var fetchDriverUrl = '/Driver/ViewDriver';
-    FetchDataForTable('driverTable', fetchDriverUrl);
+    FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase());
 };
 
-$('#customDriverSearch').off('keyup').on('keyup', function () {
+$('#driverTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchDriverList();
 });
@@ -555,6 +568,7 @@ function DeleteDriver(driverId, fileName) {
                     DeleteMasterAttachment(result[0].attachmentId);
                 }
                 toastr.success("Driver Details Deleted Successfully!");
+                $('#currentPage').val(1);
                 FetchDriverList();
             },
             error: function (xhr, status, error) {
