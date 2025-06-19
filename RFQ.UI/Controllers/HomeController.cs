@@ -31,30 +31,6 @@ namespace RFQ.UI.Controllers
         {
             return View("Views/RFQ/RFQFinalization.cshtml");
         }
-        public IActionResult CompanyConfiguration()
-        {
-            return View();
-        }
-        public IActionResult OrganisationLocation()
-        {
-            return View();
-        }
-        public IActionResult Vendor()
-        {
-            return View();
-        }
-        public IActionResult Item()
-        {
-            return View();
-        }
-        public IActionResult CorporateCompany()
-        {
-            return View();
-        }
-        public IActionResult user()
-        {
-            return View();
-        }
         public IActionResult QuotationToCustomer()
         {
             return View("Views/Quotation/QuotationToCustomer.cshtml");
@@ -63,7 +39,6 @@ namespace RFQ.UI.Controllers
         {
             return View("Views/Quotation/QuotationToAmendment.cshtml");
         }
-
 
         [HttpPost]
         public async Task<IActionResult> UserSave([FromBody] UserRequestDto userRequestDto)
@@ -80,17 +55,13 @@ namespace RFQ.UI.Controllers
                     userRequestDto.CreatedBy = parsedProfileId;
                     userRequestDto.UpdatedBy = parsedProfileId;
                     userRequestDto.ProfileId = parsedProfileId;
-                    
+
                     var result = await _usersService.AddUsers(userRequestDto);
                     var response = JsonConvert.DeserializeObject<CommanResponseDto>(result);
                     if (response != null && response.StatusCode == 200)
-                    {
                         return Json(new { result = "success", data = "User Saved SucsessFully" });
-                    }
                     else
-                    {
                         return Json(new { result = "fail", message = response.ErrorMessage });
-                    }
                 }
                 return Json(new { result = "fail", message = "Invalid user data provided" });
             }
@@ -143,13 +114,9 @@ namespace RFQ.UI.Controllers
 
                 var result = await _usersService.EditUsers(userId, userRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -163,13 +130,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _usersService.DeleteUsers(UserId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -184,19 +147,15 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 int profileID = Convert.ToInt32(profileid);
+
                 var alllist = await _usersService.GetAllCompanyAndFranchise();
                 if (alllist != null && alllist.Count() > 0)
-                {
                     return Json(alllist);
-                }
+
                 if (Request.IsAjaxRequest())
-                {
                     return Json(alllist);
-                }
                 else
-                {
                     return View(alllist);
-                }
             }
             catch (Exception ex)
             {
@@ -213,17 +172,11 @@ namespace RFQ.UI.Controllers
                 int profileID = Convert.ToInt32(profileid);
                 var alllist = await _usersService.GetAllLocation();
                 if (alllist != null && alllist.Count() > 0)
-                {
                     return Json(alllist);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(alllist);
-                }
                 else
-                {
                     return View(alllist);
-                }
             }
             catch (Exception ex)
             {

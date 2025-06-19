@@ -382,10 +382,10 @@
                                             </span>
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-shrink-0">
-                                                    <div class="notify-icon">
+                                                   @*  <div class="notify-icon">
                                                         <img src="assets/images/users/avatar-4.jpg"
                                                             class="img-fluid rounded-circle" alt="" />
-                                                    </div>
+                                                    </div> *@
                                                 </div>
                                                 <div class="flex-grow-1 text-truncate ms-2">
                                                     <h5 class="noti-item-title fw-semibold font-14">Karen Robinson</h5>
@@ -571,7 +571,6 @@
 
                     //     sidebarHtml += '</ul></li>';
                     // }
-
                     for (let groupId in groupedItems) {
                         let group = groupedItems[groupId];
                         let collapseId = 'submenu-' + groupId;
@@ -579,8 +578,7 @@
                         sidebarHtml += '<li class="side-nav-item dropdown" onclick="toggleDropdown(this)"   >';
 
                         sidebarHtml += '<a href="javascript:void(0)" class="side-nav-link" data-bs-toggle="collapse" data-bs-target="#' + collapseId + '" aria-expanded="false" aria-controls="' + collapseId + '">';
-                        sidebarHtml += '<i class="ri-car-line"></i>';
-                        sidebarHtml += '<i class="ri-car-fill"></i>';
+                        sidebarHtml += '<i class="'+group.linkGroupIcon+'"></i>';
                         sidebarHtml += '<span> ' + group.groupName + ' </span>';
                         sidebarHtml += '</a>';
 
@@ -608,19 +606,6 @@
             });
         });
 
-        function setToken(token) {
-            fetch('https://localhost:7295/api/global/set-token', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(token)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        console.error("Failed to set token");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-        }
         function toggleDropdown(element) {
             element.classList.toggle('dropdown-open');
         }
