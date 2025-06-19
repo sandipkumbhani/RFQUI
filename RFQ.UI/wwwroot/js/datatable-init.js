@@ -348,7 +348,7 @@ $(document).ready(function () {
             }
         ],
 
-        paging: true,
+        paging: false,
         info: true,
         lengthChange: false,
         pageLength: 10,
