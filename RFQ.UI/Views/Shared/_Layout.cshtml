@@ -606,19 +606,6 @@
             });
         });
 
-        function setToken(token) {
-            fetch('/global/set-token', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(token)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        console.error("Failed to set token");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-        }
         function toggleDropdown(element) {
             element.classList.toggle('dropdown-open');
         }
