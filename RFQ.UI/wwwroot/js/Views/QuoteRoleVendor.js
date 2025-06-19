@@ -127,14 +127,12 @@ function ValidationCheck() {
     }
 }
 function GetAllVehicleType() {
-    debugger;
     var getVehicleTypeUrl = '/Vehicle/GetAllMasterVehicleType'
     $.ajax({
         url: getVehicleTypeUrl,
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            debugger;
             const vehicleTypedropdown = document.getElementById("ddlVehicleType");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -156,7 +154,7 @@ function GetAllVehicleType() {
     });
 }
 function GetAllItemName() {
-    var getUrl = '/Product/GetAllProducts';
+    var getUrl = '/Product/GetDrpProductList';
     $.ajax({
         url: getUrl,
         type: "GET",

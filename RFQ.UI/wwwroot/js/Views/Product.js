@@ -1,4 +1,5 @@
-﻿var productListDto;
+﻿
+var productListDto;
 var orderColumn = '';
 var orderDir = '';
 var fetchProductUrl = '/Product/GetAllProducts';

@@ -182,5 +182,21 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<IActionResult> GetDrpCustomerList()
+        {
+            try
+            {
+                var result = await _customerServices.GetDrpCustomerList();
+                if (Request.IsAjaxRequest())
+                    return Json(result);
+                else
+                    return View(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

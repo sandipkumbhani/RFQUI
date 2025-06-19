@@ -1,4 +1,5 @@
-﻿
+﻿var orderColumn = '';
+var orderDir = '';
 $(document).ready(function () {
     var corporateCompanyViewModelDto
     var list
@@ -25,6 +26,17 @@ $(document).ready(function () {
         window.location.reload(true);
     });
 
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase());
+    });
+
     document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
         element.addEventListener("input", function () {
             this.value = this.value.toUpperCase();
@@ -47,55 +59,21 @@ $('#addCompany').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
 });
-function generatePagination(totalRecords, pageSize, currentPage) {
-    const paginationContainer = $('#customcorporatePagination');
-    paginationContainer.empty();
-
-    const totalPages = Math.ceil(totalRecords / pageSize);
-    if (totalPages <= 1) return;
-
-    let paginationHtml = '<div class="dataTables_paginate paging_simple_numbers">';
-    paginationHtml += '<ul class="pagination">';
-
-    paginationHtml += `<li class="paginate_button page-item ${currentPage === 1 ? 'disabled' : ''} arrow">
-        <a class="page-link" href="#" data-page="${currentPage - 1}"><i class="ri-arrow-left-s-line"></i></a></li>`;
-
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-    if (endPage - startPage < maxPagesToShow - 1) {
-        startPage = Math.max(1, endPage - maxPagesToShow + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-        paginationHtml += `<li class="paginate_button page-item ${i === currentPage ? 'active' : ''}">
-            <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-    }
-
-    paginationHtml += `<li class="paginate_button page-item ${currentPage === totalPages ? 'disabled' : ''} arrow">
-        <a class="page-link" href="#" data-page="${currentPage + 1}"><i class="ri-arrow-right-s-line"></i></a></li>`;
-    paginationHtml += '</ul>';
-    paginationHtml += '</div>';
-    paginationContainer.html(paginationHtml);
-
-    paginationContainer.off('click').on('click', 'a.page-link', function (e) {
-        e.preventDefault();
-        const selectedPage = Number($(this).data('page'));
-        if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
-            $('#currentPage').val(selectedPage);
-            FetchCorporateCompany();
-        }
-    });
+function FetchCorporateCompany() {
+    $("#tableDiv").show();
+    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', null, null);
 }
 // Bind events
-$('#customcorporateSearch').off('keyup').on('keyup', function () {
+$('#corporateTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchCorporateCompany();
+    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase());
+    //FetchCorporateCompany();
 });
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchCorporateCompany();
+    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase());
+    //FetchCorporateCompany();
 });
 function CheckValidation() {
     $("#txtCompanyName").on("blur", function () {
@@ -298,10 +276,6 @@ function BindDropDown(data) {
         select.appendChild(opt);
     });
 }
-function FetchCorporateCompany() {
-    $("#tableDiv").show();
-    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany');
-}
 function ButtonUpdateClick() {
     $("#btnupdate").click(function (e) {
         e.preventDefault();
@@ -423,6 +397,7 @@ function DeleteCorporateCompany(companyId, linkId) {
                     DeleteMasterAttachment(result[0].attachmentId);
                 }
                 toastr.success("Corporate Company Deleted Successfully!");
+                $('#currentPage').val(1);
                 FetchCorporateCompany();
                 $("#backButton").css('display', 'block');
             },

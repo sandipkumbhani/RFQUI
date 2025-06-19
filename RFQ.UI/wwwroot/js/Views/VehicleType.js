@@ -69,8 +69,7 @@ function OnSubmitValidation() {
 function FetchVehicleTypes() {
     $('#tableDiv').show();
 
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', null, null);
-    console.log($('th.sortable'));
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
 }
 
 
