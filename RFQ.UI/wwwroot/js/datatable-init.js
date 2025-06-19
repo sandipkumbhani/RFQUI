@@ -76,6 +76,7 @@ $(document).ready(function () {
             // { orderable: false, targets: [] } // all sortable
             { orderable: false, targets: 'no-sort' }
         ],
+        ordering:true,
         language: {
             paginate: {
                 previous: '<i class="ri-arrow-left-s-line"></i>',
@@ -88,7 +89,7 @@ $(document).ready(function () {
     table.buttons().container().appendTo('#exportFranchiseButtons');
 
     // Search
-    $('#customFranchiseSearch').on('keyup', function () {
+    $('#franchiseTableSearch').on('keyup', function () {
         table.search(this.value).draw();
     });
 
@@ -116,6 +117,7 @@ $(document).ready(function () {
         columnDefs: [
             // { orderable: false, targets: [] } // all sortable
             { orderable: false, targets: 'no-sort' }
+
         ],
         language: {
             paginate: {
@@ -129,7 +131,7 @@ $(document).ready(function () {
     table.buttons().container().appendTo('#exportDriverButtons');
 
     // Search
-    $('#customDriverSearch').on('keyup', function () {
+    $('#driverTableSearch').on('keyup', function () {
         table.search(this.value).draw();
     });
 
@@ -212,32 +214,14 @@ $(document).ready(function () {
     table.buttons().container().appendTo('#exportCustomerButtons');
 
     // Search
-    $('#customCustomerSearch').on('keyup', function () {
+    $('#customerTableSearch').on('keyup', function () {
         table.search(this.value).draw();
-    });
-
-    // Move pagination to custom div
-    $('#customerTable_paginate').appendTo('#customCustomerPagination');
-
-    // Filter dropdown logic
-    $('.filter-option').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-
-        // Update filter label after selection
-        $('#filterDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
     });
 
     // Page length
     $('#pageLength').on('change', function () {
         table.page.len(this.value).draw();
     });
-
-    // Update total reminders
-    $('#totalList').text(`Total List: ${table.rows().count()}`);
 });
 
 $(document).ready(function () {
@@ -364,7 +348,7 @@ $(document).ready(function () {
             }
         ],
 
-        paging: true,
+        paging: false,
         info: true,
         lengthChange: false,
         pageLength: 10,
@@ -495,7 +479,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $.fn.DataTable.ext.pager.numbers_length = 3;
 
-    const table = $('#tableVehicle').DataTable({
+    const table = $('#vehicleTable').DataTable({
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
@@ -528,28 +512,6 @@ $(document).ready(function () {
         table.search(this.value).draw();
     });
 
-    // Move pagination to custom div
-    $('#tableVehicle_paginate').appendTo('#customvtableVehiclePagination');
-
-    // Filter dropdown logic
-    $('.filter-option-tableVehicle').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-
-        // Update filter label after selection
-        $('#filtertableVehicleDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
-    });
-
-    // Page length
-    $('#pageLength').on('change', function () {
-        table.page.len(this.value).draw();
-    });
-
-    // Update total reminders
-    $('#totaltableVehicleReminders').text(`Total List: ${table.rows().count()}`);
 });
 
 $(document).ready(function () {
@@ -707,7 +669,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $.fn.DataTable.ext.pager.numbers_length = 3;
-    const table = $('#tableProduct').DataTable({
+    const table = $('#productTable').DataTable({
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
@@ -716,7 +678,7 @@ $(document).ready(function () {
                 text: '<i class="ri-file-excel-line"></i> Export All',
             },
         ],
-        paging: true,
+        paging: false,
         info: true,
         lengthChange: false,
         pageLength: 10,
@@ -734,24 +696,7 @@ $(document).ready(function () {
     // Move export buttons
     table.buttons().container().appendTo('#exporttableproduct');
     // Search
-    $('#customSearch').on('keyup', function () {
+    $('#productTableSearch').on('keyup', function () {
         table.search(this.value).draw();
     });
-    // Move pagination to custom div
-    $('#tableProduct_paginate').appendTo('#customPagination');
-    // Filter dropdown logic
-    $('.filter-option-applicableroute').on('click', function () {
-        const value = $(this).data('value');
-        const label = $(this).text();
-        // Update filter label after selection
-        $('#filterApplicableRouteDropdown').text(label === 'All Status' ? 'Filter' : `${label}`);
-        // Apply DataTables column filter (status is column 2)
-        table.column(2).search(value).draw();
-    });
-    // Page length
-    $('#pageLength').on('change', function () {
-        table.page.len(this.value).draw();
-    });
-    // Update total reminders
-    $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
 });

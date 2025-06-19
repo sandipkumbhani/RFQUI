@@ -67,7 +67,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: "https://localhost:7295/Login/GetToken",
+            url: "/Login/GetToken",
             contentType: "application/json",
             data: JSON.stringify(formData),
             dataType: "json",

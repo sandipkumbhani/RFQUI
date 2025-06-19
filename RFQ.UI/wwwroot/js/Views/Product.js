@@ -1,9 +1,22 @@
-﻿var orderColumn = '';
-var orderDir = '';
+﻿
 var productListDto;
+var orderColumn = '';
+var orderDir = '';
+var fetchProductUrl = '/Product/GetAllProducts';
 $(document).ready(function () {
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase());
+    });
+
     $("#btnCancel").on("click", function () {
-        window.location.reload(true);
+        FetchProduct();
     });
 
     $('#listSectionLink').on('click', function (e) {
@@ -16,29 +29,6 @@ $(document).ready(function () {
         SaveProduct(action);
     });
 
-    //$("#btnSaveProduct, #btnSavenewProduct").on('click', function () {
-
-    //    var action = $(this).data('action'); // "save" or "saveNew"
-    //    if (CheckValidation()) {
-    //        SaveProduct(action);
-    //    }
-    //});
-    //$('#btnViewButton').on('click',function () {
-    //    FetchProduct();
-    //    $("#addProductDiv").css('display', 'none');
-    //    $("#backButton").css('display', 'block');
-    //});
-    //$('#btnUpdateProduct').on('click',function () {
-    //    UpdateProduct();
-    //});
-    //$('#backButton').on('click', function () {
-    //    window.location.reload(true);
-    //});
-    //$("#btnCancel").on("click", function () {
-    //    FetchProduct();
-    //    $("#addProductDiv").css('display', 'none');
-    //    $("#backButton").css('display', 'block');
-    //});
     CheckValidation();
     FetchProduct();
     UpdateProduct();
@@ -65,64 +55,6 @@ function CheckNullValidation() {
     }
     return true;
 }
-
-//function SaveProduct(action) {
-//    //if (!CheckValidation()) {
-//    //    return;
-//    //}
-//    var saveProductUrl = "/Product/ProductSave";
-//    var itemName = $("#txtItemName").val();
-//    var formData = {
-//        ItemName: itemName
-//    };
-//    if (action == "save") {
-//        $.ajax({
-//            url: saveProductUrl,
-//            method: 'POST',
-//            contentType: 'application/json',
-//            dataType: "json",
-//            data: JSON.stringify(formData),
-//            success: function (response) {
-
-//                if (response.result == "Success") {
-//                    toastr.success("Item Save Successfully!");
-//                    window.location.href = "../Dashboard/Dashboard";
-//                }
-//                else {
-//                    toastr.error("Failed to Save Item!");
-//                }
-//            },
-//            error: function (xhr, status, error) {
-//                toastr.error("Failed to Save Item!");
-
-//            }
-//        });
-//    }
-//    else if (action == "saveNew") {
-//        $.ajax({
-//            url: saveProductUrl,
-//            method: 'POST',
-//            contentType: 'application/json',
-//            dataType: "json",
-//            data: JSON.stringify(formData),
-//            success: function (response) {
-
-//                if (response.result == "Success") {
-//                    toastr.success("Item Save successfully!");
-//                    $('#productForm')[0].reset();
-//                }
-//                else {
-//                    toastr.error("Failed to Save Item!");
-//                }
-//            },
-//            error: function (xhr, status, error) {
-//                toastr.error("Failed to Save Item!");
-
-//            }
-//        });
-//    }
-//}
-
 function SaveProduct(action) {
     if (!CheckNullValidation()) {
         return;
@@ -180,42 +112,16 @@ function SaveProduct(action) {
     }
 }
 function FetchProduct() {
+    $("#formSection").hide();
     $("#listSection").show();
-    FetchDataForTable('tableProduct', '/Product/GetAllProducts', orderColumn, orderDir.toUpperCase());
-
-    //var fetchProductUrl = "/Product/GetAllProducts";
-    //$.ajax({
-    //    url: fetchProductUrl,
-    //    type: 'GET',
-    //    dataType: 'json',
-    //    success: function (response) {
-    //        let trlist = response;
-    //        productListDto = response;
-    //        if ($.fn.DataTable.isDataTable('#tableProduct')) {
-    //            $('#tableProduct').DataTable().clear();
-    //        }
-    //        const table = $('#tableProduct').DataTable();
-    //        trlist.forEach(item => {
-    //            table.row.add([
-    //            item.companyName,
-    //            item.itemName,
-    //                `
-    //                <div class="text-center action-items" style="cursor:pointer;">
-    //                    <a class="icon-btn" onclick="EditProduct(${item.itemId})"><i class="ri-edit-2-line"></i></a>
-    //                    <a class="icon-btn" onclick="DeleteProduct(${item.itemId})"><i class="ri-delete-bin-3-line"></i></a>
-    //                </div>
-    //                `
-    //            ]);
-    //        });
-    //        // Redraw table with new data
-    //        table.draw();
-    //        // Update total list count
-    //        $('#totalList').text(`Total List: ${trlist.length}`);
-    //    }
-    //});
+    $('#productForm')[0].reset();
+    $("#btnUpdateProduct").hide();
+    $("#btnSavenewProduct").show();
+    $("#btnSaveProduct").show();
+    FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase());
 }
 //Bind events
-$('#tableProduct').off('keyup').on('keyup', function () {
+$('#productTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchProduct();
 });
@@ -260,16 +166,8 @@ function UpdateProduct() {
             success: function (response) {
                 if (response.result == 'Success') {
                     toastr.success("Product Updated Successfully!");
-                    //$("#addProductDiv").hide();
-                    //$("#backButton").show();
-                    //$("#tableDiv").show();
                     FetchProduct();
-                    $("#formSection").hide();
-                    $("#listSection").show();
-                    $('#productForm')[0].reset();
-                    $("#btnUpdateProduct").hide();
-                    $("#btnSavenewProduct").show();
-                    $("#btnSaveProduct").show();
+
                 }
                 else {
                     toastr.error("Failed to update Product", "Error");
@@ -290,6 +188,7 @@ function DeleteProduct(itemId) {
         data: JSON.stringify(itemId),
         success: function (response) {
             toastr.success("Product Deleted Successfully!");
+            $('#currentPage').val(1);
             FetchProduct();
         },
         error: function (xhr, status, error) {

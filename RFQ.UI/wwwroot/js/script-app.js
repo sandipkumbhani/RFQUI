@@ -290,6 +290,7 @@ $(document).ready(function () {
           utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
         });
       });
+        fixIntlTelInputPadding();
 
     }).fail(function () {
       // If geo IP fails, default to US
@@ -300,7 +301,16 @@ $(document).ready(function () {
         });
       });
     });
+    
   });
+function fixIntlTelInputPadding() {
+    $(".item-input .iti input.iti__tel-input[type='tel']").each(function () {
+        // Remove inline padding-left if set
+        $(this).css("padding-left", "");
+        // Force correct padding with !important
+        this.style.setProperty("padding-left", "91px", "important");
+    });
+}
 
 
 // Function to initialize SimpleBar on elements with a given class

@@ -21,6 +21,10 @@ namespace RFQ.UI.Controllers
             _corporateCompanyService = corporateCompanyService;
             _globalClass = globalClass;
         }
+        public IActionResult CorporateCompany()
+        {
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> CorporateCompanySave([FromBody] CorporateCompanyRequestDto corporateCompanyRequestDto)
@@ -29,19 +33,19 @@ namespace RFQ.UI.Controllers
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
 
-            string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-            corporateCompanyRequestDto.LogoImage = "null";
-            if (corporateCompanyRequestDto != null)
-            {
-                corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                corporateCompanyRequestDto.LogoImage = "null";
+                if (corporateCompanyRequestDto != null)
+                {
+                    corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(profileid);
+                    corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(profileid);
 
-                var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyRequestDto);
-                return Json(new { result });
-            }
-            else
-            {
-                return Json(new { result = "fail" });
+                    var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyRequestDto);
+                    return Json(new { result });
+                }
+                else
+                {
+                    return Json(new { result = "fail" });
 
                 }
             }
@@ -93,7 +97,7 @@ namespace RFQ.UI.Controllers
                     {
                         draw = result.PageNumber,
                         recordsTotal = result.TotalRecordCount,
-                        recordsFiltered = result.TotalRecordCount, 
+                        recordsFiltered = result.TotalRecordCount,
                         data = result.Result
                     });
                 }
@@ -106,7 +110,7 @@ namespace RFQ.UI.Controllers
             {
                 throw new Exception(ex.Message);
             }
-        
+
         }
 
         [HttpDelete("CorporateCompany/DeleteCorporateCompany/{companyId}")]

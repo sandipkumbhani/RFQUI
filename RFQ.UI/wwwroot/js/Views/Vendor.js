@@ -648,6 +648,7 @@ function DeleteVendor(partyId) {
                     DeleteMasterAttachment(result[0].attachmentId);
                 }
                 toastr.success("Vendor Details Deleted Successfully!");
+                $('#currentPage').val(1);
                 FetchVendor();
                 $("#backButton").css('display', 'block');
             },

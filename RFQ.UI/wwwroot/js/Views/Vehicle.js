@@ -1,6 +1,19 @@
 ﻿const linkId = GetQueryParam("LinkId");
-
+var orderColumn = '';
+var orderDir = '';
+var fetchVehicleUrl = '/Vehicle/ViewVehicle';
 $(document).ready(function () {
+
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase());
+    });
 
     $("#btnSaveVehicle, #btnSaveNewVehicle").on('click', function () {
         var action = $(this).data('action');
@@ -329,6 +342,7 @@ function DeleteVehicle(vehicleId) {
             if (response && response.result === "success") {
                 toastr.success("Vehicle Details Deleted Successfully!");
                 $("#addVehicleDiv").addClass('d-none');
+                $('#currentPage').val(1);
                 FetchVehicleList();
             } else {
                 toastr.error("Failed to Delete Vehicle Details!", "Error");
@@ -342,70 +356,12 @@ function DeleteVehicle(vehicleId) {
 
 function FetchVehicleList() {
     $("#tableDiv").show();
-
-    FetchDataForTable('tableVehicle', '/Vehicle/ViewVehicle');
-    //$('#tableVehicle tbody').empty();
-    //$('#totalList').text('Total List: 0');
-    //$('#customVehiclePagination').empty();
-
-    //const pageLength = Number($('#pageLength').val()) || 10;
-    //let pageNumber = Number($('#currentPage').val()) || 1;
-    //if (pageNumber < 1) pageNumber = 1;
-
-    //const searchValue = $('#vehicleTableSearch').val() || '';
-
-    //$.ajax({
-    //    url: '/Vehicle/ViewVehicle',
-    //    type: "POST",
-    //    contentType: "application/json",
-    //    data: JSON.stringify({
-    //        Draw: pageNumber,
-    //        start: (pageNumber - 1) * pageLength,
-    //        length: pageLength,
-    //        searchValue: searchValue,
-    //        orderColumn: 'vehicleNo',
-    //        orderDir: 'asc'
-    //    }),
-    //    success: function (response) {
-    //        if (!response || !response.data || response.data.length === 0) {
-    //            $('#tableVehicle tbody').html('<tr><td colspan="7" class="text-center">No records found</td></tr>');
-    //            $('#totalList').text('Total List: 0');
-    //            $('#customVehiclePagination').empty();
-    //            return;
-    //        }
-    //        vehicleResponse = response.data;
-
-    //        let rowsHtml = '';
-    //        response.data.forEach(item => {
-    //            rowsHtml += `
-    //                <tr>
-    //                    <td>${item.vehicleNo}</td>
-    //                    <td>${item.vehicleStatus}</td>
-    //                    <td>${item.engineNo}</td>
-    //                    <td>${item.chassisNo}</td>
-    //                    <td>${item.vehicleCapacity}</td>
-    //                    <td>${item.rtoRegistration}</td>
-    //                    <td class="text-center action-items" style="cursor:pointer;">
-    //                        <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
-    //                        <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
-    //                    </td>
-    //                </tr>`;
-    //        });
-
-    //        $('#tableVehicle tbody').html(rowsHtml);
-    //        $('#totalList').text(`Total List: ${response.recordsTotal}`);
-    //        generatePagination(response.recordsTotal, pageLength, pageNumber);
-    //    },
-    //    error: function () {
-    //        $('#tableVehicle tbody').html('<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>');
-    //        $('#customVehiclePagination').empty();
-    //    }
-    //});
+    FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase());
 }
 
 
 //Bind events
-$('#tableVehicle').off('keyup').on('keyup', function () {
+$('#vehicleTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchVehicleList();
 });

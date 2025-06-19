@@ -46,7 +46,7 @@
 					<h4>List of Product</h4>
 					<div class="d-flex gap-2">
 						<div class="table-search-box">
-							<input type="text" id="customSearch" class="form-control form-control-sm" placeholder="Search...">
+							<input type="text" id="productTableSearch" class="form-control form-control-sm" placeholder="Search...">
 							<button type="submit"><i class="ri-search-line"></i></button>
 						</div>
 						@* <div class="dropdown">
@@ -64,13 +64,13 @@
 				</div>
 				<!-- Table -->
 				<div class="table-responsive">
-					<table id="tableProduct"
+					<table id="productTable"
 						   class="table dt-responsive nowrap w-100">
 						<thead class="bg-light">
 							<tr class="text-center">
-								<th class="text-center">Company Name</th>
-								<th class="text-center">Item Name</th>
-								<th class="text-center no-sort">Action</th>
+								<th class="sortable text-center" data-column="CompanyName" data-order="asc">Company Name</th>
+								<th class="sortable text-center" data-column="ItemName" data-order="asc">Item Name</th>
+								<th class="sortable text-center no-sort">Action</th>
 							</tr>
 						</thead>
 						<tbody class="text-center">

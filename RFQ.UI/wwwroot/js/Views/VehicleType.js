@@ -182,6 +182,7 @@ function DeleteVehicleType(vehicleTypeId) {
         data: JSON.stringify(vehicleTypeId),
         success: function (response) {
             $("#addVehicleTypeDiv").addClass("d-none");
+            $('#currentPage').val(1);
             FetchVehicleTypes();
         },
         error: function (xhr, status, error) {

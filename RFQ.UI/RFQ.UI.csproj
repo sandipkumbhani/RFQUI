@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Infrastructure\" />
     <Folder Include="Views\CompanyConfiguration\" />
+    <Folder Include="Views\CorporateCompany\" />
     <Folder Include="Views\Profile\" />
     <Folder Include="wwwroot\driverphoto\" />
   </ItemGroup>
