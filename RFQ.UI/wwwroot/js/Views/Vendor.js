@@ -1,4 +1,5 @@
-﻿
+﻿var orderColumn = '';
+var orderDir = '';
 document.getElementById("txtPanNumber").addEventListener("input", function () {
     const panKyc = this.value;
     document.getElementById("numPanNumber").value = panKyc;
@@ -132,6 +133,16 @@ $(document).ready(function () {
         FetchVendor();
         $("#addVendorDiv").css('display', 'none');
         $("#backButton").css('display', 'block');
+    });
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase());
     });
     FetchVendor();
 });
@@ -470,18 +481,19 @@ function FetchVendor() {
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
     ResetAttachmentRepeater();
-    var fetchVendorUrl = '/Vendor/GetAllVendor';
-    FetchDataForTable('vendorTable', fetchVendorUrl);
+    //var fetchVendorUrl = '/Vendor/GetAllVendor';
+    //FetchDataForTable('vendorTable', fetchVendorUrl);
+    FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', null, null);
 }
 
-$('#customVendorSearch').off('keyup').on('keyup', function () {
+$('#vendorTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchVendor();
+    FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase());
 });
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchVendor();
+    FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase());
 });
 function EditVendor(partyId) {
     var data = viewModelDto.filter(x => x.partyId == partyId);
