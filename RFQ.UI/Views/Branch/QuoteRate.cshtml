@@ -30,115 +30,109 @@
 			<h2 class="page-form-title">QuoteRate-Branch Details</h2>
 			<form class="row all-custom-class" id="QRBranchForm">
 				<input type="hidden" id="txtQRBranchId" />
-				<!-- Left Section -->
-				<div class="col-xl-6">
-					<div class="mb-4">
-						<div class="row">
-							<div class="col-xl-6">
-								<div class="mb-4">
-									<label class="form-label ">RFQ No</label>
-									<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtRfqNo" />
-								</div>
-							</div>
-							<div class="col-xl-6">
-								<div class="mb-4">
-									<label class="form-label">RFQ Date</label>
-									<input type="datetime-local" class="form-control" id="txtRfqDate" />
-								</div>
-							</div>
-						</div>
-						<label class="form-label ">Customer Name</label>
-						<select class="selectpicker" aria-label="Select Customer Name" id="ddlCustomerName" data-live-search="true" data-width="100%">
-						</select>
-					</div>
-					<div class="row">
-						<div class="col-xl-6">
-							<div class="mb-4">
-								<label class="form-label ">Origin/From</label>
-								<input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" />
-							</div>
-						</div>
-						<div class="col-xl-6">
-							<div class="mb-4">
-								<label class="form-label">Destination/To</label>
-								<input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" />
-							</div>
+				<div class="row all-custom-class">
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label ">RFQ No</label>
+							<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtRfqNo" />
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-xl-6">
-							<div class="mb-4">
-								<label class="form-label">RFQ On</label>
-								<select class="selectpicker" id="ddlRfqOn" data-live-search="true" data-width="100%">
-								</select>
-							</div>
-						</div>
-						<div class="col-xl-6">
-							<div class="mb-4">
-								<div class="item-input">
-									<label class="form-label ">Vehicle Type<span>*</span></label>
-									<select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;">
-									</select>
-								</div>
-
-							</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label">RFQ Date</label>
+							<input type="datetime-local" class="form-control" id="txtRfqDate" />
 						</div>
 					</div>
-				</div>
-				<!-- Right Section -->
-				<div class="col-xl-6">
-					<div class="row">
-						<div class="col-xl-6">
-
-							<div class="mb-4">
-								<label class="form-label">RFQ Expired On</label>
-								<input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" />
-							</div>
-							<div class="mb-4">
-								<label class="form-label">RFQ Type</label>
-								<select class="selectpicker" id="ddlRfqType" data-live-search="true" data-width="100%">
-								</select>
-							</div>
-							<div class="mb-4">
-								<div class="item-input">
-									<label class="form-label">Item Name</label>
-									<select class="select2-custom form-control" id="ddlItemName" style="width: 100%;">
-									</select>
-								</div>
-							</div>
-							<div class="mb-4">
-								<label class="form-label">No. of Vehicles</label>
-								<input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" onkeypress="return isNumber(event)" />
-							</div>
-						</div>
-						<div class="col-xl-6">
-							<div class="mb-4">
-								<label class="form-label">Vehicle Req On</label>
-								<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
-							</div>
-							<div class="mb-4">
-								<label class="form-label">RFQ Priority</label>
-								<select class="selectpicker" id="ddlRfqPriority" data-live-search="true" data-width="100%">
-								</select>
-							</div>
-							<div class="mb-4">
-								<div class="item-input">
-									<label class="form-label ">Packing Type</label>
-									<select class="select2-custom form-control" id="ddlPackingType" style="width: 100%;">
-									</select>
-								</div>
-							</div>
-							<div class="mb-4">
-								<label class="form-label">Total Qty in Tons</label>
-								<input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" onkeypress="return isNumber(event)" />
-							</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label">RFQ Expired On</label>
+							<input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" />
 						</div>
 					</div>
-				</div>
-				<div class="col-xl-12">
-					<div class="mb-4">
-						<label class="form-label">Special Instructions</label>
-						<input type="text" class="form-control" placeholder="Text" id="txtSpecialInstructions" />
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label">Vehicle Req On</label>
+							<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="item-input">
+							<label class="form-label ">Customer Name</label>
+							<select class="select2-custom form-control" data-control="select2" id="ddlCustomerName" style="width: 100%;">
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label">RFQ Type</label>
+							<select class="select2-custom form-control" data-control="select2" id="ddlRfqType" style="width: 100%;">
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label ">RFQ Priority<span></span></label>
+							<select class="select2-custom form-control" data-control="select2" id="ddlRfqPriority" style="width: 100%;">
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label ">Origin/From</label>
+							<input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" />
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label">Destination/To</label>
+							<input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" />
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label">Item Name</label>
+							<select class="select2-custom form-control" data-control="select2" id="ddlItemName" style="width:100%;">
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label ">Packing Type</label>
+							<select class="select2-custom form-control" id="ddlPackingType" style="width:100%;">
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label">RFQ On</label>
+							<select class="select2-custom form-control" data-control="select2" id="ddlRfqOn" style="width: 100%;">
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label ">Vehicle Type<span></span></label>
+							<select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;">
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label">No.of Vehicles</label>
+							<input type="text" class="form-control" placeholder="No.of Vehicles" id="txtNoOfVehicles" />
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="item-input">
+							<label class="form-label">Total Qty in Tons</label>
+							<input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" onkeypress="return isNumber(event)" />
+						</div>
+					</div>
+					<div class="col-xl-12">
+						<div class="mb-5">
+							<label class="form-label">Special Instructions</label>
+							<input type="text" class="form-control" placeholder="Text" id="txtSpecialInstructions" />
+						</div>
 					</div>
 				</div>
 				<!-- RFQ Sent To Vendors Section -->
