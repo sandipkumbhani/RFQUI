@@ -204,10 +204,8 @@ function GetGridHtml(response, gridTableName) {
         response.data.forEach(item => {
             rowsHtml += `
                       <tr>
-                        <td>${item.companyId}</td>
-                        <td>${item.smsProvider}</td>
+                        <td>${item.companyName}</td>
                         <td>${item.smsAuthKey}</td>
-                        <td>${item.whatsAppProvider}</td>
                         <td>${item.whatsAppAuthKey}</td>
                         <td>${item.smtpHost}</td>
                         <td>${item.smtpPort}</td>
