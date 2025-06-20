@@ -29,7 +29,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = "https://localhost:7272/api/MasterAttachment/AddMasterAttachment";
+                var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/AddMasterAttachment";
                 var company = JsonConvert.SerializeObject(masterAttachmentRequestDto);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -63,7 +63,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var _httpClient = new HttpClient();
                     _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                    var response = await _httpClient.GetAsync($"https://localhost:7272/api/MasterAttachment/GetAllMasterAttachment");
+                    var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/MasterAttachment/GetAllMasterAttachment");
                     var responseData = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                     if (responseModel != null)
@@ -86,7 +86,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync($"https://localhost:7272/api/MasterAttachmentType/GetAllMasterAttachmentType");
+                var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/MasterAttachmentType/GetAllMasterAttachmentType");
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
