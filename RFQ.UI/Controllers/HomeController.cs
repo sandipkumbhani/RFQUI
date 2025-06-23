@@ -27,10 +27,7 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-        public IActionResult RFQFinalization()
-        {
-            return View("Views/RFQ/RFQFinalization.cshtml");
-        }
+       
         public IActionResult QuotationToCustomer()
         {
             return View("Views/Quotation/QuotationToCustomer.cshtml");

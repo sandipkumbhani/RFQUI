@@ -27,7 +27,10 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-
+        public ActionResult VendorRequest()
+        {
+            return View();
+        }
         public ActionResult QuoteRoleVendor()
         {
             return View();
