@@ -6,6 +6,8 @@
 
         public int CompanyId { get; set; }
 
+        public string CompanyName { get; set; }
+
         public string? SMSProvider { get; set; }
 
         public string SMSAuthKey { get; set; }

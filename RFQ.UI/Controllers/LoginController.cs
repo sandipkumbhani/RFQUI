@@ -7,10 +7,12 @@ namespace RFQ.UI.Controllers
     public class LoginController : Controller
     {
         private readonly ILoginServices _loginServcies;
+        private readonly ILogger<LoginController> _logger;
 
-        public LoginController(ILoginServices loginServcies)
+        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger    )
         {
             _loginServcies = loginServcies;
+            _logger = logger;
         }
         public IActionResult Login()
         {
@@ -22,6 +24,7 @@ namespace RFQ.UI.Controllers
             return View("~/Views/Login/sign-up.cshtml");
         }
 
+        [HttpPost]
         public async Task<string> GetToken([FromBody] LoginDto input)
         {
             try
@@ -38,8 +41,12 @@ namespace RFQ.UI.Controllers
                 }
                 return string.Empty;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(" Error -------------------- " + ex.Message);
+                _logger.LogInformation("--------------------------------");
+                _logger.LogInformation(ex.StackTrace);
+                _logger.LogInformation("--------------------------------");
                 throw;
             }
 

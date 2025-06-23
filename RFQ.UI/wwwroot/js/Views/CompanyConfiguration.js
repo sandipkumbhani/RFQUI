@@ -1,6 +1,21 @@
 ﻿
 var companyConfigResponseDto;
+var orderColumn = '';
+var orderDir = '';
+var fetchUrl = '/CompanyConfiguration/GetAllCompanyConfiguration'
 $(document).ready(function () {
+
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
+    });
+
     // Optionally, add "Cancel" to go back to the list
     $("#btnCancel").on("click", function () {
         window.location.reload(true);
@@ -273,7 +288,7 @@ function SaveCompanyConfiguration(action) {
 function FetchCompanyConfiguration() {
     $("#listSection").show();
 
-    FetchDataForTable('tableCmpConfig', '/CompanyConfiguration/GetAllCompanyConfiguration');
+    FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
     //$('#tableCmpConfig tbody').empty();
     //$('#totalList').text('Total List: 0');
     //$('#customCompanyConfigPagination').empty();
