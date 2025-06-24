@@ -12,7 +12,7 @@ $(document).ready(function () {
         $(this).data('order', orderDir); // update for next click
 
         $('th.sortable').not(this).data('order', 'asc');
-
+        debugger;
         FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
     });
 
@@ -65,7 +65,7 @@ function Initializejquery() {
 }
 function GetAllCompany() {
     $("#tableDiv").show();
-    var fetchFranchiseUrl = '/CompanyConfiguration/GetAllCompany';
+    var fetchFranchiseUrl = '/Company/GetAllCompanyAndFranchise';
     $.ajax({
         url: fetchFranchiseUrl,
         type: 'GET',
@@ -287,7 +287,7 @@ function SaveCompanyConfiguration(action) {
 
 function FetchCompanyConfiguration() {
     $("#listSection").show();
-
+    debugger;
     FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
     //$('#tableCmpConfig tbody').empty();
     //$('#totalList').text('Total List: 0');
@@ -369,7 +369,7 @@ function FetchCompanyConfiguration() {
 }
 
 // Bind events
-$('#customSearch').off('keyup').on('keyup', function () {
+$('#tableCmpConfigSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchCompanyConfiguration();
 });
