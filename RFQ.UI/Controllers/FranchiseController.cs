@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -19,7 +18,7 @@ namespace RFQ.UI.Controllers
             _globalClass = globalClass;
             _webHostEnvironment = webHostEnvironment;
         }
-        public  IActionResult Franchise()
+        public IActionResult Franchise()
         {
             return View();
         }
@@ -46,8 +45,9 @@ namespace RFQ.UI.Controllers
                 }
                 return Json(new { fileName = uniqueFileName });
             }
-            catch (Exception ex) {
-                return Json(new {result="Error",message=ex.Message});
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
             }
         }
 
@@ -56,7 +56,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "franchiselogo" , fileName);
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "franchiselogo", fileName);
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);
@@ -104,7 +104,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetAllFranchise([FromBody]PagingParam pagingParam)
+        public async Task<IActionResult> GetAllFranchise([FromBody] PagingParam pagingParam)
         {
             try
             {
@@ -123,8 +123,8 @@ namespace RFQ.UI.Controllers
                 {
                     return View(result);
                 }
-            } 
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -147,7 +147,7 @@ namespace RFQ.UI.Controllers
                 franchiseRequestDto.CreatedOn = DateTime.Now;
                 franchiseRequestDto.UpdatedOn = DateTime.Now;
 
-                var result = await _fanchiseService.EditFranchise(companyId,franchiseRequestDto);
+                var result = await _fanchiseService.EditFranchise(companyId, franchiseRequestDto);
                 if (result != null)
                 {
                     return Json(new { result = "Success" });

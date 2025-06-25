@@ -60,7 +60,7 @@ try
         }
         await next.Invoke();
     });
-   // app.UseHttpsRedirection();
+    // app.UseHttpsRedirection();
     app.UseStaticFiles();
     app.UseRouting();
     app.UseCors("AllowLocalhost");

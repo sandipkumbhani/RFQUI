@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
-using RFQ.UI.Extension;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using AutoMapper;
+using RFQ.UI.Extension;
+using System.IdentityModel.Tokens.Jwt;
 
 
 namespace RFQ.UI.Controllers
@@ -101,7 +100,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var vehicleTypeViewModel = new VehicleTypeResponseDto();    
+                var vehicleTypeViewModel = new VehicleTypeResponseDto();
                 var result = await _vehicleTypeServices.GetVehicleTypeAll(pagingParam);
                 if (Request.IsAjaxRequest())
                 {
@@ -109,9 +108,9 @@ namespace RFQ.UI.Controllers
                     {
                         draw = result.PageNumber,
                         recordsTotal = result.TotalRecordCount,
-                        recordsFiltered  = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
                         data = result.Result
-                    } );
+                    });
                 }
                 else
                 {
@@ -173,8 +172,8 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpPost] 
-        public async Task<IActionResult> VehicleSave([FromBody]VehicleRequestDto vehicleRequestDto)
+        [HttpPost]
+        public async Task<IActionResult> VehicleSave([FromBody] VehicleRequestDto vehicleRequestDto)
         {
             try
             {
@@ -202,14 +201,14 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "fail" });
             }
             catch (Exception ex)
-            { 
+            {
                 throw new Exception(ex.Message);
             }
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateVehicle([FromBody] VehicleRequestDto vehicleRequestDto)
-        {   
+        {
             try
             {
                 int vehicleId = vehicleRequestDto.VehicleId;
@@ -221,7 +220,7 @@ namespace RFQ.UI.Controllers
                 vehicleRequestDto.CreatedOn = DateTime.Now;
                 vehicleRequestDto.UpdatedOn = DateTime.Now;
 
-                var result = await _vehicleServices.EditVehicle(vehicleId,vehicleRequestDto);
+                var result = await _vehicleServices.EditVehicle(vehicleId, vehicleRequestDto);
                 if (!String.IsNullOrEmpty(result))
                     return Json(new { result = "success" });
                 else

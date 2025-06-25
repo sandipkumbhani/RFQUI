@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 
@@ -24,7 +23,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-               
+
                 if (Request.IsAjaxRequest())
                 {
                     var userlist = await _dashBoardServices.GetAllUsers();

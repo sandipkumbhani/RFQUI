@@ -14,6 +14,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> UpdateVehicleType(int vehicleTypeId, VehicleTypeRequestDto vehicleTypeRequestDto);
 
         Task<string> DeleteVehicleType(int vehicleTypeId);
-        
+
     }
 }

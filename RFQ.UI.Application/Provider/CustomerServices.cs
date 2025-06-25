@@ -29,7 +29,7 @@ namespace RFQ.UI.Application.Provider
             return _customerAdaptor.EditCustomer(PartyId, customerRequestDto);
         }
 
-        public Task<PageList<CustomerResponseDto>> GetAllCustomer(PagingParam pagingParam )
+        public Task<PageList<CustomerResponseDto>> GetAllCustomer(PagingParam pagingParam)
         {
             return _customerAdaptor.GetAllCustomer(pagingParam);
         }

@@ -1,0 +1,396 @@
+2025-06-25 12:50:55.427 +05:30 [INF] User profile is available. Using 'C:\Users\Hp\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-25 12:50:55.778 +05:30 [INF] Now listening on: http://localhost:5029
+2025-06-25 12:50:55.934 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-25 12:50:55.937 +05:30 [INF] Hosting environment: Development
+2025-06-25 12:50:55.939 +05:30 [INF] Content root path: D:\Project\RFQUI\RFQ.UI
+2025-06-25 12:50:57.921 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/ - null null
+2025-06-25 12:50:58.255 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.LoginController.Login (RFQ.UI)'
+2025-06-25 12:50:58.285 +05:30 [INF] Route matched with {action = "Login", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Login() on controller RFQ.UI.Controllers.LoginController (RFQ.UI).
+2025-06-25 12:50:58.310 +05:30 [INF] Executing ViewResult, running view Login.
+2025-06-25 12:50:58.425 +05:30 [INF] Executed ViewResult - view Login executed in 122.579ms.
+2025-06-25 12:50:58.431 +05:30 [INF] Executed action RFQ.UI.Controllers.LoginController.Login (RFQ.UI) in 142.3839ms
+2025-06-25 12:50:58.434 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.LoginController.Login (RFQ.UI)'
+2025-06-25 12:50:58.445 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/ - 200 null text/html; charset=utf-8 541.0302ms
+2025-06-25 12:50:58.455 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/css/intlTelInput-largeFlags.css - null null
+2025-06-25 12:50:58.457 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/css/app-style.css - null null
+2025-06-25 12:50:58.480 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/js/datatable-init.js - null null
+2025-06-25 12:50:58.494 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/js/script-app.js - null null
+2025-06-25 12:50:58.486 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 12:50:58.539 +05:30 [INF] The file /css/intlTelInput-largeFlags.css was not modified
+2025-06-25 12:50:58.517 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_vs/browserLink - null null
+2025-06-25 12:50:58.543 +05:30 [INF] The file /css/app-style.css was not modified
+2025-06-25 12:50:58.543 +05:30 [INF] The file /js/datatable-init.js was not modified
+2025-06-25 12:50:58.550 +05:30 [INF] The file /js/script-app.js was not modified
+2025-06-25 12:50:58.558 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - 200 13748 application/javascript; charset=utf-8 72.2184ms
+2025-06-25 12:50:58.569 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/css/app-style.css - 304 null text/css 112.0545ms
+2025-06-25 12:50:58.573 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/js/script-app.js - 304 null text/javascript 79.8916ms
+2025-06-25 12:50:58.571 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/js/datatable-init.js - 304 null text/javascript 90.7557ms
+2025-06-25 12:50:58.559 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/css/intlTelInput-largeFlags.css - 304 null text/css 104.9373ms
+2025-06-25 12:50:58.675 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_vs/browserLink - 200 null text/javascript; charset=UTF-8 158.0762ms
+2025-06-25 12:50:58.833 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/favicon.ico - null null
+2025-06-25 12:50:58.850 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/favicon.ico - 404 0 null 17.703ms
+2025-06-25 12:50:58.858 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5029/favicon.ico, Response status code: 404
+2025-06-25 12:51:00.134 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5029/Login/GetToken - application/json 53
+2025-06-25 12:51:00.148 +05:30 [INF] CORS policy execution failed.
+2025-06-25 12:51:00.150 +05:30 [INF] Request origin http://localhost:5029 does not have permission to access the resource.
+2025-06-25 12:51:00.152 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.LoginController.GetToken (RFQ.UI)'
+2025-06-25 12:51:00.171 +05:30 [INF] Route matched with {action = "GetToken", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[System.String] GetToken(RFQ.UI.Models.LoginDto) on controller RFQ.UI.Controllers.LoginController (RFQ.UI).
+2025-06-25 12:51:00.384 +05:30 [INF] Base URL: https://localhost:7272/api/Login/Login
+2025-06-25 12:51:04.748 +05:30 [INF] API Error : No connection could be made because the target machine actively refused it. (localhost:7272)
+2025-06-25 12:51:04.751 +05:30 [INF] API Error Inner Exception: System.Net.Sockets.SocketException (10061): No connection could be made because the target machine actively refused it.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+2025-06-25 12:51:04.753 +05:30 [INF] ========================================================================================================
+2025-06-25 12:51:04.755 +05:30 [INF] 
+
+
+2025-06-25 12:51:04.856 +05:30 [ERR]  Error -------------------- No connection could be made because the target machine actively refused it. (localhost:7272)
+2025-06-25 12:51:04.858 +05:30 [INF] --------------------------------
+2025-06-25 12:51:04.882 +05:30 [INF]    at RFQ.UI.Infrastructure.Provider.LoginAdaptor.PostApiDataAsync(LoginDto loginDto) in D:\Project\RFQUI\RFQ.UI.Infrastructure\Provider\LoginAdaptor.cs:line 54
+   at RFQ.UI.Controllers.LoginController.GetToken(LoginDto input) in D:\Project\RFQUI\RFQ.UI\Controllers\LoginController.cs:line 34
+2025-06-25 12:51:04.884 +05:30 [INF] --------------------------------
+2025-06-25 12:51:04.955 +05:30 [INF] Executed action RFQ.UI.Controllers.LoginController.GetToken (RFQ.UI) in 4780.7107ms
+2025-06-25 12:51:04.960 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.LoginController.GetToken (RFQ.UI)'
+2025-06-25 12:51:05.108 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+System.Exception: No connection could be made because the target machine actively refused it. (localhost:7272)
+   at RFQ.UI.Infrastructure.Provider.LoginAdaptor.PostApiDataAsync(LoginDto loginDto) in D:\Project\RFQUI\RFQ.UI.Infrastructure\Provider\LoginAdaptor.cs:line 54
+   at RFQ.UI.Controllers.LoginController.GetToken(LoginDto input) in D:\Project\RFQUI\RFQ.UI\Controllers\LoginController.cs:line 34
+   at lambda_method18(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Program.<>c__DisplayClass0_0.<<<Main>$>b__2>d.MoveNext() in D:\Project\RFQUI\RFQ.UI\Program.cs:line 61
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2025-06-25 12:51:05.125 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5029/Login/GetToken - 500 null text/plain; charset=utf-8 4990.4367ms
+2025-06-25 12:51:13.281 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-06-25 12:51:13.287 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 6.17ms
+2025-06-25 12:51:13.295 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-06-25 12:52:30.161 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5029/Login/GetToken - application/json 53
+2025-06-25 12:52:30.167 +05:30 [INF] CORS policy execution failed.
+2025-06-25 12:52:30.168 +05:30 [INF] Request origin http://localhost:5029 does not have permission to access the resource.
+2025-06-25 12:52:30.170 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.LoginController.GetToken (RFQ.UI)'
+2025-06-25 12:52:30.171 +05:30 [INF] Route matched with {action = "GetToken", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[System.String] GetToken(RFQ.UI.Models.LoginDto) on controller RFQ.UI.Controllers.LoginController (RFQ.UI).
+2025-06-25 12:52:30.176 +05:30 [INF] Base URL: https://localhost:7272/api/Login/Login
+2025-06-25 12:52:35.385 +05:30 [INF] responseData  : {"statusCode":200,"data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlbW8xMjNAZ21haWwuY29tIiwicHJvZmlsZWlkIjoiMSIsImNvbXBhbnlpZCI6IjI5MyIsInBlcnNvbm5hbWUiOiJEZW1vIiwiZXhwIjoxNzUwODc5MzU1LCJpc3MiOiJWaWtyYW50IiwiYXVkIjoiVmlrcmFudCJ9.LWYzcgQGF0d7hfwE9UEn2isA1xsZcMkOsMC6LEN4FeQ"},"message":"Success","errorMessage":null}
+2025-06-25 12:52:35.441 +05:30 [INF] Executing ObjectResult, writing value of type 'System.String'.
+2025-06-25 12:52:35.448 +05:30 [INF] Executed action RFQ.UI.Controllers.LoginController.GetToken (RFQ.UI) in 5274.1206ms
+2025-06-25 12:52:35.452 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.LoginController.GetToken (RFQ.UI)'
+2025-06-25 12:52:35.455 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5029/Login/GetToken - 200 null application/json; charset=utf-8 5294.5279ms
+2025-06-25 12:52:35.471 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Dashboard/Dashboard - null null
+2025-06-25 12:52:35.490 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.DashboardController.Dashboard (RFQ.UI)'
+2025-06-25 12:52:35.508 +05:30 [INF] Route matched with {action = "Dashboard", controller = "Dashboard"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Dashboard(RFQ.UI.Domain.ResponseDto.CompanyUserResponseDto) on controller RFQ.UI.Controllers.DashboardController (RFQ.UI).
+2025-06-25 12:52:35.522 +05:30 [INF] Executing ViewResult, running view Dashboard.
+2025-06-25 12:52:35.591 +05:30 [INF] Executed ViewResult - view Dashboard executed in 70.808ms.
+2025-06-25 12:52:35.594 +05:30 [INF] Executed action RFQ.UI.Controllers.DashboardController.Dashboard (RFQ.UI) in 83.8276ms
+2025-06-25 12:52:35.599 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.DashboardController.Dashboard (RFQ.UI)'
+2025-06-25 12:52:35.602 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Dashboard/Dashboard - 200 null text/html; charset=utf-8 131.0923ms
+2025-06-25 12:52:35.705 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_vs/browserLink - null null
+2025-06-25 12:52:35.667 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/js/common.js - null null
+2025-06-25 12:52:35.759 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-06-25 12:52:35.814 +05:30 [INF] The file /js/common.js was not modified
+2025-06-25 12:52:35.657 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 12:52:35.846 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_vs/browserLink - 200 null text/javascript; charset=UTF-8 141.6037ms
+2025-06-25 12:52:35.856 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 97.0928ms
+2025-06-25 12:52:35.857 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/js/common.js - 304 null text/javascript 191.327ms
+2025-06-25 12:52:35.864 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - 200 13748 application/javascript; charset=utf-8 207.4457ms
+2025-06-25 12:52:35.879 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-06-25 12:52:36.111 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetMenu - null null
+2025-06-25 12:52:36.135 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Dashboard/Dashboard - null null
+2025-06-25 12:52:36.260 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:52:36.270 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.DashboardController.Dashboard (RFQ.UI)'
+2025-06-25 12:52:36.272 +05:30 [INF] Route matched with {action = "Dashboard", controller = "Dashboard"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Dashboard(RFQ.UI.Domain.ResponseDto.CompanyUserResponseDto) on controller RFQ.UI.Controllers.DashboardController (RFQ.UI).
+2025-06-25 12:52:36.281 +05:30 [INF] Route matched with {action = "GetMenu", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMenu(RFQ.UI.Domain.Model.MenulistModel) on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:52:36.442 +05:30 [INF] Executing JsonResult, writing value of type 'null'.
+2025-06-25 12:52:36.447 +05:30 [INF] Executed action RFQ.UI.Controllers.DashboardController.Dashboard (RFQ.UI) in 171.1585ms
+2025-06-25 12:52:36.450 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.DashboardController.Dashboard (RFQ.UI)'
+2025-06-25 12:52:36.453 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Dashboard/Dashboard - 200 null application/json; charset=utf-8 318.3691ms
+2025-06-25 12:52:37.991 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.Model.MenulistModel, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:52:38.000 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI) in 1698.469ms
+2025-06-25 12:52:38.002 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:52:38.004 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetMenu - 200 null application/json; charset=utf-8 1893.5929ms
+2025-06-25 12:52:42.503 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/customer/customer?LinkId=1 - null null
+2025-06-25 12:52:42.513 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CustomerController.Customer (RFQ.UI)'
+2025-06-25 12:52:42.523 +05:30 [INF] Route matched with {action = "Customer", controller = "Customer"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Customer() on controller RFQ.UI.Controllers.CustomerController (RFQ.UI).
+2025-06-25 12:52:42.532 +05:30 [INF] Executing ViewResult, running view Customer.
+2025-06-25 12:52:42.559 +05:30 [INF] Executed ViewResult - view Customer executed in 28.282ms.
+2025-06-25 12:52:42.569 +05:30 [INF] Executed action RFQ.UI.Controllers.CustomerController.Customer (RFQ.UI) in 39.915ms
+2025-06-25 12:52:42.571 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CustomerController.Customer (RFQ.UI)'
+2025-06-25 12:52:42.575 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/customer/customer?LinkId=1 - 200 null text/html; charset=utf-8 70.6951ms
+2025-06-25 12:52:42.619 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/js/Views/Customer.js - null null
+2025-06-25 12:52:42.620 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-06-25 12:52:42.636 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_vs/browserLink - null null
+2025-06-25 12:52:42.636 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 12:52:42.653 +05:30 [INF] The file /js/Views/Customer.js was not modified
+2025-06-25 12:52:42.671 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - 200 13748 application/javascript; charset=utf-8 35.1196ms
+2025-06-25 12:52:42.677 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/js/Views/Customer.js - 304 null text/javascript 58.3243ms
+2025-06-25 12:52:42.659 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 39.5701ms
+2025-06-25 12:52:42.690 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_vs/browserLink - 200 null text/javascript; charset=UTF-8 54.4262ms
+2025-06-25 12:52:42.702 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-06-25 12:52:42.983 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetMenu - null null
+2025-06-25 12:52:42.997 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:52:43.000 +05:30 [INF] Route matched with {action = "GetMenu", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMenu(RFQ.UI.Domain.Model.MenulistModel) on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:52:43.125 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.Model.MenulistModel, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:52:43.132 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI) in 125.7994ms
+2025-06-25 12:52:43.139 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:52:43.141 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Customer/GetAllCity - null null
+2025-06-25 12:52:43.142 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetMenu - 200 null application/json; charset=utf-8 159.0753ms
+2025-06-25 12:52:43.151 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/MasterAttachment/GetAllMasterAttachmentType - application/json null
+2025-06-25 12:52:43.154 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CustomerController.GetAllCity (RFQ.UI)'
+2025-06-25 12:52:43.157 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5029/Customer/ViewCustomer - application/json 80
+2025-06-25 12:52:43.175 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.MasterAttachmentController.GetAllMasterAttachmentType (RFQ.UI)'
+2025-06-25 12:52:43.202 +05:30 [INF] Route matched with {action = "GetAllCity", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllCity() on controller RFQ.UI.Controllers.CustomerController (RFQ.UI).
+2025-06-25 12:52:43.206 +05:30 [INF] CORS policy execution failed.
+2025-06-25 12:52:43.219 +05:30 [INF] Route matched with {action = "GetAllMasterAttachmentType", controller = "MasterAttachment"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllMasterAttachmentType() on controller RFQ.UI.Controllers.MasterAttachmentController (RFQ.UI).
+2025-06-25 12:52:43.220 +05:30 [INF] Request origin http://localhost:5029 does not have permission to access the resource.
+2025-06-25 12:52:43.239 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CustomerController.ViewCustomer (RFQ.UI)'
+2025-06-25 12:52:43.275 +05:30 [INF] Route matched with {action = "ViewCustomer", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ViewCustomer(RFQ.UI.Domain.RequestDto.PagingParam) on controller RFQ.UI.Controllers.CustomerController (RFQ.UI).
+2025-06-25 12:52:43.632 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.MasterAttachmentTypeResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:52:43.691 +05:30 [INF] Executed action RFQ.UI.Controllers.MasterAttachmentController.GetAllMasterAttachmentType (RFQ.UI) in 467.5145ms
+2025-06-25 12:52:43.703 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.MasterAttachmentController.GetAllMasterAttachmentType (RFQ.UI)'
+2025-06-25 12:52:43.705 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/MasterAttachment/GetAllMasterAttachmentType - 200 null application/json; charset=utf-8 554.5557ms
+2025-06-25 12:52:43.783 +05:30 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.CustomerResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-06-25 12:52:43.822 +05:30 [INF] Executed action RFQ.UI.Controllers.CustomerController.ViewCustomer (RFQ.UI) in 472.7264ms
+2025-06-25 12:52:43.834 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CustomerController.ViewCustomer (RFQ.UI)'
+2025-06-25 12:52:43.839 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5029/Customer/ViewCustomer - 200 null application/json; charset=utf-8 682.4271ms
+2025-06-25 12:52:44.058 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.ComMstCityDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:52:44.100 +05:30 [INF] Executed action RFQ.UI.Controllers.CustomerController.GetAllCity (RFQ.UI) in 881.5891ms
+2025-06-25 12:52:44.104 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CustomerController.GetAllCity (RFQ.UI)'
+2025-06-25 12:52:44.106 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Customer/GetAllCity - 200 null application/json; charset=utf-8 965.0231ms
+2025-06-25 12:52:45.409 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Vehicle/VehicleType?LinkId=3 - null null
+2025-06-25 12:52:45.423 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.VehicleController.VehicleType (RFQ.UI)'
+2025-06-25 12:52:45.432 +05:30 [INF] Route matched with {action = "VehicleType", controller = "Vehicle"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult VehicleType() on controller RFQ.UI.Controllers.VehicleController (RFQ.UI).
+2025-06-25 12:52:45.444 +05:30 [INF] Executing ViewResult, running view VehicleType.
+2025-06-25 12:52:45.489 +05:30 [INF] Executed ViewResult - view VehicleType executed in 47.9087ms.
+2025-06-25 12:52:45.495 +05:30 [INF] Executed action RFQ.UI.Controllers.VehicleController.VehicleType (RFQ.UI) in 56.0322ms
+2025-06-25 12:52:45.499 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.VehicleController.VehicleType (RFQ.UI)'
+2025-06-25 12:52:45.508 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Vehicle/VehicleType?LinkId=3 - 200 null text/html; charset=utf-8 99.6926ms
+2025-06-25 12:52:45.557 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-06-25 12:52:45.558 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_vs/browserLink - null null
+2025-06-25 12:52:45.559 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/js/Views/VehicleType.js - null null
+2025-06-25 12:52:45.567 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 10.385ms
+2025-06-25 12:52:45.561 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 12:52:45.579 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_vs/browserLink - 200 null text/javascript; charset=UTF-8 21.5817ms
+2025-06-25 12:52:45.580 +05:30 [INF] The file /js/Views/VehicleType.js was not modified
+2025-06-25 12:52:45.586 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-06-25 12:52:45.593 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - 200 13748 application/javascript; charset=utf-8 31.7466ms
+2025-06-25 12:52:45.603 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/js/Views/VehicleType.js - 304 null text/javascript 43.9548ms
+2025-06-25 12:52:45.798 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetMenu - null null
+2025-06-25 12:52:45.812 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:52:45.815 +05:30 [INF] Route matched with {action = "GetMenu", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMenu(RFQ.UI.Domain.Model.MenulistModel) on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:52:45.894 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.Model.MenulistModel, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:52:45.919 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI) in 100.1042ms
+2025-06-25 12:52:45.920 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5029/Vehicle/ViewVehicleType - application/json 80
+2025-06-25 12:52:45.924 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:52:45.971 +05:30 [INF] CORS policy execution failed.
+2025-06-25 12:52:45.972 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetMenu - 200 null application/json; charset=utf-8 174.3258ms
+2025-06-25 12:52:46.001 +05:30 [INF] Request origin http://localhost:5029 does not have permission to access the resource.
+2025-06-25 12:52:46.033 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.VehicleController.ViewVehicleType (RFQ.UI)'
+2025-06-25 12:52:46.045 +05:30 [INF] Route matched with {action = "ViewVehicleType", controller = "Vehicle"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ViewVehicleType(RFQ.UI.Domain.RequestDto.PagingParam) on controller RFQ.UI.Controllers.VehicleController (RFQ.UI).
+2025-06-25 12:52:46.426 +05:30 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.VehicleTypeResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-06-25 12:52:46.455 +05:30 [INF] Executed action RFQ.UI.Controllers.VehicleController.ViewVehicleType (RFQ.UI) in 404.0565ms
+2025-06-25 12:52:46.463 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.VehicleController.ViewVehicleType (RFQ.UI)'
+2025-06-25 12:52:46.467 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5029/Vehicle/ViewVehicleType - 200 null application/json; charset=utf-8 547.2009ms
+2025-06-25 12:52:55.912 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Franchise/Franchise?LinkId=4 - null null
+2025-06-25 12:52:55.920 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.FranchiseController.Franchise (RFQ.UI)'
+2025-06-25 12:52:55.926 +05:30 [INF] Route matched with {action = "Franchise", controller = "Franchise"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Franchise() on controller RFQ.UI.Controllers.FranchiseController (RFQ.UI).
+2025-06-25 12:52:55.932 +05:30 [INF] Executing ViewResult, running view Franchise.
+2025-06-25 12:52:55.960 +05:30 [INF] Executed ViewResult - view Franchise executed in 29.5499ms.
+2025-06-25 12:52:55.963 +05:30 [INF] Executed action RFQ.UI.Controllers.FranchiseController.Franchise (RFQ.UI) in 33.7519ms
+2025-06-25 12:52:55.967 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.FranchiseController.Franchise (RFQ.UI)'
+2025-06-25 12:52:55.969 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Franchise/Franchise?LinkId=4 - 200 null text/html; charset=utf-8 57.9288ms
+2025-06-25 12:52:56.010 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 12:52:56.013 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/js/Views/Franchise.js - null null
+2025-06-25 12:52:56.013 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-06-25 12:52:56.014 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_vs/browserLink - null null
+2025-06-25 12:52:56.031 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - 200 13748 application/javascript; charset=utf-8 20.946ms
+2025-06-25 12:52:56.054 +05:30 [INF] The file /js/Views/Franchise.js was not modified
+2025-06-25 12:52:56.063 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 50.1923ms
+2025-06-25 12:52:56.080 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_vs/browserLink - 200 null text/javascript; charset=UTF-8 66.8841ms
+2025-06-25 12:52:56.081 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/js/Views/Franchise.js - 304 null text/javascript 68.7418ms
+2025-06-25 12:52:56.090 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-06-25 12:52:56.261 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetMenu - null null
+2025-06-25 12:52:56.297 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:52:56.301 +05:30 [INF] Route matched with {action = "GetMenu", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMenu(RFQ.UI.Domain.Model.MenulistModel) on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:52:56.348 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.Model.MenulistModel, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:52:56.351 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI) in 40.3435ms
+2025-06-25 12:52:56.358 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:52:56.362 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetMenu - 200 null application/json; charset=utf-8 100.2992ms
+2025-06-25 12:52:56.409 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/MasterAttachment/GetAllMasterAttachmentType - application/json null
+2025-06-25 12:52:56.409 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Customer/GetAllCity - null null
+2025-06-25 12:52:56.416 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5029/Franchise/GetAllFranchise - application/json 80
+2025-06-25 12:52:56.421 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.MasterAttachmentController.GetAllMasterAttachmentType (RFQ.UI)'
+2025-06-25 12:52:56.424 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CustomerController.GetAllCity (RFQ.UI)'
+2025-06-25 12:52:56.434 +05:30 [INF] Route matched with {action = "GetAllMasterAttachmentType", controller = "MasterAttachment"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllMasterAttachmentType() on controller RFQ.UI.Controllers.MasterAttachmentController (RFQ.UI).
+2025-06-25 12:52:56.435 +05:30 [INF] CORS policy execution failed.
+2025-06-25 12:52:56.437 +05:30 [INF] Route matched with {action = "GetAllCity", controller = "Customer"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllCity() on controller RFQ.UI.Controllers.CustomerController (RFQ.UI).
+2025-06-25 12:52:56.447 +05:30 [INF] Request origin http://localhost:5029 does not have permission to access the resource.
+2025-06-25 12:52:56.503 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.FranchiseController.GetAllFranchise (RFQ.UI)'
+2025-06-25 12:52:56.527 +05:30 [INF] Route matched with {action = "GetAllFranchise", controller = "Franchise"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllFranchise(RFQ.UI.Domain.RequestDto.PagingParam) on controller RFQ.UI.Controllers.FranchiseController (RFQ.UI).
+2025-06-25 12:52:56.798 +05:30 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.FranchiseResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-06-25 12:52:56.817 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.MasterAttachmentTypeResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:52:56.819 +05:30 [INF] Executed action RFQ.UI.Controllers.FranchiseController.GetAllFranchise (RFQ.UI) in 287.9896ms
+2025-06-25 12:52:56.820 +05:30 [INF] Executed action RFQ.UI.Controllers.MasterAttachmentController.GetAllMasterAttachmentType (RFQ.UI) in 374.3028ms
+2025-06-25 12:52:56.832 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.FranchiseController.GetAllFranchise (RFQ.UI)'
+2025-06-25 12:52:56.836 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.MasterAttachmentController.GetAllMasterAttachmentType (RFQ.UI)'
+2025-06-25 12:52:56.848 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5029/Franchise/GetAllFranchise - 200 null application/json; charset=utf-8 432.7298ms
+2025-06-25 12:52:56.851 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/MasterAttachment/GetAllMasterAttachmentType - 200 null application/json; charset=utf-8 442.013ms
+2025-06-25 12:52:56.997 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.ComMstCityDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:52:57.030 +05:30 [INF] Executed action RFQ.UI.Controllers.CustomerController.GetAllCity (RFQ.UI) in 531.6582ms
+2025-06-25 12:52:57.033 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CustomerController.GetAllCity (RFQ.UI)'
+2025-06-25 12:52:57.035 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Customer/GetAllCity - 200 null application/json; charset=utf-8 626.8436ms
+2025-06-25 12:53:07.384 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/index?LinkId=13 - null null
+2025-06-25 12:53:07.398 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.Index (RFQ.UI)'
+2025-06-25 12:53:07.403 +05:30 [INF] Route matched with {action = "Index", controller = "CompanyConfiguration"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult Index() on controller RFQ.UI.Controllers.CompanyConfigurationController (RFQ.UI).
+2025-06-25 12:53:07.412 +05:30 [INF] Executing ViewResult, running view Index.
+2025-06-25 12:53:07.430 +05:30 [INF] Executed ViewResult - view Index executed in 19.1759ms.
+2025-06-25 12:53:07.432 +05:30 [INF] Executed action RFQ.UI.Controllers.CompanyConfigurationController.Index (RFQ.UI) in 23.0566ms
+2025-06-25 12:53:07.439 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.Index (RFQ.UI)'
+2025-06-25 12:53:07.443 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/index?LinkId=13 - 200 null text/html; charset=utf-8 59.1294ms
+2025-06-25 12:53:07.478 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 12:53:07.479 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-06-25 12:53:07.479 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/js/Views/CompanyConfiguration.js - null null
+2025-06-25 12:53:07.479 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_vs/browserLink - null null
+2025-06-25 12:53:07.499 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - 200 13748 application/javascript; charset=utf-8 21.1543ms
+2025-06-25 12:53:07.511 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 32.5665ms
+2025-06-25 12:53:07.560 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_vs/browserLink - 200 null text/javascript; charset=UTF-8 80.5214ms
+2025-06-25 12:53:07.564 +05:30 [INF] Sending file. Request path: '/js/Views/CompanyConfiguration.js'. Physical path: 'D:\Project\RFQUI\RFQ.UI\wwwroot\js\Views\CompanyConfiguration.js'
+2025-06-25 12:53:07.570 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-06-25 12:53:07.577 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/js/Views/CompanyConfiguration.js - 200 20526 text/javascript 98.4392ms
+2025-06-25 12:53:07.772 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetMenu - null null
+2025-06-25 12:53:07.785 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:53:07.790 +05:30 [INF] Route matched with {action = "GetMenu", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMenu(RFQ.UI.Domain.Model.MenulistModel) on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:53:07.837 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.Model.MenulistModel, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:53:07.840 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI) in 46.4903ms
+2025-06-25 12:53:07.843 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:53:07.845 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetMenu - 200 null application/json; charset=utf-8 73.3326ms
+2025-06-25 12:53:07.908 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetAllCompanyAndFranchise - null null
+2025-06-25 12:53:07.910 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/GetAllProviders - null null
+2025-06-25 12:53:07.917 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetAllCompanyAndFranchise (RFQ.UI)'
+2025-06-25 12:53:07.939 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllProviders (RFQ.UI)'
+2025-06-25 12:53:07.955 +05:30 [INF] Route matched with {action = "GetAllCompanyAndFranchise", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllCompanyAndFranchise() on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:53:07.961 +05:30 [INF] Route matched with {action = "GetAllProviders", controller = "CompanyConfiguration"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllProviders() on controller RFQ.UI.Controllers.CompanyConfigurationController (RFQ.UI).
+2025-06-25 12:53:07.988 +05:30 [INF] Start processing HTTP request GET https://localhost:7272/api/Company/GetAllCompanyAndFranchise
+2025-06-25 12:53:08.009 +05:30 [INF] Sending HTTP request GET https://localhost:7272/api/Company/GetAllCompanyAndFranchise
+2025-06-25 12:53:08.132 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.ProviderResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:53:08.132 +05:30 [INF] Received HTTP response headers after 115.8648ms - 200
+2025-06-25 12:53:08.142 +05:30 [INF] Executed action RFQ.UI.Controllers.CompanyConfigurationController.GetAllProviders (RFQ.UI) in 160.7631ms
+2025-06-25 12:53:08.142 +05:30 [INF] End processing HTTP request after 161.7117ms - 200
+2025-06-25 12:53:08.145 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllProviders (RFQ.UI)'
+2025-06-25 12:53:08.149 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/GetAllProviders - 200 null application/json; charset=utf-8 239.3031ms
+2025-06-25 12:53:08.154 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.CompanyAndFranchiseListDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:53:08.160 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetAllCompanyAndFranchise (RFQ.UI) in 193.5109ms
+2025-06-25 12:53:08.163 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetAllCompanyAndFranchise (RFQ.UI)'
+2025-06-25 12:53:08.165 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetAllCompanyAndFranchise - 200 null application/json; charset=utf-8 256.9738ms
+2025-06-25 12:53:09.848 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5029/CompanyConfiguration/GetAllCompanyConfiguration - application/json 80
+2025-06-25 12:53:09.854 +05:30 [INF] CORS policy execution failed.
+2025-06-25 12:53:09.858 +05:30 [INF] Request origin http://localhost:5029 does not have permission to access the resource.
+2025-06-25 12:53:09.860 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllCompanyConfiguration (RFQ.UI)'
+2025-06-25 12:53:09.872 +05:30 [INF] Route matched with {action = "GetAllCompanyConfiguration", controller = "CompanyConfiguration"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllCompanyConfiguration(RFQ.UI.Domain.RequestDto.PagingParam) on controller RFQ.UI.Controllers.CompanyConfigurationController (RFQ.UI).
+2025-06-25 12:53:10.008 +05:30 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.CompanyConfigurationResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-06-25 12:53:10.014 +05:30 [INF] Executed action RFQ.UI.Controllers.CompanyConfigurationController.GetAllCompanyConfiguration (RFQ.UI) in 138.8796ms
+2025-06-25 12:53:10.017 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllCompanyConfiguration (RFQ.UI)'
+2025-06-25 12:53:10.024 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5029/CompanyConfiguration/GetAllCompanyConfiguration - 200 null application/json; charset=utf-8 176.5447ms
+2025-06-25 12:53:17.558 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/index?LinkId=13 - null null
+2025-06-25 12:53:17.569 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.Index (RFQ.UI)'
+2025-06-25 12:53:17.571 +05:30 [INF] Route matched with {action = "Index", controller = "CompanyConfiguration"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult Index() on controller RFQ.UI.Controllers.CompanyConfigurationController (RFQ.UI).
+2025-06-25 12:53:17.575 +05:30 [INF] Executing ViewResult, running view Index.
+2025-06-25 12:53:17.578 +05:30 [INF] Executed ViewResult - view Index executed in 3.7467ms.
+2025-06-25 12:53:17.582 +05:30 [INF] Executed action RFQ.UI.Controllers.CompanyConfigurationController.Index (RFQ.UI) in 6.9985ms
+2025-06-25 12:53:17.602 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.Index (RFQ.UI)'
+2025-06-25 12:53:17.606 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/index?LinkId=13 - 200 null text/html; charset=utf-8 47.3292ms
+2025-06-25 12:53:17.629 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_vs/browserLink - null null
+2025-06-25 12:53:17.631 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 12:53:17.649 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_vs/browserLink - 200 null text/javascript; charset=UTF-8 20.5188ms
+2025-06-25 12:53:17.652 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - 200 13748 application/javascript; charset=utf-8 21.3108ms
+2025-06-25 12:53:17.673 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-06-25 12:53:17.679 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 5.4737ms
+2025-06-25 12:53:17.687 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-06-25 12:53:17.865 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetMenu - null null
+2025-06-25 12:53:17.889 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:53:17.891 +05:30 [INF] Route matched with {action = "GetMenu", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMenu(RFQ.UI.Domain.Model.MenulistModel) on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:53:17.959 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.Model.MenulistModel, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:53:17.962 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI) in 65.4691ms
+2025-06-25 12:53:17.972 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:53:17.974 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetMenu - 200 null application/json; charset=utf-8 109.2832ms
+2025-06-25 12:53:18.039 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetAllCompanyAndFranchise - null null
+2025-06-25 12:53:18.040 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/GetAllProviders - null null
+2025-06-25 12:53:18.051 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetAllCompanyAndFranchise (RFQ.UI)'
+2025-06-25 12:53:18.056 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllProviders (RFQ.UI)'
+2025-06-25 12:53:18.057 +05:30 [INF] Route matched with {action = "GetAllCompanyAndFranchise", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllCompanyAndFranchise() on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:53:18.059 +05:30 [INF] Route matched with {action = "GetAllProviders", controller = "CompanyConfiguration"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllProviders() on controller RFQ.UI.Controllers.CompanyConfigurationController (RFQ.UI).
+2025-06-25 12:53:18.062 +05:30 [INF] Start processing HTTP request GET https://localhost:7272/api/Company/GetAllCompanyAndFranchise
+2025-06-25 12:53:18.071 +05:30 [INF] Sending HTTP request GET https://localhost:7272/api/Company/GetAllCompanyAndFranchise
+2025-06-25 12:53:18.103 +05:30 [INF] Received HTTP response headers after 27.5658ms - 200
+2025-06-25 12:53:18.106 +05:30 [INF] End processing HTTP request after 43.5119ms - 200
+2025-06-25 12:53:18.111 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.CompanyAndFranchiseListDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:53:18.124 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetAllCompanyAndFranchise (RFQ.UI) in 61.9298ms
+2025-06-25 12:53:18.134 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetAllCompanyAndFranchise (RFQ.UI)'
+2025-06-25 12:53:18.136 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.ProviderResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:53:18.142 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetAllCompanyAndFranchise - 200 null application/json; charset=utf-8 103.093ms
+2025-06-25 12:53:18.145 +05:30 [INF] Executed action RFQ.UI.Controllers.CompanyConfigurationController.GetAllProviders (RFQ.UI) in 78.7925ms
+2025-06-25 12:53:18.163 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllProviders (RFQ.UI)'
+2025-06-25 12:53:18.169 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/GetAllProviders - 200 null application/json; charset=utf-8 129.1165ms
+2025-06-25 12:53:21.845 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/index?LinkId=13 - null null
+2025-06-25 12:53:21.883 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.Index (RFQ.UI)'
+2025-06-25 12:53:21.887 +05:30 [INF] Route matched with {action = "Index", controller = "CompanyConfiguration"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult Index() on controller RFQ.UI.Controllers.CompanyConfigurationController (RFQ.UI).
+2025-06-25 12:53:21.890 +05:30 [INF] Executing ViewResult, running view Index.
+2025-06-25 12:53:21.893 +05:30 [INF] Executed ViewResult - view Index executed in 2.803ms.
+2025-06-25 12:53:21.898 +05:30 [INF] Executed action RFQ.UI.Controllers.CompanyConfigurationController.Index (RFQ.UI) in 7.6888ms
+2025-06-25 12:53:21.905 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.Index (RFQ.UI)'
+2025-06-25 12:53:21.936 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/index?LinkId=13 - 200 null text/html; charset=utf-8 91.337ms
+2025-06-25 12:53:21.951 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_vs/browserLink - null null
+2025-06-25 12:53:21.952 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 12:53:21.972 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_vs/browserLink - 200 null text/javascript; charset=UTF-8 21.394ms
+2025-06-25 12:53:21.973 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/_framework/aspnetcore-browser-refresh.js - 200 13748 application/javascript; charset=utf-8 20.8204ms
+2025-06-25 12:53:22.010 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-06-25 12:53:22.020 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 9.2539ms
+2025-06-25 12:53:22.032 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5029/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-06-25 12:53:22.223 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetMenu - null null
+2025-06-25 12:53:22.322 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:53:22.349 +05:30 [INF] Route matched with {action = "GetMenu", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMenu(RFQ.UI.Domain.Model.MenulistModel) on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:53:22.392 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/GetAllProviders - null null
+2025-06-25 12:53:22.392 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5029/Home/GetAllCompanyAndFranchise - null null
+2025-06-25 12:53:22.405 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllProviders (RFQ.UI)'
+2025-06-25 12:53:22.409 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.HomeController.GetAllCompanyAndFranchise (RFQ.UI)'
+2025-06-25 12:53:22.411 +05:30 [INF] Route matched with {action = "GetAllProviders", controller = "CompanyConfiguration"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllProviders() on controller RFQ.UI.Controllers.CompanyConfigurationController (RFQ.UI).
+2025-06-25 12:53:22.418 +05:30 [INF] Route matched with {action = "GetAllCompanyAndFranchise", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllCompanyAndFranchise() on controller RFQ.UI.Controllers.HomeController (RFQ.UI).
+2025-06-25 12:53:22.435 +05:30 [INF] Start processing HTTP request GET https://localhost:7272/api/Company/GetAllCompanyAndFranchise
+2025-06-25 12:53:22.452 +05:30 [INF] Sending HTTP request GET https://localhost:7272/api/Company/GetAllCompanyAndFranchise
+2025-06-25 12:53:22.485 +05:30 [INF] Received HTTP response headers after 30.1881ms - 200
+2025-06-25 12:53:22.488 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.Model.MenulistModel, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:53:22.490 +05:30 [INF] End processing HTTP request after 55.1398ms - 200
+2025-06-25 12:53:22.492 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.ProviderResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:53:22.493 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI) in 116.6143ms
+2025-06-25 12:53:22.502 +05:30 [INF] Executing JsonResult, writing value of type 'System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.CompanyAndFranchiseListDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 12:53:22.504 +05:30 [INF] Executed action RFQ.UI.Controllers.CompanyConfigurationController.GetAllProviders (RFQ.UI) in 81.2667ms
+2025-06-25 12:53:22.506 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetMenu (RFQ.UI)'
+2025-06-25 12:53:22.508 +05:30 [INF] Executed action RFQ.UI.Controllers.HomeController.GetAllCompanyAndFranchise (RFQ.UI) in 73.5697ms
+2025-06-25 12:53:22.510 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllProviders (RFQ.UI)'
+2025-06-25 12:53:22.515 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetMenu - 200 null application/json; charset=utf-8 292.8505ms
+2025-06-25 12:53:22.518 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.HomeController.GetAllCompanyAndFranchise (RFQ.UI)'
+2025-06-25 12:53:22.521 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/CompanyConfiguration/GetAllProviders - 200 null application/json; charset=utf-8 129.8399ms
+2025-06-25 12:53:22.532 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5029/Home/GetAllCompanyAndFranchise - 200 null application/json; charset=utf-8 140.0212ms
+2025-06-25 12:53:46.664 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5029/CompanyConfiguration/GetAllCompanyConfiguration - application/json 80
+2025-06-25 12:53:46.674 +05:30 [INF] CORS policy execution failed.
+2025-06-25 12:53:46.676 +05:30 [INF] Request origin http://localhost:5029 does not have permission to access the resource.
+2025-06-25 12:53:46.678 +05:30 [INF] Executing endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllCompanyConfiguration (RFQ.UI)'
+2025-06-25 12:53:46.682 +05:30 [INF] Route matched with {action = "GetAllCompanyConfiguration", controller = "CompanyConfiguration"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllCompanyConfiguration(RFQ.UI.Domain.RequestDto.PagingParam) on controller RFQ.UI.Controllers.CompanyConfigurationController (RFQ.UI).
+2025-06-25 12:53:46.759 +05:30 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Collections.Generic.List`1[[RFQ.UI.Domain.ResponseDto.CompanyConfigurationResponseDto, RFQ.UI.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-06-25 12:53:46.761 +05:30 [INF] Executed action RFQ.UI.Controllers.CompanyConfigurationController.GetAllCompanyConfiguration (RFQ.UI) in 76.502ms
+2025-06-25 12:53:46.764 +05:30 [INF] Executed endpoint 'RFQ.UI.Controllers.CompanyConfigurationController.GetAllCompanyConfiguration (RFQ.UI)'
+2025-06-25 12:53:46.766 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5029/CompanyConfiguration/GetAllCompanyConfiguration - 200 null application/json; charset=utf-8 102.0517ms

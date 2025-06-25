@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RFQ.UI.Domain.Helper
+﻿namespace RFQ.UI.Domain.Helper
 {
     public class PageList<T>
     {

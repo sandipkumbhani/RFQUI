@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -27,10 +26,10 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
 
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-               
+
                 if (companyMasterPackingTypeRequestDto != null)
                 {
-                    
+
 
                     var result = await _companyMasterPackingTypeServices.AddMasterPackingType(companyMasterPackingTypeRequestDto);
                     return Json(new { result });

@@ -22,7 +22,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetAllCompanyConfiguration([FromBody]PagingParam pagingParam)
+        public async Task<IActionResult> GetAllCompanyConfiguration([FromBody] PagingParam pagingParam)
         {
             try
             {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RFQ.UI.Domain.RequestDto
+﻿namespace RFQ.UI.Domain.RequestDto
 {
     public class CorporateCompanyRequestDto
     {
@@ -21,7 +15,7 @@ namespace RFQ.UI.Domain.RequestDto
         public string? Email { get; set; }
         public string? PANNo { get; set; }
         public string? GSTNo { get; set; }
-        public string? LogoImage { get; set; } 
+        public string? LogoImage { get; set; }
         public int ParentCompanyId { get; set; }
         public int LinkId { get; set; }
         public int StatusId { get; set; }

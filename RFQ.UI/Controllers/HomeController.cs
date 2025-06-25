@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -27,7 +26,7 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-       
+
         public IActionResult QuotationToCustomer()
         {
             return View("Views/Quotation/QuotationToCustomer.cshtml");

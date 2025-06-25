@@ -9,7 +9,7 @@ namespace RFQ.UI.Controllers
         private readonly ILoginServices _loginServcies;
         private readonly ILogger<LoginController> _logger;
 
-        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger    )
+        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger)
         {
             _loginServcies = loginServcies;
             _logger = logger;
@@ -50,6 +50,6 @@ namespace RFQ.UI.Controllers
                 throw;
             }
 
-        } 
+        }
     }
 }

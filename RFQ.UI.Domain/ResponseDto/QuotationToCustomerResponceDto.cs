@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RFQ.UI.Domain.ResponseDto
+﻿namespace RFQ.UI.Domain.ResponseDto
 {
     public class QuotationToCustomerResponceDto
     {
@@ -19,12 +13,12 @@ namespace RFQ.UI.Domain.ResponseDto
         public int VehicleTypeId { get; set; }
         public int VehicleCount { get; set; }
         public int TotalQty { get; set; }
-        public int ItemId { get; set; } 
+        public int ItemId { get; set; }
         public int MaxCosting { get; set; }
         public int DetentionPerDay { get; set; }
         public int DetentionFreeDay { get; set; }
         public int PackingTypeId { get; set; }
-        public string? SpecialInstruction { get; set; } 
+        public string? SpecialInstruction { get; set; }
 
     }
 }

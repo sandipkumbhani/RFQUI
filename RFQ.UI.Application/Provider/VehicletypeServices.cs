@@ -16,10 +16,10 @@ namespace RFQ.UI.Application.Provider
         }
         public async Task<string> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto)
         {
-            return await  _vehicleTypeAdaptor.AddVehicleType(vehicleTypeRequestDto);
+            return await _vehicleTypeAdaptor.AddVehicleType(vehicleTypeRequestDto);
         }
 
-        public  async Task<string> DeleteVehicleType(int vehicleTypeId)
+        public async Task<string> DeleteVehicleType(int vehicleTypeId)
         {
             return await _vehicleTypeAdaptor.DeleteVehicleType(vehicleTypeId);
         }

@@ -5,7 +5,6 @@ using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using RFQ.UI.Models;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -180,7 +179,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     dlKycDetails.DrivingLicenseModel.ValidityIssueDate = dlKycDetails.DrivingLicenseModel.ValidityIssueDate.AddDays(1);
                     dlKycDetails.DrivingLicenseModel.ValidityExpiryDate = dlKycDetails.DrivingLicenseModel.ValidityExpiryDate.AddDays(1);
-                }   
+                }
 
                 return dlKycDetails;
             }
