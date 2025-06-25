@@ -317,7 +317,7 @@ function UpdateCustomer() {
 
         $.ajax({
             type: "PUT",
-            /*//url: '/MasterAttachment/UpdateMasterAttachment',*/
+            url: '/MasterAttachment/UpdateMasterAttachment',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(updateAttachmentDetails),
             dataType: "json",

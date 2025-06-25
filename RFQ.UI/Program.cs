@@ -1,4 +1,4 @@
-using RFQ.UI.Application.Extension;
+﻿using RFQ.UI.Application.Extension;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Infrastructure.Extension;
 using RFQ.UI.MapperProfile;
@@ -14,6 +14,17 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost",
+        builder => builder.WithOrigins("https://localhost:7265")
+                          .WithOrigins("https://localhost:7075")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials());
+});
+
 
 var globalclass = new GlobalClass();
 // Add services to the container.
@@ -49,14 +60,11 @@ try
         }
         await next.Invoke();
     });
-
-    app.UseHttpsRedirection();
+   // app.UseHttpsRedirection();
     app.UseStaticFiles();
-
     app.UseRouting();
-
+    app.UseCors("AllowLocalhost");
     app.UseAuthorization();
-
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Login}/{action=Login}/{id?}");

@@ -166,7 +166,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
         }),
         success: function (response) {
             if (!response || !response.data || response.data.length === 0) {
-                $( '#' + gridTableName + ' tbody').html('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                $( '#' + gridTableName + ' tbody').html('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                 $('#totalList').text('Total List: 0');
                 $('#customPagination').empty();
                 return;
@@ -179,7 +179,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
             generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url);
         },
         error: function () {
-            $('#' + gridTableName + ' tbody').html('<tr><td colspan="4" class="text-center text-danger">Error loading data</td></tr>');
+            $('#' + gridTableName + ' tbody').html('<tr><td colspan="12" class="text-center text-danger">Error loading data</td></tr>');
             $('#customvehicleTypesPagination').empty();
         }
     });
