@@ -18,7 +18,18 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        public IActionResult Verification()
+        {
+            return View();
+        }
+        public IActionResult SetNewPassword()
+        {
+            return View();
+        }
         public IActionResult Signup()
         {
             return View("~/Views/Login/sign-up.cshtml");
