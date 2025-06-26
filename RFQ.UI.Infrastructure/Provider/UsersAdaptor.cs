@@ -214,7 +214,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<string> UpdateUsersPassword(UserRequestDto userRequestDto)
+        public async Task<bool> UpdateUsersPassword(UserRequestDto userRequestDto)
         {
             try
             {
@@ -230,16 +230,12 @@ namespace RFQ.UI.Infrastructure.Provider
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
-                    if (result == 200)
-                    {
-                        return "User Updated...";
-                    }
+                    if (result == 200 && responseModel.Data == true.ToString())
+                        return true;
                     else
-                    {
-                        return responseModel.ErrorMessage;
-                    }
+                        return false;
                 }
-                return "Failed to Update User ";
+                return false;
             }
             catch (Exception)
             {

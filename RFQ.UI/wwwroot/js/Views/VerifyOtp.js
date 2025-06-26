@@ -15,10 +15,9 @@ function OnSubmit() {
 
         $.post('/Login/VerifyOtp', { email, otp }, function (res) {
             if (res.success) {
-                alert("OTP verified. Redirecting...");
                 window.location.href = '/Login/SetNewPassword?email=' + encodeURIComponent(email);
             } else {
-                alert("Invalid OTP. Please try again.");
+                toastr.error("Failed to Update User Password", "Error");
             }
         });
     });

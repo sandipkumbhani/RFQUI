@@ -36,8 +36,8 @@ namespace RFQ.UI.Controllers
                 userRequestDto.ProfileId = Convert.ToInt32(profileid);
 
                 var result = await _usersService.UpdateUserPassword(userRequestDto);
-                if (result != null)
-                    return Json(new { result = "success" });
+                if (result)
+                    return Json(new { result = "c" });
                 else
                     return Json(new { result = "failure" });
             }

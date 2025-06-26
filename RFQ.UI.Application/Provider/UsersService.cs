@@ -42,7 +42,7 @@ namespace RFQ.UI.Application.Provider
         {
             return await _usersAdaptor.GetAllLocation();
         }
-        public async Task<string> UpdateUserPassword(UserRequestDto userRequestDto)
+        public async Task<bool> UpdateUserPassword(UserRequestDto userRequestDto)
         {
             return await _usersAdaptor.UpdateUsersPassword(userRequestDto);
         }
