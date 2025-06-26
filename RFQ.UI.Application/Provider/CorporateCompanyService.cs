@@ -18,7 +18,7 @@ namespace RFQ.UI.Application.Provider
 
         public async Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyRequestDto)
         {
-            return await  _corporateCompanyAdaptor.AddCorporateCompany(corporateCompanyRequestDto);
+            return await _corporateCompanyAdaptor.AddCorporateCompany(corporateCompanyRequestDto);
         }
 
         public Task<string> DeleteCorporateCompany(int companyId)

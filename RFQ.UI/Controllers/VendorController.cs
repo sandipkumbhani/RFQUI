@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
-using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -87,7 +85,7 @@ namespace RFQ.UI.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetAllVendor([FromBody]PagingParam pagingParam)
+        public async Task<IActionResult> GetAllVendor([FromBody] PagingParam pagingParam)
         {
             try
             {

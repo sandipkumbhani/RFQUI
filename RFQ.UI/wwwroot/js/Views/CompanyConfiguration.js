@@ -3,6 +3,7 @@ var companyConfigResponseDto;
 var orderColumn = '';
 var orderDir = '';
 var fetchUrl = '/CompanyConfiguration/GetAllCompanyConfiguration'
+
 $(document).ready(function () {
 
     $(document).on('click', 'th.sortable', function () {
@@ -29,6 +30,7 @@ $(document).ready(function () {
     CheckValidation();
     loadAllData();
 });
+
 async function loadAllData() {
     try {
         const companies = await GetAllCompany();
@@ -65,12 +67,14 @@ function Initializejquery() {
 }
 function GetAllCompany() {
     $("#tableDiv").show();
-    var fetchFranchiseUrl = '/Company/GetAllCompanyAndFranchise';
+    var fetchFranchiseUrl = '/Home/GetAllCompanyAndFranchise';
     $.ajax({
         url: fetchFranchiseUrl,
         type: 'GET',
         dataType: 'json',
         success: function (response) {
+            response = response.filter(x => x.companyTypeId == 2);
+          
             sessionStorage.setItem("CompanyList", JSON.stringify(response));
             const companydropdown = document.getElementById("ddlCompany");
             let placeholderOption = document.createElement("option");
@@ -284,7 +288,6 @@ function SaveCompanyConfiguration(action) {
         }
     }
 }
-
 function FetchCompanyConfiguration() {
     $("#listSection").show();
     debugger;

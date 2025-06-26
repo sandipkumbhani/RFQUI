@@ -10,7 +10,7 @@ namespace RFQ.UI.Controllers
         private readonly ILogger<LoginController> _logger;
         private static Dictionary<string, string> otpStore = new();
 
-        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger    )
+        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger)
         {
             _loginServcies = loginServcies;
             _logger = logger;

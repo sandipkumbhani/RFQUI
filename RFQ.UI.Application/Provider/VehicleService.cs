@@ -41,9 +41,9 @@ namespace RFQ.UI.Application.Provider
             return _vehicleAdaptor.GetAllVehicle(pagingParam);
         }
 
-        public Task<string> EditVehicle(int vehicleId,VehicleRequestDto vehicleRequestDto)
+        public Task<string> EditVehicle(int vehicleId, VehicleRequestDto vehicleRequestDto)
         {
-           return _vehicleAdaptor.EditVehicle(vehicleId,vehicleRequestDto);
+            return _vehicleAdaptor.EditVehicle(vehicleId, vehicleRequestDto);
         }
 
         public Task<string> DeleteVehicle(int vehicleId)

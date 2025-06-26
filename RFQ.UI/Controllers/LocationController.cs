@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -78,7 +77,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                
+
                 var locationViewModel = new LocationResponseDto();
                 var result = await _locationService.GetAllLocation(pagingParam);
                 if (Request.IsAjaxRequest())
@@ -115,7 +114,7 @@ namespace RFQ.UI.Controllers
                 locationRequestDto.CreatedBy = Convert.ToInt32(profileid);
                 locationRequestDto.UpdatedBy = Convert.ToInt32(profileid);
                 locationRequestDto.CompanyId = Convert.ToInt32(profileid);
-               
+
                 var result = await _locationService.EditLocation(locationId, locationRequestDto);
                 if (result != null)
                 {

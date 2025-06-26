@@ -8,7 +8,7 @@ namespace RFQ.UI.Application.Extension
     {
         public static IServiceCollection AddApplicationService(this IServiceCollection services)
         {
-           
+
             services.AddScoped<IDashboardServices, DashboardServices>();
             services.AddScoped<IProfileServices, ProfileServices>();
             services.AddScoped<IVehicleTypeServices, VehicleTypeServices>();
@@ -22,7 +22,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<ICompanyConfigurationServices, CompanyConfigrationServices>();
-            services.AddScoped<IDriverServices,DriverService>();
+            services.AddScoped<IDriverServices, DriverService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IMasterAttachmentService, MasterAttachmentService>();
             services.AddScoped<ICompanyMasterPackingTypeService, CompanyMasterPackingTypeServices>();

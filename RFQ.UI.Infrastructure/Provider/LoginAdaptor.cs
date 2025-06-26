@@ -16,7 +16,7 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
         private ILogger<LoginAdaptor> _logger;
-        public LoginAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration,ILogger<LoginAdaptor> logger)
+        public LoginAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, ILogger<LoginAdaptor> logger)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
@@ -30,7 +30,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 var baseUrl = _fleetLynkApiUrl + _config["Login:Login"];
-                _logger.LogInformation("Base URL: " + baseUrl); 
+                _logger.LogInformation("Base URL: " + baseUrl);
                 var company = JsonConvert.SerializeObject(loginDto);
                 var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseUrl, requestContent);

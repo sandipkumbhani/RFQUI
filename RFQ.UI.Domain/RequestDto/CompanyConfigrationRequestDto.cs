@@ -4,7 +4,7 @@
     {
         public int CompanyConfigId { get; set; }
 
-        public int CompanyId { get; set; } 
+        public int CompanyId { get; set; }
 
         public string? SMSProvider { get; set; }
 

@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.ResponseDto;
-using RFQ.UI.Models;
 
 namespace RFQ.UI.Infrastructure.Provider
 {

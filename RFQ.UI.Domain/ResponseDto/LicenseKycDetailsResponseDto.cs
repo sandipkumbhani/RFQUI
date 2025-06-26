@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace RFQ.UI.Domain.ResponseDto
+﻿namespace RFQ.UI.Domain.ResponseDto
 {
     public class LicenseKycDetailsResponseDto
     {

@@ -2,7 +2,7 @@
 {
     public class LicenseKycDetailsRequestDto
     {
-        public string DrivingLicenseNo {  get; set; }
+        public string DrivingLicenseNo { get; set; }
         public string DateOfBirth { get; set; }
     }
 }
