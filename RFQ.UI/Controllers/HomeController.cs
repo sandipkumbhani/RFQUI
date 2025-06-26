@@ -96,6 +96,7 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPut]
         public async Task<IActionResult> EditUserList([FromBody] UserRequestDto userRequestDto)
         {
@@ -120,6 +121,7 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
         [HttpDelete("Home/DeleteUserList/{UserId}")]
         public async Task<IActionResult> DeleteUserList(int UserId)
         {
@@ -136,6 +138,7 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllCompanyAndFranchise()
         {
@@ -159,6 +162,7 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllLocation()
         {
@@ -180,18 +184,22 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
         public IActionResult ResetPassword()
         {
             return View();
         }
+
         public IActionResult ChangePassword()
         {
             return View();
         }
+
         public IActionResult Privacy()
         {
             return View();
         }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

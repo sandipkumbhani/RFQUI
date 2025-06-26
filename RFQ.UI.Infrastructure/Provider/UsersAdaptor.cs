@@ -215,5 +215,38 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+        public async Task<string> UpdateUsersPassword(UserRequestDto userRequestDto)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = _fleetLynkApiUrl + _config["Users:UpdateUserPassword"];
+                var user = JsonConvert.SerializeObject(userRequestDto);
+                var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "User Updated...";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
+                }
+                return "Failed to Update User ";
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

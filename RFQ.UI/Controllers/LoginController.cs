@@ -8,6 +8,7 @@ namespace RFQ.UI.Controllers
     {
         private readonly ILoginServices _loginServcies;
         private readonly ILogger<LoginController> _logger;
+        private static Dictionary<string, string> otpStore = new();
 
         public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger    )
         {
@@ -61,6 +62,42 @@ namespace RFQ.UI.Controllers
                 throw;
             }
 
-        } 
+        }
+
+        [HttpPost]
+        public JsonResult SendOtp(string email)
+        {
+            // Validate email exists (dummy check)
+            if (string.IsNullOrEmpty(email)) return Json(new { success = false });
+
+            // Generate OTP
+            var otp = new Random().Next(1000, 9999).ToString();
+
+            // Store OTP
+            otpStore[email] = otp;
+
+            // Send OTP via email (dummy log, replace with actual mail code)
+            System.Diagnostics.Debug.WriteLine($"OTP for {email}: {otp}");
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public JsonResult VerifyOtp(string email, string otp)
+        {
+            if (otpStore.ContainsKey(email) && otpStore[email] == otp)
+            {
+                // OTP verified
+                otpStore.Remove(email); // clear OTP after use
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
+
+        public ActionResult ResetPassword(string email)
+        {
+            // Show reset form (not implemented here)
+            return Content($"Reset password for: {email}");
+        }
     }
 }
