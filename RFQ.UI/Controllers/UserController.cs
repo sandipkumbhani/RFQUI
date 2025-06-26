@@ -37,7 +37,7 @@ namespace RFQ.UI.Controllers
 
                 var result = await _usersService.UpdateUserPassword(userRequestDto);
                 if (result)
-                    return Json(new { result = "c" });
+                    return Json(new { result = "success" });
                 else
                     return Json(new { result = "failure" });
             }

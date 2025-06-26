@@ -1,6 +1,7 @@
 ﻿// verify-otp.js
 $(document).ready(function () {
     OnSubmit();
+    ResendOtp();
 });
 
 function OnSubmit() {
@@ -18,6 +19,28 @@ function OnSubmit() {
                 window.location.href = '/Login/SetNewPassword?email=' + encodeURIComponent(email);
             } else {
                 toastr.error("Failed to Update User Password", "Error");
+            }
+        });
+    });
+}
+function ResendOtp() {
+    $('#btnResendOtp').submit(function (e) {
+        e.preventDefault();
+
+        const email = $('input[type="email"]').val();
+        $.ajax({
+            type: "POST",
+            url: '/Login/SendOtp',
+            data: { email },
+            success: function (res) {
+                if (res.success) {
+                    toastr.success("OTP sent successfully!", "Success");
+                } else {
+                    toastr.error("Email not registered or OTP sending failed.", "Error");
+                }
+            },
+            error: function () {
+                toastr.error("Email not registered or OTP sending failed.", "Error");
             }
         });
     });

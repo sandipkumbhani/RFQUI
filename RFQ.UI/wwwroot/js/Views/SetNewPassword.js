@@ -1,5 +1,4 @@
-﻿// verify-otp.js
-$(document).ready(function () {
+﻿$(document).ready(function () {
     OnSubmit();
 });
 
@@ -9,7 +8,7 @@ function OnSubmit() {
         const confirmPassword = $('#confirmPassword').val();
 
         if (newPassword !== confirmPassword) {
-            alert("Passwords do not match.");
+            toastr.warning("Passwords do not match.", "warning");
             return;
         }
 
