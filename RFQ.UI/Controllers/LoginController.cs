@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Models;
+using System.Net.Mail;
+using System.Net;
 
 namespace RFQ.UI.Controllers
 {
@@ -76,10 +78,44 @@ namespace RFQ.UI.Controllers
             // Store OTP
             otpStore[email] = otp;
 
-            // Send OTP via email (dummy log, replace with actual mail code)
-            System.Diagnostics.Debug.WriteLine($"OTP for {email}: {otp}");
+            // Prepare email
+            var subject = "Your OTP Code";
+            string body = "";
+            body += "Dear User,\n\n";
+            body += "We received a request to verify your email address.\n\n";
+            body += $"Your One-Time Password (OTP) is: {otp}\n\n";
+            body += "Please enter this OTP in the application to complete your verification.\n\n";
+            body += "If you did not request this, you can safely ignore this email.\n\n";
+            body += "Thank you,\n";
+            body += "FleetLynk";
 
-            return Json(new { success = true });
+            try
+            {
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("amit.dev1018@gmail.com", "fqrf srsh rllg cpwl"), // <-- App password here
+                    EnableSsl = true,
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("amit.dev1018@gmail.com", "FleetLynk"),  // your Gmail address
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = false
+                };
+                mailMessage.To.Add(email);
+
+                smtpClient.Send(mailMessage);
+
+                return Json(new { success = true, message = "OTP sent successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Failed to send email", error = ex.Message });
+            }
+
         }
 
         [HttpPost]
@@ -92,12 +128,6 @@ namespace RFQ.UI.Controllers
                 return Json(new { success = true });
             }
             return Json(new { success = false });
-        }
-
-        public ActionResult ResetPassword(string email)
-        {
-            // Show reset form (not implemented here)
-            return Content($"Reset password for: {email}");
         }
     }
 }

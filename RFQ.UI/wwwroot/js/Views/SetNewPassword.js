@@ -31,10 +31,13 @@ function OnSubmit() {
             data: JSON.stringify(UserViewModel),
             dataType: "json",
             success: function (result) {
-                toastr.success("Successfully Update User Password");
+                if (result == "success")
+                    toastr.success("Successfully Update User Password", "success");
+                else
+                    toastr.error("Somthing Went Wrong Contact Administrator", "Error");
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Update User Password", "Error");
+                toastr.error("Failed to Update User Password Password", "Error");
             }
         });
     });
