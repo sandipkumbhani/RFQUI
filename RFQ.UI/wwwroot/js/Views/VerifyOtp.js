@@ -1,9 +1,36 @@
-﻿// verify-otp.js
+﻿let countdownSeconds = 30;
+let timerInterval;
 $(document).ready(function () {
+    initilization();
+    startCountdown();
     OnSubmit();
     ResendOtp();
 });
 
+function initilization() {
+    $('.verification-number input').on('input', function () {
+        var $inputs = $('.verification-number input');
+        var index = $inputs.index(this);
+
+        if ($(this).val().length === 1) {
+            // Move to next input if not the last one
+            if (index < $inputs.length - 1) {
+                $inputs.eq(index + 1).focus();
+            }
+        }
+    });
+
+    // Optional: handle backspace to move focus to previous input
+    $('.verification-number input').on('keydown', function (e) {
+        var $inputs = $('.verification-number input');
+        var index = $inputs.index(this);
+        if (e.key === 'Backspace' && $(this).val() === '') {
+            if (index > 0) {
+                $inputs.eq(index - 1).focus();
+            }
+        }
+    });
+}
 function OnSubmit() {
     $('#continue').on('click',function (e) {
         e.preventDefault();
@@ -45,3 +72,23 @@ function ResendOtp() {
         });
     });
 }
+function startCountdown() {
+    // display initial time
+    document.querySelector('.verification-time span').innerText = "00:30";
+
+    timerInterval = setInterval(() => {
+        if (countdownSeconds > 0) {
+            countdownSeconds--;
+            // Format the time as MM:SS
+            let minutes = Math.floor(countdownSeconds / 60);
+            let seconds = countdownSeconds % 60;
+            let formattedTime =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.querySelector('.verification-time span').innerText = formattedTime;
+        } else {
+            clearInterval(timerInterval);
+            // Optional: do something when time runs out
+        }
+    }, 1000);
+}
+
