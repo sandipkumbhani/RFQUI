@@ -11,6 +11,7 @@
 *.wsuo
 /.vs/RFQUI/v17
 *.sqlite
+*.log
 /.vs
 /RFQ.UI/.vs/RFQ.UI
 /RFQ.UI/bin/Debug/net8.0

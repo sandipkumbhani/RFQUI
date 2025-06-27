@@ -166,7 +166,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
         }),
         success: function (response) {
             if (!response || !response.data || response.data.length === 0) {
-                $( '#' + gridTableName + ' tbody').html('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                $('#' + gridTableName + ' tbody').html('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                 $('#totalList').text('Total List: 0');
                 $('#customPagination').empty();
                 return;
@@ -427,4 +427,10 @@ function generatePagination(totalRecords, pageSize, currentPage, gridTableName, 
         //}, 1000);
         //$("#customvehicleTypesPagination").focus();
     });
+}
+
+function getCookieValue(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
 }

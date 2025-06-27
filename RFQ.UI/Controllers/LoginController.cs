@@ -3,6 +3,8 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Models;
 using System.Net.Mail;
 using System.Net;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -49,6 +51,17 @@ namespace RFQ.UI.Controllers
 
                     if (!string.IsNullOrEmpty(tokenstring))
                     {
+                        var handler = new JwtSecurityTokenHandler();
+                        var jwtToken = handler.ReadJwtToken(tokenstring);
+                        var email = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+                        var personname = jwtToken.Claims.FirstOrDefault(c => c.Type == "personname")?.Value;
+
+                        if (!string.IsNullOrEmpty(email))
+                            Response.Cookies.Append("UserEmail", email);
+
+                        if (!string.IsNullOrEmpty(personname))
+                            Response.Cookies.Append("PersonName", personname);
+
                         Response.Cookies.Append("AuthToken", tokenstring);
                     }
                     return tokenstring;
