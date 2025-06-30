@@ -1,7 +1,7 @@
 ﻿
+var vendorlist;
 $(document).ready(function () {
 
-    
 
     const criteriaList = [
         "Cost & Pricing", "Vehicle Conditions", "Vendor Communication",
@@ -32,8 +32,18 @@ $(document).ready(function () {
 
         $('#tableDiv').append($tr);
     });
-        GetAllPakingType();
-        GetAllInternalMaster();
+    fetchVendorList();
+
+    $('#ddlVendor').on('change', function () {
+        const selectedValue = $(this).val();
+        const selectedText = $(this).find("option:selected").text();
+        const selectedVendor = vendorlist.filter(x => x.partyName == selectedText);
+        console.log("Selected Text:", selectedText);
+        if (selectedVendor.length > 0) {
+            $("#txtPanNumber").val(selectedVendor[0].panNo);
+            $("#txtVendorCategory").val(selectedVendor[0].vendorCategoryName);
+        }
+    });
 });
 
 $(document).on('click', '.rating-stars label', function () {
@@ -57,69 +67,34 @@ $(document).on('click', '.rating-stars label', function () {
     // Check the corresponding radio button
     $ratingDiv.find(`input#${ratingName}_${selectedIndex}`).prop('checked', true);
 });
-
-
-function GetAllPakingType() {
-    var getUrl = '/CompanyMasterPackingType/GetAllMasterPackingType';
+function fetchVendorList() {
     $.ajax({
-        url: getUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlPakingType");
+        url: '/Vendor/GetAllVendorList',
+        type: 'GET',
+        success: function (data) {
+            console.log("Vendor List:", data);
+            vendorlist = data;
+            const select = document.getElementById("ddlVendor");
+            select.innerHTML = "";
+            debugger;
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
-            placeholderOption.textContent = "Select a PakingType";
+            placeholderOption.textContent = "Select a Category";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.packingId;
-                option.textContent = item.packingName;
-                vehicleTypedropdown.appendChild(option);
+            select.appendChild(placeholderOption);
+
+            vendorlist.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.partyId;
+                opt.textContent = option.partyName;
+                select.appendChild(opt);
             });
+
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Paking Type!", "Error");
+            console.error("Error fetching vendor list:", error);
         }
     });
-}
-
-function GetAllInternalMaster() {
-    var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
-    $.ajax({
-        url: getInternalMasterUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            BindDropDown(response)
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
-function BindDropDown(data) {
-
-    let internalData = data.filter(x => x.internalMasterTypeId == 3);
-    const select = document.getElementById("ddlVendorCategory");
-    select.innerHTML = "";
-
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a Category";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-
-    internalData.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.internalMasterId;
-        opt.textContent = option.internalMasterName;
-        select.appendChild(opt);
-    });
-
-    $('.selectpicker').selectpicker('refresh');
 }

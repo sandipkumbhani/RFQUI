@@ -15,5 +15,6 @@ namespace RFQ.UI.Application.Interface
         Task<string> DeleteVendor(int PartyId);
 
         Task<IEnumerable<InternalMasterResponseDto>> GetAllInternalMaster();
+        Task<IEnumerable<VendorListResponseDto>> GetAllVendorList();
     }
 }
