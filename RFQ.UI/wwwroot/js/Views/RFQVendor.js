@@ -1,10 +1,10 @@
 ﻿$(document).ready(function () {
     CheckValidation();
-    $("#btnSave, #btnSaveAndNew").on('click', function () {
+    $("#btnSaveForm, #btnSaveAndNew").on('click', function () {
         var action = $(this).data('action'); // "save" or "saveNew"
-        if (OnSubmitCheckValidation()) {
+        //if (OnSubmitValidation()) {
             SaveAndSaveNew(action);
-        }
+        //}
     });
     GetAllCustomer();
     GetAllVehicleType();
@@ -299,3 +299,80 @@ function Save() {
         return;
     }
 }
+
+function collectRfqFormData() {
+    // Collect parent data
+    const rfq = {
+        CompanyId: 1, // Set from session or hidden field
+        RfqCategoryId: 1, // Set as needed
+        CustomerId: $("#ddlCustomerName").val(),
+        RfqNoPrefix: "RFQ",
+        RfqNo: $("#txtRfqNo").val(),
+        RfqDate: $("#txtRfqDate").val(),
+        RfqSubject: $("#txtRfqSubject").val(),
+        RfqExpiresOn: $("#txtRfqExpiredOn").val(),
+        RfqTypeId: $("#ddlRfqType").val(),
+        VehicleReqOn: $("#txtVehicleReqDate").val(),
+        RfqPriorityId: $("#ddlRfqPriority").val(),
+        Remarks: $("#txtSpecialInstructions").val(),
+        LinkId: 0,
+        StatusId: 1,
+        CreatedBy: 1, // Set from session
+        CreatedOn: new Date().toISOString(),
+        UpdatedBy: null,
+        UpdatedOn: null
+    };
+
+    // Collect child data (example for one row, loop for multiple)
+    const rfqDetails = [{
+        FromLoc: $("#txtOrigin").val(),
+        FromLocLat: "", // Set as needed
+        FromLocLong: "",
+        ToLoc: $("#txtDestination").val(),
+        ToLocLat: "",
+        ToLocLong: "",
+        RfqOnId: $("#ddlRfqOn").val(),
+        VehicleTypeId: $("#ddlVehicleType").val(),
+        VehicleCount: $("#txtNoofVehicles").val(),
+        TotalQty: $("#txtTotalQty").val(),
+        ItemId: $("#ddlItemName").val(),
+        MaxCosting: $("#txtMaxCosting").val(),
+        DetentionPerDay: $("#txtDetentionPerDay").val(),
+        DetentionFreeDays: $("#txtDetentionFreeDays").val(),
+        PackingTypeId: $("#ddlPackingType").val(),
+        SpecialInstruction: $("#txtSpecialInstructions").val()
+    }];
+
+    return { Rfq: rfq, RfqDetails: rfqDetails };
+}
+function SaveAndSaveNew(action) {
+    console.log("Action received:", action);
+    debugger;
+    if (action === "save") {
+        const data = collectRfqFormData();
+        $.ajax({
+            url: "/RFQVendor/InsertRfqVendor", // Matches [HttpPost("InsertRfq")] in controller
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (response) {
+                if (response.result === "success") {
+                    toastr.success("RFQ saved successfully. RFQ ID: " + response.rfqId);
+                    // Optionally reset the form or redirect
+                } else {
+                    toastr.error("Failed to save RFQ: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("An error occurred while saving RFQ.");
+                console.error(xhr.responseText);
+            }
+        });
+    } else if (action === "savenew") {
+
+    } else {
+        console.warn("Unknown action:", action);
+    }
+}
+
+
