@@ -173,58 +173,79 @@
 						</div>
 					</div>
 				</div>
-				@* </div>
-				</div> *@
-				<!-- RFQ Sent To Vendors Section -->
-				<div class="mt-8">
-					<div class="card-header p-4">
-						<h4 class="fw-bold m-0 text-lg">RFQ Sent To Vendor</h4>
-					</div>
-					<div class="ard-card">
-						<table id="datatable_ard" class="table table-striped align-middle border rounded fs-6 gy-5 gs-7 dataTable" style="width:100%">
-							<thead>
-								<tr class="fw-semibold fs-6 text-gray-800">
-									<th>Sr. No.</th>
-									<th>Vendor Name</th>
-									<th>PAN No</th>
-									<th>Vendor Rating</th>
-									<th>Mobile Number</th>
-									<th>WhatsApp Number</th>
-									<th>Email ID</th>
-									<th class="text-end">Edit/Delete</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>1</td>
-									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
-									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
-									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
-									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
-									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
-									<td><input type="text" class="form-control form-control-sm border-primary" /></td>
-									<td class="text-end">
-										<a href="#" class="btn btn-light btn-active-light-primary btn-sm" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-											Actions
-										</a>
-										<ul class="dropdown-menu dropdown-menu-end">
-											<li>
-												<a class="dropdown-item" href="#">
-													<i class="ti ti-edit"></i> Edit
-												</a>
-											</li>
-											<li>
-												<a class="dropdown-item" href="#">
-													<i class="ti ti-trash"></i> Delete
-												</a>
-											</li>
-										</ul>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+				<h2 class="page-form-title">RequestForQuote-Vendor Details</h2>
+				<div class="table-responsive">
+					<table id="rfqVendorTable" class="table dt-responsive nowrap w-100">
+						<thead>
+						<tr class="text-center">
+							<th class="text-center no-sort">Sr. No.</th>
+							<th class="text-center no-sort">Vendor Name</th>
+							<th class="text-center no-sort">PAN No</th>
+							<th class="text-center no-sort">Vendor Rating</th>
+							<th class="text-center no-sort">Mobile Number</th>
+							<th class="text-center no-sort">WhatsApp Number</th>
+							<th class="text-center no-sort">Email ID</th>
+							<th class="text-center no-sort">Actions</th>
+						</tr>
+					</thead>
+					<tbody class="text-center">
+						<!-- Dynamic rows here -->
+					</tbody>
+					<tfoot>
+						<tr class="text-center">
+							<td class="text-center"></td>
+							<td class="text-center"><select class="select2-custom form-control" id="ddlFetchVendorName"></select></td>
+							<td class="text-center"><input type="text" class="form-control" id="fetchVendorPanNo" disabled></td>
+							<td class="text-center"><input type="text" class="form-control" id="fetchVendorRating" disabled></td>
+							<td class="text-center"><input type="text" class="form-control" id="fetchVendorMobileNo"></td>
+							<td class="text-center"><input type="text" class="form-control" id="fetchVendorWhatsappNo"></td>
+							<td class="text-center"><input type="text" class="form-control" id="fetchVendorEmailId"></td>
+							<td class="text-center action-items" style="cursor:pointer;">
+								<button type="button" class="btn-btn-light-primary w-50" id="addBtn"><i class="ri-add-line"></i>Add</button>
+								<button type="button" class="card-link w-50 btn-btn-light-danger" id="cancelBtn"><i class="ri-close-line"></i>Cancel</button>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
 				</div>
+
+
+
+
+
+
+
+				@* <div class="table-responsive"> *@
+				@* 	<table id="rfqBranchTable" class="table dt-responsive nowrap w-100"> *@
+				@* 		<thead class="text-center"> *@
+				@* 			<tr> *@
+				@* 				<th class="text-center no-sort">Sr. No.</th> *@
+				@* 				<th class="text-center no-sort">Vendor Name</th> *@
+				@* 				<th class="text-center no-sort">PAN No</th> *@
+				@* 				<th class="text-center no-sort">Vendor Rating</th> *@
+				@* 				<th class="text-center no-sort">Mobile Number</th> *@
+				@* 				<th class="text-center no-sort">WhatsApp Number</th> *@
+				@* 				<th class="text-center no-sort">Email ID</th> *@
+				@* 				<th class="text-center no-sort">Edit/Delete</th> *@
+				@* 			</tr> *@
+				@* 		</thead> *@
+				@* 		<tbody class="text-center"> *@
+				@* 			<tr> *@
+				@* 			<td></td> *@
+				@* 				<td><input type="text" class="form-control" /></td> *@
+				@* 				<td><input type="text" class="form-control" /></td> *@
+				@* 				<td><input type="text" class="form-control" /></td> *@
+				@* 				<td><input type="text" class="form-control" /></td> *@
+				@* 				<td><input type="text" class="form-control" /></td> *@
+				@* 				<td><input type="text" class="form-control" /></td> *@
+				@* 				<td class="text-center action-items" style="cursor:pointer;"> *@
+				@* 					<a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a> *@
+				@* 					<a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a> *@
+				@* 				</td> *@
+				@* 			</tr> *@
+				@* 		</tbody> *@
+				@* 	</table> *@
+				@* </div> *@
 				@await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 			</form>
 		</div>

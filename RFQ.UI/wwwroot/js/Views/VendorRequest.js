@@ -10,7 +10,11 @@
     GetAllVehicleType();
     GetAllItemName();
     GetAllPakingType();
+    GetAllVendorList();
+    FetchVendorData();
 });
+let vendorList = [];
+var fetchedVendorDataList;
 function CheckValidation() {
     $("#ddlCustomerName").on("blur", function () {
         if (!isValidateSelect($(this).val())) {
@@ -299,3 +303,106 @@ function Save() {
         return;
     }
 }
+function GetAllVendorList() {
+    var getUrl = '/Branch/GetAllVendorList'
+    $.ajax({
+        url: getUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            fetchedVendorDataList = response;
+            const vendorListDropdown = document.getElementById("ddlFetchVendorName");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Vendor Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            vendorListDropdown.appendChild(placeholderOption);
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.partyId;
+                option.textContent = item.partyName;
+                vendorListDropdown.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Vendor Name!", "Error");
+        }
+    });
+}
+function FetchVendorData() {
+    $("#ddlFetchVendorName").on('change', function () {
+        const selectedVendorId = $(this).val();
+        const selectedVendorData = fetchedVendorDataList.find(x => x.partyId == selectedVendorId);
+        $("#fetchVendorPanNo").val(selectedVendorData.panNo);
+        $("#fetchVendorRating").val("5");
+        $("#fetchVendorMobileNo").val(selectedVendorData.mobNo);
+        $("#fetchVendorWhatsappNo").val(selectedVendorData.whatsAppNo);
+        $("#fetchVendorEmailId").val(selectedVendorData.email);
+    })
+}
+function renderTable() {
+    const tbody = $('#rfqVendorTable tbody');
+    tbody.empty();
+    $.each(vendorList, function (index, vendor) {
+        const row = `
+      <tr data-index="${index}">
+        <td>${index + 1}</td>
+        <td>${vendor.getvendorName}</td>
+        <td>${vendor.getpanNo}</td>
+        <td>${vendor.getVendorRating}</td>
+        <td>${vendor.getMobileNo}</td>
+        <td>${vendor.getWhatsappNo}</td>
+        <td>${vendor.getEmail}</td>
+        <td>
+          <button type="button" class="editVendor" style="color:blue;border:none;background:none;">Edit</button> /
+          <button type="button" class="deleteVendor" style="color:blue;border:none;background:none;">Delete</button>
+        </td>
+      </tr>
+    `;
+        tbody.append(row);
+    });
+}
+function clearForm() {
+    $("#fetchVendorPanNo").val('');
+    $("#fetchVendorRating").val('');
+    $("#fetchVendorMobileNo").val('');
+    $("#fetchVendorWhatsappNo").val('');
+    $("#fetchVendorEmailId").val('');
+    $('#ddlFetchVendorName').val(null).trigger('change');
+
+}
+$('#addBtn').on('click', function () {
+    const getSelectVendorID = $("#ddlFetchVendorName").val();
+    if (getSelectVendorID == null || getSelectVendorID == '') {
+        toastr.warning("Please Select Vendor Name!", "Warning");
+        return;
+    }
+    const getvendorName = $('#ddlFetchVendorName option:selected').text();
+    const getpanNo = $("#fetchVendorPanNo").val();
+    const getVendorRating = $("#fetchVendorRating").val();
+    const getMobileNo = $("#fetchVendorMobileNo").val();
+    const getWhatsappNo = $("#fetchVendorWhatsappNo").val();
+    const getEmail = $("#fetchVendorEmailId").val();
+    vendorList.push({ getvendorName, getpanNo, getVendorRating, getMobileNo, getWhatsappNo, getEmail });
+    renderTable();
+    clearForm();
+});
+$('#cancelBtn').on('click', function () {
+    clearForm();
+});
+$('#rfqVendorTable').on('click', '.deleteVendor', function () {
+    const rowIndex = $(this).closest('tr').data('index');
+    if (confirm('Are you sure to delete this vendor?')) {
+        vendorList.splice(rowIndex, 1);
+        renderTable();
+    }
+});
+$('#rfqVendorTable').on('click', '.editVendor', function () {
+    const rowIndex = $(this).closest('tr').data('index');
+    const vendor = vendorList[rowIndex];
+    $('#vendorName').val(vendor.vendorName);
+    $('#panNo').val(vendor.panNo);
+    vendorList.splice(rowIndex, 1); // remove current so it can be updated on next Add
+    renderTable();
+});

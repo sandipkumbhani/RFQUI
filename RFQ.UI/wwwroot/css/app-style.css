@@ -265,6 +265,24 @@ select {
     width: 100%;
 }
 
+/*<style >*/
+/* Make inputs/selects medium-sized and fit columns */
+/*#rfqVendorTable tfoot input,
+#rfqVendorTable tfoot select {
+    min-width: 150px;
+    width: 100%;
+    box-sizing: border-box;
+}*/
+
+/* Optional: fix action button column styles */
+/*#rfqVendorTable tfoot .action-items button {
+    width: 45%;
+    margin: 1px 1%;
+}*/
+
+
+
+
 .navbar-custom {
     min-height: var(--ft-topbar-height);
     margin-left: var(--ft-leftbar-width);
