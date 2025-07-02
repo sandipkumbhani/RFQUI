@@ -25,7 +25,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = config;
-            _fleetLynkApiUrl = _config["FleetLynkApiUrl"];
+            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
 
 
@@ -34,6 +34,7 @@ namespace RFQ.UI.Infrastructure.Provider
             try
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
                 var baseurl = _fleetLynkApiUrl + _config["RFQVendor:AddRfqVendor"];
                 var rfqVendorDto = JsonConvert.SerializeObject(requestDto);
                 var requestContent = new StringContent(rfqVendorDto, Encoding.UTF8, "application/json");
