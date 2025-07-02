@@ -22,6 +22,7 @@ namespace RFQ.UI.Infrastructure.Extension
             services.AddScoped<FranchiseAdaptor>();
             services.AddScoped<IVendorAdaptor, VendorAdaptor>();
             services.AddScoped<ICompanyConfigurationAdaptor, CompanyConfigurationAdaptor>();
+            services.AddScoped<QuoteRateVendorAdaptor>();
             services.AddScoped<IProductAdaptor, ProductAdaptor>();
             services.AddScoped<MasterAttachmentAdaptor>();
             services.AddScoped<DriverAdaptor>();

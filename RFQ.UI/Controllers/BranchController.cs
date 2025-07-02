@@ -9,9 +9,6 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-        public ActionResult QuoteRate()
-        {
-            return View();
-        }
+      
     }
 }

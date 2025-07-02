@@ -29,10 +29,7 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-        public ActionResult QuoteRoleVendor()
-        {
-            return View();
-        }
+      
         [HttpGet]
         public async Task<IActionResult> GetAllInternalMaster()
         {

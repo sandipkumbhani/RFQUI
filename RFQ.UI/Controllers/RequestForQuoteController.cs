@@ -15,7 +15,10 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-
+        public ActionResult RFQDetails()
+        {
+            return View();
+        }
         // GET: RequestForQuoteController/Create
         public ActionResult Create()
         {
