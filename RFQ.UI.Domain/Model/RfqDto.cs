@@ -2,6 +2,7 @@
 {
     public class RfqDto
     {
+        public int RfqId { get; set; }
         public int CompanyId { get; set; }
         public int RfqCategoryId { get; set; }
         public int CustomerId { get; set; }

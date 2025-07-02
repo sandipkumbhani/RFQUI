@@ -384,7 +384,8 @@ $('#addBtn').on('click', function () {
     const getMobileNo = $("#fetchVendorMobileNo").val();
     const getWhatsappNo = $("#fetchVendorWhatsappNo").val();
     const getEmail = $("#fetchVendorEmailId").val();
-    vendorList.push({ getvendorName, getpanNo, getVendorRating, getMobileNo, getWhatsappNo, getEmail });
+
+    vendorList.push({ getSelectVendorID,getvendorName, getpanNo, getVendorRating, getMobileNo, getWhatsappNo, getEmail });
     renderTable();
     clearForm();
 });
@@ -407,50 +408,65 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
     renderTable();
 });
 function collectRfqFormData() {
-    // Collect parent data
+    // 1. Collect RFQ Header (Parent)
     const rfq = {
-        CompanyId: 1, // Set from session or hidden field
-        RfqCategoryId: 1, // Set as needed
-        CustomerId: $("#ddlCustomerName").val(),
+        RfqCategoryId: 1,
+        CustomerId: parseInt($("#ddlCustomerName").val()),
         RfqNoPrefix: "RFQ",
-        RfqNo: $("#txtRfqNo").val(),
+        RfqNo: parseInt($("#txtRfqNo").val()),
         RfqDate: $("#txtRfqDate").val(),
         RfqSubject: $("#txtRfqSubject").val(),
         RfqExpiresOn: $("#txtRfqExpiredOn").val(),
-        RfqTypeId: $("#ddlRfqType").val(),
+        RfqTypeId: parseInt($("#ddlRfqType").val()),
         VehicleReqOn: $("#txtVehicleReqDate").val(),
-        RfqPriorityId: $("#ddlRfqPriority").val(),
+        RfqPriorityId: parseInt($("#ddlRfqPriority").val()),
         Remarks: $("#txtSpecialInstructions").val(),
         LinkId: 0,
-        StatusId: 1,
-        CreatedBy: 1, // Set from session
+        StatusId: 30,
+        CreatedBy: 0,
         CreatedOn: new Date().toISOString(),
-        UpdatedBy: null,
-        UpdatedOn: null
+        UpdatedBy: 0,
+        UpdatedOn: new Date().toISOString()
     };
 
-    // Collect child data (example for one row, loop for multiple)
+    // 2. Collect RFQ Details (You can loop this if dynamic)
     const rfqDetails = [{
         FromLoc: $("#txtOrigin").val(),
-        FromLocLat: "", // Set as needed
+        FromLocLat: "",  // Populate if available
         FromLocLong: "",
         ToLoc: $("#txtDestination").val(),
         ToLocLat: "",
         ToLocLong: "",
-        RfqOnId: $("#ddlRfqOn").val(),
-        VehicleTypeId: $("#ddlVehicleType").val(),
-        VehicleCount: $("#txtNoofVehicles").val(),
-        TotalQty: $("#txtTotalQty").val(),
-        ItemId: $("#ddlItemName").val(),
-        MaxCosting: $("#txtMaxCosting").val(),
-        DetentionPerDay: $("#txtDetentionPerDay").val(),
-        DetentionFreeDays: $("#txtDetentionFreeDays").val(),
-        PackingTypeId: $("#ddlPackingType").val(),
+        RfqOnId: parseInt($("#ddlRfqOn").val()),
+        VehicleTypeId: parseInt($("#ddlVehicleType").val()),
+        VehicleCount: parseInt($("#txtNoofVehicles").val()),
+        TotalQty: parseFloat($("#txtTotalQty").val()),
+        ItemId: parseInt($("#ddlItemName").val()),
+        MaxCosting: parseFloat($("#txtMaxCosting").val()),
+        DetentionPerDay: parseFloat($("#txtDetentionPerDay").val()),
+        DetentionFreeDays: parseInt($("#txtDetentionFreeDays").val()),
+        PackingTypeId: parseInt($("#ddlPackingType").val()),
         SpecialInstruction: $("#txtSpecialInstructions").val()
     }];
 
-    return { Rfq: rfq, RfqDetails: rfqDetails };
+    // 3. Collect Recipients (You can loop if multiple)
+    const rfqRecipients = [{
+        LocationId: parseInt($("#ddlLocation").val()),
+        LocUserId: parseInt($("#ddlUser").val()),
+        VendorId: parseInt($("#ddlVendor").val()),
+        VendorRating: parseInt($("#txtVendorRating").val()),
+        MobNo: $("#txtVendorMobile").val(),
+        WhatsAppNo: $("#txtVendorWhatsApp").val(),
+        EmailId: $("#txtVendorEmail").val()
+    }];
+
+    return {
+        rfq: rfq,
+        rfqDetails: rfqDetails,
+        rfqRecipients: rfqRecipients
+    };
 }
+
 function SaveAndSaveNew(action) {
     console.log("Action received:", action);
     debugger;
