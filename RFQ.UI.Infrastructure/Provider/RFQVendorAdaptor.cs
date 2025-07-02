@@ -34,7 +34,7 @@ namespace RFQ.UI.Infrastructure.Provider
             try
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Franchise:AddFranchise"];
+                var baseurl = _fleetLynkApiUrl + _config["RFQVendor:AddRfqVendor"];
                 var rfqVendorDto = JsonConvert.SerializeObject(requestDto);
                 var requestContent = new StringContent(rfqVendorDto, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);

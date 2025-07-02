@@ -2,8 +2,7 @@
 {
     public class RfqRecipient
     {
-        public int RfqRecipientId { get; set; }
-        public int RfqDetailId { get; set; }
+        public int? RfqDetailId { get; set; }
         public int? LocationId { get; set; }
         public int? LocUserId { get; set; }
         public int VendorId { get; set; }

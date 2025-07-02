@@ -348,12 +348,12 @@ function renderTable() {
         const row = `
       <tr data-index="${index}">
         <td>${index + 1}</td>
-        <td>${vendor.getvendorName}</td>
-        <td>${vendor.getpanNo}</td>
-        <td>${vendor.getVendorRating}</td>
-        <td>${vendor.getMobileNo}</td>
-        <td>${vendor.getWhatsappNo}</td>
-        <td>${vendor.getEmail}</td>
+        <td>${vendor.VendorName}</td>
+        <td>${vendor.PanNo}</td>
+        <td>${vendor.VendorRating}</td>
+        <td>${vendor.MobileNo}</td>
+        <td>${vendor.WhatsappNo}</td>
+        <td>${vendor.EmailId}</td>
         <td>
           <button type="button" class="editVendor" style="color:blue;border:none;background:none;">Edit</button> /
           <button type="button" class="deleteVendor" style="color:blue;border:none;background:none;">Delete</button>
@@ -385,7 +385,17 @@ $('#addBtn').on('click', function () {
     const getWhatsappNo = $("#fetchVendorWhatsappNo").val();
     const getEmail = $("#fetchVendorEmailId").val();
 
-    vendorList.push({ getSelectVendorID,getvendorName, getpanNo, getVendorRating, getMobileNo, getWhatsappNo, getEmail });
+    vendorList.push({
+        VendorId: parseInt(getSelectVendorID),
+        VendorName: getvendorName,
+        PanNo: getpanNo,
+        VendorRating: parseInt(getVendorRating) || 0,
+        MobileNo: getMobileNo,
+        WhatsappNo: getWhatsappNo,
+        EmailId: getEmail
+    });
+
+    //vendorList.push({ getSelectVendorID, getvendorName, getpanNo, getVendorRating, getMobileNo, getWhatsappNo, getEmail });
     renderTable();
     clearForm();
 });
@@ -403,17 +413,17 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
     const rowIndex = $(this).closest('tr').data('index');
     const vendor = vendorList[rowIndex];
     $('#vendorName').val(vendor.vendorName);
-    $('#panNo').val(vendor.panNo);
+    $('#panNo').val(vendor.PanNo);
     vendorList.splice(rowIndex, 1); // remove current so it can be updated on next Add
     renderTable();
 });
 function collectRfqFormData() {
-    // 1. Collect RFQ Header (Parent)
     const rfq = {
+        CompanyId: 1,
         RfqCategoryId: 1,
         CustomerId: parseInt($("#ddlCustomerName").val()),
         RfqNoPrefix: "RFQ",
-        RfqNo: parseInt($("#txtRfqNo").val()),
+        RfqNo: 0,
         RfqDate: $("#txtRfqDate").val(),
         RfqSubject: $("#txtRfqSubject").val(),
         RfqExpiresOn: $("#txtRfqExpiredOn").val(),
@@ -429,10 +439,10 @@ function collectRfqFormData() {
         UpdatedOn: new Date().toISOString()
     };
 
-    // 2. Collect RFQ Details (You can loop this if dynamic)
-    const rfqDetails = [{
+    const rfqDetails = {
+        RfqId: 0,
         FromLoc: $("#txtOrigin").val(),
-        FromLocLat: "",  // Populate if available
+        FromLocLat: "",
         FromLocLong: "",
         ToLoc: $("#txtDestination").val(),
         ToLocLat: "",
@@ -447,29 +457,28 @@ function collectRfqFormData() {
         DetentionFreeDays: parseInt($("#txtDetentionFreeDays").val()),
         PackingTypeId: parseInt($("#ddlPackingType").val()),
         SpecialInstruction: $("#txtSpecialInstructions").val()
-    }];
+    };
 
-    // 3. Collect Recipients (You can loop if multiple)
-    const rfqRecipients = [{
-        LocationId: parseInt($("#ddlLocation").val()),
-        LocUserId: parseInt($("#ddlUser").val()),
-        VendorId: parseInt($("#ddlVendor").val()),
-        VendorRating: parseInt($("#txtVendorRating").val()),
-        MobNo: $("#txtVendorMobile").val(),
-        WhatsAppNo: $("#txtVendorWhatsApp").val(),
-        EmailId: $("#txtVendorEmail").val()
-    }];
+    const rfqRecipients = vendorList.map(vendor => ({
+        RfqDetailId: 0,
+        LocationId: 0,
+        LocUserId: 0,
+        VendorId: vendor.VendorId,
+        VendorRating: vendor.VendorRating,
+        MobNo: vendor.MobileNo,
+        WhatsAppNo: vendor.WhatsappNo,
+        EmailId: vendor.EmailId
+    }));
 
     return {
-        rfq: rfq,
-        rfqDetails: rfqDetails,
+        Rfq: rfq,
+        RfqDetails: rfqDetails,
         rfqRecipients: rfqRecipients
     };
 }
-
 function SaveAndSaveNew(action) {
     console.log("Action received:", action);
-    debugger;
+
     if (action === "save") {
         const data = collectRfqFormData();
         $.ajax({
@@ -478,18 +487,13 @@ function SaveAndSaveNew(action) {
             contentType: "application/json",
             data: JSON.stringify(data),
             success: function (response) {
-                if (response.result === "success") {
-                    toastr.success("RFQ saved successfully. RFQ ID: " + response.rfqId);
-                    // Optionally reset the form or redirect
-                } else {
-                    toastr.error("Failed to save RFQ: " + response.message);
-                }
+                console.log("Success:", response);
             },
             error: function (xhr, status, error) {
-                toastr.error("An error occurred while saving RFQ.");
-                console.error(xhr.responseText);
+            
             }
         });
+
     } else if (action === "savenew") {
 
     } else {

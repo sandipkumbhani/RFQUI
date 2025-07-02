@@ -2,7 +2,6 @@
 {
     public class RfqDetailDto
     {
-        public int RfqDetailId { get; set; }
         public int RfqId { get; set; }
         public string? FromLoc { get; set; }
         public string? FromLocLat { get; set; }
