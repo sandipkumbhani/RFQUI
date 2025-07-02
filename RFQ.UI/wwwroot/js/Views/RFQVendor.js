@@ -457,7 +457,7 @@ function SaveAndSaveNew(action) {
     if (action === "save") {
         const data = collectRfqFormData();
         $.ajax({
-            url: "/RFQVendor/InsertRfqVendor", // Matches [HttpPost("InsertRfq")] in controller
+            url: "/RFQVendor/AddRfqVendor", 
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(data),
