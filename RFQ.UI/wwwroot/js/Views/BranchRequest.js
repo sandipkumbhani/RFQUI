@@ -1,15 +1,33 @@
 ﻿$(document).ready(function () {
     CheckValidation();
-    $("#btnSave, #btnSaveAndNew").on('click', function () {
+    $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
         var action = $(this).data('action'); // "save" or "saveNew"
-        if (OnSubmitCheckValidation()) {
-            SaveAndSaveNew(action);
+        if (OnSubmitValidation()) {
+            debugger;
+            SaveBranchRequest(action);
         }
     });
     GetAllCustomer();
     GetAllVehicleType();
     GetAllItemName();
     GetAllPakingType();
+    generateBranchRFQ();
+});
+function generateBranchRFQ() {
+    const today = new Date();
+    const dateStr = today.toISOString().slice(0, 10).replace(/-/g, ''); // yyyyMMdd
+    const key = `branch_rfq_${dateStr}`;
+    let lastSeq = localStorage.getItem(key);
+    let newSeq = lastSeq ? parseInt(lastSeq) + 1 : 1;
+    localStorage.setItem(key, newSeq);
+    const paddedSeq = String(newSeq).padStart(4, '0');
+    return paddedSeq;
+}
+
+// Automatically set the RFQ number in the input field
+window.addEventListener('DOMContentLoaded', () => {
+    const rfqNo = generateBranchRFQ();
+    document.getElementById('txtRfqNo').value = rfqNo;
 });
 function CheckValidation() {
     $("#ddlCustomerName").on("blur", function () {
@@ -126,12 +144,12 @@ function OnSubmitValidation() {
         toastr.warning("Please select a Rfq Type", "Validation Error");
         return false;
     }
-  
+
     if (!isValidateSelect($("#ddlRfqPriority").val())) {
         toastr.warning("Please select a Rfq Property", "Validation Error");
         return false;
     }
-    
+
     if (!isValidateSelect($("#ddlRfqOn").val())) {
         toastr.warning("Please select a Rfq On", "Validation Error");
         return false;
@@ -161,7 +179,7 @@ function OnSubmitValidation() {
         toastr.warning("Please select a Paking Type", "Validation Error");
         return false;
     }
-    
+
     if (IsNullOrEmpty($("#txtSpecialInstructions").val()) || !/^[A-Za-z0-9 ]+$/.test($("#txtSpecialInstructions").val())) {
         toastr.warning("Please enter a valid Special Instructions", "Validation Error");
         return false;
@@ -170,18 +188,18 @@ function OnSubmitValidation() {
     if (IsNullOrEmpty($("#txtMaxCosting").val()) || !isNumeric($("#txtMaxCosting").val())) {
         toastr.warning("Please Enter a Total Max Costing", "Validation Error");
         return false;
-    } 
-    
+    }
+
     if (IsNullOrEmpty($("#txtDetentionPerDay").val()) || !isNumeric($("#txtDetentionPerDay").val())) {
         toastr.warning("Please Enter a Detention Per Day", "Validation Error");
         return false;
-    } 
+    }
 
     if (IsNullOrEmpty($("#txtDetentionFreeDays").val()) || !isNumeric($("#txtDetentionFreeDays").val())) {
         toastr.warning("Please Enter a Detention Free Days", "Validation Error");
         return false;
-    } 
-
+    }
+    return true;
 }
 function GetAllCustomer() {
     var GetUrl = '/Customer/GetDrpCustomerList';
@@ -292,10 +310,96 @@ function GetAllPakingType() {
         }
     });
 }
-function Save() {
+function collectRfqFormData() {
+    const rfq = {
+        CompanyId: 1,
+        RfqCategoryId: 1,
+        CustomerId: $("#ddlCustomerName").val(),
+        RfqNo: $("#txtRfqNo").val(),
+        RfqDate: $("#txtRfqDate").val(),
+        RfqSubject: $("#txtRfqSubject").val(),
+        RfqExpiresOn: $("#txtRfqExpiredOn").val(),
+        RfqTypeId: $("#ddlRfqType").val(),
+        VehicleReqOn: $("#txtVehicleReqDate").val(),
+        RfqPriorityId: $("#ddlRfqPriority").val(),
+        Remarks: $("#txtSpecialInstructions").val(),
+        LinkId: 0,
+        StatusId: 30,
+        CreatedBy: 0,
+        CreatedOn: new Date().toISOString(),
+        UpdatedBy: 0,
+        UpdatedOn: new Date().toISOString()
+    };
 
-    var isvalid = OnSubmitValidation();
-    if (!isvalid) {
-        return;
+    const rfqDetails = {
+        RfqId: 0,
+        FromLoc: $("#txtOrigin").val(),
+        FromLocLat: "",
+        FromLocLong: "",
+        ToLoc: $("#txtDestination").val(),
+        ToLocLat: "",
+        ToLocLong: "",
+        RfqOnId: $("#ddlRfqOn").val(),
+        VehicleTypeId: $("#ddlVehicleType").val(),
+        VehicleCount: $("#txtNoofVehicles").val(),
+        TotalQty: $("#txtTotalQty").val(),
+        ItemId: $("#ddlItemName").val(),
+        PackingTypeId: $("#ddlPackingType").val(),
+        SpecialInstruction: $("#txtSpecialInstructions").val(),
+        MaxCosting: $("#txtMaxCosting").val(),
+        DetentionPerDay: $("#txtDetentionPerDay").val(),
+        DetentionFreeDays: $("#txtDetentionFreeDays ").val(),
+    };
+
+    //const rfqRecipients = vendorList.map(vendor => ({
+    //    RfqDetailId: 10,
+    //    LocationId: 10,
+    //    LocUserId: 10,
+    //    VendorId: vendor.VendorId,
+    //    VendorRating: vendor.VendorRating,
+    //    MobNo: vendor.MobileNo,
+    //    WhatsAppNo: vendor.WhatsappNo,
+    //    EmailId: vendor.EmailId
+    //}));
+
+    const rfqRecipients = [
+        {
+
+            RfqDetailId: 10,
+            LocationId: 10,
+            LocUserId: 10,
+            VendorId: 10,
+            VendorRating: 10,
+            MobNo: "6465445454",
+            WhatsAppNo: "6465445454",
+            EmailId: "abc@gmail.com"
+        }
+    ];
+
+    return {
+        Rfq: rfq,
+        RfqDetails: rfqDetails,
+        rfqRecipients: rfqRecipients
+    };
+}
+
+function SaveBranchRequest(action) {
+    debugger;
+    console.log("Action received:", action);
+
+    if (action == "save") {
+        const data = collectRfqFormData();
+        $.ajax({
+            url: "/RfqBranch/AddRfqBranch", 
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (response) {
+                console.log("Success:", response);
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Request for Quote-Branch Details!", "Error");
+            }
+        });
     }
 }
