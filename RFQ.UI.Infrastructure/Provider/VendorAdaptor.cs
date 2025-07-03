@@ -180,5 +180,43 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<IEnumerable<VendorListResponseDto>?> GetAllVendorList()
+        {
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var url = _fleetLynkApiUrl + _config["Vendor:GetAllVendorList"];
+                var response = await httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    return null;
+                }
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(responseData))
+                    return null;
+
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel?.Data != null)
+                {
+                    var internalMasterList = JsonConvert.DeserializeObject<List<VendorListResponseDto>>(responseModel.Data.ToString());
+                    return internalMasterList;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return null;
+            }
+        }
+
     }
 }

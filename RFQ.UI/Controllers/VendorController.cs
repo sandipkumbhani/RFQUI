@@ -29,7 +29,10 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-      
+        public ActionResult QuoteRoleVendor()
+        {
+            return View();
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllInternalMaster()
         {
@@ -51,6 +54,7 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> VendorSave([FromBody] VendorRequestDto vendorRequestDto)
         {
@@ -157,6 +161,28 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllVendorList()
+        {
+            try
+            {
+                var internalMasterList = await _vendorService.GetAllVendorList();
+
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(internalMasterList);
+                }
+                else
+                {
+                    return View(internalMasterList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

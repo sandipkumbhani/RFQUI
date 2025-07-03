@@ -700,3 +700,19 @@ $(document).ready(function () {
         table.search(this.value).draw();
     });
 });
+$(document).ready(function () {
+    const table = $('#rfqVendorTable').DataTable({
+        responsive: true,
+        paging: false,
+        info: true,
+        lengthChange: false,
+        columnDefs: [
+            // { orderable: false, targets: [] } // all sortable
+            { orderable: false, targets: 'no-sort' }
+        ],
+        language: {
+            zeroRecords: "", // Hides "No matching records found"
+            emptyTable: "",  // Hides "No data available in table"
+        },
+    });
+});
