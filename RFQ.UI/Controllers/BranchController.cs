@@ -19,6 +19,30 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-      
+        [HttpGet]
+        public async Task<IActionResult> GetAllVendorList()
+        {
+            try
+            {
+                var getAllVendorList = await _branchService.GetAllVendorList();
+                if (getAllVendorList != null && getAllVendorList.Count() > 0)
+                {
+                    return Json(getAllVendorList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(getAllVendorList);
+                }
+                else
+                {
+                    return View(getAllVendorList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }

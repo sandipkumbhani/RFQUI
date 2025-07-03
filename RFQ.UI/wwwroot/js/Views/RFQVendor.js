@@ -12,6 +12,7 @@
     GetAllPakingType();
     GetAllVendorList();
     FetchVendorData();
+    FetchRfqNo();
 });
 let vendorList = [];
 var fetchedVendorDataList;
@@ -423,7 +424,7 @@ function collectRfqFormData() {
         RfqCategoryId: 1,
         CustomerId: parseInt($("#ddlCustomerName").val()),
         RfqNoPrefix: "RFQ",
-        RfqNo: 0,
+        RfqNo: parseInt($("#txtRfqNo").val()),
         RfqDate: $("#txtRfqDate").val(),
         RfqSubject: $("#txtRfqSubject").val(),
         RfqExpiresOn: $("#txtRfqExpiredOn").val(),
@@ -500,5 +501,16 @@ function SaveAndSaveNew(action) {
         console.warn("Unknown action:", action);
     }
 }
-
-
+function FetchRfqNo() {
+    $.ajax({
+        url: "/RFQVendor/GetRfqNo",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            $("#txtRfqNo").val(response.result);
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch RFQ No!", "Error");
+        }
+    });
+}

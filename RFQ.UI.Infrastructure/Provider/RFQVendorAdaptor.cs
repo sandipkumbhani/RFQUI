@@ -4,12 +4,7 @@ using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -59,6 +54,38 @@ namespace RFQ.UI.Infrastructure.Provider
                 Console.WriteLine(ex.Message);
             }
             return false;
+        }
+
+        public async Task<string> GetRfqNo()
+        {
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["RFQVendor:GetRfqNo"];
+                var response = await _httpClient.GetAsync(baseurl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    return null;
+                }
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(responseData))
+                    return null;
+
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel?.Data != null)
+                {
+                    var rfqNo = responseModel.Data.ToString();
+                    return rfqNo;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
         }
     }
 }
