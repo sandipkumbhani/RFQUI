@@ -1,43 +1,39 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿
+using System.Text;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
-    public class RFQVendorAdaptor : IRFQVendorAdaptor
+    public class QuoteRateVendorAdaptor : IQuoteRateVendorAdaptor
     {
-        private readonly HttpClient _httpClient;
+        private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private readonly string _fleetLynkApiUrl;
-
-        public RFQVendorAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration config)
+        private string _fleetLynkApiUrl;
+        public QuoteRateVendorAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
-            _config = config;
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
+            _config = configuration;
+            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
+
         }
-
-
-        public async Task<bool> AddRfqVendor(RfqVendorRequestDto requestDto)
+        public async Task<string> AddQuoteRateVendor(QuoteRateVendorRequestDto rfqRateRequestDto)
         {
             try
             {
+                _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var baseurl = _fleetLynkApiUrl + _config["RFQVendor:AddRfqVendor"];
-                var rfqVendorDto = JsonConvert.SerializeObject(requestDto);
-                var requestContent = new StringContent(rfqVendorDto, Encoding.UTF8, "application/json");
+                var baseurl = _fleetLynkApiUrl + _config["RFQRate:AddRfqRate"];
+                var User = JsonConvert.SerializeObject(rfqRateRequestDto);
+                var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
@@ -46,19 +42,19 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (result == 200)
                     {
-                        return JsonConvert.DeserializeObject<bool>(responseModel.Data.ToString());
+                        return "QuoteRateVendor Saved";
                     }
                     else
                     {
-                        return false;
+                        return responseModel.ErrorMessage;
                     }
                 }
+                return string.Empty;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return false;
         }
     }
 }

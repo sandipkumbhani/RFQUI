@@ -33,7 +33,6 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-
         [HttpGet]
         public async Task<IActionResult> GetAllInternalMaster()
         {
