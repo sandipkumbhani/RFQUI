@@ -11,24 +11,9 @@
     GetAllVehicleType();
     GetAllItemName();
     GetAllPakingType();
-    generateBranchRFQ();
+    FetchRfqNo();
 });
-function generateBranchRFQ() {
-    const today = new Date();
-    const dateStr = today.toISOString().slice(0, 10).replace(/-/g, ''); // yyyyMMdd
-    const key = `branch_rfq_${dateStr}`;
-    let lastSeq = localStorage.getItem(key);
-    let newSeq = lastSeq ? parseInt(lastSeq) + 1 : 1;
-    localStorage.setItem(key, newSeq);
-    const paddedSeq = String(newSeq).padStart(4, '0');
-    return paddedSeq;
-}
 
-// Automatically set the RFQ number in the input field
-window.addEventListener('DOMContentLoaded', () => {
-    const rfqNo = generateBranchRFQ();
-    document.getElementById('txtRfqNo').value = rfqNo;
-});
 function CheckValidation() {
     $("#ddlCustomerName").on("blur", function () {
         if (!isValidateSelect($(this).val())) {
@@ -402,4 +387,18 @@ function SaveBranchRequest(action) {
             }
         });
     }
+}
+
+function FetchRfqNo() {
+    $.ajax({
+        url: "/RFQVendor/GetRfqNo",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            $("#txtRfqNo").val(response.result);
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch RFQ No!", "Error");
+        }
+    });
 }
