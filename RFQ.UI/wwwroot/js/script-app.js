@@ -278,39 +278,39 @@ Array.from(forms)
 
 
 
-$(document).ready(function () {
-    // Get user's country via geo IP once
-    $.get("https://ipapi.co/json/", function (data) {
-      const userCountry = data.country_code || "us";
+//$(document).ready(function () {
+//    // Get user's country via geo IP once
+//    $.get("https://ipapi.co/json/", function (data) {
+//      const userCountry = data.country_code || "us";
 
-      // Initialize intl-tel-input for each phone input
-      $(".phone-input").each(function () {
-        window.intlTelInput(this, {
-          initialCountry: userCountry.toLowerCase(),
-          utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
-        });
-      });
-        fixIntlTelInputPadding();
+//      // Initialize intl-tel-input for each phone input
+//      $(".phone-input").each(function () {
+//        window.intlTelInput(this, {
+//          initialCountry: userCountry.toLowerCase(),
+//          utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
+//        });
+//      });
+//        fixIntlTelInputPadding();
 
-    }).fail(function () {
-      // If geo IP fails, default to US
-      $(".phone-input").each(function () {
-        window.intlTelInput(this, {
-          initialCountry: "us",
-          utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
-        });
-      });
-    });
+//    }).fail(function () {
+//      // If geo IP fails, default to US
+//      $(".phone-input").each(function () {
+//        window.intlTelInput(this, {
+//          initialCountry: "us",
+//          utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
+//        });
+//      });
+//    });
     
-  });
-function fixIntlTelInputPadding() {
-    $(".item-input .iti input.iti__tel-input[type='tel']").each(function () {
-        // Remove inline padding-left if set
-        $(this).css("padding-left", "");
-        // Force correct padding with !important
-        this.style.setProperty("padding-left", "91px", "important");
-    });
-}
+//  });
+//function fixIntlTelInputPadding() {
+//    $(".item-input .iti input.iti__tel-input[type='tel']").each(function () {
+//        // Remove inline padding-left if set
+//        $(this).css("padding-left", "");
+//        // Force correct padding with !important
+//        this.style.setProperty("padding-left", "91px", "important");
+//    });
+//}
 
 
 // Function to initialize SimpleBar on elements with a given class
