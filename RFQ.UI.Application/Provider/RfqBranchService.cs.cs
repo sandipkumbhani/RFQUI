@@ -1,6 +1,7 @@
 ﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,11 @@ namespace RFQ.UI.Application.Provider
         public async Task<RfqBranchRequestDto?> AddRfqBranch(RfqBranchRequestDto rfqRequestDto)
         {
             return await _rfqAdaptor.AddRfqBranch(rfqRequestDto);
+        }
+
+        public async Task<List<RfqBranchResponceDto>> GetAllRfqBranchList()
+        {
+            return await _rfqAdaptor.GetAllRfqBranchList();
         }
     }
 }

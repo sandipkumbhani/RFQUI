@@ -12,8 +12,56 @@
     GetAllItemName();
     GetAllPakingType();
     FetchRfqNo();
+   
+    $("#viewPrev").on('click', function () {
+        debugger;
+        FetchBranchRequest();
+    });
 });
 
+function FetchBranchRequest() {
+    $("#formDiv").addClass('d-none');
+    $("#tableDiv").removeClass('d-none');
+    debugger;
+    var fetchCustomerUrl = '/RfqBranch/GetAllRfqBranchList';
+    $.ajax({
+        url: fetchCustomerUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            //if ($.fn.DataTable.isDataTable('#rfqBranchTable')) {
+            //    $('#rfqBranchTable').DataTable().clear();
+            //}
+            const table = $("#rfqBranchTable").DataTable();
+            response.forEach(item => {
+                table.row.add([
+                    item.companyId,
+                    item.rfqNo,
+                    item.rfqDate,
+                    item.rfqSubject,
+                    item.rfqExpiresOn,
+                    item.rfqTypeId,
+                    item.vehicleReqOn,
+                    item.rfqPriorityId,
+                    `
+           <div class="action-items" style="cursor:pointer;">
+                    <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
+                    <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+            </div>
+            `
+                ]);
+            });
+            // Redraw table with new data
+            table.draw();
+            // Update total list count
+            $('#totalList').text(`Total List: ${response.length}`);
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
 function CheckValidation() {
     $("#ddlCustomerName").on("blur", function () {
         if (!isValidateSelect($(this).val())) {

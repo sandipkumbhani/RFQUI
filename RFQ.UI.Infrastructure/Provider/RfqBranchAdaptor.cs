@@ -62,5 +62,21 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             return null;
         }
+
+        public async Task<List<RfqBranchResponceDto>> GetAllRfqBranchList()
+        {
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+            var baseurl = $"{_fleetLynkApiUrl}/RfqVendor/GetAllRfqVendorList";
+            var response = await _httpClient.GetAsync(baseurl);
+            var responseData = await response.Content.ReadAsStringAsync();
+            var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+            if (responseModel != null)
+            {
+                var Profilelist = JsonConvert.DeserializeObject<List<RfqBranchResponceDto>>(Convert.ToString(responseModel.Data!));
+                return Profilelist;
+            }
+            return null;
+        }
     }
 }

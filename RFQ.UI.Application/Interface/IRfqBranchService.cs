@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace RFQ.UI.Application.Interface
     public interface IRfqBranchService
     {
         Task<RfqBranchRequestDto?> AddRfqBranch(RfqBranchRequestDto rfqRequestDto);
+        Task<List<RfqBranchResponceDto>> GetAllRfqBranchList();
 
         //Task<IEnumerable<RfqResponseDto>> GetAllRfq();
         //Task<RfqResponseDto?> GetRfqById(int rfqId);

@@ -3,6 +3,7 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -51,6 +52,29 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllRfqBranchList()
+        {
+            try
+            {
+
+                var RfqBranchList = await _rfqService.GetAllRfqBranchList();
+
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(RfqBranchList);
+                }
+                else
+                {
+                    return View(RfqBranchList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }
