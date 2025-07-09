@@ -1,0 +1,330 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Booking Or Trip";
+}
+@section Scripts {
+
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box add">
+            <h1 class="page-title">LR / Booking </h1>
+        </div>
+    </div>
+
+    <div id="AddVehiclePlacementDiv" class="card com-profile-info">
+        <div class="top-details">
+            <form class="row all-custom-class" id="vehiclePlacementForm" method="post">
+                <input type="hidden" id="vehiclePlacementId" />
+                <div class="Booking Details">
+                    <h3 class="page-form-title">Booking Details</h3>
+                    <hr />
+                    <div class="row all-custom-class">
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Booking Branch <span>*</span></label>
+                                <select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">LR No <span>*</span></label>
+                                <input type="text" class="form-control" placeholder="Auto / Text" id="lrNo" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">LR Date <span>*</span></label>
+                                <input type="date" class="form-control" id="lrDate" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Indent/Placement No</label>
+                                <select class="select2-custom form-control" id="placementNo" style="width: 100%;"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">E-Way Bill State</label>
+                                <select class="select2-custom form-control" id="ewayBillState" style="width: 100%;"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Business Vertical</label>
+                                <select class="select2-custom form-control" id="businessVertical" style="width: 100%;">
+                                    <option>RCM</option>
+                                    <option>FCM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">E-Way Bill No</label>
+                                <input type="text" class="form-control" id="billNo" />
+                            </div>
+                        </div>
+                       
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Origin/From <span>*</span></label>
+                                <input type="text" class="form-control" id="origin" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Destination/To <span>*</span></label>
+                                <input type="text" class="form-control" id="destination" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Customer <span>*</span></label>
+                                <select class="select2-custom form-control" id="customer" style="width: 100%;"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Vehicle No <span>*</span></label>
+                                <input type="text" class="form-control" id="vehicleNo" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Vehicle Type <span>*</span></label>
+                                <select class="select2-custom form-control" id="vehicleType" style="width: 100%;"></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Driver Name <span>*</span></label>
+                                <input type="text" class="form-control" id="driverName" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Mobile No <span>*</span></label>
+                                <input type="number" class="form-control" id="mobileNo" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Tracking Type <span>*</span></label>
+                                <select class="select2-custom form-control" id="trackingType" style="width: 100%;"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Invoice No</label>
+                                <input type="text" class="form-control" id="invoiceNo" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Invoice Date</label>
+                                <input type="date" class="form-control" id="invoiceDate" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Invoice Value</label>
+                                <input type="number" class="form-control" id="invoiceValue" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">E-Way Bill No</label>
+                                <input type="number" class="form-control" id="ewayBillNo" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">E-Way Bill Date</label>
+                                <input type="date" class="form-control" id="ewayBillDate" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Expiry Date</label>
+                                <input type="date" class="form-control" id="expiryDate" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="Additional Invoice Details">
+                    <h3 class="page-form-title">Additional Invoice Details</h3>
+                    <hr />
+                    <div class="row all-custom-class">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th>Invoice No</th>
+                                    <th>Invoice Date</th>
+                                    <th>Invoice Value</th>
+                                    <th>E-Way Bill No</th>
+                                    <th>E-Way Bill Date</th>
+                                    <th>E-Way Bill Date</th>
+                                    <th>Edit / Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td> </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><a href="#">Edit</a> / <a href="#">Delete</a></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Text</td>
+                                    <td>Date Selection</td>
+                                    <td>Numeric</td>
+                                    <td>Numeric</td>
+                                    <td>Date Selection</td>
+                                    <td>Date Selection</td>
+                                    <td><a href="#">Add</a> / <a href="#">Cancel</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+
+                <div class="Other Details">
+                    <h3 class="page-form-title">Other Details</h3>
+                    <hr />
+                    <div class="row all-custom-class">
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Consignor</label>
+                                <select class="select2-custom form-control" id="ddlConsignor" style="width: 100%;"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Consignee</label>
+                                <select class="select2-custom form-control" id="ddlConsignee" style="width: 100%;"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Transit Days</label>
+                                <input type="number" class="form-control" id="transitDays" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">EDD</label>
+                                <input type="date" class="form-control" id="eddDate" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Item Name</label>
+                                <select class="select2-custom form-control" id="ddlItemName" style="width: 100%;"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Packing Type</label>
+                                <select class="select2-custom form-control" id="ddlPackingType" style="width: 100%;"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Total Pkgs</label>
+                                <input type="number" class="form-control" id="totalPkgs" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Actual Wt</label>
+                                <input type="number" class="form-control" id="actualWt" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Charged Wt</label>
+                                <input type="number" class="form-control" id="chargedWt" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Total Freight</label>
+                                <input type="number" class="form-control" id="totalFreight" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                
+                @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
+
+                <div class="button-main">
+                    <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="saveNew">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save
+                        </span>
+                    </a>
+                    <a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save & New
+                        </span>
+                    </a>
+                    <a href="#" class="card-link" id="btnUpdate" style="display:none;">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Update
+                        </span>
+                    </a>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+
+</div>

@@ -1,5 +1,6 @@
 ﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Helper;
+using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
@@ -31,6 +32,11 @@ namespace RFQ.UI.Application.Provider
         public async Task<PageList<DriverResponseDto>> GetAllDriver(PagingParam pagingParam)
         {
             return await _driverAdaptor.GetAllDriver(pagingParam);
+        }
+
+        public Task<IEnumerable<DriverResponseDto>> GetAllDriverList()
+        {
+            return _driverAdaptor.GetAllDriverList();
         }
 
         public async Task<LicenseKycDetailsResponseDto> GetDlKycDetails(LicenseKycDetailsRequestDto licenseKycDetailsRequestDto)
