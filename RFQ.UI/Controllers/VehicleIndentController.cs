@@ -1,82 +1,56 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
     public class VehicleIndentController : Controller
     {
-        // GET: VehicleIndentController
+        private readonly GlobalClass _globalClass;
+        private readonly IVehicleIndentService _vehicleIndentService;
+        private readonly ILogger<VehicleIndentController> _logger;
+        public VehicleIndentController(GlobalClass globalClass, IVehicleIndentService vehicleIndentService, ILogger<VehicleIndentController> logger)
+        {
+            _globalClass = globalClass;
+            _vehicleIndentService = vehicleIndentService;
+            _logger = logger;
+        }
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: VehicleIndentController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-        // GET: VehicleIndentController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: VehicleIndentController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> AddVehicleIndent([FromBody] VehicleIndentRequestDto vehicleIndentRequestDto)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
 
-        // GET: VehicleIndentController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+                if (vehicleIndentRequestDto != null)
+                {
+                    vehicleIndentRequestDto.CreatedBy = Convert.ToInt32(companyId);
+                    vehicleIndentRequestDto.UpdatedBy = Convert.ToInt32(companyId);
 
-        // POST: VehicleIndentController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+                    var result = await _vehicleIndentService.AddVehicleIndent(vehicleIndentRequestDto);
+                    return Json(new { result });
+                }
+                else
+                {
+                    return Json(new { result = "Failed" });
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
-            }
-        }
-
-        // GET: VehicleIndentController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: VehicleIndentController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                throw new Exception(ex.Message);
             }
         }
     }
+
 }
