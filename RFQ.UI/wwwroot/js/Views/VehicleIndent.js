@@ -1,11 +1,12 @@
 ﻿$(document).ready(function () {
     //CheckValidation();
-    //$("#btnSave, #btnSaveAndNew").on('click', function () {
-    //    var action = $(this).data('action'); // "save" or "saveNew"
-    //    if (OnSubmitCheckValidation()) {
-    //        SaveAndSaveNew(action);
-    //    }
-    //});
+    $("#btnSave, #btnSaveAndNew").on('click', function () {
+        var action = $(this).data('action'); 
+        debugger;
+        //if (OnSubmitCheckValidation()) {
+        SaveVehicleIndent(action);
+        //}
+    });
     GetAllCustomer();
     GetAllVehicleType();
     GetAllItemName();
@@ -147,4 +148,79 @@ function GetAllPakingType() {
             toastr.error("Failed to Fetch Paking Type!", "Error");
         }
     });
+}
+
+function SaveVehicleIndent(action) {
+    //if (OnSubmitValidation()) {
+    var saveUrl = '/VehicleIndent/AddVehicleIndent';
+    const formData = {
+        IndentNo: $('#txtRfqNo').val(), 
+        BranchId: $('#ddlLocation').val(),
+        CorporateId: null,
+        IndentDate: $('#txtIndentDate').val(),
+        VehicleRequiredOn: $('#txtVehicleReqDate').val(),
+        CustomerId: $('#ddlCustomerName').val(),
+        FromLocation: $('#txtOrigin').val(),
+        FromLatitude: null,
+        FromLongitude: null,
+        ToLocation: $('#txtDestination').val(),
+        ToLatitude: null,
+        ToLongitude: null,
+        VehicleTypeId: $('#ddlVehicleType').val(),
+        ItemId: $('#ddlItemName').val(),
+        PackingTypeId: $('#ddlPackingType').val(),
+        ExpiryDate: $('#txtRfqExpiredOn').val(),
+        Consignor: $('#txtConsignor').val(),
+        Consignee: $('#txtConsignee').val(),
+        StatusId: 1,
+        CreatedBy: 1, 
+        CreatedOn: new Date().toISOString(),
+        UpdatedBy: null,
+        UpdatedOn: null
+    };
+
+    if (action === "save") {
+
+        $.ajax({
+            url: '/VehicleIndent/AddVehicleIndent',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response) {
+                    alert("Vehicle Indent saved successfully!");
+                    if ($(e.currentTarget).attr('id') === 'btnsaveandnew') {
+                        $('#vehicleIndentForm')[0].reset(); // reset form if "Save & New"
+                    }
+                } else {
+                    alert("Something went wrong while saving.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", xhr.responseText);
+                alert("Error occurred while saving vehicle indent.");
+            }
+        });
+    } else if (action === "saveNew") {
+        $.ajax({
+            url: '/VehicleIndent/AddVehicleIndent',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response) {
+                    alert("Vehicle Indent saved successfully!");
+                    if ($(e.currentTarget).attr('id') === 'btnsaveandnew') {
+                        $('#vehicleIndentForm')[0].reset(); // reset form if "Save & New"
+                    }
+                } else {
+                    alert("Something went wrong while saving.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", xhr.responseText);
+                alert("Error occurred while saving vehicle indent.");
+            }
+        });
+    }
 }
