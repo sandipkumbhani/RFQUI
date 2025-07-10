@@ -11,6 +11,7 @@
     GetAllItemName();
     GetAllPakingType();
     GetAllLocation();
+    GetAllVehicleIndent();
 });
 function GetAllCustomer() {
     var GetUrl = '/Customer/GetDrpCustomerList';
@@ -145,6 +146,36 @@ function GetAllLocation() {
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
+function GetAllVehicleIndent() {
+    debugger;
+    var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
+    $.ajax({
+        url: getVehicleTypeUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            response = response.result;
+            console.log(response);
+            const Indentdropdown = document.getElementById("ddlIndent");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Indent No";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            Indentdropdown.appendChild(placeholderOption);
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.indentId;
+                option.textContent = item.indentNo;
+                Indentdropdown.appendChild(option);
+            });
+            $('.selectpicker').selectpicker('refresh');
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Indent No!", "Error");
         }
     });
 }
