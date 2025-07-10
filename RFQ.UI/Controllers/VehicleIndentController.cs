@@ -51,6 +51,20 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetIndentNo()
+        {
+            try
+            {
+                var result = await _vehicleIndentService.GetIndentNo();
+                return Json(new { result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
     }
 
 }

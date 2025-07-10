@@ -5,5 +5,7 @@ namespace RFQ.UI.Domain.Interfaces
     public interface IVehicleIndentAdaptor
     {
         Task<bool> AddVehicleIndent(VehicleIndentRequestDto vehicleIndentRequestDto);
+
+        Task<string> GetIndentNo();
     }
 }

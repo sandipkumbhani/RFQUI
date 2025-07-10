@@ -12,12 +12,12 @@
 <div class="row">
 	<div class="col-12">
 		<div class="page-title-box add">
-			<h2 class="page-title">Vehicle Indent</h2>
+			<h1 class="page-title">Vehicle Indent</h1>
 		</div>
+
 		<div id="addReqBranchDiv" class="card com-profile-info">
 			<div class="top-details">
-
-				<form class="form" id="vehicleIndentForm">
+				<form class="row all-custom-class" id="vehicleIndentForm" method="post">
 					<input type="hidden" id="txtVehicleIndentId" />
 					<div class="row all-custom-class">
 						<div class="col-lg-3">
@@ -30,7 +30,7 @@
 						<div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label">Indent No</label>
-								<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtRfqNo" />
+								<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtIndentNo" />
 							</div>
 						</div>
 						<div class="col-lg-3">
@@ -74,7 +74,7 @@
 						<div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label">No. of Vehicles Req</label>
-								<input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" />
+								<input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric"onkeypress="return isNumber(event)" />
 							</div>
 						</div>
 						<div class="col-lg-3">

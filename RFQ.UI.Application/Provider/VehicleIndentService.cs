@@ -16,5 +16,10 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehicleIndentAdaptor.AddVehicleIndent(vehicleIndentRequestDto);
         }
+
+        public Task<string> GetIndentNo()
+        {
+            return _vehicleIndentAdaptor.GetIndentNo();
+        }
     }
 }
