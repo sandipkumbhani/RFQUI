@@ -28,6 +28,7 @@ namespace RFQ.UI.Infrastructure.Extension
             services.AddScoped<DriverAdaptor>();
             services.AddScoped<CompanyMasterPackingTypeAdaptor>();
             services.AddScoped<IVehicleIndentAdaptor, VehicleIndentAdaptor>();
+            services.AddScoped<IRequestForQuoteAdaptor, RequestForQuoteAdaptor>();
             return services;
         }
     }

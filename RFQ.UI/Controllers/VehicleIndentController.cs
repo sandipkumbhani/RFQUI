@@ -66,5 +66,4 @@ namespace RFQ.UI.Controllers
             }
         }
     }
-
 }
