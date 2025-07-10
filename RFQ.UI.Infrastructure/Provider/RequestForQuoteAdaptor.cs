@@ -11,10 +11,10 @@ namespace RFQ.UI.Infrastructure.Provider
     public class RequestForQuoteAdaptor : IRequestForQuoteAdaptor
     {
         private HttpClient _httpClient;
-        private readonly IGlobalClass _globalClass;
+        private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public RequestForQuoteAdaptor(HttpClient httpClient, IGlobalClass globalClass, IConfiguration configuration)
+        public RequestForQuoteAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
