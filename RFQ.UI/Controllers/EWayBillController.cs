@@ -2,14 +2,9 @@
 
 namespace RFQ.UI.Controllers
 {
-    public class QuoteRateBranchController : Controller
+    public class EWayBillController : Controller
     {
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public ActionResult QuoteRateBranch()
         {
             return View();
         }

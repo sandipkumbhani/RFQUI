@@ -1,0 +1,229 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Vehicle Placement";
+}
+@section Scripts {
+    <script src="~/js/views/vehicleplacement.js"></script>
+}
+
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <!-- (Optional) Latest compiled and minified JavaScript translation files -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+    <style>
+        .item-input {
+            margin-bottom: 0.75rem;
+        }
+
+        .form-label span {
+            color: red;
+        }
+    </style>
+</head>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box add">
+            <h1 class="page-title">Vehicle Placement </h1>
+        </div>
+    </div>
+
+    <div id="AddVehiclePlacementDiv" class="card com-profile-info">
+        <div class="top-details">
+            <form class="row all-custom-class" id="vehiclePlacementForm" method="post">
+                <input type="hidden" id="vehiclePlacementId" />
+                <div class="row all-custom-class">
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">Location <span>*</span></label>
+                            <select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">Placement No </label>
+                            <input type="text" class="form-control" placeholder="Auto Generated" disabled id="txtPlacementNo" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">Placement Date</label>
+                            <input type="datetime-local" class="form-control" placeholder="RFQ Date" id="txtPlacementDate" />
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="Indent Details">
+                    <h3 class="page-form-title">Indent Details</h3>
+                    <div class="row all-custom-class">
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Indent No <span>*</span></label>
+                                <select class="select2-custom form-control" id="ddlIndentNo" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Indent Date</label>
+                                <input type="datetime-local" class="form-control" placeholder="Auto Display" disabled id="txtIndentDate" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Indent Branch</label>
+                                <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtIndentBranch" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Vehicle Req On</label>
+                                <input type="datetime-local" class="form-control" placeholder="Auto Display" disabled id="txtVehicleReqOn" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">RFQ NO </label>
+                                <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtRFQNo" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">RFQ Date</label>
+                                <input type="datetime-local" class="form-control" placeholder="Auto Display" disabled id="txtRFQDate" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Customer</label>
+                                <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtCustomer" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Origin/From</label>
+                                <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtOriginFrom" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Destination/To</label>
+                                <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtDestination" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Vehicle Type</label>
+                                <input type="datetime-local" class="form-control" placeholder="Auto Display" disabled id="txtVehicleType" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">No.of Vehicles</label>
+                                <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtNoOfVehicles" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Pending Vehicles</label>
+                                <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtNoOfVehicles" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="Vehicle Placement Details">
+                    <h3 class="page-form-title">Vehicle Placement Details</h3>
+                    <div class="row all-custom-class">
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Vehicle No <span>*</span></label>
+                                <select class="select2-custom form-control" id="ddlVehicleNo" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Traking Type<span>*</span></label>
+                                <select class="select2-custom form-control" id="ddlTrakingType" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Driver Name<span>*</span></label>
+                                <select class="select2-custom form-control" id="ddlDriverName" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Mobile No</label>
+                                <input type="text" class="form-control" placeholder="Mobile No" id="txtMobileNo" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Owner Name</label>
+                                <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtOwnerName" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Broker Name</label>
+                                <select class="select2-custom form-control" id="ddlBrokerName" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Total Hair Amt</label>
+                                <input type="text" class="form-control" placeholder="Amount" id="txtTotalHairAmt" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Advance Payable</label>
+                                <input type="text" class="form-control" placeholder="Amount" id="txtAdvancePayable" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Balance Payable</label>
+                                <input type="text" class="form-control" placeholder="Auto Display" disabled id="txt>BalancePayable" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-main">
+                    <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="saveNew">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save
+                        </span>
+                    </a>
+                    <a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save & New
+                        </span>
+                    </a>
+                    <a href="#" class="card-link" id="btnUpdate" style="display:none;">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Update
+                        </span>
+                    </a>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

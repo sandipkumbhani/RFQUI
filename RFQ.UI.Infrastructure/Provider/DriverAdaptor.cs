@@ -212,5 +212,28 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<IEnumerable<DriverResponseDto>> GetAllDriverList()
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = (_fleetLynkApiUrl + _config["Driver:GetAllDriverList"]);
+                var response = await _httpClient.GetAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var ProfileList = JsonConvert.DeserializeObject<List<DriverResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return ProfileList;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

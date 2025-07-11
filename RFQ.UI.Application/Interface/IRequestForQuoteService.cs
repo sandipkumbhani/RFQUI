@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace RFQ.UI.Application.Interface
 {
-    public interface IBranchService
+    public interface IRequestForQuoteService
     {
-        Task<List<VendorListResponseDto>> GetAllVendorList();
+        Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList();
     }
 }

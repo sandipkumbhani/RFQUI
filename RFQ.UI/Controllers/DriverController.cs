@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -266,6 +267,29 @@ namespace RFQ.UI.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllDriverList()
+        {
+            try
+            {
+                var driverlist = await _driverServices.GetAllDriverList();
+
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(driverlist);
+                }
+                else
+                {
+                    return Json(driverlist);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

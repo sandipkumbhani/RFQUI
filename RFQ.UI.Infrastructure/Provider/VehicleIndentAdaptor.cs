@@ -4,64 +4,59 @@ using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using System.Net.Http;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
-    public class RFQVendorAdaptor : IRFQVendorAdaptor
+    public class VehicleIndentAdaptor : IVehicleIndentAdaptor
     {
-        private readonly HttpClient _httpClient;
+        private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private readonly string _fleetLynkApiUrl;
-
-        public RFQVendorAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration config)
+        private string _fleetLynkApiUrl;
+        public VehicleIndentAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
-            _config = config;
+            _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
-
-
-        public async Task<bool> AddRfqVendor(RfqVendorRequestDto requestDto)
+        public async Task<bool> AddVehicleIndent(VehicleIndentRequestDto vehicleIndentRequestDto)
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var baseurl = _fleetLynkApiUrl + _config["RFQVendor:AddRfqVendor"];
-                var rfqVendorDto = JsonConvert.SerializeObject(requestDto);
-                var requestContent = new StringContent(rfqVendorDto, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
+                var baseUrl = _fleetLynkApiUrl + _config["VehicleIndent:AddVehicleIndent"];
+                var requestJson = JsonConvert.SerializeObject(vehicleIndentRequestDto);
+                var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(baseUrl, content);
                 var responseData = await response.Content.ReadAsStringAsync();
+
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                    {
-                        return JsonConvert.DeserializeObject<bool>(responseModel.Data.ToString());
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Error in AddVehicleIndent: {ex.Message}");
             }
+
             return false;
         }
 
-        public async Task<string> GetRfqNo()
+        public async Task<string> GetIndentNo()
         {
             try
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RFQVendor:GetRfqNo"];
+                var baseurl = _fleetLynkApiUrl + _config["VehicleIndent:GenerateVehicleIndent"];
                 var response = await _httpClient.GetAsync(baseurl);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -76,8 +71,8 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel?.Data != null)
                 {
-                    var rfqNo = responseModel.Data.ToString();
-                    return rfqNo;
+                    var indentNo = responseModel.Data.ToString();
+                    return indentNo;
                 }
                 return null;
             }

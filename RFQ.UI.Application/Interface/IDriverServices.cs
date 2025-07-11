@@ -12,5 +12,6 @@ namespace RFQ.UI.Application.Interface
         Task<string> DeleteDriver(int DriverId);
         Task<LicenseKycDetailsResponseDto> GetDlKycDetails(LicenseKycDetailsRequestDto licenseKycDetailsRequestDto);
         Task<IEnumerable<InternalMasterResponseDto>> GetDriverType();
+        Task<IEnumerable<DriverResponseDto>> GetAllDriverList();
     }
 }

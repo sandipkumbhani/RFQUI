@@ -2,9 +2,9 @@
 
 namespace RFQ.UI.Controllers
 {
-    public class QuotationToCustomerController : Controller
+    public class DeliveryOrCloseTripController : Controller
     {
-        public IActionResult Index()
+        public IActionResult DeliveryOrCloseTrip()
         {
             return View();
         }

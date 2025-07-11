@@ -1,16 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Model;
 
 namespace RFQ.UI.Controllers
 {
     public class RequestForQuoteController : Controller
     {
-        // GET: RequestForQuoteController
+        private readonly GlobalClass _globalClass;
+        private readonly IRequestForQuoteService _requestForQuoteService;
+        private readonly ILogger<RequestForQuoteController> _logger;
+        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger)
+        {
+            _globalClass = globalClass;
+            _requestForQuoteService = requestForQuoteService;
+            _logger = logger;
+        }
         public ActionResult VendorRequest()
         {
             return View();
         }
-
-        // GET: RequestForQuoteController/Details/5
         public ActionResult Details(int id)
         {
             return View();
@@ -19,66 +27,19 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-        // GET: RequestForQuoteController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
 
-        // POST: RequestForQuoteController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllVehicleIndentList()
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var result = await _requestForQuoteService.GetAllVehicleIndentList();
+                return Json(new { result });
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
-            }
-        }
-
-        // GET: RequestForQuoteController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: RequestForQuoteController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: RequestForQuoteController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: RequestForQuoteController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                return Json(new { success = false, message = ex.Message });
             }
         }
     }
