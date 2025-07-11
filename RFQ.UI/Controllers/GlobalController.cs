@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
-
+using RFQ.UI.Extension;
 namespace RFQ.UI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class GlobalController : ControllerBase
+    public class GlobalController : Controller
     {
         private readonly GlobalClass _globalClass;
-        public GlobalController(GlobalClass globalClass)
+        private readonly ICompanyStateService _companyStateService;
+        public GlobalController(GlobalClass globalClass, ICompanyStateService companyStateService)
         {
             _globalClass = globalClass;
+            _companyStateService = companyStateService;
         }
 
         [HttpPost("set-token")]
@@ -24,6 +25,28 @@ namespace RFQ.UI.Controllers
         public IActionResult GetToken()
         {
             return Ok(new { token = _globalClass.Token });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllStateList()
+        {
+            try
+            {
+                var stateList = await _companyStateService.GetAllStateList();
+                if (stateList != null && stateList.Count() > 0)
+                {
+                    return Json(stateList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(stateList);
+                }
+                return Json(new {});
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

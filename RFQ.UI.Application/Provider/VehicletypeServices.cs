@@ -34,5 +34,9 @@ namespace RFQ.UI.Application.Provider
             return await _vehicleTypeAdaptor.GetAllVehicleType(pagingParam);
         }
 
+        public Task<List<VehicleTypeResponseDto?>> GetAllVehicleTypes()
+        {
+            return _vehicleTypeAdaptor.GetAllVehicleTypes();
+        }
     }
 }

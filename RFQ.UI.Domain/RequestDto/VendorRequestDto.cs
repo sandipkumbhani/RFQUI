@@ -2,6 +2,11 @@
 {
     public class VendorRequestDto
     {
+        public VendorRequestDto() 
+        {
+            VendorVehicleTypes = new();
+            VendorApplicableRoutes = new();
+        }
         public int PartyId { get; set; }
 
         public int CompanyId { get; set; }
@@ -57,5 +62,8 @@
 
         public int UpdatedBy { get; set; }
         //public DateTime UpdatedOn { get; set; }
+
+        public List<MasterPartyVehicleTypeRequestDto>? VendorVehicleTypes { get; set; }
+        public List<MasterPartyRouteRequestDto>? VendorApplicableRoutes{ get; set; }
     }
 }

@@ -30,6 +30,9 @@ namespace RFQ.UI.Infrastructure.Extension
             services.AddScoped<RfqBranchAdaptor>();
             services.AddScoped<BranchAdaptor>();
             services.AddScoped<IRFQVendorAdaptor, RFQVendorAdaptor>();
+            services.AddScoped<CompanyStateAdaptor>();
+            services.AddScoped<MasterPartyRouteAdaptor>();
+            services.AddScoped<MasterPartyVehicleTypeAdaptor>();
             return services;
         }
     }
