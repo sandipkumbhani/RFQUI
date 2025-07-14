@@ -13,5 +13,7 @@ namespace RFQ.UI.Application.Interface
         Task<string> UpdateVehicleType(int vehicleTypeId, VehicleTypeRequestDto vehicleTypeRequestDto);
 
         Task<string> DeleteVehicleType(int vehicleTypeId);
+
+        Task<List<VehicleTypeResponseDto?>> GetAllVehicleTypes();
     }
 }

@@ -27,6 +27,9 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IMasterAttachmentService, MasterAttachmentService>();
             services.AddScoped<ICompanyMasterPackingTypeService, CompanyMasterPackingTypeServices>();
+            services.AddScoped<ICompanyStateService,CompanyStateService>();
+            services.AddScoped<IMasterPartyVehicleTypeService,MasterPartyVehicleTypeService>();
+            services.AddScoped<IMasterPartyRouteService, MasterPartyRouteService>();
             services.AddScoped<IVehicleIndentService, VehicleIndentService>();
             services.AddScoped<IRequestForQuoteService, RequestForQuoteService>();
             return services;

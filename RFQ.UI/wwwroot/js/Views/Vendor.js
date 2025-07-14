@@ -14,9 +14,11 @@ const linkId = urlParams.get('LinkId');
 $(document).ready(function () {
     GetAllInternalMaster();
     GetAllCityList();
+    GetAllStateList();
+    BindDropDownVehicleType();
     CheckValidation();
-    
-
+    VehicleTypeDetailsTable();
+    ApplicableRouteDetailsTable();
     $(document).on("click", "#btnViewButton", function () {
         FetchVendor();
         $("#formDiv").css('display', 'none')
@@ -146,10 +148,19 @@ $(document).ready(function () {
     });
     FetchVendor();
 });
-$('#addVendor').click(function () {
+
+let vehicleTypeNameList = [];
+let applicableRouteList = [];
+
+$('#addVendor').on('click',function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
 });
+$('#ddlvendorFromCityTable').on('change', function () {
+    const stateId = $('option:selected', this).data('stateid');
+    $('#ddlvendorFromStateTable').val(stateId).change();
+});
+
 function CheckValidation() {
     $("#txtPanNumber").on("blur", function () {
         if (!ValidatePanNumber($(this).val())) {
@@ -309,6 +320,7 @@ function OnSubmitValidation() {
     }
     return true;
 }
+
 function GetAllInternalMaster() {
     var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
     $.ajax({
@@ -345,6 +357,21 @@ function BindDropDown(data) {
 
     $('.selectpicker').selectpicker('refresh');
 }
+function GetAllStateList() {
+    var getStateUrl = '/Global/GetAllStateList'
+    $.ajax({
+        url: getStateUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            BindDropDownFromState(response)
+            BindDropDownToState(response)
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
 function GetAllCityList() {
     var getcityUrl = '/Customer/GetAllCity'
     $.ajax({
@@ -353,6 +380,7 @@ function GetAllCityList() {
         dataType: "json",
         success: function (response) {
             BindDropDownCity(response)
+            BindDropDownFromCity(response)
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -379,6 +407,91 @@ function BindDropDownCity(data) {
 
     $('.selectpicker').selectpicker('refresh');
 }
+function BindDropDownFromCity(data) {
+    const select = document.getElementById("ddlvendorFromCityTable");
+    select.innerHTML = "";
+
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = "";
+    placeholderOption.textContent = "Select a City";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select.appendChild(placeholderOption);
+
+    data.forEach(option => {
+        let opt = document.createElement("option");
+        opt.value = option.cityId;
+        opt.textContent = option.cityName;
+        opt.setAttribute("data-stateid", option.stateId);
+        select.appendChild(opt);
+    });
+}
+function BindDropDownVehicleType() {
+    var getvehicleTypeUrl = '/Vehicle/GetAllVehicleTypes'
+    $.ajax({
+        url: getvehicleTypeUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            const select = document.getElementById("ddlvendorVehicleTypeTable");
+            select.innerHTML = "";
+
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a VehicleType";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            response.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.vehicleTypeId;
+                opt.textContent = option.vehicleTypeName;
+                select.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
+function BindDropDownFromState(response) {
+    const select = document.getElementById("ddlvendorFromStateTable");
+    select.innerHTML = "";
+
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = "";
+    placeholderOption.textContent = "Select a State";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select.appendChild(placeholderOption);
+
+    response.forEach(option => {
+        let opt = document.createElement("option");
+        opt.value = option.stateId;
+        opt.textContent = option.stateName;
+        select.appendChild(opt);
+    });
+}
+function BindDropDownToState(response) {
+    const select = document.getElementById("ddlvendorToStateTable");
+    select.innerHTML = "";
+
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = "";
+    placeholderOption.textContent = "Select a State";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select.appendChild(placeholderOption);
+
+    response.forEach(option => {
+        let opt = document.createElement("option");
+        opt.value = option.stateId;
+        opt.textContent = option.stateName;
+        select.appendChild(opt);
+    });
+}
+
 function SaveVendor(action) {
     if (OnSubmitValidation()) {
         var legalName = $("#txtLegalName").val();
@@ -405,6 +518,18 @@ function SaveVendor(action) {
         var shareAppLink = $("#shareapplink").is(":checked");
         var partyId = 0;
         var saveVendorUrl = '/Vendor/VendorSave';
+        var vendorVehicleTypes = vehicleTypeNameList.map(item => ({
+            PartyVehicleTypeId: 0,
+            PartyId : 0,
+            VehicleTypeId: item.VehicleTypeId
+        }));
+        var vendorApplicableRoutes = applicableRouteList.map(item => ({
+            PartyRouteId : 0,
+            PartyId: 0,
+            FromCityId: item.FromCityId,
+            FromStateId: item.FromStateId,
+            ToStateId: item.ToStateId,
+        }));
         var formData = {
             PartyName: vendorName,
             PartyCategoryId: vendorCategory,
@@ -427,7 +552,9 @@ function SaveVendor(action) {
             PANStatus: panStatus,
             PANLinkedWithAdhar: adharLinked,
             PANVerifiedOn: panVerifiedOn,
-            LinkId: linkId
+            LinkId: linkId,
+            VendorVehicleTypes: vendorVehicleTypes,
+            VendorApplicableRoutes: vendorApplicableRoutes
         };
         if (action == "save") {
             $.ajax({
@@ -477,12 +604,11 @@ function FetchVendor() {
     $("#formDiv").css('display', 'none');
     $('#vendorForm')[0].reset();
     $('#ddlCity').val(null).trigger('change');
+    $('#ddlVendorCategory').val(null).trigger('change');
     $("#btnSaveVendor").show();
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
     ResetAttachmentRepeater();
-    //var fetchVendorUrl = '/Vendor/GetAllVendor';
-    //FetchDataForTable('vendorTable', fetchVendorUrl);
     FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', null, null);
 }
 
@@ -498,6 +624,26 @@ $('#pageLength').off('change').on('change', function () {
 function EditVendor(partyId) {
     var data = viewModelDto.filter(x => x.partyId == partyId);
     var formData = data[0];
+    var vehicleTypeTableData = FetchVendorVehicleTypeList(partyId);
+    var applicableRouteTableData = FetchVendorApplicableRouteList(partyId);
+    vehicleTypeNameList = vehicleTypeTableData.map(item => ({  
+       PartyVehicleTypeId: item.partyVehicleTypeId,  
+       PartyId: item.partyId,  
+       VehicleTypeId: item.vehicleTypeId,  
+       VehicleTypeName: item.vehicleTypeName  
+    }));
+    applicableRouteList = applicableRouteTableData.map(item => ({
+        PartyRouteId: item.partyRouteId,
+        PartyId: item.partyId,
+        FromCityId: item.fromCityId,
+        FromCity: item.fromCityName,
+        FromStateId: item.fromStateId,
+        FromState : item.fromStateName,
+        ToStateId: item.toStateId,
+        ToState: item.toStateName
+    }))
+    RenderVehicleTypeDetailsTable();
+    RenderApplicableRouteDetailsTable();
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
         var attachmentData = list;
         $('#tableDiv').css('display', 'none');
@@ -539,7 +685,6 @@ function EditVendor(partyId) {
             EditMasterAttachment(attachmentData);
         }
     })
-    
 }
 function UpdateVendor() {
 
@@ -566,8 +711,21 @@ function UpdateVendor() {
         PANStatus: $("#txtPanStatus").val(),
         PANLinkedWithAdhar: $("#txtAadharLinked").val(),
         PANVerifiedOn: $("#txtPanVerifiedOn").val(),
-        LinkId: linkId
+        LinkId: linkId,
+        VendorVehicleTypes: vehicleTypeNameList.map(item => ({
+            PartyVehicleTypeId: item.PartyVehicleTypeId,
+            PartyId: $("#hdnPartyId").val(),
+            VehicleTypeId: item.VehicleTypeId
+        })),
+        VendorApplicableRoutes: applicableRouteList.map(item => ({
+            PartyRouteId: item.PartyRouteId,
+            PartyId: $("#hdnPartyId").val(),
+            FromCityId: item.FromCityId,
+            FromStateId: item.FromStateId,
+            ToStateId: item.ToStateId,
+        }))
     }
+    console.log(formData.VendorVehicleTypes);
     let repeaterItems = document.querySelectorAll("[data-repeater-item]");
     let updateAttachmentDetails = [];
     var linkd = GetQueryParam("LinkId");
@@ -602,7 +760,7 @@ function UpdateVendor() {
                 $("#backButton").show();
             }
             else {
-                toastr.error("Failed to Update Vendor Details!","Error");
+                toastr.error("Failed to Update Vendor Details!", "Error");
             }
         },
         error: function (xhr, status, error) {
@@ -654,10 +812,11 @@ function DeleteVendor(partyId) {
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Delete Vendor Details", "Error");
-            }   
+            }
         });
     });
 }
+
 function ClearGstFields() {
     $("#txtLegalName").val('');
     $("#txtTypeBusiness").val('');
@@ -673,4 +832,306 @@ function ClearPanFields() {
         $("#txtAadharLinked").val(''),
         $("#txtPanStatus").val(''),
         $("#txtPanVerifiedOn ").val('')
+}
+
+function VehicleTypeDetailsTable() {
+    $('#btnAddVendorVehicleType').on('click', function () {
+        const getSelectVehicleTypeID = $("#ddlvendorVehicleTypeTable").val();
+        if (getSelectVehicleTypeID == null || getSelectVehicleTypeID == '') {
+            toastr.warning("Please Select Vehcile Type Name!", "Warning");
+            return;
+        }
+        const getvehicleTypeName = $('#ddlvendorVehicleTypeTable option:selected').text();
+        vehicleTypeNameList.push({
+            VehicleTypeId: getSelectVehicleTypeID,
+            VehicleTypeName: getvehicleTypeName
+        });
+        RenderVehicleTypeDetailsTable();
+        ClearVehicleTypeForm();
+    });
+    $('#btnCancelVendorVehicleType').on('click', function () {
+        ClearVehicleTypeForm();
+    });
+    $('#vendorVehicleTypeTable').on('click', '.deleteVehicleType', function () {
+        const rowIndex = $(this).closest('tr').data('index');
+        const deleteItem = vehicleTypeNameList.splice(rowIndex, 1);
+        const partyVehicleTypeId = deleteItem[0].PartyVehicleTypeId;
+        var deleteUrl = '/MasterPartyVehicleType/DeleteMasterPartyVehicleTypeById/' + partyVehicleTypeId;
+        $.ajax({
+            url: deleteUrl,
+            type: "DELETE",
+            dataType: "json",
+            data: JSON.stringify(partyVehicleTypeId),
+            success: function (response) {
+                if (response.result == "1") {
+                    toastr.success("VehicleType Details Deleted Successfully!", "Success");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Delete VehicleType Details", "Error");
+            }
+        });
+        RenderVehicleTypeDetailsTable();
+    });
+    $('#vendorVehicleTypeTable').on('click', '.editVehicleType', function () {
+        const rowIndex = $(this).closest('tr').data('index');
+        const vehicleType = vehicleTypeNameList[rowIndex];
+        const selectHtml = `<select id="editVehicleTypeSelect"  class="select2-custom form-control" placeholdeeer="Select a Vehicle Type">  
+          ${$('#ddlvendorVehicleTypeTable').html()}  
+        </select>`;
+        $(this).closest('tr').find('td:nth-child(2)').html(selectHtml);
+        //$('#editVehicleTypeSelect').select2('refresh');
+        //$('#editVehicleTypeSelect').val(vehicleType.VehicleTypeId);  
+
+        const actionButtonsHtml = `
+              <button type="button" class="saveEditVehicleType" style="color:blue;border:none;background:none;">Save</button> /
+              <button type="button" class="cancelEditVehicleType" style="color:blue;border:none;background:none;">Cancel</button>
+          `;
+        $(this).closest('tr').find('td:nth-child(3)').html(actionButtonsHtml);
+
+        $('.saveEditVehicleType').on('click', function () {
+            const selectedVehicleTypeId = $('#editVehicleTypeSelect').val();
+            const selectedVehicleTypeName = $('#editVehicleTypeSelect option:selected').text();
+
+            if (!selectedVehicleTypeId) {
+                toastr.warning("Please select a valid Vehicle Type!", "Validation Error");
+                return;
+            }
+
+            vehicleTypeNameList[rowIndex] = {
+                PartyVehicleTypeId: vehicleType.PartyVehicleTypeId,
+                VehicleTypeId: selectedVehicleTypeId,
+                VehicleTypeName: selectedVehicleTypeName
+            };
+
+            RenderVehicleTypeDetailsTable();
+        });
+
+        $('.cancelEditVehicleType').on('click', function () {
+            RenderVehicleTypeDetailsTable();
+        });
+
+        $('#btnEditAddVehicleType').on('click', function () {
+            const selectedVehicleTypeId = $('#editVehicleTypeSelect').val();
+            const selectedVehicleTypeName = $('#editVehicleTypeSelect option:selected').text();
+
+            if (!selectedVehicleTypeId) {
+                toastr.warning("Please select a valid Vehicle Type!", "Validation Error");
+                return;
+            }
+
+            vehicleTypeNameList[rowIndex] = {
+                VehicleTypeId: selectedVehicleTypeId,
+                VehicleTypeName: selectedVehicleTypeName
+            };
+
+            RenderVehicleTypeDetailsTable();
+        });
+    });
+    return;
+}
+function RenderVehicleTypeDetailsTable() {
+    const tbody = $('#vendorVehicleTypeTable tbody');
+
+    tbody.empty();
+    //console.log(vehicleTypeNameList);
+    $.each(vehicleTypeNameList, function (index, item) {
+        const row = `
+      <tr data-index="${index}">
+        <td class="text-center">${index + 1}</td>
+        <td class="text-center">${item.VehicleTypeName}</td>
+        <td class="text-center">
+          <button type="button" class="editVehicleType" style="color:blue;border:none;background:none;">Edit</button> /
+          <button type="button" class="deleteVehicleType" style="color:blue;border:none;background:none;">Delete</button>
+        </td>
+      </tr>
+    `;
+        tbody.append(row);
+    });
+}
+function ClearVehicleTypeForm() {
+    $('#ddlvendorVehicleTypeTable').val(null).trigger('change');
+}
+
+function ApplicableRouteDetailsTable() {
+    $('#btnAddVendorApplicableRoute').on('click', function () {
+        const getSelectFromCityID = $("#ddlvendorFromCityTable").val();
+        const getSelectFromStateID = $("#ddlvendorFromStateTable").val();
+        const getSelectToStateID = $("#ddlvendorToStateTable").val();
+        if (getSelectFromCityID == null || getSelectFromCityID == '') {
+            toastr.warning("Please Select From City!", "Warning");
+            return;
+        }
+        if (getSelectFromStateID == null || getSelectFromStateID == '') {
+            toastr.warning("Please Select From State!", "Warning");
+            return;
+        }
+        if (getSelectToStateID == null || getSelectToStateID == '') {
+            toastr.warning("Please Select To State!", "Warning");
+            return;
+        }
+        const getFromCityName = $('#ddlvendorFromCityTable option:selected').text();
+        const getFromStateName = $('#ddlvendorFromStateTable option:selected').text();
+        const getToStateName = $('#ddlvendorToStateTable option:selected').text();
+        applicableRouteList.push({
+            FromCityId: getSelectFromCityID,
+            FromCity: getFromCityName,
+            FromStateId: getSelectFromStateID,
+            FromState: getFromStateName,
+            ToStateId: getSelectToStateID,
+            ToState: getToStateName
+        });
+        RenderApplicableRouteDetailsTable();
+        ClearApplicableRouteForm();
+    });
+    $('#btnCancelVendorApplicableRoute').on('click', function () {
+        ClearApplicableRouteForm();
+    });
+    $('#applicableRouteDetails').on('click', '.deleteApplicableRouteDetails', function () {
+        const rowIndex = $(this).closest('tr').data('index');
+        const deleteItem = applicableRouteList.splice(rowIndex, 1);
+        const partyRouteId = deleteItem[0].PartyRouteId;
+        var deleteUrl = '/MasterPartyRoute/DeleteMasterPartyRouteById/' + partyRouteId;
+        $.ajax({
+            url: deleteUrl,
+            type: "DELETE",
+            dataType: "json",
+            data: JSON.stringify(partyRouteId),
+            success: function (response) {
+                if (response.result == "1") {
+                    toastr.success("Route Details Deleted Successfully!", "Success");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Delete Route Details", "Error");
+            }
+        });
+        RenderApplicableRouteDetailsTable();
+    });
+    $('#applicableRouteDetails').on('click', '.editApplicableRouteDetails', function () {  
+       const rowIndex = $(this).closest('tr').data('index');  
+       const routeDetails = applicableRouteList[rowIndex];  
+
+       const fromCitySelectHtml = `<select id="editFromCitySelect" class="select2-custom form-control">  
+           ${$('#ddlvendorFromCityTable').html()}  
+       </select>`;  
+       const fromStateSelectHtml = `<select id="editFromStateSelect" class="select2-custom form-control">  
+           ${$('#ddlvendorFromStateTable').html()}  
+       </select>`;  
+       const toStateSelectHtml = `<select id="editToStateSelect" class="select2-custom form-control">  
+           ${$('#ddlvendorToStateTable').html()}  
+       </select>`;  
+
+       $(this).closest('tr').find('td:nth-child(2)').html(fromCitySelectHtml);  
+       $(this).closest('tr').find('td:nth-child(3)').html(fromStateSelectHtml);  
+       $(this).closest('tr').find('td:nth-child(4)').html(toStateSelectHtml);  
+
+       $('#editFromCitySelect').val(routeDetails.FromCityId).trigger('change');  
+       $('#editFromStateSelect').val(routeDetails.FromStateId).trigger('change');  
+       $('#editToStateSelect').val(routeDetails.ToStateId).trigger('change');  
+
+       const actionButtonsHtml = `  
+           <button type="button" class="saveEditApplicableRouteDetails" style="color:blue;border:none;background:none;">Save</button> /  
+           <button type="button" class="cancelEditApplicableRouteDetails" style="color:blue;border:none;background:none;">Cancel</button>  
+       `;  
+        $(this).closest('tr').find('td:nth-child(5)').html(actionButtonsHtml);  
+        $('#editFromCitySelect').on('change', function () {
+            const stateId = $('option:selected', this).data('stateid');
+            console.log(stateId);
+            $('#editFromStateSelect').val(stateId).change();
+        });
+
+
+       $('.saveEditApplicableRouteDetails').on('click', function () {  
+           const selectedFromCityId = $('#editFromCitySelect').val();  
+           const selectedFromCityName = $('#editFromCitySelect option:selected').text();  
+           const selectedFromStateId = $('#editFromStateSelect').val();  
+           const selectedFromStateName = $('#editFromStateSelect option:selected').text();  
+           const selectedToStateId = $('#editToStateSelect').val();  
+           const selectedToStateName = $('#editToStateSelect option:selected').text();  
+
+           if (!selectedFromCityId || !selectedFromStateId || !selectedToStateId) {  
+               toastr.warning("Please select valid route details!", "Validation Error");  
+               return;  
+           }  
+
+           applicableRouteList[rowIndex] = {
+               PartyRouteId: routeDetails.PartyRouteId,
+               FromCityId: selectedFromCityId,  
+               FromCity: selectedFromCityName,  
+               FromStateId: selectedFromStateId,  
+               FromState: selectedFromStateName,  
+               ToStateId: selectedToStateId,  
+               ToState: selectedToStateName  
+           };  
+
+           RenderApplicableRouteDetailsTable();  
+       });  
+
+       $('.cancelEditApplicableRouteDetails').on('click', function () {  
+           RenderApplicableRouteDetailsTable();  
+       });  
+    });
+    return;
+}
+function RenderApplicableRouteDetailsTable() {
+    const tbody = $('#applicableRouteDetails tbody');
+
+    tbody.empty();
+    console.log(applicableRouteList);
+    $.each(applicableRouteList, function (index, item) {
+        const row = `
+      <tr data-index="${index}">
+        <td class="text-center">${index + 1}</td>
+        <td class="text-center">${item.FromCity}</td>
+        <td class="text-center">${item.FromState}</td>
+        <td class="text-center">${item.ToState}</td>
+        <td class="text-center">
+          <button type="button" class="editApplicableRouteDetails" style="color:blue;border:none;background:none;">Edit</button> /
+          <button type="button" class="deleteApplicableRouteDetails" style="color:blue;border:none;background:none;">Delete</button>
+        </td>
+      </tr>
+    `;
+        tbody.append(row);
+    });
+}
+function ClearApplicableRouteForm() {
+    $('#ddlvendorFromCityTable').val(null).trigger('change');
+    $('#ddlvendorFromStateTable').val(null).trigger('change');
+    $('#ddlvendorToStateTable').val(null).trigger('change');
+}
+
+function FetchVendorVehicleTypeList(partyId) {  
+   var fetchVehicleTypeUrl = '/MasterPartyVehicleType/GetMasterPartyVehicleTypeByPartyId/' + partyId;  
+   var result = null;  
+   $.ajax({  
+       url: fetchVehicleTypeUrl,  
+       type: "GET",  
+       dataType: "json",  
+       async: false,
+       success: function (response) {  
+           result = response;  
+       },  
+       error: function (xhr, status, error) {  
+           toastr.error("Failed to Fetch Vehicle Type Data!", "Error");  
+       }  
+   });  
+   return result;  
+}
+function FetchVendorApplicableRouteList(partyId) {  
+   var fetchRouteUrl = '/MasterPartyRoute/GetMasterPartyRouteByPartyId/' + partyId;  
+   var result = null;  
+   $.ajax({  
+       url: fetchRouteUrl,  
+       type: "GET",  
+       dataType: "json",  
+       async: false,
+       success: function (response) {  
+           result = response;  
+       },  
+       error: function (xhr, status, error) {  
+           toastr.error("Failed to Fetch Applicable Route Data!", "Error");  
+       }  
+   });  
+   return result;  
 }

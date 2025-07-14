@@ -357,5 +357,29 @@ namespace RFQ.UI.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllVehicleTypes()
+        {
+            try
+            {
+                var vehicleTypeList = await _vehicleTypeServices.GetAllVehicleTypes();
+                if (vehicleTypeList != null && vehicleTypeList.Count() > 0)
+                {
+                    return Json(vehicleTypeList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(vehicleTypeList);
+                }
+                else
+                {
+                    return View(vehicleTypeList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

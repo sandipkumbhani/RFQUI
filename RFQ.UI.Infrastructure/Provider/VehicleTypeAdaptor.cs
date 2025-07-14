@@ -140,5 +140,27 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<List<VehicleTypeResponseDto?>> GetAllVehicleTypes()
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["VehicleType:GetAllVehicleTypeList"]);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var vehicleTypelist = JsonConvert.DeserializeObject<List<VehicleTypeResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return vehicleTypelist;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }
