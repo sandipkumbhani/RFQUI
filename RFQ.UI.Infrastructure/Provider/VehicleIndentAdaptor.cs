@@ -4,7 +4,6 @@ using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using System.Net.Http;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -29,14 +28,11 @@ namespace RFQ.UI.Infrastructure.Provider
                 using var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
                 var baseUrl = _fleetLynkApiUrl + _config["VehicleIndent:AddVehicleIndent"];
-                var requestJson = JsonConvert.SerializeObject(vehicleIndentRequestDto);
-                var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PostAsync(baseUrl, content);
+                var vehicleIndent = JsonConvert.SerializeObject(vehicleIndentRequestDto);
+                var requestContent = new StringContent(vehicleIndent, Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(baseUrl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
@@ -47,7 +43,6 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 Console.WriteLine($"Error in AddVehicleIndent: {ex.Message}");
             }
-
             return false;
         }
 

@@ -30,13 +30,13 @@
 						<div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label">Indent No</label>
-								<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtIndentNo" />
+								<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtIndentNo" maxlength="50"/>
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label">Indent Date</label>
-								<input type="date" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtIndentDate" />
+                                <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtIndentDate" />
 							</div>
 						</div>
 						<div class="col-lg-3">
@@ -55,13 +55,13 @@
 						<div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label ">Origin/From</label>
-								<input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" />
+								<input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" maxlength="250"/>
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label">Destination/To</label>
-								<input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" />
+								<input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" maxlength="250"/>
 							</div>
 						</div>
 						<div class="col-lg-3">
@@ -91,25 +91,25 @@
 							<div class="col-lg-6">
 								<div class="item-input">
 									<label class="form-label">Consignor</label>
-									<input type="text" class="form-control" placeholder="Text" id="txtConsignor" />
+									<input type="text" class="form-control" placeholder="Text" id="txtConsignor" maxlength="100"/>
 								</div>
 							</div>
 							<div class="col-lg-6">
 								<div class="item-input">
 									<label class="form-label">Pickup Address</label>
-									<input type="text" class="form-control" placeholder="Text" id="txtPickupAddress" />
+									<input type="text" class="form-control" placeholder="Text" id="txtPickupAddress" maxlength="300"/>
 								</div>
 							</div>
 							<div class="col-lg-6">
 								<div class="item-input">
 									<label class="form-label">Consignee</label>
-									<input type="text" class="form-control" placeholder="Text" id="txtConsignee" />
+									<input type="text" class="form-control" placeholder="Text" id="txtConsignee" maxlength="100"/>
 								</div>
 							</div>
 							<div class="col-lg-6">
 								<div class="item-input">
 									<label class="form-label">Delivery Address</label>
-									<input type="text" class="form-control" placeholder="Text" id="txtaddress" />
+									<input type="text" class="form-control" placeholder="Text" id="txtDeliveryAddress" maxlength="300"/>
 								</div>
 							</div>
 							<div class="col-lg-3">
@@ -131,7 +131,7 @@
 							<div class="col-lg-6">
 								<div class="item-input">
 									<label class="form-label"> Remarks</label>
-									<input type="text" class="form-control" placeholder="Text" id="txtremarks" />
+									<input type="text" class="form-control" placeholder="Text" id="txtRemarks" maxlength="200"/>
 								</div>
 							</div>
 						</div>

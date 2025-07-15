@@ -1,32 +1,36 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace RFQ.UI.Domain.RequestDto
+﻿namespace RFQ.UI.Domain.RequestDto
 {
     public class VehicleIndentRequestDto
     {
         public string IndentNo { get; set; }
-        public int? BranchId { get; set; }
-        public int? CorporateId { get; set; }
-        public DateTime? IndentDate { get; set; }
-        public DateTime? VehicleRequiredOn { get; set; }
-        public int? CustomerId { get; set; }
-        public string FromLocation { get; set; }
-        public decimal? FromLatitude { get; set; }
-        public decimal? FromLongitude { get; set; }
-        public string ToLocation { get; set; }
-        public decimal? ToLatitude { get; set; }
-        public decimal? ToLongitude { get; set; }
-        public int? VehicleTypeId { get; set; }
-        public int? ItemId { get; set; }
-        public int? PackingTypeId { get; set; }
-        public DateTime? ExpiryDate { get; set; }
-        public string Consignor { get; set; }
-        public string Consignee { get; set; }
-        public int? StatusId { get; set; }
-        public int? CreatedBy { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public int? UpdatedBy { get; set; }
-        public DateTime? UpdatedOn { get; set; }
+        public int CompanyId { get; set; }
+        public int LocationId { get; set; }
+        public DateTime IndentDate { get; set; }
+        public DateTime VehicleReqOn { get; set; }
+        public int PartyId { get; set; }
+        public string? FromLocation { get; set; }
+        public string? FromLatitude { get; set; } = "null";
+        public string? FromLongitude { get; set; } = "null";
+        public string? ToLocation { get; set; }
+        public string? ToLatitude { get; set; } = "null";
+        public string? ToLongitude { get; set; } = "null";
+        public int VehicleTypeId { get; set; }
+        public int RequiredVehicles { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public int? ConsignerId { get; set; } = 0;
+        public string? ConsignerName { get; set; }
+        public int? ConsigneeId { get; set; } = 0;
+        public string? ConsigneeName { get; set; }
+        public string? PickUpAddress { get; set; }
+        public string? DeliveryAddress { get; set; }
+        public int ItemId { get; set; }
+        public int PackingTypeId { get; set; }
+        public string? Remarks { get; set; }
+        public int LinkId { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public int UpdatedBy { get; set; }
+        public DateTime UpdatedOn { get; set; }
     }
 }
 

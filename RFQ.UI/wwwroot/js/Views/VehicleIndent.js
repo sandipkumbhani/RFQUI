@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     CheckValidation();
-    $("#btnSave, #btnSaveAndNew").on('click', function () {
+    $("#btnSave, #btnsaveandnew").on('click', function () {
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
             SaveVehicleIndent(action);
@@ -29,13 +29,13 @@ function CheckValidation() {
         }
     });
     $("#txtIndentDate").on("blur", function () {
-        if (!IsNullOrEmpty($(this).val())) {
+        if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a Indent Date", "Validation Error");
             return;
         }
     });
     $("#txtVehicleReqDate").on("blur", function () {
-        if (!IsNullOrEmpty($(this).val())) {
+        if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a Vehicle Req On", "Validation Error");
             return;
         }
@@ -94,7 +94,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Consignee", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtaddress").val())) {
+    if (IsNullOrEmpty($("#txtDeliveryAddress").val())) {
         toastr.warning("Please enter a Delivery Address", "Validation Error");
         return false;
     }
@@ -106,7 +106,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please Select a Packing Type", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtremarks").val())) {
+    if (IsNullOrEmpty($("#txtRemarks").val())) {
         toastr.warning("Please enter a Remarks", "Validation Error");
         return false;
     }
@@ -252,72 +252,66 @@ function SaveVehicleIndent(action) {
     var saveUrl = '/VehicleIndent/AddVehicleIndent';
     const formData = {
         IndentNo: $('#txtIndentNo').val(),
-        BranchId: $('#ddlLocation').val(),
-        CorporateId: null,
+        LocationId: $('#ddlLocation').val(),
         IndentDate: $('#txtIndentDate').val(),
-        VehicleRequiredOn: $('#txtVehicleReqDate').val(),
-        CustomerId: $('#ddlCustomerName').val(),
+        VehicleReqOn: $('#txtVehicleReqDate').val(),
+        PartyId: $('#ddlCustomerName').val(),
         FromLocation: $('#txtOrigin').val(),
-        FromLatitude: null,
-        FromLongitude: null,
         ToLocation: $('#txtDestination').val(),
-        ToLatitude: null,
-        ToLongitude: null,
         VehicleTypeId: $('#ddlVehicleType').val(),
+        RequiredVehicles: $('#txtNoofVehicles').val(),
+        ExpiryDate: $('#txtRfqExpiredOn').val(),
+        ConsignerName: $('#txtConsignor').val(),
+        ConsigneeName: $('#txtConsignee').val(),
+        PickUpAddress: $('#txtPickupAddress').val(),
+        DeliveryAddress: $('#txtDeliveryAddress').val(),
         ItemId: $('#ddlItemName').val(),
         PackingTypeId: $('#ddlPackingType').val(),
-        ExpiryDate: $('#txtRfqExpiredOn').val(),
-        Consignor: $('#txtConsignor').val(),
-        Consignee: $('#txtConsignee').val(),
-        StatusId: 1,
-        CreatedBy: 1,
-        CreatedOn: new Date().toISOString(),
-        UpdatedBy: null,
-        UpdatedOn: new Date().toISOString()
+        Remarks: $('#txtRemarks').val(),
+        LinkId: GetQueryParam("LinkId")
     };
 
     if (action === "save") {
 
         $.ajax({
-            url: '/VehicleIndent/AddVehicleIndent',
+            url: saveUrl,
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
-                    toastr.success("Vehicle Indent saved successfully!");
-                    if ($(e.currentTarget).attr('id') === 'btnsaveandnew') {
-                        $('#vehicleIndentForm')[0].reset(); // reset form if "Save & New"
-                    }
+                    window.location.href = "../Dashboard/Dashboard";
                 } else {
-                    toastr.error("Something went wrong while saving.");
+                    toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
                 }
             },
             error: function (xhr, status, error) {
-                console.error("Error:", xhr.responseText);
-                toastr.error("Error occurred while saving vehicle indent.");
+                toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
             }
         });
     }
     else if (action === "saveNew") {
         $.ajax({
-            url: '/VehicleIndent/AddVehicleIndent',
+            url: saveUrl,
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
-                    toastr.success("Vehicle Indent saved successfully!");
-                    if ($(e.currentTarget).attr('id') === 'btnsaveandnew') {
-                        $('#vehicleIndentForm')[0].reset(); // reset form if "Save & New"
-                    }
+                    toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    $('#vehicleIndentForm')[0].reset();
+                    $('#ddlLocation').val(null).trigger('change');
+                    $('#ddlCustomerName').val(null).trigger('change');
+                    $('#ddlVehicleType').val(null).trigger('change');
+                    $('#ddlItemName').val(null).trigger('change');
+                    $('#ddlPackingType').val(null).trigger('change');
+                    FetchIndentNo();
                 } else {
-                    toastr.error("Something went wrong while saving.");
+                    toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
                 }
             },
             error: function (xhr, status, error) {
-                console.error("Error:", xhr.responseText);
-                alert("Error occurred while saving vehicle indent.");
+                toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
             }
         });
     }

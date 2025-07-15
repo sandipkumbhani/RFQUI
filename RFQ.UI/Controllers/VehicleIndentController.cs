@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using System.IdentityModel.Tokens.Jwt;
@@ -37,13 +36,13 @@ namespace RFQ.UI.Controllers
                 {
                     vehicleIndentRequestDto.CreatedBy = Convert.ToInt32(companyId);
                     vehicleIndentRequestDto.UpdatedBy = Convert.ToInt32(companyId);
-
+                    vehicleIndentRequestDto.CompanyId = Convert.ToInt32(companyId);
                     var result = await _vehicleIndentService.AddVehicleIndent(vehicleIndentRequestDto);
-                    return Json(new { result });
+                    return Json(result);
                 }
                 else
                 {
-                    return Json(new { result = "Failed" });
+                    return Json(false);
                 }
             }
             catch (Exception ex)

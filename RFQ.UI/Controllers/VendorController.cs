@@ -169,15 +169,15 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var internalMasterList = await _vendorService.GetAllVendorList();
+                var vendorList = await _vendorService.GetAllVendorList();
 
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(internalMasterList);
+                    return Json(vendorList);
                 }
                 else
                 {
-                    return View(internalMasterList);
+                    return View(vendorList);
                 }
             }
             catch (Exception ex)

@@ -210,7 +210,7 @@
 			<div class="tab-pane fade" id="VendorDetails" role="tabpanel" aria-labelledby="vendorDetails-tab">
 				<div class="table-responsive mt-3">
 					<h5><strong>RFQ Sent To Vendors</strong> <span>{List of Vendors will be auto fetched as per From / To / Vehicle Type Combinations}</span></h5>
-					<table class="table table-bordered text-center align-middle">
+					<table class="table table-bordered text-center align-middle" id="rfqVendorTable">
 						<thead>
 							<tr>
 								<th>Sr. No.</th>
@@ -224,27 +224,24 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td></td>
-								<td> </td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td><a href="#">Edit</a> / <a href="#">Delete</a></td>
-							</tr>
-							<tr>
-								<td><input type="checkbox" /></td>
-								<td>Selection Box</td>
-								<td>Auto Display</td>
-								<td>Auto Display</td>
-								<td>Auto Fetched</td>
-								<td>Auto Fetched</td>
-								<td>Auto Fetched</td>
-								<td><a href="#">Add</a> / <a href="#">Cancel</a></td>
-							</tr>
 						</tbody>
+						<tfoot>
+							<tr>
+								<td></td>
+								<td class="text-center">
+									<select class="select2-custom form-control" id="ddlRFQVendorList" style="width: 100%;"></select>
+								</td>
+								<td class="text-center"><input type="text" class="form-control" id="fetchVendorPanNo" disabled /></td>
+								<td class="text-center"><input type="text" class="form-control" id="fetchVendorRating" disabled /></td>
+								<td class="text-center"><input type="text" class="form-control" maxlength="10" id="fetchVendorMobileNo" /></td>
+								<td class="text-center"><input type="text" class="form-control" maxlength="10" id="fetchVendorWhatsappNo" /></td>
+								<td class="text-center"><input type="text" class="form-control" maxlength="50" id="fetchVendorEmailId" /></td>
+								<td class="text-center">
+									<a class="card-link w-50" id="btnAddVendor" style="cursor:pointer;">Add</a> /
+									<a class="w-50" id="btnCancelVendor" style="cursor:pointer">Cancel</a>
+								</td>
+							</tr>
+						</tfoot>
 					</table>
 					<div class="button-main">
 						<a href="#" class="card-link me-3" id="btnSaveCompanyType" type="button" data-action="save">
