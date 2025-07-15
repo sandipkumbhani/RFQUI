@@ -1,5 +1,6 @@
 ﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Interfaces;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,20 @@ namespace RFQ.UI.Application.Provider
         {
             _requestForQuoteAdaptor = requestForQuoteAdaptor;
         }
+
+        public Task<RfqRequestDto?> AddRfq(RfqRequestDto RfqRequestDto)
+        {
+            return _requestForQuoteAdaptor.AddRfq(RfqRequestDto);
+        }
+
         public Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList()
         {
             return _requestForQuoteAdaptor.GetAllVehicleIndentList();
+        }
+
+        public Task<string> GetRfqNo()
+        {
+            return _requestForQuoteAdaptor.GetRfqNo();
         }
     }
 }

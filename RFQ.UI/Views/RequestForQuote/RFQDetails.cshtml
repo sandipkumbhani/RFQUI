@@ -72,39 +72,39 @@
 									<div class="col-lg-6">
 										<div class="item-input">
 											<label class="form-label">Customer Name</label>
-											<select class="select2-custom form-control" data-control="select2" id="ddlCustomerName" style="width: 100%;">
+											<select class="select2-custom form-control" data-control="select2" disabled id="ddlCustomerName" style="width: 100%;">
 											</select>
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
 											<label class="form-label ">Vehicle Req On</label>
-											<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
+											<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" disabled id="txtVehicleReqDate" />
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
 											<label class="form-label ">Origin/From</label>
-											<input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" />
+											<input type="text" class="form-control" disabled id="txtOrigin" placeholder="Map Based Search" />
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
 											<label class="form-label">Destination/To</label>
-											<input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" />
+											<input type="text" class="form-control " placeholder="Map Based Search" disabled id="txtDestination" />
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
 											<label class="form-label">Vehicle Type</label>
-											<select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;">
+											<select class="select2-custom form-control" data-control="select2" disabled id="ddlVehicleType" style="width: 100%;">
 											</select>
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
 											<label class="form-label">No. of Vehicles</label>
-											<input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" />
+											<input type="text" class="form-control" id="txtNoofVehicles" disabled placeholder="Numeric" />
 										</div>
 									</div>
 									<div class="col-lg-3">
@@ -116,13 +116,13 @@
 									<div class="col-lg-3">
 										<div class="item-input">
 											<label class="form-label">Detention Per Day</label>
-											<input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" />
+											<input type="text" class="form-control" placeholder="Numeric" id="txtPerDay" />
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
 											<label class="form-label">Detention Free Days</label>
-											<input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" />
+											<input type="text" class="form-control" placeholder="Numeric" id="txtFreeDay" />
 										</div>
 									</div>
 								</div>
@@ -144,8 +144,8 @@
 												<select class="select2-custom form-control" aria-label="Selection"
 														data-control="select2" placeholder="Selection" id="ddlRfqPriority">
 													<option value="" disabled selected>Select a Priority</option>
-													<option value="0">High</option>
-													<option value="1">Medium</option>
+													<option value="1">High</option>
+													<option value="2">Medium</option>
 												</select>
 											</div>
 										</div>
@@ -156,8 +156,8 @@
 											<select class="select2-custom form-control" aria-label="Selection"
 													data-control="select2" placeholder="Selection" id="ddlRfqType">
 												<option value="" disabled selected>Select a Type</option>
-												<option value="0">Contractual</option>
-												<option value="1">Adhoc</option>
+												<option value="1">Contractual</option>
+												<option value="2">Adhoc</option>
 											</select>
 										</div>
 									</div>
@@ -188,13 +188,13 @@
 							<hr />
 							@await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 							<div class="button-main">
-								<a href="#" class="card-link" id="btnSaveCompanyType" type="button" data-action="save">
+								<a href="#" class="card-link" id="btnSaveType" type="button" data-action="save">
 									<i class="ri-save-line"></i>
 									<span>
 										Save
 									</span>
 								</a>
-								<a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
+								<a href="#" class="card-link" id="btnSaveAndNew" data-action="saveNew">
 									<i class="ri-save-line"></i>
 									<span>
 										Save & New
@@ -297,19 +297,19 @@
 						</tbody>
 					</table>
 					<div class="button-main">
-						<a href="#" class="card-link me-3" id="btnSaveCompanyType" type="button" data-action="save">
-							<i class="ri-save-line"></i>
-							<span>
-								Save
-							</span>
-						</a>
-						<a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
-							<i class="ri-save-line"></i>
-							<span>
-								Save & New
-							</span>
-						</a>
-					</div>
+					<a href="#" class="card-link" id="btnSave" type="button" data-action="save">
+						<i class="ri-save-line"></i>
+						<span>
+							Save
+						</span>
+					</a>
+					<a href="#" class="card-link" id="btnsaveAndNew" data-action="saveNew">
+						<i class="ri-save-line"></i>
+						<span>
+							Save & New
+						</span>
+					</a>
+				</div>
 				</div>
 			</div>
 		</div>

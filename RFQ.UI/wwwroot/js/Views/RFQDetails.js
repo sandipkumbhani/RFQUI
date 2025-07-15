@@ -1,18 +1,71 @@
-﻿$(document).ready(function () {
+﻿var VehicIndentList;
+$(document).ready(function () {
+    
     //CheckValidation();
-    //$("#btnSave, #btnSaveAndNew").on('click', function () {
-    //    var action = $(this).data('action'); // "save" or "saveNew"
-    //    if (OnSubmitCheckValidation()) {
-    //        SaveAndSaveNew(action);
-    //    }
-    //});
+    $("#btnSaveType, #btnSaveAndNew").on('click', function () {
+        
+        var action = $(this).data('action'); // "save" or "saveNew"
+        if (OnSubmitCheckValidation()) {
+            SaveAndSaveNew(action);
+        }
+    });
+
+    $('#ddlIndent').on('change', function () {
+        debugger;
+        const selectedValue = $(this).val();
+
+        const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
+
+        if (selectedIndent) {
+            $("#ddlCustomerName").selectpicker('val', selectedIndent.partyId);
+            $('#ddlCustomerName').selectpicker('refresh');
+            $("#ddlVehicleType").selectpicker('val', selectedIndent.vehicleTypeId);
+            $('#ddlVehicleType').selectpicker('refresh');
+            $('#txtOrigin').val(selectedIndent.fromLocation);
+            $('#txtDestination').val(selectedIndent.toLocation);
+            $('#txtNoofVehicles').val(selectedIndent.requiredVehicles);
+            $('#txtVehicleReqDate').val(selectedIndent.vehicleReqOn);
+            let dateValue = selectedIndent.vehicleReqOn;
+            if (dateValue) {
+                // If it's a Date object, format it
+                if (dateValue instanceof Date) {
+                    dateValue = dateValue.toISOString().split('T')[0];
+                } else if (typeof dateValue === "string" && dateValue.includes("T")) {
+                    dateValue = dateValue.split('T')[0];
+                }
+                $('#txtVehicleReqDate').val(dateValue);
+            } else {
+                $('#txtVehicleReqDate').val('');
+            }
+            
+        }
+    });
     GetAllCustomer();
     GetAllVehicleType();
     GetAllItemName();
     GetAllPakingType();
     GetAllLocation();
     GetAllVehicleIndent();
+    FetchRfqNo();
 });
+
+function CheckValidation() {
+    $("#ddlLocation").on("keypress", function () {
+        if (!isValidateSelect($(this).val())) {
+            toastr.warning("Please Select a Location", "Validation Error");
+            return;
+        }
+    });
+}
+function OnSubmitCheckValidation() {
+    debugger;
+    if (!isValidateSelect($("#ddlLocation").val())) {
+        toastr.warning("Please Select a Location", "Validation Error");
+        return false;
+    }
+    return true;
+}
+
 function GetAllCustomer() {
     var GetUrl = '/Customer/GetDrpCustomerList';
     $.ajax({
@@ -150,7 +203,6 @@ function GetAllLocation() {
     });
 }
 function GetAllVehicleIndent() {
-    debugger;
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
     $.ajax({
         url: getVehicleTypeUrl,
@@ -158,6 +210,7 @@ function GetAllVehicleIndent() {
         contentType: "application/json",
         success: function (response) {
             response = response.result;
+            VehicIndentList = response;
             console.log(response);
             const Indentdropdown = document.getElementById("ddlIndent");
             let placeholderOption = document.createElement("option");
@@ -178,4 +231,114 @@ function GetAllVehicleIndent() {
             toastr.error("Failed to Fetch Indent No!", "Error");
         }
     });
+}
+function FetchRfqNo() {
+    $.ajax({
+        url: "/RequestForQuote/GetRfqNo",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            $("#txtRfqNo").val(response.result);
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Indent No!", "Error");
+        }
+    });
+}
+function SaveAndSaveNew(action) {
+    var saveUrl = '/RequestForQuote/AddRfq';
+    debugger;
+    const formData = { 
+        RfqNo: $('#txtRfqNo').val(),
+        CompanyId: $('#ddlLocation').val(),
+        LocationId: $('#ddlLocation').val(),
+        IndentId: $('#ddlIndent').val(),
+        RfqDate: $('#txtRfqDate').val(),
+        ExpiryDate: $('#txtRfqExpiredOn').val(),
+        PartyId: $('#ddlCustomerName').val(),
+        VehicleReqOn: $('#txtVehicleReqDate').val(),
+        FromLocation: $('#txtOrigin').val(),
+        //FromLatitude: null,
+        //FromLongitude: null,
+        ToLocation: $('#txtDestination').val(),
+        //ToLatitude: null,
+        //ToLongitude: null,
+        VehicleRequiredOn: $('#txtVehicleReqDate').val(),
+        VehicleTypeId: $('#ddlVehicleType').val(),
+        VehicleCount: $('#txtNoofVehicles').val(),
+        RfqPriorityId: $('#ddlRfqPriority').val(),
+        RfqTypeId: $('#ddlRfqType').val(),
+        ItemId: $('#ddlItemName').val(),
+        MaxCosting: $('#txtMaxCosting').val(),
+        DetentionPerDay: $('#txtPerDay').val(),
+        DetentionFreeDays: $('#txtFreeDay').val(),
+        PackingTypeId: $('#ddlPackingType').val(),
+        SpecialInstruction: $('#txtSpecialInstructions').val(),
+        LinkId : GetQueryParam("LinkId"),
+
+        //StatusId: 1,
+        //CreatedBy: 1,
+        //CreatedOn: new Date().toISOString(),
+        //UpdatedBy: null,
+        //UpdatedOn: new Date().toISOString()
+
+    };
+
+    if (action === "save") {
+        $.ajax({
+            url: saveUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response) {
+                    window.location.href = "../Dashboard/Dashboard";
+                } else {
+                    toastr.error("Failed to Submit Request For Quote.", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Request For Quote.", "Error");
+            }
+        });
+    }
+
+    else if (action === "saveNew") {
+        $.ajax({
+            url: saveUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response) {
+                    toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    $('#RfqDetailsForm')[0].reset();
+                    $('#ddlLocation').val(null).trigger('change');
+                    $('#ddlIndent').val(null).trigger('change');
+                    $('#ddlCustomerName').val(null).trigger('change');
+                    $('#ddlVehicleType').val(null).trigger('change');
+                    $('#ddlRfqPriority').val(null).trigger('change');
+                    $('#ddlRfqType').val(null).trigger('change');
+                    $('#ddlItemName').val(null).trigger('change');
+                    $('#ddlPackingType').val(null).trigger('change');
+                    FetchRfqNo();
+                } else {
+                    toastr.error("Failed to Submit Request For Quote.", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Request For Quote.", "Error");
+            }
+        });
+    }
+
+
+
+
+
+    else if (action === "saveNew") {
+
+    } else {
+        console.warn("Unknown action:", action);
+    }
 }
