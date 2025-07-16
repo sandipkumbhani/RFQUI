@@ -1,9 +1,9 @@
 ﻿var VehicIndentList;
 $(document).ready(function () {
-    
+
     //CheckValidation();
     $("#btnSaveType, #btnSaveAndNew").on('click', function () {
-        
+
         var action = $(this).data('action'); // "save" or "saveNew"
         if (OnSubmitCheckValidation()) {
             SaveAndSaveNew(action);
@@ -11,7 +11,6 @@ $(document).ready(function () {
     });
 
     $('#ddlIndent').on('change', function () {
-        debugger;
         const selectedValue = $(this).val();
 
         const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
@@ -37,7 +36,7 @@ $(document).ready(function () {
             } else {
                 $('#txtVehicleReqDate').val('');
             }
-            
+
         }
     });
     GetAllCustomer();
@@ -46,13 +45,13 @@ $(document).ready(function () {
     GetAllPakingType();
     GetAllLocation();
     GetAllVehicleIndent();
+    FetchVendorData();
     FetchRfqNo();
     GetAllVendorList();
-    FetchVendorData();
     RenderFetchTable();
     ClearFetchForm();
+    SaveRfqVendorDetails();
 });
-
 function CheckValidation() {
     $("#ddlLocation").on("keypress", function () {
         if (!isValidateSelect($(this).val())) {
@@ -105,19 +104,19 @@ function OnSubmitCheckValidation() {
     if (IsNullOrEmpty($("#txtNoofVehicles").val())) {
         toastr.warning("Please enter a No. of Vehicles", "Validation Error");
         return false;
-    }   
+    }
     if (IsNullOrEmpty($("#txtMaxCosting").val())) {
         toastr.warning("Please enter a Max Costing", "Validation Error");
         return false;
-    }   
+    }
     if (IsNullOrEmpty($("#txtPerDay").val())) {
         toastr.warning("Please enter a Detention Per Day", "Validation Error");
         return false;
-    }   
+    }
     if (IsNullOrEmpty($("#txtFreeDay").val())) {
         toastr.warning("Please enter a Detention Free Days", "Validation Error");
         return false;
-    }   
+    }
     if (!isValidateSelect($("#ddlRfqPriority").val())) {
         toastr.warning("Please Select a RFQ Priority", "Validation Error");
         return false;
@@ -137,13 +136,14 @@ function OnSubmitCheckValidation() {
     if (IsNullOrEmpty($("#txtSpecialInstructions").val())) {
         toastr.warning("Please enter a Special Instructions", "Validation Error");
         return false;
-    }   
+    }
 
 
     return true;
 }
 var fetchedVendorDataList = [];
 var vendorList = [];
+var rfqId;
 function GetAllCustomer() {
     var GetUrl = '/Customer/GetDrpCustomerList';
     $.ajax({
@@ -289,7 +289,6 @@ function GetAllVehicleIndent() {
         success: function (response) {
             response = response.result;
             VehicIndentList = response;
-            console.log(response);
             const Indentdropdown = document.getElementById("ddlIndent");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -353,6 +352,9 @@ function GetAllVendorList() {
 function FetchVendorData() {
     $("#ddlRFQVendorList").on('change', function () {
         const selectedVendorId = $(this).val();
+        if (selectedVendorId == null) {
+            return;
+        }
         const selectedVendorData = fetchedVendorDataList.find(x => x.partyId == selectedVendorId);
         $("#fetchVendorPanNo").val(selectedVendorData.panNo);
         $("#fetchVendorRating").val("5");
@@ -463,11 +465,10 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
     });
 
 });
-}
+
 function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
-    debugger;
-    const formData = { 
+    const formData = {
         RfqNo: $('#txtRfqNo').val(),
         CompanyId: $('#ddlLocation').val(),
         LocationId: $('#ddlLocation').val(),
@@ -493,14 +494,7 @@ function SaveAndSaveNew(action) {
         DetentionFreeDays: $('#txtFreeDay').val(),
         PackingTypeId: $('#ddlPackingType').val(),
         SpecialInstruction: $('#txtSpecialInstructions').val(),
-        LinkId : GetQueryParam("LinkId"),
-
-        //StatusId: 1,
-        //CreatedBy: 1,
-        //CreatedOn: new Date().toISOString(),
-        //UpdatedBy: null,
-        //UpdatedOn: new Date().toISOString()
-
+        LinkId: GetQueryParam("LinkId")
     };
 
     if (action === "save") {
@@ -511,6 +505,7 @@ function SaveAndSaveNew(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
+                    rfqId = response.rfqId;
                     window.location.href = "../Dashboard/Dashboard";
                 } else {
                     toastr.error("Failed to Submit Request For Quote.", "Error");
@@ -530,6 +525,7 @@ function SaveAndSaveNew(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
+                    rfqId = response.rfqId;
                     toastr.success("Vehicle Indent Saved Successfully!", "Success");
                     $('#RfqDetailsForm')[0].reset();
                     $('#ddlLocation').val(null).trigger('change');
@@ -550,14 +546,34 @@ function SaveAndSaveNew(action) {
             }
         });
     }
-
-
-
-
-
-    else if (action === "saveNew") {
-
-    } else {
-        console.warn("Unknown action:", action);
-    }
+}
+function SaveRfqVendorDetails() {
+    var saveUrl = '/RfqRecipient/AddRfqRecipient';
+    $("#btnSaveRfqVendorDetails").on('click', function () {
+        var formData = vendorList.map(vendor => ({
+            RfqId: rfqId,
+            VendorId: vendor.VendorId,
+            PanNo: vendor.PanNo,
+            VendorRating: vendor.VendorRating,
+            MobNo: vendor.MobileNo,
+            WhatsAppNo: vendor.WhatsappNo,
+            EmailId: vendor.EmailId
+        }));
+        $.ajax({
+            url: saveUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response != null) {
+                    toastr.success("Request For Quote Submitted Successfully!", "Success");
+                } else {
+                    toastr.error("Failed to Submit Request For Quote.", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Request For Quote.", "Error");
+            }
+        });
+    });
 }

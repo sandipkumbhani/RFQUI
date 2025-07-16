@@ -1,15 +1,8 @@
-﻿using RFQ.UI.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RFQ.UI.Domain.RequestDto
+﻿namespace RFQ.UI.Domain.RequestDto
 {
     public class RfqRequestDto
     {
-        //public int RfqId { get; set; }
+        public int RfqId { get; set; }
         public string RfqNo { get; set; }
         public int CompanyId { get; set; }
         public int LocationId { get; set; }
@@ -36,10 +29,7 @@ namespace RFQ.UI.Domain.RequestDto
         public int PackingTypeId { get; set; }
         public string SpecialInstruction { get; set; }
         public int LinkId { get; set; }
-        //public int StatusId { get; set; }
         public int CreatedBy { get; set; }
-        //public DateTime CreatedOn { get; set; }
         public int UpdatedBy { get; set; }
-        //public DateTime UpdatedOn { get; set; }
     }
 }

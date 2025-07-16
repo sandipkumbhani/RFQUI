@@ -1,0 +1,216 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Quotation To Customer - Amendment";
+}
+@section Scripts {
+    <script src="~/js/views/quotationtoamendment.js"></script>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box add">
+            <h1 class="page-title">Quotation To Customer - Amendment </h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card com-franchise-info">
+            <form class="form" id="AmendmentForm" method="post">
+                <input type="hidden" id="txtAmendmentId" />
+                <div class="franchise-details">
+                    <div class="row all-custom-class">
+                        <div class="col-xl-4 col-lg-6 col-md-6">
+                            <div class="item-input">
+                                <div class="item-input">
+                                    <label class="form-label">RFQ No <span>*</span></label>
+                                    <div class="kyc-input">
+                                        <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtGstNumber" maxlength="15" placeholder="Enter RFQ No" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                        <button class="kyc-btn" type="button" id="gstEKycButton">e-KYC</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row all-custom-class">
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Customer Name</label>
+                                    <select class="select2-custom form-control" data-control="select2" id="ddlCustomerName" style="width: 100%;" disabled>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">RFQ No</label>
+                                    <input type="text" class="form-control" placeholder="Auto Generated" id="txtRfqNo" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">RFQ Date</label>
+                                    <input type="datetime-local" class="form-control" id="txtRfqDate" placeholder="Auto Generated" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label ">RFQ Expired On</label>
+                                    <input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label ">Vehicle Req On</label>
+                                    <input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label ">Origin/From</label>
+                                    <input type="text" class="form-control" id="txtOrigin" placeholder="Map Based Search" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Destination/To</label>
+                                    <input type="text" class="form-control " placeholder="Map Based Search" id="txtDestination" disabled />
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">RFQ On</label>
+                                    <select class="select2-custom form-control" data-control="select2" placeholder="Qty/Vehicle" id="txtRfqOn" style="width: 100%;" disabled>
+                                        <option value="">Select a Option</option>
+                                        <option value="0">Qty</option>
+                                        <option value="1">Vehicle</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Vehicle Type</label>
+                                    <select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;" disabled>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">No. of Vehicles</label>
+                                    <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Totak Qty in Tons</label>
+                                    <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Item Name</label>
+                                    <select class="select2-custom form-control" data-control="select2" id="ddlItemName" style="width: 100%;" disabled>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">L1 Hire Cost</label>
+                                    <input type="text" class="form-control" placeholder="Text" id="txtSpecialInstructions" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Detention Per Day</label>
+                                    <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Detention Free Days</label>
+                                    <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Paking Type</label>
+                                    <select class="select2-custom form-control" data-control="select2" id="txtPakingType" style="width: 100%;" disabled>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9">
+                                <div class="item-input">
+                                    <label class="form-label">Special Instructions</label>
+                                    <input type="text" class="form-control" placeholder="Text" id="txtSpecial" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Quote Rate</label>
+                                    <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Detention Per Day</label>
+                                    <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty"  />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Detention Free Days</label>
+                                    <input type="text" class="form-control" placeholder="Numeric" id="txtTotalQty"  />
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-main">
+                    <a href="#" class="card-link" id="btnSaveCompanyType" type="button" data-action="save">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save
+                        </span>
+
+                    </a>
+
+                    <a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save & New
+                        </span>
+                    </a>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
