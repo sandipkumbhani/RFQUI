@@ -6,6 +6,7 @@
 }
 
 @section Scripts {
+    <script src="~/js/views/deliveryorclosetrip.js"></script>
     <script src="~/js/AttachmentDetails.js"></script>
 }
 
@@ -86,7 +87,7 @@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Customer</label>
-                                <input type="text" class="form-control" id="txtCustomer" />
+                                <select class="select2-custom form-control" id="ddlCustomer" style="width: 100%;"></select>
                             </div>
                         </div>
 
@@ -107,14 +108,15 @@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Vehicle No</label>
-                                <input type="text" class="form-control" id="txtVehicleNo" />
+                                <select class="select2-custom form-control" id="ddlVehicleNo" style="width: 100%;"></select>
                             </div>
                         </div>
 
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Vehicle Type</label>
-                                <input type="text" class="form-control" id="txtVehicleType" />
+                                <select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;">
+                                </select>
                             </div>
                         </div>
 

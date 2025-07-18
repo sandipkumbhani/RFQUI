@@ -15,5 +15,8 @@ namespace RFQ.UI.Application.Interface
         Task<PageList<VehicleResponseDto>> GetAllVehicle(PagingParam pagingParam);
         Task<string> EditVehicle(int vehicleId, VehicleRequestDto vehicleRequestDto);
         Task<string> DeleteVehicle(int vehicleId);
+        Task<List<VehicleResponseDto?>> GetVehicleNumber();
+
+
     }
 }

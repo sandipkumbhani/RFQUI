@@ -50,5 +50,10 @@ namespace RFQ.UI.Application.Provider
         {
             return _vehicleAdaptor.DeleteVehicle(vehicleId);
         }
+
+        public Task<List<VehicleResponseDto?>> GetVehicleNumber()
+        {
+            return _vehicleAdaptor.GetVehicleNumber();
+        }
     }
 }

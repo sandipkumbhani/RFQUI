@@ -381,5 +381,30 @@ namespace RFQ.UI.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVehicleNumber()
+        {
+            try
+            {
+                var vehicleNumberList = await _vehicleServices.GetVehicleNumber();
+                if (vehicleNumberList != null && vehicleNumberList.Count() > 0)
+                {
+                    return Json(vehicleNumberList);
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(vehicleNumberList);
+                }
+                else
+                {
+                    return View(vehicleNumberList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

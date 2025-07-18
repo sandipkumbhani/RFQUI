@@ -32,6 +32,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IMasterPartyRouteService, MasterPartyRouteService>();
             services.AddScoped<IVehicleIndentService, VehicleIndentService>();
             services.AddScoped<IRequestForQuoteService, RequestForQuoteService>();
+            services.AddScoped<IVehiclePlacementService, VehiclePlacementService>();
             return services;
         }
     }

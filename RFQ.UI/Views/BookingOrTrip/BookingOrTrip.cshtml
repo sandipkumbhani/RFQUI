@@ -5,7 +5,7 @@
     ViewData["Title"] = "Booking Or Trip";
 }
 @section Scripts {
-
+    <script src="~/js/views/bookingortrip.js"></script>
 }
 
 
@@ -72,10 +72,10 @@
                         <div class="col-lg-6">
                             <div class="item-input">
                                 <label class="form-label">E-Way Bill No</label>
-                                <input type="text" class="form-control" id="billNo" />
+                                <input type="text" class="form-control" id="txtBillNo" placeholder="Numeric" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
-                       
+
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Origin/From <span>*</span></label>
@@ -93,34 +93,34 @@
                         <div class="col-lg-6">
                             <div class="item-input">
                                 <label class="form-label">Customer <span>*</span></label>
-                                <select class="select2-custom form-control" id="customer" style="width: 100%;"></select>
+                                <select class="select2-custom form-control" id="ddlCustomer" style="width: 100%;"></select>
                             </div>
                         </div>
 
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Vehicle No <span>*</span></label>
-                                <input type="text" class="form-control" id="vehicleNo" />
+                                <select class="select2-custom form-control" id="ddlVehicleNo" style="width: 100%;"></select>
                             </div>
                         </div>
 
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Vehicle Type <span>*</span></label>
-                                <select class="select2-custom form-control" id="vehicleType" style="width: 100%;"></select>
+                                <select class="select2-custom form-control" id="ddlVehicleType" style="width: 100%;"></select>
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Driver Name <span>*</span></label>
-                                <input type="text" class="form-control" id="driverName" />
+                                <select class="select2-custom form-control" id="ddlDriverName" style="width: 100%;"></select>
                             </div>
                         </div>
 
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Mobile No <span>*</span></label>
-                                <input type="number" class="form-control" id="mobileNo" />
+                                <input type="text" class="form-control" id="txtMobileNo" placeholder="+1 (555) 000-0000" maxlength="10" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
 
@@ -148,14 +148,14 @@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Invoice Value</label>
-                                <input type="number" class="form-control" id="invoiceValue" />
+                                <input type="text" class="form-control" id="txtInvoiceValue" placeholder="Numeric" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
 
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">E-Way Bill No</label>
-                                <input type="number" class="form-control" id="ewayBillNo" />
+                                <input type="number" class="form-control" id="txtEwayBillNo" placeholder="Numeric" onkeypress="return isNumber(event)"/>
                             </div>
                         </div>
 
@@ -241,7 +241,7 @@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Transit Days</label>
-                                <input type="number" class="form-control" id="transitDays" />
+                                <input type="text" class="form-control" id="txtTransitDays" placeholder="Numeric" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
 
@@ -269,34 +269,34 @@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Total Pkgs</label>
-                                <input type="number" class="form-control" id="totalPkgs" />
+                                <input type="text" class="form-control" id="txtTotalPkgs" placeholder="Numeric" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
 
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Actual Wt</label>
-                                <input type="number" class="form-control" id="actualWt" />
+                                <input type="text" class="form-control" id="txtActualWt" placeholder="Numeric" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
 
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Charged Wt</label>
-                                <input type="number" class="form-control" id="chargedWt" />
+                                <input type="text" class="form-control" id="txtChargedWt" placeholder="Numeric" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
 
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Total Freight</label>
-                                <input type="number" class="form-control" id="totalFreight" />
+                                <input type="text" class="form-control" id="txtTotalFreight" placeholder="Numeric" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                     </div>
                 </div>
                 <hr />
-                
+
                 @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 
                 <div class="button-main">
