@@ -605,6 +605,10 @@ function FetchVendor() {
     $('#vendorForm')[0].reset();
     $('#ddlCity').val(null).trigger('change');
     $('#ddlVendorCategory').val(null).trigger('change');
+    $('#vendorVehicleTypeTable tbody').empty();
+    ClearVehicleTypeForm();
+    $('#applicableRouteDetails tbody').empty();
+    ClearApplicableRouteForm();
     $("#btnSaveVendor").show();
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
@@ -624,6 +628,7 @@ $('#pageLength').off('change').on('change', function () {
 function EditVendor(partyId) {
     var data = viewModelDto.filter(x => x.partyId == partyId);
     var formData = data[0];
+    debugger;
     var vehicleTypeTableData = FetchVendorVehicleTypeList(partyId);
     var applicableRouteTableData = FetchVendorApplicableRouteList(partyId);
     vehicleTypeNameList = vehicleTypeTableData.map(item => ({  
@@ -1037,7 +1042,6 @@ function ApplicableRouteDetailsTable() {
         $(this).closest('tr').find('td:nth-child(5)').html(actionButtonsHtml);  
         $('#editFromCitySelect').on('change', function () {
             const stateId = $('option:selected', this).data('stateid');
-            console.log(stateId);
             $('#editFromStateSelect').val(stateId).change();
         });
 
@@ -1119,14 +1123,16 @@ function FetchVendorVehicleTypeList(partyId) {
    return result;  
 }
 function FetchVendorApplicableRouteList(partyId) {  
-   var fetchRouteUrl = '/MasterPartyRoute/GetMasterPartyRouteByPartyId/' + partyId;  
+    var fetchRouteUrl = '/MasterPartyRoute/GetMasterPartyRouteByPartyId/' + partyId;
+    debugger;
    var result = null;  
    $.ajax({  
        url: fetchRouteUrl,  
        type: "GET",  
        dataType: "json",  
        async: false,
-       success: function (response) {  
+       success: function (response) {
+           debugger;
            result = response;  
        },  
        error: function (xhr, status, error) {  

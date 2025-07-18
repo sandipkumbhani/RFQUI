@@ -205,8 +205,8 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel?.Data != null)
                 {
-                    var internalMasterList = JsonConvert.DeserializeObject<List<VendorListResponseDto>>(responseModel.Data.ToString());
-                    return internalMasterList;
+                    var vendorList = JsonConvert.DeserializeObject<List<VendorListResponseDto>>(responseModel.Data.ToString());
+                    return vendorList;
                 }
 
                 return null;
@@ -214,7 +214,7 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception: {ex.Message}");
-                return null;
+                throw ;
             }
         }
 

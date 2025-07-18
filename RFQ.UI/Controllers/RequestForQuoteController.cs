@@ -75,7 +75,7 @@ namespace RFQ.UI.Controllers
                     RfqRequestDto.UpdatedBy = Convert.ToInt32(profileid);
 
                     var result = await _requestForQuoteService.AddRfq(RfqRequestDto);
-                    return Json(new { result });
+                    return Json(result);
                 }
                 else
                 {

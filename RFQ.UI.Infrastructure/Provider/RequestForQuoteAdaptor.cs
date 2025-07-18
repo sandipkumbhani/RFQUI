@@ -101,20 +101,15 @@ namespace RFQ.UI.Infrastructure.Provider
                 httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var baseUrl = $"{_fleetLynkApiUrl}/Rfq/AddRfq";
-                var jsonPayload = JsonConvert.SerializeObject(rfqRequestDto);
-                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PostAsync(baseUrl, content);
+                var baseUrl = _fleetLynkApiUrl + _config["RequestForQuote:AddRfq"];
+                var rfq = JsonConvert.SerializeObject(rfqRequestDto);
+                var requestContent = new StringContent(rfq, Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(baseUrl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
-
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-
-                if (responseModel != null && responseModel.StatusCode == 200 && responseModel.Data != null)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    
-                    var dataToken = responseModel.Data as JToken ?? JToken.FromObject(responseModel.Data);
-                    var rfqData = dataToken.ToObject<RfqRequestDto>();
+                    var rfqData = JsonConvert.DeserializeObject<RfqRequestDto>(responseModel.Data.ToString());
                     return rfqData;
                 }
             }
@@ -125,39 +120,5 @@ namespace RFQ.UI.Infrastructure.Provider
 
             return null;
         }
-
-
-
-        //public async Task<RfqRequestDto?> AddRfq(RfqRequestDto RfqRequestDto)
-        //{
-        //    try
-        //    {
-        //        _httpClient = new HttpClient();
-        //        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-        //        var baseurl = $"{_fleetLynkApiUrl}/Rfq/AddRfq";
-        //        var company = JsonConvert.SerializeObject(RfqRequestDto);
-        //        var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
-        //        var response = await _httpClient.PostAsync(baseurl, requestContent);
-        //        var responseData = await response.Content.ReadAsStringAsync();
-        //        var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-        //        if (responseModel != null)
-        //        {
-        //            var result = responseModel.StatusCode;
-        //            if (result == 200)
-        //            {
-        //                return JsonConvert.DeserializeObject<RfqRequestDto>(responseModel.Data.ToString());
-        //            }
-        //            else
-        //            {
-        //                return null;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //    }
-        //    return null;
-        //}
     }
 }
