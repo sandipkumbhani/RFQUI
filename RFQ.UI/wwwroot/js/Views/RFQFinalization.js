@@ -2,12 +2,20 @@
 $(document).ready(function () {
     GetAllCustomerName();
     GetAllVehicleType();
-    GetAllItemName();
+    GetRfqStatus();
     $("#btnGetRfqData").on('click', function () {
         GetRfqDetailsByRfqNo();
     })
 });
-
+$("#ddlRfqStatus").on('change', function () {  
+   if ($(this).find('option:selected').text() === "NOT AWARDED") {  
+       $(".ddlRfqReason").removeClass('d-none');
+       $("#awardedDiv").addClass('d-none');
+   } else {  
+       $(".ddlRfqReason").addClass('d-none');
+       $("#awardedDiv").removeClass('d-none');
+   }  
+});
 function GetAllCustomerName() {
     var GetUrl = '/Customer/GetDrpCustomerList';
     $.ajax({
@@ -63,30 +71,33 @@ function GetAllVehicleType() {
         }
     });
 }
-function GetAllItemName() {
-    var getUrl = '/Product/GetDrpProductList';
+function GetRfqStatus() {
+    var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
     $.ajax({
-        url: getUrl,
+        url: getInternalMasterUrl,
         type: "GET",
-        contentType: "application/json",
+        dataType: "json",
         success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlItemName");
+            let internalData = response.filter(x => x.internalMasterTypeId == 11);
+            const select = document.getElementById("ddlRfqStatus");
+            select.innerHTML = "";
+
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Item Name";
+            placeholderOption.textContent = "Select a RFQ Status";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.itemId;
-                option.textContent = item.itemName;
-                vehicleTypedropdown.appendChild(option);
+            select.appendChild(placeholderOption);
+
+            internalData.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.internalMasterId;
+                opt.textContent = option.internalMasterName;
+                select.appendChild(opt);
             });
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle Type!", "Error");
+            toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
@@ -98,7 +109,6 @@ function GetRfqDetailsByRfqNo() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            console.log(response);
             $("#ddlCustomerName").val(response.partyId).trigger('change');
             $("#txtRfqNo").val(response.rfqNo)
             $("#txtRfqDate").val(response.rfqDate)

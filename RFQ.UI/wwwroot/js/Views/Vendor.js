@@ -628,7 +628,6 @@ $('#pageLength').off('change').on('change', function () {
 function EditVendor(partyId) {
     var data = viewModelDto.filter(x => x.partyId == partyId);
     var formData = data[0];
-    debugger;
     var vehicleTypeTableData = FetchVendorVehicleTypeList(partyId);
     var applicableRouteTableData = FetchVendorApplicableRouteList(partyId);
     vehicleTypeNameList = vehicleTypeTableData.map(item => ({  
@@ -730,7 +729,6 @@ function UpdateVendor() {
             ToStateId: item.ToStateId,
         }))
     }
-    console.log(formData.VendorVehicleTypes);
     let repeaterItems = document.querySelectorAll("[data-repeater-item]");
     let updateAttachmentDetails = [];
     var linkd = GetQueryParam("LinkId");
@@ -939,7 +937,6 @@ function RenderVehicleTypeDetailsTable() {
     const tbody = $('#vendorVehicleTypeTable tbody');
 
     tbody.empty();
-    //console.log(vehicleTypeNameList);
     $.each(vehicleTypeNameList, function (index, item) {
         const row = `
       <tr data-index="${index}">
@@ -1082,7 +1079,6 @@ function RenderApplicableRouteDetailsTable() {
     const tbody = $('#applicableRouteDetails tbody');
 
     tbody.empty();
-    console.log(applicableRouteList);
     $.each(applicableRouteList, function (index, item) {
         const row = `
       <tr data-index="${index}">
@@ -1124,7 +1120,6 @@ function FetchVendorVehicleTypeList(partyId) {
 }
 function FetchVendorApplicableRouteList(partyId) {  
     var fetchRouteUrl = '/MasterPartyRoute/GetMasterPartyRouteByPartyId/' + partyId;
-    debugger;
    var result = null;  
    $.ajax({  
        url: fetchRouteUrl,  
@@ -1132,7 +1127,6 @@ function FetchVendorApplicableRouteList(partyId) {
        dataType: "json",  
        async: false,
        success: function (response) {
-           debugger;
            result = response;  
        },  
        error: function (xhr, status, error) {  
