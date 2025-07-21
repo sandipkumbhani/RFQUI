@@ -3,6 +3,9 @@ $(document).ready(function () {
     GetAllCustomerName();
     GetAllVehicleType();
     GetAllItemName();
+    $("#btnGetRfqData").on('click', function () {
+        GetRfqDetailsByRfqNo();
+    })
 });
 
 function GetAllCustomerName() {
@@ -84,6 +87,31 @@ function GetAllItemName() {
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Vehicle Type!", "Error");
+        }
+    });
+}
+function GetRfqDetailsByRfqNo() {
+    var rfqNumber = $("#txtRfqNumber").val();
+    var getUrl = '/RequestForQuote/GetRfqByRfqNo/' + rfqNumber;
+    $.ajax({
+        url: getUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            console.log(response);
+            $("#ddlCustomerName").val(response.partyId).trigger('change');
+            $("#txtRfqNo").val(response.rfqNo)
+            $("#txtRfqDate").val(response.rfqDate)
+            $("#txtRfqExpiredOn").val(response.expiryDate)
+            $("#txtVehicleReqDate").val(new Date(response.vehicleReqOn).toISOString().split('T')[0])
+            $("#txtOrigin").val(response.fromLocation)
+            $("#txtDestination").val(response.toLocation)
+            $("#ddlVehicleType").val(response.vehicleTypeId).trigger('change');
+            $("#txtNoofVehicles").val(response.vehicleCount)
+            $("#txtSpecial").val(response.specialInstruction)
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Rfq Data!", "Error");
         }
     });
 }

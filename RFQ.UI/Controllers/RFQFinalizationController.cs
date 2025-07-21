@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
     public class RFQFinalizationController : Controller
     {
-        private readonly IMenuServices _menuServices;
         private readonly GlobalClass _globalClass;
-        private readonly IUsersService _usersService;
-
-        public RFQFinalizationController(IMenuServices menuServices, GlobalClass globalClass, IUsersService usersService)
+        private readonly IRfqFinalService _rfqFinalService;
+        public RFQFinalizationController(IRfqFinalService rfqFinalService, GlobalClass globalClass)
         {
-            _menuServices = menuServices;
+            _rfqFinalService = rfqFinalService;
             _globalClass = globalClass;
-            _usersService = usersService;
         }
         public IActionResult Index()
         {
@@ -23,6 +22,32 @@ namespace RFQ.UI.Controllers
         public IActionResult RFQFinalization()
         {
             return View("Views/RFQ/RFQFinalization.cshtml");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddRfqFinal([FromBody] RfqFinalRequestDto rfqFinalRequestDto)
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+
+                if (rfqFinalRequestDto != null)
+                {
+                    rfqFinalRequestDto.CreatedBy = Convert.ToInt32(companyId);
+                    rfqFinalRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                    var result = await _rfqFinalService.AddRfqFinal(rfqFinalRequestDto);
+                    return Json(result);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

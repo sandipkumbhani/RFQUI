@@ -1,12 +1,9 @@
-﻿using AutoMapper.Configuration;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using System.Net.Http;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -118,6 +115,37 @@ namespace RFQ.UI.Infrastructure.Provider
                 Console.WriteLine("Error in AddRfq: " + ex.Message);
             }
 
+            return null;
+        }
+
+        public async Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetRfqByRfqNo"] + rfqNo;
+                var response = await _httpClient.GetAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             return null;
         }
     }
