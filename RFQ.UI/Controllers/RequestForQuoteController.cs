@@ -3,6 +3,7 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using System.ComponentModel.Design;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -86,6 +87,27 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpGet("RequestForQuote/GetRfqByRfqNo/{rfqNo}")]
+        public async Task<IActionResult> GetRfqByRfqNo(string rfqNo)
+        {
+            try
+            {
+                var result = await _requestForQuoteService.GetRfqByRfqNo(rfqNo);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return Json(null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
             }
         }
     }

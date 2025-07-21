@@ -24,8 +24,8 @@
                     <div class="item-input">
                         <label class="form-label">RFQ No <span>*</span></label>
                         <div class="kyc-input">
-                            <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtGstNumber" maxlength="15" placeholder="Enter RFQ No" onkeypress="return AllowAlphaNumericOnly(event)" />
-                            <button class="kyc-btn" type="button" id="gstEKycButton">e-KYC</button>
+                            <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtRfqNumber" maxlength="15" placeholder="Enter RFQ No" onkeypress="return AllowAlphaNumericOnly(event)" />
+                            <button class="kyc-btn" type="button" id="btnGetRfqData">Get-Data</button>
                         </div>
                     </div>
                 </div>
@@ -96,13 +96,15 @@
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">RFQ Status</label>
-                        <input type="text" class="form-control" placeholder="status" id="txtStatus" />
+                        <select class="select2-custom form-control" data-control="select2" id="ddlRfqStatus" style="width: 100%;">
+                        </select>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-3 d-none ddlRfqReason">
                     <div class="item-input">
                         <label class="form-label">Failure Reason</label>
-                        <input type="text" class="form-control" placeholder="reason" id="txtReason" />
+                        <select class="select2-custom form-control" data-control="select2" id="ddlRfqReason" style="width: 100%;">
+                        </select> 
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -138,7 +140,7 @@
             </div>
 
             <!-- RFQ Sent To Finalization Section -->
-            <div class="mt-8">
+            <div class="mt-8 d-none" id="awardedDiv">
                 <div class="card-header p-4">
                     <h4 class="fw-bold m-0 text-lg">Awarded Vendor Details</h4>
                 </div>
