@@ -412,9 +412,7 @@
                         <li class="dropdown user-listitem">
                             <a class="nav-link dropdown-toggle arrow-none nav-user" data-bs-toggle="dropdown" href="#"
                                role="button" aria-haspopup="false" aria-expanded="false">
-                                <span class="account-user-avatar">
-                                    <img src="~/images/avatar-1.png" alt="user-image" width="50" class="rounded-circle">
-                                </span>
+                                <div id="avatarImage"></div>
                                 <span class="d-lg-flex flex-column gap-1 d-none">
                                     <h5 class="my-0" id="PersonName"></h5>
                                     <h6 class="my-0 fw-normal" id="UserEmail"></h6>
@@ -526,11 +524,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-           var UserEmail = getCookieValue("email");
+           var UserEmail = getCookieValue("UserEmail");
            var PersonName = getCookieValue("PersonName");
-            $("#UserEmail").text(UserEmail);
+            $("#UserEmail").text(decodeURIComponent(UserEmail));
             $("#PersonName").text(PersonName);
-
+            showInitial(PersonName); // Calling function
             $.ajax({
                 url: '/Home/GetMenu',
                 type: "GET",
@@ -662,6 +660,26 @@
                             }
                         }
                     });
+        }
+
+        function showInitial(userName) {
+                 const firstChar = userName.charAt(0).toUpperCase();
+                 const avatarImage = document.getElementById("avatarImage");
+
+                 const fixedColor = "#1d68a7"; // Deep blue
+                 avatarImage.innerText = firstChar;
+                 avatarImage.style.backgroundColor = fixedColor;
+                 avatarImage.style.width = "50px";
+                 avatarImage.style.height = "50px";
+                 avatarImage.style.borderRadius = "50%";
+                 avatarImage.style.color = "#ffffff"; // white font
+                 avatarImage.style.fontSize = "24px";
+                 avatarImage.style.fontWeight = "bold";
+                 avatarImage.style.fontFamily = "Arial, sans-serif";
+                 avatarImage.style.display = "flex";
+                 avatarImage.style.alignItems = "center";
+                 avatarImage.style.justifyContent = "center";
+                 avatarImage.style.userSelect = "none";
         }
     </script>
 
