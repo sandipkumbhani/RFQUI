@@ -2,10 +2,15 @@
 var orderDir = '';
 var userResponseDto;
 var allUserList = [];
-$(document).ready(function ()
-{ 
-    $("#btnCancel").on("click", function ()
-    {
+var profileid = '';
+$(document).ready(function () {
+
+    // Get profileid from cookies value and if user is admin then Disable location dropdwn
+     profileid = getCookieValue('profileid');
+    if (profileid == EnumInternalMaster.ADMIN) {
+        $('#ddlLocation').prop('disabled', true);
+    }
+    $("#btnCancel").on("click", function () {
         window.location.reload(true);
     });
     $('#userListSectionLink').on('click', function (e) {
@@ -35,6 +40,7 @@ $("#btnAddUser").on("click", function (e) {
     e.preventDefault();
     $("#userListSection").hide();
     $("#userFormSection").show();
+
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -85,8 +91,9 @@ function Initialization() {
         }
     });
     $("#txtPassword").on("blur", function () {
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
         var password = $(this).val();
-        if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password)) {
+        if (!passwordPattern.test(password)) {
             $("#txtPassword").val('');
             toastr.warning("Please enter a valid PASSWORD", "Validation Error");
             return;
@@ -104,7 +111,6 @@ function Initialization() {
         var action = $(this).data('action');
         SaveUser(action);
     });
-
 }
 function FetchUser() {
     $('#userListSection').show();
@@ -124,6 +130,12 @@ function SaveUser(action) {
     var emailid = $('#txtEmailid').val();
     var password = $('#txtPassword').val();
 
+    if (profileid == EnumProfile.Admin) {
+        var profile = EnumProfile.Franchise; // Default to Franchise for Admin
+    } else if (profileid == EnumProfile.Corporate || profileid == EnumProfile.Branch) {
+        var selectedValue = $('#ddlLocation').val();
+    }
+
     var formdata = {
         PersonName: username,
         LoginId: loginname,
@@ -131,17 +143,18 @@ function SaveUser(action) {
         CompanyId: corporatename,
         LocationId: location,
         Emailid: emailid,
-        Password: password
+        Password: password,
+        ProfileId: profile
     };
 
-   // var existuser = allUserList.filter(x => x.emailId).includes(emailid)
+    // var existuser = allUserList.filter(x => x.emailId).includes(emailid)
     //var existuser = allUserList.some(x => x.emailId?.trim().toLowerCase() === emailid.trim().toLowerCase());
     //if (existuser) {
     //    toastr.warning("User already exists. Please update Email ID.", "Duplicate Email");
     //    $('#txtEmailid').val('');
     //    return;
     //}
-    
+
     if (action === "save") {
         $.ajax({
             url: '/Home/UserSave/',
@@ -344,10 +357,12 @@ function ValidationCheck() {
         toastr.warning("Login Name is Required", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtPassword").val())) {
-        toastr.warning("Password is Required", "Validation Error");
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+    if (IsNullOrEmpty($("#txtPassword").val() || !passwordPattern.test(password))) {
+        toastr.warning("Please enter a valid PASSWORD", "Validation Error");
         return false;
     }
+   
     if (IsNullOrEmpty($("#txtEmailid").val()) || !isValidateEmail($("#txtEmailid").val())) {
         toastr.warning("Please enter a valid email", "Validation Error");
         return false;
@@ -356,7 +371,10 @@ function ValidationCheck() {
         toastr.warning("Please select a Corporate Name", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
+    if ($('#ddlLocation').is(':disabled')) {
+        return true;
+    }
+    else if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
         toastr.warning("Please select a Location", "Validation Error");
         return false;
     }
@@ -386,10 +404,10 @@ function GetAllUser() {
 // Bind events
 $('#tableuserSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchUser('tableuser', '/Home/ViewUserList',orderColumn, orderDir.toUpperCase());
-}); 
+    FetchUser('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
+});
 
-$('#pageLength').off('change').on('change', function () {   
+$('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchUser('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
 }); 

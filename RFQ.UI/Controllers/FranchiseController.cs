@@ -79,13 +79,14 @@ namespace RFQ.UI.Controllers
 
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
 
                 if (franchiseRequestDto != null)
                 {
                     franchiseRequestDto.CompanyTypeId = 2;
                     franchiseRequestDto.ParentCompanyId = Convert.ToInt32(companyId);
-                    franchiseRequestDto.CreatedBy = Convert.ToInt32(companyId);
-                    franchiseRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                    franchiseRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    franchiseRequestDto.UpdatedBy = Convert.ToInt32(userid);
                     franchiseRequestDto.CreatedOn = DateTime.Now;
                     franchiseRequestDto.UpdatedOn = DateTime.Now;
 
@@ -139,11 +140,11 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string parentId = jwt.Claims.First(c => c.Type == "companyid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 franchiseRequestDto.CompanyTypeId = 2;
                 franchiseRequestDto.ParentCompanyId = Convert.ToInt32(parentId);
-                franchiseRequestDto.CreatedBy = Convert.ToInt32(parentId);
-                franchiseRequestDto.UpdatedBy = Convert.ToInt32(parentId);
+                franchiseRequestDto.CreatedBy = Convert.ToInt32(userid);
+                franchiseRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 franchiseRequestDto.CreatedOn = DateTime.Now;
                 franchiseRequestDto.UpdatedOn = DateTime.Now;
 

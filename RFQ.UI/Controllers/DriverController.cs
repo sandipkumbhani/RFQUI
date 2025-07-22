@@ -143,11 +143,11 @@ namespace RFQ.UI.Controllers
         {
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
             string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+            string userid = jwt.Claims.First(c => c.Type == "userid").Value;
             if (driverRequestDto != null)
             {
-                driverRequestDto.CreatedBy = Convert.ToInt32(profileId);
-                driverRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+                driverRequestDto.CreatedBy = Convert.ToInt32(userid);
+                driverRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
                 var result = _driverServices.AddDriver(driverRequestDto);
                 return Json(new { result });
@@ -170,8 +170,9 @@ namespace RFQ.UI.Controllers
                 int driverId = driverRequestDto.DriverId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                driverRequestDto.CreatedBy = Convert.ToInt32(profileId);
-                driverRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                driverRequestDto.CreatedBy = Convert.ToInt32(userid);
+                driverRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 var result = await _driverServices.EditDriver(driverId, driverRequestDto);
                 if (result != null)
                     return Json(new { result = "success" });

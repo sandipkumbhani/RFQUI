@@ -30,12 +30,12 @@ namespace RFQ.UI.Controllers
 
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (productRequestDto != null)
                 {
                     productRequestDto.CompanyId = Convert.ToInt32(companyId);
-                    productRequestDto.CreatedBy = Convert.ToInt32(companyId);
-                    productRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                    productRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    productRequestDto.UpdatedBy = Convert.ToInt32(userid);
                     productRequestDto.CreatedOn = DateTime.Now;
                     productRequestDto.UpdatedOn = DateTime.Now;
 
@@ -62,10 +62,10 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 productRequestDto.CompanyId = Convert.ToInt32(companyId);
-                productRequestDto.CreatedBy = Convert.ToInt32(companyId);
-                productRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                productRequestDto.CreatedBy = Convert.ToInt32(userid);
+                productRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 productRequestDto.CreatedOn = DateTime.Now;
                 productRequestDto.UpdatedOn = DateTime.Now;
 

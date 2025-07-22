@@ -131,7 +131,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
-                    if (result == 200)
+                    if (responseModel.Data != null && result == 200)
                     {
                         return JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
                     }
