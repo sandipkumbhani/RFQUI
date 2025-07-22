@@ -2,10 +2,14 @@
 var orderDir = '';
 var userResponseDto;
 var allUserList = [];
-$(document).ready(function ()
-{ 
-    $("#btnCancel").on("click", function ()
-    {
+$(document).ready(function () {
+
+    // Get profileid from cookies value and if user is admin then Disable location dropdwn
+    var profileid = getCookieValue('profileid');
+    if (profileid == EnumInternalMaster.ADMIN) {
+        $('#ddlLocation').prop('disabled', true);
+    }
+    $("#btnCancel").on("click", function () {
         window.location.reload(true);
     });
     $('#userListSectionLink').on('click', function (e) {
@@ -35,6 +39,7 @@ $("#btnAddUser").on("click", function (e) {
     e.preventDefault();
     $("#userListSection").hide();
     $("#userFormSection").show();
+
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -104,7 +109,6 @@ function Initialization() {
         var action = $(this).data('action');
         SaveUser(action);
     });
-
 }
 function FetchUser() {
     $('#userListSection').show();
@@ -134,14 +138,14 @@ function SaveUser(action) {
         Password: password
     };
 
-   // var existuser = allUserList.filter(x => x.emailId).includes(emailid)
+    // var existuser = allUserList.filter(x => x.emailId).includes(emailid)
     //var existuser = allUserList.some(x => x.emailId?.trim().toLowerCase() === emailid.trim().toLowerCase());
     //if (existuser) {
     //    toastr.warning("User already exists. Please update Email ID.", "Duplicate Email");
     //    $('#txtEmailid').val('');
     //    return;
     //}
-    
+
     if (action === "save") {
         $.ajax({
             url: '/Home/UserSave/',
@@ -356,7 +360,10 @@ function ValidationCheck() {
         toastr.warning("Please select a Corporate Name", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
+    if ($('#ddlLocation').is(':disabled')) {
+        return true;
+    }
+    else if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
         toastr.warning("Please select a Location", "Validation Error");
         return false;
     }
@@ -386,10 +393,10 @@ function GetAllUser() {
 // Bind events
 $('#tableuserSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchUser('tableuser', '/Home/ViewUserList',orderColumn, orderDir.toUpperCase());
-}); 
+    FetchUser('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
+});
 
-$('#pageLength').off('change').on('change', function () {   
+$('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchUser('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
 }); 

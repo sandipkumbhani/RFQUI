@@ -30,12 +30,12 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (customerRequestDto != null)
                 {
                     customerRequestDto.CompanyId = Convert.ToInt32(companyId);
-                    customerRequestDto.CreatedBy = Convert.ToInt32(profileId);
-                    customerRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+                    customerRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    customerRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
                     var result = await _customerServices.AddCustomer(customerRequestDto);
                     return Json(new { result });
@@ -91,9 +91,10 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 customerRequestDto.CompanyId = Convert.ToInt32(companyId);
-                customerRequestDto.CreatedBy = Convert.ToInt32(profileId);
-                customerRequestDto.UpdatedBy = Convert.ToInt32(profileId);
+                customerRequestDto.CreatedBy = Convert.ToInt32(userid);
+                customerRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 var result = await _customerServices.EditCustomer(partyId, customerRequestDto);
                 if (result != null)
                 {

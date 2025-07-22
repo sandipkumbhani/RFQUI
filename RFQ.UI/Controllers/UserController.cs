@@ -28,11 +28,11 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                int userId = userRequestDto.UserId;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                userRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                userRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                userRequestDto.CreatedBy = Convert.ToInt32(userid);
+                userRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 userRequestDto.ProfileId = Convert.ToInt32(profileid);
 
                 var result = await _usersService.UpdateUserPassword(userRequestDto);

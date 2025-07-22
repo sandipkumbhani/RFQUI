@@ -27,14 +27,13 @@ namespace RFQ.UI.Controllers
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (masterAttachmentRequestDto != null)
                 {
 
-                    //masterAttachmentRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                    //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                    //masterAttachmentRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
 
                     var result = _masterAttachmentService.AddMasterAttachment(masterAttachmentRequestDto);

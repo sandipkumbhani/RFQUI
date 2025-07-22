@@ -45,10 +45,10 @@ namespace RFQ.UI.Controllers
                     var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                     string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                     string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+                    string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                     vehicleTypeRequestDto.CompanyId = Convert.ToInt32(companyid);
-                    vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                    vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                    vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
                     var result = _vehicleTypeServices.AddVehicleType(vehicleTypeRequestDto);
                     return Json(new { result = "success" });
@@ -74,10 +74,10 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 vehicleTypeRequestDto.CompanyId = Convert.ToInt32(companyid);
-                vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(userid);
+                vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
                 var result = await _vehicleTypeServices.UpdateVehicleType(vechicleTypeId, vehicleTypeRequestDto);
                 if (result != null)
@@ -181,11 +181,11 @@ namespace RFQ.UI.Controllers
 
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (vehicleRequestDto != null)
                 {
-                    vehicleRequestDto.CreatedBy = Convert.ToInt32(companyId);
-                    vehicleRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                    vehicleRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    vehicleRequestDto.UpdatedBy = Convert.ToInt32(userid);
                     vehicleRequestDto.CreatedOn = DateTime.Now;
                     vehicleRequestDto.UpdatedOn = DateTime.Now;
                     var result = await _vehicleServices.AddVehicle(vehicleRequestDto);
@@ -215,8 +215,9 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                vehicleRequestDto.CreatedBy = Convert.ToInt32(companyId);
-                vehicleRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                vehicleRequestDto.CreatedBy = Convert.ToInt32(userid);
+                vehicleRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 vehicleRequestDto.CreatedOn = DateTime.Now;
                 vehicleRequestDto.UpdatedOn = DateTime.Now;
 

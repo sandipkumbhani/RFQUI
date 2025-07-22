@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -63,13 +64,13 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (vendorRequestDto != null)
                 {
                     vendorRequestDto.CompanyId = Convert.ToInt32(companyId);
-                    vendorRequestDto.CreatedBy = Convert.ToInt32(companyId);
-                    vendorRequestDto.UpdatedBy = Convert.ToInt32(companyId);
-                    vendorRequestDto.PartyTypeId = 5;
+                    vendorRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    vendorRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                    vendorRequestDto.PartyTypeId = (int)EnumInternalMaster.VENDOR;
 
                     var result = await _vendorService.AddVendor(vendorRequestDto);
                     return Json(new { result });
@@ -124,9 +125,10 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 vendorRequestDto.CompanyId = Convert.ToInt32(companyId);
-                vendorRequestDto.CreatedBy = Convert.ToInt32(companyId);
-                vendorRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                vendorRequestDto.CreatedBy = Convert.ToInt32(userid);
+                vendorRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 vendorRequestDto.PartyTypeId = 5;
                 var result = _vendorService.EditVendor(partyId, vendorRequestDto);
                 if (result != null)

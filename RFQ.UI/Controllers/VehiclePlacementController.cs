@@ -43,13 +43,12 @@ namespace RFQ.UI.Controllers
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (vehiclePlacementRequestDto != null)
                 {
-                    vehiclePlacementRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                    vehiclePlacementRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                    vehiclePlacementRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    vehiclePlacementRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
                     var result = await _vehiclePlacementService.AddVehiclePlacement(vehiclePlacementRequestDto);
                     return Json(new { result });

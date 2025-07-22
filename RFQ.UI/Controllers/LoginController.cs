@@ -55,12 +55,21 @@ namespace RFQ.UI.Controllers
                         var jwtToken = handler.ReadJwtToken(tokenstring);
                         var email = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
                         var personname = jwtToken.Claims.FirstOrDefault(c => c.Type == "personname")?.Value;
+                        var companyid = jwtToken.Claims.FirstOrDefault(c => c.Type == "companyid")?.Value;
+                        var profileid = jwtToken.Claims.FirstOrDefault(c => c.Type == "profileid")?.Value;
+
 
                         if (!string.IsNullOrEmpty(email))
                             Response.Cookies.Append("UserEmail", email);
 
                         if (!string.IsNullOrEmpty(personname))
                             Response.Cookies.Append("PersonName", personname);
+
+                        if (!string.IsNullOrEmpty(companyid))
+                            Response.Cookies.Append("companyid", companyid);
+
+                        if (!string.IsNullOrEmpty(profileid))
+                            Response.Cookies.Append("profileid", profileid);
 
                         Response.Cookies.Append("AuthToken", tokenstring);
                     }
