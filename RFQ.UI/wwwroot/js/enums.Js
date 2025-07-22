@@ -27,3 +27,11 @@ const EnumInternalMasterType = Object.freeze({
     SMS_PROVIDER: 9,
     WHATSAPP_PROVIDER: 10
 });
+
+const EnumProfile = Object.freeze({
+    Admin : 1,
+    Franchise : 2,
+    Corporate : 3,
+    Branch :4,
+    Vendor : 5
+});

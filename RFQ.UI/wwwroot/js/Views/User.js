@@ -2,10 +2,11 @@
 var orderDir = '';
 var userResponseDto;
 var allUserList = [];
+var profileid = '';
 $(document).ready(function () {
 
     // Get profileid from cookies value and if user is admin then Disable location dropdwn
-    var profileid = getCookieValue('profileid');
+     profileid = getCookieValue('profileid');
     if (profileid == EnumInternalMaster.ADMIN) {
         $('#ddlLocation').prop('disabled', true);
     }
@@ -90,8 +91,9 @@ function Initialization() {
         }
     });
     $("#txtPassword").on("blur", function () {
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
         var password = $(this).val();
-        if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(password)) {
+        if (!passwordPattern.test(password)) {
             $("#txtPassword").val('');
             toastr.warning("Please enter a valid PASSWORD", "Validation Error");
             return;
@@ -128,6 +130,12 @@ function SaveUser(action) {
     var emailid = $('#txtEmailid').val();
     var password = $('#txtPassword').val();
 
+    if (profileid == EnumProfile.Admin) {
+        var profile = EnumProfile.Franchise; // Default to Franchise for Admin
+    } else if (profileid == EnumProfile.Corporate || profileid == EnumProfile.Branch) {
+        var selectedValue = $('#ddlLocation').val();
+    }
+
     var formdata = {
         PersonName: username,
         LoginId: loginname,
@@ -135,7 +143,8 @@ function SaveUser(action) {
         CompanyId: corporatename,
         LocationId: location,
         Emailid: emailid,
-        Password: password
+        Password: password,
+        ProfileId: profile
     };
 
     // var existuser = allUserList.filter(x => x.emailId).includes(emailid)
@@ -348,10 +357,12 @@ function ValidationCheck() {
         toastr.warning("Login Name is Required", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtPassword").val())) {
-        toastr.warning("Password is Required", "Validation Error");
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+    if (IsNullOrEmpty($("#txtPassword").val() || !passwordPattern.test(password))) {
+        toastr.warning("Please enter a valid PASSWORD", "Validation Error");
         return false;
     }
+   
     if (IsNullOrEmpty($("#txtEmailid").val()) || !isValidateEmail($("#txtEmailid").val())) {
         toastr.warning("Please enter a valid email", "Validation Error");
         return false;

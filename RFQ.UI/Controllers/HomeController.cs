@@ -33,15 +33,12 @@ namespace RFQ.UI.Controllers
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value; 
                 if (userRequestDto != null)
                 {
-                    int parsedProfileId = Convert.ToInt32(profileid);
-
                     userRequestDto.CreatedBy = Convert.ToInt32(userid);
                     userRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                    userRequestDto.ProfileId = parsedProfileId;
+                    userRequestDto.ProfileId = Convert.ToInt32(userRequestDto.ProfileId); 
 
                     var result = await _usersService.AddUsers(userRequestDto);
                     var response = JsonConvert.DeserializeObject<CommanResponseDto>(result);
