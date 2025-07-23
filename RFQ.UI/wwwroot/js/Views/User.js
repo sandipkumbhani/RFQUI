@@ -3,10 +3,12 @@ var orderDir = '';
 var userResponseDto;
 var allUserList = [];
 var profileid = '';
+var companyid = ''
 $(document).ready(function () {
 
     // Get profileid from cookies value and if user is admin then Disable location dropdwn
-     profileid = getCookieValue('profileid');
+    profileid = getCookieValue('profileid');
+    companyid = getCookieValue('companyid');
     if (profileid == EnumInternalMaster.ADMIN) {
         $('#ddlLocation').prop('disabled', true);
     }
@@ -40,7 +42,9 @@ $("#btnAddUser").on("click", function (e) {
     e.preventDefault();
     $("#userListSection").hide();
     $("#userFormSection").show();
-
+    $('#ddlCompanyAndFranchise').val(Number(companyid)).trigger('change');
+    if (profileid != EnumProfile.Admin)
+    $('#ddlCompanyAndFranchise').prop('disabled', true);
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -117,7 +121,7 @@ function FetchUser() {
     FetchDataForTable('tableuser', '/Home/ViewUserList', null, null);
 }
 function SaveUser(action) {
-
+    var profile = '';
     var isvalid = ValidationCheck();
     if (!isvalid) {
         return;
@@ -131,9 +135,14 @@ function SaveUser(action) {
     var password = $('#txtPassword').val();
 
     if (profileid == EnumProfile.Admin) {
-        var profile = EnumProfile.Franchise; // Default to Franchise for Admin
-    } else if (profileid == EnumProfile.Corporate || profileid == EnumProfile.Branch) {
-        var selectedValue = $('#ddlLocation').val();
+        profile = EnumProfile.Franchise; // Default to Franchise for Admin
+    } else if (profileid == EnumProfile.Franchise) {
+        var ddllocationVal = $('#ddlLocation').val();
+        if (!IsNullOrEmpty(ddllocationVal)) {
+            profile = EnumProfile.Branch;
+        } else {
+            profile = EnumProfile.Corporate;
+        }
     }
 
     var formdata = {
@@ -357,7 +366,7 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid PASSWORD", "Validation Error");
         return false;
     }
-   
+
     if (IsNullOrEmpty($("#txtEmailid").val()) || !isValidateEmail($("#txtEmailid").val())) {
         toastr.warning("Please enter a valid email", "Validation Error");
         return false;
@@ -369,10 +378,10 @@ function ValidationCheck() {
     if ($('#ddlLocation').is(':disabled')) {
         return true;
     }
-    else if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
-        toastr.warning("Please select a Location", "Validation Error");
-        return false;
-    }
+    //else if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
+    //    toastr.warning("Please select a Location", "Validation Error");
+    //    return false;
+    //}
     if (IsNullOrEmpty($("#txtMobileNo").val()) || !isMobile($("#txtMobileNo").val())) {
         toastr.warning("Please enter a valid Mobile Number", "Validation Error");
         return false;
