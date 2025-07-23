@@ -44,7 +44,7 @@ $("#btnAddUser").on("click", function (e) {
     $("#userFormSection").show();
     $('#ddlCompanyAndFranchise').val(Number(companyid)).trigger('change');
     if (profileid != EnumProfile.Admin)
-    $('#ddlCompanyAndFranchise').prop('disabled', true);
+        $('#ddlCompanyAndFranchise').prop('disabled', true);
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -223,16 +223,20 @@ function EditUser(userId) {
     $('#hdnUserId').val(formdata.userId);
     $("#txtName").val(formdata.personName);
     $("#txtEmailid").val(formdata.emailId);
-    $("#ddlCompanyAndFranchise").val(formdata.companyId);
     $("#txtMobileNo").val(formdata.mobileNo);
     $("#txtLoginName").val(formdata.loginId);
-    $('#ddlLocation').val(formdata.locationId).trigger('change');
     $('#ddlCompanyAndFranchise').val(formdata.companyId).trigger('change');
     $('#txtPassword').val(formdata.password);
     $("#txtPassword").prop("disabled", true);
     $("#btnSaveForm").hide();
     $("#btnSaveAndNewForm").hide();
     $("#btnViewForm").hide();
+    if (formdata.locationId != 0) {
+        $('#ddlLocation').val(formdata.locationId).trigger('change');
+    }
+    if (profileid != EnumInternalMaster.ADMIN) {
+        $('#ddlCompanyAndFranchise').prop('disabled', true);
+    }
 }
 function DeleteUser(userId) {
     var deleteuserlist = '/Home/DeleteUserList/' + userId
