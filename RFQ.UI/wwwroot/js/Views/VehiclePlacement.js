@@ -21,14 +21,10 @@
             } else {
                 $('#txtIndentDate').val('');
             }
-            $("#ddlCustomerName").selectpicker('val', selectedIndent.partyId);
-            $('#ddlCustomerName').selectpicker('refresh');
-            $("#ddlVehicleType").selectpicker('val', selectedIndent.vehicleTypeId);
-            $('#ddlVehicleType').selectpicker('refresh');
-            $("#ddlOrigin").selectpicker('val', selectedIndent.fromLocation);
-            $('#ddlOrigin').selectpicker('refresh');
-            $("#ddlDestination").selectpicker('val', selectedIndent.toLocation);
-            $('#txtDestination').selectpicker('refresh');
+            $("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
+            $("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
+            $("#ddlOrigin").val(selectedIndent.fromLocation).trigger('change');
+            $("#ddlDestination").val(selectedIndent.toLocation).trigger('change');
             $('#txtNoOfVehicles').val(selectedIndent.requiredVehicles);
             $('#txtVehicleReqOn').val(selectedIndent.vehicleReqOn);
             if (dateValue) {
@@ -46,22 +42,15 @@
         }
     });
     $('#ddlVehicleNo').on('change', function () {
-        debugger;
         const selectedValue = $(this).val();
-
         const selectedVehicle = VehicleList.find(x => x.vehicleId == selectedValue);
-
         if (selectedVehicle) {
-            $("#ddlOwnerName").selectpicker('val', selectedVehicle.ownerVendorId);
-            $('#ddlOwnerName').selectpicker('refresh');
-            
+            $("#ddlOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');            
         }
     });
     GetAllLocation(); 
     GetAllDriver();
     GetAllVehicleIndent();
-    GetAllCustomer();
-    GetAllVehicleType();
     GetAllVehicleNumber();
     FetchPlacementNo();
     GetAllOwnerOrVendor();
@@ -104,7 +93,6 @@ function GetAllDriver() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            console.log(response);
             var data = response
             const selectLocation = document.getElementById("ddlDriverName");
             let placeholderOption = document.createElement("option");
@@ -135,7 +123,6 @@ function GetAllVehicleIndent() {
         success: function (response) {
             response = response.result;
             VehicIndentList = response;
-            console.log(response);
             const Indentdropdown = document.getElementById("ddlIndentNo");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";

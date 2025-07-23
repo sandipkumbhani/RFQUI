@@ -47,7 +47,7 @@ $(document).ready(function () {
     FetchVehicleList();
     GetAllOwnerOrVendor();
     GetAllVehicleCategory();
-    GetAllVehicleTypeList();
+    GetAllVehicleType("ddlVehicleType");
     CheckValidation();
     VehicleEKycClick();
     UpdateVehicle();
@@ -94,9 +94,6 @@ function SaveVehicle(action) {
     var policyNo = $("#policyNoInput").val();
     var policyExpDate = $("#policyExpiryInput").val();
 
-    console.log(vehicleType)
-    console.log(vehicleCategory)
-
     var saveUrl = '/Vehicle/VehicleSave';
     var formData = {
         VehicleNo: vehicleNo,
@@ -131,7 +128,6 @@ function SaveVehicle(action) {
         PolicyExpiryDate: policyExpDate ? new Date(policyExpDate).toISOString() : null,
         LinkId: linkId
     };
-    console.log(formData);
     if (action === "save") {
         $.ajax({
             url: saveUrl,
@@ -163,7 +159,6 @@ function SaveVehicle(action) {
                     $("#ddlVehicleType").val("");
                     $("#ddlOwnerName").val("");
                     $("#ddlTrackingProvider").val("");
-                    $(".selectpicker").selectpicker("refresh");
                 } else {
                     toastr.error("Something went wrong!");
                 }
@@ -177,7 +172,6 @@ function SaveVehicle(action) {
 function EditVehicle(vehicleId) {
     var data = viewModelDto.filter(x => x.vehicleId === vehicleId);
     var formData = data[0];
-    console.log(formData);
 
     $('#tableDiv').hide();
     $('#btnAddVehicle').addClass('d-none');
@@ -189,15 +183,11 @@ function EditVehicle(vehicleId) {
 
     $("#vehicleNo").val(formData.vehicleNo).prop("disabled", true);
     $("#hdVehicleId").val(formData.vehicleId);
-    $('#ddlVehicleCategory').selectpicker('val', formData.vehicleCategoryId);
-    $('#ddlVehicleCategory').selectpicker('refresh');
-    $('#ddlVehicleType').selectpicker('val', formData.vehicleTypeId);
-    $('#ddlVehicleType').selectpicker('refresh');
+    $('#ddlVehicleCategory').val(formData.vehicleCategoryId).trigger('change');
+    $('#ddlVehicleType').val(formData.vehicleTypeId).trigger('change');
     $("#vehicleCapacity").val(formData.vehicleCapacity);
-    $('#ddlOwnerName').selectpicker('val', formData.ownerVendorId);
-    $('#ddlOwnerName').selectpicker('refresh');
-    //$('#ddlTrackingProvider').selectpicker('val', formData.trackingProviderId);
-    //$('#ddlTrackingProvider').selectpicker('refresh');
+    $('#ddlOwnerName').val(formData.ownerVendorId).trigger('change');
+    //$('#ddlTrackingProvider').val(formData.trackingProviderId).trigger('change');
     $("#vehicleStatusInput").val(formData.vehicleStatus);
     $("#blacklistStatusInput").val(formData.blacklistStatus);
     $("#regdOwnerInput").val(formData.regdOwner);
@@ -307,7 +297,6 @@ function UpdateVehicle() {
             PolicyExpiryDate: $("#policyExpiryInput").val() ? new Date($("#policyExpiryInput").val()).toISOString() : null,
             LinkId: linkId
         };
-        console.log(formData);
         var editVehicle = '/Vehicle/UpdateVehicle';
         $.ajax({
             type: "PUT",
@@ -396,7 +385,6 @@ function VehicleEKycClick() {
             data: JSON.stringify(Body),
             success: function (response) {
                 var rcModel = response.vehicleRCModel;
-                console.log(rcModel)
                 if (rcModel != null) {
                     $("#vehicleNo").val(rcModel.vehicleNo);
                     $("#vehicleStatusInput").val(rcModel.vehicleRCStatus);
@@ -405,7 +393,6 @@ function VehicleEKycClick() {
                     $("#engineNoInput").val(rcModel.vehicleEngineNumber);
                     $("#chasisNoInput").val(rcModel.vehicleChassisNumber);
                     $("#makeModelInput").val(rcModel.vehicleMakerModel);
-                    console.log(rcModel.pucExpiryDate)
                     rcModel.pucExpiryDate ? $("#pucExpiryInput").val(new Date(rcModel.pucExpiryDate).toISOString().split('T')[0]) : "";
                     $("#financerInput").val(rcModel.financier);
                     $("#ownerSerialNoInput").val(rcModel.ownerSerialNo);
@@ -459,40 +446,9 @@ function GetAllVehicleCategory() {
                 option.textContent = category.internalMasterName;
                 dropdown.appendChild(option);
             });
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Vehicle Category!", "Error");
-        }
-    });
-}
-function GetAllVehicleTypeList() {
-    var getVehicleTypeUrl = '/Vehicle/GetAllMasterVehicleType'
-    $.ajax({
-        url: getVehicleTypeUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlVehicleType");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a VehicleType";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-
-
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.vehicleTypeId;
-                option.textContent = item.vehicleTypeName;
-                vehicleTypedropdown.appendChild(option);
-            });
-
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle Type!", "Error");
         }
     });
 }
@@ -520,7 +476,6 @@ function GetAllOwnerOrVendor() {
                 ownerdropdown.appendChild(option);
             });
 
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to fetch Owner/Vendor Data!", "Error");

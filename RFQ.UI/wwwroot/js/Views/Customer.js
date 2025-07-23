@@ -55,7 +55,7 @@ $(document).ready(function () {
         FetchCustomerList();
     });
     InitializeFields();
-    GetAllCityList();
+    GetAllCityList("ddlCity");
     UpdateCustomer();
     GstEKycClick();
     PanEKycClick();
@@ -223,8 +223,7 @@ function EditCustomer(partyId) {
         $("#txtCustomerName").val(formData.partyName);
         $("#txtCustomerCode").val(formData.customerCode);
         $("#txtaddress").val(formData.addressLine);
-        $('#ddlCity').selectpicker('val', formData.cityId);
-        $('#ddlCity').selectpicker('refresh');
+        $('#ddlCity').val(formData.cityId).trigger('change');
         $("#txtContactPerson").val(formData.contactPerson);
         $("#numMobile").val(formData.mobNo);
         $("#numContact").val(formData.contactNo);
@@ -385,7 +384,6 @@ function GstEKycClick() {
             data: JSON.stringify(Body),
             dataType: "json",
             success: function (response) {
-                var Data = response;
                 var gstModel = response.gstModel
                 if (gstModel != null) {
                     $("#txtLegalName").val(gstModel.legalName),
@@ -429,7 +427,6 @@ function PanEKycClick() {
             dataType: "json",
             data: JSON.stringify(Body),
             success: function (response) {
-                var Data = response;
                 var panModel = response.panModel
                 if (panModel != null) {
                     $("#txtPanName").val(panModel.fullName),
@@ -446,38 +443,6 @@ function PanEKycClick() {
                 ClearPanFields();
             }
         });
-    });
-}
-function GetAllCityList() {
-    var getAllCityUrl = '/Customer/GetAllCity'
-    $.ajax({
-        url: getAllCityUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            BindDropDown(response)
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
-function BindDropDown(data) {
-    const select = document.getElementById("ddlCity");
-    select.innerHTML = "";
-
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a City";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-
-    data.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.cityId;
-        opt.textContent = option.cityName;
-        select.appendChild(opt);
     });
 }
 function ClearGstFields() {

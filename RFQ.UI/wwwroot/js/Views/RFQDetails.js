@@ -9,26 +9,21 @@ $(document).ready(function () {
             SaveAndSaveNew(action);
         }
     });
-
+     
     $('#ddlIndent').on('change', function () {
         const selectedValue = $(this).val();
 
         const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
 
         if (selectedIndent) {
-            $("#ddlCustomerName").selectpicker('val', selectedIndent.partyId);
-            $('#ddlCustomerName').selectpicker('refresh');
-            $("#ddlVehicleType").selectpicker('val', selectedIndent.vehicleTypeId);
-            $('#ddlVehicleType').selectpicker('refresh');
-            $("#ddlOrigin").selectpicker('val', selectedIndent.fromLocation);
-            $('#ddlOrigin').selectpicker('refresh');
-            $("#ddlDestination").selectpicker('val', selectedIndent.toLocation);
-            $('#txtDestination').selectpicker('refresh');
+            $("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
+            $("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
+            $("#ddlOrigin").val(selectedIndent.fromLocation).trigger('change');
+            $("#ddlDestination").val(selectedIndent.toLocation).trigger('change');
             $('#txtNoofVehicles').val(selectedIndent.requiredVehicles);
             $('#txtVehicleReqDate').val(selectedIndent.vehicleReqOn);
             let dateValue = selectedIndent.vehicleReqOn;
             if (dateValue) {
-                // If it's a Date object, format it
                 if (dateValue instanceof Date) {
                     dateValue = dateValue.toISOString().split('T')[0];
                 } else if (typeof dateValue === "string" && dateValue.includes("T")) {
@@ -41,10 +36,6 @@ $(document).ready(function () {
 
         }
     });
-    GetAllCustomer();
-    GetAllVehicleType();
-    GetAllItemName();
-    GetAllPakingType();
     GetAllLocation();
     GetAllVehicleIndent();
     FetchVendorData();
@@ -58,7 +49,7 @@ $(document).ready(function () {
     GetAllCustomer("ddlCustomerName");
     GetAllVehicleType("ddlVehicleType");
     GetAllItemName("ddlItemName");
-
+    GetAllPakingType("ddlPackingType");
 });
 function CheckValidation() {
     $("#ddlLocation").on("keypress", function () {
@@ -153,33 +144,7 @@ var fetchedVendorDataList = [];
 var vendorList = [];
 var rfqId;
 
-function GetAllPakingType() {
-    var getUrl = '/CompanyMasterPackingType/GetAllMasterPackingType';
-    $.ajax({
-        url: getUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlPackingType");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a PakingType";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.packingId;
-                option.textContent = item.packingName;
-                vehicleTypedropdown.appendChild(option);
-            });
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Paking Type!", "Error");
-        }
-    });
-}
+
 function GetAllLocation() {
     $.ajax({
         url: '/Location/GetAllLocationList',
@@ -229,7 +194,6 @@ function GetAllVehicleIndent() {
                 option.textContent = item.indentNo;
                 Indentdropdown.appendChild(option);
             });
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Indent No!", "Error");

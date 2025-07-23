@@ -22,7 +22,7 @@ $(document).ready(function () {
     });
 
     InitializeFields();
-    GetAllCityList();
+    GetAllCityList("ddlCity");
     GetDriverType();
     DlEKycclick();
     FetchDriverList();
@@ -247,40 +247,6 @@ function SaveDriver(uploadedFileName,callback) {
     console.log(driverId);
     return driverId;
 }
-function GetAllCityList() {
-    var getcityUrl = '/Customer/GetAllCity'
-    $.ajax({
-        url: getcityUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            BindDropDown(response)
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
-function BindDropDown(data) {
-    const select = document.getElementById("ddlCity");
-    select.innerHTML = "";
-
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a City";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-
-    data.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.cityId;
-        opt.textContent = option.cityName;
-        select.appendChild(opt);
-    });
-
-    $('.selectpicker').selectpicker('refresh');
-}
 function FetchDriverList() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
@@ -322,7 +288,7 @@ function EditDriver(driverId) {
         }
 
         $("#hdDriverId").val(formData.driverId);
-        $("#ddlDriverType").val(formData.driverTypeId).change();
+        $("#ddlDriverType").val(formData.driverTypeId).trigger('change');
         $("#numLicenseNo").val(formData.licenseNo).prop("disabled", true);
         $("#txtDateOfBirth").val(FormatDateToLocal(formData.dateOfBirth)).prop("disabled", true);
         $("#txtDriverCode").val(formData.driverCode);
@@ -333,7 +299,7 @@ function EditDriver(driverId) {
         $("#numMobile").val(formData.mobNo);
         $("#numPincode").val(formData.pinCode);
         $("#txtDriverName").val(formData.driverName);
-        $("#ddlCity").val(formData.cityId).change();
+        $("#ddlCity").val(formData.cityId).trigger('change');
         var uploadPhoto = formData.driverImagePath;
         $("#txtUploadedPhoto").val(uploadPhoto);
         $("#dropzone").append('<div class="dz-preview dz-image-preview"><div class="dz-image"><img data-dz-thumbnail style="width: 120px; height: 120px; object-fit: cover;" src="../../driverphoto/' + uploadPhoto + '"></div></div>');

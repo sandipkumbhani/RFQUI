@@ -217,9 +217,8 @@ function EditUser(userId) {
     $("#ddlCompanyAndFranchise").val(formdata.companyId);
     $("#txtMobileNo").val(formdata.mobileNo);
     $("#txtLoginName").val(formdata.loginId);
-    $('#ddlLocation').selectpicker('val', formdata.locationId);
-    $('#ddlCompanyAndFranchise').selectpicker('val', formdata.companyId);
-    $('#ddlLocation').selectpicker('refresh');
+    $('#ddlLocation').val(formdata.locationId).trigger('change');
+    $('#ddlCompanyAndFranchise').val(formdata.companyId).trigger('change');
     $('#txtPassword').val(formdata.password);
     $("#txtPassword").prop("disabled", true);
     $("#btnSaveForm").hide();
@@ -310,8 +309,6 @@ function GetAllLocation() {
                 opt.textContent = option.locationName;
                 selectLocation.appendChild(opt);
             });
-
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -340,8 +337,6 @@ function GetFranchiseAndCorporateName() {
                 opt.textContent = option.companyName;
                 CompanyAndFranchiseDrp.appendChild(opt);
             });
-
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");

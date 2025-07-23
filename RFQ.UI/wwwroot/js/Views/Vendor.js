@@ -13,9 +13,11 @@ const linkId = urlParams.get('LinkId');
 
 $(document).ready(function () {
     GetAllInternalMaster();
-    GetAllCityList();
-    GetAllStateList();
-    BindDropDownVehicleType();
+    BindDropDownFromCity();
+    GetAllCityList("ddlCity");
+    GetAllVehicleType("ddlvendorVehicleTypeTable");
+    GetAllStateList("ddlvendorFromStateTable");
+    GetAllStateList("ddlvendorToStateTable");
     CheckValidation();
     VehicleTypeDetailsTable();
     ApplicableRouteDetailsTable();
@@ -354,60 +356,14 @@ function BindDropDown(data) {
         opt.textContent = option.internalMasterName;
         select.appendChild(opt);
     });
-
-    $('.selectpicker').selectpicker('refresh');
 }
-function GetAllStateList() {
-    var getStateUrl = '/Global/GetAllStateList'
-    $.ajax({
-        url: getStateUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            BindDropDownFromState(response)
-            BindDropDownToState(response)
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
-function GetAllCityList() {
+function BindDropDownFromCity() {
     var getcityUrl = '/Customer/GetAllCity'
     $.ajax({
         url: getcityUrl,
         type: "GET",
         dataType: "json",
         success: function (response) {
-            BindDropDownCity(response)
-            BindDropDownFromCity(response)
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
-function BindDropDownCity(data) {
-    const select = document.getElementById("ddlCity");
-    select.innerHTML = "";
-
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a City";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-
-    data.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.cityId;
-        opt.textContent = option.cityName;
-        select.appendChild(opt);
-    });
-
-    $('.selectpicker').selectpicker('refresh');
-}
-function BindDropDownFromCity(data) {
     const select = document.getElementById("ddlvendorFromCityTable");
     select.innerHTML = "";
 
@@ -418,77 +374,17 @@ function BindDropDownFromCity(data) {
     placeholderOption.selected = true;
     select.appendChild(placeholderOption);
 
-    data.forEach(option => {
+            response.forEach(option => {
         let opt = document.createElement("option");
         opt.value = option.cityId;
         opt.textContent = option.cityName;
         opt.setAttribute("data-stateid", option.stateId);
         select.appendChild(opt);
     });
-}
-function BindDropDownVehicleType() {
-    var getvehicleTypeUrl = '/Vehicle/GetAllVehicleTypes'
-    $.ajax({
-        url: getvehicleTypeUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            const select = document.getElementById("ddlvendorVehicleTypeTable");
-            select.innerHTML = "";
-
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a VehicleType";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            select.appendChild(placeholderOption);
-
-            response.forEach(option => {
-                let opt = document.createElement("option");
-                opt.value = option.vehicleTypeId;
-                opt.textContent = option.vehicleTypeName;
-                select.appendChild(opt);
-            });
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
         }
-    });
-}
-function BindDropDownFromState(response) {
-    const select = document.getElementById("ddlvendorFromStateTable");
-    select.innerHTML = "";
-
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a State";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-
-    response.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.stateId;
-        opt.textContent = option.stateName;
-        select.appendChild(opt);
-    });
-}
-function BindDropDownToState(response) {
-    const select = document.getElementById("ddlvendorToStateTable");
-    select.innerHTML = "";
-
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a State";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-
-    response.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.stateId;
-        opt.textContent = option.stateName;
-        select.appendChild(opt);
     });
 }
 
@@ -585,8 +481,7 @@ function SaveVendor(action) {
                     toastr.success("Vendor Details Submitted Successfully!");
                     $('#vendorForm')[0].reset();
                     $('#ddlCity').val('');
-                    $('#ddlVendorCategory').val('');
-                    $('.selectpicker').selectpicker('refresh');
+                    $('#ddlVendorCategory').val(null).trigger('');
                     setTimeout(() => {
                         ResetAttachmentRepeater();
                     }, 1000);
@@ -675,9 +570,9 @@ function EditVendor(partyId) {
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
         $("#txtVendorName").val(formData.partyName);
-        $("#ddlVendorCategory").val(formData.partyCategoryId).change();
+        $("#ddlVendorCategory").val(formData.partyCategoryId).trigger('change');
         $("#txtAddress").val(formData.addressLine);
-        $("#ddlCity").val(formData.cityId).change();
+        $("#ddlCity").val(formData.cityId).trigger('change');
         $("#txtContactPerson").val(formData.contactPerson);
         $("#txtMobileNumber").val(formData.mobNo);
         $("#txtPinCode").val(formData.pinCode);

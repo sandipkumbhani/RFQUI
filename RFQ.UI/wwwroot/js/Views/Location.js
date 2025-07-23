@@ -23,7 +23,7 @@ $(document).ready(function () {
         FetchDataForTable('tablelocation', '/Location/ViewLocationList', orderColumn, orderDir.toUpperCase());
     });
     Initialization();
-    GetAllCityList();
+    GetAllCityList("ddlCity");
     UpdateLocation();
     FetchLocationList();
 });
@@ -254,8 +254,7 @@ function EditLocation(locationId) {
     $('#hdnLocationId').val(formdata.locationId);
     $('#txtLocationName').val(formdata.locationName);
     $('#txtAddress').val(formdata.addressLine);
-    $('#ddlCity').selectpicker('val', formdata.cityId);
-    $('#ddlCity').selectpicker('refresh');
+    $('#ddlCity').val(formdata.cityId).trigger('change');
     $("#txtPinCode").val(formdata.pinCode);
     $("#txtPerson").val(formdata.contactPerson);
     $("#txtContactNumber").val(formdata.contactNo);
@@ -281,37 +280,6 @@ function DeleteLocation(locationId) {
             toastr.error("Failed to Delete Location Details!", "Error");
         }
     });
-}
-function GetAllCityList() {
-    var deleteCustomerUrl = '/Customer/GetAllCity';
-    $.ajax({
-        url: deleteCustomerUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            BindDropDown(response);
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
-function BindDropDown(data) {
-    const selectCity = document.getElementById("ddlCity");
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select City";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    selectCity.appendChild(placeholderOption);
-    data.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.cityId;
-        opt.textContent = option.cityName;
-        selectCity.appendChild(opt);
-    });
-
-    $('.selectpicker').selectpicker('refresh');
 }
 function ValidationCheck() {
     if (IsNullOrEmpty($("#txtLocationName").val())) {

@@ -1,11 +1,8 @@
 ﻿var orderColumn = '';
 var orderDir = '';
 $(document).ready(function () {
-    var corporateCompanyViewModelDto
-    var list
-
     GetAllFranchiseList();
-    GetAllCityList();
+    GetAllCityList("ddlCity");
     CheckValidation();
     FetchCorporateCompany();
     $(document).on("click", "#btnView", function () {
@@ -63,7 +60,6 @@ function FetchCorporateCompany() {
     $("#tableDiv").show();
     FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', null, null);
 }
-// Bind events
 $('#corporateTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase());
@@ -245,36 +241,6 @@ function BindDropDownData(data) {
         select.appendChild(opt);
     });
 
-}
-function GetAllCityList() {
-    var getcityUrl = '/Customer/GetAllCity'
-    $.ajax({
-        url: getcityUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            BindDropDown(response)
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
-function BindDropDown(data) {
-    const select = document.getElementById("ddlCity");
-    select.innerHTML = "";
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a City";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-    data.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.cityId;
-        opt.textContent = option.cityName;
-        select.appendChild(opt);
-    });
 }
 function ButtonUpdateClick() {
     $("#btnupdate").click(function (e) {
@@ -507,15 +473,13 @@ function EditCorporateCompany(companyId) {
         $("#txtMobileNumber").val(formData.mobNo);
         $("#txtContactNumber").val(formData.contactNo);
         $("#txtAddress").val(formData.addressLine);
-        $("#ddlCity").selectpicker('val', formData.cityId);
-        $('#ddlCity').selectpicker('refresh');
+        $("#ddlCity").val(formData.cityId).trigger('change');
         $("#txtPinCode").val(formData.pinCode);
         $("#txtEmail").val(formData.email);
         $("#txtWhatsAppNumber").val(formData.whatsAppNo);
         $("#txtPanNumber").val(formData.panNo);
         $("#txtGstNumber").val(formData.gstNo);
-        $("#ddlFranchisename").selectpicker('val', formData.parentCompanyId);
-        $('#ddlFranchisename').selectpicker('refresh');
+        $("#ddlFranchisename").val(formData.parentCompanyId).trigger('change');
 
         if (attachmantData.length > 0) {
             EditMasterAttachment(attachmantData);

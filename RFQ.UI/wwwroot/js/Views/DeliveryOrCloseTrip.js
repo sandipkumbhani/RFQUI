@@ -1,8 +1,6 @@
 ﻿$(document).ready(function () {
  
-    GetAllVehicleType();
     GetAllVehicleNumber();
-    GetAllCustomer();
     GetAllCustomer("ddlCustomerName");
     GetAllVehicleType("ddlVehicleType"); 
 
@@ -27,7 +25,6 @@ function GetAllVehicleNumber() {
                 opt.textContent = option.vehicleNo;
                 selectVehicleNumber.appendChild(opt);
             });
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");

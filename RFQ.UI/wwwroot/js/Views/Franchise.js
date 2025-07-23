@@ -16,7 +16,7 @@ $(document).ready(function () {
 
         FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase());
     });
-    GetAllCityList();
+    GetAllCityList("ddlCity");
     CheckValidation();
     FetchFranchise();
     document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
@@ -280,38 +280,6 @@ function OnSubmitValidation() {
     }
     return true;
 }
-function GetAllCityList() {
-    var getcityUrl = '/Customer/GetAllCity'
-    $.ajax({
-        url: getcityUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            BindDropDown(response)
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
-function BindDropDown(data) {
-    const select = document.getElementById("ddlCity");
-    select.innerHTML = "";
-
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a City";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-
-    data.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.cityId;
-        opt.textContent = option.cityName;
-        select.appendChild(opt);
-    });
-}
 function SaveFranchise(fileName, callback) {
     var franchiseName = $("#txtFranchiseName").val();
     var franchiseAddress = $("#txtAddress").val();
@@ -401,8 +369,7 @@ function EditFranchise(companyId) {
         $("#txtFranchiseName").val(formData.companyName);
         $("#txtFranchiseCode").val(formData.companyTypeId);
         $("#txtAddress").val(formData.addressLine);
-        $("#ddlCity").selectpicker('val', formData.cityId);
-        $('#ddlCity').selectpicker('refresh');
+        $("#ddlCity").val(formData.cityId).trigger('change');
         $("#txtPinCode").val(formData.pinCode);
         $("#txtContactPerson").val(formData.contactPerson);
         $("#txtContactNumber").val(formData.contactNo);
