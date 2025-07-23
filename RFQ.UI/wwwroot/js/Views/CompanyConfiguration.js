@@ -13,7 +13,6 @@ $(document).ready(function () {
         $(this).data('order', orderDir); // update for next click
 
         $('th.sortable').not(this).data('order', 'asc');
-        debugger;
         FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
     });
 
@@ -34,17 +33,12 @@ $(document).ready(function () {
 async function loadAllData() {
     try {
         const companies = await GetAllCompany();
-        console.log("Companies loaded:", companies);
-
         const providers = await GetAllProviders();
-        console.log("Providers loaded:", providers);
 
         const config = await FetchCompanyConfiguration();
-        console.log("Company configuration loaded:", config);
 
         // Continue with logic after all are done
     } catch (error) {
-        console.error("Error loading data:", error);
     }
 }
 
@@ -290,85 +284,8 @@ function SaveCompanyConfiguration(action) {
 }
 function FetchCompanyConfiguration() {
     $("#listSection").show();
-    debugger;
+    
     FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
-    //$('#tableCmpConfig tbody').empty();
-    //$('#totalList').text('Total List: 0');
-    //$('#customCompanyConfigPagination').empty();
-
-    //const pageLength = Number($('#pageLength').val()) || 10;
-    //let pageNumber = Number($('#currentPage').val()) || 1;
-    //if (pageNumber < 1) pageNumber = 1;
-
-    //const searchValue = $('#companyConfigSearch').val() || '';
-
-    //$.ajax({
-    //    url: '/CompanyConfiguration/GetAllCompanyConfiguration',
-    //    type: 'POST',
-    //    contentType: 'application/json',
-    //    data: JSON.stringify({
-    //        Draw: pageNumber,
-    //        start: (pageNumber - 1) * pageLength,
-    //        length: pageLength,
-    //        searchValue: searchValue,
-    //        orderColumn: 'companyId',
-    //        orderDir: 'asc'
-    //    }),
-    //    success: function (response) {
-    //        if (!response || !response.data || response.data.length === 0) {
-    //            $('#tableCmpConfig tbody').html('<tr><td colspan="8" class="text-center">No records found</td></tr>');
-    //            $('#totalList').text('Total List: 0');
-    //            $('#customCompanyConfigPagination').empty();
-    //            return;
-    //        }
-
-    //        // Get sessionStorage lists
-    //        const companyList = JSON.parse(sessionStorage.getItem("CompanyList") || "[]");
-    //        const providersList = JSON.parse(sessionStorage.getItem("ProvidersList") || "[]");
-
-    //        // Processed List
-    //        const trlist = response.data.map(item => {
-    //            const company = companyList.find(c => c.companyId === item.companyId);
-    //            const smsProvider = providersList.find(p => p.providerTypeId === Number(item.smsProvider));
-    //            const whatsAppProvider = providersList.find(p => p.providerTypeId === Number(item.whatsAppProvider));
-
-    //            return {
-    //                ...item,
-    //                companyId: company ? company.companyName : "",
-    //                smsProvider: smsProvider ? smsProvider.providerName : "",
-    //                whatsAppProvider: whatsAppProvider ? whatsAppProvider.providerName : ""
-    //            };
-    //        });
-
-    //        companyConfigResponseDto = trlist;
-
-    //        let rowsHtml = '';
-    //        trlist.forEach(item => {
-    //            rowsHtml += `
-    //                <tr>
-    //                    <td>${item.companyId}</td>
-    //                    <td>${item.smsProvider}</td>
-    //                    <td>${item.smsAuthKey}</td>
-    //                    <td>${item.whatsAppProvider}</td>
-    //                    <td>${item.whatsAppAuthKey}</td>
-    //                    <td>${item.smtpHost}</td>
-    //                    <td>${item.smtpPort}</td>
-    //                    <td class="text-center action-items" style="cursor:pointer;">
-    //                        <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
-    //                        <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
-    //                    </td>
-    //                </tr>`;
-    //        });
-
-    //        $('#tableCmpConfig tbody').html(rowsHtml);
-    //        $('#totalList').text(`Total List: ${response.recordsTotal}`);
-    //        generatePagination(response.recordsTotal, pageLength, pageNumber);
-    //    },
-    //    error: function () {
-    //        $('#tableCmpConfig tbody').html('<tr><td colspan="8" class="text-center text-danger">Error loading data</td></tr>');
-    //        $('#customCompanyConfigPagination').empty();
-    //    }
-    //});
 }
 
 // Bind events
@@ -393,13 +310,9 @@ function EditCompanyConfiguration(companyConfigId) {
     $("#btnSaveAndNewForm").prop("disabled", true);
     $("#btnUpdate").show();
     $("#btnCancel").removeClass('d-none');
-    $("#ddlCompany").selectpicker('val', formdata.companyId);
-    $("#ddlCompany").selectpicker('refresh');
-    $("#ddlSmsProvider").selectpicker('val', formdata.smsProvider);
-    $('#ddlSmsProvider').selectpicker('refresh');
-    $("#ddlWhatsappProvider").selectpicker('val', formdata.whatsAppProvider);
-    $('#ddlWhatsappProvider').selectpicker('refresh');
-    $("#txtSmsAuthKey").val(formdata.smsAuthKey);
+    $("#ddlCompany").val(formdata.companyId).trigger('change');
+    $("#ddlSmsProvider").val(formdata.smsProvider).trigger('change');
+    $("#ddlWhatsappProvider").val(formdata.whatsAppProvider).trigger('change');
     $("#txtWhatsappAuthKey").val(formdata.whatsAppAuthKey);
     $("#txtSmtpHost").val(formdata.smtpHost);
     $("#txtSmtpPort").val(formdata.smtpPort)
@@ -410,7 +323,6 @@ function EditCompanyConfiguration(companyConfigId) {
     $("#btnViewForm").hide();
     $('#btnUpdate').off('click').on('click', function (e) {
         e.preventDefault();
-        console.log("Update button clicked");
         UpdateCompanyConfiguration(companyConfigId);
     });
 }

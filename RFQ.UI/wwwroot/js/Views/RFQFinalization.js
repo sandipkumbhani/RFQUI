@@ -58,7 +58,7 @@ function GetRfqDetailsByRfqNo() {
         contentType: "application/json",
         success: function (response) {
             if (response == null) {
-                toastr.warning("Enter currect RFQ No.", "Warning");
+                toastr.warning("Enter Correct RFQ No.", "Warning");
                 return;
             }
             $("#ddlCustomerName").val(response.partyId).trigger('change');
