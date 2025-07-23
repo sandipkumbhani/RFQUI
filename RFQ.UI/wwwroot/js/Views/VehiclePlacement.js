@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
 
     $('#ddlIndentNo').on('change', function () {
-        debugger;
+        
         const selectedValue = $(this).val();
 
         const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
@@ -25,8 +25,10 @@
             $('#ddlCustomerName').selectpicker('refresh');
             $("#ddlVehicleType").selectpicker('val', selectedIndent.vehicleTypeId);
             $('#ddlVehicleType').selectpicker('refresh');
-            $('#txtOriginFrom').val(selectedIndent.fromLocation);
-            $('#txtDestination').val(selectedIndent.toLocation);
+            $("#ddlOrigin").selectpicker('val', selectedIndent.fromLocation);
+            $('#ddlOrigin').selectpicker('refresh');
+            $("#ddlDestination").selectpicker('val', selectedIndent.toLocation);
+            $('#txtDestination').selectpicker('refresh');
             $('#txtNoOfVehicles').val(selectedIndent.requiredVehicles);
             $('#txtVehicleReqOn').val(selectedIndent.vehicleReqOn);
             if (dateValue) {
@@ -43,6 +45,18 @@
 
         }
     });
+    $('#ddlVehicleNo').on('change', function () {
+        debugger;
+        const selectedValue = $(this).val();
+
+        const selectedVehicle = VehicleList.find(x => x.vehicleId == selectedValue);
+
+        if (selectedVehicle) {
+            $("#ddlOwnerName").selectpicker('val', selectedVehicle.ownerVendorId);
+            $('#ddlOwnerName').selectpicker('refresh');
+            
+        }
+    });
     GetAllLocation(); 
     GetAllDriver();
     GetAllVehicleIndent();
@@ -50,6 +64,11 @@
     GetAllVehicleType();
     GetAllVehicleNumber();
     FetchPlacementNo();
+    GetAllOwnerOrVendor();
+    GetAllStateList("ddlOrigin");
+    GetAllStateList("ddlDestination");
+    GetAllCustomer("ddlCustomerName");
+    GetAllVehicleType("ddlVehicleType");
 });
 
 function GetAllLocation() {
@@ -137,61 +156,6 @@ function GetAllVehicleIndent() {
         }
     });
 }
-function GetAllVehicleType() {
-    var getVehicleTypeUrl = '/Vehicle/GetAllMasterVehicleType'
-    $.ajax({
-        url: getVehicleTypeUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlVehicleType");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a VehicleType";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.vehicleTypeId;
-                option.textContent = item.vehicleTypeName;
-                vehicleTypedropdown.appendChild(option);
-            });
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle Type!", "Error");
-        }
-    });
-}
-function GetAllCustomer() {
-    var GetUrl = '/Customer/GetDrpCustomerList';
-    $.ajax({
-        url: GetUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            let customerList = response.filter(x => x.partyTypeId == 6);
-            const dropdown = document.getElementById("ddlCustomerName");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Customer Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            dropdown.appendChild(placeholderOption);
-            customerList.forEach(name => {
-                const option = document.createElement("option");
-                option.value = name.partyId;
-                option.textContent = name.partyName;
-                dropdown.appendChild(option);
-            });
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Customer Name!", "Error");
-        }
-    });
-}
 function GetAllVehicleNumber() {
     $.ajax({
         url: '/Vehicle/GetVehicleNumber',
@@ -199,6 +163,7 @@ function GetAllVehicleNumber() {
         dataType: "json",
         success: function (response) {
             var data = response
+            VehicleList = response;
             const selectVehicleNumber = document.getElementById("ddlVehicleNo");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -220,7 +185,7 @@ function GetAllVehicleNumber() {
     });
 }
 function FetchPlacementNo() {
-    debugger;
+    
     $.ajax({
         url: "/VehiclePlacement/GetPlacementNo",
         type: "GET",
@@ -230,6 +195,37 @@ function FetchPlacementNo() {
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Placement No!", "Error");
+        }
+    });
+}
+function GetAllOwnerOrVendor() {
+    var getAllOwnerOrVendorUrl = "/Vehicle/GetAllOwnerOrVendor";
+
+    $.ajax({
+        url: getAllOwnerOrVendorUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            const ownerdropdown = document.getElementById("ddlOwnerName");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Owner Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            ownerdropdown.appendChild(placeholderOption);
+
+
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.partyId;
+                option.textContent = item.partyName;
+                ownerdropdown.appendChild(option);
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to fetch Owner/Vendor Data!", "Error");
         }
     });
 }

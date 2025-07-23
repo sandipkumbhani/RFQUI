@@ -15,6 +15,9 @@ $(document).ready(function () {
     GetAllVehicleType();
     GetAllItemName();
     GetAllPakingType();
+    GetAllStateList("ddlOrigin");
+    GetAllStateList("ddlDestination");
+    GetAllItemName("ddlItemName");
 });
 function Initialization()
 {
@@ -242,34 +245,6 @@ function GetAllVehicleType() {
                 option.textContent = item.vehicleTypeName;
                 vehicleTypedropdown.appendChild(option);
             });
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle Type!", "Error");
-        }
-    });
-}
-function GetAllItemName() {
-    var getUrl = '/Product/GetDrpProductList';
-    $.ajax({
-        url: getUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlItemName");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Item Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.itemId;
-                option.textContent = item.itemName;
-                vehicleTypedropdown.appendChild(option);
-            });
-
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {

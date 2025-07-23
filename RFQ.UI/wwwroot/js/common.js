@@ -434,3 +434,165 @@ function getCookieValue(name) {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
+
+function GetAllStateList(dropdownId) {
+    var getVehicleTypeUrl = '/CompanyState/GetAllStateList';
+    $.ajax({
+        url: getVehicleTypeUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            const dropdown = document.getElementById(dropdownId);
+            if (!dropdown) {
+                console.warn(`Dropdown with ID "${dropdownId}" not found.`);
+                return;
+            }
+            dropdown.innerHTML = "";
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a State Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            dropdown.appendChild(placeholderOption);
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.stateId;
+                option.textContent = item.stateName;
+                dropdown.appendChild(option);
+            });
+            $(`#${dropdownId}`).selectpicker('refresh');
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch State Name!", "Error");
+        }
+    });
+}
+function GetAllCustomer(dropdownId) {
+    var GetUrl = '/Customer/GetDrpCustomerList';
+
+    $.ajax({
+        url: GetUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            let customerList = response.filter(x => x.partyTypeId == 6);
+
+            const dropdown = document.getElementById(dropdownId);
+
+            if (!dropdown) {
+                console.error(`Dropdown with ID "${dropdownId}" not found.`);
+                return;
+            }
+
+            dropdown.innerHTML = ""; // Clear existing options
+
+            // Add placeholder
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Customer Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            dropdown.appendChild(placeholderOption);
+
+            // Populate options
+            customerList.forEach(name => {
+                const option = document.createElement("option");
+                option.value = name.partyId;
+                option.textContent = name.partyName;
+                dropdown.appendChild(option);
+            });
+
+            // Refresh selectpicker if applicable
+            $(`#${dropdownId}`).selectpicker('refresh');
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Customer Name!", "Error");
+        }
+    });
+}
+function GetAllVehicleType(dropdownId) {
+    var getVehicleTypeUrl = '/Vehicle/GetAllMasterVehicleType';
+
+    $.ajax({
+        url: getVehicleTypeUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            const vehicleTypedropdown = document.getElementById(dropdownId);
+
+            if (!vehicleTypedropdown) {
+                console.error(`Dropdown with ID "${dropdownId}" not found.`);
+                return;
+            }
+
+            vehicleTypedropdown.innerHTML = ""; // Clear existing options
+
+            // Add placeholder option
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Vehicle Type";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            vehicleTypedropdown.appendChild(placeholderOption);
+
+            // Populate the dropdown
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.vehicleTypeId;
+                option.textContent = item.vehicleTypeName;
+                vehicleTypedropdown.appendChild(option);
+            });
+
+            // Refresh Bootstrap selectpicker
+            $(`#${dropdownId}`).selectpicker('refresh');
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Vehicle Type!", "Error");
+        }
+    });
+}
+function GetAllItemName(dropdownId) {
+    var getUrl = '/Product/GetDrpProductList';
+
+    $.ajax({
+        url: getUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            const itemDropdown = document.getElementById(dropdownId);
+
+            if (!itemDropdown) {
+                console.error(`Dropdown with ID "${dropdownId}" not found.`);
+                return;
+            }
+
+            itemDropdown.innerHTML = ""; // Clear existing options
+
+            // Add placeholder option
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select an Item Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            itemDropdown.appendChild(placeholderOption);
+
+            // Populate the dropdown with product items
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.itemId;
+                option.textContent = item.itemName;
+                itemDropdown.appendChild(option);
+            });
+
+            // Refresh Bootstrap selectpicker
+            $(`#${dropdownId}`).selectpicker('refresh');
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Product List!", "Error");
+        }
+    });
+}
+
+
+
+

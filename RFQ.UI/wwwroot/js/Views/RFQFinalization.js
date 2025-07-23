@@ -1,21 +1,24 @@
 ﻿
+$("#ddlRfqStatus").on('change', function () {
+    if ($(this).find('option:selected').text() === "NOT AWARDED") {
+        $(".ddlRfqReason").removeClass('d-none');
+        $("#awardedDiv").addClass('d-none');
+    } else {
+        $(".ddlRfqReason").addClass('d-none');
+        $("#awardedDiv").removeClass('d-none');
+    }
+});
 $(document).ready(function () {
     GetAllCustomerName();
     GetAllVehicleType();
     GetRfqStatus();
+    GetAllStateList("ddlOrigin");
+    GetAllStateList("ddlDestination");
     $("#btnGetRfqData").on('click', function () {
         GetRfqDetailsByRfqNo();
     })
 });
-$("#ddlRfqStatus").on('change', function () {  
-   if ($(this).find('option:selected').text() === "NOT AWARDED") {  
-       $(".ddlRfqReason").removeClass('d-none');
-       $("#awardedDiv").addClass('d-none');
-   } else {  
-       $(".ddlRfqReason").addClass('d-none');
-       $("#awardedDiv").removeClass('d-none');
-   }  
-});
+
 function GetAllCustomerName() {
     var GetUrl = '/Customer/GetDrpCustomerList';
     $.ajax({
@@ -109,13 +112,17 @@ function GetRfqDetailsByRfqNo() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
+            if (response == null) {
+                toastr.warning("Enter currect RFQ No.", "Warning");
+                return;
+            }
             $("#ddlCustomerName").val(response.partyId).trigger('change');
             $("#txtRfqNo").val(response.rfqNo)
             $("#txtRfqDate").val(response.rfqDate)
             $("#txtRfqExpiredOn").val(response.expiryDate)
             $("#txtVehicleReqDate").val(new Date(response.vehicleReqOn).toISOString().split('T')[0])
-            $("#txtOrigin").val(response.fromLocation)
-            $("#txtDestination").val(response.toLocation)
+            $("#ddlOrigin").val(response.fromLocation).trigger('change');
+            $("#ddlDestination").val(response.toLocation).trigger('change');
             $("#ddlVehicleType").val(response.vehicleTypeId).trigger('change');
             $("#txtNoofVehicles").val(response.vehicleCount)
             $("#txtSpecial").val(response.specialInstruction)

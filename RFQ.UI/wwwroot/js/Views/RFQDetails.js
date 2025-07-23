@@ -20,8 +20,10 @@ $(document).ready(function () {
             $('#ddlCustomerName').selectpicker('refresh');
             $("#ddlVehicleType").selectpicker('val', selectedIndent.vehicleTypeId);
             $('#ddlVehicleType').selectpicker('refresh');
-            $('#txtOrigin').val(selectedIndent.fromLocation);
-            $('#txtDestination').val(selectedIndent.toLocation);
+            $("#ddlOrigin").selectpicker('val', selectedIndent.fromLocation);
+            $('#ddlOrigin').selectpicker('refresh');
+            $("#ddlDestination").selectpicker('val', selectedIndent.toLocation);
+            $('#txtDestination').selectpicker('refresh');
             $('#txtNoofVehicles').val(selectedIndent.requiredVehicles);
             $('#txtVehicleReqDate').val(selectedIndent.vehicleReqOn);
             let dateValue = selectedIndent.vehicleReqOn;
@@ -51,6 +53,12 @@ $(document).ready(function () {
     RenderFetchTable();
     ClearFetchForm();
     SaveRfqVendorDetails();
+    GetAllStateList("ddlOrigin");
+    GetAllStateList("ddlDestination");
+    GetAllCustomer("ddlCustomerName");
+    GetAllVehicleType("ddlVehicleType");
+    GetAllItemName("ddlItemName");
+
 });
 function CheckValidation() {
     $("#ddlLocation").on("keypress", function () {
@@ -89,11 +97,11 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Vehicle Req On", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtOrigin").val())) {
+    if (!isValidateSelect($("#ddlOrigin").val())) {
         toastr.warning("Please enter a Origin/From", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtDestination").val())) {
+    if (!isValidateSelect($("#ddlDestination").val())) {
         toastr.warning("Please enter a Destination/To", "Validation Error");
         return false;
     }
@@ -144,88 +152,7 @@ function OnSubmitCheckValidation() {
 var fetchedVendorDataList = [];
 var vendorList = [];
 var rfqId;
-function GetAllCustomer() {
-    var GetUrl = '/Customer/GetDrpCustomerList';
-    $.ajax({
-        url: GetUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            let customerList = response.filter(x => x.partyTypeId == 6);
-            const dropdown = document.getElementById("ddlCustomerName");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Customer Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            dropdown.appendChild(placeholderOption);
-            customerList.forEach(name => {
-                const option = document.createElement("option");
-                option.value = name.partyId;
-                option.textContent = name.partyName;
-                dropdown.appendChild(option);
-            });
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Customer Name!", "Error");
-        }
-    });
-}
-function GetAllVehicleType() {
-    var getVehicleTypeUrl = '/Vehicle/GetAllMasterVehicleType'
-    $.ajax({
-        url: getVehicleTypeUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlVehicleType");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a VehicleType";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.vehicleTypeId;
-                option.textContent = item.vehicleTypeName;
-                vehicleTypedropdown.appendChild(option);
-            });
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle Type!", "Error");
-        }
-    });
-}
-function GetAllItemName() {
-    var getUrl = '/Product/GetDrpProductList';
-    $.ajax({
-        url: getUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlItemName");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Item Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.itemId;
-                option.textContent = item.itemName;
-                vehicleTypedropdown.appendChild(option);
-            });
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Product Type!", "Error");
-        }
-    });
-}
+
 function GetAllPakingType() {
     var getUrl = '/CompanyMasterPackingType/GetAllMasterPackingType';
     $.ajax({
@@ -477,10 +404,10 @@ function SaveAndSaveNew(action) {
         ExpiryDate: $('#txtRfqExpiredOn').val(),
         PartyId: $('#ddlCustomerName').val(),
         VehicleReqOn: $('#txtVehicleReqDate').val(),
-        FromLocation: $('#txtOrigin').val(),
+        FromLocation: $('#ddlOrigin').val(),
         //FromLatitude: null,
         //FromLongitude: null,
-        ToLocation: $('#txtDestination').val(),
+        ToLocation: $('#ddlDestination').val(),
         //ToLatitude: null,
         //ToLongitude: null,
         VehicleRequiredOn: $('#txtVehicleReqDate').val(),
