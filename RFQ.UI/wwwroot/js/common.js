@@ -141,6 +141,8 @@ function ValidatePinCode(number) {
 
 function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
 
+    const companyid = getCookieValue('companyid');
+    const profileid = getCookieValue('profileid');
     $('#tableDiv').show();
     $('#' + gridTableName + ' tbody').empty();
     $('#totalList').text('Total List: 0');
@@ -157,6 +159,8 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
+            ProfileId: profileid,
+            CompanyId: companyid,
             Draw: pageNumber,
             start: (pageNumber - 1) * pageLength,
             length: pageLength,

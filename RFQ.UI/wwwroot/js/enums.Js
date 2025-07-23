@@ -30,8 +30,8 @@ const EnumInternalMasterType = Object.freeze({
 
 const EnumProfile = Object.freeze({
     Admin : 1,
-    Franchise : 2,
+    Branch :2,
     Corporate : 3,
-    Branch :4,
+    Franchise : 4,
     Vendor : 5
 });
