@@ -31,13 +31,13 @@ namespace RFQ.UI.Controllers
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 corporateCompanyRequestDto.LogoImage = "null";
                 if (corporateCompanyRequestDto != null)
                 {
-                    corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                    corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                    corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
                     var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyRequestDto);
                     return Json(new { result });
@@ -63,9 +63,9 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 corporateCompanyRequestDto.LogoImage = "null";
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
-                corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value; 
+                corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(userid);
+                corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
                 var result = await _corporateCompanyService.EditCorporateCompany(companyId, corporateCompanyRequestDto);
                 if (result != null)

@@ -67,13 +67,12 @@ namespace RFQ.UI.Controllers
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (RfqRequestDto != null)
                 {
-                    RfqRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                    RfqRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                    RfqRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
                     var result = await _requestForQuoteService.AddRfq(RfqRequestDto);
                     return Json(result);

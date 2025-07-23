@@ -29,14 +29,13 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (locationRequestDto != null)
                 {
-                    locationRequestDto.CompanyId = Convert.ToInt32(profileid);
-                    locationRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                    locationRequestDto.UpdatedBy = Convert.ToInt32(profileid);
+                    locationRequestDto.CompanyId = Convert.ToInt32(companyid);
+                    locationRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    locationRequestDto.UpdatedBy = Convert.ToInt32(userid);
                     //locationRequestDto.ProfileId = Convert.ToInt32(profileid);
-
 
                     var result = _locationService.AddLocation(locationRequestDto);
                     return Json(new { result = "success" });
@@ -109,11 +108,11 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value; 
 
-
-                locationRequestDto.CreatedBy = Convert.ToInt32(profileid);
-                locationRequestDto.UpdatedBy = Convert.ToInt32(profileid);
-                locationRequestDto.CompanyId = Convert.ToInt32(profileid);
+                locationRequestDto.CreatedBy = Convert.ToInt32(userid);
+                locationRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                locationRequestDto.CompanyId = Convert.ToInt32(companyid);
 
                 var result = await _locationService.EditLocation(locationId, locationRequestDto);
                 if (result != null)

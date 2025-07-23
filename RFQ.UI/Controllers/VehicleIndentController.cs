@@ -31,11 +31,11 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value; 
                 if (vehicleIndentRequestDto != null)
                 {
-                    vehicleIndentRequestDto.CreatedBy = Convert.ToInt32(companyId);
-                    vehicleIndentRequestDto.UpdatedBy = Convert.ToInt32(companyId);
+                    vehicleIndentRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    vehicleIndentRequestDto.UpdatedBy = Convert.ToInt32(userid);
                     vehicleIndentRequestDto.CompanyId = Convert.ToInt32(companyId);
                     var result = await _vehicleIndentService.AddVehicleIndent(vehicleIndentRequestDto);
                     return Json(result);
