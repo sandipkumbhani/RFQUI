@@ -168,9 +168,44 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public Task<string> GetUsers(int userId)
+        public async Task<UserResponseDto> GetUserById(int userId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                
+                var baseUrl = _fleetLynkApiUrl + _config["Users:GetUserById"] + userId;
+
+                var response = await httpClient.GetAsync(baseUrl);
+                response.EnsureSuccessStatusCode();
+                var responseData = await response.Content.ReadAsStringAsync();
+                var user = JsonConvert.DeserializeObject<UserResponseDto>(responseData);
+
+                if (user != null)
+                {
+                    var userResponse = new UserResponseDto
+                    {
+                        UserId = user.UserId,
+                        CompanyId = user.CompanyId,
+                        PersonName = user.PersonName,
+                        EmailId = user.EmailId,
+                        LocationId = user.LocationId,
+                        ProfileId = user.ProfileId,
+                        StatusId= user.StatusId,
+                        // map other fields accordingly
+                    };
+
+                    return userResponse;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to fetch user by ID", ex);
+            }
         }
         public async Task<IEnumerable<CompanyAndFranchiseListDto>> GetAllCompanyAndFranchise()
         {

@@ -96,7 +96,6 @@ namespace RFQ.UI.Controllers
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 userRequestDto.CreatedBy = Convert.ToInt32(userid);
                 userRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                userRequestDto.ProfileId = Convert.ToInt32(profileid);
 
                 var result = await _usersService.EditUsers(userId, userRequestDto);
                 if (result != null)

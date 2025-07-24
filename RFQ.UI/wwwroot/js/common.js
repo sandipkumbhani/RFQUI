@@ -175,11 +175,17 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
                 $('#customPagination').empty();
                 return;
             }
+            // Condition hide login user from user list
+            if (gridTableName == 'tableuser') {
+                var loginUser = decodeURIComponent(getCookieValue('UserEmail'));
+                const filteredUsers = response.data.filter(user => user.emailId !== loginUser);
+                response.data = filteredUsers;
+            }
             viewModelDto = response.data;
             let rowsHtml = '';
             rowsHtml = GetGridHtml(response, gridTableName);
             $('#' + gridTableName + ' tbody').html(rowsHtml);
-            $('#totalList').text(`Total List: ${response.recordsTotal}`);
+            $('#totalList').text(`Total List: ${viewModelDto.length}`);
             generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url);
         },
         error: function () {

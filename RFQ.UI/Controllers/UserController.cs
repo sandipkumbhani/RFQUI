@@ -2,6 +2,7 @@
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -40,6 +41,22 @@ namespace RFQ.UI.Controllers
                     return Json(new { result = "success" });
                 else
                     return Json(new { result = "failure" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        public async Task<IActionResult> GetUserById(int UserId)
+        {
+            try
+            {
+                var result = await _usersService.GetUserById(UserId);
+                if (Request.IsAjaxRequest())
+                    return Json(result);
+                else
+                    return View(result);
             }
             catch (Exception ex)
             {

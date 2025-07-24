@@ -57,7 +57,7 @@ namespace RFQ.UI.Controllers
                         var personname = jwtToken.Claims.FirstOrDefault(c => c.Type == "personname")?.Value;
                         var companyid = jwtToken.Claims.FirstOrDefault(c => c.Type == "companyid")?.Value;
                         var profileid = jwtToken.Claims.FirstOrDefault(c => c.Type == "profileid")?.Value;
-
+                        var userid = jwtToken.Claims.FirstOrDefault(c => c.Type == "userid")?.Value;
 
                         if (!string.IsNullOrEmpty(email))
                             Response.Cookies.Append("UserEmail", email);
@@ -70,6 +70,9 @@ namespace RFQ.UI.Controllers
 
                         if (!string.IsNullOrEmpty(profileid))
                             Response.Cookies.Append("profileid", profileid);
+
+                        if (!string.IsNullOrEmpty(profileid))
+                            Response.Cookies.Append("userid", userid);
 
                         Response.Cookies.Append("AuthToken", tokenstring);
                     }
