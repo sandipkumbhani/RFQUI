@@ -641,6 +641,30 @@ function GetAllPakingType(dropdownId) {
         }
     });
 }
-
-
-
+function GetAllLocation(dropdownId,companyIdParam) {
+    $.ajax({
+        url: '/Location/GetAllLocationList',
+        type: "GET",
+        data: { companyId: companyIdParam },
+        dataType: "json",
+        success: function (response) {
+            var data = response
+            const selectLocation = document.getElementById(dropdownId);
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select Location";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            selectLocation.appendChild(placeholderOption);
+            data.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.locationId;
+                opt.textContent = option.locationName;
+                selectLocation.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}

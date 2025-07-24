@@ -51,11 +51,11 @@ namespace RFQ.UI.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllLocationList()
+        public async Task<IActionResult> GetAllLocationList([FromQuery] int companyId)
         {
             try
             {
-                var locationlist = await _locationService.GetAllLocationList();
+                var locationlist = await _locationService.GetAllLocationList(companyId);
 
                 if (Request.IsAjaxRequest())
                 {

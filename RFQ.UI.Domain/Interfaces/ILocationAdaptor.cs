@@ -10,6 +10,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> AddLocation(LocationRequestDto locationRequestDto);
         Task<string> EditLocation(int LocationId, LocationRequestDto locationRequestDto);
         Task<string> DeleteLocation(int LocationId);
-        Task<IEnumerable<LocationResponseDto>> GetAllLocationList();
+        Task<IEnumerable<LocationResponseDto>> GetAllLocationList(int companyId);
     }
 }
