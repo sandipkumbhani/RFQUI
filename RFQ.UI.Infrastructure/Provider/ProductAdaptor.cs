@@ -142,27 +142,34 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<IEnumerable<ProductResponseDto>> GetDrpProductList()
+        public async Task<IEnumerable<ProductResponseDto>> GetDrpProductList(int companyId)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Product:GetDrpProductList"]);
+
+                // Corrected the URL construction and query parameter
+                var baseUrl = $"{_fleetLynkApiUrl}{_config["Product:GetDrpProductList"]}?companyId={companyId}";
+                var response = await _httpClient.GetAsync(baseUrl); // Fixed invalid syntax
+
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+
                 if (responseModel != null)
                 {
                     var list = JsonConvert.DeserializeObject<List<ProductResponseDto>>(Convert.ToString(responseModel.Data!));
                     return list;
                 }
+
                 return null;
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
+
 
     }
 }

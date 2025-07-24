@@ -506,116 +506,6 @@ function GetAllStateList(dropdownId) {
         }
     });
 }
-function GetAllCustomer(dropdownId) {
-    var GetUrl = '/Customer/GetDrpCustomerList';
-
-    $.ajax({
-        url: GetUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            let customerList = response.filter(x => x.partyTypeId == 6);
-
-            const dropdown = document.getElementById(dropdownId);
-
-            if (!dropdown) {
-                toastr.error("Failed to Fetch Customer Name!", "Error");
-                return;
-            }
-
-            dropdown.innerHTML = ""; 
-
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Customer Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            dropdown.appendChild(placeholderOption);
-
-            customerList.forEach(name => {
-                const option = document.createElement("option");
-                option.value = name.partyId;
-                option.textContent = name.partyName;
-                dropdown.appendChild(option);
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Customer Name!", "Error");
-        }
-    });
-}
-function GetAllVehicleType(dropdownId) {
-    var getVehicleTypeUrl = '/Vehicle/GetAllMasterVehicleType';
-
-    $.ajax({
-        url: getVehicleTypeUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const vehicleTypedropdown = document.getElementById(dropdownId);
-
-            if (!vehicleTypedropdown) {
-                toastr.error("Failed to Fetch Vehicle Type!", "Error");
-                return;
-            }
-
-            vehicleTypedropdown.innerHTML = ""; 
-
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Vehicle Type";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.vehicleTypeId;
-                option.textContent = item.vehicleTypeName;
-                vehicleTypedropdown.appendChild(option);
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle Type!", "Error");
-        }
-    });
-}
-function GetAllItemName(dropdownId) {
-    var getUrl = '/Product/GetDrpProductList';
-
-    $.ajax({
-        url: getUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const itemDropdown = document.getElementById(dropdownId);
-
-            if (!itemDropdown) {
-                toastr.error("Failed to Fetch Product List!", "Error");
-                return;
-            }
-
-            itemDropdown.innerHTML = ""; 
-
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select an Item Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            itemDropdown.appendChild(placeholderOption);
-
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.itemId;
-                option.textContent = item.itemName;
-                itemDropdown.appendChild(option);
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Product List!", "Error");
-        }
-    });
-}
 function GetAllPakingType(dropdownId) {
     var getUrl = '/CompanyMasterPackingType/GetAllMasterPackingType';
     $.ajax({
@@ -671,6 +561,89 @@ function GetAllLocation(dropdownId,companyIdParam) {
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
+function GetAllCustomer(dropdownId, companyIdParam) {
+    $.ajax({
+        url: '/Customer/GetDrpCustomerList',
+        type: "GET",
+        data: { companyId: companyIdParam },
+        dataType: "json",
+        success: function (response) {
+            var data = response
+            const selectCustomer = document.getElementById(dropdownId);
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Customer Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            selectCustomer.appendChild(placeholderOption);
+            data.forEach(name => {
+                const option = document.createElement("option");
+                option.value = name.partyId;
+                option.textContent = name.partyName;
+                selectCustomer.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Customer Name!", "Error");
+        }
+    });
+}
+function GetAllVehicleType(dropdownId, companyIdParam) {
+    $.ajax({
+        url: '/Vehicle/GetAllMasterVehicleType',
+        type: "GET",
+        data: { companyId: companyIdParam },
+        dataType: "json",
+        success: function (response) {
+            var data = response
+            const selectVehicleType = document.getElementById(dropdownId);
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Vehicle Type";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            selectVehicleType.appendChild(placeholderOption);
+
+            data.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.vehicleTypeId;
+                option.textContent = item.vehicleTypeName;
+                selectVehicleType.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Vehicle Type!", "Error");
+        }
+    });
+}
+function GetAllItemName(dropdownId, companyIdParam) {
+    $.ajax({
+        url: '/Product/GetDrpProductList', 
+        type: "GET",
+        data: { companyId: companyIdParam },
+        dataType: "json",
+        success: function (response) {
+            var data = response
+            const selectItemName = document.getElementById(dropdownId);
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select an Item Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            selectItemName.appendChild(placeholderOption);
+
+            data.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.itemId;
+                option.textContent = item.itemName;
+                selectItemName.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Product List!", "Error");
         }
     });
 }

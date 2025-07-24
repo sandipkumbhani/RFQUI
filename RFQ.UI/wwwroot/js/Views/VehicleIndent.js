@@ -14,9 +14,9 @@ $(document).ready(function () {
     FetchIndentNo();
     GetAllStateList("ddlOrigin");
     GetAllStateList("ddlDestination");
-    GetAllCustomer("ddlCustomerName");
-    GetAllVehicleType("ddlVehicleType");            
-    GetAllItemName("ddlItemName");
+    GetAllCustomer("ddlCustomerName",companyId);
+    GetAllVehicleType("ddlVehicleType",companyId);            
+    GetAllItemName("ddlItemName", companyId );
     GetAllPakingType("ddlPackingType");
     if (profileId == EnumProfile.Branch) {
         $("#ddlLocation").val()

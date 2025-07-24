@@ -22,9 +22,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehicleAdaptor.GetVehicleKycDetails(vehicleKycRequestDto);
         }
-        public async Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType()
+        public async Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType(int companyId)
         {
-            return await _vehicleAdaptor.GetAllMasterVehicleType();
+            return await _vehicleAdaptor.GetAllMasterVehicleType(companyId);
         }
         public async Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor()
         {

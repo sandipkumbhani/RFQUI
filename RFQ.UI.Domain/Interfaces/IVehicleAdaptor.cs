@@ -13,7 +13,7 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> DeleteVehicle(int vehicleId);
         Task<IEnumerable<InternalMasterModel>> GetAllVehicleCategory();
         Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto vehicleKycRequestDto);
-        Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType();
+        Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType(int companyId); 
         Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor();
         Task<List<VehicleResponseDto?>> GetVehicleNumber();
     }
