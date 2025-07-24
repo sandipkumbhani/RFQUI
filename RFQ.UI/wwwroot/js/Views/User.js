@@ -30,6 +30,7 @@ $(document).ready(function () {
         $('th.sortable').not(this).data('order', 'asc');
 
         FetchDataForTable('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
+
     });
     Initialization();
     GetAllLocation();
@@ -38,13 +39,21 @@ $(document).ready(function () {
     GetAllUser();
     FetchUser();
 });
+
 $("#btnAddUser").on("click", function (e) {
     e.preventDefault();
     $("#userListSection").hide();
     $("#userFormSection").show();
     $('#ddlCompanyAndFranchise').val(Number(companyid)).trigger('change');
+
     if (profileid != EnumProfile.Admin)
         $('#ddlCompanyAndFranchise').prop('disabled', true);
+    if (profileid == EnumProfile.Branch) {
+        var loginUser = decodeURIComponent(getCookieValue('UserEmail'));
+        var locationFilter = viewModelDto.filter(x => x.emailId == loginUser)[0];
+        $('#ddlLocation').val(Number(locationFilter.locationId)).trigger('change');
+        $('#ddlLocation').prop('disabled', true);
+    }
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -236,6 +245,10 @@ function EditUser(userId) {
     }
     if (profileid != EnumInternalMaster.ADMIN) {
         $('#ddlCompanyAndFranchise').prop('disabled', true);
+    }
+    if (profileid == EnumProfile.Branch) {
+        $('#ddlLocation').val(Number(formdata.locationId)).trigger('change');
+        $('#ddlLocation').prop('disabled', true);
     }
 }
 function DeleteUser(userId) {

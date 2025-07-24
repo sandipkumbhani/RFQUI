@@ -30,9 +30,9 @@ namespace RFQ.UI.Application.Provider
         {
             return _usersAdaptor.GetAllUser(pagingParam);
         }
-        public Task<string> GetUsers(int userId)
+        public Task<UserResponseDto> GetUserById(int userId)
         {
-            throw new NotImplementedException();
+            return _usersAdaptor.GetUserById(userId);
         }
         public async Task<IEnumerable<CompanyAndFranchiseListDto>> GetAllCompanyAndFranchise()
         {

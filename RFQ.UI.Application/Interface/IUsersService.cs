@@ -6,7 +6,7 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IUsersService
     {
-        Task<string> GetUsers(int userId);
+        Task<UserResponseDto> GetUserById(int userId);
         Task<PageList<UserResponseDto>> GetAllUser(PagingParam pagingParam);
         Task<string> AddUsers(UserRequestDto userRequestDto);
         Task<string> EditUsers(int UserId, UserRequestDto userRequestDto);
