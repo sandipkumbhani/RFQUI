@@ -9,5 +9,6 @@
         public bool IsEdit { get; set; }
         public bool IsView { get; set; }
         public bool IsCancel { get; set; }
+        public int LinkGroupId { get; set; }
     }
 }
