@@ -5,6 +5,7 @@ using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using System.ComponentModel.Design;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -236,13 +237,13 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<IEnumerable<CustomerRequestDto>> GetDrpCustomerList()
+        public async Task<IEnumerable<CustomerRequestDto>> GetDrpCustomerList(int companyId)
         {
             try
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = _fleetLynkApiUrl + _config["Customer:GetDrpCustomerList"];
+                var url = $"{_fleetLynkApiUrl}{_config["Customer:GetDrpCustomerList"]}?companyId={companyId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -253,11 +254,12 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseData = await response.Content.ReadAsStringAsync();
                 if (string.IsNullOrWhiteSpace(responseData))
                     return null;
+
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
-                    var coustomerList = JsonConvert.DeserializeObject<List<CustomerRequestDto>>(Convert.ToString(responseModel.Data!));
-                    return coustomerList;
+                    var customerList = JsonConvert.DeserializeObject<List<CustomerRequestDto>>(Convert.ToString(responseModel.Data!));
+                    return customerList;
                 }
                 return null;
             }

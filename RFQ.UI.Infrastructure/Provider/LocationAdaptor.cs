@@ -106,16 +106,16 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception)
             {
                 throw;
-            }
+            } 
         }
-        public async Task<IEnumerable<LocationResponseDto>> GetAllLocationList()
+        public async Task<IEnumerable<LocationResponseDto>> GetAllLocationList(int companyId)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Location:GetAllLocationList"]);
-
+                var baseUrl = $"{_fleetLynkApiUrl}{_config["Location:GetAllLocationList"]}?companyId={companyId}";
+                var response = await _httpClient.GetAsync(baseUrl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)

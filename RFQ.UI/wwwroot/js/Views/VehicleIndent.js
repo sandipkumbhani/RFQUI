@@ -1,4 +1,8 @@
-﻿$(document).ready(function () {
+﻿var companyId;
+var profileId;
+$(document).ready(function () {
+    companyId = getCookieValue('companyid');
+    profileId = getCookieValue('profileid');
     CheckValidation();
     $("#btnSave, #btnsaveandnew").on('click', function () {
         var action = $(this).data('action');
@@ -6,14 +10,17 @@
             SaveVehicleIndent(action);
         }
     });
-    GetAllLocation();
+    GetAllLocation("ddlLocation", companyId);
     FetchIndentNo();
     GetAllStateList("ddlOrigin");
     GetAllStateList("ddlDestination");
-    GetAllCustomer("ddlCustomerName");
-    GetAllVehicleType("ddlVehicleType"); 
-    GetAllItemName("ddlItemName");
+    GetAllCustomer("ddlCustomerName",companyId);
+    GetAllVehicleType("ddlVehicleType",companyId);            
+    GetAllItemName("ddlItemName", companyId );
     GetAllPakingType("ddlPackingType");
+    if (profileId == EnumProfile.Branch) {
+        $("#ddlLocation").val()
+    }
 });
 function CheckValidation() {
     $("#ddlLocation").on("keypress", function () {
@@ -111,33 +118,6 @@ function OnSubmitCheckValidation() {
         return false;
     }
     return true;
-}
-function GetAllLocation() {
-    $.ajax({
-        url: '/Location/GetAllLocationList',
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            var data = response
-            const selectLocation = document.getElementById("ddlLocation");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select Location";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            selectLocation.appendChild(placeholderOption);
-            data.forEach(option => {
-                let opt = document.createElement("option");
-                opt.value = option.locationId;
-                opt.textContent = option.locationName;
-                selectLocation.appendChild(opt);
-            });
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
 }
 function SaveVehicleIndent(action) {
     var saveUrl = '/VehicleIndent/AddVehicleIndent';

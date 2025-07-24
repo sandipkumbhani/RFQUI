@@ -303,14 +303,14 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllMasterVehicleType()
+        public async Task<IActionResult> GetAllMasterVehicleType([FromQuery] int companyId)
         {
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 int profileID = Convert.ToInt32(profileid);
-                var vehicleCategoryList = await _vehicleServices.GetAllMasterVehicleType();
+                var vehicleCategoryList = await _vehicleServices.GetAllMasterVehicleType(companyId);
                 if (vehicleCategoryList != null && vehicleCategoryList.Count() > 0)
                 {
                     return Json(vehicleCategoryList);

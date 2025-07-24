@@ -1,5 +1,7 @@
-﻿$(document).ready(function () {
+﻿var companyId;
 
+$(document).ready(function () {
+    companyId = getCookieValue('companyid');
     $('#ddlIndentNo').on('change', function () {
         
         const selectedValue = $(this).val();
@@ -48,7 +50,7 @@
             $("#ddlOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');            
         }
     });
-    GetAllLocation(); 
+    GetAllLocation("ddlLocation",companyId); 
     GetAllDriver();
     GetAllVehicleIndent();
     GetAllVehicleNumber();
@@ -59,34 +61,6 @@
     GetAllCustomer("ddlCustomerName");
     GetAllVehicleType("ddlVehicleType");
 });
-
-function GetAllLocation() {
-    $.ajax({
-        url: '/Location/GetAllLocationList',
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            var data = response
-            const selectLocation = document.getElementById("ddlLocation");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select Location";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            selectLocation.appendChild(placeholderOption);
-            data.forEach(option => {
-                let opt = document.createElement("option");
-                opt.value = option.locationId;
-                opt.textContent = option.locationName;
-                selectLocation.appendChild(opt);
-            });
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
 function GetAllDriver() {
     $.ajax({
         url: '/Driver/GetAllDriverList',

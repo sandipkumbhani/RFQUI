@@ -184,11 +184,11 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        public async Task<IActionResult> GetDrpCustomerList()
+        public async Task<IActionResult> GetDrpCustomerList([FromQuery] int companyId)
         {
             try
             {
-                var result = await _customerServices.GetDrpCustomerList();
+                var result = await _customerServices.GetDrpCustomerList(companyId);
                 if (Request.IsAjaxRequest())
                     return Json(result);
                 else

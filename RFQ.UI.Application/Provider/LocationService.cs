@@ -29,9 +29,9 @@ namespace RFQ.UI.Application.Provider
         {
             return _locationAdaptor.GetAllLocation(pagingParam);
         }
-        public Task<IEnumerable<LocationResponseDto>> GetAllLocationList()
+        public Task<IEnumerable<LocationResponseDto>> GetAllLocationList(int companyId)
         {
-            return _locationAdaptor.GetAllLocationList();
+            return _locationAdaptor.GetAllLocationList(companyId);
         }
     }
 }

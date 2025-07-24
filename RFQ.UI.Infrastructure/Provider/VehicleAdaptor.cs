@@ -80,13 +80,14 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType()
+        public async Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType(int companyId)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Vehicle:GetAllVehicleType"]);
+                var url = $"{_fleetLynkApiUrl}{_config["Vehicle:GetAllVehicleType"]}?companyId={companyId}";
+                var response = await _httpClient.GetAsync(url);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)

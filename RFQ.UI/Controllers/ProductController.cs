@@ -133,11 +133,11 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        public async Task<IActionResult> GetDrpProductList()
+        public async Task<IActionResult> GetDrpProductList([FromQuery] int companyId)
         {
             try
             {
-                var result = await _productService.GetDrpProductList();
+                var result = await _productService.GetDrpProductList(companyId);
                 if (Request.IsAjaxRequest())
                     return Json(result);
                 else

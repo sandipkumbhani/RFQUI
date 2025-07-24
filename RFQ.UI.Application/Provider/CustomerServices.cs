@@ -47,9 +47,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _customerAdaptor.GetAllCity();
         }
-        public async Task<IEnumerable<CustomerRequestDto>> GetDrpCustomerList()
+        public async Task<IEnumerable<CustomerRequestDto>> GetDrpCustomerList(int companyId)
         {
-            return await _customerAdaptor.GetDrpCustomerList();
+            return await _customerAdaptor.GetDrpCustomerList(companyId);
         }
     }
 }
