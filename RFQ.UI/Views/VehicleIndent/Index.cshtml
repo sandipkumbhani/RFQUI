@@ -23,7 +23,7 @@
 						<div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label">Location <span>*</span></label>
-								<select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
+								<select class="select2-custom form-control" id="ddlLocation" data-control="select2" style="width: 100%;">
 								</select>
 							</div>
 						</div>
@@ -34,17 +34,17 @@
 							</div>
 						</div>
 						<div class="col-lg-3">
-							<div class="item-input">
-								<label class="form-label">Indent Date</label>
-                                <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtIndentDate" />
-							</div>
+                            <div class="item-input">  
+                               <label class="form-label">Indent Date</label>  
+                               <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtIndentDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" />  
+                            </div>
 						</div>
-						<div class="col-lg-3">
-							<div class="item-input">
-								<label class="form-label ">Vehicle Req On</label>
-								<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
-							</div>
-						</div>
+                        <div class="col-lg-3">  
+                           <div class="item-input">  
+                               <label class="form-label ">Vehicle Req On</label>  
+                               <input type="date" onfocus="this.min=new Date(new Date(document.getElementById('txtIndentDate').value).setDate(new Date(document.getElementById('txtIndentDate').value).getDate() + 1)).toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
+                           </div>  
+                        </div>
 						<div class="col-lg-6">
 							<div class="item-input">
 								<label class="form-label">Customer Name</label>
@@ -90,7 +90,9 @@
 						<div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label ">Indent Expired On</label>
-								<input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" />
+								<input type="datetime-local"
+                                       onfocus="this.min=new Date(new Date(document.getElementById('txtVehicleReqDate').value).setDate(new Date(document.getElementById('txtVehicleReqDate').value).getDate() + 1)).toISOString().slice(0, 16)"  
+                                       class="form-control" id="txtRfqExpiredOn" />
 							</div>
 						</div>
 					</div>
@@ -98,12 +100,13 @@
 					<div class="Additional Details">
 						<h3 class="page-form-title">Additional Details</h3>
 						<div class="row all-custom-class">
-							<div class="col-lg-6">
-								<div class="item-input">
-									<label class="form-label">Consignor</label>
-									<input type="text" class="form-control" placeholder="Text" id="txtConsignor" maxlength="100"/>
-								</div>
-							</div>
+                            <div class="col-lg-6">  
+                               <div class="item-input">  
+                                   <label class="form-label">Consignor</label>  
+                                   <select id="ddlConsignorInput" class="select2-custom form-control" data-control="select2" style="width:100%;" data-tags="true">  
+                                   </select>  
+                               </div>  
+                            </div>
 							<div class="col-lg-6">
 								<div class="item-input">
 									<label class="form-label">Pickup Address</label>
@@ -113,7 +116,8 @@
 							<div class="col-lg-6">
 								<div class="item-input">
 									<label class="form-label">Consignee</label>
-									<input type="text" class="form-control" placeholder="Text" id="txtConsignee" maxlength="100"/>
+									<select id="ddlConsigneeInput" class="select2-custom form-control" ata-control="select2" style="width:100%;" data-tags="true">
+									</select>
 								</div>
 							</div>
 							<div class="col-lg-6">

@@ -28,6 +28,7 @@
         EVENT_TYPE = 7,
         VEHICLE_CATEGORY = 8,
         SMS_PROVIDER = 9,
-        WHATSAPP_PROVIDER = 10
+        WHATSAPP_PROVIDER = 10,
+        RFQ_STATUS = 11
     }
 }

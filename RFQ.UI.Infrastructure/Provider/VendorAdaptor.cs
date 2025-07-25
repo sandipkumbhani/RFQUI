@@ -181,7 +181,7 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<IEnumerable<VendorListResponseDto>?> GetAllVendorList()
+        public async Task<IEnumerable<VendorListResponseDto>?> GetAllVendorList(int companyId)
         {
             try
             {
@@ -189,7 +189,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = _fleetLynkApiUrl + _config["Vendor:GetAllVendorList"];
+                var url = $"{_fleetLynkApiUrl}{_config["Vendor:GetAllVendorList"]}?companyId={companyId}";
                 var response = await httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
