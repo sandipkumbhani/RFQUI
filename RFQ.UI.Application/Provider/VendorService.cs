@@ -33,9 +33,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vendorAdaptor.GetAllInternalMaster();
         }
-        public async Task<IEnumerable<VendorListResponseDto>> GetAllVendorList()
+        public async Task<IEnumerable<VendorListResponseDto>> GetAllVendorList(int companyId)
         {
-            return await _vendorAdaptor.GetAllVendorList();
+            return await _vendorAdaptor.GetAllVendorList(companyId);
         }
 
         public async Task<PageList<VendorResponseDto>> GetAllVendor(PagingParam pagingParam)

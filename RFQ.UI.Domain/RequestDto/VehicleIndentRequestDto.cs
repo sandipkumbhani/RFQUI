@@ -17,9 +17,9 @@
         public int VehicleTypeId { get; set; }
         public int RequiredVehicles { get; set; }
         public DateTime ExpiryDate { get; set; }
-        public int? ConsignerId { get; set; } = 0;
+        public int? ConsignerId { get; set; }
         public string? ConsignerName { get; set; }
-        public int? ConsigneeId { get; set; } = 0;
+        public int? ConsigneeId { get; set; } 
         public string? ConsigneeName { get; set; }
         public string? PickUpAddress { get; set; }
         public string? DeliveryAddress { get; set; }

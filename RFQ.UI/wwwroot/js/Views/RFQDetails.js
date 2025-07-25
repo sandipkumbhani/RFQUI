@@ -39,6 +39,8 @@ $(document).ready(function () {
     });
     GetAllLocation("ddlLocation",companyId);
     GetAllVehicleIndent();
+    GetRfqType();
+    GetRfqPriority();
     FetchVendorData();
     FetchRfqNo();
     GetAllVendorList();
@@ -47,9 +49,9 @@ $(document).ready(function () {
     SaveRfqVendorDetails();
     GetAllStateList("ddlOrigin");
     GetAllStateList("ddlDestination");
-    GetAllCustomer("ddlCustomerName");
-    GetAllVehicleType("ddlVehicleType");
-    GetAllItemName("ddlItemName");
+    GetAllCustomer("ddlCustomerName", companyId);
+    GetAllVehicleType("ddlVehicleType", companyId);
+    GetAllItemName("ddlItemName", companyId);
     GetAllPakingType("ddlPackingType");
 });
 function CheckValidation() {
@@ -172,6 +174,66 @@ function GetAllVehicleIndent() {
         }
     });
 }
+function GetRfqType() {
+    var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
+    $.ajax({
+        url: getInternalMasterUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.RFQ_TYPE);
+            const select = document.getElementById("ddlRfqType");
+            select.innerHTML = "";
+
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a RFQ Type";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            internalData.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.internalMasterId;
+                opt.textContent = option.internalMasterName;
+                select.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
+function GetRfqPriority() {
+    var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
+    $.ajax({
+        url: getInternalMasterUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.RFQ_PRIORITY);
+            const select = document.getElementById("ddlRfqPriority");
+            select.innerHTML = "";
+
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a RFQ Priority";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            internalData.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.internalMasterId;
+                opt.textContent = option.internalMasterName;
+                select.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
 function FetchRfqNo() {
     $.ajax({
         url: "/RequestForQuote/GetRfqNo",
@@ -190,6 +252,7 @@ function GetAllVendorList() {
     $.ajax({
         url: getUrl,
         type: "GET",
+        data: { companyId: companyId },
         contentType: "application/json",
         success: function (response) {
             fetchedVendorDataList = response;

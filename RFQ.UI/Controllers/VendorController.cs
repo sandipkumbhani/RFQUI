@@ -167,11 +167,11 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllVendorList()
+        public async Task<IActionResult> GetAllVendorList([FromQuery]int companyId)
         {
             try
             {
-                var vendorList = await _vendorService.GetAllVendorList();
+                var vendorList = await _vendorService.GetAllVendorList(companyId);
 
                 if (Request.IsAjaxRequest())
                 {

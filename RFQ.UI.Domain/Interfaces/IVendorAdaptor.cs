@@ -11,6 +11,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> EditVendor(int PartyId, VendorRequestDto vendorRequestDto);
         Task<string> DeleteVendor(int PartyId);
         Task<IEnumerable<InternalMasterResponseDto>> GetAllInternalMaster();
-        Task<IEnumerable<VendorListResponseDto>?> GetAllVendorList();
+        Task<IEnumerable<VendorListResponseDto>?> GetAllVendorList(int companyId);
     }
 }

@@ -1,50 +1,99 @@
 ﻿var companyId;
 var profileId;
+var locationId;
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
+    locationId = getCookieValue('locationid');
     CheckValidation();
+    GetAllLocation("ddlLocation", companyId);
+    FetchIndentNo();
+    GetAllStateList("ddlOrigin");
+    GetAllStateList("ddlDestination");
+    GetAllVehicleType("ddlVehicleType", companyId);
+    GetAllCustomer("ddlCustomerName", companyId);
+    GetAllItemName("ddlItemName", companyId);
+    GetAllConsignorList();
+    GetAllConsigneeList();
+    GetAllPakingType("ddlPackingType");
+    if (profileId == EnumProfile.Branch) {
+        setTimeout(function () {
+            $('#ddlLocation').val(Number(locationId)).trigger('change');
+            $('#ddlLocation').prop('disabled', true);
+        }, 200);
+    }
     $("#btnSave, #btnsaveandnew").on('click', function () {
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
             SaveVehicleIndent(action);
         }
     });
-    GetAllLocation("ddlLocation", companyId);
-    FetchIndentNo();
-    GetAllStateList("ddlOrigin");
-    GetAllStateList("ddlDestination");
-    GetAllCustomer("ddlCustomerName",companyId);
-    GetAllVehicleType("ddlVehicleType",companyId);            
-    GetAllItemName("ddlItemName", companyId );
-    GetAllPakingType("ddlPackingType");
-    if (profileId == EnumProfile.Branch) {
-        $("#ddlLocation").val()
-    }
 });
+function GetAllConsignorList() {
+    var getUrl = '/Vendor/GetAllVendorList'
+    $.ajax({
+        url: getUrl,
+        type: "GET",
+        data: { companyId: companyId },
+        contentType: "application/json",
+        success: function (response) {
+            const consignorListDropdown = document.getElementById("ddlConsignorInput");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select or Add a Consignor Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            consignorListDropdown.appendChild(placeholderOption);
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.partyId;
+                option.textContent = item.partyName;
+                consignorListDropdown.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Consignor Name!", "Error");
+        }
+    });
+}
+function GetAllConsigneeList() {
+    $.ajax({
+        url: '/Customer/GetDrpCustomerList',
+        type: "GET",
+        data: { companyId: companyId },
+        dataType: "json",
+        success: function (response) {
+            const selectConsignee = document.getElementById("ddlConsigneeInput");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select or Add a Consignee Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            selectConsignee.appendChild(placeholderOption);
+            response.forEach(name => {
+                const option = document.createElement("option");
+                option.value = name.partyId;
+                option.textContent = name.partyName;
+                selectConsignee.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Consignee Name!", "Error");
+        }
+    });
+}
 function CheckValidation() {
-    $("#ddlLocation").on("keypress", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please Select a Location", "Validation Error");
-            return;
+    $("#txtVehicleReqDate").on("change", function () {
+        if ($(this).val() <= $('#txtIndentDate').val()) {
+            toastr.warning("Vehicle Req On date must be greater than Indent Date.", "Warning");
+            $(this).val('');
         }
     });
-    $("#txtIndentNo").on("blur", function () {
-        if (!IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a Indent No", "Validation Error");
-            return;
-        }
-    });
-    $("#txtIndentDate").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a Indent Date", "Validation Error");
-            return;
-        }
-    });
-    $("#txtVehicleReqDate").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a Vehicle Req On", "Validation Error");
-            return;
+    $("#txtRfqExpiredOn").on("change", function () {
+        var expireDate = $(this).val().split('T')[0];
+        if (expireDate <= $('#txtVehicleReqDate').val()) {
+            toastr.warning("Indent Expired On date must be greater than Vehicle Req On Date.", "Warning");
+            $(this).val('');
         }
     });
 }
@@ -89,7 +138,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Indent Expired On", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtConsignor").val())) {
+    if (IsNullOrEmpty($("#ddlConsignorInput").val())) {
         toastr.warning("Please enter a Consignor", "Validation Error");
         return false;
     }
@@ -97,7 +146,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Pickup Address", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtConsignee").val())) {
+    if (IsNullOrEmpty($("#ddlConsigneeInput").val())) {
         toastr.warning("Please enter a Consignee", "Validation Error");
         return false;
     }
@@ -121,6 +170,8 @@ function OnSubmitCheckValidation() {
 }
 function SaveVehicleIndent(action) {
     var saveUrl = '/VehicleIndent/AddVehicleIndent';
+    var consignorResult = GetDropdownValue("ddlConsignorInput");
+    var consigneeResult = GetDropdownValue("ddlConsignorInput");
     const formData = {
         IndentNo: $('#txtIndentNo').val(),
         LocationId: $('#ddlLocation').val(),
@@ -132,8 +183,10 @@ function SaveVehicleIndent(action) {
         VehicleTypeId: $('#ddlVehicleType').val(),
         RequiredVehicles: $('#txtNoofVehicles').val(),
         ExpiryDate: $('#txtRfqExpiredOn').val(),
-        ConsignerName: $('#txtConsignor').val(),
-        ConsigneeName: $('#txtConsignee').val(),
+        ConsignerId: consignorResult.id,
+        ConsignerName: consignorResult.name,
+        ConsigneeId: consigneeResult.id,
+        ConsigneeName: consigneeResult.name,
         PickUpAddress: $('#txtPickupAddress').val(),
         DeliveryAddress: $('#txtDeliveryAddress').val(),
         ItemId: $('#ddlItemName').val(),
@@ -201,4 +254,20 @@ function FetchIndentNo() {
         }
     });
 }
-
+function GetDropdownValue(inputId) {
+    const selectedValue = $("#" + inputId).val();
+    const selectedText = $("#" + inputId).find("option:selected").text();
+    let result;
+    if (selectedValue === selectedText) {
+        result = {
+            id: 0,
+            name: selectedValue
+        };
+    } else {
+        result = {
+            id: selectedValue,
+            name: selectedText
+        };
+    }
+    return result;
+}
