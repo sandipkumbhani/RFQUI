@@ -55,7 +55,6 @@ $("#btnAddUser").on("click", function (e) {
 
     if (profileid != EnumProfile.Admin)
         $('#ddlCompanyAndFranchise').prop('disabled', true);
-    
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
