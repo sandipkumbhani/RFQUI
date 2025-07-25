@@ -76,7 +76,6 @@ function fetchVendorList() {
             vendorlist = data;
             const select = document.getElementById("ddlVendor");
             select.innerHTML = "";
-            debugger;
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a Category";

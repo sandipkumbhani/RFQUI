@@ -7,6 +7,7 @@
 
 @section Scripts {
 	<script src="~/js/views/VehicleIndent.js"></script>
+	<script src="~/js/Map.js"></script>
 }
 
 <div class="row">
@@ -52,20 +53,55 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-lg-3">
+						@* <div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label ">Origin/From</label>
 								<select class="select2-custom form-control" data-control="select2" id="ddlOrigin" style="width: 100%;">
 								</select>
 							</div>
+						</div> *@
+						<div class="col-lg-3">
+							<div class="item-input">
+								<label class="form-label" style="font-size: 14px;">* Origin/From</label>
+								<div style="display: flex; align-items: center; gap: 6px;">
+									<!-- Dropdown with same classes as customer name -->
+									<select class="select2-custom form-control" data-control="select2" id="ddlOrigin" style="flex: 1;">
+										<!-- options go here -->
+									</select>
+									<!-- Map Icon -->
+									<a href="#" onclick="openMapPopup()" title="Open Map" style="flex-shrink: 0;">
+										<img src="https://cdn-icons-png.flaticon.com/512/684/684908.png"
+											 alt="Map Pin"
+											 style="width: 20px; height: 20px;">
+									</a>
+								</div>
+							</div>
+						</div>
+						<div id="mapModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog">
+							<div class="modal-dialog modal-xl" role="document">
+								<div class="modal-content" id="mapModalContent" style="width: 100%;max-width: 80%;">
+									<!-- _MapPartial will load here -->
+								</div>
+							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="item-input">
-								<label class="form-label">Destination/To</label>
-								<select class="select2-custom form-control" data-control="select2" id="ddlDestination" style="width: 100%;">
-								</select>
+								<label class="form-label" style="font-size: 14px;">* Destination/To</label>
+								<div style="display: flex; align-items: center; gap: 6px;">
+									<!-- Dropdown -->
+									<select class="select2-custom form-control" data-control="select2" id="ddlDestination" style="flex: 1;">
+										<!-- options go here -->
+									</select>
+									<!-- Map Icon -->
+									<a href="#" onclick="openMapPopup('destination')" title="Open Map" style="flex-shrink: 0;">
+										<img src="https://cdn-icons-png.flaticon.com/512/684/684908.png"
+											 alt="Map Pin"
+											 style="width: 20px; height: 20px;">
+									</a>
+								</div>
 							</div>
 						</div>
+
 						<div class="col-lg-3">
 							<div class="item-input">
 								<label class="form-label">Vehicle Type</label>

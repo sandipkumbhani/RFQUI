@@ -53,9 +53,11 @@ function GetAllConsignorList() {
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Consignor Name!", "Error");
+            $("#ddlLocation").val()
         }
+
     });
-}
+};
 function GetAllConsigneeList() {
     $.ajax({
         url: '/Customer/GetDrpCustomerList',

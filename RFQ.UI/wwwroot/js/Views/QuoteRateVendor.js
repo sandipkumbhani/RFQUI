@@ -313,7 +313,6 @@ function Save(action) {
         DetentionFreeDay : DetentionFreeDays
     };
     if (action == "save") {
-        debugger;
         $.ajax({
             url: '/RFQRate/SaveQuoteRateVendor/',
             type: "POST",
