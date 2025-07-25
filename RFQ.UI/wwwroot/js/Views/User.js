@@ -48,12 +48,6 @@ $("#btnAddUser").on("click", function (e) {
 
     if (profileid != EnumProfile.Admin)
         $('#ddlCompanyAndFranchise').prop('disabled', true);
-    if (profileid == EnumProfile.Branch) {
-        var loginUser = decodeURIComponent(getCookieValue('UserEmail'));
-        var locationFilter = viewModelDto.filter(x => x.emailId == loginUser)[0];
-        $('#ddlLocation').val(Number(locationFilter.locationId)).trigger('change');
-        $('#ddlLocation').prop('disabled', true);
-    }
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {

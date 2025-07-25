@@ -1,115 +1,100 @@
-﻿(function () {
-    let map;
-    let marker;
-    let geocoder;
-    let autocomplete;
+﻿let autocompleteService;
+let geocoder;
 
-    window.initMap = function () {
-        const defaultLocation = { lat: 20.5937, lng: 78.9629 }; // India center
+// Google Maps API will call this function automatically after loading
+function initMap() {
+    autocompleteService = new google.maps.places.AutocompleteService();
+    geocoder = new google.maps.Geocoder();
 
-        map = new google.maps.Map(document.getElementById("map"), {
-            center: defaultLocation,
-            zoom: 5,
-        });
+    // Initialize both inputs
+    setupLocationSearch(
+        "from-search-box",
+        "from-location-suggestions",
+        "fromLat",
+        "fromLng",
+        "fromState"
+    );
 
-        geocoder = new google.maps.Geocoder();
+    setupLocationSearch(
+        "to-search-box",
+        "to-location-suggestions",
+        "toLat",
+        "toLng",
+        "toState"
+    );
+}
 
-        const input = document.getElementById("search-box");
-        autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.bindTo("bounds", map);
+function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId) {
+    const input = document.getElementById(inputId);
+    const suggestionsBox = document.getElementById(suggestionListId);
 
-        autocomplete.addListener("place_changed", function () {
-            const place = autocomplete.getPlace();
-            if (!place.geometry) {
-                alert("No details available for input: '" + place.name + "'");
-                return;
-            }
+    input.addEventListener("input", function () {
+        let query = this.value.trim();
+        if (query.length > 2) {
+            autocompleteService.getPlacePredictions({
+                input: query,
+                componentRestrictions: { country: 'in' } // restrict to India
+            }, function (predictions, status) {
+                suggestionsBox.innerHTML = "";
+                if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+                    predictions.forEach(function (prediction) {
+                        let li = document.createElement("li");
+                        li.classList.add("list-group-item", "list-group-item-action");
+                        li.textContent = prediction.description;
 
-            map.setCenter(place.geometry.location);
-            map.setZoom(15);
-            placeMarker(place.geometry.location);
-            getLatLngState(place.geometry.location);
-        });
+                        li.addEventListener("click", function () {
+                            input.value = prediction.description;
+                            suggestionsBox.style.display = "none";
+                            getLatLngAndState(prediction.place_id, latId, lngId, stateId);
+                        });
 
-        map.addListener("click", function (event) {
-            placeMarker(event.latLng);
-            getLatLngState(event.latLng);
-        });
-
-        const locationButton = document.createElement("button");
-        locationButton.textContent = "📍 Current Location";
-        locationButton.classList.add("btn", "btn-sm", "btn-primary", "mt-2");
-        locationButton.style.position = "absolute";
-        locationButton.style.top = "10px";
-        locationButton.style.right = "10px";
-        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(locationButton);
-
-        locationButton.addEventListener("click", () => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const pos = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude,
-                        };
-                        map.setCenter(pos);
-                        map.setZoom(15);
-                        placeMarker(pos);
-                        getLatLngState(pos);
-                    },
-                    () => {
-                        alert("Geolocation failed.");
-                    }
-                );
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        });
-    };
-
-    function placeMarker(location) {
-        if (marker) {
-            marker.setPosition(location);
-        } else {
-            marker = new google.maps.Marker({
-                position: location,
-                map: map,
-            });
-        }
-    }
-
-    function getLatLngState(latlng) {
-        const lat = latlng.lat ? latlng.lat() : latlng.lat;
-        const lng = latlng.lng ? latlng.lng() : latlng.lng;
-
-        document.getElementById("latitude").value = lat.toFixed(6);
-        document.getElementById("longitude").value = lng.toFixed(6);
-
-        geocoder.geocode({ location: { lat, lng } }, function (results, status) {
-            if (status === "OK") {
-                if (results[0]) {
-                    const components = results[0].address_components;
-                    const stateComponent = components.find(c => c.types.includes("administrative_area_level_1"));
-                    const state = stateComponent ? stateComponent.long_name : "N/A";
-                    document.getElementById("state").value = state;
+                        suggestionsBox.appendChild(li);
+                    });
+                    suggestionsBox.style.display = "block";
                 } else {
-                    alert("No results found");
+                    suggestionsBox.style.display = "none";
                 }
-            } else {
-                alert("Geocoder failed due to: " + status);
-            }
-        });
-    }
-
-    window.openMapPopup = function () {
-        $("#mapModalContent").load("/Map/MapPartial", function () {
-            $("#mapModal").modal("show");
-
-            // Wait for modal to be shown before initializing map
-            $('#mapModal').on('shown.bs.modal', function () {
-                initMap();
             });
-        });
-    };
+        } else {
+            suggestionsBox.style.display = "none";
+        }
+    });
 
-})();
+    // Hide suggestions when clicking outside
+    document.addEventListener("click", function (e) {
+        if (!input.contains(e.target) && !suggestionsBox.contains(e.target)) {
+            suggestionsBox.style.display = "none";
+        }
+    });
+}
+
+function getLatLngAndState(placeId, latId, lngId, stateId) {
+    geocoder.geocode({ placeId: placeId }, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK && results[0]) {
+            let location = results[0].geometry.location;
+            let lat = location.lat();
+            let lng = location.lng();
+            let state = "";
+
+            results[0].address_components.forEach(function (component) {
+                if (component.types.includes("administrative_area_level_1")) {
+                    state = component.long_name;
+                }
+            });
+
+            // Log values in console
+            console.log("Selected Location Details:");
+            console.log("Latitude:", lat.toFixed(6));
+            console.log("Longitude:", lng.toFixed(6));
+            console.log("State:", state);
+
+            // Store values in hidden inputs
+            document.getElementById(latId).value = lat.toFixed(6);
+            document.getElementById(lngId).value = lng.toFixed(6);
+            document.getElementById(stateId).value = state;
+        } else {
+            console.error("Geocoder failed or no result:", status);
+        }
+    });
+}
+

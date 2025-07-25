@@ -175,31 +175,37 @@ namespace RFQ.UI.Infrastructure.Provider
                 using var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                
+
                 var baseUrl = _fleetLynkApiUrl + _config["Users:GetUserById"] + userId;
 
                 var response = await httpClient.GetAsync(baseUrl);
                 response.EnsureSuccessStatusCode();
                 var responseData = await response.Content.ReadAsStringAsync();
-                var user = JsonConvert.DeserializeObject<UserResponseDto>(responseData);
-
-                if (user != null)
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                //var user = JsonConvert.DeserializeObject<UserResponseDto>(responseData);
+                if (responseModel != null && responseModel.Data != null)
                 {
+                    var json = JsonConvert.SerializeObject(responseModel.Data);
+                    var user = JsonConvert.DeserializeObject<UserResponseDto>(json);
                     var userResponse = new UserResponseDto
                     {
                         UserId = user.UserId,
                         CompanyId = user.CompanyId,
-                        PersonName = user.PersonName,
-                        EmailId = user.EmailId,
                         LocationId = user.LocationId,
                         ProfileId = user.ProfileId,
-                        StatusId= user.StatusId,
-                        // map other fields accordingly
+                        Company = user.Company,
+                        CreatedBy = user.CreatedBy,
+                        Location = user.Location,
+                        LoginId = user.LoginId,
+                        MobileNo = user.MobileNo,
+                        UpdatedBy = user.UpdatedBy,
+                        PersonName = user.PersonName,
+                        EmailId = user.EmailId,
+                        StatusId = user.StatusId,
                     };
 
                     return userResponse;
                 }
-
                 return null;
             }
             catch (Exception ex)
