@@ -10,6 +10,7 @@
     <Folder Include="Infrastructure\" />
     <Folder Include="Views\CompanyConfiguration\" />
     <Folder Include="Views\CorporateCompany\" />
+    <Folder Include="Views\Map\" />
     <Folder Include="Views\Profile\" />
   </ItemGroup>
 

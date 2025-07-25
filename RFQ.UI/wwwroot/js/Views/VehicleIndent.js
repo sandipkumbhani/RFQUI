@@ -1,6 +1,8 @@
 ﻿var companyId;
 var profileId;
 $(document).ready(function () {
+    
+
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
     CheckValidation();
@@ -21,6 +23,7 @@ $(document).ready(function () {
     if (profileId == EnumProfile.Branch) {
         $("#ddlLocation").val()
     }
+   
 });
 function CheckValidation() {
     $("#ddlLocation").on("keypress", function () {
