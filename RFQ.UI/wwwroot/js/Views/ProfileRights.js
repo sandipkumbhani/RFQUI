@@ -133,7 +133,6 @@ function GetLinkItemList(linkGroupId, profileId) {
             var data = $.grep(response, function (x) {
                 return (x.profileId == parseInt(profileId) && x.linkGroupId == linkGroupId);
             });
-            debugger;
             if (data.length > 0) {
                 linkItemData = data;
 
@@ -350,10 +349,8 @@ function GetAllProfileRightsData() {
             dataType: "json",
             data: JSON.stringify(profileId),
             success: function (response) {
-                debugger;
                 const filtered = response.filter(item => item.linkGroupId === linkGroupId);
                 if (response.length > 0 && filtered.length > 0) {
-                    debugger;
                     AllProfileRightsData = [];
                     AllProfileRightsData = response;
                     AllProfileRightsData.forEach((item, index) => {
