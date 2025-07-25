@@ -2,6 +2,8 @@
 var companyId;
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
+    profileId = getCookieValue('profileid');
+    locationId = getCookieValue('locationid');
     //CheckValidation();
     $("#btnSaveType, #btnSaveAndNew").on('click', function () {
 
@@ -37,7 +39,12 @@ $(document).ready(function () {
 
         }
     });
-    GetAllLocation("ddlLocation",companyId);
+    GetAllLocation("ddlLocation", companyId, function () {
+        if (profileId == EnumProfile.Branch) {
+            $('#ddlLocation').val(Number(locationId)).trigger('change');
+            $('#ddlLocation').prop('disabled', true);
+        }
+    });
     GetAllVehicleIndent();
     GetRfqType();
     GetRfqPriority();

@@ -537,7 +537,7 @@ function GetAllPakingType(dropdownId) {
         }
     });
 }
-function GetAllLocation(dropdownId,companyIdParam) {
+function GetAllLocation(dropdownId,companyIdParam,callback) {
     $.ajax({
         url: '/Location/GetAllLocationList',
         type: "GET",
@@ -558,6 +558,9 @@ function GetAllLocation(dropdownId,companyIdParam) {
                 opt.textContent = option.locationName;
                 selectLocation.appendChild(opt);
             });
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");

@@ -6,7 +6,12 @@ $(document).ready(function () {
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
     CheckValidation();
-    GetAllLocation("ddlLocation", companyId);
+    GetAllLocation("ddlLocation", companyId, function () {
+        if (profileId == EnumProfile.Branch) {
+            $('#ddlLocation').val(Number(locationId)).trigger('change');
+            $('#ddlLocation').prop('disabled', true);
+        }
+    });
     FetchIndentNo();
     GetAllStateList("ddlOrigin");
     GetAllStateList("ddlDestination");
@@ -16,12 +21,7 @@ $(document).ready(function () {
     GetAllConsignorList();
     GetAllConsigneeList();
     GetAllPakingType("ddlPackingType");
-    if (profileId == EnumProfile.Branch) {
-        setTimeout(function () {
-            $('#ddlLocation').val(Number(locationId)).trigger('change');
-            $('#ddlLocation').prop('disabled', true);
-        }, 200);
-    }
+
     $("#btnSave, #btnsaveandnew").on('click', function () {
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {

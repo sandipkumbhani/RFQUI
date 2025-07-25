@@ -4,11 +4,13 @@ var userResponseDto;
 var allUserList = [];
 var profileid = '';
 var companyid = ''
+var locationid;
 $(document).ready(function () {
 
     // Get profileid from cookies value and if user is admin then Disable location dropdwn
     profileid = getCookieValue('profileid');
     companyid = getCookieValue('companyid');
+    locationid = getCookieValue('locationid');
     if (profileid == EnumInternalMaster.ADMIN) {
         $('#ddlLocation').prop('disabled', true);
     }
@@ -33,7 +35,12 @@ $(document).ready(function () {
 
     });
     Initialization();
-    GetAllLocation("ddlLocation", companyid);
+    GetAllLocation("ddlLocation", companyid, function () {
+        if (profileid == EnumProfile.Branch) {
+            $('#ddlLocation').val(Number(locationid)).trigger('change');
+            $('#ddlLocation').prop('disabled', true);
+        }
+    });
     GetFranchiseAndCorporateName();
     UpdateUser();
     GetAllUser();
@@ -48,12 +55,7 @@ $("#btnAddUser").on("click", function (e) {
 
     if (profileid != EnumProfile.Admin)
         $('#ddlCompanyAndFranchise').prop('disabled', true);
-    if (profileid == EnumProfile.Branch) {
-        var loginUser = decodeURIComponent(getCookieValue('UserEmail'));
-        var locationFilter = viewModelDto.filter(x => x.emailId == loginUser)[0];
-        $('#ddlLocation').val(Number(locationFilter.locationId)).trigger('change');
-        $('#ddlLocation').prop('disabled', true);
-    }
+    
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {

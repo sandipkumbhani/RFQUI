@@ -53,13 +53,15 @@
 									<div class="col-lg-3">
 										<div class="item-input">
 											<label class="form-label">RFQ Date</label>
-											<input type="datetime-local" class="form-control" id="txtRfqDate" placeholder="Auto Generated" />
+											<input type="date" class="form-control" id="txtRfqDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="Auto Generated" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
 											<label class="form-label ">RFQ Expired On</label>
-											<input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" />
+											<input type="datetime-local"
+												   onfocus="this.min=new Date(new Date(document.getElementById('txtVehicleReqDate').value).setDate(new Date(document.getElementById('txtVehicleReqDate').value).getDate() + 1)).toISOString().slice(0, 16)"
+												   class="form-control" id="txtRfqExpiredOn" />
 										</div>
 									</div>
 									<div class="col-lg-3">
