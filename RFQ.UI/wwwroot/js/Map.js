@@ -27,25 +27,26 @@ function initMap() {
 function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId) {
     const input = document.getElementById(inputId);
     const suggestionsBox = document.getElementById(suggestionListId);
+    let currentFocus = -1;
 
     input.addEventListener("input", function () {
         let query = this.value.trim();
+        currentFocus = -1; // Reset focus
         if (query.length > 2) {
             autocompleteService.getPlacePredictions({
                 input: query,
-                componentRestrictions: { country: 'in' } // restrict to India
+                componentRestrictions: { country: 'in' }
             }, function (predictions, status) {
                 suggestionsBox.innerHTML = "";
                 if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-                    predictions.forEach(function (prediction) {
+                    predictions.forEach(function (prediction, index) {
                         let li = document.createElement("li");
                         li.classList.add("list-group-item", "list-group-item-action");
                         li.textContent = prediction.description;
+                        li.setAttribute("data-place-id", prediction.place_id);
 
                         li.addEventListener("click", function () {
-                            input.value = prediction.description;
-                            suggestionsBox.style.display = "none";
-                            getLatLngAndState(prediction.place_id, latId, lngId, stateId);
+                            selectPrediction(prediction);
                         });
 
                         suggestionsBox.appendChild(li);
@@ -60,7 +61,42 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId) {
         }
     });
 
-    // Hide suggestions when clicking outside
+    input.addEventListener("keydown", function (e) {
+        let items = suggestionsBox.getElementsByTagName("li");
+        if (e.key === "ArrowDown") {
+            currentFocus++;
+            highlightItem(items);
+        } else if (e.key === "ArrowUp") {
+            currentFocus--;
+            highlightItem(items);
+        } else if (e.key === "Enter") {
+            e.preventDefault(); // Prevent form submission
+            if (currentFocus > -1 && items[currentFocus]) {
+                items[currentFocus].click();
+            }
+        }
+    });
+
+    function highlightItem(items) {
+        if (!items || items.length === 0) return;
+        removeActive(items);
+        if (currentFocus >= items.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = items.length - 1;
+        items[currentFocus].classList.add("active");
+    }
+
+    function removeActive(items) {
+        for (let item of items) {
+            item.classList.remove("active");
+        }
+    }
+
+    function selectPrediction(prediction) {
+        input.value = prediction.description;
+        suggestionsBox.style.display = "none";
+        getLatLngAndState(prediction.place_id, latId, lngId, stateId);
+    }
+
     document.addEventListener("click", function (e) {
         if (!input.contains(e.target) && !suggestionsBox.contains(e.target)) {
             suggestionsBox.style.display = "none";
