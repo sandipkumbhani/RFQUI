@@ -13,8 +13,6 @@ $(document).ready(function () {
         }
     });
     FetchIndentNo();
-    GetAllStateList("ddlOrigin");
-    GetAllStateList("ddlDestination");
     GetAllVehicleType("ddlVehicleType", companyId);
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllItemName("ddlItemName", companyId);
@@ -120,11 +118,11 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please Select a Customer Name", "Validation Error");
         return false;
     }
-    if (!isValidateSelect($("#ddlOrigin").val())) {
+    if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Please enter a Origin/From", "Validation Error");
         return false;
     }
-    if (!isValidateSelect($("#ddlDestination").val())) {
+    if (IsNullOrEmpty($("#to-search-box").val())) {
         toastr.warning("Please enter a Destination/To", "Validation Error");
         return false;
     }
@@ -174,14 +172,19 @@ function SaveVehicleIndent(action) {
     var saveUrl = '/VehicleIndent/AddVehicleIndent';
     var consignorResult = GetDropdownValue("ddlConsignorInput");
     var consigneeResult = GetDropdownValue("ddlConsignorInput");
+    debugger;
     const formData = {
         IndentNo: $('#txtIndentNo').val(),
         LocationId: $('#ddlLocation').val(),
         IndentDate: $('#txtIndentDate').val(),
         VehicleReqOn: $('#txtVehicleReqDate').val(),
         PartyId: $('#ddlCustomerName').val(),
-        FromLocation: $('#ddlOrigin').val(),
-        ToLocation: $('#ddlDestination').val(),
+        FromLocation: $('#from-search-box').val(),
+        FromLatitude: $('#fromLat').val(),
+        FromLongitude: $('#fromLng').val(),
+        ToLocation: $('#to-search-box').val(),
+        ToLatitude: $('#toLat').val(),
+        ToLongitude: $('#toLng').val(),  
         VehicleTypeId: $('#ddlVehicleType').val(),
         RequiredVehicles: $('#txtNoofVehicles').val(),
         ExpiryDate: $('#txtRfqExpiredOn').val(),
