@@ -21,10 +21,15 @@ $(document).ready(function () {
         if (selectedIndent) {
             $("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
             $("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
-            $("#ddlOrigin").val(selectedIndent.fromLocation).trigger('change');
-            $("#ddlDestination").val(selectedIndent.toLocation).trigger('change');
+            $('#from-search-box').val(selectedIndent.fromLocation);
+            $('#to-search-box').val(selectedIndent.toLocation);
             $('#txtNoofVehicles').val(selectedIndent.requiredVehicles);
             $('#txtVehicleReqDate').val(selectedIndent.vehicleReqOn);
+
+            $('#fromLat').val(selectedIndent.fromLatitude);
+            $('#fromLng').val(selectedIndent.fromLongitude);
+            $('#toLat').val(selectedIndent.toLatitude);
+            $('#toLng').val(selectedIndent.toLongitude);
             let dateValue = selectedIndent.vehicleReqOn;
             if (dateValue) {
                 if (dateValue instanceof Date) {
@@ -54,8 +59,6 @@ $(document).ready(function () {
     RenderFetchTable();
     ClearFetchForm();
     SaveRfqVendorDetails();
-    GetAllStateList("ddlOrigin");
-    GetAllStateList("ddlDestination");
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
     GetAllItemName("ddlItemName", companyId);
@@ -98,11 +101,11 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Vehicle Req On", "Validation Error");
         return false;
     }
-    if (!isValidateSelect($("#ddlOrigin").val())) {
+    if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Please enter a Origin/From", "Validation Error");
         return false;
     }
-    if (!isValidateSelect($("#ddlDestination").val())) {
+    if (IsNullOrEmpty($("#to-search-box").val())) {
         toastr.warning("Please enter a Destination/To", "Validation Error");
         return false;
     }
@@ -124,6 +127,10 @@ function OnSubmitCheckValidation() {
     }
     if (IsNullOrEmpty($("#txtFreeDay").val())) {
         toastr.warning("Please enter a Detention Free Days", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtRfqSubject").val())) {
+        toastr.warning("Please enter a RFQ Subject", "Validation Error");
         return false;
     }
     if (!isValidateSelect($("#ddlRfqPriority").val())) {
@@ -410,15 +417,16 @@ function SaveAndSaveNew(action) {
         ExpiryDate: $('#txtRfqExpiredOn').val(),
         PartyId: $('#ddlCustomerName').val(),
         VehicleReqOn: $('#txtVehicleReqDate').val(),
-        FromLocation: $('#ddlOrigin').val(),
-        //FromLatitude: null,
-        //FromLongitude: null,
-        ToLocation: $('#ddlDestination').val(),
-        //ToLatitude: null,
-        //ToLongitude: null,
+        FromLocation: $('#from-search-box').val(),
+        FromLatitude: $('#fromLat').val(),
+        FromLongitude: $('#fromLng').val(),
+        ToLocation: $('#to-search-box').val(),
+        ToLatitude: $('#toLat').val(),
+        ToLongitude: $('#toLng').val(),   
         VehicleRequiredOn: $('#txtVehicleReqDate').val(),
         VehicleTypeId: $('#ddlVehicleType').val(),
         VehicleCount: $('#txtNoofVehicles').val(),
+        RfqSubject: $('#txtRfqSubject').val(),
         RfqPriorityId: $('#ddlRfqPriority').val(),
         RfqTypeId: $('#ddlRfqType').val(),
         ItemId: $('#ddlItemName').val(),

@@ -20,6 +20,7 @@
         public DateTime VehicleRequiredOn { get; set; }
         public int VehicleTypeId { get; set; }
         public int VehicleCount { get; set; }
+        public string RfqSubject { get; set; }
         public int RfqPriorityId { get; set; }
         public int RfqTypeId { get; set; }
         public int ItemId { get; set; }
