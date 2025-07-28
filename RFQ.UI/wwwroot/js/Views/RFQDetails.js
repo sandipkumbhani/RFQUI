@@ -12,7 +12,7 @@ $(document).ready(function () {
             SaveAndSaveNew(action);
         }
     });
-     
+
     $('#ddlIndent').on('change', function () {
         const selectedValue = $(this).val();
 
@@ -55,7 +55,6 @@ $(document).ready(function () {
     GetRfqPriority();
     FetchVendorData();
     FetchRfqNo();
-    GetAllVendorList();
     RenderFetchTable();
     ClearFetchForm();
     SaveRfqVendorDetails();
@@ -72,6 +71,15 @@ function CheckValidation() {
         }
     });
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const vendorDetailsTab = document.getElementById("vendorDetails-tab");
+
+    if (vendorDetailsTab) {
+        vendorDetailsTab.addEventListener("click", function () {
+            GetAllVendorList();
+        });
+    }
+});
 function OnSubmitCheckValidation() {
     if (!isValidateSelect($("#ddlLocation").val())) {
         toastr.warning("Please Select a Location", "Validation Error");
@@ -262,12 +270,24 @@ function FetchRfqNo() {
     });
 }
 function GetAllVendorList() {
-    var getUrl = '/Vendor/GetAllVendorList'
+    var getUrl = '/RequestForQuote/GetAllVendorListForRfq'
+    var fromOrigin = $('#from-search-box').val();
+    let fromOriginParts = fromOrigin.split(',');
+    let fromStateName = fromOriginParts[1].trim().toUpperCase();
+    var toDestination = $('#to-search-box').val();
+    let toDestinationParts = toDestination.split(',');
+    let toStateName = toDestinationParts[1].trim().toUpperCase();
+    var formData = {
+        OriginFrom: fromStateName,
+        ToDestination: toStateName,
+        VehicleTypeId: $('#ddlVehicleType').val()
+    }
+    console.log(formData);
     $.ajax({
         url: getUrl,
-        type: "GET",
-        data: { companyId: companyId },
+        type: "POST",
         contentType: "application/json",
+        data: JSON.stringify(formData),
         success: function (response) {
             fetchedVendorDataList = response;
             const vendorListDropdown = document.getElementById("ddlRFQVendorList");
@@ -422,7 +442,7 @@ function SaveAndSaveNew(action) {
         FromLongitude: $('#fromLng').val(),
         ToLocation: $('#to-search-box').val(),
         ToLatitude: $('#toLat').val(),
-        ToLongitude: $('#toLng').val(),   
+        ToLongitude: $('#toLng').val(),
         VehicleRequiredOn: $('#txtVehicleReqDate').val(),
         VehicleTypeId: $('#ddlVehicleType').val(),
         VehicleCount: $('#txtNoofVehicles').val(),

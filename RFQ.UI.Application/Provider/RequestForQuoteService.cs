@@ -23,6 +23,10 @@ namespace RFQ.UI.Application.Provider
             return _requestForQuoteAdaptor.GetAllVehicleIndentList();
         }
 
+        public async Task<IEnumerable<RfqVendorListResponseDto>> GetAllVendorListForRfq(RfqVendorDetailsParam rfqVendorDetailsParam)
+        {
+            return await _requestForQuoteAdaptor.GetAllVendorListForRfq(rfqVendorDetailsParam);
+        }
         public async Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo)
         {
             return await _requestForQuoteAdaptor.GetRfqByRfqNo(rfqNo);

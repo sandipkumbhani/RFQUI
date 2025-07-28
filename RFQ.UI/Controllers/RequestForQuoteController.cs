@@ -109,5 +109,21 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "Error", message = ex.Message });
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllVendorListForRfq([FromBody] RfqVendorDetailsParam rfqVendorDetailsParam)
+        {
+            try
+            {
+                _logger.LogInformation("Requesting GetAllVendorListForRfq Details...");
+                var result = await _requestForQuoteService.GetAllVendorListForRfq(rfqVendorDetailsParam);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                return Ok(ex);
+            }
+        }
     }
 }

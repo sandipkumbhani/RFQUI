@@ -4,6 +4,7 @@ using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using System.Net.Http;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -147,6 +148,32 @@ namespace RFQ.UI.Infrastructure.Provider
                 Console.WriteLine(ex.Message);
             }
             return null;
+        }
+
+        public async Task<IEnumerable<RfqVendorListResponseDto>> GetAllVendorListForRfq(RfqVendorDetailsParam rfqVendorDetailsParam)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetAllVendorListForRfq"] ;
+                var rfqVendorList = JsonConvert.SerializeObject(rfqVendorDetailsParam);
+                var requestContent = new StringContent(rfqVendorList, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                {
+                    var rfqVendorListData = JsonConvert.DeserializeObject<IEnumerable<RfqVendorListResponseDto>>(responseModel.Data.ToString());
+                    return rfqVendorListData;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in GetAllVendorListForRfq: " + ex.Message);
+            }
+            return Enumerable.Empty<RfqVendorListResponseDto>();
         }
     }
 }
