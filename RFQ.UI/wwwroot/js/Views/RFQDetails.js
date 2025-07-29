@@ -24,23 +24,23 @@ $(document).ready(function () {
             $('#from-search-box').val(selectedIndent.fromLocation);
             $('#to-search-box').val(selectedIndent.toLocation);
             $('#txtNoofVehicles').val(selectedIndent.requiredVehicles);
-            $('#txtVehicleReqDate').val(selectedIndent.vehicleReqOn);
+            $('#txtVehicleReqDate').val(selectedIndent.vehicleReqOn.split('T')[0]);
 
             $('#fromLat').val(selectedIndent.fromLatitude);
             $('#fromLng').val(selectedIndent.fromLongitude);
             $('#toLat').val(selectedIndent.toLatitude);
             $('#toLng').val(selectedIndent.toLongitude);
-            let dateValue = selectedIndent.vehicleReqOn;
-            if (dateValue) {
-                if (dateValue instanceof Date) {
-                    dateValue = dateValue.toISOString().split('T')[0];
-                } else if (typeof dateValue === "string" && dateValue.includes("T")) {
-                    dateValue = dateValue.split('T')[0];
-                }
-                $('#txtVehicleReqDate').val(dateValue);
-            } else {
-                $('#txtVehicleReqDate').val('');
-            }
+            //let dateValue = selectedIndent.vehicleReqOn;
+            //if (dateValue) {
+            //    if (dateValue instanceof Date) {
+            //        dateValue = dateValue.toISOString().split('T')[0];
+            //    } else if (typeof dateValue === "string" && dateValue.includes("T")) {
+            //        dateValue = dateValue.split('T')[0];
+            //    }
+            //    $('#txtVehicleReqDate').val(dateValue);
+            //} else {
+            //    $('#txtVehicleReqDate').val('');
+            //}
 
         }
     });
@@ -270,6 +270,7 @@ function FetchRfqNo() {
     });
 }
 function GetAllVendorList() {
+    $("#ddlRFQVendorList").empty();
     var getUrl = '/RequestForQuote/GetAllVendorListForRfq'
     var fromOrigin = $('#from-search-box').val();
     let fromOriginParts = fromOrigin.split(',');
@@ -282,7 +283,6 @@ function GetAllVendorList() {
         ToDestination: toStateName,
         VehicleTypeId: $('#ddlVehicleType').val()
     }
-    console.log(formData);
     $.ajax({
         url: getUrl,
         type: "POST",
