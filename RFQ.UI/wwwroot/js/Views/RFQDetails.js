@@ -290,23 +290,27 @@ function GetAllVendorList() {
         data: JSON.stringify(formData),
         success: function (response) {
             fetchedVendorDataList = response;
-            const vendorListDropdown = document.getElementById("ddlRFQVendorList");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Vendor Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            vendorListDropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.partyId;
-                option.textContent = item.partyName;
-                vendorListDropdown.appendChild(option);
-            });
+            BindAllVendorList(fetchedVendorDataList);
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Vendor Name!", "Error");
         }
+    });
+}
+function BindAllVendorList(fetchedVendorDataList) {
+    $("#ddlRFQVendorList").empty();
+    const vendorListDropdown = document.getElementById("ddlRFQVendorList");
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = "";
+    placeholderOption.textContent = "Select a Vendor Name";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    vendorListDropdown.appendChild(placeholderOption);
+    fetchedVendorDataList.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.partyId;
+        option.textContent = item.partyName;
+        vendorListDropdown.appendChild(option);
     });
 }
 function FetchVendorData() {
@@ -378,6 +382,10 @@ $('#btnAddVendor').on('click', function () {
     });
     RenderFetchTable();
     ClearFetchForm();
+    fetchedVendorDataList = $.grep(fetchedVendorDataList, function (item) {
+        return item.partyId != getSelectVendorID;
+    });
+    BindAllVendorList(fetchedVendorDataList);
 });
 
 $('#btnCancelVendor').on('click', function () {
@@ -386,8 +394,19 @@ $('#btnCancelVendor').on('click', function () {
 
 $('#rfqVendorTable').on('click', '.deleteVendor', function () {
     const rowIndex = $(this).closest('tr').data('index');
-    vendorList.splice(rowIndex, 1);
+    const deletedVendor = vendorList.splice(rowIndex, 1);
     RenderFetchTable();
+    deletedVendor.forEach(item => {
+        fetchedVendorDataList.push({
+            email: item.EmailId,
+            mobNo: item.MobileNo,
+            panNo: item.PanNo,
+            partyId: item.VendorId,
+            partyName: item.VendorName,
+            whatsAppNo: item.WhatsappNo
+        });
+    })
+    BindAllVendorList(fetchedVendorDataList);
 });
 
 $('#rfqVendorTable').on('click', '.editVendor', function () {
@@ -434,7 +453,6 @@ function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
     const formData = {
         RfqNo: $('#txtRfqNo').val(),
-        CompanyId: $('#ddlLocation').val(),
         LocationId: $('#ddlLocation').val(),
         IndentId: $('#ddlIndent').val(),
         RfqDate: $('#txtRfqDate').val(),

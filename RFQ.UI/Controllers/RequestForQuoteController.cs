@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
-using System.ComponentModel.Design;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -68,8 +66,10 @@ namespace RFQ.UI.Controllers
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                 if (RfqRequestDto != null)
                 {
+                    RfqRequestDto.CompanyId = Convert.ToInt32(companyid);
                     RfqRequestDto.CreatedBy = Convert.ToInt32(userid);
                     RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
