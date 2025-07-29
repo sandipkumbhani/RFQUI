@@ -25,7 +25,7 @@
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <div class="item-input">
                     <div class="item-input">
-                        <label class="form-label">RFQ No <span>*</span></label>
+                        <label class="form-label">RFQ No</label>
                         <div class="kyc-input">
                             <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtRfqNumber" maxlength="15" placeholder="Enter RFQ No" onkeypress="return AllowAlphaNumericOnly(event)" />
                             <button class="kyc-btn" type="button" id="btnGetRfqData">Get-Data</button>
@@ -78,7 +78,7 @@
 
                 <div class="col-lg-3">
                     <div class="item-input position-relative">
-                        <label class="form-label">* Destination/To</label>
+                        <label class="form-label">Destination/To</label>
                         <input disabled id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
                         <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
                         <input type="hidden" id="toLat">
@@ -107,14 +107,14 @@
                 </div>
                 <div class="col-lg-3">
                     <div class="item-input">
-                        <label class="form-label">RFQ Status</label>
+                        <label class="form-label"><span>*</span>RFQ Status</label>
                         <select class="select2-custom form-control" data-control="select2" id="ddlRfqStatus" style="width: 100%;">
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-3 d-none ddlRfqReason">
                     <div class="item-input">
-                        <label class="form-label">Failure Reason</label>
+                        <label class="form-label"><span>*</span>Failure Reason</label>
                         <select class="select2-custom form-control" data-control="select2" id="ddlRfqReason" style="width: 100%;">
                         </select> 
                     </div>

@@ -2,7 +2,6 @@
  
     GetAllVehicleNumber();
     GetAllCustomer("ddlCustomerName");
-    GetAllVehicleType("ddlVehicleType"); 
 
 });
 function GetAllVehicleNumber() {
