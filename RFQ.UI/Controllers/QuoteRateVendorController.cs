@@ -69,40 +69,39 @@ namespace RFQ.UI.Controllers
             foreach (var vendor in vendorList)
             {
                 RfqResponseDto data =await _requestForQuoteService.GetRfqById(vendor.RfqId ?? 0);
-                string formLink = Url.Action("RFQDetails", "RequestForQuote",
-                    new RfqResponseDto()
-                    {
-                        RfqId = data.RfqId,
-                        RfqNo = data.RfqNo,
-                        CompanyId = data.CompanyId,
-                        LocationId = data.LocationId,
-                        IndentId = data.IndentId,
-                        RfqDate = data.RfqDate, // ISO format
-                        ExpiryDate = data.ExpiryDate,
-                        PartyId = data.PartyId,
-                        VehicleReqOn = data.VehicleReqOn,
-                        FromLocation = data.FromLocation,
-                        FromLatitude = data.FromLatitude,
-                        FromLongitude = data.FromLongitude,
-                        ToLocation = data.ToLocation,
-                        ToLatitude = data.ToLatitude,
-                        ToLongitude = data.ToLongitude,
-                        VehicleRequiredOn = data.VehicleRequiredOn,
-                        VehicleTypeId = data.VehicleTypeId,
-                        VehicleCount = data.VehicleCount,
-                        RfqSubject = data.RfqSubject,
-                        RfqPriorityId = data.RfqPriorityId,
-                        RfqTypeId = data.RfqTypeId,
-                        ItemId = data.ItemId,
-                        MaxCosting = data.MaxCosting,
-                        DetentionPerDay = data.DetentionPerDay,
-                        DetentionFreeDays = data.DetentionFreeDays,
-                        PackingTypeId = data.PackingTypeId,
-                        SpecialInstruction = data.SpecialInstruction,
-                        LinkId = data.LinkId,
-                        StatusId = data.StatusId,
-                    },
-                    Request.Scheme);
+                string formLink = Url.Action("RFQDetails", "RequestForQuote", data, Request.Scheme);
+                //new RfqResponseDto()
+                //{
+                //    RfqId = data.RfqId,
+                //    RfqNo = data.RfqNo,
+                //    CompanyId = data.CompanyId,
+                //    LocationId = data.LocationId,
+                //    IndentId = data.IndentId,
+                //    RfqDate = data.RfqDate, // ISO format
+                //    ExpiryDate = data.ExpiryDate,
+                //    PartyId = data.PartyId,
+                //    VehicleReqOn = data.VehicleReqOn,
+                //    FromLocation = data.FromLocation,
+                //    FromLatitude = data.FromLatitude,
+                //    FromLongitude = data.FromLongitude,
+                //    ToLocation = data.ToLocation,
+                //    ToLatitude = data.ToLatitude,
+                //    ToLongitude = data.ToLongitude,
+                //    VehicleRequiredOn = data.VehicleRequiredOn,
+                //    VehicleTypeId = data.VehicleTypeId,
+                //    VehicleCount = data.VehicleCount,
+                //    RfqSubject = data.RfqSubject,
+                //    RfqPriorityId = data.RfqPriorityId,
+                //    RfqTypeId = data.RfqTypeId,
+                //    ItemId = data.ItemId,
+                //    MaxCosting = data.MaxCosting,
+                //    DetentionPerDay = data.DetentionPerDay,
+                //    DetentionFreeDays = data.DetentionFreeDays,
+                //    PackingTypeId = data.PackingTypeId,
+                //    SpecialInstruction = data.SpecialInstruction,
+                //    LinkId = data.LinkId,
+                //    StatusId = data.StatusId,
+                //};
 
                 SendEmail(vendor, formLink);
                 sentLinks.Add(formLink);

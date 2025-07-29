@@ -6,6 +6,9 @@
 }
 @section Scripts {
     <script src="~/js/Views/RFQFinalization.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
+    </script>
 }
 
 <div class="row">
@@ -18,7 +21,7 @@
 <div id="AddQuoteRoleVendorDiv" class="card com-profile-info">
     <div class="top-details">
         <form class="row all-custom-class" id="RFQForm" method="post">
-            <input type="hidden" id="txtRFQId" />
+            <input type="hidden" id="txtRFQFinalizationId" />
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <div class="item-input">
                     <div class="item-input">
@@ -63,17 +66,24 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label ">Origin/From</label>
-                        <select class="select2-custom form-control" data-control="select2" disabled id="ddlOrigin" style="width: 100%;">
-                        </select>
+                    <div class="item-input position-relative">
+                        <label class="form-label">Origin/From</label>
+                        <input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                        <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                        <input type="hidden" id="fromLat">
+                        <input type="hidden" id="fromLng">
+                        <input type="hidden" id="fromState">
                     </div>
                 </div>
+
                 <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Destination/To</label>
-                        <select class="select2-custom form-control" data-control="select2" disabled id="ddlDestination" style="width: 100%;">
-                        </select>
+                    <div class="item-input position-relative">
+                        <label class="form-label">* Destination/To</label>
+                        <input disabled id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                        <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                        <input type="hidden" id="toLat">
+                        <input type="hidden" id="toLng">
+                        <input type="hidden" id="toState">
                     </div>
                 </div>
                 <div class="col-lg-3">
@@ -112,31 +122,31 @@
                 <div class="col-lg-6">
                     <div class="item-input">
                         <label class="form-label">Remarks </label>
-                        <input type="text" class="form-control" placeholder="remarks" id="txtremarks" />
+                        <input type="text" class="form-control" placeholder="remarks" id="txtRemarks" />
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label ">Billing Rate </label>
-                        <input type="number" class="form-control" placeholder="Numeric" id="txtBillingRate" />
+                        <input type="text" class="form-control" placeholder="Numeric" id="txtBillingRate" />
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">Detention Per Day</label>
-                        <input type="number" class="form-control" placeholder="Per Day" id="txtPerDay" />
+                        <input type="text" class="form-control" placeholder="Per Day" id="txtPerDay" />
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">Detention Free Days</label>
-                        <input type="number" class="form-control" placeholder="Free Days" id="txtFreeDays" />
+                        <input type="text" class="form-control" placeholder="Free Days" id="txtFreeDays" />
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">Margin Amount</label>
-                        <input type="number" class="form-control" placeholder="Amount" id="txtAmount" />
+                        <input type="text" class="form-control" placeholder="Amount" id="txtAmount" />
                     </div>
                 </div>
             </div>
@@ -216,13 +226,13 @@
                 </div>
             </div>
             <div class="button-main">
-                <a href="#" class="card-link" id="btnSaveCompanyType" type="button" data-action="save">
+                <a href="#" class="card-link" id="btnSave" type="button" data-action="save">
                     <i class="ri-save-line"></i>
                     <span>
                         Save
                     </span>
                 </a>
-                <a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
+                <a href="#" class="card-link" id="btnSaveAndNew" data-action="saveNew">
                     <i class="ri-save-line"></i>
                     <span>
                         Save & New
