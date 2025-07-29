@@ -42,7 +42,7 @@
 								<div class="row all-custom-class">
 									<div class="col-lg-3">
 										<div class="item-input">
-											<label class="form-label">Location <span>*</span></label>
+											<label class="form-label"><span>*</span>Location</label>
 											<select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
 											</select>
 										</div>
@@ -55,13 +55,13 @@
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
-											<label class="form-label">RFQ Date</label>
+											<label class="form-label"><span>*</span>RFQ Date</label>
 											<input type="date" class="form-control" id="txtRfqDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="Auto Generated" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
-											<label class="form-label ">RFQ Expired On</label>
+											<label class="form-label "><span>*</span>RFQ Expired On</label>
 											<input type="datetime-local"
 												   onfocus="this.min=new Date(new Date(document.getElementById('txtVehicleReqDate').value).setDate(new Date(document.getElementById('txtVehicleReqDate').value).getDate() + 1)).toISOString().slice(0, 16)"
 												   class="form-control" id="txtRfqExpiredOn" />
@@ -76,20 +76,20 @@
 									</div>
 									<div class="col-lg-6">
 										<div class="item-input">
-											<label class="form-label">Customer Name</label>
+											<label class="form-label"><span>*</span>Customer Name</label>
 											<select class="select2-custom form-control" data-control="select2" disabled id="ddlCustomerName" style="width: 100%;">
 											</select>
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
-											<label class="form-label ">Vehicle Req On</label>
+											<label class="form-label "><span>*</span>Vehicle Req On</label>
 											<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" disabled id="txtVehicleReqDate" />
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input position-relative">
-											<label class="form-label">Origin/From</label>
+											<label class="form-label"><span>*</span>Origin/From</label>
 											<input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
 											<ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
 											<input type="hidden" id="fromLat">
@@ -101,7 +101,7 @@
 									<!-- TO Input -->
 									<div class="col-lg-3">
 										<div class="item-input position-relative">
-											<label class="form-label">* Destination/To</label>
+											<label class="form-label"><span>*</span>Destination/To</label>
 											<input disabled id="to-search-box" type="text" class="form-control " placeholder="Search location" autocomplete="off" />
 											<ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
 											<input type="hidden" id="toLat">
@@ -111,14 +111,14 @@
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
-											<label class="form-label">Vehicle Type</label>
+											<label class="form-label"><span>*</span>Vehicle Type</label>
 											<select class="select2-custom form-control" data-control="select2" disabled id="ddlVehicleType" style="width: 100%;">
 											</select>
 										</div>
 									</div>
 									<div class="col-lg-3">
 										<div class="item-input">
-											<label class="form-label">No. of Vehicles</label>
+											<label class="form-label"><span>*</span>No. of Vehicles</label>
 											<input type="text" class="form-control" id="txtNoofVehicles" disabled placeholder="Numeric" onkeypress="return isNumber(event)" />
 										</div>
 									</div>

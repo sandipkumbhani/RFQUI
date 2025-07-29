@@ -6,7 +6,6 @@
     GetAllStateList("ddlOrigin");
     GetAllStateList("ddlDestination");
     GetAllCustomer("ddlCustomerName");
-    GetAllVehicleType("ddlVehicleType"); 
     GetAllItemName("ddlItemName");
 
 });
