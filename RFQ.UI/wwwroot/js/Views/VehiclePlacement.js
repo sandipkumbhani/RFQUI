@@ -59,7 +59,6 @@ $(document).ready(function () {
     GetAllStateList("ddlOrigin");
     GetAllStateList("ddlDestination");
     GetAllCustomer("ddlCustomerName");
-    GetAllVehicleType("ddlVehicleType");
 });
 function GetAllDriver() {
     $.ajax({

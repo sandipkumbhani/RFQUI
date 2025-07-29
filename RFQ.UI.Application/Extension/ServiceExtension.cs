@@ -35,6 +35,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IRfqRecipientService,RfqRecipientService>();
             services.AddScoped<IRfqFinalService,RfqFinalService>();
             services.AddScoped<IVehiclePlacementService, VehiclePlacementService>();
+            services.AddScoped<IRfqRateServices, RfqRateServices>();
             return services;
         }
     }

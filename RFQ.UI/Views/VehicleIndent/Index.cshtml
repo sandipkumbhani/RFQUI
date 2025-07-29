@@ -25,39 +25,39 @@
 					<div class="row all-custom-class">
 						<div class="col-lg-3">
 							<div class="item-input">
-								<label class="form-label">Location <span>*</span></label>
+								<label class="form-label"><span>*</span>Location </label>
 								<select class="select2-custom form-control" id="ddlLocation" data-control="select2" style="width: 100%;">
 								</select>
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="item-input">
-								<label class="form-label">Indent No</label>
+								<label class="form-label"><span>*</span>Indent No</label>
 								<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtIndentNo" maxlength="50"/>
 							</div>
 						</div>
 						<div class="col-lg-3">
-                            <div class="item-input">  
-                               <label class="form-label">Indent Date</label>  
-                               <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtIndentDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" />  
+                            <div class="item-input">
+								<label class="form-label"><span>*</span>Indent Date</label>
+								<input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtIndentDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" />  
                             </div>
 						</div>
                         <div class="col-lg-3">  
-                           <div class="item-input">  
-                               <label class="form-label ">Vehicle Req On</label>  
-                               <input type="date" onfocus="this.min=new Date(new Date(document.getElementById('txtIndentDate').value).setDate(new Date(document.getElementById('txtIndentDate').value).getDate() + 1)).toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
+                           <div class="item-input">
+								<label class="form-label "><span>*</span>Vehicle Req On</label>
+								<input type="date" onfocus="this.min=new Date(new Date(document.getElementById('txtIndentDate').value).setDate(new Date(document.getElementById('txtIndentDate').value).getDate() + 1)).toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
                            </div>  
                         </div>
 						<div class="col-lg-6">
 							<div class="item-input">
-								<label class="form-label">Customer Name</label>
+								<label class="form-label"><span>*</span>Customer Name</label>
 								<select class="select2-custom form-control" data-control="select2" id="ddlCustomerName" style="width: 100%;">
 								</select>
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="item-input position-relative">
-								<label class="form-label">Origin/From</label>
+								<label class="form-label"><span>*</span>Origin/From</label>
 								<input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
 								<ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
 								<input type="hidden" id="fromLat">
@@ -69,7 +69,7 @@
 						<!-- TO Input -->
 						<div class="col-lg-3">
 							<div class="item-input position-relative">
-								<label class="form-label">* Destination/To</label>
+								<label class="form-label"><span>*</span>Destination/To</label>
 								<input id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
 								<ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
 								<input type="hidden" id="toLat">
@@ -79,20 +79,20 @@
 						</div>
 						<div class="col-lg-3">
 							<div class="item-input">
-								<label class="form-label">Vehicle Type</label>
+								<label class="form-label"><span>*</span>Vehicle Type</label>
 								<select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;">
 								</select>
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="item-input">
-								<label class="form-label">No. of Vehicles Req</label>
+								<label class="form-label"><span>*</span>No. of Vehicles Req</label>
 								<input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric"onkeypress="return isNumber(event)" />
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="item-input">
-								<label class="form-label ">Indent Expired On</label>
+								<label class="form-label "><span>*</span>Indent Expired On</label>
 								<input type="datetime-local"
                                        onfocus="this.min=new Date(new Date(document.getElementById('txtVehicleReqDate').value).setDate(new Date(document.getElementById('txtVehicleReqDate').value).getDate() + 1)).toISOString().slice(0, 16)"  
                                        class="form-control" id="txtRfqExpiredOn" />
