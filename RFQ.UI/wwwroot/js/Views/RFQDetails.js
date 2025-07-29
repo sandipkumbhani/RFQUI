@@ -353,6 +353,7 @@ function ClearFetchForm() {
     $("#fetchVendorEmailId").val('');
     $('#ddlRFQVendorList').val(null).trigger('change');
 }
+
 $('#btnAddVendor').on('click', function () {
     const getSelectVendorID = $("#ddlRFQVendorList").val();
     if (getSelectVendorID == null || getSelectVendorID == '') {
@@ -378,14 +379,17 @@ $('#btnAddVendor').on('click', function () {
     RenderFetchTable();
     ClearFetchForm();
 });
+
 $('#btnCancelVendor').on('click', function () {
     ClearFetchForm();
 });
+
 $('#rfqVendorTable').on('click', '.deleteVendor', function () {
     const rowIndex = $(this).closest('tr').data('index');
     vendorList.splice(rowIndex, 1);
     RenderFetchTable();
 });
+
 $('#rfqVendorTable').on('click', '.editVendor', function () {
     const rowIndex = $(this).closest('tr').data('index');
     const vendor = vendorList[rowIndex];
@@ -511,6 +515,7 @@ function SaveAndSaveNew(action) {
 function SaveRfqVendorDetails() {
     var saveUrl = '/RfqRecipient/AddRfqRecipient';
     $("#btnSaveRfqVendorDetails").on('click', function () {
+        debugger;
         var formData = vendorList.map(vendor => ({
             RfqId: rfqId,
             VendorId: vendor.VendorId,
@@ -520,6 +525,7 @@ function SaveRfqVendorDetails() {
             WhatsAppNo: vendor.WhatsappNo,
             EmailId: vendor.EmailId
         }));
+        sendQuoteLinksForVendors(formData);
         $.ajax({
             url: saveUrl,
             type: 'POST',
@@ -538,3 +544,44 @@ function SaveRfqVendorDetails() {
         });
     });
 }
+
+
+function sendQuoteLinksForVendors(vendorList) {
+    const formData = vendorList.map(vendor => ({
+        RfqRecipientId: 0,
+        RfqId: rfqId,
+        VendorId: vendor.VendorId,
+        PanNo: vendor.PanNo,
+        VendorRating: vendor.VendorRating,
+        MobNo: vendor.MobileNo,
+        WhatsAppNo: vendor.WhatsAppNo,
+        EmailId: vendor.EmailId
+    }));
+
+    $.ajax({
+        url: '/QuoteRateVendor/SendQuoteLinks', // Must match your controller route
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function (response) {
+            console.log("Links generated successfully:", response.links);
+
+            // Example: Display or send links via WhatsApp
+            response.links.forEach(linkInfo => {
+                console.log(`Vendor ${linkInfo.VendorId} - Link: ${linkInfo.Link}`);
+
+                // Send via WhatsApp browser link (optional)
+                if (linkInfo.WhatsAppNo) {
+                    const message = encodeURIComponent("Please fill your RFQ form: " + linkInfo.Link);
+                    const waUrl = `https://wa.me/${linkInfo.WhatsAppNo}?text=${message}`;
+                    window.open(waUrl, '_blank');
+                }
+            });
+        },
+        error: function (xhr) {
+            console.error("Error sending quote links", xhr);
+            alert("Failed to send links.");
+        }
+    });
+}
+

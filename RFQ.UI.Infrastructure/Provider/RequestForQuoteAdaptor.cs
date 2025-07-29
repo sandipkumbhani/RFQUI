@@ -150,6 +150,37 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
+        public async Task<RfqResponseDto> GetRfqById(int rfqId)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetRfqById"] + rfqId;
+                var response = await _httpClient.GetAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (responseModel.Data != null && result == 200)
+                    {
+                        return JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+        }
+
         public async Task<IEnumerable<RfqVendorListResponseDto>> GetAllVendorListForRfq(RfqVendorDetailsParam rfqVendorDetailsParam)
         {
             try

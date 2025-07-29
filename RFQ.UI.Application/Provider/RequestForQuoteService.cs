@@ -36,5 +36,9 @@ namespace RFQ.UI.Application.Provider
         {
             return _requestForQuoteAdaptor.GetRfqNo();
         }
+        public async Task<RfqResponseDto> GetRfqById(int rfqId)
+        {
+            return await _requestForQuoteAdaptor.GetRfqById(rfqId);
+        }
     }
 }
