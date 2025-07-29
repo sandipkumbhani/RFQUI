@@ -54,7 +54,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 Console.WriteLine("Error in AddRfq: " + ex.Message);
             }
 
-            return null;
+            return false;
         }
     }
 }
