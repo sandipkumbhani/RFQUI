@@ -5,7 +5,7 @@
         public int RfqFinalIdId { get; set; }
         public string RfqId { get; set; }
         public int RfqStatusId { get; set; }
-        public int ReasonId { get; set; }
+        public int ReasonId { get; set; } = 1; 
         public int BillingRate { get; set; }
         public int DetentionPerDay { get; set; }
         public int DetentionFreeDays { get; set; }

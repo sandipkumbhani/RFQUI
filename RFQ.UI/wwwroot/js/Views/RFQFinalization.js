@@ -1,4 +1,4 @@
-﻿
+﻿var companyId;
 $("#ddlRfqStatus").on('change', function () {
     if ($(this).find('option:selected').text() === "NOT AWARDED") {
         $(".ddlRfqReason").removeClass('d-none');
@@ -9,16 +9,29 @@ $("#ddlRfqStatus").on('change', function () {
     }
 });
 $(document).ready(function () {
+    companyId = getCookieValue('companyid');
+    $("#btnSave, #btnSaveAndNew").on('click', function () {
+
+        var action = $(this).data('action'); // "save" or "saveNew"
+        if (OnSubmitCheckValidation()) {
+            SaveAndSaveNew(action);
+        }
+    });
     GetRfqStatus();
-    GetAllStateList("ddlOrigin");
-    GetAllStateList("ddlDestination");
-    GetAllCustomer("ddlCustomerName");
-    GetAllVehicleType("ddlVehicleType"); 
+    GetAllCustomer("ddlCustomerName", companyId);
+    GetAllVehicleType("ddlVehicleType", companyId);
     $("#btnGetRfqData").on('click', function () {
         GetRfqDetailsByRfqNo();
     })
 });
 
+function OnSubmitCheckValidation() {
+    if (IsNullOrEmpty($("#txtRfqNumber").val())) {
+        toastr.warning("Please enter a RFQ No", "Validation Error");
+        return false;
+    }
+    return true;
+}
 function GetRfqStatus() {
     var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
     $.ajax({
@@ -50,6 +63,7 @@ function GetRfqStatus() {
     });
 }
 function GetRfqDetailsByRfqNo() {
+    debugger;
     var rfqNumber = $("#txtRfqNumber").val();
     var getUrl = '/RequestForQuote/GetRfqByRfqNo/' + rfqNumber;
     $.ajax({
@@ -66,8 +80,8 @@ function GetRfqDetailsByRfqNo() {
             $("#txtRfqDate").val(response.rfqDate)
             $("#txtRfqExpiredOn").val(response.expiryDate)
             $("#txtVehicleReqDate").val(new Date(response.vehicleReqOn).toISOString().split('T')[0])
-            $("#ddlOrigin").val(response.fromLocation).trigger('change');
-            $("#ddlDestination").val(response.toLocation).trigger('change');
+            $('#from-search-box').val(response.fromLocation);
+            $('#to-search-box').val(response.toLocation);
             $("#ddlVehicleType").val(response.vehicleTypeId).trigger('change');
             $("#txtNoofVehicles").val(response.vehicleCount)
             $("#txtSpecial").val(response.specialInstruction)
@@ -76,4 +90,68 @@ function GetRfqDetailsByRfqNo() {
             toastr.error("Failed to Fetch Rfq Data!", "Error");
         }
     });
+}
+
+function SaveAndSaveNew(action) {
+    var saveUrl = '/RFQFinalization/AddRfqFinal';
+    const formData = {
+        RfqId: $('#txtRfqNumber').val(),
+        RfqStatusId: $('#ddlRfqStatus').val(),
+        Remarks: $('#txtRemarks').val(),
+        BillingRate: $('#txtBillingRate').val(),
+        DetentionPerDay: $('#txtPerDay').val(),
+        DetentionFreeDays: $('#txtFreeDays').val(),
+        MarginAmount: $('#txtAmount').val(),
+        LinkId: GetQueryParam("LinkId")
+    };
+
+    if (action === "save") {
+
+        $.ajax({
+            url: saveUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response) {
+                    window.location.href = "../Dashboard/Dashboard";
+                } else {
+                    toastr.error("Failed to Submit RFQ Finalization.", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit RFQ Finalization.", "Error");
+            }
+        });
+    }
+
+    //else if (action === "saveNew") {
+    //    $.ajax({
+    //        url: saveUrl,
+    //        type: 'POST',
+    //        contentType: 'application/json',
+    //        data: JSON.stringify(formData),
+    //        success: function (response) {
+    //            if (response) {
+    //                rfqId = response.rfqId;
+    //                toastr.success("Vehicle Indent Saved Successfully!", "Success");
+    //                $('#RfqDetailsForm')[0].reset();
+    //                $('#ddlLocation').val(null).trigger('change');
+    //                $('#ddlIndent').val(null).trigger('change');
+    //                $('#ddlCustomerName').val(null).trigger('change');
+    //                $('#ddlVehicleType').val(null).trigger('change');
+    //                $('#ddlRfqPriority').val(null).trigger('change');
+    //                $('#ddlRfqType').val(null).trigger('change');
+    //                $('#ddlItemName').val(null).trigger('change');
+    //                $('#ddlPackingType').val(null).trigger('change');
+    //                FetchRfqNo();
+    //            } else {
+    //                toastr.error("Failed to Submit RFQ Finalization.", "Error");
+    //            }
+    //        },
+    //        error: function (xhr, status, error) {
+    //            toastr.error("Failed to Submit RFQ Finalization.", "Error");
+    //        }
+    //    });
+    //}
 }

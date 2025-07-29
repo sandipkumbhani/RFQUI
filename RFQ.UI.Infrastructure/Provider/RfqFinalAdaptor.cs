@@ -21,36 +21,32 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
-        public async Task<RfqFinalRequestDto> AddRfqFinal(RfqFinalRequestDto rfqFinalRequestDto)
+
+        public async Task<RfqFinalRequestDto?> AddRfqFinal(RfqFinalRequestDto rfqFinalRequestDto)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Franchise:AddFranchise"];
-                var rfqFinal = JsonConvert.SerializeObject(rfqFinalRequestDto);
-                var requestContent = new StringContent(rfqFinal, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseUrl = _fleetLynkApiUrl + _config["RfqFinal:AddRfqFinal"];
+                var rfq = JsonConvert.SerializeObject(rfqFinalRequestDto);
+                var requestContent = new StringContent(rfq, Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(baseUrl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                    {
-                        return JsonConvert.DeserializeObject<RfqFinalRequestDto>(responseModel.Data.ToString());
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                    var rfqData = JsonConvert.DeserializeObject<RfqFinalRequestDto>(responseModel.Data.ToString());
+                    return rfqData;
                 }
-                return null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Error in AddRfqFinal: " + ex.Message);
             }
+
             return null;
         }
     }
