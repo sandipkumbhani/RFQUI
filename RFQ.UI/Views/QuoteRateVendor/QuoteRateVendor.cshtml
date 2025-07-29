@@ -1,159 +1,156 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    Layout = "_Layout";
+    Layout = null;
     ViewData["Title"] = "QuoteRate-Vendor";
 }
-@section Scripts {
-    <script src="~/js/Views/QuoteRateVendor.js"></script>
-}
-
-
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box add">
-            <h1 class="page-title">Quote Rate - Vendor </h1>
-        </div>
-
-        <div id="AddQuoteRoleVendorDiv" class="card com-profile-info">
-            <div class="top-details">
-                <form class="row all-custom-class" id="QRVendorBodyForm" method="post">
-                    <input type="hidden" id="rfqrateId" />
-                    <div class="row all-custom-class">
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">RFQ NO </label>
-                                <input type="text" class="form-control" placeholder="RFQ No" id="txtRFQNo" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">RFQ Date</label>
-                                <input type="datetime-local" class="form-control" placeholder="RFQ Date" id="txtRFQDate" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">RFQ Expire On</label>
-                                <input type="datetime-local" class="form-control" placeholder="Expire On" id="txtExpireOn" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">Vehicle Req On</label>
-                                <input type="datetime-local" class="form-control" placeholder="Vehicle Req On" id="txtVehicleReqOn" />
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="item-input">
-                                <label class="form-label">Vendor Name</label>
-                                <input type="text" class="form-control" placeholder="Vendor Name" id="txtVednorName" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">PAN No </label>
-                                <input type="text" class="form-control" placeholder="PAN No" id="txtPANNo" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label ">Origin/From</label>
-                                <select class="select2-custom form-control" data-control="select2" id="ddlOrigin" style="width: 100%;">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">Destination/To</label>
-                                <select class="select2-custom form-control" data-control="select2" id="ddlDestination" style="width: 100%;">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label ">Vehicle Type<span>*</span></label>
-                                <select class="select2-custom form-control" id="ddlVehicleType" style="width: 100%;">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">No.of Vehicles Req</label>
-                                <input type="text" class="form-control" placeholder="No.of Vehicles" id="txtNoOfVehicles" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">Item Name</label>
-                                <select class="select2-custom form-control" id="ddlItemName" style="width: 100%;">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">Packing Type</label>
-                                <select class="select2-custom form-control" id="ddlPackingType" style="width: 100%;">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="item-input">
-                                <label class="form-label">Special Instructions </label>
-                                <input type="text" class="form-control" placeholder="Special Instructions" id="txtInstruction" />
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">Total Hire Cost<span>*</span></label>
-                                <input type="number" class="form-control" placeholder="Total Hire Cost" id="txtHireCost" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">Detention Per Day <span>*</span></label>
-                                <input type="number" class="form-control" placeholder="Detention Per Day" id="txtDetentionDay" />
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">Detention Free Days <span>*</span></label>
-                                <input type="number" class="form-control" placeholder="Detention Free Days" id="txtDetentionDays" />
-                            </div>
-                        </div>
-                    </div>
-                </form>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="~/css/intlTelInput-largeFlags.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/select2-bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/remixicon.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/app-style.css" rel="stylesheet" type="text/css" />
+</head>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Quote Rate - Vendor </h1>
             </div>
-            <div class="button-main">
-                <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="saveNew">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Save
-                    </span>
-                </a>
-                <a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Save & New
-                    </span>
-                </a>
-                <a href="#" class="card-link" id="btnUpdate" style="display:none;">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Update
-                    </span>
-                </a>
-                <a href="#" class="card-link" id="btnCancel">
-                    <i class="ri-close-line"></i>
-                    <span>
-                        Cancel
-                    </span>
-                </a>
+
+            <div id="AddQuoteRoleVendorDiv" class="card com-profile-info">
+                <div class="top-details">
+                    <form class="row all-custom-class" id="QRVendorBodyForm" method="post">
+                        <input type="hidden" id="rfqrateId" />
+                        <div class="row all-custom-class">
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">RFQ NO </label>
+                                    <input disabled type="text" class="form-control" placeholder="RFQ No" id="txtRFQNo" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">RFQ Date</label>
+                                    <input disabled type="text" class="form-control" placeholder="RFQ Date" id="txtRFQDate" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">RFQ Expire On</label>
+                                    <input disabled type="text" class="form-control" placeholder="Expire On" id="txtExpireOn" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Vehicle Req On</label>
+                                    <input disabled type="text" class="form-control" placeholder="Vehicle Req On" id="txtVehicleReqOn" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Vendor Name</label>
+                                    <input disabled type="text" class="form-control" placeholder="Vendor Name" id="txtVednorName" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">PAN No </label>
+                                    <input disabled type="text" class="form-control" placeholder="PAN No" id="txtPANNo" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label ">Origin/From</label>
+                                    <input disabled class="form-control" id="ddlOrigin" style="width: 100%;">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Destination/To</label>
+                                    <input disabled class="form-control" id="ddlDestination" style="width: 100%;">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label ">Vehicle Type<span>*</span></label>
+                                    <select disabled class="select2-custom form-control" id="ddlVehicleType" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">No.of Vehicles Req</label>
+                                    <input disabled type="text" class="form-control" placeholder="No.of Vehicles" id="txtNoOfVehicles" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Item Name</label>
+                                    <select disabled class="select2-custom form-control" id="ddlItemName" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Packing Type</label>
+                                    <select disabled class="select2-custom form-control" id="ddlPackingType" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Special Instructions </label>
+                                    <input disabled type="text" class="form-control" placeholder="Special Instructions" id="txtInstruction" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Total Hire Cost<span>*</span></label>
+                                    <input type="number" class="form-control" placeholder="Total Hire Cost" id="txtHireCost" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Detention Per Day <span>*</span></label>
+                                    <input type="number" class="form-control" placeholder="Detention Per Day" id="txtDetentionDay" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Detention Free Days <span>*</span></label>
+                                    <input type="number" class="form-control" placeholder="Detention Free Days" id="txtDetentionDays" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="button-main">
+                    <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="saveNew">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save
+                        </span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script src="~/js/jquery.min.js"></script>
+<script src="~/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/simplebar.min.js"></script>
+<script src="~/js/select2.min.js"></script>
+<script src="~/js/intlTelInput.min.js"></script>
+<script src="~/js/jquery.repeater.min.js"></script>
+<script src="~/js/script-app.js"></script>
+<script src="~/js/Views/QuoteRateVendor.js"></script>
+<script src="~/js/common.js"></script>

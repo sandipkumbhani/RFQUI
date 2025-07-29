@@ -1,31 +1,31 @@
 ﻿var quoteratevendore
+var companyId;
 $(document).on("click", "#btnViewForm", function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    
-        RfqRateId: $('#rfqrateId').val(),
-        RfqNo: $('#txtRFQNo').val(),
-        RfqDate: $('#txtRFQDate').val(),
-        ExpireOn: $('#txtExpireOn').val(),
-        VehicleReqOn: $('#txtVehicleReqOn').val(),
-        VendorName: $('#txtVednorName').val(),
-        PanNo: $('#txtPANNo').val(),
-        OriginId: $('#ddlOrigin').val(),
-        DestinationId: $('#ddlDestination').val(),
-        VehicleTypeId: $('#ddlVehicleType').val(),
-        NoOfVehicles: $('#txtNoOfVehicles').val(),
-        ItemNameId: $('#ddlItemName').val(),
-        PackingTypeId: $('#ddlPackingType').val(),
-        SpecialInstructions: $('#txtInstruction').val(),
-        TotalHireCost: $('#txtHireCost').val(),
-        DetentionPerDay: $('#txtDetentionDay').val(),
-        DetentionFreeDays: $('#txtDetentionDays').val()
-   
 
-    FetchList();
+    //RfqRateId: $('#rfqrateId').val(),
+    //RfqNo: $('#txtRFQNo').val(),
+    //RfqDate: $('#txtRFQDate').val(),
+    //ExpireOn: $('#txtExpireOn').val(),
+    //VehicleReqOn: $('#txtVehicleReqOn').val(),
+    //VendorName: $('#txtVednorName').val(),
+    //PanNo: $('#txtPANNo').val(),
+    //OriginId: $('#ddlOrigin').val(),
+    //DestinationId: $('#ddlDestination').val(),
+    //VehicleTypeId: $('#ddlVehicleType').val(),
+    //NoOfVehicles: $('#txtNoOfVehicles').val(),
+    //ItemNameId: $('#ddlItemName').val(),
+    //PackingTypeId: $('#ddlPackingType').val(),
+    //SpecialInstructions: $('#txtInstruction').val(),
+    //TotalHireCost: $('#txtHireCost').val(),
+    //DetentionPerDay: $('#txtDetentionDay').val(),
+    //DetentionFreeDays: $('#txtDetentionDays').val()
+
     $("#AddQuoteRoleVendorDiv").css('display', 'none')
     $("#backButton").css('display', 'Block')
 });
 $(document).ready(function () {
+    companyId = getCookieValue('companyid');
+    profileId = getCookieValue('profileid');
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
         var action = $(this).data('action'); // "save" or "saveNew"
         if (ValidationCheck()) {
@@ -33,15 +33,14 @@ $(document).ready(function () {
         }
     });
     Initialization();
-    GetAllVehicleType();
-    GetAllItemName();
-    GetAllPakingType();
-    GetAllStateList("ddlOrigin");
-    GetAllStateList("ddlDestination");
-    GetAllItemName("ddlItemName");
+    GetAllVehicleType("ddlVehicleType", companyId);
+    GetAllPakingType("ddlPackingType");
+    GetAllItemName("ddlItemName", companyId);
+    setTimeout(() => {
+        UrlParamBind()
+    }, 100);
 });
-function Initialization()
-{
+function Initialization() {
     $("#txtRFQDate").on("blur", function () {
         if (!isValidateSelect($(this).val())) {
             toastr.warning("Please select a Rfq Date", "Validation Error");
@@ -169,7 +168,7 @@ function Initialization()
     });
 }
 function ValidationCheck() {
-    
+
     if (IsNullOrEmpty($("#txtRFQDate").val())) {
         toastr.warning("Please enter a valid RFQ Date", "Validation Error");
         return false;
@@ -231,7 +230,7 @@ function ValidationCheck() {
         toastr.warning("Please enter a No of Hire Cost", "Validation Error");
         return false;
     }
-    
+
     if (IsNullOrEmpty($("#txtDetentionDay").val()) || !isNumeric($("#txtDetentionDay").val())) {
         toastr.warning("Please Enter a Detention Per Day", "Validation Error");
         return false;
@@ -239,7 +238,7 @@ function ValidationCheck() {
     if (IsNullOrEmpty($("#txtDetentionDays").val()) || !isNumeric($("#txtDetentionDays").val())) {
         toastr.warning("Please Enter a Detention Free Days", "Validation Error");
         return false;
-    } 
+    }
     if (IsNullOrEmpty($("#txtInstruction").val())) {
         toastr.warning("Please enter a valid Instruction", "Validation Error");
         return false;
@@ -326,12 +325,12 @@ function Save(action) {
     var Destination = $("#txtDestination").val();
     var HireCost = $("#txtHireCost").val();
     var formdata = {
-       // RfqDetailId : rfqDetailId,
-        VendorId : VednorName,
-        LocationId : Destination,
-        TotalHireCost : HireCost,
-        DetentionPerDay : DetentionDay,
-        DetentionFreeDay : DetentionFreeDays
+        // RfqDetailId : rfqDetailId,
+        VendorId: VednorName,
+        LocationId: Destination,
+        TotalHireCost: HireCost,
+        DetentionPerDay: DetentionDay,
+        DetentionFreeDay: DetentionFreeDays
     };
     if (action == "save") {
         $.ajax({
@@ -377,4 +376,39 @@ function Save(action) {
             toastr.error("Failed to Save  Details", "Error");
         }
     }
+}
+
+function UrlParamBind() {
+    debugger;
+    const urlParams = new URLSearchParams(window.location.search);
+    const rfqId = urlParams.get("RfqId");
+    const rfqNo = urlParams.get("RfqNo");
+    const rfqDate = urlParams.get("RfqDate");
+    const expiryDate = urlParams.get("ExpiryDate");
+    const partyId = urlParams.get("PartyId");
+    const vehicleReqOn = urlParams.get("VehicleReqOn");
+    const fromLocation = urlParams.get("FromLocation");
+    const toLocation = urlParams.get("ToLocation");
+    const vehicleTypeId = urlParams.get("VehicleTypeId");
+    const vehicleCount = urlParams.get("VehicleCount");
+    const itemId = urlParams.get("ItemId");
+    const packingTypeId = urlParams.get("PackingTypeId");
+    const specialInstruction = urlParams.get("SpecialInstruction");
+    var VendorId = urlParams.get("VendorId");
+    const PanNo = urlParams.get("PanNo");
+
+    $("#rfqrateId").val(rfqId),
+        $("#txtRFQNo").val(rfqNo),
+        $("#txtRFQDate").val(formatDate(rfqDate).substring(0, 11)),
+        $("#txtExpireOn").val(formatDate(expiryDate));
+    $("#txtVehicleReqOn").val(formatDate(vehicleReqOn).substring(0, 11)),
+        $("#txtVednorName").val(partyId),
+        $("#txtPANNo").val(PanNo),
+        $("#ddlOrigin").val(fromLocation),
+        $("#ddlDestination").val(toLocation),
+        $("#ddlVehicleType").val(parseInt(vehicleTypeId)).trigger('change'),
+        $("#txtNoOfVehicles").val(vehicleCount),
+        $("#ddlItemName").val(parseInt(itemId)).trigger('change'),
+        $("#ddlPackingType").val(parseInt(packingTypeId)).trigger('change'),
+        $("#txtInstruction").val(specialInstruction)
 }

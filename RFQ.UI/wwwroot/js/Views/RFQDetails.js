@@ -471,7 +471,9 @@ function SaveAndSaveNew(action) {
             success: function (response) {
                 if (response) {
                     rfqId = response.rfqId;
-                    window.location.href = "../Dashboard/Dashboard";
+                    debugger;
+                    $("#vendorDetails-tab").removeAttr("disabled");
+                    toastr.success("Request For Quote Saved Sucessfully", "success");
                 } else {
                     toastr.error("Failed to Submit Request For Quote.", "Error");
                 }
