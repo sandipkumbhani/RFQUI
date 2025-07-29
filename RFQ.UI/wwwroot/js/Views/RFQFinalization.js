@@ -30,6 +30,34 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a RFQ No", "Validation Error");
         return false;
     }
+    if (!isValidateSelect($("#ddlRfqStatus").val())) {
+        toastr.warning("Please Select a RFQ Status", "Validation Error");
+        return false;
+    }
+    //if (!isValidateSelect($("#ddlRfqReason").val())) {
+    //    toastr.warning("Please Select a Failure Reason", "Validation Error");
+    //    return false;
+    //}
+    if (IsNullOrEmpty($("#txtRemarks").val())) {
+        toastr.warning("Please enter a Remarks", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtBillingRate").val())) {
+        toastr.warning("Please enter a Billing Rate", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtPerDay").val())) {
+        toastr.warning("Please enter a Detention Per Day", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtFreeDays").val())) {
+        toastr.warning("Please enter a Detention Free Days", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtAmount").val())) {
+        toastr.warning("Please enter a Margin Amount", "Validation Error");
+        return false;
+    }
     return true;
 }
 function GetRfqStatus() {
