@@ -1,5 +1,26 @@
 ﻿var quoteratevendore
 $(document).on("click", "#btnViewForm", function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+        RfqRateId: $('#rfqrateId').val(),
+        RfqNo: $('#txtRFQNo').val(),
+        RfqDate: $('#txtRFQDate').val(),
+        ExpireOn: $('#txtExpireOn').val(),
+        VehicleReqOn: $('#txtVehicleReqOn').val(),
+        VendorName: $('#txtVednorName').val(),
+        PanNo: $('#txtPANNo').val(),
+        OriginId: $('#ddlOrigin').val(),
+        DestinationId: $('#ddlDestination').val(),
+        VehicleTypeId: $('#ddlVehicleType').val(),
+        NoOfVehicles: $('#txtNoOfVehicles').val(),
+        ItemNameId: $('#ddlItemName').val(),
+        PackingTypeId: $('#ddlPackingType').val(),
+        SpecialInstructions: $('#txtInstruction').val(),
+        TotalHireCost: $('#txtHireCost').val(),
+        DetentionPerDay: $('#txtDetentionDay').val(),
+        DetentionFreeDays: $('#txtDetentionDays').val()
+   
+
     FetchList();
     $("#AddQuoteRoleVendorDiv").css('display', 'none')
     $("#backButton").css('display', 'Block')

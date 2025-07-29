@@ -1,9 +1,14 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using System.Numerics;
+using RFQ.UI.Domain.ResponseDto;
+using System.Threading.Tasks;
 
 namespace RFQ.UI.Controllers
 {
@@ -12,10 +17,12 @@ namespace RFQ.UI.Controllers
 
         private readonly GlobalClass _globalClass;
         private readonly IQuoteRateVendorService _rfqRateService;
-        public QuoteRateVendorController(GlobalClass globalClass, IQuoteRateVendorService rfqRateService)
+        private readonly IRequestForQuoteService _requestForQuoteService;
+        public QuoteRateVendorController(GlobalClass globalClass, IQuoteRateVendorService rfqRateService, IRequestForQuoteService requestForQuoteService)
         {
             _globalClass = globalClass;
             _rfqRateService = rfqRateService;
+            _requestForQuoteService = requestForQuoteService;
         }
         public IActionResult Index()
         {
@@ -54,5 +61,96 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
+        public async Task<IActionResult> SendQuoteLinks([FromBody] List<RfqRecipientRequestDto> vendorList)
+        {
+            var sentLinks = new List<object>();
+
+            foreach (var vendor in vendorList)
+            {
+                RfqResponseDto data =await _requestForQuoteService.GetRfqById(vendor.RfqId ?? 0);
+                string formLink = Url.Action("RFQDetails", "RequestForQuote",
+                    new RfqResponseDto()
+                    {
+                        RfqId = data.RfqId,
+                        RfqNo = data.RfqNo,
+                        CompanyId = data.CompanyId,
+                        LocationId = data.LocationId,
+                        IndentId = data.IndentId,
+                        RfqDate = data.RfqDate, // ISO format
+                        ExpiryDate = data.ExpiryDate,
+                        PartyId = data.PartyId,
+                        VehicleReqOn = data.VehicleReqOn,
+                        FromLocation = data.FromLocation,
+                        FromLatitude = data.FromLatitude,
+                        FromLongitude = data.FromLongitude,
+                        ToLocation = data.ToLocation,
+                        ToLatitude = data.ToLatitude,
+                        ToLongitude = data.ToLongitude,
+                        VehicleRequiredOn = data.VehicleRequiredOn,
+                        VehicleTypeId = data.VehicleTypeId,
+                        VehicleCount = data.VehicleCount,
+                        RfqSubject = data.RfqSubject,
+                        RfqPriorityId = data.RfqPriorityId,
+                        RfqTypeId = data.RfqTypeId,
+                        ItemId = data.ItemId,
+                        MaxCosting = data.MaxCosting,
+                        DetentionPerDay = data.DetentionPerDay,
+                        DetentionFreeDays = data.DetentionFreeDays,
+                        PackingTypeId = data.PackingTypeId,
+                        SpecialInstruction = data.SpecialInstruction,
+                        LinkId = data.LinkId,
+                        StatusId = data.StatusId,
+                    },
+                    Request.Scheme);
+
+                SendEmail(vendor, formLink);
+                sentLinks.Add(formLink);
+            }
+
+            return Json(new { links = sentLinks });
+        }
+
+        private bool SendEmail(RfqRecipientRequestDto vendor, string formLink)
+        {
+            // Validate email exists (dummy check)
+            if (string.IsNullOrEmpty(vendor.EmailId)) return false;
+
+            // Prepare email
+            var subject = "Quate-Rate Vendor";
+            string body = "";
+            body += "Dear User,\n\n";
+            body += formLink;
+            body += "Thank you,\n";
+            body += "FleetLynk";
+
+            try
+            {
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("amit.dev1018@gmail.com", "fqrf srsh rllg cpwl"), // <-- App password here
+                    EnableSsl = true,
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("amit.dev1018@gmail.com", "FleetLynk"),  // your Gmail address
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = false
+                };
+                mailMessage.To.Add(vendor.EmailId);
+
+                smtpClient.Send(mailMessage);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
     }
 }

@@ -9,5 +9,7 @@ namespace RFQ.UI.Application.Interface
         Task<string> GetRfqNo();
         Task<RfqRequestDto?> AddRfq(RfqRequestDto RfqRequestDto);
         Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo);
+        Task<RfqResponseDto> GetRfqById(int rfqId);
+        Task<IEnumerable<RfqVendorListResponseDto>> GetAllVendorListForRfq(RfqVendorDetailsParam rfqVendorDetailsParam);
     }
 }

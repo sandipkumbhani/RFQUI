@@ -12,7 +12,7 @@ $(document).ready(function () {
             SaveAndSaveNew(action);
         }
     });
-     
+
     $('#ddlIndent').on('change', function () {
         const selectedValue = $(this).val();
 
@@ -55,7 +55,6 @@ $(document).ready(function () {
     GetRfqPriority();
     FetchVendorData();
     FetchRfqNo();
-    GetAllVendorList();
     RenderFetchTable();
     ClearFetchForm();
     SaveRfqVendorDetails();
@@ -72,6 +71,15 @@ function CheckValidation() {
         }
     });
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const vendorDetailsTab = document.getElementById("vendorDetails-tab");
+
+    if (vendorDetailsTab) {
+        vendorDetailsTab.addEventListener("click", function () {
+            GetAllVendorList();
+        });
+    }
+});
 function OnSubmitCheckValidation() {
     if (!isValidateSelect($("#ddlLocation").val())) {
         toastr.warning("Please Select a Location", "Validation Error");
@@ -262,12 +270,24 @@ function FetchRfqNo() {
     });
 }
 function GetAllVendorList() {
-    var getUrl = '/Vendor/GetAllVendorList'
+    var getUrl = '/RequestForQuote/GetAllVendorListForRfq'
+    var fromOrigin = $('#from-search-box').val();
+    let fromOriginParts = fromOrigin.split(',');
+    let fromStateName = fromOriginParts[1].trim().toUpperCase();
+    var toDestination = $('#to-search-box').val();
+    let toDestinationParts = toDestination.split(',');
+    let toStateName = toDestinationParts[1].trim().toUpperCase();
+    var formData = {
+        OriginFrom: fromStateName,
+        ToDestination: toStateName,
+        VehicleTypeId: $('#ddlVehicleType').val()
+    }
+    console.log(formData);
     $.ajax({
         url: getUrl,
-        type: "GET",
-        data: { companyId: companyId },
+        type: "POST",
         contentType: "application/json",
+        data: JSON.stringify(formData),
         success: function (response) {
             fetchedVendorDataList = response;
             const vendorListDropdown = document.getElementById("ddlRFQVendorList");
@@ -333,6 +353,7 @@ function ClearFetchForm() {
     $("#fetchVendorEmailId").val('');
     $('#ddlRFQVendorList').val(null).trigger('change');
 }
+
 $('#btnAddVendor').on('click', function () {
     const getSelectVendorID = $("#ddlRFQVendorList").val();
     if (getSelectVendorID == null || getSelectVendorID == '') {
@@ -358,14 +379,17 @@ $('#btnAddVendor').on('click', function () {
     RenderFetchTable();
     ClearFetchForm();
 });
+
 $('#btnCancelVendor').on('click', function () {
     ClearFetchForm();
 });
+
 $('#rfqVendorTable').on('click', '.deleteVendor', function () {
     const rowIndex = $(this).closest('tr').data('index');
     vendorList.splice(rowIndex, 1);
     RenderFetchTable();
 });
+
 $('#rfqVendorTable').on('click', '.editVendor', function () {
     const rowIndex = $(this).closest('tr').data('index');
     const vendor = vendorList[rowIndex];
@@ -422,7 +446,7 @@ function SaveAndSaveNew(action) {
         FromLongitude: $('#fromLng').val(),
         ToLocation: $('#to-search-box').val(),
         ToLatitude: $('#toLat').val(),
-        ToLongitude: $('#toLng').val(),   
+        ToLongitude: $('#toLng').val(),
         VehicleRequiredOn: $('#txtVehicleReqDate').val(),
         VehicleTypeId: $('#ddlVehicleType').val(),
         VehicleCount: $('#txtNoofVehicles').val(),
@@ -491,6 +515,7 @@ function SaveAndSaveNew(action) {
 function SaveRfqVendorDetails() {
     var saveUrl = '/RfqRecipient/AddRfqRecipient';
     $("#btnSaveRfqVendorDetails").on('click', function () {
+        debugger;
         var formData = vendorList.map(vendor => ({
             RfqId: rfqId,
             VendorId: vendor.VendorId,
@@ -500,6 +525,7 @@ function SaveRfqVendorDetails() {
             WhatsAppNo: vendor.WhatsappNo,
             EmailId: vendor.EmailId
         }));
+        sendQuoteLinksForVendors(formData);
         $.ajax({
             url: saveUrl,
             type: 'POST',
@@ -518,3 +544,44 @@ function SaveRfqVendorDetails() {
         });
     });
 }
+
+
+function sendQuoteLinksForVendors(vendorList) {
+    const formData = vendorList.map(vendor => ({
+        RfqRecipientId: 0,
+        RfqId: rfqId,
+        VendorId: vendor.VendorId,
+        PanNo: vendor.PanNo,
+        VendorRating: vendor.VendorRating,
+        MobNo: vendor.MobileNo,
+        WhatsAppNo: vendor.WhatsAppNo,
+        EmailId: vendor.EmailId
+    }));
+
+    $.ajax({
+        url: '/QuoteRateVendor/SendQuoteLinks', // Must match your controller route
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function (response) {
+            console.log("Links generated successfully:", response.links);
+
+            // Example: Display or send links via WhatsApp
+            response.links.forEach(linkInfo => {
+                console.log(`Vendor ${linkInfo.VendorId} - Link: ${linkInfo.Link}`);
+
+                // Send via WhatsApp browser link (optional)
+                if (linkInfo.WhatsAppNo) {
+                    const message = encodeURIComponent("Please fill your RFQ form: " + linkInfo.Link);
+                    const waUrl = `https://wa.me/${linkInfo.WhatsAppNo}?text=${message}`;
+                    window.open(waUrl, '_blank');
+                }
+            });
+        },
+        error: function (xhr) {
+            console.error("Error sending quote links", xhr);
+            alert("Failed to send links.");
+        }
+    });
+}
+

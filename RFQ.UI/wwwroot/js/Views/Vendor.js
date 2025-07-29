@@ -1,5 +1,6 @@
 ﻿var orderColumn = '';
 var orderDir = '';
+var companyId;
 document.getElementById("txtPanNumber").addEventListener("input", function () {
     const panKyc = this.value;
     document.getElementById("numPanNumber").value = panKyc;
@@ -12,10 +13,11 @@ const urlParams = new URLSearchParams(window.location.search);
 const linkId = urlParams.get('LinkId');
 
 $(document).ready(function () {
+    companyId = getCookieValue('companyid');
     GetAllInternalMaster();
     BindDropDownFromCity();
     GetAllCityList("ddlCity");
-    GetAllVehicleType("ddlvendorVehicleTypeTable");
+    GetAllVehicleType("ddlvendorVehicleTypeTable", companyId);
     GetAllStateList("ddlvendorFromStateTable");
     GetAllStateList("ddlvendorToStateTable");
     CheckValidation();
