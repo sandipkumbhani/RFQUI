@@ -1,5 +1,8 @@
 ﻿var VehicIndentList;
 var companyId;
+var rfqId;
+var fetchedVendorDataList = [];
+var vendorList = [];
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
@@ -30,18 +33,6 @@ $(document).ready(function () {
             $('#fromLng').val(selectedIndent.fromLongitude);
             $('#toLat').val(selectedIndent.toLatitude);
             $('#toLng').val(selectedIndent.toLongitude);
-            //let dateValue = selectedIndent.vehicleReqOn;
-            //if (dateValue) {
-            //    if (dateValue instanceof Date) {
-            //        dateValue = dateValue.toISOString().split('T')[0];
-            //    } else if (typeof dateValue === "string" && dateValue.includes("T")) {
-            //        dateValue = dateValue.split('T')[0];
-            //    }
-            //    $('#txtVehicleReqDate').val(dateValue);
-            //} else {
-            //    $('#txtVehicleReqDate').val('');
-            //}
-
         }
     });
     GetAllLocation("ddlLocation", companyId, function () {
@@ -165,9 +156,6 @@ function OnSubmitCheckValidation() {
 
     return true;
 }
-var fetchedVendorDataList = [];
-var vendorList = [];
-var rfqId;
 function GetAllVehicleIndent() {
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
     $.ajax({
@@ -451,33 +439,75 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
 
 function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
+
+
     const formData = {
         RfqNo: $('#txtRfqNo').val(),
-        LocationId: $('#ddlLocation').val(),
-        IndentId: $('#ddlIndent').val(),
-        RfqDate: $('#txtRfqDate').val(),
+        LocationId: parseInt($('#ddlLocation').val()) || 0,
+        IndentId: parseInt($('#ddlIndent').val()) || 0,
+        RfqDate: $('#txtRfqDate').val(), // Ensure format: yyyy-MM-ddTHH:mm
         ExpiryDate: $('#txtRfqExpiredOn').val(),
-        PartyId: $('#ddlCustomerName').val(),
+        PartyId: parseInt($('#ddlCustomerName').val()) || 0,
         VehicleReqOn: $('#txtVehicleReqDate').val(),
+
         FromLocation: $('#from-search-box').val(),
         FromLatitude: $('#fromLat').val(),
         FromLongitude: $('#fromLng').val(),
         ToLocation: $('#to-search-box').val(),
         ToLatitude: $('#toLat').val(),
         ToLongitude: $('#toLng').val(),
+
         VehicleRequiredOn: $('#txtVehicleReqDate').val(),
-        VehicleTypeId: $('#ddlVehicleType').val(),
-        VehicleCount: $('#txtNoofVehicles').val(),
+        VehicleTypeId: parseInt($('#ddlVehicleType').val()) || 0,
+        VehicleCount: parseInt($('#txtNoofVehicles').val()) || 0,
         RfqSubject: $('#txtRfqSubject').val(),
-        RfqPriorityId: $('#ddlRfqPriority').val(),
-        RfqTypeId: $('#ddlRfqType').val(),
-        ItemId: $('#ddlItemName').val(),
-        MaxCosting: $('#txtMaxCosting').val(),
-        DetentionPerDay: $('#txtPerDay').val(),
-        DetentionFreeDays: $('#txtFreeDay').val(),
-        PackingTypeId: $('#ddlPackingType').val(),
+        RfqPriorityId: parseInt($('#ddlRfqPriority').val()) || 0,
+        RfqTypeId: parseInt($('#ddlRfqType').val()) || 0,
+        ItemId: parseInt($('#ddlItemName').val()) || 0,
+        MaxCosting: parseInt($('#txtMaxCosting').val()) || 0,
+        DetentionPerDay: parseInt($('#txtPerDay').val()) || 0,
+        DetentionFreeDays: parseInt($('#txtFreeDay').val()) || 0,
+        PackingTypeId: parseInt($('#ddlPackingType').val()) || 0,
         SpecialInstruction: $('#txtSpecialInstructions').val(),
-        LinkId: GetQueryParam("LinkId")
+        LinkId: parseInt(GetQueryParam("LinkId")) || 0
+    };
+
+    // Add required default or hidden values for CreatedBy, UpdatedBy, etc.
+    const rfqData = {
+        rfqId: 0, // For new RFQ
+        rfqNo: formData.RfqNo,
+        companyId: parseInt($('#ddlCompany').val()) || 0,
+        locationId: formData.LocationId,
+        indentId: formData.IndentId,
+        rfqDate: formData.RfqDate,
+        expiryDate: formData.ExpiryDate,
+        partyId: formData.PartyId,
+        vehicleReqOn: formData.VehicleReqOn,
+
+        fromLocation: formData.FromLocation,
+        fromLatitude: formData.FromLatitude,
+        fromLongitude: formData.FromLongitude,
+        toLocation: formData.ToLocation,
+        toLatitude: formData.ToLatitude,
+        toLongitude: formData.ToLongitude,
+
+        vehicleRequiredOn: formData.VehicleRequiredOn,
+        vehicleTypeId: formData.VehicleTypeId,
+        vehicleCount: formData.VehicleCount,
+        rfqSubject: formData.RfqSubject,
+        rfqPriorityId: formData.RfqPriorityId,
+        rfqTypeId: formData.RfqTypeId,
+        itemId: formData.ItemId,
+        maxCosting: formData.MaxCosting,
+        detentionPerDay: formData.DetentionPerDay,
+        detentionFreeDays: formData.DetentionFreeDays,
+        packingTypeId: formData.PackingTypeId,
+        specialInstruction: formData.SpecialInstruction,
+        linkId: formData.LinkId,
+
+        createdBy: parseInt($('#txtCreatedBy').val()) || 0,
+        updatedBy: parseInt($('#txtUpdatedBy').val()) || 0,
+        updatedOn: new Date().toISOString()
     };
 
     if (action === "save") {
@@ -489,6 +519,7 @@ function SaveAndSaveNew(action) {
             success: function (response) {
                 if (response) {
                     rfqId = response.rfqId;
+                    console.log(rfqId);
                     debugger;
                     $("#vendorDetails-tab").removeAttr("disabled");
                     toastr.success("Request For Quote Saved Sucessfully", "success");
@@ -564,9 +595,8 @@ function SaveRfqVendorDetails() {
         });
     });
 }
-
-
 function sendQuoteLinksForVendors(vendorList) {
+    debugger;
     const formData = vendorList.map(vendor => ({
         RfqRecipientId: 0,
         RfqId: rfqId,

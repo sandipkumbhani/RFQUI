@@ -1,5 +1,7 @@
 ﻿var quoteratevendore
 var companyId;
+var vendorId;
+var rfqId = '';
 $(document).on("click", "#btnViewForm", function () {
 
     //RfqRateId: $('#rfqrateId').val(),
@@ -28,14 +30,15 @@ $(document).ready(function () {
     profileId = getCookieValue('profileid');
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
         var action = $(this).data('action'); // "save" or "saveNew"
-        if (ValidationCheck()) {
-            Save(action);
-        }
+        //if (ValidationCheck()) {
+        Save(action);
+        //}
     });
     Initialization();
     GetAllVehicleType("ddlVehicleType", companyId);
     GetAllPakingType("ddlPackingType");
     GetAllItemName("ddlItemName", companyId);
+    GetAllVendorList()
     setTimeout(() => {
         UrlParamBind()
     }, 100);
@@ -300,88 +303,41 @@ function GetAllPakingType() {
     });
 }
 function Save(action) {
-
-    //var isvalid = ValidationCheck();
-    //if (!isvalid) {
-    //    return;
-    //}
-    //var ExpireOn = $("#txtExpireOn").val();
-    //var VehicleReqOn = $("#txtVehicleReqOn").val();
-    //var ItemName = $("#ddlItemName").val();
-    //var PackingType = $("#ddlPackingType").val();
-    //var PANNo = $("#txtPANNo").val();
-    //var RFQPriority = $("#txtRFQPriority").val();
-    //var NoOfVehicles = $("#txtNoOfVehicles").val();
-    //var TotalQTY = $("#txtTotalQTY").val();
-    //var Instruction = $("#txtInstruction").val();
-    //var RFQNo = $("#txtRFQNo").val();
-    //var RFQDate = $("#txtRFQDate").val();
-    //var OriginFrom = $("#txtOriginFrom").val();
-    //var RFQOn = $("#txtRFQOn").val();
-    //var VehicleType = $("#ddlVehicleType").val();
+    debugger;
     var DetentionFreeDays = $("#txtDetentionDays").val();
     var DetentionDay = $("#txtDetentionDay").val();
     var VednorName = $("#txtVednorName").val();
-    var Destination = $("#txtDestination").val();
     var HireCost = $("#txtHireCost").val();
+
     var formdata = {
-        // RfqDetailId : rfqDetailId,
-        VendorId: VednorName,
-        LocationId: Destination,
-        TotalHireCost: HireCost,
-        DetentionPerDay: DetentionDay,
-        DetentionFreeDay: DetentionFreeDays
+        rfqRateId: 0,
+        rfqId: parseInt(VednorName),
+        vendorId: parseInt(rfqId),
+        totalHireCost: parseInt(HireCost),
+        detentionPerDay: parseInt(DetentionDay),
+        detentionFreeDays: parseInt(DetentionFreeDays)
     };
-    if (action == "save") {
-        $.ajax({
-            url: '/RFQRate/SaveQuoteRateVendor/',
-            type: "POST",
-            contentType: "application/json;charset=utf-8",
-            data: JSON.stringify(formdata),
-            dataType: "json",
-            success: function (response) {
-                toastr.success(" Details Submitted Successfully!");
-                window.location.href = "../Dashboard/Dashboard";
-            },
-            error: function (req, status, error) {
-                toastr.error("Failed to Save User Details", "Error");
-            }
-        });
-    }
-    else if (action === "saveNew") {
-        try {
-            $.ajax({
-                url: '/RFQRate/SaveQuoteRateVendor/',
-                type: "POST",
-                contentType: "application/json;charset=utf-8",
-                data: JSON.stringify(formdata),
-                dataType: "json",
-                success: function (response) {
-                    if (response.result == "success") {
-                        toastr.success(" Details Submitted Successfully!");
-                        $('#userbodyform')[0].reset();
-                        $('#ddlCompanyAndFranchise').val(null).trigger('change');
-                        $('#ddlLocation').val(null).trigger('change');
-                    } else {
-                        toastr.error(" already exists", "Error");
-                    }
-                },
-                error: function (req, status, error) {
-                    toastr.error("Failed to Save  Details", "Error");
-                }
-            });
-
-
-        } catch (error) {
-            toastr.error("Failed to Save  Details", "Error");
+    debugger;
+    $.ajax({
+        url: '/QuoteRateVendor/SaveQuoteRateVendor',
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(formdata),
+        dataType: "json",
+        success: function (response) {
+            toastr.success(" Details Submitted Successfully!");
+            window.location.href = "../Dashboard/Dashboard";
+        },
+        error: function (req, status, error) {
+            toastr.error("Failed to Save User Details", "Error");
         }
-    }
+    });
 }
 
 function UrlParamBind() {
     debugger;
     const urlParams = new URLSearchParams(window.location.search);
-    const rfqId = urlParams.get("RfqId");
+    const RFQId = urlParams.get("RfqId");
     const rfqNo = urlParams.get("RfqNo");
     const rfqDate = urlParams.get("RfqDate");
     const expiryDate = urlParams.get("ExpiryDate");
@@ -396,19 +352,51 @@ function UrlParamBind() {
     const specialInstruction = urlParams.get("SpecialInstruction");
     var VendorId = urlParams.get("VendorId");
     const PanNo = urlParams.get("PanNo");
-
-    $("#rfqrateId").val(rfqId),
-        $("#txtRFQNo").val(rfqNo),
-        $("#txtRFQDate").val(formatDate(rfqDate).substring(0, 11)),
-        $("#txtExpireOn").val(formatDate(expiryDate));
-    $("#txtVehicleReqOn").val(formatDate(vehicleReqOn).substring(0, 11)),
-        $("#txtVednorName").val(partyId),
-        $("#txtPANNo").val(PanNo),
-        $("#ddlOrigin").val(fromLocation),
-        $("#ddlDestination").val(toLocation),
-        $("#ddlVehicleType").val(parseInt(vehicleTypeId)).trigger('change'),
-        $("#txtNoOfVehicles").val(vehicleCount),
-        $("#ddlItemName").val(parseInt(itemId)).trigger('change'),
-        $("#ddlPackingType").val(parseInt(packingTypeId)).trigger('change'),
-        $("#txtInstruction").val(specialInstruction)
+    debugger;
+    vendorId = VendorId;
+    rfqId = RFQId;
+    $("#txtRFQNo").val(rfqNo);
+    $("#txtExpireOn").val(formatDate(expiryDate));
+    $("#txtVednorName").val(parseInt(VendorId)).trigger('change');;
+    $("#txtPANNo").val(PanNo);
+    $("#ddlOrigin").val(fromLocation);
+    $("#ddlDestination").val(toLocation);
+    $("#ddlVehicleType").val(parseInt(vehicleTypeId)).trigger('change');
+    $("#txtNoOfVehicles").val(vehicleCount);
+    $("#ddlItemName").val(parseInt(itemId)).trigger('change');
+    $("#ddlPackingType").val(parseInt(packingTypeId)).trigger('change');
+    $("#txtInstruction").val(specialInstruction);
+    $("#txtRFQDate").val(formatDate(rfqDate).substring(0, 11));
+    $("#txtVehicleReqOn").val(formatDate(vehicleReqOn).substring(0, 11));
 }
+
+function GetAllVendorList() {
+    var getUrl = '/Vendor/GetAllVendorList'
+    $.ajax({
+        url: getUrl,
+        type: "GET",
+        data: { companyId: companyId },
+        contentType: "application/json",
+        success: function (response) {
+            console.log(response);
+            const VednorListDropdown = document.getElementById("txtVednorName");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select Vednor Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            VednorListDropdown.appendChild(placeholderOption);
+            response.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.partyId;
+                option.textContent = item.partyName;
+                VednorListDropdown.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Consignor Name!", "Error");
+            $("#ddlLocation").val()
+        }
+
+    });
+};
