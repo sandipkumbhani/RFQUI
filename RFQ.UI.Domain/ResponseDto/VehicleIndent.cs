@@ -16,9 +16,13 @@ namespace RFQ.UI.Domain.ResponseDto
         public DateTime VehicleReqOn { get; set; }
         public int PartyId { get; set; }
         public string FromLocation { get; set; }
+        public string FromLocationState { get; set; }
+        public string FromLocationCity { get; set; }
         public string FromLatitude { get; set; }
         public string FromLongitude { get; set; }
         public string ToLocation { get; set; }
+        public string ToLocationState { get; set; }
+        public string ToLocationCity { get; set; }
         public string ToLatitude { get; set; }
         public string ToLongitude { get; set; }
         public int VehicleTypeId { get; set; }
