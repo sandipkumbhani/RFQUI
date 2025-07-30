@@ -28,9 +28,12 @@ $(document).ready(function () {
             $('#to-search-box').val(selectedIndent.toLocation);
             $('#txtNoofVehicles').val(selectedIndent.requiredVehicles);
             $('#txtVehicleReqDate').val(selectedIndent.vehicleReqOn.split('T')[0]);
-
+            $('#fromState').val(selectedIndent.fromLocationState);
+            $('#fromCity').val(selectedIndent.fromLocationCity);
             $('#fromLat').val(selectedIndent.fromLatitude);
             $('#fromLng').val(selectedIndent.fromLongitude);
+            $('#toState').val(selectedIndent.toLocationState);
+            $('#toCity').val(selectedIndent.toLocationCity);
             $('#toLat').val(selectedIndent.toLatitude);
             $('#toLng').val(selectedIndent.toLongitude);
         }
@@ -452,74 +455,53 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
 
 function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
-    const formData = {
+    const rfqFormData = {
+        //RfqId:0,
         RfqNo: $('#txtRfqNo').val(),
-        LocationId: parseInt($('#ddlLocation').val()) || 0,
-        IndentId: parseInt($('#ddlIndent').val()) || 0,
+        //CompanyId:0,
+        LocationId: $('#ddlLocation').val(),
+        IndentId: $('#ddlIndent').val(),
         RfqDate: $('#txtRfqDate').val(), 
         ExpiryDate: $('#txtRfqExpiredOn').val(),
-        PartyId: parseInt($('#ddlCustomerName').val()) || 0,
+        PartyId: $('#ddlCustomerName').val(),
         VehicleReqOn: $('#txtVehicleReqDate').val(),
         FromLocation: $('#from-search-box').val(),
+        FromLocationState: $('#fromState').val(),
+        FromLocationCity: $('#fromCity').val(),
         FromLatitude: $('#fromLat').val(),
         FromLongitude: $('#fromLng').val(),
         ToLocation: $('#to-search-box').val(),
+        ToLocationState: $('#toState').val(),
+        ToLocationCity: $('#toCity').val(),
         ToLatitude: $('#toLat').val(),
         ToLongitude: $('#toLng').val(),
-
-        VehicleRequiredOn: $('#txtVehicleReqDate').val(),
-        VehicleTypeId: parseInt($('#ddlVehicleType').val()) || 0,
-        VehicleCount: parseInt($('#txtNoofVehicles').val()) || 0,
+        VehicleTypeId: $('#ddlVehicleType').val() ,
+        VehicleCount: $('#txtNoofVehicles').val(),
         RfqSubject: $('#txtRfqSubject').val(),
-        RfqPriorityId: parseInt($('#ddlRfqPriority').val()) || 0,
-        RfqTypeId: parseInt($('#ddlRfqType').val()) || 0,
-        ItemId: parseInt($('#ddlItemName').val()) || 0,
-        MaxCosting: parseInt($('#txtMaxCosting').val()) || 0,
-        DetentionPerDay: parseInt($('#txtPerDay').val()) || 0,
-        DetentionFreeDays: parseInt($('#txtFreeDay').val()) || 0,
-        PackingTypeId: parseInt($('#ddlPackingType').val()) || 0,
+        RfqPriorityId: $('#ddlRfqPriority').val(),
+        RfqTypeId: $('#ddlRfqType').val(),
+        ItemId: parseInt($('#ddlItemName').val()),
+        MaxCosting: parseInt($('#txtMaxCosting').val()) ,
+        DetentionPerDay: parseInt($('#txtPerDay').val()) ,
+        DetentionFreeDays: parseInt($('#txtFreeDay').val()) ,
+        PackingTypeId: parseInt($('#ddlPackingType').val()) ,
         SpecialInstruction: $('#txtSpecialInstructions').val(),
-        LinkId: parseInt(GetQueryParam("LinkId")) || 0
+        LinkId: parseInt(GetQueryParam("LinkId"))
     };
-
-    // Add required default or hidden values for CreatedBy, UpdatedBy, etc.
-    const rfqData = {
-        rfqId: 0, // For new RFQ
-        rfqNo: formData.RfqNo,
-        companyId: parseInt($('#ddlCompany').val()) || 0,
-        locationId: formData.LocationId,
-        indentId: formData.IndentId,
-        rfqDate: formData.RfqDate,
-        expiryDate: formData.ExpiryDate,
-        partyId: formData.PartyId,
-        vehicleReqOn: formData.VehicleReqOn,
-
-        fromLocation: formData.FromLocation,
-        fromLatitude: formData.FromLatitude,
-        fromLongitude: formData.FromLongitude,
-        toLocation: formData.ToLocation,
-        toLatitude: formData.ToLatitude,
-        toLongitude: formData.ToLongitude,
-
-        vehicleRequiredOn: formData.VehicleRequiredOn,
-        vehicleTypeId: formData.VehicleTypeId,
-        vehicleCount: formData.VehicleCount,
-        rfqSubject: formData.RfqSubject,
-        rfqPriorityId: formData.RfqPriorityId,
-        rfqTypeId: formData.RfqTypeId,
-        itemId: formData.ItemId,
-        maxCosting: formData.MaxCosting,
-        detentionPerDay: formData.DetentionPerDay,
-        detentionFreeDays: formData.DetentionFreeDays,
-        packingTypeId: formData.PackingTypeId,
-        specialInstruction: formData.SpecialInstruction,
-        linkId: formData.LinkId,
-
-        createdBy: parseInt($('#txtCreatedBy').val()) || 0,
-        updatedBy: parseInt($('#txtUpdatedBy').val()) || 0,
-        updatedOn: new Date().toISOString()
-    };
-
+    const recipientFormData = vendorList.map(vendor => ({
+        //RfqRecipientId: 0,
+        //RfqId:0,
+        VendorId: vendor.VendorId,
+        PanNo: vendor.PanNo,
+        VendorRating: vendor.VendorRating,
+        MobNo: vendor.MobileNo,
+        WhatsAppNo: vendor.WhatsappNo,
+        EmailId: vendor.EmailId
+    }));
+    var formData = {
+        RfqRequestDto: rfqFormData,
+        RfqRecipients: recipientFormData
+    }
     if (action === "save") {
         $.ajax({
             url: saveUrl,
@@ -528,6 +510,7 @@ function SaveAndSaveNew(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
+                    console.log(response);
                     rfqId = response.rfqId;
                     toastr.success("Request For Quote Saved Sucessfully", "success");
                 } else {
@@ -548,6 +531,7 @@ function SaveAndSaveNew(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
+                    console.log(response);
                     rfqId = response.rfqId;
                     toastr.success("Vehicle Indent Saved Successfully!", "Success");
                     $('#RfqDetailsForm')[0].reset();

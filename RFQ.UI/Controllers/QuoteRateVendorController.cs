@@ -60,13 +60,13 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
+            
         public async Task<IActionResult> SendQuoteLinks([FromBody] List<RfqRecipientRequestDto> vendorList)
         {
             var sentLinks = new List<object>();
             foreach (var vendor in vendorList)
             {
-                RfqResponseDto data = await _requestForQuoteService.GetRfqById(vendor.RfqId ?? 0);
+                RequestForQuoteResponseDto data = await _requestForQuoteService.GetRfqById(vendor.RfqId);
                 if (data != null)
                 {
                     string? formLink = string.Empty;

@@ -59,7 +59,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRfq([FromBody] RequestForQouteRequestDto requestForQouteRequestDto)
+        public async Task<IActionResult> AddRfq([FromBody] RequestForQuoteRequestDto requestForQouteRequestDto)
         {
             try
             {
