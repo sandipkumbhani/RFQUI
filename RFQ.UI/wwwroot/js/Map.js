@@ -12,7 +12,8 @@ function initMap() {
         "from-location-suggestions",
         "fromLat",
         "fromLng",
-        "fromState"
+        "fromState",
+        "fromCity"
     );
 
     setupLocationSearch(
@@ -20,11 +21,12 @@ function initMap() {
         "to-location-suggestions",
         "toLat",
         "toLng",
-        "toState"
+        "toState",
+        "toCity"
     );
 }
 
-function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId) {
+function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId,cityId) {
     const input = document.getElementById(inputId);
     const suggestionsBox = document.getElementById(suggestionListId);
     let currentFocus = -1;
@@ -94,7 +96,7 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId) {
     function selectPrediction(prediction) {
         input.value = prediction.description;
         suggestionsBox.style.display = "none";
-        getLatLngAndState(prediction.place_id, latId, lngId, stateId);
+        getLatLngAndState(prediction.place_id, latId, lngId, stateId, cityId);
     }
 
     document.addEventListener("click", function (e) {
@@ -104,31 +106,28 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId) {
     });
 }
 
-function getLatLngAndState(placeId, latId, lngId, stateId) {
+function getLatLngAndState(placeId, latId, lngId, stateId,cityId) {
     geocoder.geocode({ placeId: placeId }, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK && results[0]) {
-            console.log(results[0]); // Log the full result for debugging)
             let location = results[0].geometry.location;
             let lat = location.lat();
             let lng = location.lng();
             let state = "";
-
+            let city = "";
             results[0].address_components.forEach(function (component) {
                 if (component.types.includes("administrative_area_level_1")) {
                     state = component.long_name;
                 }
+                if (component.types.includes("locality")) {
+                    city = component.long_name;
+                }
             });
-
-            // Log values in console
-            console.log("Selected Location Details:");
-            console.log("Latitude:", lat.toFixed(6));
-            console.log("Longitude:", lng.toFixed(6));
-            console.log("State:", state);
 
             // Store values in hidden inputs
             document.getElementById(latId).value = lat.toFixed(6);
             document.getElementById(lngId).value = lng.toFixed(6);
             document.getElementById(stateId).value = state;
+            document.getElementById(cityId).value = city; 
         } else {
             console.error("Geocoder failed or no result:", status);
         }

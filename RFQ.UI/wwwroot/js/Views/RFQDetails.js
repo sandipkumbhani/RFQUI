@@ -452,17 +452,14 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
 
 function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
-
-
     const formData = {
         RfqNo: $('#txtRfqNo').val(),
         LocationId: parseInt($('#ddlLocation').val()) || 0,
         IndentId: parseInt($('#ddlIndent').val()) || 0,
-        RfqDate: $('#txtRfqDate').val(), // Ensure format: yyyy-MM-ddTHH:mm
+        RfqDate: $('#txtRfqDate').val(), 
         ExpiryDate: $('#txtRfqExpiredOn').val(),
         PartyId: parseInt($('#ddlCustomerName').val()) || 0,
         VehicleReqOn: $('#txtVehicleReqDate').val(),
-
         FromLocation: $('#from-search-box').val(),
         FromLatitude: $('#fromLat').val(),
         FromLongitude: $('#fromLng').val(),
