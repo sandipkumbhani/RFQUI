@@ -91,7 +91,6 @@ function GetRfqStatus() {
     });
 }
 function GetRfqDetailsByRfqNo() {
-    debugger;
     var rfqNumber = $("#txtRfqNumber").val();
     var getUrl = '/RequestForQuote/GetRfqByRfqNo/' + rfqNumber;
     $.ajax({
@@ -153,33 +152,27 @@ function SaveAndSaveNew(action) {
         });
     }
 
-    //else if (action === "saveNew") {
-    //    $.ajax({
-    //        url: saveUrl,
-    //        type: 'POST',
-    //        contentType: 'application/json',
-    //        data: JSON.stringify(formData),
-    //        success: function (response) {
-    //            if (response) {
-    //                rfqId = response.rfqId;
-    //                toastr.success("Vehicle Indent Saved Successfully!", "Success");
-    //                $('#RfqDetailsForm')[0].reset();
-    //                $('#ddlLocation').val(null).trigger('change');
-    //                $('#ddlIndent').val(null).trigger('change');
-    //                $('#ddlCustomerName').val(null).trigger('change');
-    //                $('#ddlVehicleType').val(null).trigger('change');
-    //                $('#ddlRfqPriority').val(null).trigger('change');
-    //                $('#ddlRfqType').val(null).trigger('change');
-    //                $('#ddlItemName').val(null).trigger('change');
-    //                $('#ddlPackingType').val(null).trigger('change');
-    //                FetchRfqNo();
-    //            } else {
-    //                toastr.error("Failed to Submit RFQ Finalization.", "Error");
-    //            }
-    //        },
-    //        error: function (xhr, status, error) {
-    //            toastr.error("Failed to Submit RFQ Finalization.", "Error");
-    //        }
-    //    });
-    //}
+    else if (action === "saveNew") {
+        $.ajax({
+            url: saveUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response) {
+                    toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    $('#RFQForm')[0].reset();
+                    $('#ddlCustomerName').val(null).trigger('change');
+                    $('#ddlVehicleType').val(null).trigger('change');
+                    $('#ddlRfqStatus').val(null).trigger('change');
+                    //FetchIndentNo();
+                } else {
+                    toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
+            }
+        });
+    }
 }
