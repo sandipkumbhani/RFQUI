@@ -519,9 +519,6 @@ function SaveAndSaveNew(action) {
             success: function (response) {
                 if (response) {
                     rfqId = response.rfqId;
-                    console.log(rfqId);
-                    debugger;
-                    $("#vendorDetails-tab").removeAttr("disabled");
                     toastr.success("Request For Quote Saved Sucessfully", "success");
                 } else {
                     toastr.error("Failed to Submit Request For Quote.", "Error");
