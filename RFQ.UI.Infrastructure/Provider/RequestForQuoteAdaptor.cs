@@ -90,7 +90,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
-        public async Task<bool> AddRfq(RequestForQouteRequestDto requestForQouteRequestDto)
+        public async Task<RfqResponseDto> AddRfq(RequestForQouteRequestDto requestForQouteRequestDto)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var rfqData = JsonConvert.DeserializeObject<bool>(responseModel.Data.ToString());
+                    var rfqData = JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
                     return rfqData;
                 }
             }
@@ -115,7 +115,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 Console.WriteLine("Error in AddRfq: " + ex.Message);
             }
 
-            return false;
+            return null;
         }
 
         public async Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo)

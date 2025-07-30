@@ -13,7 +13,7 @@ namespace RFQ.UI.Application.Provider
             _requestForQuoteAdaptor = requestForQuoteAdaptor;
         }
 
-        public Task<bool> AddRfq(RequestForQouteRequestDto requestForQouteRequestDto)
+        public Task<RfqResponseDto> AddRfq(RequestForQouteRequestDto requestForQouteRequestDto)
         {
             return _requestForQuoteAdaptor.AddRfq(requestForQouteRequestDto);
         }

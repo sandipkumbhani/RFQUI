@@ -16,4 +16,12 @@
     <Folder Include="RFQ\UI\Domain\Model\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Project\RFQUI\RFQ.UI.Domain\ResponseDto\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\Project\RFQUI\RFQ.UI.Domain\ResponseDto\.editorconfig" />
+  </ItemGroup>
+
 </Project>
