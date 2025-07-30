@@ -13,9 +13,9 @@ namespace RFQ.UI.Application.Provider
             _requestForQuoteAdaptor = requestForQuoteAdaptor;
         }
 
-        public Task<RfqRequestDto?> AddRfq(RfqRequestDto RfqRequestDto)
+        public Task<RfqResponseDto> AddRfq(RequestForQouteRequestDto requestForQouteRequestDto)
         {
-            return _requestForQuoteAdaptor.AddRfq(RfqRequestDto);
+            return _requestForQuoteAdaptor.AddRfq(requestForQouteRequestDto);
         }
 
         public Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList()

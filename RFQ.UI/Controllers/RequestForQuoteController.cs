@@ -59,7 +59,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRfq([FromBody] RfqRequestDto RfqRequestDto)
+        public async Task<IActionResult> AddRfq([FromBody] RequestForQouteRequestDto requestForQouteRequestDto)
         {
             try
             {
@@ -67,20 +67,19 @@ namespace RFQ.UI.Controllers
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                if (RfqRequestDto != null)
+                if (requestForQouteRequestDto != null)
                 {
-                    RfqRequestDto.CompanyId = Convert.ToInt32(companyid);
-                    RfqRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                    requestForQouteRequestDto.RfqRequestDto.CompanyId = Convert.ToInt32(companyid);
+                    requestForQouteRequestDto.RfqRequestDto.CreatedBy = Convert.ToInt32(userid);
+                    requestForQouteRequestDto.RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
-                    var result = await _requestForQuoteService.AddRfq(RfqRequestDto);
+                    var result = await _requestForQuoteService.AddRfq(requestForQouteRequestDto);
                     return Json(result);
                 }
                 else
-                {
-                    return Json(new { result = "fail" });
+                    return Json(new { result = "failure" });
 
-                }
+
             }
             catch (Exception ex)
             {

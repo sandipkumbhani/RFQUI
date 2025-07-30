@@ -52,7 +52,7 @@ namespace RFQ.UI.Controllers
                 }
                 else
                 {
-                    return Json(new { result = "fail" });
+                    return Json(new { result = "failure" });
                 }
             }
             catch (Exception ex)
@@ -69,28 +69,29 @@ namespace RFQ.UI.Controllers
                 RfqResponseDto data = await _requestForQuoteService.GetRfqById(vendor.RfqId ?? 0);
                 if (data != null)
                 {
-                    string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor",
-                                new
-                                {
-                                    RfqId = data.RfqId,
-                                    RfqNo = data.RfqNo,
-                                    CompanyId = data.CompanyId,
-                                    LocationId = data.LocationId,
-                                    RfqDate = data.RfqDate,
-                                    ExpiryDate = data.ExpiryDate,
-                                    PartyId = data.PartyId,
-                                    VehicleReqOn = data.VehicleReqOn,
-                                    FromLocation = data.FromLocation,
-                                    ToLocation = data.ToLocation,
-                                    VehicleTypeId = data.VehicleTypeId,
-                                    VehicleCount = data.VehicleCount,
-                                    RfqPriorityId = data.RfqPriorityId,
-                                    ItemId = data.ItemId,
-                                    PackingTypeId = data.PackingTypeId,
-                                    SpecialInstruction = data.SpecialInstruction,
-                                    VendorId = vendor.VendorId,
-                                    PanNo = vendor.PanNo,
-                                }, Request.Scheme) ?? string.Empty;
+                    string? formLink = string.Empty;
+                    //string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor",
+                    //            new
+                    //            {
+                    //                RfqId = data.RfqId,
+                    //                RfqNo = data.RfqNo,
+                    //                CompanyId = data.CompanyId,
+                    //                LocationId = data.LocationId,
+                    //                RfqDate = data.RfqDate,
+                    //                ExpiryDate = data.ExpiryDate,
+                    //                PartyId = data.PartyId,
+                    //                VehicleReqOn = data.VehicleReqOn,
+                    //                FromLocation = data.FromLocation,
+                    //                ToLocation = data.ToLocation,
+                    //                VehicleTypeId = data.VehicleTypeId,
+                    //                VehicleCount = data.VehicleCount,
+                    //                RfqPriorityId = data.RfqPriorityId,
+                    //                ItemId = data.ItemId,
+                    //                PackingTypeId = data.PackingTypeId,
+                    //                SpecialInstruction = data.SpecialInstruction,
+                    //                VendorId = vendor.VendorId,
+                    //                PanNo = vendor.PanNo,
+                    //            }, Request.Scheme) ?? string.Empty;
                     SendEmail(vendor, formLink);
                     sentLinks.Add(formLink);
                 }

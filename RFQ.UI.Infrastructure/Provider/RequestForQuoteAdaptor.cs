@@ -4,7 +4,6 @@ using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using System.Net.Http;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -91,7 +90,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
-        public async Task<RfqRequestDto?> AddRfq(RfqRequestDto rfqRequestDto)
+        public async Task<RfqResponseDto> AddRfq(RequestForQouteRequestDto requestForQouteRequestDto)
         {
             try
             {
@@ -100,14 +99,14 @@ namespace RFQ.UI.Infrastructure.Provider
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
                 var baseUrl = _fleetLynkApiUrl + _config["RequestForQuote:AddRfq"];
-                var rfq = JsonConvert.SerializeObject(rfqRequestDto);
+                var rfq = JsonConvert.SerializeObject(requestForQouteRequestDto);
                 var requestContent = new StringContent(rfq, Encoding.UTF8, "application/json");
                 var response = await httpClient.PostAsync(baseUrl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var rfqData = JsonConvert.DeserializeObject<RfqRequestDto>(responseModel.Data.ToString());
+                    var rfqData = JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
                     return rfqData;
                 }
             }
@@ -187,7 +186,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetAllVendorListForRfq"] ;
+                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetAllVendorListForRfq"];
                 var rfqVendorList = JsonConvert.SerializeObject(rfqVendorDetailsParam);
                 var requestContent = new StringContent(rfqVendorList, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);

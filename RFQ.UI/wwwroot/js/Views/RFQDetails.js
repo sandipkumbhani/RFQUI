@@ -7,10 +7,10 @@ $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
-    //CheckValidation();
+    CheckValidation();
     $("#btnSaveType, #btnSaveAndNew").on('click', function () {
 
-        var action = $(this).data('action'); // "save" or "saveNew"
+        var action = $(this).data('action'); 
         if (OnSubmitCheckValidation()) {
             SaveAndSaveNew(action);
         }
@@ -61,6 +61,13 @@ function CheckValidation() {
             return;
         }
     });
+    $("#txtRfqExpiredOn").on("change", function () {
+        var expireDate = $(this).val().split('T')[0];
+        if (expireDate <= $('#txtVehicleReqDate').val()) {
+            toastr.warning("Indent Expired On date must be greater than Vehicle Req On Date.", "Warning");
+            $(this).val('');
+        }
+    });
 }
 document.addEventListener("DOMContentLoaded", function () {
     const vendorDetailsTab = document.getElementById("vendorDetails-tab");
@@ -84,10 +91,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a RFQ Date", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtRfqExpiredOn").val())) {
-        toastr.warning("Please enter a RFQ Expired On", "Validation Error");
-        return false;
-    }
+    
     if (!isValidateSelect($("#ddlIndent").val())) {
         toastr.warning("Please Select a Indent No", "Validation Error");
         return false;
@@ -98,6 +102,15 @@ function OnSubmitCheckValidation() {
     }
     if (IsNullOrEmpty($("#txtVehicleReqDate").val())) {
         toastr.warning("Please enter a Vehicle Req On", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtRfqExpiredOn").val())) {
+        toastr.warning("Please enter a RFQ Expired On", "Validation Error");
+        return false;
+    }
+    if ($("#txtRfqExpiredOn").val().split('T')[0] <= $('#txtVehicleReqDate').val()) {
+        toastr.warning("Indent Expired On date must be greater than Vehicle Req On Date.", "Warning");
+        $("#txtRfqExpiredOn").val('');
         return false;
     }
     if (IsNullOrEmpty($("#from-search-box").val())) {
@@ -439,17 +452,14 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
 
 function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
-
-
     const formData = {
         RfqNo: $('#txtRfqNo').val(),
         LocationId: parseInt($('#ddlLocation').val()) || 0,
         IndentId: parseInt($('#ddlIndent').val()) || 0,
-        RfqDate: $('#txtRfqDate').val(), // Ensure format: yyyy-MM-ddTHH:mm
+        RfqDate: $('#txtRfqDate').val(), 
         ExpiryDate: $('#txtRfqExpiredOn').val(),
         PartyId: parseInt($('#ddlCustomerName').val()) || 0,
         VehicleReqOn: $('#txtVehicleReqDate').val(),
-
         FromLocation: $('#from-search-box').val(),
         FromLatitude: $('#fromLat').val(),
         FromLongitude: $('#fromLng').val(),
