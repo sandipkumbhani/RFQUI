@@ -90,7 +90,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
-        public async Task<RfqResponseDto> AddRfq(RequestForQouteRequestDto requestForQouteRequestDto)
+        public async Task<RequestForQuoteResponseDto> AddRfq(RequestForQuoteRequestDto requestForQouteRequestDto)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var rfqData = JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
+                    var rfqData = JsonConvert.DeserializeObject<RequestForQuoteResponseDto>(responseModel.Data.ToString());
                     return rfqData;
                 }
             }
@@ -118,7 +118,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
-        public async Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo)
+        public async Task<RequestForQuoteResponseDto> GetRfqByRfqNo(string rfqNo)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (responseModel.Data != null && result == 200)
                     {
-                        return JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
+                        return JsonConvert.DeserializeObject<RequestForQuoteResponseDto>(responseModel.Data.ToString());
                     }
                     else
                     {
@@ -149,7 +149,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
-        public async Task<RfqResponseDto> GetRfqById(int rfqId)
+        public async Task<RequestForQuoteResponseDto> GetRfqById(int rfqId)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (responseModel.Data != null && result == 200)
                     {
-                        return JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
+                        return JsonConvert.DeserializeObject<RequestForQuoteResponseDto>(responseModel.Data.ToString());
                     }
                     else
                     {

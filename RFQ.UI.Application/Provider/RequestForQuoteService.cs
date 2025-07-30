@@ -13,7 +13,7 @@ namespace RFQ.UI.Application.Provider
             _requestForQuoteAdaptor = requestForQuoteAdaptor;
         }
 
-        public Task<RfqResponseDto> AddRfq(RequestForQouteRequestDto requestForQouteRequestDto)
+        public Task<RequestForQuoteResponseDto> AddRfq(RequestForQuoteRequestDto requestForQouteRequestDto)
         {
             return _requestForQuoteAdaptor.AddRfq(requestForQouteRequestDto);
         }
@@ -27,7 +27,7 @@ namespace RFQ.UI.Application.Provider
         {
             return await _requestForQuoteAdaptor.GetAllVendorListForRfq(rfqVendorDetailsParam);
         }
-        public async Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo)
+        public async Task<RequestForQuoteResponseDto> GetRfqByRfqNo(string rfqNo)
         {
             return await _requestForQuoteAdaptor.GetRfqByRfqNo(rfqNo);
         }
@@ -36,7 +36,7 @@ namespace RFQ.UI.Application.Provider
         {
             return _requestForQuoteAdaptor.GetRfqNo();
         }
-        public async Task<RfqResponseDto> GetRfqById(int rfqId)
+        public async Task<RequestForQuoteResponseDto> GetRfqById(int rfqId)
         {
             return await _requestForQuoteAdaptor.GetRfqById(rfqId);
         }
