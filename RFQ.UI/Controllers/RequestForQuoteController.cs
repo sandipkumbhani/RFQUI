@@ -69,7 +69,7 @@ namespace RFQ.UI.Controllers
                 string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
                 if (requestForQouteRequestDto != null)
                 {
-                    requestForQouteRequestDto.RfqRequestDto.CompanyId= Convert.ToInt32(companyid);
+                    requestForQouteRequestDto.RfqRequestDto.CompanyId = Convert.ToInt32(companyid);
                     requestForQouteRequestDto.RfqRequestDto.CreatedBy = Convert.ToInt32(userid);
                     requestForQouteRequestDto.RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
@@ -77,10 +77,9 @@ namespace RFQ.UI.Controllers
                     return Json(result);
                 }
                 else
-                {
-                    return Json(new { result = "fail" });
+                    return Json(new { result = "failure" });
 
-                }
+
             }
             catch (Exception ex)
             {
