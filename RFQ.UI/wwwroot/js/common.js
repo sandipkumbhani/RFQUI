@@ -128,7 +128,6 @@ function populateDropdown(selectElement) {
     });
 
 }
-
 function ValidatePanNumber(number) {
     return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(number);
 }
@@ -138,7 +137,6 @@ function ValidateGstNumber(number) {
 function ValidatePinCode(number) {
     return /^\d{6}$/.test(number);
 }
-
 function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
 
     const companyid = getCookieValue('companyid');
@@ -438,7 +436,6 @@ function generatePagination(totalRecords, pageSize, currentPage, gridTableName, 
         //$("#customvehicleTypesPagination").focus();
     });
 }
-
 function getCookieValue(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -650,3 +647,20 @@ function GetAllItemName(dropdownId, companyIdParam) {
         }
     });
 }
+
+function formatDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date)) return "";
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months start at 0
+    const year = date.getFullYear();
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+}
+

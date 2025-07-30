@@ -8,18 +8,12 @@ namespace RFQ.UI.Domain.RequestDto
 {
     public class QuoteRateVendorRequestDto
     {
-        public int RfqDetailId { get; set; }
-
+        public int RfqRateId { get; set; }
+        public int RfqId { get; set; }
         public int VendorId { get; set; }
-
-        public int LocationId { get; set; }
-
         public int TotalHireCost { get; set; }
-
         public int DetentionPerDay { get; set; }
-
-        public int DetentionFreeDay { get; set; }
-
-        public DateTime UpdatedOn { get; set; }
+        public int DetentionFreeDays { get; set; }
+        public DateTime UpdatedOn { get; set; } = DateTime.Now;
     }
 }

@@ -36,7 +36,6 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-        [HttpPost]
         public async Task<IActionResult> SaveQuoteRateVendor([FromBody] QuoteRateVendorRequestDto rfqRateRequestDto)
         {
             try
@@ -65,48 +64,37 @@ namespace RFQ.UI.Controllers
         public async Task<IActionResult> SendQuoteLinks([FromBody] List<RfqRecipientRequestDto> vendorList)
         {
             var sentLinks = new List<object>();
-
             foreach (var vendor in vendorList)
             {
-                RfqResponseDto data =await _requestForQuoteService.GetRfqById(vendor.RfqId ?? 0);
-                string formLink = Url.Action("RFQDetails", "RequestForQuote", data, Request.Scheme);
-                //new RfqResponseDto()
-                //{
-                //    RfqId = data.RfqId,
-                //    RfqNo = data.RfqNo,
-                //    CompanyId = data.CompanyId,
-                //    LocationId = data.LocationId,
-                //    IndentId = data.IndentId,
-                //    RfqDate = data.RfqDate, // ISO format
-                //    ExpiryDate = data.ExpiryDate,
-                //    PartyId = data.PartyId,
-                //    VehicleReqOn = data.VehicleReqOn,
-                //    FromLocation = data.FromLocation,
-                //    FromLatitude = data.FromLatitude,
-                //    FromLongitude = data.FromLongitude,
-                //    ToLocation = data.ToLocation,
-                //    ToLatitude = data.ToLatitude,
-                //    ToLongitude = data.ToLongitude,
-                //    VehicleRequiredOn = data.VehicleRequiredOn,
-                //    VehicleTypeId = data.VehicleTypeId,
-                //    VehicleCount = data.VehicleCount,
-                //    RfqSubject = data.RfqSubject,
-                //    RfqPriorityId = data.RfqPriorityId,
-                //    RfqTypeId = data.RfqTypeId,
-                //    ItemId = data.ItemId,
-                //    MaxCosting = data.MaxCosting,
-                //    DetentionPerDay = data.DetentionPerDay,
-                //    DetentionFreeDays = data.DetentionFreeDays,
-                //    PackingTypeId = data.PackingTypeId,
-                //    SpecialInstruction = data.SpecialInstruction,
-                //    LinkId = data.LinkId,
-                //    StatusId = data.StatusId,
-                //};
-
-                SendEmail(vendor, formLink);
-                sentLinks.Add(formLink);
+                RfqResponseDto data = await _requestForQuoteService.GetRfqById(vendor.RfqId ?? 0);
+                if (data != null)
+                {
+                    string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor",
+                                new
+                                {
+                                    RfqId = data.RfqId,
+                                    RfqNo = data.RfqNo,
+                                    CompanyId = data.CompanyId,
+                                    LocationId = data.LocationId,
+                                    RfqDate = data.RfqDate,
+                                    ExpiryDate = data.ExpiryDate,
+                                    PartyId = data.PartyId,
+                                    VehicleReqOn = data.VehicleReqOn,
+                                    FromLocation = data.FromLocation,
+                                    ToLocation = data.ToLocation,
+                                    VehicleTypeId = data.VehicleTypeId,
+                                    VehicleCount = data.VehicleCount,
+                                    RfqPriorityId = data.RfqPriorityId,
+                                    ItemId = data.ItemId,
+                                    PackingTypeId = data.PackingTypeId,
+                                    SpecialInstruction = data.SpecialInstruction,
+                                    VendorId = vendor.VendorId,
+                                    PanNo = vendor.PanNo,
+                                }, Request.Scheme) ?? string.Empty;
+                    SendEmail(vendor, formLink);
+                    sentLinks.Add(formLink);
+                }
             }
-
             return Json(new { links = sentLinks });
         }
 
@@ -116,12 +104,17 @@ namespace RFQ.UI.Controllers
             if (string.IsNullOrEmpty(vendor.EmailId)) return false;
 
             // Prepare email
-            var subject = "Quate-Rate Vendor";
+            var subject = "Quote Request - FleetLynk";
             string body = "";
-            body += "Dear User,\n\n";
-            body += formLink;
+
+            body += "Dear Vendor,\n\n";
+            body += "You are requested to provide your quote for the requested services/products. Please use the link below to submit your quotation:\n\n";
+            body += formLink + "\n\n";
+            body += "Kindly ensure that you submit your response before the specified deadline.\n\n";
+            body += "If you have any questions, feel free to contact us.\n\n";
             body += "Thank you,\n";
-            body += "FleetLynk";
+            body += "FleetLynk Team";
+
 
             try
             {
