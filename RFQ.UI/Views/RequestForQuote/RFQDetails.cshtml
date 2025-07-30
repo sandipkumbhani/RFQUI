@@ -12,314 +12,321 @@
 			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
 	</script>
 }
-
 <div class="row">
-	<div class="col-12">
-		<div class="page-title-box add">
-			<h1 class="page-title">Request For Quote</h1>
-		</div>
-		<ul class="nav nav-tabs mb-3" id="DetailsTabs" role="tablist">
-			<li class="nav-item" role="presentation">
-				<button class="nav-link active" id="rfqDetails-tab" data-bs-toggle="tab" data-bs-target="#RFQDetails" type="button" role="tab" aria-controls="RFQDetails" aria-selected="true">RFQ Details</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="vendorDetails-tab" data-bs-toggle="tab" data-bs-target="#VendorDetails"  type="button" role="tab" aria-controls="VendorDetails" aria-selected="false">Vendor Details</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="previousQuotes-tab" data-bs-toggle="tab" data-bs-target="#PreviousQuotes"  type="button" role="tab" aria-controls="PreviousQuotes" aria-selected="false">Previous Quotes</button>
-			</li>
-		</ul>
-		<div class="tab-content" id="DetailsTabsContent">
-			<!-- RFQ DETAILS TAB -->
-			<div class="tab-pane fade show active" id="RFQDetails" role="tabpanel" aria-labelledby="rfqDetails-tab">
-				@* Your existing RFQ Details form *@
-				@* <div class="card com-profile-info"> *@
-				<div id="addReqDetailsDiv" class="card com-profile-info">
-					<div class="top-details">
-						<form class="row all-custom-class" id="RfqDetailsForm" method="post">
-							<input type="hidden" id="txtRfqDetailsId" />
-							<div class="RFQ Details">
-								<div class="row all-custom-class">
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label"><span>*</span>Location</label>
-											<select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
-											</select>
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label">RFQ No</label>
-											<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtRfqNo" />
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label">RFQ Date <span>*</span></label>
-											<input type="date" class="form-control" id="txtRfqDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="Auto Generated" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label ">RFQ Expired On <span>*</span></label>
-											<input type="datetime-local"
-												   onfocus="this.min=new Date(new Date(document.getElementById('txtVehicleReqDate').value).setDate(new Date(document.getElementById('txtVehicleReqDate').value).getDate() + 1)).toISOString().slice(0, 16)"
-												   class="form-control" id="txtRfqExpiredOn" />
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label">Indent No <span>*</span></label>
-											<select class="select2-custom form-control" id="ddlIndent" style="width: 100%;">
-											</select>
-										</div>
-									</div>
-									<div class="col-lg-6">
-										<div class="item-input">
-											<label class="form-label">Customer Name <span>*</span></label>
-											<select class="select2-custom form-control" data-control="select2" disabled id="ddlCustomerName" style="width: 100%;">
-											</select>
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label ">Vehicle Req On <span>*</span></label>
-											<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" disabled id="txtVehicleReqDate" />
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input position-relative">
-											<label class="form-label">Origin/From <span>*</span></label>
-											<input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
-											<ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-											<input type="hidden" id="fromLat">
-											<input type="hidden" id="fromLng">
-											<input type="hidden" id="fromState">
-											<input type="hidden" id="fromCity">
-										</div>
-									</div>
+    <div class="col-12">
+        <div class="page-title-box add">
+            <h1 class="page-title">Request For Quote</h1>
+        </div>
 
-									<!-- TO Input -->
-									<div class="col-lg-3">
-										<div class="item-input position-relative">
-											<label class="form-label">Destination/To <span>*</span></label>
-											<input disabled id="to-search-box" type="text" class="form-control " placeholder="Search location" autocomplete="off" />
-											<ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-											<input type="hidden" id="toLat">
-											<input type="hidden" id="toLng">
-											<input type="hidden" id="toState">
-											<input type="hidden" id="toCity">
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label">Vehicle Type <span>*</span></label>
-											<select class="select2-custom form-control" data-control="select2" disabled id="ddlVehicleType" style="width: 100%;">
-											</select>
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label">No. of Vehicles <span>*</span></label>
-											<input type="text" class="form-control" id="txtNoofVehicles" disabled placeholder="Numeric" onkeypress="return isNumber(event)" />
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label">Max Costing </label>
-											<input type="text" class="form-control" placeholder="Numeric" id="txtMaxCosting" onkeypress="return isNumber(event)" />
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label">Detention Per Day</label>
-											<input type="text" class="form-control" placeholder="Numeric" id="txtPerDay" onkeypress="return isNumber(event)" />
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label">Detention Free Days</label>
-											<input type="text" class="form-control" placeholder="Numeric" id="txtFreeDay" onkeypress="return isNumber(event)" />
-										</div>
-									</div>
-								</div>
-							</div>
-							<hr />
-							<div class="Additional Details">
-								<h3 class="page-form-title">Additional Details</h3>
-								<div class="row all-custom-class">
-									<div class="col-lg-6">
-										<div class="item-input">
-											<label class="form-label">RFQ Subject</label>
-											<input type="text" class="form-control" placeholder="Text" id="txtRfqSubject" />
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<div class="item-input">
-												<label class="form-label">RFQ Priority</label>
-												<select class="select2-custom form-control" aria-label="Selection"
-														data-control="select2" placeholder="Selection" id="ddlRfqPriority">
-												</select>
+        <div class="card com-profile-info">
+            <div class="card-body">
+                <!-- Tab Headers -->
+                <ul class="nav nav-tabs mb-3" id="DetailsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="rfqDetails-tab" data-bs-toggle="tab" data-bs-target="#RFQDetails" type="button" role="tab" aria-controls="RFQDetails" aria-selected="true">RFQ Details</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="vendorDetails-tab" data-bs-toggle="tab" data-bs-target="#VendorDetails" type="button" role="tab" aria-controls="VendorDetails" aria-selected="false">Vendor Details</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="previousQuotes-tab" data-bs-toggle="tab" data-bs-target="#PreviousQuotes" type="button" role="tab" aria-controls="PreviousQuotes" aria-selected="false">Previous Quotes</button>
+                    </li>
+                </ul>
+
+                <!-- Tab Contents -->
+                <div class="tab-content" id="DetailsTabsContent">
+					<!-- RFQ DETAILS TAB -->
+					<div class="tab-pane fade show active" id="RFQDetails" role="tabpanel" aria-labelledby="rfqDetails-tab">
+						@* Your existing RFQ Details form *@
+						@* <div class="card com-profile-info"> *@
+						<div id="addReqDetailsDiv" class="card com-profile-info">
+							<div class="top-details">
+								<form class="row all-custom-class" id="RfqDetailsForm" method="post">
+									<input type="hidden" id="txtRfqDetailsId" />
+									<div class="RFQ Details">
+										<div class="row all-custom-class">
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label"><span>*</span>Location</label>
+													<select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
+													</select>
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label">RFQ No</label>
+													<input type="text" class="form-control " placeholder="Auto Generated" disabled id="txtRfqNo" />
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label">RFQ Date <span>*</span></label>
+													<input type="date" class="form-control" id="txtRfqDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="Auto Generated" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label ">RFQ Expired On <span>*</span></label>
+													<input type="datetime-local"
+														   onfocus="this.min=new Date(new Date(document.getElementById('txtVehicleReqDate').value).setDate(new Date(document.getElementById('txtVehicleReqDate').value).getDate() + 1)).toISOString().slice(0, 16)"
+														   class="form-control" id="txtRfqExpiredOn" />
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label">Indent No <span>*</span></label>
+													<select class="select2-custom form-control" id="ddlIndent" style="width: 100%;">
+													</select>
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="item-input">
+													<label class="form-label">Customer Name <span>*</span></label>
+													<select class="select2-custom form-control" data-control="select2" disabled id="ddlCustomerName" style="width: 100%;">
+													</select>
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label ">Vehicle Req On <span>*</span></label>
+													<input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" disabled id="txtVehicleReqDate" />
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input position-relative">
+													<label class="form-label">Origin/From <span>*</span></label>
+													<input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+													<ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+													<input type="hidden" id="fromLat">
+													<input type="hidden" id="fromLng">
+													<input type="hidden" id="fromState">
+													<input type="hidden" id="fromCity">
+												</div>
+											</div>
+
+											<!-- TO Input -->
+											<div class="col-lg-3">
+												<div class="item-input position-relative">
+													<label class="form-label">Destination/To <span>*</span></label>
+													<input disabled id="to-search-box" type="text" class="form-control " placeholder="Search location" autocomplete="off" />
+													<ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+													<input type="hidden" id="toLat">
+													<input type="hidden" id="toLng">
+													<input type="hidden" id="toState">
+													<input type="hidden" id="toCity">
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label">Vehicle Type <span>*</span></label>
+													<select class="select2-custom form-control" data-control="select2" disabled id="ddlVehicleType" style="width: 100%;">
+													</select>
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label">No. of Vehicles <span>*</span></label>
+													<input type="text" class="form-control" id="txtNoofVehicles" disabled placeholder="Numeric" onkeypress="return isNumber(event)" />
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label">Max Costing </label>
+													<input type="text" class="form-control" placeholder="Numeric" id="txtMaxCosting" onkeypress="return isNumber(event)" />
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label">Detention Per Day</label>
+													<input type="text" class="form-control" placeholder="Numeric" id="txtPerDay" onkeypress="return isNumber(event)" />
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label">Detention Free Days</label>
+													<input type="text" class="form-control" placeholder="Numeric" id="txtFreeDay" onkeypress="return isNumber(event)" />
+												</div>
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label">RFQ Type</label>
-											<select class="select2-custom form-control" aria-label="Selection"
-													data-control="select2" placeholder="Selection" id="ddlRfqType">
-											</select>
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<div class="item-input">
-												<label class="form-label">Item Name</label>
-												<select class="select2-custom form-control" id="ddlItemName" style="width: 100%;">
-												</select>
+									<hr />
+									<div class="Additional Details">
+										<h3 class="page-form-title">Additional Details</h3>
+										<div class="row all-custom-class">
+											<div class="col-lg-6">
+												<div class="item-input">
+													<label class="form-label">RFQ Subject</label>
+													<input type="text" class="form-control" placeholder="Text" id="txtRfqSubject" />
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<div class="item-input">
+														<label class="form-label">RFQ Priority</label>
+														<select class="select2-custom form-control" aria-label="Selection"
+																data-control="select2" placeholder="Selection" id="ddlRfqPriority">
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label">RFQ Type</label>
+													<select class="select2-custom form-control" aria-label="Selection"
+															data-control="select2" placeholder="Selection" id="ddlRfqType">
+													</select>
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<div class="item-input">
+														<label class="form-label">Item Name</label>
+														<select class="select2-custom form-control" id="ddlItemName" style="width: 100%;">
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="item-input">
+													<label class="form-label ">Packing Type</label>
+													<select class="select2-custom form-control" id="ddlPackingType" style="width: 100%;">
+													</select>
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="item-input">
+													<label class="form-label">Special Instructions</label>
+													<input type="text" class="form-control" placeholder="Text" id="txtSpecialInstructions" />
+												</div>
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-3">
-										<div class="item-input">
-											<label class="form-label ">Packing Type</label>
-											<select class="select2-custom form-control" id="ddlPackingType" style="width: 100%;">
-											</select>
-										</div>
+									<hr />
+									@await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
+									<div class="button-main">
+										<a href="#" class="card-link" id="btnSaveType" type="button" data-action="save">
+											<i class="ri-save-line"></i>
+											<span>
+												Save
+											</span>
+										</a>
+										<a href="#" class="card-link" id="btnSaveAndNew" data-action="saveNew">
+											<i class="ri-save-line"></i>
+											<span>
+												Save & New
+											</span>
+										</a>
 									</div>
-									<div class="col-lg-6">
-										<div class="item-input">
-											<label class="form-label">Special Instructions</label>
-											<input type="text" class="form-control" placeholder="Text" id="txtSpecialInstructions" />
-										</div>
-									</div>
-								</div>
+								</form>
 							</div>
-							<hr />
-							@await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
+						</div>
+						@* </div> *@
+					</div>
+					<!-- VENDOR DETAILS TAB -->
+					<div class="tab-pane fade" id="VendorDetails" role="tabpanel" aria-labelledby="vendorDetails-tab">
+						<div class="table-responsive mt-3">
+							<h5><strong>RFQ Sent To Vendors</strong> <span>{List of Vendors will be auto fetched as per From / To / Vehicle Type Combinations}</span></h5>
+							<table class="table table-bordered text-center align-middle" id="rfqVendorTable">
+								<thead>
+									<tr>
+										<th>Sr. No.</th>
+										<th>Vendor Name</th>
+										<th>PAN No</th>
+										<th>Vendor Rating</th>
+										<th>Mobile Number</th>
+										<th>WhatsApp Number</th>
+										<th>Email ID</th>
+										<th>Edit / Delete</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td></td>
+										<td class="text-center">
+											<select class="select2-custom form-control" id="ddlRFQVendorList" style="width: 100%;"></select>
+										</td>
+										<td class="text-center"><input type="text" class="form-control" id="fetchVendorPanNo" disabled /></td>
+										<td class="text-center"><input type="text" class="form-control" id="fetchVendorRating" disabled /></td>
+										<td class="text-center"><input type="text" class="form-control" maxlength="10" id="fetchVendorMobileNo" /></td>
+										<td class="text-center"><input type="text" class="form-control" maxlength="10" id="fetchVendorWhatsappNo" /></td>
+										<td class="text-center"><input type="text" class="form-control" maxlength="50" id="fetchVendorEmailId" /></td>
+										<td class="text-center">
+											<a class="card-link w-50" id="btnAddVendor" style="cursor:pointer;">Add</a> /
+											<a class="w-50" id="btnCancelVendor" style="cursor:pointer">Cancel</a>
+										</td>
+									</tr>
+								</tfoot>
+							</table>
 							<div class="button-main">
-								<a href="#" class="card-link" id="btnSaveType" type="button" data-action="save">
+								<a href="#" class="card-link me-3" id="btnSaveRfqVendorDetails" type="button" data-action="save">
 									<i class="ri-save-line"></i>
 									<span>
 										Save
 									</span>
 								</a>
-								<a href="#" class="card-link" id="btnSaveAndNew" data-action="saveNew">
+								<a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
 									<i class="ri-save-line"></i>
 									<span>
 										Save & New
 									</span>
 								</a>
 							</div>
-						</form>
+						</div>
 					</div>
-				</div>
-				@* </div> *@
-			</div>
-			<!-- VENDOR DETAILS TAB -->
-			<div class="tab-pane fade" id="VendorDetails" role="tabpanel" aria-labelledby="vendorDetails-tab">
-				<div class="table-responsive mt-3">
-					<h5><strong>RFQ Sent To Vendors</strong> <span>{List of Vendors will be auto fetched as per From / To / Vehicle Type Combinations}</span></h5>
-					<table class="table table-bordered text-center align-middle" id="rfqVendorTable">
-						<thead>
-							<tr>
-								<th>Sr. No.</th>
-								<th>Vendor Name</th>
-								<th>PAN No</th>
-								<th>Vendor Rating</th>
-								<th>Mobile Number</th>
-								<th>WhatsApp Number</th>
-								<th>Email ID</th>
-								<th>Edit / Delete</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-						<tfoot>
-							<tr>
-								<td></td>
-								<td class="text-center">
-									<select class="select2-custom form-control" id="ddlRFQVendorList" style="width: 100%;"></select>
-								</td>
-								<td class="text-center"><input type="text" class="form-control" id="fetchVendorPanNo" disabled /></td>
-								<td class="text-center"><input type="text" class="form-control" id="fetchVendorRating" disabled /></td>
-								<td class="text-center"><input type="text" class="form-control" maxlength="10" id="fetchVendorMobileNo" /></td>
-								<td class="text-center"><input type="text" class="form-control" maxlength="10" id="fetchVendorWhatsappNo" /></td>
-								<td class="text-center"><input type="text" class="form-control" maxlength="50" id="fetchVendorEmailId" /></td>
-								<td class="text-center">
-									<a class="card-link w-50" id="btnAddVendor" style="cursor:pointer;">Add</a> /
-									<a class="w-50" id="btnCancelVendor" style="cursor:pointer">Cancel</a>
-								</td>
-							</tr>
-						</tfoot>
-					</table>
-					<div class="button-main">
-						<a href="#" class="card-link me-3" id="btnSaveRfqVendorDetails" type="button" data-action="save">
-							<i class="ri-save-line"></i>
-							<span>
-								Save
-							</span>
-						</a>
-						<a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
-							<i class="ri-save-line"></i>
-							<span>
-								Save & New
-							</span>
-						</a>
+					<!-- PREVIOUS QUOTES TAB -->
+					<div class="tab-pane fade" id="PreviousQuotes" role="tabpanel" aria-labelledby="previousQuotes-tab">
+						<div class="table-responsive mt-3">
+							<h5><strong>Previous Quotes</strong></h5>
+							<table class="table table-bordered text-center align-middle">
+								<thead>
+									<tr>
+										<th>Sr. No.</th>
+										<th>Vendor Name</th>
+										<th>PAN No</th>
+										<th>Vendor Rating</th>
+										<th>Quote Date</th>
+										<th>Quote Rate</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td></td>
+										<td> </td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td> </td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="button-main">
+								<a href="#" class="card-link me-3" id="btnSave" type="button" data-action="save">
+									<i class="ri-save-line"></i>
+									<span>
+										Save
+									</span>
+								</a>
+								<a href="#" class="card-link" id="btnsaveAndNew" data-action="saveNew">
+									<i class="ri-save-line"></i>
+									<span>
+										Save & New
+									</span>
+								</a>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-			<!-- PREVIOUS QUOTES TAB -->
-			<div class="tab-pane fade" id="PreviousQuotes" role="tabpanel" aria-labelledby="previousQuotes-tab">
-				<div class="table-responsive mt-3">
-					<h5><strong>Previous Quotes</strong></h5>
-					<table class="table table-bordered text-center align-middle">
-						<thead>
-							<tr>
-								<th>Sr. No.</th>
-								<th>Vendor Name</th>
-								<th>PAN No</th>
-								<th>Vendor Rating</th>
-								<th>Quote Date</th>
-								<th>Quote Rate</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td></td>
-								<td> </td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td> </td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="button-main">
-					<a href="#" class="card-link me-3" id="btnSave" type="button" data-action="save">
-						<i class="ri-save-line"></i>
-						<span>
-							Save
-						</span>
-					</a>
-					<a href="#" class="card-link" id="btnsaveAndNew" data-action="saveNew">
-						<i class="ri-save-line"></i>
-						<span>
-							Save & New
-						</span>
-					</a>
-				</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+                </div> <!-- tab-content end -->
+            </div> <!-- card-body end -->
+        </div> <!-- card end -->
+    </div> <!-- col end -->
+</div> <!-- row end -->
