@@ -25,8 +25,8 @@ $(document).ready(function () {
             }
             $("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
             $("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
-            $("#ddlOrigin").val(selectedIndent.fromLocation).trigger('change');
-            $("#ddlDestination").val(selectedIndent.toLocation).trigger('change');
+            $('#from-search-box').val(selectedIndent.fromLocation);
+            $('#to-search-box').val(selectedIndent.toLocation);
             $('#txtNoOfVehicles').val(selectedIndent.requiredVehicles);
             $('#txtVehicleReqOn').val(selectedIndent.vehicleReqOn);
             if (dateValue) {
@@ -56,9 +56,8 @@ $(document).ready(function () {
     GetAllVehicleNumber();
     FetchPlacementNo();
     GetAllOwnerOrVendor();
-    GetAllStateList("ddlOrigin");
-    GetAllStateList("ddlDestination");
-    GetAllCustomer("ddlCustomerName");
+    GetAllCustomer("ddlCustomerName", companyId);
+    GetAllVehicleType("ddlVehicleType", companyId);
 });
 function GetAllDriver() {
     $.ajax({
