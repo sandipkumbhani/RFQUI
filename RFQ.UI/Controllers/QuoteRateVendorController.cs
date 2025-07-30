@@ -52,7 +52,7 @@ namespace RFQ.UI.Controllers
                 }
                 else
                 {
-                    return Json(new { result = "fail" });
+                    return Json(new { result = "failure" });
                 }
             }
             catch (Exception ex)
