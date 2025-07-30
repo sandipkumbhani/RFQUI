@@ -114,6 +114,11 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Vehicle Req On", "Validation Error");
         return false;
     }
+    if ($("#txtVehicleReqDate").val() <= $('#txtIndentDate').val()) {
+        toastr.warning("Vehicle Req On date must be greater than Indent Date.", "Warning");
+        $("#txtVehicleReqDate").val('');
+        return false;
+    }
     if (!isValidateSelect($("#ddlCustomerName").val())) {
         toastr.warning("Please Select a Customer Name", "Validation Error");
         return false;
@@ -136,6 +141,11 @@ function OnSubmitCheckValidation() {
     }
     if (IsNullOrEmpty($("#txtRfqExpiredOn").val())) {
         toastr.warning("Please enter a Indent Expired On", "Validation Error");
+        return false;
+    }
+    if ($("#txtRfqExpiredOn").val().split('T')[0] <= $('#txtVehicleReqDate').val()) {
+        toastr.warning("Indent Expired On date must be greater than Vehicle Req On Date.", "Warning");
+        $("#txtRfqExpiredOn").val('');
         return false;
     }
     if (IsNullOrEmpty($("#ddlConsignorInput").val())) {

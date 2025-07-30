@@ -107,6 +107,7 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId) {
 function getLatLngAndState(placeId, latId, lngId, stateId) {
     geocoder.geocode({ placeId: placeId }, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK && results[0]) {
+            console.log(results[0]); // Log the full result for debugging)
             let location = results[0].geometry.location;
             let lat = location.lat();
             let lng = location.lng();

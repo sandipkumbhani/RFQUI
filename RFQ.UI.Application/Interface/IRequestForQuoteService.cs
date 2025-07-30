@@ -7,7 +7,7 @@ namespace RFQ.UI.Application.Interface
     {
         Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList();
         Task<string> GetRfqNo();
-        Task<RfqRequestDto?> AddRfq(RfqRequestDto RfqRequestDto);
+        Task<bool> AddRfq(RequestForQouteRequestDto requestForQouteRequestDto);
         Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo);
         Task<RfqResponseDto> GetRfqById(int rfqId);
         Task<IEnumerable<RfqVendorListResponseDto>> GetAllVendorListForRfq(RfqVendorDetailsParam rfqVendorDetailsParam);
