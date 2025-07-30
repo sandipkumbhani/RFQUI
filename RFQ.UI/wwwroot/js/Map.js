@@ -122,6 +122,12 @@ function getLatLngAndState(placeId, latId, lngId, stateId,cityId) {
                     city = component.long_name;
                 }
             });
+            console.log("Selected Location Details:");
+            console.log("Latitude:", lat.toFixed(6));
+            console.log("Longitude:", lng.toFixed(6));
+            console.log("State:", state);
+            console.log("City:", city);
+
 
             // Store values in hidden inputs
             document.getElementById(latId).value = lat.toFixed(6);
