@@ -123,5 +123,20 @@ namespace RFQ.UI.Controllers
                 return Ok(ex);
             }
         }
+
+        public async Task<IActionResult> GetPreviousQuotesList([FromBody] RfqVendorDetailsParam rfqVendorDetailsParam)
+        {
+            try
+            {
+                _logger.LogInformation("Requesting GetPreviousQuotesList Details...");
+                var result = await _requestForQuoteService.GetPreviousQuotesList(rfqVendorDetailsParam);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                return Ok(ex);
+            }
+        }
     }
 }

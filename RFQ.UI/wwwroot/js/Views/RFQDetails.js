@@ -10,7 +10,7 @@ $(document).ready(function () {
     CheckValidation();
     $("#btnSaveType, #btnSaveAndNew").on('click', function () {
 
-        var action = $(this).data('action'); 
+        var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
             SaveAndSaveNew(action);
         }
@@ -72,12 +72,24 @@ function CheckValidation() {
         }
     });
 }
+
 document.addEventListener("DOMContentLoaded", function () {
     const vendorDetailsTab = document.getElementById("vendorDetails-tab");
+    const previousQuotes = document.getElementById("previousQuotes-tab");
 
     if (vendorDetailsTab) {
         vendorDetailsTab.addEventListener("click", function () {
             GetAllVendorList();
+        });
+    }
+    if (previousQuotes) {
+        previousQuotes.addEventListener("click", function () {
+            if (!isValidateSelect($("#ddlIndent").val())) {
+                toastr.warning("Please Select a Indent No", "Validation Error");
+                return;
+            } else {
+                getPreviousQuotesList();
+            }
         });
     }
 });
@@ -94,7 +106,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a RFQ Date", "Validation Error");
         return false;
     }
-    
+
     if (!isValidateSelect($("#ddlIndent").val())) {
         toastr.warning("Please Select a Indent No", "Validation Error");
         return false;
@@ -461,7 +473,7 @@ function SaveAndSaveNew(action) {
         //CompanyId:0,
         LocationId: $('#ddlLocation').val(),
         IndentId: $('#ddlIndent').val(),
-        RfqDate: $('#txtRfqDate').val(), 
+        RfqDate: $('#txtRfqDate').val(),
         ExpiryDate: $('#txtRfqExpiredOn').val(),
         PartyId: $('#ddlCustomerName').val(),
         VehicleReqOn: $('#txtVehicleReqDate').val(),
@@ -475,16 +487,16 @@ function SaveAndSaveNew(action) {
         ToLocationCity: $('#toCity').val(),
         ToLatitude: $('#toLat').val(),
         ToLongitude: $('#toLng').val(),
-        VehicleTypeId: $('#ddlVehicleType').val() ,
+        VehicleTypeId: $('#ddlVehicleType').val(),
         VehicleCount: $('#txtNoofVehicles').val(),
         RfqSubject: $('#txtRfqSubject').val(),
         RfqPriorityId: $('#ddlRfqPriority').val(),
         RfqTypeId: $('#ddlRfqType').val(),
         ItemId: parseInt($('#ddlItemName').val()),
-        MaxCosting: parseInt($('#txtMaxCosting').val()) ,
-        DetentionPerDay: parseInt($('#txtPerDay').val()) ,
-        DetentionFreeDays: parseInt($('#txtFreeDay').val()) ,
-        PackingTypeId: parseInt($('#ddlPackingType').val()) ,
+        MaxCosting: parseInt($('#txtMaxCosting').val()),
+        DetentionPerDay: parseInt($('#txtPerDay').val()),
+        DetentionFreeDays: parseInt($('#txtFreeDay').val()),
+        PackingTypeId: parseInt($('#ddlPackingType').val()),
         SpecialInstruction: $('#txtSpecialInstructions').val(),
         LinkId: parseInt(GetQueryParam("LinkId"))
     };
@@ -625,4 +637,35 @@ function sendQuoteLinksForVendors(vendorList) {
         }
     });
 }
+
+function getPreviousQuotesList() {
+    var fromOrigin = $('#from-search-box').val();
+    let fromOriginParts = fromOrigin.split(',');
+    let fromStateName = fromOriginParts[1].trim().toUpperCase();
+    var toDestination = $('#to-search-box').val();
+    let toDestinationParts = toDestination.split(',');
+    let toStateName = toDestinationParts[1].trim().toUpperCase();
+    debugger;
+    var requestData = {
+        OriginFrom: fromStateName,
+        ToDestination: toStateName,
+        VehicleTypeId: parseInt($('#ddlVehicleType').val()),
+    };
+
+    $.ajax({
+        url: '/RequestForQuote/GetPreviousQuotesList',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestData),
+        success: function (response) {
+            console.log('Previous Quotes:', response);
+            // TODO: populate Previous Quotes table with 'response' data
+            populatePreviousQuotesTable(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching previous quotes:', error);
+        }
+    });
+}
+
 

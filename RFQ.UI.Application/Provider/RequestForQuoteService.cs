@@ -40,5 +40,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _requestForQuoteAdaptor.GetRfqById(rfqId);
         }
+        public async Task<IEnumerable<RfqPreviousQuotesList>> GetPreviousQuotesList(RfqVendorDetailsParam rfqVendorDetailsParam)
+        {
+            return await _requestForQuoteAdaptor.GetPreviousQuotesList(rfqVendorDetailsParam);
+        }
     }
 }
