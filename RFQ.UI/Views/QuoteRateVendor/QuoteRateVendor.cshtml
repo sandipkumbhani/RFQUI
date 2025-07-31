@@ -14,6 +14,7 @@
     <link href="~/css/remixicon.css" rel="stylesheet" type="text/css" />
     <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/css/app-style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <div class="container">
     <div class="row">
@@ -54,8 +55,9 @@
                             <div class="col-lg-6">
                                 <div class="item-input">
                                     <label class="form-label">Vendor Name</label>
-                                    <select disabled class="select2-custom form-control" placeholder="Vendor Name"  id="txtVednorName" style="width: 100%;">
-                                    </select>
+                                    <input disabled class="form-control" placeholder="Vendor Name"  id="txtVednorName" style="width: 100%;">
+                                    <input type="hidden" id="RfqId" name="RfqId">
+                                    <input type="hidden" id="vendorId" name="vendorId">
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -82,8 +84,7 @@
                             <div class="col-lg-3">
                                 <div class="item-input">
                                     <label class="form-label ">Vehicle Type</label>
-                                    <select disabled class="select2-custom form-control" id="ddlVehicleType" style="width: 100%;">
-                                    </select>
+                                    <input disabled class="form-control" id="ddlVehicleType" style="width: 100%;">
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -95,15 +96,13 @@
                             <div class="col-lg-3">
                                 <div class="item-input">
                                     <label class="form-label">Item Name</label>
-                                    <select disabled class="select2-custom form-control" id="ddlItemName" style="width: 100%;">
-                                    </select>
+                                    <input disabled class="form-control" id="ddlItemName" style="width: 100%;">
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="item-input">
                                     <label class="form-label">Packing Type</label>
-                                    <select disabled class="select2-custom form-control" id="ddlPackingType" style="width: 100%;">
-                                    </select>
+                                    <input disabled class="form-control" id="ddlPackingType" style="width: 100%;">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -140,7 +139,7 @@
                     </form>
                 </div>
                 <div class="button-main">
-                    <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="saveNew">
+                    <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
                         <i class="ri-save-line"></i>
                         <span>
                             Save

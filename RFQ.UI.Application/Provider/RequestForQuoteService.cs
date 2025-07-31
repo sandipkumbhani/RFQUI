@@ -36,13 +36,18 @@ namespace RFQ.UI.Application.Provider
         {
             return _requestForQuoteAdaptor.GetRfqNo();
         }
-        public async Task<RequestForQuoteResponseDto> GetRfqById(int rfqId)
+        public async Task<RfqResponseDto> GetRfqById(int rfqId)
         {
             return await _requestForQuoteAdaptor.GetRfqById(rfqId);
         }
         public async Task<IEnumerable<RfqPreviousQuotesList>> GetPreviousQuotesList(RfqVendorDetailsParam rfqVendorDetailsParam)
         {
             return await _requestForQuoteAdaptor.GetPreviousQuotesList(rfqVendorDetailsParam);
+        }
+
+        public async Task<RfqQuoteRateVendorDetails> GetRfqQuoteRateVendorDetailsqById(int rfqId)
+        {
+            return await _requestForQuoteAdaptor.GetRfqQuoteRateVendorDetailsqById(rfqId);
         }
     }
 }

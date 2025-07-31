@@ -29,7 +29,7 @@ namespace RFQ.UI.Infrastructure.Provider
             try
             {
                 _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                //_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
                 var baseurl = _fleetLynkApiUrl + _config["RFQRate:AddRfqRate"];
                 var User = JsonConvert.SerializeObject(rfqRateRequestDto);
