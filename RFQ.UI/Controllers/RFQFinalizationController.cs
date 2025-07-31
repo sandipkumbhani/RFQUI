@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -42,6 +44,27 @@ namespace RFQ.UI.Controllers
                 else
                 {
                     return Json(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpGet("AwardedVendor/{id}")]
+        public async Task<IActionResult> AwardedVendor(int id)
+        {
+            try
+            {
+                var routeList = await _rfqFinalService.AwardedVendor(id);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(routeList);
+                }
+                else
+                {
+                    return View(routeList);
                 }
             }
             catch (Exception ex)
