@@ -79,7 +79,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (vendorDetailsTab) {
         vendorDetailsTab.addEventListener("click", function () {
-            GetAllVendorList();
+            if (!isValidateSelect($("#ddlIndent").val())) {
+                toastr.warning("Please Select a Indent No", "Validation Error");
+                return;
+            } else {
+                GetAllVendorList();
+            }
         });
     }
     if (previousQuotes) {
@@ -88,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 toastr.warning("Please Select a Indent No", "Validation Error");
                 return;
             } else {
-                getPreviousQuotesList();
+                GetPreviousQuotesList();
             }
         });
     }
@@ -638,14 +643,13 @@ function sendQuoteLinksForVendors(vendorList) {
     });
 }
 
-function getPreviousQuotesList() {
+function GetPreviousQuotesList() {
     var fromOrigin = $('#from-search-box').val();
     let fromOriginParts = fromOrigin.split(',');
     let fromStateName = fromOriginParts[1].trim().toUpperCase();
     var toDestination = $('#to-search-box').val();
     let toDestinationParts = toDestination.split(',');
     let toStateName = toDestinationParts[1].trim().toUpperCase();
-    debugger;
     var requestData = {
         OriginFrom: fromStateName,
         ToDestination: toStateName,
@@ -658,12 +662,26 @@ function getPreviousQuotesList() {
         contentType: 'application/json',
         data: JSON.stringify(requestData),
         success: function (response) {
-            console.log('Previous Quotes:', response);
-            // TODO: populate Previous Quotes table with 'response' data
-            populatePreviousQuotesTable(response);
+            const tbody = $("#previousQoutesTable tbody");
+            tbody.empty();
+            if (!response || !Array.isArray(response) || response.length <= 0) {
+                tbody.append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+            }
+            $.each(response, function (index, quotes) {
+                const rowHtml = `
+                        <tr data-index="${index}">
+                        <td>${index + 1}</td>
+                        <td>${quotes.partyName}</td >
+                        <td>${quotes.panNo}</td >
+                        <td>5</td >
+                        <td>${quotes.rfqDate.split(" ")[0]}</td>
+                        <td>${quotes.totalHireCost}</td>
+                    </tr>`;
+                tbody.append(rowHtml);
+            })
         },
         error: function (xhr, status, error) {
-            console.error('Error fetching previous quotes:', error);
+            toastr.error('Failed to fetch previous quotes:', "Error");
         }
     });
 }
