@@ -18,6 +18,7 @@ $(document).ready(function () {
         }
     });
     GetRfqStatus();
+    GetRfqFailureReason();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
     $("#btnGetRfqData").on('click', function () {
@@ -130,7 +131,36 @@ function GetRfqDetailsByRfqNo() {
         }
     });
 }
+function GetRfqFailureReason() {
+    var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
+    $.ajax({
+        url: getInternalMasterUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            let internalData = response.filter(x => x.internalMasterTypeId == 12);
+            const select = document.getElementById("ddlRfqReason");
+            select.innerHTML = "";
 
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Failure Reason";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            internalData.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.internalMasterId;
+                opt.textContent = option.internalMasterName;
+                select.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Failure Reason!", "Error");
+        }
+    });
+}
 function SaveAndSaveNew(action) {
     var saveUrl = '/RFQFinalization/AddRfqFinal';
     const formData = {
