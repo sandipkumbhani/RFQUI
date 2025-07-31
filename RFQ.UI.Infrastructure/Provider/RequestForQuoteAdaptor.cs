@@ -149,7 +149,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
-        public async Task<RequestForQuoteResponseDto> GetRfqById(int rfqId)
+        public async Task<RfqResponseDto> GetRfqById(int rfqId)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (responseModel.Data != null && result == 200)
                     {
-                        return JsonConvert.DeserializeObject<RequestForQuoteResponseDto>(responseModel.Data.ToString());
+                        return JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
                     }
                     else
                     {
@@ -204,6 +204,62 @@ namespace RFQ.UI.Infrastructure.Provider
                 Console.WriteLine("Error in GetAllVendorListForRfq: " + ex.Message);
             }
             return Enumerable.Empty<RfqVendorListResponseDto>();
+        }
+
+        public async Task<IEnumerable<RfqPreviousQuotesList>> GetPreviousQuotesList(RfqVendorDetailsParam rfqVendorDetailsParam)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetPreviousQuotesList"];
+                var rfqVendorList = JsonConvert.SerializeObject(rfqVendorDetailsParam);
+                var requestContent = new StringContent(rfqVendorList, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                {
+                    var QuotesList = JsonConvert.DeserializeObject<IEnumerable<RfqPreviousQuotesList>>(responseModel.Data.ToString());
+                    return QuotesList;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in GetPreviousQuotesList: " + ex.Message);
+            }
+            return Enumerable.Empty<RfqPreviousQuotesList>();
+        }
+
+        public async Task<RfqQuoteRateVendorDetails> GetRfqQuoteRateVendorDetailsqById(int rfqId)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetRfqQuoteRateVendorDetails"] + rfqId;
+                var response = await _httpClient.GetAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (responseModel.Data != null && result == 200)
+                    {
+                        return JsonConvert.DeserializeObject<RfqQuoteRateVendorDetails>(responseModel.Data.ToString());
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
         }
     }
 }
