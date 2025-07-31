@@ -118,7 +118,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
-        public async Task<RequestForQuoteResponseDto> GetRfqByRfqNo(string rfqNo)
+        public async Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (responseModel.Data != null && result == 200)
                     {
-                        return JsonConvert.DeserializeObject<RequestForQuoteResponseDto>(responseModel.Data.ToString());
+                        return JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
                     }
                     else
                     {

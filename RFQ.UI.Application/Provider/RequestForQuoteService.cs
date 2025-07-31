@@ -27,7 +27,7 @@ namespace RFQ.UI.Application.Provider
         {
             return await _requestForQuoteAdaptor.GetAllVendorListForRfq(rfqVendorDetailsParam);
         }
-        public async Task<RequestForQuoteResponseDto> GetRfqByRfqNo(string rfqNo)
+        public async Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo)
         {
             return await _requestForQuoteAdaptor.GetRfqByRfqNo(rfqNo);
         }

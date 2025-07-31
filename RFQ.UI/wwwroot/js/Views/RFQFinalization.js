@@ -98,6 +98,7 @@ function GetRfqDetailsByRfqNo() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
+            debugger;
             if (response == null) {
                 toastr.warning("Enter Correct RFQ No.", "Warning");
                 return;
@@ -106,7 +107,18 @@ function GetRfqDetailsByRfqNo() {
             $("#txtRfqNo").val(response.rfqNo)
             $("#txtRfqDate").val(response.rfqDate)
             $("#txtRfqExpiredOn").val(response.expiryDate)
-            $("#txtVehicleReqDate").val(new Date(response.vehicleReqOn).toISOString().split('T')[0])
+            if (response.vehicleReqOn) {
+                var date = new Date(response.vehicleReqOn);
+                if (!isNaN(date)) {
+                    $("#txtVehicleReqDate").val(date.toISOString().split('T')[0]);
+                } else {
+                    $("#txtVehicleReqDate").val('');
+                    toastr.warning("Invalid Vehicle Required Date format.", "Warning");
+                }
+            } else {
+                $("#txtVehicleReqDate").val('');
+            }
+
             $('#from-search-box').val(response.fromLocation);
             $('#to-search-box').val(response.toLocation);
             $("#ddlVehicleType").val(response.vehicleTypeId).trigger('change');
