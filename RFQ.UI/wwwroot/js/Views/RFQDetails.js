@@ -74,16 +74,17 @@ function CheckValidation() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    const rfqDetailsTab = document.getElementById("rfqDetails-tab");
     const vendorDetailsTab = document.getElementById("vendorDetails-tab");
     const previousQuotes = document.getElementById("previousQuotes-tab");
 
     if (vendorDetailsTab) {
         vendorDetailsTab.addEventListener("click", function () {
-            if (!isValidateSelect($("#ddlIndent").val())) {
-                toastr.warning("Please Select a Indent No", "Validation Error");
-                return;
-            } else {
+            if (OnSubmitCheckValidation()) {
                 GetAllVendorList();
+            } else {
+                rfqDetailsTab.click();
+                return
             }
         });
     }
@@ -91,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
         previousQuotes.addEventListener("click", function () {
             if (!isValidateSelect($("#ddlIndent").val())) {
                 toastr.warning("Please Select a Indent No", "Validation Error");
+                rfqDetailsTab.click();
                 return;
             } else {
                 GetPreviousQuotesList();
@@ -469,7 +471,6 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
     });
 
 });
-
 function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
     const rfqFormData = {
@@ -642,7 +643,6 @@ function sendQuoteLinksForVendors(vendorList) {
         }
     });
 }
-
 function GetPreviousQuotesList() {
     var fromOrigin = $('#from-search-box').val();
     let fromOriginParts = fromOrigin.split(',');
@@ -685,5 +685,3 @@ function GetPreviousQuotesList() {
         }
     });
 }
-
-
