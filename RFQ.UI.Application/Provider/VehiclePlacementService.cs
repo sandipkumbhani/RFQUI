@@ -1,6 +1,7 @@
 ﻿using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,11 @@ namespace RFQ.UI.Application.Provider
         public Task<VehiclePlacementRequestDto?> AddVehiclePlacement(VehiclePlacementRequestDto vehiclePlacementRequestDto)
         {
             return _vehiclePlacementAdaptor.AddVehiclePlacement(vehiclePlacementRequestDto);
+        }
+
+        public async Task<IEnumerable<AutoFetchIndentResponseDto>> AutoFetchPlacement(int id)
+        {
+            return await _vehiclePlacementAdaptor.AutoFetchPlacement(id);
         }
 
         public Task<string> GetPlacementNo()

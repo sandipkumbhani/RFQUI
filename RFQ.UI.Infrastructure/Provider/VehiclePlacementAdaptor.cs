@@ -93,5 +93,29 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             return null;
         }
+
+        public async Task<IEnumerable<AutoFetchIndentResponseDto>> AutoFetchPlacement(int id)
+        {
+            try
+            {
+                var _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var url = _fleetLynkApiUrl + _config["VehiclePlacement:AutoFetchPlacement"] + id;
+                var response = await _httpClient.GetAsync(url);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var routeList = JsonConvert.DeserializeObject<IEnumerable<AutoFetchIndentResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return routeList;
+                }
+                return null;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error in AutoFetchPlacement.", ex);
+            }
+        }
     }
 }

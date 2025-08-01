@@ -1,8 +1,11 @@
-﻿const linkId = GetQueryParam("LinkId");
+﻿var companyId;
+const linkId = GetQueryParam("LinkId");
 var orderColumn = '';
 var orderDir = '';
 var fetchVehicleUrl = '/Vehicle/ViewVehicle';
+
 $(document).ready(function () {
+    companyId = getCookieValue('companyid');
 
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
@@ -47,7 +50,7 @@ $(document).ready(function () {
     FetchVehicleList();
     GetAllOwnerOrVendor();
     GetAllVehicleCategory();
-    GetAllVehicleType("ddlVehicleType");
+    GetAllVehicleType("ddlVehicleType", companyId);
     CheckValidation();
     VehicleEKycClick();
     UpdateVehicle();

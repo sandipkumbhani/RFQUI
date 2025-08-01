@@ -3,6 +3,7 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -62,6 +63,28 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+
+        [HttpGet("VehiclePlacement/AutoFetchPlacement/{id}")]
+        public async Task<IActionResult> AutoFetchPlacement(int id)
+        {
+            try
+            {
+                var routeList = await _vehiclePlacementService.AutoFetchPlacement(id);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(routeList);
+                }
+                else
+                {
+                    return View(routeList);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

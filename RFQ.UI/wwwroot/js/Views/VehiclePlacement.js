@@ -2,46 +2,48 @@
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
+    profileId = getCookieValue('profileid');
+    locationId = getCookieValue('locationid');
     $('#ddlIndentNo').on('change', function () {
-        
-        const selectedValue = $(this).val();
+        AutoFetch();
+        //const selectedValue = $(this).val();
+        //const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
 
-        const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
-
-        if (selectedIndent) {
+        //if (selectedIndent) {
             
-            $('#txtIndentDate').val(selectedIndent.indentDate);
-            let dateValue = selectedIndent.indentDate;
-            if (dateValue) {
-                // If it's a Date object, format it
-                if (dateValue instanceof Date) {
-                    dateValue = dateValue.toISOString().split('T')[0];
-                } else if (typeof dateValue === "string" && dateValue.includes("T")) {
-                    dateValue = dateValue.split('T')[0];
-                }
-                $('#txtIndentDate').val(dateValue);
-            } else {
-                $('#txtIndentDate').val('');
-            }
-            $("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
-            $("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
-            $('#from-search-box').val(selectedIndent.fromLocation);
-            $('#to-search-box').val(selectedIndent.toLocation);
-            $('#txtNoOfVehicles').val(selectedIndent.requiredVehicles);
-            $('#txtVehicleReqOn').val(selectedIndent.vehicleReqOn);
-            if (dateValue) {
-                // If it's a Date object, format it
-                if (dateValue instanceof Date) {
-                    dateValue = dateValue.toISOString().split('T')[0];
-                } else if (typeof dateValue === "string" && dateValue.includes("T")) {
-                    dateValue = dateValue.split('T')[0];
-                }
-                $('#txtVehicleReqOn').val(dateValue);
-            } else {
-                $('#txtVehicleReqOn').val('');
-            }
+        //    $('#txtIndentDate').val(selectedIndent.indentDate);
+        //    let dateValue = selectedIndent.indentDate;
+        //    if (dateValue) {
+        //        // If it's a Date object, format it
+        //        if (dateValue instanceof Date) {
+        //            dateValue = dateValue.toISOString().split('T')[0];
+        //        } else if (typeof dateValue === "string" && dateValue.includes("T")) {
+        //            dateValue = dateValue.split('T')[0];
+        //        }
+        //        $('#txtIndentDate').val(dateValue);
+        //    } else {
+        //        $('#txtIndentDate').val('');
+        //    }
+        //    $("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
+        //    $("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
+        //    $('#from-search-box').val(selectedIndent.fromLocation);
+        //    $('#to-search-box').val(selectedIndent.toLocation);
+        //    $('#txtNoOfVehicles').val(selectedIndent.requiredVehicles);
+        //    $('#txtVehicleReqOn').val(selectedIndent.vehicleReqOn);
 
-        }
+        //    if (dateValue) {
+        //        // If it's a Date object, format it
+        //        if (dateValue instanceof Date) {
+        //            dateValue = dateValue.toISOString().split('T')[0];
+        //        } else if (typeof dateValue === "string" && dateValue.includes("T")) {
+        //            dateValue = dateValue.split('T')[0];
+        //        }
+        //        $('#txtVehicleReqOn').val(dateValue);
+        //    } else {
+        //        $('#txtVehicleReqOn').val('');
+        //    }
+
+        //}
     });
     $('#ddlVehicleNo').on('change', function () {
         const selectedValue = $(this).val();
@@ -50,7 +52,7 @@ $(document).ready(function () {
             $("#ddlOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');            
         }
     });
-    GetAllLocation("ddlLocation",companyId); 
+    //GetAllLocation("ddlLocation",companyId); 
     GetAllDriver();
     GetAllVehicleIndent();
     GetAllVehicleNumber();
@@ -58,6 +60,13 @@ $(document).ready(function () {
     GetAllOwnerOrVendor();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
+
+    GetAllLocation("ddlLocation", companyId, function () {
+        if (profileId == EnumProfile.Branch) {
+            $('#ddlLocation').val(Number(locationId)).trigger('change');
+            $('#ddlLocation').prop('disabled', true);
+        }
+    });
 });
 function GetAllDriver() {
     $.ajax({
@@ -188,3 +197,126 @@ function GetAllOwnerOrVendor() {
         }
     });
 }
+
+//function AutoFetch() {
+    
+//    var indentNo = $("#ddlIndentNo").val();
+//    var getUrl = '/VehiclePlacement/AutoFetchPlacement/' + indentNo;
+//    $.ajax({
+//        url: getUrl,
+//        type: "GET",
+//        contentType: "application/json",
+//        success: function (response) {
+//            console.log(response);
+//            $('#txtIndentDate').val(response.indentDate);
+//            let dateValue = response.indentDate;
+//                if (dateValue) {
+//                    // If it's a Date object, format it
+//                    if (dateValue instanceof Date) {
+//                        dateValue = dateValue.toISOString().split('T')[0];
+//                    } else if (typeof dateValue === "string" && dateValue.includes("T")) {
+//                        dateValue = dateValue.split('T')[0];
+//                    }
+//                    $('#txtIndentDate').val(dateValue);
+//                } else {
+//                    $('#txtIndentDate').val('');
+//                }
+//            $("#ddlCustomerName").val(response.partyId).trigger('change');
+//            $("#ddlVehicleType").val(response.vehicleTypeId).trigger('change');
+//            $('#from-search-box').val(response.fromLocation);
+//            $('#to-search-box').val(response.toLocation);
+//            $('#txtNoOfVehicles').val(response.requiredVehicles);
+//            $('#txtVehicleReqOn').val(response.vehicleReqOn);
+
+//                if (dateValue) {
+//                    // If it's a Date object, format it
+//                    if (dateValue instanceof Date) {
+//                        dateValue = dateValue.toISOString().split('T')[0];
+//                    } else if (typeof dateValue === "string" && dateValue.includes("T")) {
+//                        dateValue = dateValue.split('T')[0];
+//                    }
+//                    $('#txtVehicleReqOn').val(dateValue);
+//                } else {
+//                    $('#txtVehicleReqOn').val('');
+//                }
+//        },
+//        error: function (xhr, status, error) {
+//            toastr.error("Failed to Fetch Rfq Data!", "Error");
+//        }
+//    });
+
+//}
+function AutoFetch() {
+    var indentNo = $("#ddlIndentNo").val();
+    var getUrl = '/VehiclePlacement/AutoFetchPlacement/' + indentNo;
+
+    $.ajax({
+        url: getUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            console.log(response);
+
+            // Check if response is a non-empty array
+            if (Array.isArray(response) && response.length > 0) {
+                let data = response[0]; // Use the first object in the array
+
+                // Format indentDate
+                let indentDate = data.indentDate;
+                if (indentDate) {
+                    if (indentDate instanceof Date) {
+                        indentDate = indentDate.toISOString().split('T')[0];
+                    } else if (typeof indentDate === "string" && indentDate.includes("T")) {
+                        indentDate = indentDate.split('T')[0];
+                    }
+                    $('#txtIndentDate').val(indentDate);
+                } else {
+                    $('#txtIndentDate').val('');
+                }
+                
+                $("#txtRFQNo").val(data.rfqNo);
+                
+                $("#ddlCustomerName").val(data.partyId).trigger('change');
+                $("#ddlVehicleType").val(data.vehicleTypeId).trigger('change');
+                $('#from-search-box').val(data.fromLocation);
+                $('#to-search-box').val(data.toLocation);
+                $('#txtNoOfVehicles').val(data.requiredVehicles);
+                $('#txtIndentBranch').val(data.locationId);
+                $('#txtPendingVehicles').val(data.pendingVehicles);
+
+                // Format vehicleReqOn
+                let vehicleReqOn = data.vehicleReqOn;
+                if (vehicleReqOn) {
+                    if (vehicleReqOn instanceof Date) {
+                        vehicleReqOn = vehicleReqOn.toISOString().split('T')[0];
+                    } else if (typeof vehicleReqOn === "string" && vehicleReqOn.includes("T")) {
+                        vehicleReqOn = vehicleReqOn.split('T')[0];
+                    }
+                    $('#txtVehicleReqOn').val(vehicleReqOn);
+                } else {
+                    $('#txtVehicleReqOn').val('');
+                }
+
+                let rfqDate = data.vehicleReqOn;
+                if (rfqDate) {
+                    if (rfqDate instanceof Date) {
+                        rfqDate = rfqDate.toISOString().split('T')[0];
+                    } else if (typeof rfqDate === "string" && rfqDate.includes("T")) {
+                        rfqDate = rfqDate.split('T')[0];
+                    }
+                    $('#txtRFQDate').val(rfqDate);
+                } else {
+                    $('#txtRFQDate').val('');
+                }
+
+            } else {
+                toastr.warning("No data found for selected indent number.", "Warning");
+            }
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to fetch RFQ data!", "Error");
+        }
+    });
+}
+
+        
