@@ -11,7 +11,7 @@ namespace RFQ.UI.Application.Provider
         {
             _rfqLinkAdaptor  = rfqLinkAdaptor;
         }
-        public Task<bool> AddRfqLinkData(RfqLinkRequestDto rfqLinkRequestDto)
+        public Task<bool> AddRfqLinkData(List<RfqLinkRequestDto> rfqLinkRequestDto)
         {
             return _rfqLinkAdaptor.AddRfqLinkData(rfqLinkRequestDto);
         }

@@ -9,6 +9,6 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface IRfqLinkAdaptor
     {
-        Task<bool> AddRfqLinkData(RfqLinkRequestDto rfqLinkRequestDto);
+        Task<bool> AddRfqLinkData(List<RfqLinkRequestDto> rfqLinkRequestDto);
     }
 }
