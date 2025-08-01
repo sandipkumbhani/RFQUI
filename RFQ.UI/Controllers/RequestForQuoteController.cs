@@ -14,11 +14,13 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IRequestForQuoteService _requestForQuoteService;
         private readonly ILogger<RequestForQuoteController> _logger;
-        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger)
+        private readonly IRfqLinkService _rfqLinkService;
+        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService)
         {
             _globalClass = globalClass;
             _requestForQuoteService = requestForQuoteService;
             _logger = logger;
+            _rfqLinkService = rfqLinkService;
         }
         public ActionResult VendorRequest()
         {
@@ -66,6 +68,8 @@ namespace RFQ.UI.Controllers
         {
             try
             {
+                List<RfqRecipientResponseDto> RfqRecipientsList = new();
+                List<RfqLinkRequestDto> RfqSendlinkList = new();
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
@@ -79,16 +83,27 @@ namespace RFQ.UI.Controllers
                     var result = await _requestForQuoteService.AddRfq(requestForQouteRequestDto);
                     if (result != null && result.RfqRecipients.Count > 0)
                     {
-                        var sentLinks = new List<object>();
-                        List<RfqRecipientResponseDto> RfqRecipientsList = result.RfqRecipients;
+                        
+                        RfqRecipientsList = result.RfqRecipients;
                         foreach (var vendor in RfqRecipientsList)
                         {
                             RfqQuoteRateVendorDetails data = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsqById(vendor.RfqId);
                             if (data != null)
                             {
                                 string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", data, Request.Scheme) ?? string.Empty;
-                                SendEmail(vendor, formLink);
-                                sentLinks.Add(formLink);
+                                bool check = SendEmail(vendor, formLink);
+                                if (check)
+                                {
+                                    RfqSendlinkList.Add(new RfqLinkRequestDto
+                                    {
+                                        RfqId = vendor.RfqId,
+                                        VendorId = vendor.VendorId,
+                                       CreatedBy = Convert.ToInt32(userid),
+                                        SharedLink = formLink,
+                                        CreatedOn = DateTime.UtcNow
+                                    });
+                                    bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
+                                }
                             }
                         }
                     }
