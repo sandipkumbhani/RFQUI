@@ -26,7 +26,7 @@ namespace RFQ.UI.Controllers
             return View("Views/RFQ/RFQFinalization.cshtml");
         }
         [HttpPost]
-        public async Task<IActionResult> AddRfqFinal([FromBody] RfqFinalRequestDto rfqFinalRequestDto)
+        public async Task<IActionResult> AddRfqFinal([FromBody] RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
         {
             try
             {
@@ -34,11 +34,11 @@ namespace RFQ.UI.Controllers
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                if (rfqFinalRequestDto != null)
+                if (rfqFinalizationSaveRequestDto != null)
                 {
-                    rfqFinalRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    rfqFinalRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                    var result = await _rfqFinalService.AddRfqFinal(rfqFinalRequestDto);
+                    rfqFinalizationSaveRequestDto.RfqFinalDto.CreatedBy = Convert.ToInt32(userid);
+                    rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy= Convert.ToInt32(userid);
+                    var result = await _rfqFinalService.AddRfqFinal(rfqFinalizationSaveRequestDto);
                     return Json(result);
                 }
                 else
@@ -52,7 +52,7 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpGet("AwardedVendor/{id}")]
+        [HttpGet("RFQFinalization/AwardedVendor/{id}")]
         public async Task<IActionResult> AwardedVendor(int id)
         {
             try

@@ -700,3 +700,11 @@ $(document).ready(function () {
         table.search(this.value).draw();
     });
 });
+
+$(document).ready(function () {
+    const table = $('#awardedVendorTable').DataTable({
+        responsive: false,
+        paging: false,
+        ordering: false
+    });
+});

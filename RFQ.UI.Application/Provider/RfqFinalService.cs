@@ -12,9 +12,9 @@ namespace RFQ.UI.Application.Provider
         {
             _rfqFinalAdaptor = rfqFinalAdaptor;
         }
-        public async Task<RfqFinalRequestDto> AddRfqFinal(RfqFinalRequestDto rfqFinalRequestDto)
+        public async Task<bool> AddRfqFinal(RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
         {
-            return await _rfqFinalAdaptor.AddRfqFinal(rfqFinalRequestDto);
+            return await _rfqFinalAdaptor.AddRfqFinal(rfqFinalizationSaveRequestDto);
         }
 
         public async Task<IEnumerable<VendorFinalizationResposeDto>> AwardedVendor(int id)

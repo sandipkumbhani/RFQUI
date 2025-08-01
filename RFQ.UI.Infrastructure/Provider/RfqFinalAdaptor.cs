@@ -22,7 +22,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
 
-        public async Task<RfqFinalRequestDto?> AddRfqFinal(RfqFinalRequestDto rfqFinalRequestDto)
+        public async Task<bool> AddRfqFinal(RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
         {
             try
             {
@@ -31,15 +31,15 @@ namespace RFQ.UI.Infrastructure.Provider
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
                 var baseUrl = _fleetLynkApiUrl + _config["RfqFinal:AddRfqFinal"];
-                var rfq = JsonConvert.SerializeObject(rfqFinalRequestDto);
-                var requestContent = new StringContent(rfq, Encoding.UTF8, "application/json");
+                var rfqFinal = JsonConvert.SerializeObject(rfqFinalizationSaveRequestDto);
+                var requestContent = new StringContent(rfqFinal, Encoding.UTF8, "application/json");
                 var response = await httpClient.PostAsync(baseUrl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var rfqData = JsonConvert.DeserializeObject<RfqFinalRequestDto>(responseModel.Data.ToString());
-                    return rfqData;
+                    var result = (bool)responseModel.Data;
+                    return result;
                 }
             }
             catch (Exception ex)
@@ -47,7 +47,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 Console.WriteLine("Error in AddRfqFinal: " + ex.Message);
             }
 
-            return null;
+            return false;
         }
 
         public async Task<IEnumerable<VendorFinalizationResposeDto>> AwardedVendor(int id)

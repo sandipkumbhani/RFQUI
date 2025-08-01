@@ -295,12 +295,8 @@ function FetchRfqNo() {
 function GetAllVendorList() {
     $("#ddlRFQVendorList").empty();
     var getUrl = '/RequestForQuote/GetAllVendorListForRfq'
-    var fromOrigin = $('#from-search-box').val();
-    let fromOriginParts = fromOrigin.split(',');
-    let fromStateName = fromOriginParts[1].trim().toUpperCase();
-    var toDestination = $('#to-search-box').val();
-    let toDestinationParts = toDestination.split(',');
-    let toStateName = toDestinationParts[1].trim().toUpperCase();
+    let fromStateName = $("#fromState").val().toUpperCase();
+    let toStateName = $("#toState").val().toUpperCase();
     var formData = {
         OriginFrom: fromStateName,
         ToDestination: toStateName,
@@ -528,7 +524,6 @@ function SaveAndSaveNew(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
-                    console.log(response);
                     rfqId = response.rfqId;
                     toastr.success("Request For Quote Saved Sucessfully", "success");
                 } else {
@@ -549,7 +544,6 @@ function SaveAndSaveNew(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
-                    console.log(response);
                     rfqId = response.rfqId;
                     toastr.success("Vehicle Indent Saved Successfully!", "Success");
                     $('#RfqDetailsForm')[0].reset();
