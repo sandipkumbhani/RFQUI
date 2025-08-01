@@ -5,7 +5,7 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IRfqFinalService
     {
-        Task<RfqFinalRequestDto> AddRfqFinal(RfqFinalRequestDto rfqFinalRequestDto);
+        Task<bool> AddRfqFinal(RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto);
         Task<IEnumerable<VendorFinalizationResposeDto>> AwardedVendor(int id);
     }
 }

@@ -33,198 +33,157 @@
                     </div>
                 </div>
             </div>
-            <div class="row all-custom-class">
-                <div class="col-lg-6">
-                    <div class="item-input">
-                        <label class="form-label">Customer Name</label>
-                        <select class="select2-custom form-control" data-control="select2" id="ddlCustomerName" style="width: 100%;" disabled>
-                        </select>
+            <div class="all-custom-class">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Customer Name</label>
+                            <select class="select2-custom form-control" data-control="select2" id="ddlCustomerName" style="width: 100%;" disabled>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">RFQ No</label>
-                        <input type="text" class="form-control" placeholder="Auto Generated" id="txtRfqNo" disabled />
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">RFQ No</label>
+                            <input type="text" class="form-control" placeholder="Auto Generated" id="txtRfqNo" disabled />
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">RFQ Date</label>
-                        <input type="datetime-local" class="form-control" id="txtRfqDate" placeholder="Auto Generated" disabled />
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">RFQ Date</label>
+                            <input type="datetime-local" class="form-control" id="txtRfqDate" placeholder="Auto Generated" disabled />
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label ">RFQ Expired On</label>
-                        <input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" disabled />
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label ">RFQ Expired On</label>
+                            <input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" disabled />
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label ">Vehicle Req On</label>
-                        <input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" disabled />
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label ">Vehicle Req On</label>
+                            <input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" disabled />
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input position-relative">
-                        <label class="form-label">Origin/From</label>
-                        <input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
-                        <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-                        <input type="hidden" id="fromLat">
-                        <input type="hidden" id="fromLng">
-                        <input type="hidden" id="fromState">
+                    <div class="col-lg-3">
+                        <div class="item-input position-relative">
+                            <label class="form-label">Origin/From</label>
+                            <input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                            <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                            <input type="hidden" id="fromLat">
+                            <input type="hidden" id="fromLng">
+                            <input type="hidden" id="fromState">
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg-3">
-                    <div class="item-input position-relative">
-                        <label class="form-label">Destination/To</label>
-                        <input disabled id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
-                        <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-                        <input type="hidden" id="toLat">
-                        <input type="hidden" id="toLng">
-                        <input type="hidden" id="toState">
+                    <div class="col-lg-3">
+                        <div class="item-input position-relative">
+                            <label class="form-label">Destination/To</label>
+                            <input disabled id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                            <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                            <input type="hidden" id="toLat">
+                            <input type="hidden" id="toLng">
+                            <input type="hidden" id="toState">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">Vehicle Type</label>
+                            <select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;" disabled>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">No. of Vehicles</label>
+                            <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" disabled />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Special Instructions</label>
+                            <input type="text" class="form-control" placeholder="Special Instructions" id="txtSpecial" disabled />
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label"><span>*</span>RFQ Status</label>
+                            <select class="select2-custom form-control" data-control="select2" id="ddlRfqStatus" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 d-none ddlRfqReason">
+                        <div class="item-input">
+                            <label class="form-label"><span>*</span>Failure Reason</label>
+                            <select class="select2-custom form-control" data-control="select2" id="ddlRfqReason" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div> 
+                    <div class="col-lg-9" id="remarksDiv">
+                        <div class="item-input">
+                            <label class="form-label">Remarks </label>
+                            <input type="text" class="form-control" placeholder="remarks" id="txtRemarks" maxlength="500"/>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Vehicle Type</label>
-                        <select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;" disabled>
-                        </select>
+                <div class="row d-none" id="billingDiv">
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label ">Billing Rate </label>
+                            <input type="text" class="form-control" placeholder="Numeric" id="txtBillingRate" />
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">No. of Vehicles</label>
-                        <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" disabled />
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">Detention Per Day</label>
+                            <input type="text" class="form-control" placeholder="Per Day" id="txtPerDay" />
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="item-input">
-                        <label class="form-label">Special Instructions</label>
-                        <input type="text" class="form-control" placeholder="Special Instructions" id="txtSpecial" disabled />
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">Detention Free Days</label>
+                            <input type="text" class="form-control" placeholder="Free Days" id="txtFreeDays" />
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>RFQ Status</label>
-                        <select class="select2-custom form-control" data-control="select2" id="ddlRfqStatus" style="width: 100%;">
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-3 d-none ddlRfqReason">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>Failure Reason</label>
-                        <select class="select2-custom form-control" data-control="select2" id="ddlRfqReason" style="width: 100%;">
-                        </select> 
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="item-input">
-                        <label class="form-label">Remarks </label>
-                        <input type="text" class="form-control" placeholder="remarks" id="txtRemarks" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label ">Billing Rate </label>
-                        <input type="text" class="form-control" placeholder="Numeric" id="txtBillingRate" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Detention Per Day</label>
-                        <input type="text" class="form-control" placeholder="Per Day" id="txtPerDay" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Detention Free Days</label>
-                        <input type="text" class="form-control" placeholder="Free Days" id="txtFreeDays" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Margin Amount</label>
-                        <input type="text" class="form-control" placeholder="Amount" id="txtAmount" />
+                    <div class="col-lg-3">
+                        <div class="item-input">
+                            <label class="form-label">Margin Amount</label>
+                            <input type="text" class="form-control" placeholder="Amount" value="12345" id="txtAmount" disabled />
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- RFQ Sent To Finalization Section -->
-            <div class="mt-8 d-none" id="awardedDiv">
-                <div class="card-header p-4">
-                    <h4 class="fw-bold m-0 text-lg">Awarded Vendor Details</h4>
+            <div class="card com-profile-info d-none" id="awardedDiv">
+                <div class="table-top-header">
+                    <h4>Awarded Vendor Details</h4>
                 </div>
-                <div class="ard-card">
-                    <table id="datatable_ard" class="table table-striped align-middle border rounded fs-6 gy-5 gs-7 dataTable" style="width:100%">
+                <div class="table-responsive">
+                    <table id="awardedVendorTable" class="table dt-responsive nowrap w-100">
                         <thead>
-                            <tr class="fw-semibold fs-6 text-gray-800">
-                                <th>Sr. No.</th>
-                                <th>Vendor Name</th>
-                                <th>PAN No</th>
-                                <th>Vendor Rating</th>
-                                <th>Mobile No</th>
-                                <th>WhatsApp No</th>
-                                <th>Email ID</th>
-                                <th>Total Hire Cost</th>
-                                <th>Detention Per Day</th>
-                                <th>Detention Per Days</th>
-                                <th>Margin Amount</th>
-                                <th>Vendor Position</th>
-                                <th>Assign Order</th>
+                            <tr class="text-center">
+                                <th class="text-center">Sr. No.</th>
+                                <th class="text-center">Vendor Name</th>
+                                <th class="text-center">PAN No</th>
+                                <th class="text-center">Vendor Rating</th>
+                                <th class="text-center">Mobile No</th>
+                                <th class="text-center">WhatsApp No</th>
+                                <th class="text-center">Email ID</th>
+                                <th class="text-center">Available Vehicles</th>
+                                <th class="text-center">Assigned Vehicles</th>
+                                <th class="text-center">Total Hire Cost</th>
+                                <th class="text-center">Detention Per Day</th>
+                                <th class="text-center">Detention Free Days</th>
+                                <th class="text-center">Margin Amount</th>
+                                <th class="text-center">Vendor Position</th>
+                                <th class="text-center">Assign Order</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                                <td><input type="text" class="form-control form-control-sm border-primary" /></td>
-                            </tr>
-                        </tbody>
+                        <tbody class="text-center"></tbody>
                     </table>
                 </div>
             </div>
+
             <div class="button-main">
                 <a href="#" class="card-link" id="btnSave" type="button" data-action="save">
                     <i class="ri-save-line"></i>
