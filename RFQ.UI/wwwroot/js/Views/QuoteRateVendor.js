@@ -230,6 +230,7 @@ function Save() {
         detentionPerDay: parseInt(DetentionDay),
         detentionFreeDays: parseInt(DetentionFreeDays)
     };
+    debugger;
     $.ajax({
         url: '/QuoteRateVendor/SaveQuoteRateVendor',
         type: "POST",
@@ -237,10 +238,10 @@ function Save() {
         data: JSON.stringify(formdata),
         dataType: "json",
         success: function (response) {
-            toastr.success(" Details Submitted Successfully!","success");
+            toastr.success(" Details Submitted Successfully!", "success");
         },
         error: function (req, status, error) {
-            toastr.error("Failed to Save User Details", "Error");
+            toastr.error("Failed to Save QuoteRate Vendor  Details", "Error");
         }
     });
 }
@@ -248,6 +249,10 @@ function Save() {
 function UrlParamBind() {
     debugger;
     const urlParams = new URLSearchParams(window.location.search);
+    for (const [key, value] of urlParams.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+
     const rfqNo = urlParams.get("RfqNo");
     const rfqDate = urlParams.get("RfqDate");
     const expiryDate = urlParams.get("ExpiryDate");
@@ -261,7 +266,7 @@ function UrlParamBind() {
     const ItemName = urlParams.get("ItemName");
     const PackingTypeName = urlParams.get("PackingTypeName");
     const specialInstruction = urlParams.get("SpecialInstruction");
-    const VendorId = urlParams.get("PartyId");
+    const VendorId = urlParams.get("VendorId");
     const RFQId = urlParams.get("RfqId");
     const PanNo = urlParams.get("PanNo");
 

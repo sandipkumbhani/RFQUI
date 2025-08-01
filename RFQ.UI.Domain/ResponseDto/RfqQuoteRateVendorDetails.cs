@@ -11,6 +11,7 @@
         public DateTime VehicleReqOn { get; set; }
         public int PartyId { get; set; }
         public string PartyName { get; set; }
+        public int VendorId { get; set; }
         public string FromLocation { get; set; }
         public string ToLocation { get; set; }
         public int VehicleTypeId { get; set; }

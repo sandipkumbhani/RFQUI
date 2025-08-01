@@ -90,6 +90,7 @@ namespace RFQ.UI.Controllers
                             RfqQuoteRateVendorDetails data = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsqById(vendor.RfqId);
                             if (data != null)
                             {
+                                data.VendorId = vendor.VendorId;
                                 string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", data, Request.Scheme) ?? string.Empty;
                                 bool check = SendEmail(vendor, formLink);
                                 if (check)
