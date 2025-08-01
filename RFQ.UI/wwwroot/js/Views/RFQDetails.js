@@ -638,12 +638,8 @@ function sendQuoteLinksForVendors(vendorList) {
     });
 }
 function GetPreviousQuotesList() {
-    var fromOrigin = $('#from-search-box').val();
-    let fromOriginParts = fromOrigin.split(',');
-    let fromStateName = fromOriginParts[1].trim().toUpperCase();
-    var toDestination = $('#to-search-box').val();
-    let toDestinationParts = toDestination.split(',');
-    let toStateName = toDestinationParts[1].trim().toUpperCase();
+    let fromStateName = $("#fromState").val().toUpperCase();
+    let toStateName = $("#toState").val().toUpperCase();
     var requestData = {
         OriginFrom: fromStateName,
         ToDestination: toStateName,
