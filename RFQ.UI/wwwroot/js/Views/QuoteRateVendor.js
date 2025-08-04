@@ -4,9 +4,38 @@ $(document).on("click", "#btnViewForm", function () {
     $("#backButton").css('display', 'Block')
 });
 $(document).ready(function () {
+    $("#btnSaveForm").on('click', function () {
+        
+        
+        var action = $(this).data('action');
+        if (OnSubmitCheckValidation()) {
+            Save(action);
+        }
+    });
     UrlParamBind()
-    Initialization();
+    //Initialization();
 });
+
+function OnSubmitCheckValidation() {
+    if (IsNullOrEmpty($("#txtAvailableVehicle").val())) {
+        toastr.warning("Please enter a Vehicle Count", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtHireCost").val())) {
+        toastr.warning("Please enter a Total Hire Cost", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtDetentionDay").val())) {
+        toastr.warning("Please enter Detention Per Day", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtDetentionDays").val())) {
+        toastr.warning("Please enter a Detention Free Days", "Validation Error");
+        return false;
+    }
+    return true;
+
+}
 function Initialization() {
     $("#txtRFQDate").on("blur", function () {
         if (!isValidateSelect($(this).val())) {
@@ -129,10 +158,10 @@ function Initialization() {
         }
     });
     //on form submit
-    $("#btnSaveForm").click(function (event) {
-        event.preventDefault();
-        Save();
-    });
+    //$("#btnSaveForm").click(function (event) {
+    //    event.preventDefault();
+    //    Save();
+    //});
 }
 function ValidationCheck() {
 
@@ -212,10 +241,10 @@ function ValidationCheck() {
     }
     return true;
 }
-function Save() {
+function Save(action) {
+    debugger;
     var DetentionFreeDays = $("#txtDetentionDays").val();
     var DetentionDay = $("#txtDetentionDay").val();
-    var HireCost = $("#txtHireCost").val();
     var HireCost = $("#txtHireCost").val();
     var availVehicleCount = $("#txtAvailableVehicle").val();
     var RfqId = $("#RfqId").val();
@@ -230,24 +259,29 @@ function Save() {
         detentionPerDay: parseInt(DetentionDay),
         detentionFreeDays: parseInt(DetentionFreeDays)
     };
-    debugger;
-    $.ajax({
-        url: '/QuoteRateVendor/SaveQuoteRateVendor',
-        type: "POST",
-        contentType: "application/json;charset=utf-8",
-        data: JSON.stringify(formdata),
-        dataType: "json",
-        success: function (response) {
-            toastr.success(" Details Submitted Successfully!", "success");
-        },
-        error: function (req, status, error) {
-            toastr.error("Failed to Save QuoteRate Vendor  Details", "Error");
-        }
-    });
+
+    if (action === "save") {
+        $.ajax({
+            url: '/QuoteRateVendor/SaveQuoteRateVendor',
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(formdata),
+            dataType: "json",
+            success: function (response) {
+                if (response) {
+                    toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    $('#QRVendorBodyForm')[0].reset();
+                    UrlParamBind();
+                } else {
+                    toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
+                }
+            }
+        });
+    }
+    
 }
 
 function UrlParamBind() {
-    debugger;
     const urlParams = new URLSearchParams(window.location.search);
     for (const [key, value] of urlParams.entries()) {
         console.log(`${key}: ${value}`);

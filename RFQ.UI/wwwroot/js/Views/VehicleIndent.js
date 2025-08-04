@@ -181,7 +181,7 @@ function OnSubmitCheckValidation() {
 function SaveVehicleIndent(action) {
     var saveUrl = '/VehicleIndent/AddVehicleIndent';
     var consignorResult = GetDropdownValue("ddlConsignorInput");
-    var consigneeResult = GetDropdownValue("ddlConsignorInput");
+    var consigneeResult = GetDropdownValue("ddlConsigneeInput");
     debugger;
     const formData = {
         IndentNo: $('#txtIndentNo').val(),
