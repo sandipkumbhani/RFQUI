@@ -248,6 +248,8 @@ function SaveVehicleIndent(action) {
                     $('#ddlVehicleType').val(null).trigger('change');
                     $('#ddlItemName').val(null).trigger('change');
                     $('#ddlPackingType').val(null).trigger('change');
+                    $('#ddlConsignorInput').val(null).trigger('change');
+                    $('#ddlConsigneeInput').val(null).trigger('change');
                     FetchIndentNo();
                 } else {
                     toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
