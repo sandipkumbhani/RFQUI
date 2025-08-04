@@ -4,6 +4,7 @@
     {
         public int RfqId { get; set; }
         public string RfqNo { get; set; }
+        public string PANNo { get; set; }
         public int CompanyId { get; set; }
         public int LocationId { get; set; }
         public DateTime RfqDate { get; set; }

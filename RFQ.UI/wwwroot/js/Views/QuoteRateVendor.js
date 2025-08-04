@@ -302,7 +302,7 @@ function UrlParamBind() {
     const specialInstruction = urlParams.get("SpecialInstruction");
     const VendorId = urlParams.get("VendorId");
     const RFQId = urlParams.get("RfqId");
-    const PanNo = urlParams.get("PanNo");
+    const PanNo = urlParams.get("PANNo");
 
     $("#RfqId").val(RFQId);
     $("#vendorId").val(VendorId);
