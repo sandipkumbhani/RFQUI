@@ -12,6 +12,7 @@ $(document).ready(function () {
 
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
+            showLoader();
             SaveAndSaveNew(action);
         }
     });
@@ -529,8 +530,14 @@ function SaveAndSaveNew(action) {
                 } else {
                     toastr.error("Failed to Submit Request For Quote.", "Error");
                 }
+               
+            },
+            complete: function () {
+                hideLoader();
+                window.location.reload();
             },
             error: function (xhr, status, error) {
+                hideLoader();
                 toastr.error("Failed to Submit Request For Quote.", "Error");
             }
         });
