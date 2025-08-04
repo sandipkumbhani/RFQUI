@@ -6,44 +6,6 @@ $(document).ready(function () {
     locationId = getCookieValue('locationid');
     $('#ddlIndentNo').on('change', function () {
         AutoFetch();
-        //const selectedValue = $(this).val();
-        //const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
-
-        //if (selectedIndent) {
-            
-        //    $('#txtIndentDate').val(selectedIndent.indentDate);
-        //    let dateValue = selectedIndent.indentDate;
-        //    if (dateValue) {
-        //        // If it's a Date object, format it
-        //        if (dateValue instanceof Date) {
-        //            dateValue = dateValue.toISOString().split('T')[0];
-        //        } else if (typeof dateValue === "string" && dateValue.includes("T")) {
-        //            dateValue = dateValue.split('T')[0];
-        //        }
-        //        $('#txtIndentDate').val(dateValue);
-        //    } else {
-        //        $('#txtIndentDate').val('');
-        //    }
-        //    $("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
-        //    $("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
-        //    $('#from-search-box').val(selectedIndent.fromLocation);
-        //    $('#to-search-box').val(selectedIndent.toLocation);
-        //    $('#txtNoOfVehicles').val(selectedIndent.requiredVehicles);
-        //    $('#txtVehicleReqOn').val(selectedIndent.vehicleReqOn);
-
-        //    if (dateValue) {
-        //        // If it's a Date object, format it
-        //        if (dateValue instanceof Date) {
-        //            dateValue = dateValue.toISOString().split('T')[0];
-        //        } else if (typeof dateValue === "string" && dateValue.includes("T")) {
-        //            dateValue = dateValue.split('T')[0];
-        //        }
-        //        $('#txtVehicleReqOn').val(dateValue);
-        //    } else {
-        //        $('#txtVehicleReqOn').val('');
-        //    }
-
-        //}
     });
     $('#ddlVehicleNo').on('change', function () {
         const selectedValue = $(this).val();
@@ -60,7 +22,12 @@ $(document).ready(function () {
     GetAllOwnerOrVendor();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
-
+    $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
+        var action = $(this).data('action');
+        if (OnSubmitCheckValidation()) {
+            SaveVehicleIndent(action);
+        }
+    });
     GetAllLocation("ddlLocation", companyId, function () {
         if (profileId == EnumProfile.Branch) {
             $('#ddlLocation').val(Number(locationId)).trigger('change');
@@ -68,6 +35,41 @@ $(document).ready(function () {
         }
     });
 });
+function OnSubmitCheckValidation() {
+    if (!isValidateSelect($("#ddlIndentNo").val())) {
+        toastr.warning("Please Select a Indent No", "Validation Error");
+        return false;
+    }
+    if (!isValidateSelect($("#ddlVehicleNo").val())) {
+        toastr.warning("Please Select a Vehicle  No", "Validation Error");
+        return false;
+    }
+    if (!isValidateSelect($("#ddlTrakingType").val())) {
+        toastr.warning("Please Select a ddlTrakingType", "Validation Error");
+        return false;
+    }
+    if (!isValidateSelect($("#ddlDriverName").val())) {
+        toastr.warning("Please Select a Driver Name", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtMobileNo").val())) {
+        toastr.warning("Please enter a Mobile No", "Validation Error");
+        return false;
+    }
+    if (!isValidateSelect($("#ddlBrokerName").val())) {
+        toastr.warning("Please Select a Broker Name", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtTotalHairAmt").val())) {
+        toastr.warning("Please enter a Total Hair Amt", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtAdvancePayable").val())) {
+        toastr.warning("Please enter a Advance Payable", "Validation Error");
+        return false;
+    }
+    return true;
+}
 function GetAllDriver() {
     $.ajax({
         url: '/Driver/GetAllDriverList',
@@ -197,55 +199,6 @@ function GetAllOwnerOrVendor() {
         }
     });
 }
-
-//function AutoFetch() {
-    
-//    var indentNo = $("#ddlIndentNo").val();
-//    var getUrl = '/VehiclePlacement/AutoFetchPlacement/' + indentNo;
-//    $.ajax({
-//        url: getUrl,
-//        type: "GET",
-//        contentType: "application/json",
-//        success: function (response) {
-//            console.log(response);
-//            $('#txtIndentDate').val(response.indentDate);
-//            let dateValue = response.indentDate;
-//                if (dateValue) {
-//                    // If it's a Date object, format it
-//                    if (dateValue instanceof Date) {
-//                        dateValue = dateValue.toISOString().split('T')[0];
-//                    } else if (typeof dateValue === "string" && dateValue.includes("T")) {
-//                        dateValue = dateValue.split('T')[0];
-//                    }
-//                    $('#txtIndentDate').val(dateValue);
-//                } else {
-//                    $('#txtIndentDate').val('');
-//                }
-//            $("#ddlCustomerName").val(response.partyId).trigger('change');
-//            $("#ddlVehicleType").val(response.vehicleTypeId).trigger('change');
-//            $('#from-search-box').val(response.fromLocation);
-//            $('#to-search-box').val(response.toLocation);
-//            $('#txtNoOfVehicles').val(response.requiredVehicles);
-//            $('#txtVehicleReqOn').val(response.vehicleReqOn);
-
-//                if (dateValue) {
-//                    // If it's a Date object, format it
-//                    if (dateValue instanceof Date) {
-//                        dateValue = dateValue.toISOString().split('T')[0];
-//                    } else if (typeof dateValue === "string" && dateValue.includes("T")) {
-//                        dateValue = dateValue.split('T')[0];
-//                    }
-//                    $('#txtVehicleReqOn').val(dateValue);
-//                } else {
-//                    $('#txtVehicleReqOn').val('');
-//                }
-//        },
-//        error: function (xhr, status, error) {
-//            toastr.error("Failed to Fetch Rfq Data!", "Error");
-//        }
-//    });
-
-//}
 function AutoFetch() {
     var indentNo = $("#ddlIndentNo").val();
     var getUrl = '/VehiclePlacement/AutoFetchPlacement/' + indentNo;
