@@ -141,6 +141,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
 
     const companyid = getCookieValue('companyid');
     const profileid = getCookieValue('profileid');
+    const userid = getCookieValue('userid');
     $('#tableDiv').show();
     $('#' + gridTableName + ' tbody').empty();
     $('#totalList').text('Total List: 0');
@@ -159,6 +160,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
         data: JSON.stringify({
             ProfileId: profileid,
             CompanyId: companyid,
+            UserId: userid,
             Draw: pageNumber,
             start: (pageNumber - 1) * pageLength,
             length: pageLength,
