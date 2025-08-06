@@ -647,7 +647,6 @@ function GetAllItemName(dropdownId, companyIdParam) {
         }
     });
 }
-
 function formatDate(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -663,4 +662,16 @@ function formatDate(dateString) {
 
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
+
+// Show loader
+function showLoader() {
+    document.getElementById("loader").style.display = "block";
+}
+
+// Hide loader
+function hideLoader() {
+    document.getElementById("loader").style.display = "none";
+}
+
+
 
