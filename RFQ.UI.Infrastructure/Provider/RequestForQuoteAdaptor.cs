@@ -21,14 +21,14 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
-        public async Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList()
+        public async Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList(int companyId)
         {
             try
             {
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var baseUrl = _fleetLynkApiUrl + _config["RequestForQuote:GetAllVehicleIndentList"];
+                var baseUrl = $"{_fleetLynkApiUrl }{ _config["RequestForQuote:GetAllVehicleIndentList"]}?companyId={companyId}";
                 var response = await _httpClient.GetAsync(baseUrl);
 
                 if (!response.IsSuccessStatusCode)

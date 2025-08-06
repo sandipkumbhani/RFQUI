@@ -21,6 +21,7 @@ $(document).ready(function () {
     GetAllPakingType("ddlPackingType");
 
     $("#btnSave, #btnsaveandnew").on('click', function () {
+        $(this).prop('disabled', true);
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
             SaveVehicleIndent(action);
@@ -182,7 +183,6 @@ function SaveVehicleIndent(action) {
     var saveUrl = '/VehicleIndent/AddVehicleIndent';
     var consignorResult = GetDropdownValue("ddlConsignorInput");
     var consigneeResult = GetDropdownValue("ddlConsigneeInput");
-    debugger;
     const formData = {
         IndentNo: $('#txtIndentNo').val(),
         LocationId: $('#ddlLocation').val(),
@@ -223,6 +223,8 @@ function SaveVehicleIndent(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
+                    $("#btnSave").prop('disabled', false);
+                    $("#btnsaveandnew").prop('disabled', false);
                     window.location.href = "../Dashboard/Dashboard";
                 } else {
                     toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
@@ -242,8 +244,9 @@ function SaveVehicleIndent(action) {
             success: function (response) {
                 if (response) {
                     toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    $("#btnSave").prop('disabled', false);
+                    $("#btnsaveandnew").prop('disabled', false);
                     $('#vehicleIndentForm')[0].reset();
-                    $('#ddlLocation').val(null).trigger('change');
                     $('#ddlCustomerName').val(null).trigger('change');
                     $('#ddlVehicleType').val(null).trigger('change');
                     $('#ddlItemName').val(null).trigger('change');
@@ -251,6 +254,16 @@ function SaveVehicleIndent(action) {
                     $('#ddlConsignorInput').val(null).trigger('change');
                     $('#ddlConsigneeInput').val(null).trigger('change');
                     FetchIndentNo();
+                    
+                    if (profileId == EnumProfile.Branch) {
+                        $('#ddlLocation').val(Number(locationId)).trigger('change');
+                        $('#ddlLocation').prop('disabled', true);
+                    }
+                    else {
+                        $('#ddlLocation').val(null).trigger('change');
+                        $('#ddlLocation').prop('disabled', false);
+                    }
+
                 } else {
                     toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
                 }

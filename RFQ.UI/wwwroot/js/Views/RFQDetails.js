@@ -65,6 +65,13 @@ function CheckValidation() {
             return;
         }
     });
+    $("#txtRfqExpiredOn").on('input', function () {
+        if (!isValidateSelect($("#ddlIndent").val())) {
+            toastr.warning("Please select an Indent No", "Validation Error");
+            $("#txtRfqExpiredOn").val('');
+            return;
+        }
+    });
     $("#txtRfqExpiredOn").on("change", function () {
         var expireDate = $(this).val().split('T')[0];
         if (expireDate <= $('#txtVehicleReqDate').val()) {
@@ -197,6 +204,7 @@ function GetAllVehicleIndent() {
     $.ajax({
         url: getVehicleTypeUrl,
         type: "GET",
+        data: { companyId: companyId },
         contentType: "application/json",
         success: function (response) {
             response = response.result;

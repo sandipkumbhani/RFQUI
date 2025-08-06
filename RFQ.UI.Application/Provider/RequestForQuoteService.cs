@@ -18,9 +18,9 @@ namespace RFQ.UI.Application.Provider
             return _requestForQuoteAdaptor.AddRfq(requestForQouteRequestDto);
         }
 
-        public Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList()
+        public Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList(int companyId)
         {
-            return _requestForQuoteAdaptor.GetAllVehicleIndentList();
+            return _requestForQuoteAdaptor.GetAllVehicleIndentList(companyId);
         }
 
         public async Task<IEnumerable<RfqVendorListResponseDto>> GetAllVendorListForRfq(RfqVendorDetailsParam rfqVendorDetailsParam)

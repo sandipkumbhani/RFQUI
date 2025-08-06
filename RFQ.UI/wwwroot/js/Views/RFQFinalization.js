@@ -38,6 +38,10 @@ $(document).ready(function () {
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
     $("#btnGetRfqData").on('click', function () {
+        if (IsNullOrEmpty($("#txtRfqNumber").val())) {
+            toastr.warning("Please Enter Rfq No", "Warning");
+            return;
+        }
         GetRfqDetailsByRfqNo();
     })
 });
@@ -268,6 +272,10 @@ function FetchAwarderVendorDetails() {
         success: function (response) {
             const tbody = $("#awardedVendorTable tbody");
             tbody.empty();
+            if (!response || response.length === 0) {
+                $("#awardedVendorTable tbody").append('<tr><td colspan="16" class="text-center">No records found</td></tr>');
+                return;
+            }
             $.each(response, function (index, vendor) {
                 const rowHtml = `
                         <tr data-index="${index}">

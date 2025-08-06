@@ -36,11 +36,11 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleIndentList()
+        public async Task<IActionResult> GetAllVehicleIndentList([FromQuery] int companyId)
         {
             try
             {
-                var result = await _requestForQuoteService.GetAllVehicleIndentList();
+                var result = await _requestForQuoteService.GetAllVehicleIndentList(companyId);
                 return Json(new { result });
             }
             catch (Exception ex)

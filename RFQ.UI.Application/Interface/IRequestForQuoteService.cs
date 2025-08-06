@@ -5,7 +5,7 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IRequestForQuoteService
     {
-        Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList();
+        Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList(int companyId);
         Task<string> GetRfqNo();
         Task<RequestForQuoteResponseDto> AddRfq(RequestForQuoteRequestDto requestForQouteRequestDto);
         Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo);
