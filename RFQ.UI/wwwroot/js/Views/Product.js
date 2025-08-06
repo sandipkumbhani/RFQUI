@@ -78,11 +78,11 @@ function SaveProduct(action) {
                     window.location.href = "../Dashboard/Dashboard";
                 }
                 else {
-                    toastr.error("Failed to Save Item!");
+                    toastr.error("Failed to Product Details!", "Error");
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Save Item!");
+                toastr.error("Failed to Product Details!", "Error");
 
             }
         });
@@ -97,15 +97,16 @@ function SaveProduct(action) {
             success: function (response) {
 
                 if (response.result == "Success") {
-                    toastr.success("Item Save successfully!");
+                    toastr.success(" Product Details Submitted Successfully!!");
                     $('#productForm')[0].reset();
                 }
                 else {
-                    toastr.error("Failed to Save Item!");
+                    toastr.error("Failed to Product Details!", "Error");
+
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Save Item!");
+                toastr.error("Failed to Product Details!", "Error");
 
             }
         });
