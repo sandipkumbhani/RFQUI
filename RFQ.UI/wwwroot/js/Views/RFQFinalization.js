@@ -23,6 +23,11 @@ $("#ddlRfqStatus").on('change', function () {
             FetchAwarderVendorDetails();
         }
     }
+    else {
+        $("#billingDiv").addClass('d-none');
+        $("#awardedDiv").addClass('d-none');
+        $(".ddlRfqReason").addClass('d-none');
+    }
 });
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
@@ -40,8 +45,10 @@ $(document).ready(function () {
     $("#btnGetRfqData").on('click', function () {
         if (IsNullOrEmpty($("#txtRfqNumber").val())) {
             toastr.warning("Please Enter Rfq No", "Warning");
+            ClearDisabledFields();
             return;
         }
+        $("#ddlRfqStatus").val(null).trigger('change');
         GetRfqDetailsByRfqNo();
     })
 });
@@ -335,4 +342,13 @@ function GetSelectedVendor() {
         }
     });
     return selectedVendor;
+}
+function ClearDisabledFields() {
+    // Clear disabled text, date, datetime-local inputs
+    $('input:disabled').val('');
+    $('input[type="hidden"]').val('');
+    // Clear disabled select2 dropdowns
+    $('select.select2-custom:disabled').each(function () {
+        $(this).val(null).trigger('change');
+    });
 }

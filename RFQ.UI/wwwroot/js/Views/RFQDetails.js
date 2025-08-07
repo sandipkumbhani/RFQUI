@@ -533,7 +533,8 @@ function SaveAndSaveNew(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
-                    rfqId = response.rfqId;
+                    rfqId = response.rfqRequestDto.rfqId;
+                    Saveattachment(rfqId);
                     toastr.success("Request For Quote Saved Sucessfully", "success");
                 } else {
                     toastr.error("Failed to Submit Request For Quote.", "Error");
@@ -559,8 +560,9 @@ function SaveAndSaveNew(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response) {
-                    rfqId = response.rfqId;
-                    toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    rfqId = response.rfqRequestDto.rfqId;
+                    Saveattachment(rfqId);
+                    toastr.success("Request For Quote Saved Sucessfully", "success");
                     $('#RfqDetailsForm')[0].reset();
                     $('#ddlLocation').val(null).trigger('change');
                     $('#ddlIndent').val(null).trigger('change');
@@ -571,6 +573,9 @@ function SaveAndSaveNew(action) {
                     $('#ddlItemName').val(null).trigger('change');
                     $('#ddlPackingType').val(null).trigger('change');
                     FetchRfqNo();
+                    setTimeout(() => {
+                        ResetAttachmentRepeater();
+                    }, 1000);
                 } else {
                     toastr.error("Failed to Submit Request For Quote.", "Error");
                 }
