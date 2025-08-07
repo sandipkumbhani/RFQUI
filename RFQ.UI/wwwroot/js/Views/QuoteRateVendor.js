@@ -5,8 +5,8 @@ $(document).on("click", "#btnViewForm", function () {
 });
 $(document).ready(function () {
     $("#btnSaveForm").on('click', function () {
-        
-        
+
+
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
             Save(action);
@@ -269,7 +269,9 @@ function Save(action) {
             dataType: "json",
             success: function (response) {
                 if (response) {
-                    toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    $('#successCard').removeClass('d-none');;
+                    $('#formDiv').addClass('d-none');
+                    //toastr.success("Vehicle Indent Saved Successfully!", "Success");
                     $('#QRVendorBodyForm')[0].reset();
                     UrlParamBind();
                 } else {
@@ -278,7 +280,7 @@ function Save(action) {
             }
         });
     }
-    
+
 }
 
 function UrlParamBind() {
