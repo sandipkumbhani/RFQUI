@@ -102,6 +102,7 @@ function GetAllVehicleIndent() {
     $.ajax({
         url: getVehicleTypeUrl,
         type: "GET",
+        data: { companyId: companyId },
         contentType: "application/json",
         success: function (response) {
             response = response.result;
@@ -119,7 +120,6 @@ function GetAllVehicleIndent() {
                 option.textContent = item.indentNo;
                 Indentdropdown.appendChild(option);
             });
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Indent No!", "Error");
