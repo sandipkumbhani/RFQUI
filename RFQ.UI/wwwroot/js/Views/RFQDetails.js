@@ -589,7 +589,6 @@ function SaveAndSaveNew(action) {
 function SaveRfqVendorDetails() {
     var saveUrl = '/RfqRecipient/AddRfqRecipient';
     $("#btnSaveRfqVendorDetails").on('click', function () {
-        debugger;
         var formData = vendorList.map(vendor => ({
             RfqId: rfqId,
             VendorId: vendor.VendorId,
@@ -619,7 +618,6 @@ function SaveRfqVendorDetails() {
     });
 }
 function sendQuoteLinksForVendors(vendorList) {
-    debugger;
     const formData = vendorList.map(vendor => ({
         RfqRecipientId: 0,
         RfqId: rfqId,
