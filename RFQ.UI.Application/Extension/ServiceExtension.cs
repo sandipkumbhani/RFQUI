@@ -38,6 +38,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IRfqRateServices, RfqRateServices>();
             services.AddScoped<IRfqLinkService, RfqLinkService>();
             services.AddScoped<IReceivedVendorCostingService, ReceivedVendorCostingService>();
+            services.AddScoped<IWhatsAppService, WhatsAppService>();
             return services;
         }
     }

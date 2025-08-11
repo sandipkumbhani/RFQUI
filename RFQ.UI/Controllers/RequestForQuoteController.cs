@@ -6,6 +6,7 @@ using RFQ.UI.Domain.ResponseDto;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
 using System.Net;
+using RFQ.UI.Domain.Helper;
 
 namespace RFQ.UI.Controllers
 {
@@ -15,12 +16,14 @@ namespace RFQ.UI.Controllers
         private readonly IRequestForQuoteService _requestForQuoteService;
         private readonly ILogger<RequestForQuoteController> _logger;
         private readonly IRfqLinkService _rfqLinkService;
-        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService)
+        private readonly IWhatsAppService _whatsAppService;
+        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService)
         {
             _globalClass = globalClass;
             _requestForQuoteService = requestForQuoteService;
             _logger = logger;
             _rfqLinkService = rfqLinkService;
+            _whatsAppService = whatsAppService;
         }
         public ActionResult VendorRequest()
         {
@@ -104,6 +107,8 @@ namespace RFQ.UI.Controllers
                                         CreatedOn = DateTime.UtcNow
                                     });
                                     bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
+                                   
+
                                 }
                             }
                         }
