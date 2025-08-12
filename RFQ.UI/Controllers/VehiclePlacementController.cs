@@ -3,6 +3,7 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -22,6 +23,11 @@ namespace RFQ.UI.Controllers
         public IActionResult VehiclePlacement()
         {
             return View();
+        }
+        
+        public IActionResult CreateVehicle()
+        {
+            return View("_CreateVehicle");
         }
 
         [HttpGet]

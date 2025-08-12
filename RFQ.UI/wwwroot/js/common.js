@@ -82,6 +82,11 @@ function IsValidAuthKey(key) {
     return regex.test(key);
 }
 
+function IsValidVehicleNumber(vehicleNumber) {
+    var pattern = /^([A-Z]{2}\d{1,2}[A-Z]{1,2}\d{4})$/;
+    return pattern.test(vehicleNumber);
+}
+
 function GetQueryParam(name) {
     var url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");

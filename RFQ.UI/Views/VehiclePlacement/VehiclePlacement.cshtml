@@ -140,10 +140,17 @@
                 <h3 class="page-form-title">Vehicle Placement Details</h3>
                 <div class="row all-custom-class">
                     <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label"><span>*</span>Vehicle No</label>
-                            <select class="select2-custom form-control" id="ddlVehicleNo" style="width: 100%;">
-                            </select>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="item-input">
+                                    <label class="form-label"><span>*</span>Vehicle No</label>
+                                    <select class="select2-custom form-control" id="ddlVehicleNo" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <a href="#" onclick="VehiclePopUp()">Create</a>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -221,5 +228,18 @@
                 </a>
             </div>
         </form>
+    </div>
+</div>
+<div class="modal fade" id="popupModal" tabindex="-1" aria-labelledby="popupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="max-width:100%;width:100%">
+            <div class="modal-header">
+                <h5 class="modal-title" id="popupModalLabel">Add Vehicle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-width:100%;width:100%">
+                <!-- Form will be loaded here -->
+            </div>
+        </div>
     </div>
 </div>

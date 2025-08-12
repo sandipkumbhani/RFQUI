@@ -363,10 +363,6 @@ $('#pageLength').off('change').on('change', function () {
     FetchVehicleList();
 });
 
-function IsValidVehicleNumber(vehicleNumber) {
-    var pattern = /^([A-Z]{2}\d{1,2}[A-Z]{1,2}\d{4})$/;
-    return pattern.test(vehicleNumber);
-}
 function VehicleEKycClick() {
     $("#btnVehicleKyc").on("click", function () {
         var getUrl = '/Vehicle/GetVehicleKycDetails';
