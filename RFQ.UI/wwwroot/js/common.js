@@ -389,6 +389,35 @@ function GetGridHtml(response, gridTableName) {
                     </tr>`;
         });
     }
+    if (gridTableName == "IndentTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                        <tr>
+                        <td>${item.locationName}</td>
+                        <td>${item.indentNo}</td>
+                        <td>${item.indentDate}</td>
+                        <td>${item.vehicleReqOn}</td>
+                        <td>${item.partyName}</td>
+                        <td>${item.fromLocation}</td>
+                        <td>${item.toLocation}</td>
+                        <td>${item.vehicleTypeName}</td>
+                        <td>${item.requiredVehicles}</td>
+                        <td>${item.expiryDate}</td>
+                        <td>${item.consignerName}</td>
+                        <td>${item.pickUpAddress}</td>
+                        <td>${item.consigneeName}</td>
+                        <td>${item.deliveryAddress}</td>
+                        <td>${item.itemName}</td>
+                        <td>${item.pakingName}</td>
+                        <td>${item.remarks}</td>
+
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="UpdateVehicleIndent(${item.indentId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteVehicleIndent(${item.indentId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
     return rowsHtml;
 }
 function generatePagination(totalRecords, pageSize, currentPage, gridTableName, url) {

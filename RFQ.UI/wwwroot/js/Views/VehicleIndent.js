@@ -1,4 +1,11 @@
-﻿var companyId;
+﻿const urlParams = new URLSearchParams(window.location.search);
+const linkId = urlParams.get('LinkId');
+var myDropzone;
+var orderColumn = '';
+var orderDir = '';
+var fetchVehicleIndentUrl = '/VehicleIndent/GetAllVehicleIndent';
+
+var companyId;
 var profileId;
 var locationId;
 $(document).ready(function () {
@@ -19,6 +26,35 @@ $(document).ready(function () {
     GetAllConsignorList();
     GetAllConsigneeList();
     GetAllPakingType("ddlPackingType");
+    FetchVehicleIndent();
+    ButtonUpdateClick();
+    $(document).on("click", "#btnView", function () {
+        FetchVehicleIndent();
+        $("#formDiv").css('display', 'none')
+        $("#backButton").css('display', 'Block');
+    });
+
+    $('#tableDivLink').on('click', function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        $('#formDiv').hide(); // hide the add/edit form
+        $('#tableDiv').show(); // show the list
+    });
+
+    $("#btnCancel").on("click", function () {
+        window.location.reload(true);
+    });
+
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase());
+    });
+
 
     $("#btnSave, #btnsaveandnew").on('click', function () {
         $(this).prop('disabled', true);
@@ -28,6 +64,36 @@ $(document).ready(function () {
         }
     });
 });
+$('#addCompany').click(function () {
+    $('#formDiv').css("display", "block");
+    $('#tableDiv').css("display", "none");
+});
+
+function FetchVehicleIndent() {
+    $("#tableDiv").css('display', 'block');
+    $("#formDiv").css('display', 'none');
+    $('#vehicleIndentForm')[0].reset();
+    //myDropzone.removeAllFiles();
+    //$('#ddlCity').val(null).trigger('change');
+    $("#btnSave").show();
+    $("#btnupdate").hide();
+    $("#btnsaveandnew").show();
+    //ResetAttachmentRepeater();
+    FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase());
+}
+
+$('#IndentTableSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchVehicleIndent();
+});
+
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchVehicleIndent();
+});
+
+
 function GetAllConsignorList() {
     var getUrl = '/Vendor/GetAllVendorList'
     $.ajax({
@@ -184,6 +250,7 @@ function SaveVehicleIndent(action) {
     var consignorResult = GetDropdownValue("ddlConsignorInput");
     var consigneeResult = GetDropdownValue("ddlConsigneeInput");
     const formData = {
+
         IndentNo: $('#txtIndentNo').val(),
         LocationId: $('#ddlLocation').val(),
         IndentDate: $('#txtIndentDate').val(),
@@ -198,7 +265,7 @@ function SaveVehicleIndent(action) {
         ToLocationState: $('#toState').val(),
         ToLocationCity: $('#toCity').val(),
         ToLatitude: $('#toLat').val(),
-        ToLongitude: $('#toLng').val(),  
+        ToLongitude: $('#toLng').val(),
         VehicleTypeId: $('#ddlVehicleType').val(),
         RequiredVehicles: $('#txtNoofVehicles').val(),
         ExpiryDate: $('#txtRfqExpiredOn').val(),
@@ -254,7 +321,7 @@ function SaveVehicleIndent(action) {
                     $('#ddlConsignorInput').val(null).trigger('change');
                     $('#ddlConsigneeInput').val(null).trigger('change');
                     FetchIndentNo();
-                    
+
                     if (profileId == EnumProfile.Branch) {
                         $('#ddlLocation').val(Number(locationId)).trigger('change');
                         $('#ddlLocation').prop('disabled', true);
@@ -305,3 +372,180 @@ function GetDropdownValue(inputId) {
     }
     return result;
 }
+function ButtonUpdateClick() {
+    debugger;
+    $("#btnupdate").on('click', function (e) {
+        e.preventDefault();
+        debugger;
+        var isValid = OnSubmitCheckValidation();
+        if (!isValid) {
+            return;
+        }
+
+        var consignorResult = GetDropdownValue("ddlConsignorInput");
+        var consigneeResult = GetDropdownValue("ddlConsigneeInput");
+
+        var formData = {
+            
+            IndentId: $("#txtIndentId").val(),
+            LocationId: $("#ddlLocation").val(),
+            IndentNo: $("#txtIndentNo").val(),
+            IndentDate: $("#txtIndentDate").val(),
+            VehicleReqOn: $("#txtVehicleReqDate").val(),
+            PartyId: $("#ddlCustomerName").val(),
+            FromLocation: $("#from-search-box").val(),
+            FromLocationState: $('#fromState').val(),  
+            FromLocationCity: $('#fromCity').val(),
+            FromLatitude: $('#fromLat').val(),
+            FromLongitude: $('#fromLng').val(),
+            ToLocation: $("#to-search-box").val(),
+            ToLocationState: $('#toState').val(),
+            ToLocationCity: $('#toCity').val(),
+            ToLatitude: $('#toLat').val(),
+            ToLongitude: $('#toLng').val(),
+            VehicleTypeId: $("#ddlVehicleType").val(),
+            RequiredVehicles: $("#txtNoofVehicles").val(),
+            ExpiryDate: $("#txtRfqExpiredOn").val(),
+            PickUpAddress: $("#txtPickupAddress").val(),
+  
+            ConsignerId: consignorResult.id,
+            ConsignerName: consignorResult.name,
+            ConsigneeId: consigneeResult.id,
+            ConsigneeName: consigneeResult.name,
+
+            DeliveryAddress: $("#txtDeliveryAddress").val(),
+            ItemId: $("#ddlItemName").val(),
+            PackingTypeId: $("#ddlPackingType").val(),
+            Remarks: $("#txtRemarks").val(),
+            LinkId: GetQueryParam("LinkId")
+        };
+
+
+        var linkd = GetQueryParam("LinkId");
+
+
+        // First AJAX call
+        $.ajax({
+            type: "PUT",
+            url: "/VehicleIndent/UpdateVehicleIndent",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(formData),
+            dataType: "json",
+            success: function (result) {
+                if (result.result == "success") {
+                    toastr.success("Vehicle Indent Details Updated Successfully!");
+                    $("#formDiv").css('display', 'none');
+                    FetchVehicleIndent();
+                    $('#vehicleIndentForm')[0].reset();
+                    $('#ddlLocation').val(null).trigger('change');
+                    $('#ddlCustomerName').val(null).trigger('change');
+                    $('#ddlVehicleType').val(null).trigger('change');
+                    $('#ddlConsignorInput').val(null).trigger('change');
+                    $('#ddlConsigneeInput').val(null).trigger('change');
+                    $('#ddlItemName').val(null).trigger('change');
+                    $('#ddlPackingType').val(null).trigger('change');
+                    $("#btnupdate").hide();
+                    $("#btnsaveandnew").show();
+                    $("#btnSave").show();
+
+                } else {
+                    toastr.error("Failed to Update Vehicle Indent Details!", "Error");
+                }
+
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Update Vehicle Indent Details!", "Error");
+            }
+        });
+
+
+
+
+
+    });
+};
+function DeleteVehicleIndent(indentId) {
+    debugger;
+    var deleteVehicleIndentUrl = `/VehicleIndent/DeleteVehicleIndent/${indentId}`;
+        $.ajax({
+            url: deleteVehicleIndentUrl,
+            type: "DELETE",
+            dataType: "json",
+            data: JSON.stringify(indentId),
+            success: function (response) {
+                if (response && response.result === "success") {
+                    toastr.success("Vehicle Indent Deleted Successfully!");
+                    $("#addReqBranchDiv").addClass('d-none');
+                    $('#currentPage').val(1);
+                    FetchVehicleIndent();
+                    //$("#backButton").css('display', 'block');
+                } else {
+                    toastr.error("Failed to Delete Vehicle Indent Details!", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Delete Vehicle Indent Details!", "Error");
+            }  
+            
+        });
+    //});
+}
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    if (isNaN(date)) return '';
+
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+
+    return `${year}-${month}-${day}`;
+}
+
+function UpdateVehicleIndent(indentId) {
+    var data = viewModelDto.filter(x => x.indentId == indentId);
+    var formData = data[0];
+    debugger;
+    $('#tableDiv').css('display', 'none');
+    $("#formDiv").css('display', 'Block');
+    $("#backButton").css('display', 'none');
+    $("#formDiv").css('display', 'Block');
+    $("#btnSave").hide();
+    $("#btnupdate").show();
+    $("#btnView").hide();
+    $("#btnCancel").removeClass('d-none');
+    $("#btnsaveandnew").hide();
+    $("#txtIndentId").val(formData.indentId);
+    $("#ddlLocation").val(formData.locationId);
+    $("#txtIndentNo").val(formData.indentNo);
+    $("#txtIndentDate").val(formatDateForInput(formData.indentDate));
+    $("#txtVehicleReqDate").val(formatDateForInput(formData.vehicleReqOn));
+    $("#txtRfqExpiredOn").val(formData.expiryDate);
+    $("#ddlCustomerName").val(formData.partyId).trigger('change');
+
+    $("#from-search-box").val(formData.fromLocation);
+    $("fromState").val(formData.fromLocationState);
+    $("#fromCity").val(formData.fromLocationCity);
+    $("#fromLat").val(formData.fromLatitude);
+    $("#fromLng").val(formData.fromLongitude);
+
+    $("#to-search-box").val(formData.toLocation);
+    $("#toState").val(formData.toLocationState);
+    $("#toCity").val(formData.toLocationCity);
+    $("#toLat").val(formData.toLatitude);
+    $("#toLng").val(formData.toLongitude);
+
+
+    $("#ddlVehicleType").val(formData.vehicleTypeId).trigger('change');
+    $("#txtNoofVehicles").val(formData.requiredVehicles);
+    $("#ddlConsignorInput").val(formData.consignerId).trigger('change');
+    $("#txtPickupAddress").val(formData.pickUpAddress);
+    $("#ddlConsigneeInput").val(formData.consigneeId).trigger('change');
+    $("#txtDeliveryAddress").val(formData.deliveryAddress);
+    $("#ddlItemName").val(formData.itemId).trigger('change');
+    $("#ddlPackingType").val(formData.packingTypeId).trigger('change');
+    $("#txtRemarks").val(formData.remarks);
+
+
+} 

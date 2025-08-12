@@ -1,6 +1,8 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Application.Provider
 {
@@ -17,9 +19,24 @@ namespace RFQ.UI.Application.Provider
             return await _vehicleIndentAdaptor.AddVehicleIndent(vehicleIndentRequestDto);
         }
 
+        public async Task<string> DeleteVehicleIndent(int indentId)
+        {
+            return await _vehicleIndentAdaptor.DeleteVehicleIndent(indentId);
+        }
+
+        public async Task<PageList<VehicleIndentResponseDto>> GetAllVehicleIndent(PagingParam pagingParam)
+        {
+            return await _vehicleIndentAdaptor.GetAllVehicleIndent(pagingParam);
+        }
+
         public Task<string> GetIndentNo()
         {
             return _vehicleIndentAdaptor.GetIndentNo();
+        }
+
+        public Task<string> UpdateVehicleIndent(int indentId, VehicleIndentRequestDto vehicleIndentRequestDto)
+        {
+            return _vehicleIndentAdaptor.UpdateVehicleIndent(indentId, vehicleIndentRequestDto);
         }
     }
 }
