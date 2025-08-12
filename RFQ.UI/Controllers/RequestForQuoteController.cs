@@ -3,9 +3,10 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
 
 namespace RFQ.UI.Controllers
 {
@@ -83,7 +84,7 @@ namespace RFQ.UI.Controllers
                     var result = await _requestForQuoteService.AddRfq(requestForQouteRequestDto);
                     if (result != null && result.RfqRecipients.Count > 0)
                     {
-                        
+
                         RfqRecipientsList = result.RfqRecipients;
                         foreach (var vendor in RfqRecipientsList)
                         {
@@ -99,7 +100,7 @@ namespace RFQ.UI.Controllers
                                     {
                                         RfqId = vendor.RfqId,
                                         VendorId = vendor.VendorId,
-                                       CreatedBy = Convert.ToInt32(userid),
+                                        CreatedBy = Convert.ToInt32(userid),
                                         SharedLink = formLink,
                                         CreatedOn = DateTime.UtcNow
                                     });
@@ -114,6 +115,86 @@ namespace RFQ.UI.Controllers
                     return Json(new { result = "failure" });
             }
             catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetAllRfq([FromBody] PagingParam pagingParam)
+        {
+            try
+            {
+                var result = await _requestForQuoteService.GetAllRfq(pagingParam);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
+                }
+                else
+                {
+                    return View(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateRfq([FromBody] RequestForQuoteRequestDto requestForQuoteRequestDto)
+        {
+            try
+            {
+                if (requestForQuoteRequestDto.RfqRequestDto.RfqId <= 0)
+                {
+                    return Json(new { result = "error", message = "Invalid RfqId." });
+                }
+                int rfqId = requestForQuoteRequestDto.RfqRequestDto.RfqId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                requestForQuoteRequestDto.RfqRequestDto.CompanyId = Convert.ToInt32(companyId);
+                requestForQuoteRequestDto.RfqRequestDto.CreatedBy = Convert.ToInt32(userid);
+                requestForQuoteRequestDto.RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                var result = await _requestForQuoteService.UpdateRfq(rfqId, requestForQuoteRequestDto);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
+        [HttpDelete("RequestForQuote/DeleteRfq/{rfqId}")]
+        public async Task<IActionResult> DeleteRfq(int rfqId)
+        {
+            try
+            {
+                var result = await _requestForQuoteService.DeleteRfq(rfqId);
+                if (result)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch(Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
             }

@@ -184,6 +184,7 @@ function DeleteVehicleType(vehicleTypeId) {
             $("#addVehicleTypeDiv").addClass("d-none");
             $('#currentPage').val(1);
             FetchVehicleTypes();
+            toastr.success("Vehicle Type Details Deleted Successfully!","Success");
         },
         error: function (xhr, status, error) {
 

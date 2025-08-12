@@ -2,12 +2,27 @@
 var companyId;
 var rfqId;
 var fetchedVendorDataList = [];
-var vendorList = [];
+var orderColumn = '';
+var orderDir = '';
+var fetchRfqUrl = '/RequestForQuote/GetAllRfq';
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
     CheckValidation();
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); 
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase());
+    });
+    $("#btnCancel").on("click", function () {
+        FetchRfqList();
+    });
     $("#btnSaveType, #btnSaveAndNew").on('click', function () {
 
         var action = $(this).data('action');
@@ -16,10 +31,20 @@ $(document).ready(function () {
             SaveAndSaveNew(action);
         }
     });
-
+    $("#btnAddRfq").on("click", function () {
+        $("#tableDiv").css('display', 'none ');
+        $("#formDiv").css('display', 'block');
+    });
+    $('#tableDivLink').on('click', function (e) {
+        e.preventDefault(); 
+        $("#tableDiv").show();
+        $("#formDiv").hide();
+    });
     $('#ddlIndent').on('change', function () {
         const selectedValue = $(this).val();
-
+        if (!selectedValue) {
+            return;
+        }
         const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
 
         if (selectedIndent) {
@@ -37,8 +62,12 @@ $(document).ready(function () {
             $('#toCity').val(selectedIndent.toLocationCity);
             $('#toLat').val(selectedIndent.toLatitude);
             $('#toLng').val(selectedIndent.toLongitude);
+            $("#ddlItemName").val(selectedIndent.itemId).trigger('change');
+            $("#ddlPackingType").val(selectedIndent.packingTypeId).trigger('change');
         }
     });
+    FetchRfqList();
+    UpdateRfq();
     GetAllLocation("ddlLocation", companyId, function () {
         if (profileId == EnumProfile.Branch) {
             $('#ddlLocation').val(Number(locationId)).trigger('change');
@@ -48,10 +77,8 @@ $(document).ready(function () {
     GetAllVehicleIndent();
     GetRfqType();
     GetRfqPriority();
-    FetchVendorData();
     FetchRfqNo();
     RenderFetchTable();
-    ClearFetchForm();
     SaveRfqVendorDetails();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
@@ -301,6 +328,7 @@ function FetchRfqNo() {
         }
     });
 }
+
 function GetAllVendorList() {
     $("#ddlRFQVendorList").empty();
     var getUrl = '/RequestForQuote/GetAllVendorListForRfq'
@@ -326,123 +354,64 @@ function GetAllVendorList() {
     });
 }
 function BindAllVendorList(fetchedVendorDataList) {
-    $("#ddlRFQVendorList").empty();
-    const vendorListDropdown = document.getElementById("ddlRFQVendorList");
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a Vendor Name";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    vendorListDropdown.appendChild(placeholderOption);
-    fetchedVendorDataList.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.partyId;
-        option.textContent = item.partyName;
-        vendorListDropdown.appendChild(option);
-    });
-}
-function FetchVendorData() {
-    $("#ddlRFQVendorList").on('change', function () {
-        const selectedVendorId = $(this).val();
-        if (selectedVendorId == null) {
-            return;
-        }
-        const selectedVendorData = fetchedVendorDataList.find(x => x.partyId == selectedVendorId);
-        $("#fetchVendorPanNo").val(selectedVendorData.panNo);
-        $("#fetchVendorRating").val("5");
-        $("#fetchVendorMobileNo").val(selectedVendorData.mobNo);
-        $("#fetchVendorWhatsappNo").val(selectedVendorData.whatsAppNo);
-        $("#fetchVendorEmailId").val(selectedVendorData.email);
+    const tbody = $("#rfqVendorTable tbody");
+    tbody.empty();
+    if (!fetchedVendorDataList || !Array.isArray(fetchedVendorDataList) || fetchedVendorDataList.length <= 0) {
+        tbody.append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+    }
+    $.each(fetchedVendorDataList, function (index, vendor) {
+        const rowHtml = `
+                        <tr data-index="${index}">
+                        <td>${index + 1}</td>
+                        <td>${vendor.partyName}</td >
+                        <td>${vendor.panNo}</td >
+                        <td>5</td >
+                        <td>${vendor.mobNo}</td>
+                        <td>${vendor.whatsAppNo}</td>
+                        <td>${vendor.email}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" id="editVendor"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" id="deleteVendor"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        tbody.append(rowHtml);
     })
 }
 function RenderFetchTable() {
     const tbody = $('#rfqVendorTable tbody');
     tbody.empty();
-    $.each(vendorList, function (index, vendor) {
+    $.each(fetchedVendorDataList, function (index, vendor) {
         const row = `
       <tr data-index="${index}">
         <td>${index + 1}</td>
-        <td>${vendor.VendorName}</td>
-        <td>${vendor.PanNo}</td>
-        <td>${vendor.VendorRating}</td>
-        <td>${vendor.MobileNo}</td>
-        <td>${vendor.WhatsappNo}</td>
-        <td>${vendor.EmailId}</td>
-        <td>
-          <button type="button" class="editVendor" style="color:blue;border:none;background:none;">Edit</button> /
-          <button type="button" class="deleteVendor" style="color:blue;border:none;background:none;">Delete</button>
+        <td>${vendor.partyName}</td>
+        <td>${vendor.panNo}</td>
+        <td>5</td>
+        <td>${vendor.mobNo}</td>
+        <td>${vendor.whatsAppNo}</td>
+        <td>${vendor.email}</td>
+        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" id="editVendor"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" id="deleteVendor"><i class="ri-delete-bin-3-line"></i></a>
         </td>
       </tr>
     `;
         tbody.append(row);
     });
 }
-function ClearFetchForm() {
-    $("#fetchVendorPanNo").val('');
-    $("#fetchVendorRating").val('');
-    $("#fetchVendorMobileNo").val('');
-    $("#fetchVendorWhatsappNo").val('');
-    $("#fetchVendorEmailId").val('');
-    $('#ddlRFQVendorList').val(null).trigger('change');
-}
 
-$('#btnAddVendor').on('click', function () {
-    const getSelectVendorID = $("#ddlRFQVendorList").val();
-    if (getSelectVendorID == null || getSelectVendorID == '') {
-        toastr.warning("Please Select Vendor Name!", "Warning");
-        return;
-    }
-    const getvendorName = $('#ddlRFQVendorList option:selected').text();
-    const getpanNo = $("#fetchVendorPanNo").val();
-    const getVendorRating = $("#fetchVendorRating").val();
-    const getMobileNo = $("#fetchVendorMobileNo").val();
-    const getWhatsappNo = $("#fetchVendorWhatsappNo").val();
-    const getEmail = $("#fetchVendorEmailId").val();
-
-    vendorList.push({
-        VendorId: parseInt(getSelectVendorID),
-        VendorName: getvendorName,
-        PanNo: getpanNo,
-        VendorRating: parseInt(getVendorRating) || 0,
-        MobileNo: getMobileNo,
-        WhatsappNo: getWhatsappNo,
-        EmailId: getEmail
-    });
-    RenderFetchTable();
-    ClearFetchForm();
-    fetchedVendorDataList = $.grep(fetchedVendorDataList, function (item) {
-        return item.partyId != getSelectVendorID;
-    });
-    BindAllVendorList(fetchedVendorDataList);
-});
-
-$('#btnCancelVendor').on('click', function () {
-    ClearFetchForm();
-});
-
-$('#rfqVendorTable').on('click', '.deleteVendor', function () {
+$('#rfqVendorTable').on('click', '#deleteVendor', function () {
     const rowIndex = $(this).closest('tr').data('index');
-    const deletedVendor = vendorList.splice(rowIndex, 1);
+    const deletedVendor = fetchedVendorDataList.splice(rowIndex, 1);
     RenderFetchTable();
-    deletedVendor.forEach(item => {
-        fetchedVendorDataList.push({
-            email: item.EmailId,
-            mobNo: item.MobileNo,
-            panNo: item.PanNo,
-            partyId: item.VendorId,
-            partyName: item.VendorName,
-            whatsAppNo: item.WhatsappNo
-        });
-    })
-    BindAllVendorList(fetchedVendorDataList);
 });
 
-$('#rfqVendorTable').on('click', '.editVendor', function () {
+$('#rfqVendorTable').on('click', '#editVendor', function () {
     const rowIndex = $(this).closest('tr').data('index');
-    const vendor = vendorList[rowIndex];
-    const mobileNoInputHtml = `<input type="text" id="editMobileNo" class="form-control" maxlength="10" value="${vendor.MobileNo}">`;
-    const whatsappNoInputHtml = `<input type="text" id="editWhatsappNo" class="form-control" maxlength="10" value="${vendor.WhatsappNo}">`;
-    const emailInputHtml = `<input type="email" id="editEmailId" class="form-control" maxlength="50" value="${vendor.EmailId}">`;
+    const vendor = fetchedVendorDataList[rowIndex];
+    const mobileNoInputHtml = `<input type="text" id="editMobileNo" class="form-control" maxlength="10" value="${vendor.mobNo}">`;
+    const whatsappNoInputHtml = `<input type="text" id="editWhatsappNo" class="form-control" maxlength="10" value="${vendor.whatsAppNo}">`;
+    const emailInputHtml = `<input type="email" id="editEmailId" class="form-control" maxlength="50" value="${vendor.email}">`;
 
     $(this).closest('tr').find('td:nth-child(5)').html(mobileNoInputHtml);
     $(this).closest('tr').find('td:nth-child(6)').html(whatsappNoInputHtml);
@@ -464,9 +433,9 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
             return;
         }
 
-        vendorList[rowIndex].MobileNo = updatedMobileNo;
-        vendorList[rowIndex].WhatsappNo = updatedWhatsappNo;
-        vendorList[rowIndex].EmailId = updatedEmailId;
+        fetchedVendorDataList[rowIndex].mobNo = updatedMobileNo;
+        fetchedVendorDataList[rowIndex].whatsAppNo = updatedWhatsappNo;
+        fetchedVendorDataList[rowIndex].email = updatedEmailId;
 
         RenderFetchTable();
     });
@@ -476,6 +445,7 @@ $('#rfqVendorTable').on('click', '.editVendor', function () {
     });
 
 });
+
 function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
     const rfqFormData = {
@@ -511,15 +481,13 @@ function SaveAndSaveNew(action) {
         SpecialInstruction: $('#txtSpecialInstructions').val(),
         LinkId: parseInt(GetQueryParam("LinkId"))
     };
-    const recipientFormData = vendorList.map(vendor => ({
-        //RfqRecipientId: 0,
-        //RfqId:0,
-        VendorId: vendor.VendorId,
-        PanNo: vendor.PanNo,
-        VendorRating: vendor.VendorRating,
-        MobNo: vendor.MobileNo,
-        WhatsAppNo: vendor.WhatsappNo,
-        EmailId: vendor.EmailId
+    const recipientFormData = fetchedVendorDataList.map(vendor => ({
+        VendorId: vendor.partyId,
+        PanNo: vendor.panNo,
+        VendorRating: "5",
+        MobNo: vendor.mobNo,
+        WhatsAppNo: vendor.whatsAppNo,
+        EmailId: vendor.email
     }));
     var formData = {
         RfqRequestDto: rfqFormData,
@@ -564,14 +532,7 @@ function SaveAndSaveNew(action) {
                     Saveattachment(rfqId);
                     toastr.success("Request For Quote Saved Sucessfully", "success");
                     $('#RfqDetailsForm')[0].reset();
-                    $('#ddlLocation').val(null).trigger('change');
-                    $('#ddlIndent').val(null).trigger('change');
-                    $('#ddlCustomerName').val(null).trigger('change');
-                    $('#ddlVehicleType').val(null).trigger('change');
-                    $('#ddlRfqPriority').val(null).trigger('change');
-                    $('#ddlRfqType').val(null).trigger('change');
-                    $('#ddlItemName').val(null).trigger('change');
-                    $('#ddlPackingType').val(null).trigger('change');
+                    $('.select2-custom').val(null).trigger('change');
                     FetchRfqNo();
                     setTimeout(() => {
                         ResetAttachmentRepeater();
@@ -586,18 +547,221 @@ function SaveAndSaveNew(action) {
         });
     }
 }
+function EditRfq(rfqID) {
+    var data = viewModelDto.filter(x => x.rfqId === rfqID);
+    var formData = data[0];
+    FetchMasterAttachment(formData.linkId, rfqID, function (list) {
+        var attachmentData = list;
+        $('#tableDiv').css('display', 'none');
+        $("#formDiv").css('display', 'Block');
+        $("#button-main").css('display', 'Block');
+        $("#vendorDetails-tab").prop('disabled', true);
+        $("#previousQuotes-tab").prop('disabled', true);
+        $("#txtRfqDetailsId").val(formData.rfqId);
+        $("#ddlLocation").val(formData.locationId).trigger('change');
+        $("#txtRfqNo").val(formData.rfqNo);
+        $("#txtRfqDate").val(formData.rfqDate.split('T')[0]);
+        $("#txtRfqExpiredOn").val(formData.expiryDate);
+        $("#ddlIndent").val(formData.indentId).trigger('change');
+        $("#ddlIndent").prop('disabled', true);
+        $("#ddlCustomerName").val(formData.partyId).trigger('change');
+        $("#txtVehicleReqDate").val(formData.vehicleReqOn.split('T')[0]);
+        $("#from-search-box").val(formData.fromLocation);
+        $("#to-search-box").val(formData.toLocation);
+        $("#ddlVehicleType").val(formData.vehicleTypeId).trigger('change');
+        $("#txtNoofVehicles").val(formData.vehicleCount);
+        $("#txtMaxCosting").val(formData.maxCosting);
+        $("#txtPerDay").val(formData.detentionPerDay);
+        $("#txtFreeDay").val(formData.detentionFreeDays);
+        $("#txtRfqSubject").val(formData.rfqSubject);
+        $("#ddlRfqPriority").val(formData.rfqPriorityId).trigger('change');
+        $("#ddlRfqType").val(formData.rfqTypeId).trigger('change');
+        $("#ddlItemName").val(formData.itemId).trigger('change');
+        $("#ddlPackingType").val(formData.packingTypeId).trigger('change');
+        $("#txtSpecialInstructions").val(formData.specialInstruction);
+
+        if (attachmentData.length > 0) {
+            EditMasterAttachment(attachmentData);
+        }
+    });
+}
+function UpdateRfq() {
+    $("#btnUpdateRfq").on('click', function (e) {
+        e.preventDefault();
+        var isvalid = OnSubmitCheckValidation();
+        if (!isvalid) {
+            return;
+        }
+        const rfqFormData = {
+            RfqId: $("#txtRfqDetailsId").val(),
+            RfqNo: $('#txtRfqNo').val(),
+            LocationId: $('#ddlLocation').val(),
+            IndentId: $('#ddlIndent').val(),
+            RfqDate: $('#txtRfqDate').val(),
+            ExpiryDate: $('#txtRfqExpiredOn').val(),
+            PartyId: $('#ddlCustomerName').val(),
+            VehicleReqOn: $('#txtVehicleReqDate').val(),
+            FromLocation: $('#from-search-box').val(),
+            FromLocationState: $('#fromState').val(),
+            FromLocationCity: $('#fromCity').val(),
+            FromLatitude: $('#fromLat').val(),
+            FromLongitude: $('#fromLng').val(),
+            ToLocation: $('#to-search-box').val(),
+            ToLocationState: $('#toState').val(),
+            ToLocationCity: $('#toCity').val(),
+            ToLatitude: $('#toLat').val(),
+            ToLongitude: $('#toLng').val(),
+            VehicleTypeId: $('#ddlVehicleType').val(),
+            VehicleCount: $('#txtNoofVehicles').val(),
+            RfqSubject: $('#txtRfqSubject').val(),
+            RfqPriorityId: $('#ddlRfqPriority').val(),
+            RfqTypeId: $('#ddlRfqType').val(),
+            ItemId: parseInt($('#ddlItemName').val()),
+            MaxCosting: parseInt($('#txtMaxCosting').val()),
+            DetentionPerDay: parseInt($('#txtPerDay').val()),
+            DetentionFreeDays: parseInt($('#txtFreeDay').val()),
+            PackingTypeId: parseInt($('#ddlPackingType').val()),
+            SpecialInstruction: $('#txtSpecialInstructions').val(),
+            LinkId: parseInt(GetQueryParam("LinkId"))
+        };
+        const recipientFormData = []
+        var formData = {
+            RfqRequestDto: rfqFormData,
+            RfqRecipients: recipientFormData
+        }
+        let repeaterItems = document.querySelectorAll("[data-repeater-item]");
+        let updateAttachmentDetails = [];
+        var linkd = GetQueryParam("LinkId");
+
+        repeaterItems.forEach((item, index) => {
+            let attId = item.querySelector("#hdnAttachmentId").value;
+            let attachmentId = attId == '' ? 0 : attId;
+            let fileName = item.querySelector("#txtFileName")?.value || "N/A";
+            let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
+            let filePath = item.querySelector("#hdnUplodedFileName").value;
+
+            updateAttachmentDetails.push({
+                AttachmentId: attachmentId,
+                AttachmentName: fileName,
+                AttachmentTypeId: attachmentType,
+                AttachmentPath: filePath,
+                ReferenceLinkId: parseInt(linkd),
+                TransactionId: $("#txtRfqDetailsId").val()
+            });
+        });
+
+        var updateRfq = '/RequestForQuote/UpdateRfq';
+        $.ajax({
+            type: "PUT",
+            url: updateRfq,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(formData),
+            dataType: "json",
+            success: function (result) {
+                if (result.result === "success") {
+                    toastr.success("Rfq Details Updated Successfully!");
+                    FetchRfqList();
+                } else {
+                    toastr.error("Failed to Update Rfq Details", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
+            }
+        });
+
+        $.ajax({
+            type: "PUT",
+            url: '/MasterAttachment/UpdateMasterAttachment',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(updateAttachmentDetails),
+            dataType: "json",
+            success: function (response) {
+                if (response.result == "success") {
+                    rfqId = $("#txtRfqDetailsId").val();
+                    Saveattachment(rfqId);
+                } else {
+                    $("#dataDiv").html("Failed to update profile.");
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+            }
+        });
+
+        var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
+        $.each(deletedAttachments, function (index, value) {
+            DeleteAttachmentAPI(value);
+        });
+    });
+}
+function DeleteRfq(rfqID) {
+    var deleteRfqUrl = '/RequestForQuote/DeleteRfq/' + rfqID;
+    var result;
+    var linkId = parseInt(GetQueryParam("LinkId"));
+    FetchMasterAttachment(linkId, rfqID, function (list) {
+        result = list;
+
+        $.ajax({
+            url: deleteRfqUrl,
+            type: "DELETE",
+            dataType: "json",
+            data: JSON.stringify(rfqID),
+            success: function (response) {
+                if (result.length > 0) {
+                    DeleteMasterAttachment(result[0].attachmentId);
+                }
+                toastr.success("Rfq Details Deleted Successfully!");
+                $('#currentPage').val(1);
+                FetchRfqList();
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Delete Rfq Details!", "Error");
+            }
+        });
+    });
+}
+function FetchRfqList() {
+    $("#tableDiv").show();
+    $("#formDiv").hide();
+    $('#RfqDetailsForm')[0].reset();
+    $("#btnSaveType").show();
+    $("#button-main").hide();
+    $("#btnSaveAndNew").show();
+    $("#ddlIndent").prop('disabled', false);
+    $('.select2-custom').val(null).trigger('change');
+    GetAllLocation("ddlLocation", companyId, function () {
+        if (profileId == EnumProfile.Branch) {
+            $('#ddlLocation').val(Number(locationId)).trigger('change');
+            $('#ddlLocation').prop('disabled', true);
+        }
+    });
+    FetchRfqNo(); 
+    ResetAttachmentRepeater();
+    FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase());
+}
+$('#rfqTableSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchRfqList();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchRfqList();
+});
+
 function SaveRfqVendorDetails() {
     var saveUrl = '/RfqRecipient/AddRfqRecipient';
     $("#btnSaveRfqVendorDetails").on('click', function () {
         debugger;
-        var formData = vendorList.map(vendor => ({
+        var formData = fetchedVendorDataList.map(vendor => ({
             RfqId: rfqId,
-            VendorId: vendor.VendorId,
-            PanNo: vendor.PanNo,
-            VendorRating: vendor.VendorRating,
-            MobNo: vendor.MobileNo,
-            WhatsAppNo: vendor.WhatsappNo,
-            EmailId: vendor.EmailId
+            VendorId: vendor.partyId,
+            PanNo: vendor.panNo,
+            VendorRating: "5",
+            MobNo: vendor.mobNo,
+            WhatsAppNo: vendor.whatsAppNo,
+            EmailId: vendor.email
         }));
         sendQuoteLinksForVendors(formData);
         $.ajax({

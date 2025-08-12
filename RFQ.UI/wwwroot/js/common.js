@@ -168,7 +168,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
         }),
         success: function (response) {
             if (!response || !response.data || response.data.length === 0) {
-                $('#' + gridTableName + ' tbody').html('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                $('#' + gridTableName + ' tbody').html('<tr><td colspan="20" class="text-center">No records found</td></tr>');
                 $('#totalList').text('Total List: 0');
                 $('#customPagination').empty();
                 return;
@@ -178,7 +178,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
                 var loginUser = decodeURIComponent(getCookieValue('UserEmail'));
                 const filteredUsers = response.data.filter(user => user.emailId !== loginUser);
                 response.data = filteredUsers;
-            }
+            } 
             viewModelDto = response.data;
             let rowsHtml = '';
             rowsHtml = GetGridHtml(response, gridTableName);
@@ -187,8 +187,8 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
             generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url);
         },
         error: function () {
-            $('#' + gridTableName + ' tbody').html('<tr><td colspan="12" class="text-center text-danger">Error loading data</td></tr>');
-            $('#customvehicleTypesPagination').empty();
+            $('#' + gridTableName + ' tbody').html('<tr><td colspan="20" class="text-center text-danger">Error loading data</td></tr>');
+            $('#customPagination').empty();
         }
     });
 }
@@ -385,6 +385,43 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditLocation(${item.locationId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "rfqTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                      <tr>
+                        <td>${item.rfqNo}</td>
+                        <td>${item.location}</td>
+                        <td>${item.rfqDate ? new Date(item.rfqDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+                        <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
+                        <td>${item.indentNo}</td>
+                        <td>${item.customerName}</td>
+                        <td>${item.vehicleReqOn ? new Date(item.vehicleReqOn).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+                        <td>${item.fromLocation}</td>
+                        <td>${item.toLocation}</td>
+                        <td>${item.vehicleTypeName}</td>
+                        <td>${item.vehicleCount}</td>
+                        <td>${item.maxCosting}</td>
+                        <td>${item.detentionPerDay}</td>
+                        <td>${item.detentionFreeDays}</td>
+                        <td>${item.rfqSubject}</td>
+                        <td>${item.rfqPriority}</td>
+                        <td>${item.rfqType}</td>
+                        <td>${item.itemName}</td>
+                        <td>${item.packingTypeName}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditRfq(${item.rfqId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteRfq(${item.rfqId})"><i class="ri-delete-bin-3-line"></i></a>
                         </td>
                     </tr>`;
         });

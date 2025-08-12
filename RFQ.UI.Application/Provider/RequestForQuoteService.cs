@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -48,6 +49,21 @@ namespace RFQ.UI.Application.Provider
         public async Task<RfqQuoteRateVendorDetails> GetRfqQuoteRateVendorDetailsqById(int rfqId)
         {
             return await _requestForQuoteAdaptor.GetRfqQuoteRateVendorDetailsqById(rfqId);
+        }
+
+        public async Task<PageList<RfqListResponseDto>> GetAllRfq(PagingParam pagingParam)
+        {
+            return await _requestForQuoteAdaptor.GetAllRfq(pagingParam);
+        }
+
+        public async Task<string> UpdateRfq(int rfqId, RequestForQuoteRequestDto requestForQuoteRequestDto)
+        {
+            return await _requestForQuoteAdaptor.UpdateRfq(rfqId, requestForQuoteRequestDto);
+        }
+
+        public async Task<bool> DeleteRfq(int rfqId)
+        {
+            return await _requestForQuoteAdaptor.DeleteRfq(rfqId);
         }
     }
 }

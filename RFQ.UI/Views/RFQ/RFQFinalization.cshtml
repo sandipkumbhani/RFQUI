@@ -10,196 +10,270 @@
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
     </script>
 }
+<div id="formDiv" style="display:none;">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">RFQ Finalization</h1>
+            </div>
+        </div>
+    </div>
+    <div id="AddQuoteRoleVendorDiv" class="card com-profile-info">
+        <div class="top-details">
+            <form class="row all-custom-class" id="RFQForm" method="post">
+                <input type="hidden" id="txtRFQFinalizationId" />
+                <div class="col-xl-6 col-lg-6 col-md-6">
+                    <div class="item-input">
+                        <div class="item-input">
+                            <label class="form-label">RFQ No</label>
+                            <div class="kyc-input">
+                                <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtRfqNumber" maxlength="15" placeholder="Enter RFQ No" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                <button class="kyc-btn" type="button" id="btnGetRfqData">Get-Data</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="all-custom-class">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Customer Name</label>
+                                <select class="select2-custom form-control" data-control="select2" id="ddlCustomerName" style="width: 100%;" disabled>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">RFQ No</label>
+                                <input type="text" class="form-control" placeholder="Auto Generated" id="txtRfqNo" disabled />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">RFQ Date</label>
+                                <input type="datetime-local" class="form-control" id="txtRfqDate" placeholder="Auto Generated" disabled />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label ">RFQ Expired On</label>
+                                <input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" disabled />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label ">Vehicle Req On</label>
+                                <input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" disabled />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input position-relative">
+                                <label class="form-label">Origin/From</label>
+                                <input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                                <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                                <input type="hidden" id="fromLat">
+                                <input type="hidden" id="fromLng">
+                                <input type="hidden" id="fromState">
+                            </div>
+                        </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box add">
-            <h1 class="page-title">RFQ Finalization</h1>
+                        <div class="col-lg-3">
+                            <div class="item-input position-relative">
+                                <label class="form-label">Destination/To</label>
+                                <input disabled id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                                <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                                <input type="hidden" id="toLat">
+                                <input type="hidden" id="toLng">
+                                <input type="hidden" id="toState">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Vehicle Type</label>
+                                <select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;" disabled>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">No. of Vehicles</label>
+                                <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" disabled />
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Special Instructions</label>
+                                <input type="text" class="form-control" placeholder="Special Instructions" id="txtSpecial" disabled />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label"><span>*</span>RFQ Status</label>
+                                <select class="select2-custom form-control" data-control="select2" id="ddlRfqStatus" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 d-none ddlRfqReason">
+                            <div class="item-input">
+                                <label class="form-label"><span>*</span>Failure Reason</label>
+                                <select class="select2-custom form-control" data-control="select2" id="ddlRfqReason" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-9" id="remarksDiv">
+                            <div class="item-input">
+                                <label class="form-label">Remarks </label>
+                                <input type="text" class="form-control" placeholder="remarks" id="txtRemarks" maxlength="500" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-none" id="billingDiv">
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label ">Billing Rate </label>
+                                <input type="text" class="form-control" placeholder="Numeric" id="txtBillingRate" onkeypress="return isNumber(event)" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Detention Per Day</label>
+                                <input type="text" class="form-control" placeholder="Per Day" id="txtPerDay" onkeypress="return isNumber(event)" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="item-input">
+                                <label class="form-label">Detention Free Days</label>
+                                <input type="text" class="form-control" placeholder="Free Days" id="txtFreeDays" onkeypress="return isNumber(event)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card com-profile-info d-none" id="awardedDiv">
+                    <div class="table-top-header">
+                        <h4>Awarded Vendor Details</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="awardedVendorTable" class="table dt-responsive nowrap w-100">
+                            <thead>
+                                <tr class="text-center">
+                                    <th class="text-center">Sr. No.</th>
+                                    <th class="text-center">Vendor Name</th>
+                                    <th class="text-center">PAN No</th>
+                                    <th class="text-center">Vendor Rating</th>
+                                    <th class="text-center">Mobile No</th>
+                                    <th class="text-center">WhatsApp No</th>
+                                    <th class="text-center">Email ID</th>
+                                    <th class="text-center">Available Vehicles</th>
+                                    <th class="text-center">Assigned Vehicles</th>
+                                    <th class="text-center">Total Hire Cost</th>
+                                    <th class="text-center">Detention Per Day</th>
+                                    <th class="text-center">Detention Free Days</th>
+                                    <th class="text-center">Margin Amount</th>
+                                    <th class="text-center">Vendor Position</th>
+                                    <th class="text-center">Assign Order</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="button-main">
+                    <a href="#" class="card-link" id="btnSave" type="button" data-action="save">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save
+                        </span>
+                    </a>
+                    <a href="#" class="card-link" id="btnSaveAndNew" data-action="saveNew">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save & New
+                        </span>
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<div id="AddQuoteRoleVendorDiv" class="card com-profile-info">
-    <div class="top-details">
-        <form class="row all-custom-class" id="RFQForm" method="post">
-            <input type="hidden" id="txtRFQFinalizationId" />
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <div class="item-input">
-                    <div class="item-input">
-                        <label class="form-label">RFQ No</label>
-                        <div class="kyc-input">
-                            <input oninput="this.value = this.value.toUpperCase()" type="text" class="form-control" id="txtRfqNumber" maxlength="15" placeholder="Enter RFQ No" onkeypress="return AllowAlphaNumericOnly(event)" />
-                            <button class="kyc-btn" type="button" id="btnGetRfqData">Get-Data</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="all-custom-class">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="item-input">
-                            <label class="form-label">Customer Name</label>
-                            <select class="select2-custom form-control" data-control="select2" id="ddlCustomerName" style="width: 100%;" disabled>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">RFQ No</label>
-                            <input type="text" class="form-control" placeholder="Auto Generated" id="txtRfqNo" disabled />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">RFQ Date</label>
-                            <input type="datetime-local" class="form-control" id="txtRfqDate" placeholder="Auto Generated" disabled />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label ">RFQ Expired On</label>
-                            <input type="datetime-local" onfocus="this.min=new Date().toISOString().slice(0,16)" class="form-control" id="txtRfqExpiredOn" disabled />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label ">Vehicle Req On</label>
-                            <input type="date" onfocus="this.min=new Date().toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" disabled />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input position-relative">
-                            <label class="form-label">Origin/From</label>
-                            <input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
-                            <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-                            <input type="hidden" id="fromLat">
-                            <input type="hidden" id="fromLng">
-                            <input type="hidden" id="fromState">
-                        </div>
-                    </div>
+<div id="tableDiv">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">RFQ Finalization</h1>
 
-                    <div class="col-lg-3">
-                        <div class="item-input position-relative">
-                            <label class="form-label">Destination/To</label>
-                            <input disabled id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
-                            <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-                            <input type="hidden" id="toLat">
-                            <input type="hidden" id="toLng">
-                            <input type="hidden" id="toState">
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Vehicle Type</label>
-                            <select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;" disabled>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">No. of Vehicles</label>
-                            <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" disabled />
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="item-input">
-                            <label class="form-label">Special Instructions</label>
-                            <input type="text" class="form-control" placeholder="Special Instructions" id="txtSpecial" disabled />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label"><span>*</span>RFQ Status</label>
-                            <select class="select2-custom form-control" data-control="select2" id="ddlRfqStatus" style="width: 100%;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 d-none ddlRfqReason">
-                        <div class="item-input">
-                            <label class="form-label"><span>*</span>Failure Reason</label>
-                            <select class="select2-custom form-control" data-control="select2" id="ddlRfqReason" style="width: 100%;">
-                            </select>
-                        </div>
-                    </div> 
-                    <div class="col-lg-9" id="remarksDiv">
-                        <div class="item-input">
-                            <label class="form-label">Remarks </label>
-                            <input type="text" class="form-control" placeholder="remarks" id="txtRemarks" maxlength="500"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row d-none" id="billingDiv">
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label ">Billing Rate </label>
-                            <input type="text" class="form-control" placeholder="Numeric" id="txtBillingRate" />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Detention Per Day</label>
-                            <input type="text" class="form-control" placeholder="Per Day" id="txtPerDay" />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Detention Free Days</label>
-                            <input type="text" class="form-control" placeholder="Free Days" id="txtFreeDays" />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Margin Amount</label>
-                            <input type="text" class="form-control" placeholder="Amount" value="12345" id="txtAmount" disabled />
-                        </div>
-                    </div>
+                <div class="add-btn">
+                    <a href="#" id="btnAddRfqFinalization">
+                        <i class="ri-add-line"></i> <span>Add</span>
+                    </a>
                 </div>
             </div>
-            <div class="card com-profile-info d-none" id="awardedDiv">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <!-- Top Header -->
                 <div class="table-top-header">
-                    <h4>Awarded Vendor Details</h4>
+                    <h4>List of Rfq Finalization</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="rfqFinalizationTableSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div id="exportRfqFinalizationButtons" class="btn-group" role="group"></div>
+                    </div>
                 </div>
+
+                <!-- Table -->
                 <div class="table-responsive">
-                    <table id="awardedVendorTable" class="table dt-responsive nowrap w-100">
-                        <thead>
-                            <tr class="text-center">
-                                <th class="text-center">Sr. No.</th>
-                                <th class="text-center">Vendor Name</th>
-                                <th class="text-center">PAN No</th>
-                                <th class="text-center">Vendor Rating</th>
-                                <th class="text-center">Mobile No</th>
-                                <th class="text-center">WhatsApp No</th>
-                                <th class="text-center">Email ID</th>
-                                <th class="text-center">Available Vehicles</th>
-                                <th class="text-center">Assigned Vehicles</th>
-                                <th class="text-center">Total Hire Cost</th>
-                                <th class="text-center">Detention Per Day</th>
-                                <th class="text-center">Detention Free Days</th>
-                                <th class="text-center">Margin Amount</th>
-                                <th class="text-center">Vendor Position</th>
-                                <th class="text-center">Assign Order</th>
+                    <table id="rfqFinalizationTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center">
+                            <tr>
+                                <th class="sortable text-center" data-column="RfqNo" data-order="asc">Rfq No</th>
+                                <th class="sortable text-center" data-column="Location" data-order="asc">Location</th>
+                                <th class="sortable text-center" data-column="RfqDate" data-order="asc">Rfq Date</th>
+                                <th class="sortable text-center" data-column="ExpiryDate" data-order="asc">Rfq Expired On</th>
+                                <th class="sortable text-center" data-column="IndentNo" data-order="asc">Indent No</th>
+                                <th class="sortable text-center" data-column="CustomerName" data-order="asc">Customer Name</th>
+                                <th class="sortable text-center" data-column="VehicleReqOn" data-order="asc">Vehicle Req On</th>
+                                <th class="sortable text-center" data-column="FromLocation" data-order="asc">Origin/From</th>
+                                <th class="sortable text-center" data-column="ToLocation" data-order="asc">Destination/To</th>
+                                <th class="sortable text-center" data-column="VehicleTypeName" data-order="asc">Vehicle Type</th>
+                                <th class="sortable text-center" data-column="VehicleCount" data-order="asc">No of Vehicles</th>
+                                <th class="sortable text-center" data-column="MaxCosting" data-order="asc">Max Costing</th>
+                                <th class="sortable text-center" data-column="DetentionPerDay" data-order="asc">Detention Per Day</th>
+                                <th class="sortable text-center" data-column="DetentionFreeDays" data-order="asc">Detention Free Days</th>
+                                <th class="sortable text-center" data-column="RfqSubject" data-order="asc">RFQ Subject</th>
+                                <th class="sortable text-center" data-column="RfqPriority" data-order="asc">RFQ Priority</th>
+                                <th class="sortable text-center" data-column="RfqType" data-order="asc">RFQ Type</th>
+                                <th class="sortable text-center" data-column="ItemName" data-order="asc">Item Name</th>
+                                <th class="sortable text-center" data-column="PackingTypeName" data-order="asc">Packing Type</th>
+                                <th class="text-center no-sort">Action</th>
                             </tr>
                         </thead>
                         <tbody class="text-center"></tbody>
                     </table>
                 </div>
-            </div>
 
-            <div class="button-main">
-                <a href="#" class="card-link" id="btnSave" type="button" data-action="save">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Save
-                    </span>
-                </a>
-                <a href="#" class="card-link" id="btnSaveAndNew" data-action="saveNew">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Save & New
-                    </span>
-                </a>
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
+                    <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                        </select>
+                    </div>
+                </div>
+
             </div>
-        </form>
+        </div>
     </div>
 </div>
-
-

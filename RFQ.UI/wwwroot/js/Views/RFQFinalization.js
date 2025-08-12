@@ -51,6 +51,12 @@ $(document).ready(function () {
         $("#ddlRfqStatus").val(null).trigger('change');
         GetRfqDetailsByRfqNo();
     })
+    $("#txtBillingRate").on('change', function () {
+        if ($(this).val() != null) {
+            FetchAwarderVendorDetails();
+        }
+        return;
+    });
 });
 
 function OnSubmitCheckValidation() {
@@ -284,6 +290,14 @@ function FetchAwarderVendorDetails() {
                 return;
             }
             $.each(response, function (index, vendor) {
+                let difference=0;
+                const billingRate = parseFloat($("#txtBillingRate").val()) || 0;
+                const hireCost = parseFloat(vendor.totalHireCost) || 0;
+                if (billingRate == 0) {
+                    difference = "Not Available";
+                } else {
+                    difference = billingRate - hireCost;
+                }
                 const rowHtml = `
                         <tr data-index="${index}">
                         <td>${index + 1}</td>
@@ -294,15 +308,15 @@ function FetchAwarderVendorDetails() {
                         <td>${vendor.whatsAppNo}</td>
                         <td>${vendor.email}</td>
                         <td>${vendor.availVehicleCount}/${vendor.vehicleCount}</td>
-                        <td><input type="text" id="txtassignedVehicle" class="form-control" maxlength="10"></td>
+                        <td><input type="text" id="txtassignedVehicle" class="form-control" maxlength="10" onkeypress="return isNumber(event)"></td>
                         <td>${vendor.totalHireCost}</td>
                         <td>${vendor.detentionPerDay}</td>
                         <td>${vendor.detentionFreeDays}</td>
-                        <td>${vendor.marginAmount}</td>
+                        <td>${difference}</td>
                         <td>${vendor.vendorPosition}</td>
                         <td style="text-align: center; vertical-align: middle;">
                             <label class="check-box-custom" style="display: inline-block;">
-                                <input class="form-check-input" type="checkbox" data-availvehicle="${vendor.availVehicleCount}" data-vendorid="${vendor.vendorId}">
+                                <input class="form-check-input" type="checkbox" data-vehiclecount="${vendor.vehicleCount}" data-availvehicle="${vendor.availVehicleCount}" data-vendorid="${vendor.vendorId}">
                                     <span class="checkmark"></span>
                             </label>    
                         </td>
@@ -315,6 +329,43 @@ function FetchAwarderVendorDetails() {
         }
     });
 }
+$(document).on("input", "#awardedVendorTable tbody #txtassignedVehicle", function () {
+    let row = $(this).closest("tr");
+    let availVehicle = parseInt(row.find('input[type="checkbox"]').data("availvehicle")) || 0;
+    let vehicleCount = parseInt(row.find('input[type="checkbox"]').data("vehiclecount")) || 0;
+    let enteredValue = parseInt($(this).val()) || 0;
+
+    if (enteredValue > availVehicle || enteredValue > vehicleCount) {
+        toastr.warning(`Assigned vehicles cannot exceed available vehicles and  total vehicles.`);
+        $(this).val('');
+    }
+    ValidateTotalForVendor(vehicleCount);
+});
+
+$(document).on("change", "#awardedVendorTable tbody input[type='checkbox']", function () {
+    let row = $(this).closest("tr");
+    let vehicleCount = parseInt($(this).data("vehiclecount")) || 0;
+    ValidateTotalForVendor(vehicleCount);
+});
+function ValidateTotalForVendor(vehicleCount) {
+    let totalAssigned = 0;
+
+    $("#awardedVendorTable tbody tr").each(function () {
+        let checkbox = $(this).find('input[type="checkbox"]');
+        if (checkbox.is(":checked")) {
+            let val = parseInt($(this).find("#txtassignedVehicle").val()) || 0;
+            totalAssigned += val;
+        }
+    });
+
+    if (totalAssigned > vehicleCount) {
+        toastr.warning(`Total assigned vehicles cannot exceed total vehicles (${vehicleCount}).`);
+        $("#txtassignedVehicle").val('');
+        return false;
+    }
+    return true;
+}
+
 function GetSelectedVendor() {
     selectedVendor = [];
     $("#awardedVendorTable tbody tr").each(function () {
