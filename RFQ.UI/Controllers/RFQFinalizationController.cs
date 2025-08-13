@@ -37,8 +37,36 @@ namespace RFQ.UI.Controllers
                 if (rfqFinalizationSaveRequestDto != null)
                 {
                     rfqFinalizationSaveRequestDto.RfqFinalDto.CreatedBy = Convert.ToInt32(userid);
-                    rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy= Convert.ToInt32(userid);
+                    rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy = Convert.ToInt32(userid);
                     var result = await _rfqFinalService.AddRfqFinal(rfqFinalizationSaveRequestDto);
+                    return Json(result);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateRfqFinal([FromBody]RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
+        {
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                int rfqFinalId = rfqFinalizationSaveRequestDto.RfqFinalDto.RfqFinalIdId;
+                if (rfqFinalizationSaveRequestDto != null)
+                {
+                    rfqFinalizationSaveRequestDto.RfqFinalDto.CreatedBy = Convert.ToInt32(userid);
+                    rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy = Convert.ToInt32(userid);
+                    var result = await _rfqFinalService.UpdateRfqFinal(rfqFinalId,rfqFinalizationSaveRequestDto);
                     return Json(result);
                 }
                 else
@@ -70,6 +98,73 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllRfqFinalization([FromBody] PagingParam pagingParam)
+        {
+            try
+            {
+                var result = await _rfqFinalService.GetAllRfqFinalization(pagingParam);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
+                }
+                else
+                {
+                    return View(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetRfqFinalRateList([FromQuery] int rfqFinalId)
+        {
+            try
+            {
+                var result = await _rfqFinalService.GetRfqFinalRateList(rfqFinalId);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return View(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        [HttpDelete("RFQFinalization/DeleteRfqFinal/{rfqFinalId}")]
+        public async Task<IActionResult> DeleteRfqFinal(int rfqFinalId)
+        {
+            try
+            {
+                var result = await _rfqFinalService.DeleteRfqFinal(rfqFinalId);
+                if (result)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
             }
         }
     }

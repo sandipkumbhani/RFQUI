@@ -666,7 +666,7 @@ function UpdateRfq() {
                 }
             },
             error: function (xhr, status, error) {
-                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
+                toastr.error("Failed to Update Rfq Details", "Error");
             }
         });
 

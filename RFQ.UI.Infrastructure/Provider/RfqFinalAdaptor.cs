@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -14,7 +15,7 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly string _fleetLynkApiUrl;
-        public RfqFinalAdaptor(HttpClient httpClient,GlobalClass globalClass, IConfiguration configuration)
+        public RfqFinalAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
         {
             _globalClass = globalClass;
             _httpClient = httpClient;
@@ -72,6 +73,118 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 throw new Exception("An error occurred while fetching  routes for the party.", ex);
             }
+        }
+
+        public async Task<PageList<RfqFinalizationResponseDto>> GetAllRfqFinalization(PagingParam pagingParam)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var requestDto = JsonConvert.SerializeObject(pagingParam);
+                var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+
+                var baseUrl = _fleetLynkApiUrl + _config["RfqFinal:GetAllRfqFinal"];
+                var response = await _httpClient.PostAsync(baseUrl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+
+                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+
+                if (responseModel?.Data?.result != null)
+                {
+                    var rfqFinalizationList = JsonConvert.DeserializeObject<List<RfqFinalizationResponseDto>>(
+                        JsonConvert.SerializeObject(responseModel.Data.result)
+                    );
+
+                    int pageNumber = responseModel.Data.pageNumber;
+                    int pageSize = responseModel.Data.pageSize;
+                    int totalRecordCount = responseModel.Data.totalRecordCount;
+
+                    return new PageList<RfqFinalizationResponseDto>(rfqFinalizationList, totalRecordCount, pageNumber, pageSize);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in GetAllRfq: " + ex.Message);
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<RfqFinalRateReponseDto>> GetRfqFinalRateList(int rfqFinalId)
+        {
+            try
+            {
+                var _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var url = $"{_fleetLynkApiUrl}{_config["RfqFinal:GetRfqFinalRateList"]}?rfqFinalId={rfqFinalId}";
+                var response = await _httpClient.GetAsync(url);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var resultList = JsonConvert.DeserializeObject<IEnumerable<RfqFinalRateReponseDto>>(Convert.ToString(responseModel.Data!));
+                    return resultList;
+                }
+                return null;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching  Rfq Final Rate.", ex);
+            }
+        }
+
+        public async Task<bool> UpdateRfqFinal(int rfqFinalId, RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["RfqFinal:UpdateRfqFinal"] + rfqFinalId;
+                var rfqFinal = JsonConvert.SerializeObject(rfqFinalizationSaveRequestDto);
+                var requestContent = new StringContent(rfqFinal, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in UpdateRfq: " + ex.Message);
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteRfqFinal(int rfqFinalId)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["RfqFinal:DeleteRfqFinal"] + rfqFinalId;
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                {
+                    return (bool)responseModel.Data;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DeleteRfqFinalization: " + ex.Message);
+            }
+            return false;
         }
     }
 }

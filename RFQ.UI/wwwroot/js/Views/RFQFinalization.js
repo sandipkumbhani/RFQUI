@@ -1,9 +1,13 @@
 ﻿var companyId;
+var fetchUrl = '/RFQFinalization/GetAllRfqFinalization';
 var selectedVendor = [];
+var orderColumn = '';
+var orderDir = '';
 $("#ddlRfqStatus").on('change', function () {
     if ($(this).val() != null) {
         if ($("#txtRfqNo").val() == null || $("#txtRfqNo").val() == "") {
             toastr.warning("Please Enter Rfq No!", "Warning");
+            ClearDisabledFields();
             $("#ddlRfqStatus").val(null).trigger('change');
             return;
         };
@@ -31,6 +35,23 @@ $("#ddlRfqStatus").on('change', function () {
 });
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
+    $("#txtRfqNumber").prop('disabled', false);
+    $('#tableDivLink').on('click', function (e) {
+        e.preventDefault();
+        $("#tableDiv").show();
+        $("#formDiv").hide();
+        FetchRfqFinalizationList();
+    });
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir);
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase());
+    });
     $("#btnSave, #btnSaveAndNew").on('click', function () {
 
         var action = $(this).data('action');
@@ -38,8 +59,17 @@ $(document).ready(function () {
             SaveAndSaveNew(action);
         }
     });
+    $("#btnAddRfqFinalization").on('click', function () {
+        $("#tableDiv").css('display', 'none ');
+        $("#formDiv").css('display', 'block');
+    })
+    $("#btnCancel").on('click', function () {
+        FetchRfqFinalizationList();
+    });
     GetRfqStatus();
     GetRfqFailureReason();
+    FetchRfqFinalizationList();
+    UpdateRfqFinalization();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
     $("#btnGetRfqData").on('click', function () {
@@ -53,7 +83,9 @@ $(document).ready(function () {
     })
     $("#txtBillingRate").on('change', function () {
         if ($(this).val() != null) {
-            FetchAwarderVendorDetails();
+            FetchAwarderVendorDetails(function () {
+                FetchRfqAwardedVendorList();
+            });
         }
         return;
     });
@@ -85,10 +117,10 @@ function OnSubmitCheckValidation() {
             toastr.warning("Please enter a Detention Free Days", "Validation Error");
             return false;
         }
-        if (IsNullOrEmpty($("#txtAmount").val())) {
-            toastr.warning("Please enter a Margin Amount", "Validation Error");
-            return false;
-        }
+        //if (IsNullOrEmpty($("#txtAmount").val())) {
+        //    toastr.warning("Please enter a Margin Amount", "Validation Error");
+        //    return false;
+        //}
     }
     if ($("#ddlRfqStatus").find('option:selected').text() === "NOT AWARDED") {
         if (!isValidateSelect($("#ddlRfqReason").val())) {
@@ -128,7 +160,7 @@ function GetRfqStatus() {
         }
     });
 }
-function GetRfqDetailsByRfqNo() {
+function GetRfqDetailsByRfqNo(callback) {
     var rfqNumber = $("#txtRfqNumber").val();
     var getUrl = '/RequestForQuote/GetRfqByRfqNo/' + rfqNumber;
     $.ajax({
@@ -140,10 +172,10 @@ function GetRfqDetailsByRfqNo() {
                 toastr.warning("Enter Correct RFQ No.", "Warning");
                 return;
             }
-            $("#txtRFQFinalizationId").val(response.rfqId);
+            $("#txtRfqId").val(response.rfqId);
             $("#ddlCustomerName").val(response.partyId).trigger('change');
             $("#txtRfqNo").val(response.rfqNo)
-            $("#txtRfqDate").val(response.rfqDate)
+            $("#txtRfqDate").val(response.rfqDate.split('T')[0])
             $("#txtRfqExpiredOn").val(response.expiryDate)
             if (response.vehicleReqOn) {
                 var date = new Date(response.vehicleReqOn);
@@ -162,6 +194,9 @@ function GetRfqDetailsByRfqNo() {
             $("#ddlVehicleType").val(response.vehicleTypeId).trigger('change');
             $("#txtNoofVehicles").val(response.vehicleCount)
             $("#txtSpecial").val(response.specialInstruction)
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Rfq Data!", "Error");
@@ -201,14 +236,14 @@ function GetRfqFailureReason() {
 function SaveAndSaveNew(action) {
     var saveUrl = '/RFQFinalization/AddRfqFinal';
     const rfqFinalformData = {
-        RfqId: $("#txtRFQFinalizationId").val(),
+        RfqId: $("#txtRfqId").val(),
         RfqStatusId: $('#ddlRfqStatus').val(),
         ReasonId: $('#ddlRfqReason').val() || 0,
         Remarks: $('#txtRemarks').val(),
         BillingRate: $('#txtBillingRate').val() || 0,
         DetentionPerDay: $('#txtPerDay').val() || 0,
         DetentionFreeDays: $('#txtFreeDays').val() || 0,
-        MarginAmount: $('#txtAmount').val() || 0,
+        MarginAmount: 12314,
         LinkId: GetQueryParam("LinkId")
     };
     let selectedVendorList = GetSelectedVendor();
@@ -275,8 +310,170 @@ function SaveAndSaveNew(action) {
         });
     }
 }
-function FetchAwarderVendorDetails() {
-    var rfqId = $("#txtRFQFinalizationId").val();
+function FetchRfqFinalizationList() {
+    $("#tableDiv").show();
+    $("#formDiv").hide();
+    $("#btnUpdateRfqFinalization").hide();
+    $("#btnSave").show();
+    $("#btnSaveAndNew").show();
+    $('.select2-custom').val(null).trigger('change');
+    $("#txtRfqNumber").prop('disabled', false);
+    ClearDisabledFields();
+    FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase());
+}
+$('#rfqFinalizationTableSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchRfqFinalizationList();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchRfqFinalizationList();
+});
+function EditRfqFinalizatioin(rfqFinalIdId) {
+    var data = viewModelDto.filter(x => x.rfqFinalIdId == rfqFinalIdId);
+    var formData = data[0];
+    console.log(formData);
+    $('#tableDiv').css('display', 'none');
+    $("#formDiv").css('display', 'Block');
+    $("#btnUpdateRfqFinalization").show();
+    $("#btnSave").hide();
+    $("#btnSaveAndNew").hide();
+    $("#txtRfqNumber").val(formData.rfqNo);
+    $("#txtRfqNumber").prop('disabled', true);
+    $("#txtRfqId").val(formData.rfqId);
+    $("#hdnRFQFinalizationId").val(formData.rfqFinalIdId);
+    $("#txtRemarks").val(formData.remarks);
+    GetRfqDetailsByRfqNo(function () {
+        $("#ddlRfqStatus").val(formData.rfqStatusId).trigger('change');
+        if (formData.reasonId) {
+            $("#ddlRfqReason").val(formData.reasonId).trigger('change');
+        }
+        else {
+            $("#txtBillingRate").val(formData.billingRate);
+            $("#txtPerDay").val(formData.detentionPerDay);
+            $("#txtFreeDays").val(formData.detentionFreeDays);
+            FetchAwarderVendorDetails(function () {
+                FetchRfqAwardedVendorList();
+            })
+        }
+    });
+}
+function UpdateRfqFinalization() {
+    $("#btnUpdateRfqFinalization").on('click', function () {
+        if (!OnSubmitCheckValidation()) {
+            return;
+        }
+        const rfqFinalUpadateFormData = {
+            RfqFinalIdId: $("#hdnRFQFinalizationId").val(),
+            RfqId: $("#txtRfqId").val(),
+            RfqStatusId: $('#ddlRfqStatus').val(),
+            ReasonId: $('#ddlRfqReason').val() || 0,
+            Remarks: $('#txtRemarks').val(),
+            BillingRate: $('#txtBillingRate').val() || 0,
+            DetentionPerDay: $('#txtPerDay').val() || 0,
+            DetentionFreeDays: $('#txtFreeDays').val() || 0,
+            MarginAmount: 12314,
+            LinkId: GetQueryParam("LinkId")
+        };
+        let selecteUpdatedVendorList = GetSelectedVendor();
+        const rfqFinalRateUpdateFormData = selecteUpdatedVendorList.map(vendor => ({
+            VendorId: vendor.VendorId,
+            RfqId: vendor.RfqId,
+            RfqFinalId: $("#hdnRFQFinalizationId").val(),
+            RfqFinalRateId: vendor.FinalRateId,
+            IsAssigned: vendor.IsAssigned,
+            AvailVehicleCount: vendor.AvailVehicleCount,
+            AssignedVehicles: vendor.AssignedVehicles
+        }));
+        if ($("#ddlRfqStatus").find('option:selected').text() === "NOT AWARDED") {
+            var formData = {
+                RfqFinalDto: rfqFinalUpadateFormData,
+                RfqFinalRateDtos: []
+            }
+        }
+        else {
+            var formData = {
+                RfqFinalDto: rfqFinalUpadateFormData,
+                RfqFinalRateDtos: rfqFinalRateUpdateFormData
+            }
+        }
+        var updateRfqFinalization = '/RFQFinalization/UpdateRfqFinal';
+        $.ajax({
+            type: "PUT",
+            url: updateRfqFinalization,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(formData),
+            dataType: "json",
+            success: function (result) {
+                if (result) {
+                    toastr.success("Rfq Finalization Updated Successfully!", "Success");
+                    FetchRfqFinalizationList();
+                } else {
+                    toastr.error("Failed to Update Rfq Finalization Details!", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Update Rfq Finalization Details!", "Error");
+            }
+        });
+    })
+}
+function DeleteRfqFinalizatioin(rfqFinalIdId) {
+    var deleteRfqFinalUrl = '/RFQFinalization/DeleteRfqFinal/' + rfqFinalIdId;
+    $.ajax({
+        url: deleteRfqFinalUrl,
+        type: "DELETE",
+        dataType: "json",
+        success: function (response) {
+            if (response) {
+                toastr.success("Rfq Finalization Details Deleted Successfully!");
+                $('#currentPage').val(1);
+                FetchRfqFinalizationList();
+            }
+            else {
+                toastr.error("Failed to Delete Rfq Finalization Details!", "Error");
+            }
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Delete Rfq Finalization Details!", "Error");
+        }
+    });
+}
+function FetchRfqAwardedVendorList() {
+    //var rfqId = $("#txtRfqId").val();
+    var rfqFinalId = $("#hdnRFQFinalizationId").val();
+    var url = '/RFQFinalization/GetRfqFinalRateList';
+    $.ajax({
+        url: url,
+        type: "GET",
+        data: { rfqFinalId: rfqFinalId },
+        contentType: "application/json",
+        success: function (response) {
+            console.log(response);
+            $("#awardedVendorTable tbody tr").each(function () {
+                var checkbox = $(this).find('input[type="checkbox"]');
+                var vendorId = checkbox.data('vendorid');
+
+                const vendorData = response.find(v => v.vendorId === vendorId);
+                if (vendorData) {
+                    $(this).find("#txtassignedVehicle").val(vendorData.assignedVehicles || "");
+                    checkbox.attr("data-finalrateid", vendorData.rfqFinalRateId);
+                    if (vendorData.isAssigned) {
+                        $(this).find("input[type='checkbox']").prop("checked", true);
+                    } else {
+                        $(this).find("input[type='checkbox']").prop("checked", false);
+                    }
+                }
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Awarded Vendor List!", "Error");
+        }
+    })
+}
+function FetchAwarderVendorDetails(callback) {
+    var rfqId = $("#txtRfqId").val();
     var getAwardedVendorUrl = '/RFQFinalization/AwardedVendor/' + rfqId;
     $.ajax({
         url: getAwardedVendorUrl,
@@ -289,8 +486,9 @@ function FetchAwarderVendorDetails() {
                 $("#awardedVendorTable tbody").append('<tr><td colspan="16" class="text-center">No records found</td></tr>');
                 return;
             }
+            console.log(response);
             $.each(response, function (index, vendor) {
-                let difference=0;
+                let difference = 0;
                 const billingRate = parseFloat($("#txtBillingRate").val()) || 0;
                 const hireCost = parseFloat(vendor.totalHireCost) || 0;
                 if (billingRate == 0) {
@@ -316,13 +514,16 @@ function FetchAwarderVendorDetails() {
                         <td>${vendor.vendorPosition}</td>
                         <td style="text-align: center; vertical-align: middle;">
                             <label class="check-box-custom" style="display: inline-block;">
-                                <input class="form-check-input" type="checkbox" data-vehiclecount="${vendor.vehicleCount}" data-availvehicle="${vendor.availVehicleCount}" data-vendorid="${vendor.vendorId}">
+                                <input class="form-check-input" type="checkbox" data-finalrateid="" data-vehiclecount="${vendor.vehicleCount}" data-availvehicle="${vendor.availVehicleCount}" data-vendorid="${vendor.vendorId}">
                                     <span class="checkmark"></span>
                             </label>    
                         </td>
                         </tr>`;
                 tbody.append(rowHtml);
-            })
+            });
+            if (callback && typeof callback === 'function') {
+                callback();
+            };
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Awarded Vendor Details!", "Error");
@@ -372,11 +573,13 @@ function GetSelectedVendor() {
         var checkbox = $(this).find('input[type="checkbox"]');
         var vendorId = checkbox.data('vendorid');
         var availVehicleCount = checkbox.data('availvehicle');
+        var finalRateId = checkbox.data('finalrateid');
         var assignedVehicle = $("#txtassignedVehicle").val();
         if (checkbox.is(':checked')) {
             selectedVendor.push({
                 VendorId: vendorId,
-                RfqId: $("#txtRFQFinalizationId").val(),
+                FinalRateId: finalRateId || 0,
+                RfqId: $("#txtRfqId").val(),
                 AvailVehicleCount: availVehicleCount,
                 AssignedVehicles: assignedVehicle,
                 IsAssigned: true,
@@ -385,9 +588,10 @@ function GetSelectedVendor() {
         else {
             selectedVendor.push({
                 VendorId: vendorId,
-                RfqId: $("#txtRFQFinalizationId").val(),
+                FinalRateId: finalRateId || 0,
+                RfqId: $("#txtRfqId").val(),
                 AvailVehicleCount: availVehicleCount,
-                AssignedVehicles:0,
+                AssignedVehicles: 0,
                 IsAssigned: false,
             });
         }
@@ -397,6 +601,7 @@ function GetSelectedVendor() {
 function ClearDisabledFields() {
     // Clear disabled text, date, datetime-local inputs
     $('input:disabled').val('');
+    $("#txtRfqNumber").val('');
     $('input[type="hidden"]').val('');
     // Clear disabled select2 dropdowns
     $('select.select2-custom:disabled').each(function () {

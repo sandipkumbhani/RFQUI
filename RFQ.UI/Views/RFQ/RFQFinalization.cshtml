@@ -14,14 +14,23 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box add">
-                <h1 class="page-title">RFQ Finalization</h1>
+                <h1 class="page-title">Add Rfq Finalization</h1>
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a id="tableDivLink" href="">RFQ Finalization</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Rfq Finalization</li>
+                        </ol>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
     <div id="AddQuoteRoleVendorDiv" class="card com-profile-info">
         <div class="top-details">
             <form class="row all-custom-class" id="RFQForm" method="post">
-                <input type="hidden" id="txtRFQFinalizationId" />
+                <input type="hidden" id="txtRfqId" />
+                <input type="hidden" id="hdnRFQFinalizationId" />
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="item-input">
                         <div class="item-input">
@@ -51,7 +60,7 @@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">RFQ Date</label>
-                                <input type="datetime-local" class="form-control" id="txtRfqDate" placeholder="Auto Generated" disabled />
+                                <input type="datetime" class="form-control" id="txtRfqDate" placeholder="Auto Generated" disabled />
                             </div>
                         </div>
                         <div class="col-lg-3">
@@ -191,6 +200,8 @@
                             Save & New
                         </span>
                     </a>
+                    <a href="#" class="card-link" id="btnUpdateRfqFinalization" style="display:none;margin-left:0px;"><i class="ri-save-line"></i><span>Update</span></a>
+                    <a href="#" class="card-link" id="btnCancel"><i class="ri-close-line"></i><span>Cancel</span></a>
                 </div>
             </form>
         </div>
@@ -231,24 +242,12 @@
                         <thead class="text-center">
                             <tr>
                                 <th class="sortable text-center" data-column="RfqNo" data-order="asc">Rfq No</th>
-                                <th class="sortable text-center" data-column="Location" data-order="asc">Location</th>
-                                <th class="sortable text-center" data-column="RfqDate" data-order="asc">Rfq Date</th>
-                                <th class="sortable text-center" data-column="ExpiryDate" data-order="asc">Rfq Expired On</th>
-                                <th class="sortable text-center" data-column="IndentNo" data-order="asc">Indent No</th>
-                                <th class="sortable text-center" data-column="CustomerName" data-order="asc">Customer Name</th>
-                                <th class="sortable text-center" data-column="VehicleReqOn" data-order="asc">Vehicle Req On</th>
-                                <th class="sortable text-center" data-column="FromLocation" data-order="asc">Origin/From</th>
-                                <th class="sortable text-center" data-column="ToLocation" data-order="asc">Destination/To</th>
-                                <th class="sortable text-center" data-column="VehicleTypeName" data-order="asc">Vehicle Type</th>
-                                <th class="sortable text-center" data-column="VehicleCount" data-order="asc">No of Vehicles</th>
-                                <th class="sortable text-center" data-column="MaxCosting" data-order="asc">Max Costing</th>
-                                <th class="sortable text-center" data-column="DetentionPerDay" data-order="asc">Detention Per Day</th>
-                                <th class="sortable text-center" data-column="DetentionFreeDays" data-order="asc">Detention Free Days</th>
-                                <th class="sortable text-center" data-column="RfqSubject" data-order="asc">RFQ Subject</th>
-                                <th class="sortable text-center" data-column="RfqPriority" data-order="asc">RFQ Priority</th>
-                                <th class="sortable text-center" data-column="RfqType" data-order="asc">RFQ Type</th>
-                                <th class="sortable text-center" data-column="ItemName" data-order="asc">Item Name</th>
-                                <th class="sortable text-center" data-column="PackingTypeName" data-order="asc">Packing Type</th>
+                                <th class="sortable text-center" data-column="RfqStatus" data-order="asc">RfqStatus</th>
+                                <th class="sortable text-center" data-column="Reason" data-order="asc">Reason</th>
+                                <th class="sortable text-center" data-column="BillingRate" data-order="asc">BillingRate</th>
+                                <th class="sortable text-center" data-column="DetentionPerDay" data-order="asc">DetentionPerDay</th>
+                                <th class="sortable text-center" data-column="DetentionFreeDays" data-order="asc">DetentionFreeDays</th>
+                                <th class="sortable text-center" data-column="Remarks" data-order="asc">Remarks</th>
                                 <th class="text-center no-sort">Action</th>
                             </tr>
                         </thead>

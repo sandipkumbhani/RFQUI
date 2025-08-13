@@ -178,12 +178,12 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
                 var loginUser = decodeURIComponent(getCookieValue('UserEmail'));
                 const filteredUsers = response.data.filter(user => user.emailId !== loginUser);
                 response.data = filteredUsers;
-            } 
+            }
             viewModelDto = response.data;
             let rowsHtml = '';
             rowsHtml = GetGridHtml(response, gridTableName);
             $('#' + gridTableName + ' tbody').html(rowsHtml);
-            $('#totalList').text(`Total List: ${viewModelDto.length}`);
+            $('#totalList').text(`Total List: ${response.recordsTotal}`);
             generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url);
         },
         error: function () {
@@ -422,6 +422,25 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditRfq(${item.rfqId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteRfq(${item.rfqId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "rfqFinalizationTable") {
+        console.log(response.data);
+        response.data.forEach(item => {
+            rowsHtml += `
+                      <tr>
+                        <td>${item.rfqNo}</td>
+                        <td>${item.rfqStatus}</td>
+                        <td>${item.reason}</td>
+                        <td>${item.billingRate}</td>
+                        <td>${item.detentionPerDay}</td>
+                        <td>${item.detentionFreeDays}</td>
+                        <td>${item.remarks}</td>
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="EditRfqFinalizatioin(${item.rfqFinalIdId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteRfqFinalizatioin(${item.rfqFinalIdId})"><i class="ri-delete-bin-3-line"></i></a>
                         </td>
                     </tr>`;
         });

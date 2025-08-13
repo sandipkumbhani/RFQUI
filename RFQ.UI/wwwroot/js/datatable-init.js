@@ -746,3 +746,41 @@ $(document).ready(function () {
         table.page.len(this.value).draw();
     });
 });
+$(document).ready(function () {
+    const table = $('#rfqFinalizationTable').DataTable({
+        responsive: false,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'csv',
+                text: '<i class="ri-file-excel-line"></i> Export All',
+            },
+        ],
+        paging: false,
+        info: true,
+        lengthChange: false,
+        pageLength: 10,
+        columnDefs: [
+            { orderable: false, targets: 'no-sort' }
+        ],
+        language: {
+            paginate: {
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
+            }
+        }
+    });
+
+    // Move export buttons
+    table.buttons().container().appendTo('#exportRfqFinalizationButtons');
+
+    // Search
+    $('#rfqFinalizationTableSearch').on('keyup', function () {
+        table.search(this.value).draw();
+    });
+
+    // Page length
+    $('#pageLength').on('change', function () {
+        table.page.len(this.value).draw();
+    });
+});
