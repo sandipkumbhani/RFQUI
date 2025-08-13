@@ -339,31 +339,44 @@ function UpdateCustomer() {
         });
     });
 }
-function DeleteCustomer(partyId) {
-    var deleteCustomerUrl = '/Customer/DeleteCustomer/' + partyId;
+function DeleteCustomer(partyId, linkId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteCustomerUrl = '/Customer/DeleteCustomer/' + partyId;
 
-    FetchMasterAttachment(linkId, partyId, function (list) {
-        result = list;
+            FetchMasterAttachment(linkId, partyId, function (list) {
+                var result = list;
 
-        $.ajax({
-            url: deleteCustomerUrl,
-            type: "DELETE",
-            dataType: "json",
-            data: JSON.stringify(partyId),
-            success: function (response) {
-                if (result.length > 0) {
-                    DeleteMasterAttachment(result[0].attachmentId);
-                }
-                toastr.success("Customer Details Deleted Successfully!");
-                $('#currentPage').val(1);
-                FetchCustomerList();
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Delete Customer Details!", "Error");
-            }
-        });
+                $.ajax({
+                    url: deleteCustomerUrl,
+                    type: "DELETE",
+                    dataType: "json",
+                    data: JSON.stringify(partyId),
+                    success: function (response) {
+                        if (result && result.length > 0) {
+                            DeleteMasterAttachment(result[0].attachmentId);
+                        }
+                        Swal.fire('Deleted!', 'Customer details have been deleted.', 'success');
+                        $('#currentPage').val(1);
+                        FetchCustomerList();
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire('Error', 'Failed to delete customer details.', 'error');
+                    }
+                });
+            });
+        }
     });
 }
+
 function GstEKycClick() {
     $("#gstEKycButton").on("click", function () {
         var gstNumber = $("#txtGstNumber").val();

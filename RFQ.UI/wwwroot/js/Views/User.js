@@ -253,21 +253,35 @@ function EditUser(userId) {
     }
 }
 function DeleteUser(userId) {
-    var deleteuserlist = '/Home/DeleteUserList/' + userId
-    $.ajax({
-        url: deleteuserlist,
-        type: "DELETE",
-        dataType: "json",
-        data: JSON.stringify(userId),
-        success: function (response) {
-            FetchUser();
-            toastr.success("User Details Deleted Successfully!");
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Delete User Details!", "Error");
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteuserlist = '/Home/DeleteUserList/' + userId;
+
+            $.ajax({
+                url: deleteuserlist,
+                type: "DELETE",
+                dataType: "json",
+                data: JSON.stringify(userId),
+                success: function (response) {
+                    FetchUser();
+                    Swal.fire('Deleted!', 'User details have been deleted.', 'success');
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Failed to delete user details.', 'error');
+                }
+            });
         }
     });
 }
+
 function UpdateUser() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();

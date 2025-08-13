@@ -519,41 +519,59 @@ function GetDriverType() {
         }
     });
 }
-function DeleteDriver(driverId, fileName) {
-    var deleteDriverUrl = '/Driver/DeleteDriver/' + driverId;
-    var deleteUploadUrl = '/Driver/DeleteUpload';
-    FetchMasterAttachment(linkId, driverId, function (list) {
-        result = list;
-        $.ajax({
-            url: deleteDriverUrl,
-            type: "DELETE",
-            dataType: "json",
-            data: JSON.stringify(driverId),
-            success: function (response) {
-                if (result.length > 0) {
-                    DeleteMasterAttachment(result[0].attachmentId);
-                }
-                toastr.success("Driver Details Deleted Successfully!");
-                $('#currentPage').val(1);
-                FetchDriverList();
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Delete Driver Details!", "Error");
-            }
-        });
-    })
-    $.ajax({
-        url: deleteUploadUrl,
-        type: "POST",
-        dataType: "json",
-        data: { fileName: fileName },
-        success: function (response) {
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Delete Driver Details!", "Error");
+function DeleteDriver(driverId, fileName, linkId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteDriverUrl = '/Driver/DeleteDriver/' + driverId;
+            var deleteUploadUrl = '/Driver/DeleteUpload';
+
+            FetchMasterAttachment(linkId, driverId, function (list) {
+                var result = list;
+
+                $.ajax({
+                    url: deleteDriverUrl,
+                    type: "DELETE",
+                    dataType: "json",
+                    data: JSON.stringify(driverId),
+                    success: function (response) {
+                        if (result.length > 0) {
+                            DeleteMasterAttachment(result[0].attachmentId);
+                        }
+                        toastr.success("Driver Details Deleted Successfully!");
+                        $('#currentPage').val(1);
+                        FetchDriverList();
+
+                        // After successful delete, delete uploaded file
+                        $.ajax({
+                            url: deleteUploadUrl,
+                            type: "POST",
+                            dataType: "json",
+                            data: { fileName: fileName },
+                            success: function (response) {
+                                // Optional: Add success handling here
+                            },
+                            error: function (xhr, status, error) {
+                                toastr.error("Failed to Delete Driver Upload!", "Error");
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error("Failed to Delete Driver Details!", "Error");
+                    }
+                });
+            });
         }
-    })
-};
+    });
+}
+
 function ValidateLicenseNo(number) {
     return /^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(number);
 }

@@ -348,31 +348,46 @@ function ButtonUpdateClick() {
     });
 };
 function DeleteCorporateCompany(companyId, linkId) {
-    var result;
-    var deleteCorporateCompanyUrl = '/CorporateCompany/DeleteCorporateCompany/' + companyId
-    FetchMasterAttachment(linkId, companyId, function (list) {
-        result = list;
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteCorporateCompanyUrl = '/CorporateCompany/DeleteCorporateCompany/' + companyId;
 
-        $.ajax({
-            url: deleteCorporateCompanyUrl,
-            type: "DELETE",
-            dataType: "json",
-            data: JSON.stringify(companyId),
-            success: function (response) {
-                if (result.length > 0) {
-                    DeleteMasterAttachment(result[0].attachmentId);
-                }
-                toastr.success("Corporate Company Deleted Successfully!");
-                $('#currentPage').val(1);
-                FetchCorporateCompany();
-                $("#backButton").css('display', 'block');
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Delete Corporate Company Details!", "Error");
-            }
-        });
+            // First fetch master attachment before deleting the company
+            FetchMasterAttachment(linkId, companyId, function (list) {
+                // Proceed to delete the company
+                $.ajax({
+                    url: deleteCorporateCompanyUrl,
+                    type: "DELETE",
+                    dataType: "json",
+                    data: JSON.stringify(companyId),
+                    success: function (response) {
+                        // Delete attachment if exists
+                        if (list && list.length > 0) {
+                            DeleteMasterAttachment(list[0].attachmentId);
+                        }
+
+                        Swal.fire('Deleted!', 'Corporate Company has been deleted.', 'success');
+                        $('#currentPage').val(1);
+                        FetchCorporateCompany();
+                        $("#backButton").css('display', 'block');
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire('Error', 'Failed to delete Corporate Company.', 'error');
+                    }
+                });
+            });
+        }
     });
 }
+
 function SaveCorporateCompany(action) {
     var companyName = $("#txtCompanyName").val();
     var franchiseName = $("#ddlFranchisename").val();

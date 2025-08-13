@@ -465,31 +465,41 @@ function ButtonUpdateClick() {
     });
 };
 function DeleteVehicleIndent(indentId) {
-    debugger;
-    var deleteVehicleIndentUrl = `/VehicleIndent/DeleteVehicleIndent/${indentId}`;
-        $.ajax({
-            url: deleteVehicleIndentUrl,
-            type: "DELETE",
-            dataType: "json",
-            data: JSON.stringify(indentId),
-            success: function (response) {
-                if (response && response.result === "success") {
-                    toastr.success("Vehicle Indent Deleted Successfully!");
-                    $("#addReqBranchDiv").addClass('d-none');
-                    $('#currentPage').val(1);
-                    FetchVehicleIndent();
-                    //$("#backButton").css('display', 'block');
-                } else {
-                    toastr.error("Failed to Delete Vehicle Indent Details!", "Error");
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteVehicleIndentUrl = `/VehicleIndent/DeleteVehicleIndent/${indentId}`;
+
+            $.ajax({
+                url: deleteVehicleIndentUrl,
+                type: "DELETE",
+                dataType: "json",
+                data: JSON.stringify(indentId),
+                success: function (response) {
+                    if (response && response.result === "success") {
+                        Swal.fire('Deleted!', 'Vehicle Indent has been deleted.', 'success');
+                        $("#addReqBranchDiv").addClass('d-none');
+                        $('#currentPage').val(1);
+                        FetchVehicleIndent();
+                    } else {
+                        Swal.fire('Error', 'Failed to delete Vehicle Indent.', 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error', 'Failed to delete Vehicle Indent.', 'error');
                 }
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Delete Vehicle Indent Details!", "Error");
-            }  
-            
-        });
-    //});
+            });
+        }
+    });
 }
+
 function formatDateForInput(dateString) {
     if (!dateString) return '';
 

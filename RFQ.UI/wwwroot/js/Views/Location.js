@@ -266,21 +266,35 @@ function EditLocation(locationId) {
     $("#btnViewForm").hide();
 }
 function DeleteLocation(locationId) {
-    var deletelocationlist = '/Location/Deletelocationlist/' + locationId;
-    $.ajax({
-        url: deletelocationlist,
-        type: "DELETE",
-        dataType: "json",
-        data: JSON.stringify(locationId),
-        success: function (response) {
-            FetchLocationList();
-            toastr.success("Location Details Deleted Successfully!");
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Delete Location Details!", "Error");
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deletelocationlist = '/Location/Deletelocationlist/' + locationId;
+
+            $.ajax({
+                url: deletelocationlist,
+                type: "DELETE",
+                dataType: "json",
+                data: JSON.stringify(locationId),
+                success: function (response) {
+                    FetchLocationList();
+                    toastr.success("Location Details Deleted Successfully!");
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to Delete Location Details!", "Error");
+                }
+            });
         }
     });
 }
+
 function ValidationCheck() {
     if (IsNullOrEmpty($("#txtLocationName").val())) {
         toastr.warning("Please enter a valid Location Name", "Validation Error");

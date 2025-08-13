@@ -382,18 +382,32 @@ function UpdateCompanyConfiguration(companyConfigId) {
     }
 }
 function DeleteCompanyConfiguration(CompanyConfigrationId) {
-    var deleteCompConfig = '/CompanyConfiguration/DeleteCompanyConfiguration/' + CompanyConfigrationId;
-    $.ajax({
-        url: deleteCompConfig,
-        type: "DELETE",
-        dataType: "json",
-        data: JSON.stringify(CompanyConfigrationId),
-        success: function (response) {
-            toastr.success("Company Configuration Details Deleted Successfully!");
-            FetchCompanyConfiguration();
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Delete Company Configuration Details!", "Error");
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteCompConfig = '/CompanyConfiguration/DeleteCompanyConfiguration/' + CompanyConfigrationId;
+
+            $.ajax({
+                url: deleteCompConfig,
+                type: "DELETE",
+                dataType: "json",
+                data: JSON.stringify(CompanyConfigrationId),
+                success: function (response) {
+                    toastr.success("Company Configuration Details Deleted Successfully!");
+                    FetchCompanyConfiguration();
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to Delete Company Configuration Details!", "Error");
+                }
+            });
         }
     });
 }
+
