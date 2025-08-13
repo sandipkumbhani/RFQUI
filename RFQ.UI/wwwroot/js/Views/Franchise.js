@@ -505,39 +505,57 @@ function UpdateFranchise(fileName) {
         DeleteAttachmentAPI(value);
     });
 }
-function DeleteFranchise(companyId, fileName) {
-    var deleteFranchiseUrl = '/Franchise/DeleteFranchise/' + companyId;
-    var deleteUploadUrl = '/Franchise/DeleteUpload';
-    var result;
-    FetchMasterAttachment(linkId, companyId, function (list) {
-        result = list;
+function DeleteFranchise(companyId, fileName, linkId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteFranchiseUrl = '/Franchise/DeleteFranchise/' + companyId;
+            var deleteUploadUrl = '/Franchise/DeleteUpload';
 
-        $.ajax({
-            url: deleteFranchiseUrl,
-            type: "DELETE",
-            dataType: "json",
-            data: JSON.stringify(companyId),
-            success: function (response) {
-                if (result.length > 0) {
-                    DeleteMasterAttachment(result[0].attachmentId);
-                }
-                toastr.success("Franchise Details Deleted Successfully!");
-                $('#currentPage').val(1);
-                FetchFranchise();
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Delete Franchise Details!", "Error");
-            }
-        });
-    })
-    $.ajax({
-        url: deleteUploadUrl,
-        type: "POST",
-        dataType: "json",
-        data: { fileName: fileName },
-        success: function (response) {
-        },
-        error: function (xhr, status, error) {
+            FetchMasterAttachment(linkId, companyId, function (list) {
+                var result = list;
+
+                $.ajax({
+                    url: deleteFranchiseUrl,
+                    type: "DELETE",
+                    dataType: "json",
+                    data: JSON.stringify(companyId),
+                    success: function (response) {
+                        if (result.length > 0) {
+                            DeleteMasterAttachment(result[0].attachmentId);
+                        }
+                        toastr.success("Franchise Details Deleted Successfully!");
+                        $('#currentPage').val(1);
+                        FetchFranchise();
+
+                        // After successful franchise delete, delete the upload
+                        $.ajax({
+                            url: deleteUploadUrl,
+                            type: "POST",
+                            dataType: "json",
+                            data: { fileName: fileName },
+                            success: function (response) {
+                                // Optional: You can add success logic here if needed
+                            },
+                            error: function (xhr, status, error) {
+                                // Optional: Handle upload delete error if needed
+                            }
+                        });
+
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error("Failed to Delete Franchise Details!", "Error");
+                    }
+                });
+            });
         }
-    })
-};
+    });
+}
+

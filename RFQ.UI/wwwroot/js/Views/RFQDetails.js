@@ -783,7 +783,6 @@ function SaveRfqVendorDetails() {
     });
 }
 function sendQuoteLinksForVendors(vendorList) {
-    debugger;
     const formData = vendorList.map(vendor => ({
         RfqRecipientId: 0,
         RfqId: rfqId,

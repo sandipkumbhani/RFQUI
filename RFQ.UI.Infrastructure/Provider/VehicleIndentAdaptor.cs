@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using System.ComponentModel.Design;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -76,6 +78,104 @@ namespace RFQ.UI.Infrastructure.Provider
                 Console.WriteLine(ex.Message);
             }
             return null;
+        }
+
+        public async Task<PageList<VehicleIndentResponseDto>> GetAllVehicleIndent(PagingParam pagingParam)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                    var requestDto = JsonConvert.SerializeObject(pagingParam);
+                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+                    var baseUrl = _fleetLynkApiUrl + _config["VehicleIndent:GetAllVehicleIndent"];
+                    var response = await httpClient.PostAsync(baseUrl, requestContent);
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                    if (responseModel?.Data?.result != null)
+                    {
+                        var vehicleList = JsonConvert.DeserializeObject<List<VehicleIndentResponseDto>>(
+                            JsonConvert.SerializeObject(responseModel.Data.result)
+                        );
+                        int pageNumber = responseModel.Data.pageNumber;
+                        int pageSize = responseModel.Data.pageSize;
+                        int totalRecordCount = responseModel.Data.totalRecordCount;
+                        return new PageList<VehicleIndentResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize);
+                    }
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> UpdateVehicleIndent(int indentId, VehicleIndentRequestDto vehicleIndentRequestDto)
+        {
+            try
+            {
+
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}/VehicleIndent/UpdateVehicleIndent/{indentId}";
+                var vehicle = JsonConvert.SerializeObject(vehicleIndentRequestDto);
+                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "VehicleIndent Updated";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
+                }
+                return "Failed to update VehicleIndent";
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteVehicleIndent(int indentId)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}/VehicleIndent/DeleteVehicleIndent/{indentId}";
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "VehicleIndent Deleted";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
+                }
+                return "Failed to Delete VehicleIndent";
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

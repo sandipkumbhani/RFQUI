@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -63,6 +66,86 @@ namespace RFQ.UI.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllVehicleIndent([FromBody] PagingParam pagingParam)
+        {
+            try
+            {
+                var vehicleIndentViewModel = new VehicleIndent();
+                var result = await _vehicleIndentService.GetAllVehicleIndent(pagingParam);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
+                }
+                else
+                {
+                    return View(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateVehicleIndent([FromBody] VehicleIndentRequestDto vehicleIndentRequestDto)
+        {
+            try
+            {
+                int indentId = vehicleIndentRequestDto.IndentId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                vehicleIndentRequestDto.CreatedBy = Convert.ToInt32(userid);
+                vehicleIndentRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                vehicleIndentRequestDto.CompanyId = Convert.ToInt32(companyId);
+                var result = await _vehicleIndentService.UpdateVehicleIndent(indentId, vehicleIndentRequestDto);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpDelete("VehicleIndent/DeleteVehicleIndent/{indentId}")]
+        public async Task<IActionResult> DeleteVehicleIndent(int indentId)
+        {
+            try
+            {
+                var result = await _vehicleIndentService.DeleteVehicleIndent(indentId);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+
         }
     }
 }

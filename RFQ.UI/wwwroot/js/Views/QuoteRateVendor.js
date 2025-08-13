@@ -242,7 +242,6 @@ function ValidationCheck() {
     return true;
 }
 function Save(action) {
-    debugger;
     var DetentionFreeDays = $("#txtDetentionDays").val();
     var DetentionDay = $("#txtDetentionDay").val();
     var HireCost = $("#txtHireCost").val();

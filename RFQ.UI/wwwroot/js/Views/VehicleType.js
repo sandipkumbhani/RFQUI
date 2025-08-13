@@ -174,22 +174,36 @@ function UpdateVechileType() {
     })
 }
 function DeleteVehicleType(vehicleTypeId) {
-    var deleteVehicleTypesUrl = '/Vehicle/DeleteVehicleType/' + vehicleTypeId
-    $.ajax({
-        url: deleteVehicleTypesUrl,
-        type: "DELETE",
-        dataType: "json",
-        data: JSON.stringify(vehicleTypeId),
-        success: function (response) {
-            $("#addVehicleTypeDiv").addClass("d-none");
-            $('#currentPage').val(1);
-            FetchVehicleTypes();
-            toastr.success("Vehicle Type Details Deleted Successfully!","Success");
-        },
-        error: function (xhr, status, error) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteVehicleTypesUrl = '/Vehicle/DeleteVehicleType/' + vehicleTypeId;
 
-            toastr.error("Failed to Delete Vehicle Type Details!", "Error");
+            $.ajax({
+                url: deleteVehicleTypesUrl,
+                type: "DELETE",
+                contentType: "application/json", // Optional but included for completeness
+                dataType: "json",
+                success: function (response) {
+                    $("#addVehicleTypeDiv").addClass("d-none");
+                    $('#currentPage').val(1);
+                    FetchVehicleTypes();
+                    toastr.success("Vehicle Type has been deleted successfully!");
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to delete Vehicle Type details!", "Error");
+                }
+            });
         }
     });
 }
+
+
 

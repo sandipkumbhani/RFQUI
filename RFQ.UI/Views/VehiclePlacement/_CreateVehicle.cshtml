@@ -1,0 +1,168 @@
+﻿  @page
+@{
+    Layout = null;
+}
+@section Scripts {
+    <script src="~/js/views/vehicleplacement.js"></script>
+    <script src="~/js/common.js"></script>
+}
+
+<form class="form" id="vehicleForm" method="post">
+    <input type="hidden" id="hdVehicleId" />
+
+    <!-- Vehicle Details -->
+    <div class="franchise-details mb-4">
+        <div class="row g-3 all-custom-class">
+            <div class="col-xl-4 col-lg-6 col-md-6">
+                <div class="item-input">
+                    <label class="form-label">Vehicle No <span>*</span></label>
+                    <div class="kyc-input">
+                        <input type="text" id="vehicleNo" class="form-control" placeholder="Vehicle No" oninput="this.value = this.value.toUpperCase()" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="10" />
+                        <button id="btnVehicleKyc" type="button" class="kyc-btn btn btn-primary me-2">e-KYC</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8 col-lg-6 col-md-6"></div>
+
+            <div class="col-lg-8">
+                <label class="form-label">Owner Name <span class="text-danger">*</span></label>
+                <select id="popUpOwnerName" class="select2-custom form-control" data-placeholder="Owner Name"></select>
+            </div>
+
+            <div class="col-lg-4">
+                <label class="form-label">Vehicle Type <span class="text-danger">*</span></label>
+                <select id="popUpVehicleType" class="select2-custom form-control" data-placeholder="Vehicle Type"></select>
+            </div>
+
+            <div class="col-lg-4">
+                <label class="form-label">Vehicle Category <span class="text-danger">*</span></label>
+                <select id="ddlVehicleCategory" class="select2-custom form-control" data-placeholder="Vehicle Category"></select>
+            </div>
+
+            <div class="col-lg-4">
+                <label class="form-label">Vehicle Capacity <span class="text-danger">*</span></label>
+                <input type="text" id="vehicleCapacity" class="form-control" placeholder="Vehicle Capacity" onkeypress="return isNumber(event)" />
+            </div>
+
+            <div class="col-lg-4">
+                <label class="form-label">Tracking Provider <span class="text-danger">*</span></label>
+                <select id="ddlTrackingProvider" class="select2-custom form-control" data-placeholder="Tracking Provider"></select>
+            </div>
+        </div>
+    </div>
+
+    <!-- e-KYC Details -->
+    <div class="franchise-owner-details">
+        <h2 class="page-form-title border-bottom pb-2 mb-3">e-KYC Details</h2>
+        <div class="row g-3 all-custom-class">
+            <div class="col-lg-8">
+                <label class="form-label">Regd. Owner <span class="text-danger">*</span></label>
+                <input type="text" id="regdOwnerInput" class="form-control" placeholder="Regd. Owner" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Owner Serial No <span class="text-danger">*</span></label>
+                <input type="text" id="ownerSerialNoInput" class="form-control" placeholder="Owner Serial No" disabled />
+            </div>
+            <div class="col-lg-6">
+                <label class="form-label">Permanent Address <span class="text-danger">*</span></label>
+                <input type="text" id="permanentAddressInput" class="form-control" placeholder="Permanent Address" disabled />
+            </div>
+            <div class="col-lg-6">
+                <label class="form-label">Financer <span class="text-danger">*</span></label>
+                <input type="text" id="financerInput" class="form-control" placeholder="Financer" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Insurance Co <span class="text-danger">*</span></label>
+                <input type="text" id="insuranceCoInput" class="form-control" placeholder="Insurance Co" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Verified On <span class="text-danger">*</span></label>
+                <input type="date" id="verifiedOnInput" class="form-control" placeholder="Verified On" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Vehicle Status <span class="text-danger">*</span></label>
+                <input type="text" id="vehicleStatusInput" class="form-control" placeholder="Vehicle Status" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Make-Model <span class="text-danger">*</span></label>
+                <input type="text" id="makeModelInput" class="form-control" placeholder="Make-Model" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Blacklist Status <span class="text-danger">*</span></label>
+                <input type="text" id="blacklistStatusInput" class="form-control" placeholder="Blacklist Status" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Policy No <span class="text-danger">*</span></label>
+                <input type="text" id="policyNoInput" class="form-control" placeholder="Policy No" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Engine No <span class="text-danger">*</span></label>
+                <input type="text" id="engineNoInput" class="form-control" placeholder="Engine No" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Permit No <span class="text-danger">*</span></label>
+                <input type="text" id="permitNoInput" class="form-control" placeholder="Permit No" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Chasis No <span class="text-danger">*</span></label>
+                <input type="text" id="chasisNoInput" class="form-control" placeholder="Chasis No" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">N P No <span class="text-danger">*</span></label>
+                <input type="text" id="npNoInput" class="form-control" placeholder="N P No" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Vehicle Capacity <span class="text-danger">*</span></label>
+                <input type="text" id="vehicleCapacityInput" class="form-control" placeholder="Vehicle Capacity" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Gross Weight <span class="text-danger">*</span></label>
+                <input type="text" id="grossWeightInput" class="form-control" placeholder="Gross Weight" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Unladen Weight <span class="text-danger">*</span></label>
+                <input type="text" id="unladenWeightInput" class="form-control" placeholder="Unladen Weight" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">RTO Registration <span class="text-danger">*</span></label>
+                <input type="text" id="rtoRegistrationInput" class="form-control" placeholder="RTO Registration" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Registration Date <span class="text-danger">*</span></label>
+                <input type="date" id="registrationDateInput" class="form-control" placeholder="Registration Date" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">PUC Expiry Date <span class="text-danger">*</span></label>
+                <input type="date" id="pucExpiryInput" class="form-control" placeholder="PUC Expiry Date" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Policy Expiry Date <span class="text-danger">*</span></label>
+                <input type="date" id="policyExpiryInput" class="form-control" placeholder="Policy Expiry Date" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Fitness Expiry Date <span class="text-danger">*</span></label>
+                <input type="date" id="fitnessExpiryInput" class="form-control" placeholder="Fitness Expiry Date" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Permit Expiry Date <span class="text-danger">*</span></label>
+                <input type="date" id="permitExpiryInput" class="form-control" placeholder="Permit Expiry Date" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Tax Expiry Date <span class="text-danger">*</span></label>
+                <input type="date" id="taxExpiryInput" class="form-control" placeholder="Tax Expiry Date" disabled />
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">NP Expiry Date <span class="text-danger">*</span></label>
+                <input type="date" id="npExpiryInput" class="form-control" placeholder="NP Expiry Date" disabled />
+            </div>
+        </div>
+    </div>
+    <div class="button-main">
+        <a href="#" class="card-link" id="btnSaveVehicle" type="button" data-action="save">
+            <i class="ri-save-line"></i>
+            <span>
+                Save
+            </span>
+        </a>
+    </div>
+</form>

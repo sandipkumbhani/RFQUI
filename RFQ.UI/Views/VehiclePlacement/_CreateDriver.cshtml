@@ -1,0 +1,149 @@
+﻿ 
+@{
+    Layout = null;
+}
+
+<form id="driverForm">
+    <input type="hidden" id="hdDriverId" />
+    <div class="franchise-details">
+        <h2 class="page-form-title">Driver Details</h2>
+        <div class="all-custom-class">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="item-input">
+                        <label class="form-label">Driver Type <span>*</span></label>
+                        <select id="ddlDriverType" class="select2-custom form-control" style="width: 100%;"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="item-input">
+                        <label class="form-label">License No <span>*</span></label>
+                        <input type="text" class="form-control" placeholder="License Number" id="numLicenseNo" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" oninput="this.value = this.value.toUpperCase()" />
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-6 col-md-6">
+                    <div class="item-input">
+                        <label class="form-label">Date of Birth <span>*</span></label>
+                        <div class="kyc-input">
+                            <input type="date" class="form-control" id="txtDateOfBirth" />
+                            <button type="button" class="kyc-btn" id="licenseEKycButton">e-KYC</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="item-input">
+                        <label class="form-label">Driver Name <span>*</span></label>
+                        <input type="text" class="form-control" placeholder="Driver Name AutoFetched" id="txtDriverName" disabled />
+                    </div>
+                    <div class="item-input">
+                        <label class="form-label">DL Issue Date <span>*</span></label>
+                        <input type="datetime-local" class="form-control" id="txtDLIssueDate" disabled />
+                    </div>
+                    <div class="item-input">
+                        <label class="form-label">DL Issuing RTO</label>
+                        <input type="text" class="form-control" placeholder="DL Issuing RTO" id="txtDLIssuingRTO" disabled />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="item-input">
+                        <label class="form-label">Driver Code <span>*</span></label>
+                        <input type="text" class="form-control" id="txtDriverCode" maxlength="10" placeholder="Driver Code" onkeypress="return AllowAlphaNumericOnly(event)" />
+                    </div>
+                    <div class="item-input">
+                        <label class="form-label">DL Expiry Date <span>*</span></label>
+                        <input type="datetime-local" class="form-control" id="txtDLExpiryDate" disabled />
+                    </div>
+                    <div class="item-input">
+                        <label class="form-label">WhatsApp Number <span>*</span></label>
+                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numWhatsapp" onkeypress="return isNumber(event)" maxlength="10" />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="file-upload-item">
+                        <label class="form-label">Upload Photo <span>*</span></label>
+                        <div class="dropzone" id="dropzone">
+                            <div class="dz-message needsclick">
+                                <i class="ri-upload-cloud-2-fill"></i>
+                                <h5>Drag & Drop your files here</h5>
+                                <strong>OR</strong>
+                                <span>Browse files</span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="text" hidden id="txtUploadedPhoto" />
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="item-input">
+                    <label class="form-label">Address <span>*</span></label>
+                    <input type="text" class="form-control" placeholder="Address" id="txtAddress" disabled />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="item-input">
+                        <label class="form-label">City <span>*</span></label>
+                        <select id="ddlCity" class="select2-custom form-control" style="width: 100%;"></select>
+                    </div>
+                    <div class="item-input">
+                        <label class="form-label">Mobile Number <span>*</span></label>
+                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numMobile" onkeypress="return isNumber(event)" maxlength="10" />
+                    </div>
+                    <div class="item-input">
+                        <ul class="profile-check-box">
+                            <li>
+                                <label class="check-box-custom">
+                                    <input class="form-check-input" type="checkbox" value="" name="user_view" id="createlogin">
+                                    <span class="checkmark"></span>
+                                    <span class="form-check-label">
+                                        Create User
+                                    </span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="item-input">
+                        <label class="form-label">Pincode <span>*</span></label>
+                        <input type="text" class="form-control" placeholder="Pincode" id="numPincode" disabled onkeypress="return isNumber(event)" />
+                    </div>
+                    <div class="item-input">
+                        <label class="form-label">Verified On</label>
+                        <input type="text" class="form-control" placeholder="AutoFetched" id="txtVerifiedOn" disabled />
+                    </div>
+                    <div class="item-input">
+                        <ul class="profile-check-box">
+                            <li>
+                                <label class="check-box-custom">
+                                    <input class="form-check-input" type="checkbox" value="" name="user_view" id="shareapplink">
+                                    <span class="checkmark"></span>
+                                    <span class="form-check-label">
+                                        Share App Link
+                                    </span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
+
+    <div class="button-main">
+        <a href="#" class="card-link" id="driverSave" type="button">
+            <i class="ri-save-line"></i>
+            <span>
+                Save
+            </span>
+        </a>
+    </div>
+</form>

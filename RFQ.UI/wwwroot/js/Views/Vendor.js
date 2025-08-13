@@ -691,31 +691,45 @@ function UpdateVendor() {
         DeleteAttachmentAPI(value);
     });
 }
-function DeleteVendor(partyId) {
-    var deleteVendorUrl = '/Vendor/DeleteVendor/' + partyId
-    var result;
-    FetchMasterAttachment(linkId, partyId, function (list) {
-        result = list;
-        $.ajax({
-            url: deleteVendorUrl,
-            type: "DELETE",
-            dataType: "json",
-            data: JSON.stringify(partyId),
-            success: function (response) {
-                if (result.length > 0) {
-                    DeleteMasterAttachment(result[0].attachmentId);
-                }
-                toastr.success("Vendor Details Deleted Successfully!");
-                $('#currentPage').val(1);
-                FetchVendor();
-                $("#backButton").css('display', 'block');
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Delete Vendor Details", "Error");
-            }
-        });
+function DeleteVendor(partyId, linkId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteVendorUrl = '/Vendor/DeleteVendor/' + partyId;
+
+            FetchMasterAttachment(linkId, partyId, function (list) {
+                var result = list;
+
+                $.ajax({
+                    url: deleteVendorUrl,
+                    type: "DELETE",
+                    dataType: "json",
+                    data: JSON.stringify(partyId),
+                    success: function (response) {
+                        if (result.length > 0) {
+                            DeleteMasterAttachment(result[0].attachmentId);
+                        }
+                        toastr.success("Vendor Details Deleted Successfully!");
+                        $('#currentPage').val(1);
+                        FetchVendor();
+                        $("#backButton").css('display', 'block');
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error("Failed to Delete Vendor Details", "Error");
+                    }
+                });
+            });
+        }
     });
 }
+
 
 function ClearGstFields() {
     $("#txtLegalName").val('');

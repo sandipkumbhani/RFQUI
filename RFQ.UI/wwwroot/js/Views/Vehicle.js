@@ -324,27 +324,40 @@ function UpdateVehicle() {
     });
 }
 function DeleteVehicle(vehicleId) {
-    var deleteVehicle = `/Vehicle/DeleteVehicle/${vehicleId}`;
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteVehicle = `/Vehicle/DeleteVehicle/${vehicleId}`;
 
-    $.ajax({
-        url: deleteVehicle,
-        type: "DELETE",
-        dataType: "json",
-        success: function (response) {
-            if (response && response.result === "success") {
-                toastr.success("Vehicle Details Deleted Successfully!");
-                $("#addVehicleDiv").addClass('d-none');
-                $('#currentPage').val(1);
-                FetchVehicleList();
-            } else {
-                toastr.error("Failed to Delete Vehicle Details!", "Error");
-            }
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Delete Vehicle Details!", "Error");
+            $.ajax({
+                url: deleteVehicle,
+                type: "DELETE",
+                dataType: "json",
+                success: function (response) {
+                    if (response && response.result === "success") {
+                        toastr.success("Vehicle Details Deleted Successfully!");
+                        $("#addVehicleDiv").addClass('d-none');
+                        $('#currentPage').val(1);
+                        FetchVehicleList();
+                    } else {
+                        toastr.error("Failed to Delete Vehicle Details!", "Error");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to Delete Vehicle Details!", "Error");
+                }
+            });
         }
     });
 }
+
 
 function FetchVehicleList() {
     $("#tableDiv").show();
@@ -363,10 +376,6 @@ $('#pageLength').off('change').on('change', function () {
     FetchVehicleList();
 });
 
-function IsValidVehicleNumber(vehicleNumber) {
-    var pattern = /^([A-Z]{2}\d{1,2}[A-Z]{1,2}\d{4})$/;
-    return pattern.test(vehicleNumber);
-}
 function VehicleEKycClick() {
     $("#btnVehicleKyc").on("click", function () {
         var getUrl = '/Vehicle/GetVehicleKycDetails';

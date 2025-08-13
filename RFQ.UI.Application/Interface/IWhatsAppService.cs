@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RFQ.UI.Application.Interface
+{
+    public interface IWhatsAppService
+    {
+        Task SendWhatsAppMessageAsync(string toNumber, string messageText);
+    }
+}

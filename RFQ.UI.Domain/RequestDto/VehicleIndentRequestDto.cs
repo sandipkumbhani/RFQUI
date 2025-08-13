@@ -2,6 +2,7 @@
 {
     public class VehicleIndentRequestDto
     {
+        public int IndentId { get; set; }
         public string IndentNo { get; set; }
         public int CompanyId { get; set; }
         public int LocationId { get; set; }
