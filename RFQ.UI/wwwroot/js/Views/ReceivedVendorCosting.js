@@ -85,11 +85,7 @@ function FillCostingTable(data) {
         openModal(rowData);
     });
 }
-
-
 function openModal(row) {
-    debugger;
-
     $('#quoteVendorModal').modal('show');
  //   $("#rfqrateId").val("123");
     $("#txtRFQNo").val(row.rfqNumber);
