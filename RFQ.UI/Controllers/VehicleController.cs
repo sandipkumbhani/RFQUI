@@ -34,6 +34,7 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
+        
 
         [HttpPost]
         public IActionResult VehicleTypeSave([FromBody] VehicleTypeRequestDto vehicleTypeRequestDto)
