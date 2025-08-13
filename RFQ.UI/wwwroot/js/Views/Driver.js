@@ -38,6 +38,7 @@ $(document).ready(function () {
         FetchDriverList();
     });
 });
+
 DropzoneInitialize();
 function ResetForm() {
     $("#driverForm")[0].reset();
@@ -230,6 +231,7 @@ function SaveDriver(uploadedFileName,callback) {
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
+            debugger;
             var driverId = response.result.result.driverId;
             Saveattachment(driverId);
             toastr.success("Driver Details Submitted Successfully!");

@@ -262,7 +262,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Vehicle:GetVehicleNumber"]);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     var vehicleNumberlist = JsonConvert.DeserializeObject<List<VehicleResponseDto>>(Convert.ToString(responseModel.Data!));
                     return vehicleNumberlist;
