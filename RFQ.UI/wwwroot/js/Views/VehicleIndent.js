@@ -480,20 +480,20 @@ function DeleteVehicleIndent(indentId) {
             $.ajax({
                 url: deleteVehicleIndentUrl,
                 type: "DELETE",
+                contentType: "application/json",
                 dataType: "json",
-                data: JSON.stringify(indentId),
                 success: function (response) {
                     if (response && response.result === "success") {
-                        Swal.fire('Deleted!', 'Vehicle Indent has been deleted.', 'success');
+                        toastr.success("Vehicle Indent has been deleted successfully.");
                         $("#addReqBranchDiv").addClass('d-none');
                         $('#currentPage').val(1);
                         FetchVehicleIndent();
                     } else {
-                        Swal.fire('Error', 'Failed to delete Vehicle Indent.', 'error');
+                        toastr.error("Failed to delete Vehicle Indent.", "Error");
                     }
                 },
                 error: function () {
-                    Swal.fire('Error', 'Failed to delete Vehicle Indent.', 'error');
+                    toastr.error("Failed to delete Vehicle Indent.", "Error");
                 }
             });
         }

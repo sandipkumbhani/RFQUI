@@ -189,20 +189,21 @@ function DeleteVehicleType(vehicleTypeId) {
             $.ajax({
                 url: deleteVehicleTypesUrl,
                 type: "DELETE",
+                contentType: "application/json", // Optional but included for completeness
                 dataType: "json",
-                data: JSON.stringify(vehicleTypeId),
                 success: function (response) {
                     $("#addVehicleTypeDiv").addClass("d-none");
                     $('#currentPage').val(1);
                     FetchVehicleTypes();
-                    Swal.fire('Deleted!', 'Vehicle Type has been deleted.', 'success');
+                    toastr.success("Vehicle Type has been deleted successfully!");
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Failed to Delete Vehicle Type Details!", "Error");
+                    toastr.error("Failed to delete Vehicle Type details!", "Error");
                 }
             });
         }
     });
 }
+
 
 

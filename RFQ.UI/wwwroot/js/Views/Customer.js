@@ -352,24 +352,22 @@ function DeleteCustomer(partyId, linkId) {
         if (result.isConfirmed) {
             var deleteCustomerUrl = '/Customer/DeleteCustomer/' + partyId;
 
-            FetchMasterAttachment(linkId, partyId, function (list) {
-                var result = list;
-
+            FetchMasterAttachment(linkId, partyId, function (attachments) {
                 $.ajax({
                     url: deleteCustomerUrl,
                     type: "DELETE",
+                    contentType: "application/json",
                     dataType: "json",
-                    data: JSON.stringify(partyId),
                     success: function (response) {
-                        if (result && result.length > 0) {
-                            DeleteMasterAttachment(result[0].attachmentId);
+                        if (attachments && attachments.length > 0) {
+                            DeleteMasterAttachment(attachments[0].attachmentId);
                         }
-                        Swal.fire('Deleted!', 'Customer details have been deleted.', 'success');
+                        toastr.success("Customer details have been deleted successfully.");
                         $('#currentPage').val(1);
                         FetchCustomerList();
                     },
                     error: function (xhr, status, error) {
-                        Swal.fire('Error', 'Failed to delete customer details.', 'error');
+                        toastr.error("Failed to delete customer details.", "Error");
                     }
                 });
             });

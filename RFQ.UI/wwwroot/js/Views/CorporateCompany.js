@@ -361,26 +361,26 @@ function DeleteCorporateCompany(companyId, linkId) {
             var deleteCorporateCompanyUrl = '/CorporateCompany/DeleteCorporateCompany/' + companyId;
 
             // First fetch master attachment before deleting the company
-            FetchMasterAttachment(linkId, companyId, function (list) {
+            FetchMasterAttachment(linkId, companyId, function (attachments) {
                 // Proceed to delete the company
                 $.ajax({
                     url: deleteCorporateCompanyUrl,
                     type: "DELETE",
+                    contentType: "application/json",
                     dataType: "json",
-                    data: JSON.stringify(companyId),
                     success: function (response) {
                         // Delete attachment if exists
-                        if (list && list.length > 0) {
-                            DeleteMasterAttachment(list[0].attachmentId);
+                        if (attachments && attachments.length > 0) {
+                            DeleteMasterAttachment(attachments[0].attachmentId);
                         }
 
-                        Swal.fire('Deleted!', 'Corporate Company has been deleted.', 'success');
+                        toastr.success("Corporate Company has been deleted successfully.");
                         $('#currentPage').val(1);
                         FetchCorporateCompany();
                         $("#backButton").css('display', 'block');
                     },
                     error: function (xhr, status, error) {
-                        Swal.fire('Error', 'Failed to delete Corporate Company.', 'error');
+                        toastr.error("Failed to delete Corporate Company.", "Error");
                     }
                 });
             });

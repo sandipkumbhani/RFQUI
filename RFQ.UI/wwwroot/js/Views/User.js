@@ -263,24 +263,25 @@ function DeleteUser(userId) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            var deleteuserlist = '/Home/DeleteUserList/' + userId;
+            var deleteUserUrl = '/Home/DeleteUserList/' + userId;
 
             $.ajax({
-                url: deleteuserlist,
+                url: deleteUserUrl,
                 type: "DELETE",
+                contentType: "application/json",
                 dataType: "json",
-                data: JSON.stringify(userId),
                 success: function (response) {
                     FetchUser();
-                    Swal.fire('Deleted!', 'User details have been deleted.', 'success');
+                    toastr.success("User details have been deleted successfully.");
                 },
                 error: function (xhr, status, error) {
-                    Swal.fire('Error', 'Failed to delete user details.', 'error');
+                    toastr.error("Failed to delete user details.", "Error");
                 }
             });
         }
     });
 }
+
 
 function UpdateUser() {
     $("#btnUpdate").on('click', function (e) {
