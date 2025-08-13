@@ -29,6 +29,10 @@ namespace RFQ.UI.Controllers
         {
             return View("_CreateVehicle");
         }
+        public IActionResult CreateDriver()
+        {
+            return View("_CreateDriver");
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetPlacementNo()

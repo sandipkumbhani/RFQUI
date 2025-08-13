@@ -21,6 +21,7 @@ $(document).ready(function () {
         }
     });
 
+
     //GetAllLocation("ddlLocation",companyId); 
     GetAllDriver();
     GetAllVehicleIndent();
@@ -280,7 +281,7 @@ function AutoFetch() {
     });
 }
 function VehiclePopUp() {
-    $("#popupModal .modal-body").load('/VehiclePlacement/CreateVehicle', function () {
+    $("#vehiclePopupModal .modal-body").load('/VehiclePlacement/CreateVehicle', function () {
         $("#btnVehicleKyc").off("click").on("click", function () {
             VehicleEKycClick();
         });
@@ -294,7 +295,7 @@ function VehiclePopUp() {
         PopUpOwnerOrVendor();
         GetAllVehicleCategory();
         GetAllVehicleType("popUpVehicleType", companyId);
-        $("#popupModal").modal("show");
+        $("#vehiclePopupModal").modal("show");
     });
 }
 function SaveVehicle(action) {
@@ -379,7 +380,7 @@ function SaveVehicle(action) {
                     $("#popUpVehicleType").val("");
                     $("#popUpOwnerName").val("");
                     $("#ddlTrackingProvider").val("");
-                    $("#popupModal").modal("hide");
+                    $("#vehiclePopupModal").modal("hide");
                 } else {
                     toastr.error("Something went wrong saved to Vehicle Number!");
                 }
@@ -591,4 +592,96 @@ function ClearFields() {
     $("#vehicleCapacityInput").val("");
     $("#policyNoInput").val("");
     $("#policyExpiryInput").val("");
+}
+function DriverPopUp() {
+    var url = '/VehiclePlacement/CreateDriver';
+    $("#driverPopupModal .modal-body").load(url, function () {
+        // Dynamically load JS dependencies for the popup
+        $.getScript('/js/Views/Driver.js')
+            .done(function () {
+                console.log("Driver form script loaded successfully.");
+            })
+            .fail(function () {
+                console.log("Failed to load driver form script!");
+            });
+        $.getScript('/js/AttachmentDetails.js')
+            .done(function () {
+                console.log("AttachmentDetails script loaded successfully.");
+            })
+            .fail(function () {
+                console.log("Failed to load AttachmentDetails script!");
+            });
+
+        $('#driverSave').on('click', function (e) {
+            e.preventDefault();
+            if (!isDLEKycClicked) {
+                toastr.warning("Please Complete DL E-KYC Before Saving!");
+                return false;
+            }
+            if (!ValidationCheck()) {
+                return false;
+            }
+            if (uploadedFileName) {
+                SaveDriverDetails(uploadedFileName); 
+            } else {
+                toastr.warning("Please Upload a Driver Photo", "Validation Error");
+            }
+        });
+        $("#driverPopupModal").modal("show");
+    });
+}
+function SaveDriverDetails(uploadedFileName) {
+    var driverType = $("#ddlDriverType").val();
+    var licenseNo = $("#numLicenseNo").val();
+    var driverName = $("#txtDriverName").val();
+    var dlIssueDate = $("#txtDLIssueDate").val();
+    var dlIssueRto = $("#txtDLIssuingRTO").val();
+    var dateOfBirth = $("#txtDateOfBirth").val();
+    var driverCode = $("#txtDriverCode").val();
+    var dlExpiryDate = $("#txtDLExpiryDate").val();
+    var whatsappNumber = $("#numWhatsapp").val();
+    var address = $("#txtAddress").val();
+    var city = $("#ddlCity").val();
+    var mobileNumber = $("#numMobile").val();
+    var pincode = $("#numPincode").val();
+    // var verifiedOn = $("#txtVerifiedOn").val();
+    var uploadPhoto = uploadedFileName;
+    var driverId = 0;
+
+    var saveUrl = '/Driver/DriverSave';
+    var formData = {
+        DriverTypeId: driverType,
+        LicenseNo: licenseNo,
+        DriverName: driverName,
+        LicenseIssueDate: dlIssueDate,
+        LicenseIssueCityId: 1,
+        DateOfBirth: dateOfBirth,
+        DriverCode: driverCode,
+        LicenseExpDate: dlExpiryDate,
+        WhatsAppNo: whatsappNumber,
+        AddressLine: address,
+        CityId: city,
+        MobNo: mobileNumber,
+        PinCode: pincode,
+        LinkId: linkId,
+        DriverImagePath: uploadPhoto
+    };
+
+    $.ajax({
+        url: saveUrl,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(formData),
+        success: function (response) {
+            var driverId = response.result.result.driverId;
+            Saveattachment(driverId);
+            toastr.success("Driver Details Submitted Successfully!");
+             $("#driverPopupModal").modal("hide");
+             GetAllDriver();
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Submit Driver Details", "Error");
+        }
+    });
+    console.log(driverId);
 }
