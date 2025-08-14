@@ -56,7 +56,6 @@ $(document).ready(function () {
     // Update total reminders
     $('#totalReminders').text(`Total Reminders: ${table.rows().count()}`);
 });
-
 $(document).ready(function () {
     const table = $('#franchiseTable').DataTable({
         responsive: true,
@@ -98,7 +97,6 @@ $(document).ready(function () {
         table.page.len(this.value).draw();
     });
 });
-
 $(document).ready(function () {
     const table = $('#driverTable').DataTable({
         responsive: true,
@@ -142,7 +140,6 @@ $(document).ready(function () {
 
     
 });
-
 $(document).ready(function () {
     const table = $('#vendorTable').DataTable({
         responsive: true,
@@ -183,7 +180,6 @@ $(document).ready(function () {
         table.page.len(this.value).draw();
     });
 });
-
 $(document).ready(function () {
     const table = $('#customerTable').DataTable({
         responsive: true,
@@ -222,8 +218,7 @@ $(document).ready(function () {
     $('#pageLength').on('change', function () {
         table.page.len(this.value).draw();
     });
-});
-
+})
 $(document).ready(function () {
 
     const table = $('#vehicleTypesTable').DataTable({
@@ -275,7 +270,6 @@ $(document).ready(function () {
         table.page.len(this.value).draw();
     });
 });
-
 $(document).ready(function () {
 
     $.fn.DataTable.ext.pager.numbers_length = 3;
@@ -336,7 +330,6 @@ $(document).ready(function () {
     // Update total reminders
     $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
 });
-
 $(document).ready(function () {
     const table = $('#corporateTable').DataTable({
         responsive: false,
@@ -406,7 +399,6 @@ $(document).ready(function () {
     // Update total reminders
     $('#totalRemindersCorporate').text(`Total List: ${table.rows().count()}`);
 });
-
 $(document).ready(function () {
     $.fn.DataTable.ext.pager.numbers_length = 3;
 
@@ -444,7 +436,6 @@ $(document).ready(function () {
     });
 
 });
-
 $(document).ready(function () {
     $.fn.DataTable.ext.pager.numbers_length = 3;
     const table = $('#tablelocation').DataTable({
@@ -495,7 +486,6 @@ $(document).ready(function () {
     // Update total reminders
     $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
 });
-
 $(document).ready(function () {
     $.fn.DataTable.ext.pager.numbers_length = 3;
     const table = $('#tableuser').DataTable({
@@ -546,7 +536,6 @@ $(document).ready(function () {
     // Update total reminders
     $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
 });
-
 $(document).ready(function () {
     $.fn.DataTable.ext.pager.numbers_length = 3;
     const table = $('#tableCmpConfig').DataTable({
@@ -597,7 +586,6 @@ $(document).ready(function () {
     // Update total reminders
     $('#totalapplicableRouteReminders').text(`Total List: ${table.rows().count()}`);
 });
-
 $(document).ready(function () {
     $.fn.DataTable.ext.pager.numbers_length = 3;
     const table = $('#productTable').DataTable({
@@ -631,7 +619,6 @@ $(document).ready(function () {
         table.search(this.value).draw();
     });
 });
-
 $(document).ready(function () {
     const table = $('#awardedVendorTable').DataTable({
         responsive: false,
@@ -715,9 +702,6 @@ $(document).ready(function () {
         table.page.len(this.value).draw();
     });
 });
-});
-
-
 $(document).ready(function () {
     const table = $('#IndentTable').DataTable({
         responsive: false,
