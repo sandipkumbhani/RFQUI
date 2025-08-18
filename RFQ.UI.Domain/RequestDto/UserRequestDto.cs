@@ -9,7 +9,7 @@
         public string? PersonName { get; set; }
         public string? LoginId { get; set; }
         public string? Password { get; set; }
-        public string? EmailId { get; set; }
+        public string EmailId { get; set; }
         public string? MobileNo { get; set; }
         public int StatusId { get; set; } = 30;
         public int CreatedBy { get; set; }

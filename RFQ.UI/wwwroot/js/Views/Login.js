@@ -5,12 +5,12 @@
     var passwordPattern = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
 
     // Email validation on blur
-    $("#EmailId").on("blur", function () {
-        var email = $(this).val().trim();
-        if (!emailPattern.test(email)) {
-            toastr.warning("Invalid Email Address.","Warning");
-        }
-    });
+    //$("#EmailId").on("blur", function () {
+    //    var email = $(this).val().trim();
+    //    if (!emailPattern.test(email)) {
+    //        toastr.warning("Invalid Email Address.","Warning");
+    //    }
+    //});
 
     // Password validation on blur
     $("#Password").on("blur", function () {
@@ -25,15 +25,15 @@
         event.preventDefault();
         $("#loginButton").prop("disabled", true).text("Logging in...");
 
-        var email = $("#EmailId").val().trim();
+        var loginid = $("#txtLoginName").val().trim();
         var password = $("#Password").val().trim();
 
         // Email validation
-        if (!emailPattern.test(email)) {
-            toastr.error("Please Enter a valid Email Address.","Error");
-            $("#loginButton").prop("disabled", false).text("Log In");
-            return;
-        }
+        //if (!emailPattern.test(email)) {
+        //    toastr.error("Please Enter a valid Email Address.","Error");
+        //    $("#loginButton").prop("disabled", false).text("Log In");
+        //    return;
+        //}
 
         // Password validation
         if (!passwordPattern.test(password)) {
@@ -44,8 +44,8 @@
 
         // Prepare data
         var formData = {
-            emailId: email,
-            password: password
+            LoginId: loginid,
+            Password: password
         };
 
         // AJAX login call
@@ -59,6 +59,7 @@
                 "Accept": "application/json"
             },
             success: function (response) {
+                console.log(response);
                 if (response) {
                     sessionStorage.setItem("authToken", response.data);
                     window.location.href = window.location.origin + "/Dashboard/Dashboard";

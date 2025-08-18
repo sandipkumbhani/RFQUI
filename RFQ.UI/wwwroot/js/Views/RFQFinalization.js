@@ -420,23 +420,35 @@ function UpdateRfqFinalization() {
     })
 }
 function DeleteRfqFinalizatioin(rfqFinalIdId) {
-    var deleteRfqFinalUrl = '/RFQFinalization/DeleteRfqFinal/' + rfqFinalIdId;
-    $.ajax({
-        url: deleteRfqFinalUrl,
-        type: "DELETE",
-        dataType: "json",
-        success: function (response) {
-            if (response) {
-                toastr.success("Rfq Finalization Details Deleted Successfully!");
-                $('#currentPage').val(1);
-                FetchRfqFinalizationList();
-            }
-            else {
-                toastr.error("Failed to Delete Rfq Finalization Details!", "Error");
-            }
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Delete Rfq Finalization Details!", "Error");
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteRfqFinalUrl = '/RFQFinalization/DeleteRfqFinal/' + rfqFinalIdId;
+            $.ajax({
+                url: deleteRfqFinalUrl,
+                type: "DELETE",
+                dataType: "json",
+                success: function (response) {
+                    if (response) {
+                        toastr.success("Rfq Finalization Details Deleted Successfully!");
+                        $('#currentPage').val(1);
+                        FetchRfqFinalizationList();
+                    }
+                    else {
+                        toastr.error("Failed to Delete Rfq Finalization Details!", "Error");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to Delete Rfq Finalization Details!", "Error");
+                }
+            });
         }
     });
 }

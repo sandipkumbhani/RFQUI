@@ -696,29 +696,41 @@ function UpdateRfq() {
     });
 }
 function DeleteRfq(rfqID) {
-    var deleteRfqUrl = '/RequestForQuote/DeleteRfq/' + rfqID;
-    var result;
-    var linkId = parseInt(GetQueryParam("LinkId"));
-    FetchMasterAttachment(linkId, rfqID, function (list) {
-        result = list;
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteRfqUrl = '/RequestForQuote/DeleteRfq/' + rfqID;
+            var result;
+            var linkId = parseInt(GetQueryParam("LinkId"));
+            FetchMasterAttachment(linkId, rfqID, function (list) {
+                result = list;
 
-        $.ajax({
-            url: deleteRfqUrl,
-            type: "DELETE",
-            dataType: "json",
-            data: JSON.stringify(rfqID),
-            success: function (response) {
-                if (result.length > 0) {
-                    DeleteMasterAttachment(result[0].attachmentId);
-                }
-                toastr.success("Rfq Details Deleted Successfully!");
-                $('#currentPage').val(1);
-                FetchRfqList();
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Delete Rfq Details!", "Error");
-            }
-        });
+                $.ajax({
+                    url: deleteRfqUrl,
+                    type: "DELETE",
+                    dataType: "json",
+                    data: JSON.stringify(rfqID),
+                    success: function (response) {
+                        if (result.length > 0) {
+                            DeleteMasterAttachment(result[0].attachmentId);
+                        }
+                        toastr.success("Rfq Details Deleted Successfully!");
+                        $('#currentPage').val(1);
+                        FetchRfqList();
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error("Failed to Delete Rfq Details!", "Error");
+                    }
+                });
+            });
+        }
     });
 }
 function FetchRfqList() {

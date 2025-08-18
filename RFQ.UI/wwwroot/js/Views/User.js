@@ -98,10 +98,15 @@ function Initialization() {
     });
     $("#txtEmailid").on("blur", function () {
         var emailid = $(this).val();
-        if (!isValidateEmail(emailid)) {
-            $("#txtEmailid").val('');
-            toastr.warning("Please enter a valid Email", "Validation Error");
+        if (!emailid || emailid == "") {
             return;
+        }
+        else {
+            if (!isValidateEmail(emailid)) {
+                $("#txtEmailid").val('');
+                toastr.warning("Please enter a valid Email", "Validation Error");
+                return;
+            }
         }
     });
     $("#txtPassword").on("blur", function () {
@@ -128,6 +133,10 @@ function Initialization() {
 }
 function FetchUser() {
     $('#userListSection').show();
+    $('#userFormSection').hide();
+    $('#userbodyform')[0].reset();
+    $('#ddlCompanyAndFranchise').val(null).trigger('change');
+    $('#ddlLocation').val(null).trigger('change');
     FetchDataForTable('tableuser', '/Home/ViewUserList', null, null);
 }
 function SaveUser(action) {
@@ -166,14 +175,6 @@ function SaveUser(action) {
         ProfileId: profile
     };
 
-    // var existuser = allUserList.filter(x => x.emailId).includes(emailid)
-    //var existuser = allUserList.some(x => x.emailId?.trim().toLowerCase() === emailid.trim().toLowerCase());
-    //if (existuser) {
-    //    toastr.warning("User already exists. Please update Email ID.", "Duplicate Email");
-    //    $('#txtEmailid').val('');
-    //    return;
-    //}
-
     if (action === "save") {
         $.ajax({
             url: '/Home/UserSave/',
@@ -182,8 +183,13 @@ function SaveUser(action) {
             data: JSON.stringify(formdata),
             dataType: "json",
             success: function (response) {
-                toastr.success("User Details Submitted Successfully!");
-                window.location.href = "../Dashboard/Dashboard";
+                if (response.result == "success") {
+                    toastr.success("User Details Submitted Successfully!");
+                    FetchUser();
+                }
+                else {
+                    toastr.error("User already exists", "Error");
+                }
             },
             error: function (req, status, error) {
                 toastr.error("Failed to Save User Details", "Error");
@@ -374,10 +380,10 @@ function ValidationCheck() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#txtEmailid").val()) || !isValidateEmail($("#txtEmailid").val())) {
-        toastr.warning("Please enter a valid email", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#txtEmailid").val()) || !isValidateEmail($("#txtEmailid").val())) {
+    //    toastr.warning("Please enter a valid email", "Validation Error");
+    //    return false;
+    //}
     if (IsNullOrEmpty($("#ddlCompanyAndFranchise").val()) || !isValidateSelect($("#ddlCompanyAndFranchise").val())) {
         toastr.warning("Please select a Corporate Name", "Validation Error");
         return false;

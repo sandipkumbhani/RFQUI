@@ -41,7 +41,7 @@ namespace RFQ.UI.Controllers
                     userRequestDto.ProfileId = Convert.ToInt32(userRequestDto.ProfileId); 
 
                     var result = await _usersService.AddUsers(userRequestDto);
-                    var response = JsonConvert.DeserializeObject<CommanResponseDto>(result);
+                    var response = JsonConvert.DeserializeObject<NewCommonResponseDto>(result);
                     if (response != null && response.StatusCode == 200)
                         return Json(new { result = "success", data = "User Saved SucsessFully" });
                     else
