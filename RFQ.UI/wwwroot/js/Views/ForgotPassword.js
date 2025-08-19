@@ -1,37 +1,42 @@
 ﻿$(document).ready(function () {
     // Email validation on blur
-    $("#EmailId").on("blur", function () {
-        var emailid = $(this).val();
-        if (!isValidateEmail(emailid)) {
-            $("#EmailId").val('');
-            toastr.warning("Please enter a valid Email", "Validation Error");
+    $("#txtLoginName").on("blur", function () {
+        var txtLoginName = $(this).val();
+        if (IsNullOrEmpty(txtLoginName)) {
+            toastr.warning("Please enter a Login User Name", "Validation Error");
             return;
         }
     });
 
     // Handle form submit
-    $('.forgot-box').on('submit', function (e) {
+    $('#continueButton').on('click', function (e) {
         e.preventDefault();
-
-        const email = $('#EmailId').val().trim();
-        if (!isValidateEmail(email)) {
-            toastr.warning("Please Enter a valid Email", "Validation Error");
+        $("#continueButton").prop("disabled", true).text("Sending Otp..");
+        const txtLoginName = $('#txtLoginName').val().trim();
+        if (IsNullOrEmpty(txtLoginName)) {
+            toastr.warning("Please enter a Login User Name", "Validation Error");
             return;
         }
 
         $.ajax({
             type: "POST",
             url: '/Login/SendOtp',
-            data: { email },
+            data: { txtLoginName },
             success: function (res) {
-                if (res.success) {
-                    window.location.href = '/Login/Verification?email=' + encodeURIComponent(email);
+                if (res.statusCode == 200) {
+                    debugger;
+                    window.location.href = '/Login/Verification?loginId=' + encodeURIComponent(res.data.loginId);
                 } else {
-                    alert("Email not registered or OTP sending failed.");
+                    $("#continueButton").prop("disabled", false);
+                    toastr.error("Email not registered or OTP sending failed.","error");
                 }
             },
             error: function () {
-                alert("Error occurred while sending OTP.");
+                $("#continueButton").prop("disabled", false);
+                toastr.error("Error occurred while sending OTP.", "error");
+            },
+            complete: function () {
+                $("#continueButton").prop("disabled", false);
             }
         });
     });

@@ -47,5 +47,9 @@ namespace RFQ.UI.Application.Provider
             return await _usersAdaptor.UpdateUsersPassword(userRequestDto);
         }
 
+        public async Task<UserResponseDto> GetByLoginIdAsync(string LoginId)
+        {
+            return await _usersAdaptor.GetByLoginIdAsync(LoginId);
+        }
     }
 }

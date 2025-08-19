@@ -271,7 +271,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
-                    if (result == 200 && responseModel.Data == true.ToString())
+                    if (result == 200)
                         return true;
                     else
                         return false;
@@ -281,6 +281,49 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception)
             {
                 throw;
+            }
+        }
+        public async Task<UserResponseDto> GetByLoginIdAsync(string LoginId)
+        {
+            try
+            {
+                using var httpClient = new HttpClient();
+
+                var baseUrl = _fleetLynkApiUrl + _config["Users:GetByLoginIdAsync"] + LoginId;
+
+                var response = await httpClient.GetAsync(baseUrl);
+                response.EnsureSuccessStatusCode();
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                //var user = JsonConvert.DeserializeObject<UserResponseDto>(responseData);
+                if (responseModel != null && responseModel.Data != null)
+                {
+                    var json = JsonConvert.SerializeObject(responseModel.Data);
+                    var user = JsonConvert.DeserializeObject<UserResponseDto>(json);
+                    var userResponse = new UserResponseDto
+                    {
+                        UserId = user.UserId,
+                        CompanyId = user.CompanyId,
+                        LocationId = user.LocationId,
+                        ProfileId = user.ProfileId,
+                        Company = user.Company,
+                        CreatedBy = user.CreatedBy,
+                        Location = user.Location,
+                        LoginId = user.LoginId,
+                        MobileNo = user.MobileNo,
+                        UpdatedBy = user.UpdatedBy,
+                        PersonName = user.PersonName,
+                        EmailId = user.EmailId,
+                        StatusId = user.StatusId,
+                    };
+
+                    return userResponse;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to fetch user by ID", ex);
             }
         }
 

@@ -29,18 +29,15 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                userRequestDto.CreatedBy = Convert.ToInt32(userid);
-                userRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                userRequestDto.ProfileId = Convert.ToInt32(profileid);
+                //var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                //string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                //string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                //userRequestDto.CreatedBy = Convert.ToInt32(userid);
+                //userRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                //userRequestDto.ProfileId = Convert.ToInt32(profileid);
 
                 var result = await _usersService.UpdateUserPassword(userRequestDto);
-                if (result)
-                    return Json(new { result = "success" });
-                else
-                    return Json(new { result = "failure" });
+                return Ok(result);
             }
             catch (Exception ex)
             {

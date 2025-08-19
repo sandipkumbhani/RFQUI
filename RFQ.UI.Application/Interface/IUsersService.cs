@@ -14,5 +14,6 @@ namespace RFQ.UI.Application.Interface
         Task<IEnumerable<CompanyAndFranchiseListDto>> GetAllCompanyAndFranchise();
         Task<IEnumerable<LocationListDto>> GetAllLocation();
         Task<bool> UpdateUserPassword(UserRequestDto userRequestDto);
+        Task<UserResponseDto> GetByLoginIdAsync(string LoginId);
     }
 }
