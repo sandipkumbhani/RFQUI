@@ -46,18 +46,19 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<string> GetToken([FromBody] LoginDto input)
+        public async Task<NewCommonResponseDto> GetToken([FromBody] LoginDto input)
         {
+            NewCommonResponseDto response = new();
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var tokenstring = await _loginServcies.Login(input);
-
-                    if (!string.IsNullOrEmpty(tokenstring))
+                    response = await _loginServcies.Login(input);
+                    
+                    if (response.Data != null && response.StatusCode == 200)
                     {
                         var handler = new JwtSecurityTokenHandler();
-                        var jwtToken = handler.ReadJwtToken(tokenstring);
+                        var jwtToken = handler.ReadJwtToken(response.Data.ToString());
                         var email = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
                         var personname = jwtToken.Claims.FirstOrDefault(c => c.Type == "personname")?.Value;
                         var companyid = jwtToken.Claims.FirstOrDefault(c => c.Type == "companyid")?.Value;
@@ -83,11 +84,10 @@ namespace RFQ.UI.Controllers
                         if (!string.IsNullOrEmpty(locationid))
                             Response.Cookies.Append("locationid", locationid);
 
-                        Response.Cookies.Append("AuthToken", tokenstring);
+                        Response.Cookies.Append("AuthToken", response.Data.ToString());
                     }
-                    return tokenstring;
                 }
-                return string.Empty;
+                return response;
             }
             catch (Exception ex)
             {
@@ -104,12 +104,12 @@ namespace RFQ.UI.Controllers
         public async Task<IActionResult> SendOtp(string txtLoginName)
         {
             UserResponseDto user = new();
-            
+
             // Validate email exists (dummy check)
             if (string.IsNullOrEmpty(txtLoginName)) return Ok(user);
             else
                 user = await _usersService.GetByLoginIdAsync(txtLoginName);
-            
+
             // Generate OTP
             var otp = new Random().Next(1000, 9999).ToString();
 

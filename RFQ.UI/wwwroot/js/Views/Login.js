@@ -60,11 +60,13 @@
             },
             success: function (response) {
                 console.log(response);
-                if (response) {
+                debugger;
+                if (response != null && response.statusCode == 200) {
                     sessionStorage.setItem("authToken", response.data);
+                    toastr.success(response.message, "success");
                     window.location.href = window.location.origin + "/Dashboard/Dashboard";
                 } else {
-                    toastr.error("Invalid Email or Password.", "Error");
+                    toastr.error(response.message, "Error");
                 }
             },
             error: function (xhr) {
