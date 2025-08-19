@@ -84,7 +84,7 @@ function Initialization() {
     });
     $("#txtLoginName").on("blur", function () {
         var loginname = $(this).val();
-        if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test(loginname)) {
+        if (!/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginname)) {
             toastr.warning("Please enter a valid LoginName", "Validation Error");
             return;
         }
@@ -155,13 +155,20 @@ function SaveUser(action) {
 
     if (profileid == EnumProfile.Admin) {
         profile = EnumProfile.Franchise; // Default to Franchise for Admin
-    } else if (profileid == EnumProfile.Franchise) {
+    }
+    if (profileid == EnumProfile.Franchise) {
         var ddllocationVal = $('#ddlLocation').val();
         if (!IsNullOrEmpty(ddllocationVal)) {
             profile = EnumProfile.Branch;
         } else {
             profile = EnumProfile.Corporate;
         }
+    }
+    if (profileid == EnumProfile.Branch) {
+        profile = EnumProfile.Branch
+    }
+    if (profileid == EnumProfile.Corporate) {
+        profile = EnumProfile.Corporate
     }
 
     var formdata = {
@@ -287,8 +294,6 @@ function DeleteUser(userId) {
         }
     });
 }
-
-
 function UpdateUser() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
@@ -370,7 +375,7 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid User Name", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtLoginName").val()) || !/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test($("#txtLoginName").val())) {
+    if (IsNullOrEmpty($("#txtLoginName").val()) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test($("#txtLoginName").val())) {
         toastr.warning("Login Name is Required", "Validation Error");
         return false;
     }
