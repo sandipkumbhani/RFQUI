@@ -1,6 +1,4 @@
-﻿
-
-@{
+﻿@{
     Layout = null;
     ViewData["Title"] = "Login";
 }
@@ -43,7 +41,7 @@
                             <form id="loginForm" class="theme-form all-custom-class requires-validation" novalidate>
                                 <h2>Welcome to FLEET LYNK</h2>
                                 @* <p>Don’t have an account? <a href="@Url.Action("Signup", "Login")">Create an Account</a></p> *@
-                             @*    <a href="#" class="google-btn">
+                                @*    <a href="#" class="google-btn">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <g clip-path="url(#clip0_42_761)">
                                             <path d="M5.31891 14.5036L4.4835 17.6223L1.43011 17.6869C0.517594 15.9944 0 14.0579 0 12.0001C0 10.0102 0.483938 8.13374 1.34175 6.48145H1.34241L4.06078 6.97982L5.25159 9.68188C5.00236 10.4085 4.86652 11.1885 4.86652 12.0001C4.86661 12.881 5.02617 13.725 5.31891 14.5036Z" fill="#FBBB00" />
@@ -59,7 +57,7 @@
                                     </svg>
                                     Sign in with Google
                                 </a> *@
-                               @*  <div class="login-social-title">
+                                @*  <div class="login-social-title">
                                     <h5></h5>
                                 </div> *@
                                 <div class="item-input">
@@ -75,8 +73,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="forget-item">
-                                    <a href="@Url.Action("ForgotPassword", "Login")">Forget Password?</a>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="form-check mb-0">
+                                        <input type="checkbox" class="form-check-input" id="chkRememberMe" />
+                                        <label class="form-check-label" for="rememberMe">Remember Me</label>
+                                    </div>
+                                    <div class="forget-item mb-0">
+                                        <a href="@Url.Action("ForgotPassword", "Login")">Forget Password?</a>
+                                    </div>
                                 </div>
                                 <button type="submit" id="loginButton" class="login-btns">
                                     Log In

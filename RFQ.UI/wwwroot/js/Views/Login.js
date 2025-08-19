@@ -81,4 +81,30 @@
             }
         });
     });
+    setupRememberMe("loginForm", "txtLoginName", "chkRememberMe", "/home");
 });
+
+function setupRememberMe(formId, usernameFieldId, checkboxId, redirectUrl) {
+    const form = document.getElementById(formId);
+    const usernameField = document.getElementById(usernameFieldId);
+    const rememberCheckbox = document.getElementById(checkboxId);
+    debugger;
+    // Load saved username if exists
+    if (localStorage.getItem("rememberMe") === "true") {
+        usernameField.value = localStorage.getItem("username") || "";
+        rememberCheckbox.checked = true;
+    }
+
+    // Handle form submit
+    form.addEventListener("submit", function (e) {
+        e.preventDefault(); // prevent actual submit for demo
+
+        if (rememberCheckbox.checked) {
+            localStorage.setItem("username", usernameField.value);
+            localStorage.setItem("rememberMe", "true");
+        } else {
+            localStorage.removeItem("username");
+            localStorage.setItem("rememberMe", "false");
+        }
+    });
+}
