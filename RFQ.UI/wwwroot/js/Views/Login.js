@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-   
+
     // Regex patterns
     var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     var passwordPattern = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
@@ -11,6 +11,14 @@
     //        toastr.warning("Invalid Email Address.","Warning");
     //    }
     //});
+
+    $("#txtLoginName").on("blur", function () {
+        var loginName = $(this).val().trim();
+        if (IsNullOrEmpty(loginName) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginName)) {
+            toastr.warning("Invalid Login Name", "Warning");
+
+        }
+    });
 
     // Password validation on blur
     $("#Password").on("blur", function () {
@@ -34,6 +42,11 @@
         //    $("#loginButton").prop("disabled", false).text("Log In");
         //    return;
         //}
+    
+        if (IsNullOrEmpty(loginid) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginid)) {
+            toastr.warning("Invalid Login Name", "Warning");
+            return;
+        }
 
         // Password validation
         if (!passwordPattern.test(password)) {
@@ -66,7 +79,7 @@
                     toastr.success(response.message, "success");
                     window.location.href = window.location.origin + "/Dashboard/Dashboard";
                 } else {
-                    toastr.error(response.message, "Error");
+                    toastr.warning(response.message, "warning");
                 }
             },
             error: function (xhr) {

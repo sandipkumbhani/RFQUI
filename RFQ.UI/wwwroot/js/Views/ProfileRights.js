@@ -10,6 +10,7 @@ $(document).ready(function () {
     GetAllMenuName();
     GetLinkItemList()
     OnChangeMenuGroupDropDown();
+    CheckAll();
 });
 function initializjquery() {
     $("#btnSaveForm").on('click', function (event) {
@@ -213,28 +214,28 @@ function GetLinkItemList(linkGroupId, profileId) {
 
                 // View checkbox
                 html += '<td class="text-center">';
-                html += '<input class="checkmark" type="checkbox" id="view' + item.linkId + '" ' +
+                html += '<input class="form-check-input fs-6" type="checkbox" id="view' + item.linkId + '" ' +
                     (item.isView ? 'checked' : '') +
                     ' onchange="OnChangeViewCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
                 html += '</td>';
 
                 // Add checkbox
                 html += '<td class="text-center">';
-                html += '<input class="checkmark" type="checkbox" id="add' + item.linkId + '" ' +
+                html += '<input class="form-check-input fs-6" type="checkbox" id="add' + item.linkId + '" ' +
                     (item.isAdd ? 'checked' : '') +
                     ' onchange="OnChangeAddCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
                 html += '</td>';
 
                 // Edit checkbox
                 html += '<td class="text-center">';
-                html += '<input class="checkmark" type="checkbox" id="edit' + item.linkId + '" ' +
+                html += '<input class="form-check-input fs-6" type="checkbox" id="edit' + item.linkId + '" ' +
                     (item.isEdit ? 'checked' : '') +
                     ' onchange="OnChangeEditCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
                 html += '</td>';
 
                 // Cancel checkbox
                 html += '<td class="text-center">';
-                html += '<input class="checkmark" type="checkbox" id="cancel' + item.linkId + '" ' +
+                html += '<input class="form-check-input fs-6" type="checkbox" id="cancel' + item.linkId + '" ' +
                     (item.isCancel ? 'checked' : '') +
                     ' onchange="OnChangeCancelCheckbox(this, ' + JSON.stringify(item).replace(/"/g, '&quot;') + ')">';
                 html += '</td>';
@@ -390,6 +391,7 @@ function GetAllProfileRightsData() {
                     });
                     console.log(AllProfileRightsData);
                 }
+                debugger;
                 AddOrUpdateProfileRights(AllProfileRightsData);
             },
             error: function (xhr, status, error) {
@@ -421,3 +423,26 @@ function AddOrUpdateProfileRights(AllProfileRightsData) {
     });
 }
 
+function CheckAll() {
+    $("#selectAll").on("change", function () {
+        var isChecked = $(this).prop("checked");
+
+        var allCheckboxes = $("#menuItemList").find("input[type='checkbox']");
+
+        // Update all checkboxes
+        allCheckboxes.prop("checked", isChecked).trigger("change");
+        if (ViewCheckboxData.length > 0) {
+            ViewCheckboxData.forEach((item) => { item.status = isChecked });
+        }
+        if (AddCheckboxData.length > 0) {
+            AddCheckboxData.forEach((item) => { item.status = isChecked });
+        }
+        if (EditCheckboxData.length > 0) {
+            EditCheckboxData.forEach((item) => { item.status = isChecked });
+        }
+        if (CancelCheckboxData.length > 0) {
+            CancelCheckboxData.forEach((item) => { item.status = isChecked });
+        }
+        console.log(AddCheckboxData);
+    });
+}
