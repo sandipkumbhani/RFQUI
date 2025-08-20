@@ -13,9 +13,9 @@ namespace RFQ.UI.Application.Provider
         {
             _locationAdaptor = locationAdaptor;
         }
-        public Task<string> AddLocation(LocationRequestDto locationRequestDto)
+        public async Task<string> AddLocation(LocationRequestDto locationRequestDto)
         {
-            return _locationAdaptor.AddLocation(locationRequestDto);
+            return await _locationAdaptor.AddLocation(locationRequestDto);
         }
         public Task<string> DeleteLocation(int LocationId)
         {
