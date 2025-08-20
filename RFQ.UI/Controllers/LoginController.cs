@@ -44,7 +44,14 @@ namespace RFQ.UI.Controllers
         {
             return View("~/Views/Login/sign-up.cshtml");
         }
-
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<NewCommonResponseDto> GetToken([FromBody] LoginDto input)
         {

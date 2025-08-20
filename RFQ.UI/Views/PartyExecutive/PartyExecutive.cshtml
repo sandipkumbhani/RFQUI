@@ -1,0 +1,99 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Party Executive";
+}
+
+@section Scripts {
+
+}
+
+<div id="formDiv">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Party Executive</h1>
+
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#" id="tableDivLink">Party Executive</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Party Executive</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-franchise-info">
+                <form class="form" id="changeTypeForm" method="post">
+                    <input type="hidden" id="txtChangeId" />
+                    <div class="franchise-details">
+                        <h2 class="page-form-title">Party Executive Details</h2>
+                        <div class="row all-custom-class">
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Executive Code <span>*</span></label>
+                                    <input type="password" class="form-control" placeholder="Executive Code" maxlength="100" id="txtExecutive" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Executive Name <span>*</span></label>
+                                    <input type="password" class="form-control" placeholder="Executive Name" maxlength="100" id="txtName" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Mobile No <span>*</span></label>
+                                    <input type="password" class="form-control" placeholder="Mobile No" maxlength="100" onkeypress="return isNumber(event)" id="txtMobile" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-label col-form-label fw-semibold fs-6">
+                                    <label class="form-label">Email ID <span>*</span></label>
+                                    <input type="password" class="form-control" placeholder="Email ID" maxlength="50" id="txtEmail" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">User Name <span>*</span></label>
+                                    <select class="select2-custom form-control" data-control="select2"  id="ddlUseName" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            
+
+
+                        </div>
+                    </div>
+
+                    <div class="button-main">
+                        <a href="#" class="card-link" id="btnSaveChangeType" type="button" data-action="save">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save
+                            </span>
+
+                        </a>
+                        <a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save & New
+                            </span>
+                        </a>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
