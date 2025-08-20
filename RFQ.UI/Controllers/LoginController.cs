@@ -5,6 +5,9 @@ using System.Net.Mail;
 using System.Net;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using RFQ.UI.Application.Provider;
+using System.Threading.Tasks;
+using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.Controllers
 {
@@ -13,11 +16,13 @@ namespace RFQ.UI.Controllers
         private readonly ILoginServices _loginServcies;
         private readonly ILogger<LoginController> _logger;
         private static Dictionary<string, string> otpStore = new();
+        private readonly IUsersService _usersService;
 
-        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger)
+        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger, IUsersService usersService)
         {
             _loginServcies = loginServcies;
             _logger = logger;
+            _usersService = usersService;
         }
         public IActionResult Login()
         {
@@ -39,20 +44,28 @@ namespace RFQ.UI.Controllers
         {
             return View("~/Views/Login/sign-up.cshtml");
         }
-
-        [HttpPost]
-        public async Task<string> GetToken([FromBody] LoginDto input)
+        public IActionResult ResetPassword()
         {
+            return View();
+        }
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<NewCommonResponseDto> GetToken([FromBody] LoginDto input)
+        {
+            NewCommonResponseDto response = new();
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var tokenstring = await _loginServcies.Login(input);
-
-                    if (!string.IsNullOrEmpty(tokenstring))
+                    response = await _loginServcies.Login(input);
+                    
+                    if (response.Data != null && response.StatusCode == 200)
                     {
                         var handler = new JwtSecurityTokenHandler();
-                        var jwtToken = handler.ReadJwtToken(tokenstring);
+                        var jwtToken = handler.ReadJwtToken(response.Data.ToString());
                         var email = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
                         var personname = jwtToken.Claims.FirstOrDefault(c => c.Type == "personname")?.Value;
                         var companyid = jwtToken.Claims.FirstOrDefault(c => c.Type == "companyid")?.Value;
@@ -74,15 +87,14 @@ namespace RFQ.UI.Controllers
 
                         if (!string.IsNullOrEmpty(profileid))
                             Response.Cookies.Append("userid", userid);
-                        
+
                         if (!string.IsNullOrEmpty(locationid))
                             Response.Cookies.Append("locationid", locationid);
 
-                        Response.Cookies.Append("AuthToken", tokenstring);
+                        Response.Cookies.Append("AuthToken", response.Data.ToString());
                     }
-                    return tokenstring;
                 }
-                return string.Empty;
+                return response;
             }
             catch (Exception ex)
             {
@@ -96,16 +108,20 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public JsonResult SendOtp(string email)
+        public async Task<IActionResult> SendOtp(string txtLoginName)
         {
+            UserResponseDto user = new();
+
             // Validate email exists (dummy check)
-            if (string.IsNullOrEmpty(email)) return Json(new { success = false });
+            if (string.IsNullOrEmpty(txtLoginName)) return Ok(user);
+            else
+                user = await _usersService.GetByLoginIdAsync(txtLoginName);
 
             // Generate OTP
             var otp = new Random().Next(1000, 9999).ToString();
 
             // Store OTP
-            otpStore[email] = otp;
+            otpStore[user.LoginId] = otp;
 
             // Prepare email
             var subject = "Your OTP Code";
@@ -134,26 +150,32 @@ namespace RFQ.UI.Controllers
                     Body = body,
                     IsBodyHtml = false
                 };
-                mailMessage.To.Add(email);
+                mailMessage.To.Add(user.EmailId);
 
                 smtpClient.Send(mailMessage);
 
-                return Json(new { success = true, message = "OTP sent successfully" });
+                return Ok(new NewCommonResponseDto() { Data = user, StatusCode = 200, Message = "Successfully send email" });
             }
             catch (Exception ex)
             {
+                NewCommonResponseDto newCommonResponseDto = new()
+                {
+                    Data = null,
+                    ErrorMessage = ex.InnerException.ToString(),
+                    StatusCode = 404
+                };
                 return Json(new { success = false, message = "Failed to send email", error = ex.Message });
             }
 
         }
 
         [HttpPost]
-        public JsonResult VerifyOtp(string email, string otp)
+        public JsonResult VerifyOtp(string loginId, string otp)
         {
-            if (otpStore.ContainsKey(email) && otpStore[email] == otp)
+            if (otpStore.ContainsKey(loginId) && otpStore[loginId] == otp)
             {
                 // OTP verified
-                otpStore.Remove(email); // clear OTP after use
+                otpStore.Remove(loginId); // clear OTP after use
                 return Json(new { success = true });
             }
             return Json(new { success = false });

@@ -24,10 +24,11 @@ namespace RFQ.UI.Infrastructure.Provider
             _logger = logger;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
         }
-        public async Task<string> PostApiDataAsync(LoginDto loginDto)
+        public async Task<NewCommonResponseDto> PostApiDataAsync(LoginDto loginDto)
         {
             try
             {
+                NewCommonResponseDto responseModel = new();
                 _httpClient = new HttpClient();
                 var baseUrl = _fleetLynkApiUrl + _config["Login:Login"];
                 _logger.LogInformation("Base URL: " + baseUrl);
@@ -36,14 +37,12 @@ namespace RFQ.UI.Infrastructure.Provider
                 var response = await _httpClient.PostAsync(baseUrl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 _logger.LogInformation("responseData  : " + responseData);
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(Convert.ToString(responseData));
+                if (responseData != null)
                 {
-                    var responseToken = JsonConvert.DeserializeObject<ResponseToken>(responseModel?.Data.ToString()!);
-                    return responseToken.Token;
-
+                    responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(Convert.ToString(responseModel.Data));
                 }
-                return string.Empty;
+                return responseModel;
             }
             catch (Exception ex)
             {

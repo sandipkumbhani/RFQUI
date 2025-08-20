@@ -8,128 +8,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | User Form</title>
-    <link rel="~/shortcut icon" href="/star-html-pro/assets/media/logos/favicon.ico" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <link href="~/css/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <title>Fleet Lynk | Sign Up</title>
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="FleetLynk" name="author" />
+
+    <!-- Figtree FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <!-- intl-tel-input CSS -->
+    <link href="~/css/intlTelInput-largeFlags.css" rel="stylesheet" type="text/css" />
+    <!-- Select2 CSS -->
+    <link href="~/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <!-- Select2 Bootstrap4 CSS -->
+    <link href="~/css/select2-bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <!-- Remixicon CSS -->
+    <link href="~/css/remixicon.css" rel="stylesheet" type="text/css" />
+    <!-- SimpleBar CSS -->
+    <link href="~/css/simplebar.css" rel="stylesheet" type="text/css" />
+    <!-- Bootstrap css -->
     <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/all.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="~/css/common.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/style.css" rel="stylesheet" type="text/css" />
+    <!-- App css -->
+    <link href="~/css/app-style.css" rel="stylesheet" type="text/css" />
+
+
 </head>
-<body>
-
-    <div class="d-flex flex-column flex-root">
-        <div class="d-flex flex-column flex-lg-row flex-column-fluid">
-            <div class="d-flex flex-column flex-lg-row-auto bg-primary w-xl-600px positon-xl-relative">
-                <div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-600px scroll-y">
-                    <div class="d-flex flex-row-fluid flex-column text-center p-5 p-lg-10 pt-lg-20">
-                        <a href="#" class="py-2 py-lg-20">
-                            <img alt="Logo" src="https://img.logoipsum.com/325.svg" class="h-30px app-sidebar-logo-default theme-light-show">
-                        </a>
-                        <h1 class="d-none d-lg-block fw-bold text-white fs-2qx pb-5 pb-md-10">
-                            Welcome to Star HTML Pro
-                        </h1>
-                        <p class="d-none d-lg-block fw-semibold fs-2 text-white">
-                            Plan your blog post by choosing a topic creating <br>
-                            an outline and checking facts
-                        </p>
-                    </div>
-                    <div class="d-none d-lg-block d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-350px" style="background-image: url('images/17.png')"></div>
-                </div>
-            </div>
-            <div class="d-flex flex-column flex-lg-row-fluid py-10">
-                <div class="d-flex flex-center flex-column flex-column-fluid">
-                    <div class="w-lg-500px p-10 p-lg-15 mx-auto">
-                        <form class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework">
-                            <div class="mb-10 text-center">
-                                <h1 class="text-gray-900 mb-3">
-                                    Create an Account
-                                </h1>
-                                <div class="text-gray-500 fw-semibold fs-4">
-                                    Already have an account?
-
-                                    <a href="@Url.Action("Login", "Login")" class="link-primary fw-bold">
-                                        Sign in here
-                                    </a>
+<body data-sidenav-size="default">
+    <div class="wrapper single-page">
+        <div class="sign-inner">
+            <div class="sign-page-center">
+                <div class="sign-left">
+                    <div class="inner-sign-info">
+                        <div class="single-logo">
+                            <img src="~/images/logo.svg" alt="" />
+                        </div>
+                        <div class="login-main">
+                            <form class="theme-form all-custom-class requires-validation" novalidate>
+                                <h2>Create an Account</h2>
+                                <p>Already have an account? <a href="@Url.Action("Login", "Login")">Sign in here</a></p>
+                                <div class="item-input">
+                                    <label class="form-label">First Name</label>
+                                    <input class="form-control" type="text" name="name" placeholder="Enter First Name" required>
+                                    <div class="invalid-feedback"><i class="ri-information-line"></i> Please put valid First Name</div>
                                 </div>
-                            </div>
-                            <div class="row fv-row mb-10 fv-plugins-icon-container">
-                                <div class="col-xl-6">
-                                    <label class="form-label fw-bold text-gray-900 fs-6">First Name</label>
-                                    <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" name="first-name" autocomplete="off">
-                                    <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                                <div class="item-input">
+                                    <label class="form-label">Last Name</label>
+                                    <input class="form-control" type="text" name="name" placeholder="Enter Last Name" required>
+                                    <div class="invalid-feedback"><i class="ri-information-line"></i> Please put valid Last Name</div>
                                 </div>
-                                <div class="col-xl-6">
-                                    <label class="form-label fw-bold text-gray-900 fs-6">Last Name</label>
-                                    <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" name="last-name" autocomplete="off">
-                                    <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                                <div class="item-input">
+                                    <label class="form-label">Email</label>
+                                    <input class="form-control" type="email" required="" placeholder="admin@example.com" />
+                                    <div class="invalid-feedback"><i class="ri-information-line"></i> Please put valid Email</div>
                                 </div>
-                            </div>
-                            <div class="fv-row mb-7 fv-plugins-icon-container">
-                                <label class="form-label fw-bold text-gray-900 fs-6">Email</label>
-                                <input class="form-control form-control-lg form-control-solid" type="email" placeholder="" name="email" autocomplete="off">
-                                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
-                            </div>
-                            <div class="mb-10 fv-row fv-plugins-icon-container" data-kt-password-meter="true">
-                                <div class="mb-1">
-                                    <label class="form-label fw-bold text-gray-900 fs-6">
-                                        Password
-                                    </label>
-                                    <div class="position-relative mb-3">
-                                        <input class="form-control form-control-lg form-control-solid" type="password" placeholder="" name="password" autocomplete="off">
-
-                                        <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
-                                            <i class="ki-duotone ki-eye-slash fs-2"></i>
-                                            <i class="ki-duotone ki-eye fs-2 d-none"></i>
+                                <div class="item-input">
+                                    <label class="form-label">Password</label>
+                                    <div class="form-input position-relative">
+                                        <input class="form-control" type="password" name="login[password]" required="" placeholder="*********" />
+                                        <div class="show-hide"><span class="show"></span></div>
+                                        <div class="invalid-feedback"><i class="ri-information-line"></i> Please put valid Password</div>
+                                    </div>
+                                    <span><i class="ri-information-line"></i> Use 8 or more characters with a mix of letters, numbers & symbols</span>
+                                </div>
+                                <div class="item-input">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input class="form-control" type="password" name="confirmpassword" required="" placeholder="" />
+                                    <div class="invalid-feedback"><i class="ri-information-line"></i> Please put valid Confirm Password</div>
+                                </div>
+                                <div class="forget-item">
+                                    <label class="check-box-custom">
+                                        <input class="form-check-input" type="checkbox" value="" name="agree">
+                                        <span class="checkmark"></span>
+                                        <span class="form-check-label">
+                                            I Agree <a href="#">Terms and conditions.</a>
                                         </span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
-                                        <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                                        <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                                        <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                                        <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
-                                    </div>
+                                    </label>
                                 </div>
-                                <div class="text-muted">
-                                    Use 8 or more characters with a mix of letters, numbers &amp; symbols.
-                                </div>
-                                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
-                            </div>
-                            <div class="fv-row mb-5 fv-plugins-icon-container">
-                                <label class="form-label fw-bold text-gray-900 fs-6">Confirm Password</label>
-                                <input class="form-control form-control-lg form-control-solid" type="password" placeholder="" name="confirm-password" autocomplete="off">
-                                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback" bis_skin_checked="1"></div>
-                            </div>
-                            <div class="fv-row mb-10 fv-plugins-icon-container" bis_skin_checked="1">
-                                <label class="form-check form-check-custom form-check-solid form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="toc" value="1">
-                                    <span class="form-check-label fw-semibold text-gray-700 fs-6">
-                                        I Agree <a href="#" class="ms-1 link-primary">Terms and conditions</a>.
-                                    </span>
-                                </label>
-                                <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback" bis_skin_checked="1"></div>
-                            </div>
-
-                            <div class="text-center">
-                                <button type="button" class="btn btn-lg btn-primary">
-                                    <span class="indicator-label">
-                                        Submit
-                                    </span>
-                                    <span class="indicator-progress">
-                                        Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                    </span>
+                                <button type="submit" class="login-btns">
+                                    Sign Up
                                 </button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
+                </div>
+                <div class="sign-right">
+                    <img src="~/images/truck-driving-city-street-night-bright-lights-tall-buildings-making-its-way-through-with-trailer2.jpg" alt="" />
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="js/plugins.bundle.js"></script>
-    <script src="js/datatables.bundle.js"></script>
-    <script src="js/script.js"></script>
+    <!-- Jquery Min JS -->
+    <script src="~/js/jquery.min.js"></script>
+    <!-- Bootstrap Bundle JS -->
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <!-- SimpleBar JS -->
+    <script src="~/js/simplebar.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="~/js/select2.min.js"></script>
+    <!-- intl-tel-input JS -->
+    <script src="~/js/intlTelInput.min.js"></script>
+    <!-- Repeater JS -->
+    <script src="~/js/jquery.repeater.min.js"></script>
+    <!-- Script App JS -->
+    <script src="~/js/script-app.js"></script>
 </body>
+</html>

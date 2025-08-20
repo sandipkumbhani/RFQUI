@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-   
+
     // Regex patterns
     var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     var passwordPattern = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
@@ -11,6 +11,14 @@
     //        toastr.warning("Invalid Email Address.","Warning");
     //    }
     //});
+
+    $("#txtLoginName").on("blur", function () {
+        var loginName = $(this).val().trim();
+        if (IsNullOrEmpty(loginName) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginName)) {
+            toastr.warning("Invalid Login Name", "Warning");
+
+        }
+    });
 
     // Password validation on blur
     $("#Password").on("blur", function () {
@@ -34,6 +42,11 @@
         //    $("#loginButton").prop("disabled", false).text("Log In");
         //    return;
         //}
+    
+        if (IsNullOrEmpty(loginid) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginid)) {
+            toastr.warning("Invalid Login Name", "Warning");
+            return;
+        }
 
         // Password validation
         if (!passwordPattern.test(password)) {
@@ -60,11 +73,13 @@
             },
             success: function (response) {
                 console.log(response);
-                if (response) {
+                debugger;
+                if (response != null && response.statusCode == 200) {
                     sessionStorage.setItem("authToken", response.data);
+                    toastr.success(response.message, "success");
                     window.location.href = window.location.origin + "/Dashboard/Dashboard";
                 } else {
-                    toastr.error("Invalid Email or Password.", "Error");
+                    toastr.warning(response.message, "warning");
                 }
             },
             error: function (xhr) {
@@ -81,4 +96,30 @@
             }
         });
     });
+    setupRememberMe("loginForm", "txtLoginName", "chkRememberMe", "/home");
 });
+
+function setupRememberMe(formId, usernameFieldId, checkboxId, redirectUrl) {
+    const form = document.getElementById(formId);
+    const usernameField = document.getElementById(usernameFieldId);
+    const rememberCheckbox = document.getElementById(checkboxId);
+    debugger;
+    // Load saved username if exists
+    if (localStorage.getItem("rememberMe") === "true") {
+        usernameField.value = localStorage.getItem("username") || "";
+        rememberCheckbox.checked = true;
+    }
+
+    // Handle form submit
+    form.addEventListener("submit", function (e) {
+        e.preventDefault(); // prevent actual submit for demo
+
+        if (rememberCheckbox.checked) {
+            localStorage.setItem("username", usernameField.value);
+            localStorage.setItem("rememberMe", "true");
+        } else {
+            localStorage.removeItem("username");
+            localStorage.setItem("rememberMe", "false");
+        }
+    });
+}

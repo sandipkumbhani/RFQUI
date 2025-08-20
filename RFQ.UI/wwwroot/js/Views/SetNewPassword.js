@@ -15,11 +15,11 @@ function OnSubmit() {
         const currentUrl = window.location.href;
         const url = new URL(currentUrl);
         const params = new URLSearchParams(url.search);
-        const email = params.get("email");
+        const loginId = params.get("loginId");
 
         var UserViewModel = {
             Password: newPassword,
-            Emailid: email,
+            LoginId: loginId,
         }
 
         var UpdatePassWordUrl = '/User/UpdateUserPassword';
@@ -30,8 +30,10 @@ function OnSubmit() {
             data: JSON.stringify(UserViewModel),
             dataType: "json",
             success: function (result) {
-                if (result == "success")
+                if (result) {
                     toastr.success("Successfully Update User Password", "success");
+                    window.location.href = '/Login/Login';
+                }
                 else
                     toastr.error("Somthing Went Wrong Contact Administrator", "Error");
             },

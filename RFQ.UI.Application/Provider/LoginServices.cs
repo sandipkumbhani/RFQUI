@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
 using RFQ.UI.Models;
 
@@ -12,7 +13,7 @@ namespace RFQ.UI.Application.Provider
         {
             _loginAdaptor = loginAdaptor;
         }
-        public Task<string> Login(LoginDto loginDto)
+        public Task<NewCommonResponseDto> Login(LoginDto loginDto)
         {
             return _loginAdaptor.PostApiDataAsync(loginDto);
         }

@@ -1,0 +1,104 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Tracking Provider";
+}
+
+@section Scripts {
+
+}
+
+<div id="formDiv">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Tracking Provider</h1>
+
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#" id="tableDivLink">Tracking Provider</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Tracking Provider</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-franchise-info">
+                <form class="form" id="changeTypeForm" method="post">
+                    <input type="hidden" id="txtChangeId" />
+                    <div class="franchise-details">
+                        <h2 class="page-form-title">Tracking Provider Details</h2>
+                        <div class="row all-custom-class">
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Provier Name <span>*</span></label>
+                                    <input type="password" class="form-control" placeholder="Provier Name" maxlength="100" id="txtProvier" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">API Link <span>*</span></label>
+                                    <input type="password" class="form-control" placeholder="API Link" maxlength="100" id="txtLink" />
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">User Name </label>
+                                    <input type="password" class="form-control" placeholder="User Name" maxlength="100" id="txtUser" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Password </label>
+                                    <input type="password" class="form-control" placeholder="Password" maxlength="100" id="txtPassword" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Token </label>
+                                    <input type="password" class="form-control" placeholder="Token" maxlength="100" id="txtToken" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Remarks </label>
+                                    <input type="password" class="form-control" placeholder="Remarks" maxlength="100" id="txtRemarks" />
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="button-main">
+                        <a href="#" class="card-link" id="btnSaveChangeType" type="button" data-action="save">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save
+                            </span>
+
+                        </a>
+                        <a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save & New
+                            </span>
+                        </a>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
