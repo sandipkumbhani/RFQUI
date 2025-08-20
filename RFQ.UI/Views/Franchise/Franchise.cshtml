@@ -7,6 +7,9 @@
 @section Scripts {
     <script src="~/js/AttachmentDetails.js"></script>
     <script src="~/js/Views/Franchise.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
+    </script>
 }
 <div id="tableDiv">
 <div class="row">
@@ -118,7 +121,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="file-upload-item">
-                                    <label class="form-label">Franchise Logo <span>*</span></label>
+                                    <label class="form-label">Franchise Logo</label>
                                         <div class="dropzone" id="dropzone">
                                         <div class="dz-message needsclick">
                                             <i class="ri-upload-cloud-2-fill"></i>
@@ -136,21 +139,27 @@
                         <div class="col-lg-12">
                             <div class="item-input">
                                 <label class="form-label">Address <span>*</span></label>
-                                <input type="text" class="form-control" placeholder="Enter Your Address" id="txtAddress" maxlength="200" />
+                                @* <input type="text" class="form-control" placeholder="Enter Your Address" id="txtAddress" maxlength="200" /> *@
+                                        <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
+                                    <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 95%; display: none;"></ul>
+                                    <input type="hidden" id="fromLat">
+                                    <input type="hidden" id="fromLng">
+                                    <input type="hidden" id="fromState">
+                                    <input type="hidden" id="fromCity">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="item-input">
-                                    <label class="form-label">Contact Person <span>*</span></label>
+                                    <label class="form-label">Contact Person</label>
                                     <input type="text" class="form-control" placeholder="Enter Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
                                 </div>
                                 <div class="item-input">
-                                    <label class="form-label">Contact Number <span>*</span></label>
+                                    <label class="form-label">Contact Number</label>
                                         <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtContactNumber" maxlength="10" onkeypress="return isNumber(event)" />
                                 </div>
                                 <div class="item-input">
-                                    <label class="form-label">Mobile Number <span>*</span></label>
+                                    <label class="form-label">Mobile Number</label>
                                         <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtMobileNumber" onkeypress="return isNumber(event)" maxlength="10" />
                                 </div>
                                 <div class="item-input">
@@ -168,11 +177,11 @@
                                         <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtWhatsAppNumber" onkeypress="return isNumber(event)" maxlength="10"/>
                                 </div>
                                 <div class="item-input">
-                                    <label class="form-label">Email <span>*</span></label>
+                                    <label class="form-label">Email</label>
                                     <input type="email" class="form-control" placeholder="Enter Your Email" id="txtEmailId" maxlength="50" />
                                 </div>
                                 <div class="item-input">
-                                    <label class="form-label">GST Number <span>*</span></label>
+                                    <label class="form-label">GST Number</label>
                                     <input type="text" class="form-control" placeholder="xxxxx-xxxxx-xxxxx" id="txtGstNumber" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
                                 </div>
                             </div>
