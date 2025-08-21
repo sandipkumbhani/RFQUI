@@ -42,13 +42,13 @@
 
         public string? GSTStatus { get; set; }
 
-        public DateTime GSTVarifiedOn { get; set; }
+        public DateTime? GSTVarifiedOn { get; set; }
 
         public string? PANStatus { get; set; }
 
         public string? PANLinkedWithAdhar { get; set; }
 
-        public DateTime PANVerifiedOn { get; set; }
+        public DateTime? PANVerifiedOn { get; set; }
 
         public int LinkId { get; set; }
 

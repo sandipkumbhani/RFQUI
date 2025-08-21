@@ -36,13 +36,23 @@ $(document).ready(function () {
     });
 
     $("#btnSaveCustomer, #SavenewButton").on('click', function () {
-        var action = $(this).data('action');
-        if (isGstEKycClicked && isPanEKycClicked) {
+        var action = $(this).data('action'); // "save" or "saveNew"
+        if (ValidationCheck()) {
             SaveCustomer(action);
-        } else {
-            toastr.warning("Please complete GST and PAN E-KYC before saving!");
         }
+
     });
+
+    //$("#btnSaveCustomer, #SavenewButton").on('click', function () {
+    //    var action = $(this).data('action');
+    //    if (isGstEKycClicked && isPanEKycClicked) {
+    //        SaveCustomer(action);
+    //    }
+
+    //    //else {
+    //    //    toastr.warning("Please complete GST and PAN E-KYC before saving!");
+    //    //}
+    //});
     $("#btnCancel").on("click", function () {
         FetchCustomerList();
     });
@@ -87,7 +97,7 @@ $('#pageLength').off('change').on('change', function () {
 });
 
 function SaveCustomer(action) {
-
+    debugger;
     var isvalid = ValidationCheck();
     if (!isvalid) {
         return;
@@ -98,13 +108,13 @@ function SaveCustomer(action) {
     var gstStatus = $("#txtGstStatus").val();
     var tradeName = $("#txtTradeName").val();
     var adharVerified = $("#txtAadharVerified").val();
-    var gstVerifiedOn = $("#txtGstVerifiedOn").val();
+    var gstVerifiedOn = $("#txtGstVerifiedOn").val() ? $("#txtGstVerifiedOn").val() : null;
     var adharLinked = $("#txtAadharLinked").val();
     var panStatus = $("#txtPanStatus").val();
-    var panVerifiedOn = $("#txtPanVerifiedOn").val();
+    var panVerifiedOn = $("#txtPanVerifiedOn").val() ? $("#txtPanVerifiedOn").val() : null;
     var panKyc = $("#txtPanNumber").val();
     var customerName = $("#txtCustomerName").val();
-    var customerCode = $("#txtCustomerCode").val();
+    //var customerCode = $("#txtCustomerCode").val();
     var address = $("#txtaddress").val();
     var city = $("#ddlCity").val();
     var selectedIndex = $("#ddlCity").prop("selectedIndex");
@@ -120,7 +130,7 @@ function SaveCustomer(action) {
 
     var saveUrl = '/Customer/CustomerSave';
     var formData = {
-        // GSTNo: gstKyc,
+        GSTNo: gstKyc,
         LegalName: legalName,
         TypeOfBusiness: typeBusiness,
         GstStatus: gstStatus,
@@ -129,9 +139,9 @@ function SaveCustomer(action) {
         PanStatus: panStatus,
         GSTVarifiedOn: gstVerifiedOn,
         PANVerifiedOn: panVerifiedOn,
-        // PANNo: panKyc,
+        PANNo: panKyc,
         PartyName: customerName,
-        CustomerCode: customerCode,
+        //CustomerCode: customerCode,
         AddressLine: address,
         CityId: city,
         ContactPerson: contactPerson,
@@ -146,7 +156,7 @@ function SaveCustomer(action) {
         LinkId: linkId
 
     }
-
+    console.log(formData);
     if (action == "save") {
         $.ajax({
             url: saveUrl,
@@ -221,7 +231,7 @@ function EditCustomer(partyId) {
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo).prop("disabled", true);
         $("#txtCustomerName").val(formData.partyName);
-        $("#txtCustomerCode").val(formData.customerCode);
+        //$("#txtCustomerCode").val(formData.customerCode);
         $("#txtaddress").val(formData.addressLine);
         $('#ddlCity').val(formData.cityId).trigger('change');
         $("#txtContactPerson").val(formData.contactPerson);
@@ -257,7 +267,7 @@ function UpdateCustomer() {
             GSTVarifiedOn: $("#txtGstVerifiedOn").val(),
             PANVerifiedOn: $("#txtPanVerifiedOn").val(),
             PartyName: $("#txtCustomerName").val(),
-            CustomerCode: $("#txtCustomerCode").val(),
+            //CustomerCode: $("#txtCustomerCode").val(),
             AddressLine: $("#txtaddress").val(),
             CityId: $("#ddlCity").val(),
             ContactPerson: $("#txtContactPerson").val(),
@@ -379,10 +389,10 @@ function GstEKycClick() {
     $("#gstEKycButton").on("click", function () {
         var gstNumber = $("#txtGstNumber").val();
 
-        if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(gstNumber.toUpperCase())) {
-            toastr.warning("Please enter a valid GST No", "Validation Error");
-            return;
-        }
+        //if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(gstNumber.toUpperCase())) {
+        //    toastr.warning("Please enter a valid GST No", "Validation Error");
+        //    return;
+        //}
         // Request Body
         var Body = {
             GSTNo: gstNumber,
@@ -422,11 +432,11 @@ function PanEKycClick() {
         var getPanKycUrl = '/Customer/GetPanKycDetails';
         var panNumber = $("#txtPanNumber").val();
 
-        if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panNumber.toUpperCase())) {
-            toastr.warning("Please enter a valid PAN No", "Validation Error");
-            ClearPanFields();
-            return;
-        }
+        //if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panNumber.toUpperCase())) {
+        //    toastr.warning("Please enter a valid PAN No", "Validation Error");
+        //    ClearPanFields();
+        //    return;
+        //}
         // Request Body
         var Body = {
             PANNo: panNumber,
@@ -474,13 +484,20 @@ function ClearPanFields() {
 }
 function InitializeFields() {
     $("#txtGstNumber").on("blur", function () {
-        if (!ValidateGstNumber($(this).val())) {
+        if (!IsNullOrEmpty($(this).val()) && !ValidateGstNumber($(this).val())) {
             toastr.warning("Please enter a valid GST No", "Validation Error");
             return;
         }
     });
 
     $("#txtPanNumber").on("blur", function () {
+        if (!IsNullOrEmpty($(this).val()) && !ValidatePanNumber($(this).val())) {
+            toastr.warning("Please enter a valid PAN No", "Validation Error");
+            return;
+        }
+    });
+
+    $("#numPan").on("blur", function () {
         if (!ValidatePanNumber($(this).val())) {
             toastr.warning("Please enter a valid PAN No", "Validation Error");
             return;
@@ -508,19 +525,19 @@ function InitializeFields() {
         }
     });
 
-    $("#txtContactPerson").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a valid Contact Person", "Validation Error");
-            return;
-        }
-    });
+    //$("#txtContactPerson").on("blur", function () {
+    //    if (IsNullOrEmpty($(this).val())) {
+    //        toastr.warning("Please enter a valid Contact Person", "Validation Error");
+    //        return;
+    //    }
+    //});
 
-    $("#numMobile").on("blur", function () {
-        if (!isMobile($(this).val())) {
-            toastr.warning("Please enter a valid Mobile No", "Validation Error");
-            return;
-        }
-    });
+    //$("#numMobile").on("blur", function () {
+    //    if (!isMobile($(this).val())) {
+    //        toastr.warning("Please enter a valid Mobile No", "Validation Error");
+    //        return;
+    //    }
+    //});
 
     $("#numContact").on("blur", function () {
         if (!isMobile($(this).val())) {
@@ -552,21 +569,21 @@ function InitializeFields() {
 }
 function ValidationCheck() {
 
-    if (IsNullOrEmpty($("#txtGstStatus").val())) {
-        toastr.warning("Please complete GST and PAN E-KYC before saving!");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#txtGstStatus").val())) {
+    //    toastr.warning("Please complete GST and PAN E-KYC before saving!");
+    //    return false;
+    //}
 
-    if (IsNullOrEmpty($("#txtPanStatus").val())) {
-        toastr.warning("Please complete GST and PAN E-KYC before saving!");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtGstNumber").val()) || !ValidateGstNumber($("#txtGstNumber").val())) {
-        toastr.warning("Please enter a valid GST No", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#txtPanStatus").val())) {
+    //    toastr.warning("Please complete GST and PAN E-KYC before saving!");
+    //    return false;
+    //}
+    //if (!IsNullOrEmpty($("#numGstNumber").val()) && !ValidateGstNumber($("#numGstNumber").val())) {
+    //    toastr.warning("Please enter a valid GST No", "Validation Error");
+    //    return false;
+    //}
 
-    if (IsNullOrEmpty($("#txtPanNumber").val()) || !ValidatePanNumber($("#txtPanNumber").val())) {
+    if (IsNullOrEmpty($("#numPan").val()) || !ValidatePanNumber($("#numPan").val())) {
         toastr.warning("Please enter a valid PAN No", "Validation Error");
         return false;
     }
@@ -586,20 +603,20 @@ function ValidationCheck() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#txtContactPerson").val()) || !isAlphabets($("#txtContactPerson").val())) {
-        toastr.warning("Please enter a valid Contact Person", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#txtContactPerson").val()) || !isAlphabets($("#txtContactPerson").val())) {
+    //    toastr.warning("Please enter a valid Contact Person", "Validation Error");
+    //    return false;
+    //}
 
-    if (IsNullOrEmpty($("#numMobile").val()) || !isMobile($("#numMobile").val())) {
-        toastr.warning("Please enter a valid Mobile No", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#numMobile").val()) || !isMobile($("#numMobile").val())) {
+    //    toastr.warning("Please enter a valid Mobile No", "Validation Error");
+    //    return false;
+    //}
 
-    if (IsNullOrEmpty($("#txtEmail").val()) || !isValidateEmail($("#txtEmail").val())) {
-        toastr.warning("Please enter a valid Email", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#txtEmail").val()) || !isValidateEmail($("#txtEmail").val())) {
+    //    toastr.warning("Please enter a valid Email", "Validation Error");
+    //    return false;
+    //}
 
     if (IsNullOrEmpty($("#numPincode").val()) || !/^\d{6}$/.test($("#numPincode").val())) {
         toastr.warning("Please enter a valid Pincode", "Validation Error");

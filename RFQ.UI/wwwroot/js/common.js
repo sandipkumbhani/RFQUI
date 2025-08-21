@@ -308,7 +308,6 @@ function GetGridHtml(response, gridTableName) {
             rowsHtml += `
                         <tr>
                             <td>${item.partyName}</td>
-                            <td>${item.addressLine}</td>
                             <td>${item.pinCode}</td>
                             <td>${item.mobNo}</td>
                             <td>${item.email}</td>
