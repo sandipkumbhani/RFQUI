@@ -103,7 +103,6 @@ function setupRememberMe(formId, usernameFieldId, checkboxId, redirectUrl) {
     const form = document.getElementById(formId);
     const usernameField = document.getElementById(usernameFieldId);
     const rememberCheckbox = document.getElementById(checkboxId);
-    debugger;
     // Load saved username if exists
     if (localStorage.getItem("rememberMe") === "true") {
         usernameField.value = localStorage.getItem("username") || "";
