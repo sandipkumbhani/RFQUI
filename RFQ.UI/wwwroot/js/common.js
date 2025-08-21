@@ -235,11 +235,10 @@ function GetGridHtml(response, gridTableName) {
             rowsHtml += `
                         <tr>
                             <td>${item.vehicleNo}</td>
-                            <td>${item.vehicleStatus}</td>
-                            <td>${item.engineNo}</td>
-                            <td>${item.chassisNo}</td>
-                            <td>${item.vehicleCapacity}</td>
-                            <td>${item.rtoRegistration}</td>
+                            <td>${item.partyName}</td>
+                            <td>${item.vehicleTypeName}</td>
+                            <td>${item.internalMasterName}</td>
+                            
                             <td class="text-center action-items" style="cursor:pointer;">
                                 <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
                                 <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>

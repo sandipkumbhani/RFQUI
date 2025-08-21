@@ -36,7 +36,7 @@ namespace RFQ.UI.Application.Provider
             return await _vehicleAdaptor.AddVehicle(vehicleRequestDto);
         }
 
-        public Task<PageList<VehicleResponseDto>> GetAllVehicle(PagingParam pagingParam)
+        public Task<PageList<VehicleSpResponseDto>> GetAllVehicle(PagingParam pagingParam)
         {
             return _vehicleAdaptor.GetAllVehicle(pagingParam);
         }

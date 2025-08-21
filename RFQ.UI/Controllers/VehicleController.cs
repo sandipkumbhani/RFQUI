@@ -146,7 +146,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewVehicle([FromBody] PagingParam pagingParam)
+        public async Task<IActionResult> ViewVehicle([FromBody] PagingParam pagingParam )
         {
             try
             {

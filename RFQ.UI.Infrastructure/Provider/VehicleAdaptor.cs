@@ -157,7 +157,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return string.Empty;
         }
 
-        public async Task<PageList<VehicleResponseDto>> GetAllVehicle(PagingParam pagingParam)
+        public async Task<PageList<VehicleSpResponseDto>> GetAllVehicle(PagingParam pagingParam)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace RFQ.UI.Infrastructure.Provider
 
                     if (responseModel?.Data?.result != null)
                     {
-                        var vehicleList = JsonConvert.DeserializeObject<List<VehicleResponseDto>>(
+                        var vehicleList = JsonConvert.DeserializeObject<List<VehicleSpResponseDto>>(
                             JsonConvert.SerializeObject(responseModel.Data.result)
                         );
 
@@ -185,7 +185,7 @@ namespace RFQ.UI.Infrastructure.Provider
                         int pageSize = responseModel.Data.pageSize;
                         int totalRecordCount = responseModel.Data.totalRecordCount;
 
-                        return new PageList<VehicleResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize);
+                        return new PageList<VehicleSpResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize);
                     }
 
                     return null;
