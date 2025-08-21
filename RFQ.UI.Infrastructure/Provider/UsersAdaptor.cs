@@ -202,6 +202,7 @@ namespace RFQ.UI.Infrastructure.Provider
                         PersonName = user.PersonName,
                         EmailId = user.EmailId,
                         StatusId = user.StatusId,
+                        Password = user.Password
                     };
 
                     return userResponse;
