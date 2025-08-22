@@ -8,8 +8,16 @@ const linkId = urlParams.get('LinkId');
 var orderColumn = '';
 var orderDir = '';
 var fetchDriverUrl = '/Driver/ViewDriver';
+var companyId;
+var profileid = '';
+//var locationid;
 $(document).ready(function () {
-
+    companyId = getCookieValue('companyid');
+    profileid = getCookieValue('profileid');
+    //locationid = getCookieValue('locationid');
+    //if (profileid == EnumInternalMaster.ADMIN) {
+    //    $('#ddlLocation').prop('disabled', true);
+    //}
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
@@ -72,106 +80,112 @@ function DropzoneInitialize() {
                 isDLEKycClicked = true;
             });
 
-            $("#btnSaveDriver").on('click',function (event) {
+            $("#btnSaveDriver").on('click', function (event) {
                 event.preventDefault();
 
-                if (!isDLEKycClicked) {
-                    toastr.warning("Please Complete DL E-KYC Before Saving!");
-                    return false;
-                }
                 if (!ValidationCheck()) {
                     return false;
                 }
-                if (dz.files.length > 0) {
-                    if (dz.getQueuedFiles().length > 0) {
-                        dz.processQueue();
-                    } else {
-                        if (uploadedFileName) {
-                            SaveDriver(uploadedFileName, function (driverId) {
-                                if (driverId > 0) {
-                                    window.location.href = "../Dashboard/Dashboard";
-                                }
-                            }) 
-                        } else {
-                            toastr.warning("Please Upload a Driver Photo", "Validation Error");
+
+                // Case 1: Files exist and are queued for upload
+                if (dz.files.length > 0 && dz.getQueuedFiles().length > 0) {
+                    dz.processQueue(); // Upload first, then SaveDriver will be triggered in Dropzone success handler
+                }
+                // Case 2: Files exist but already uploaded
+                else if (dz.files.length > 0 && dz.getQueuedFiles().length === 0) {
+                    SaveDriver(uploadedFileName || "", function (driverId) {
+                        if (driverId > 0) {
+                            window.location.href = "../Dashboard/Dashboard";
                         }
-                    }
-                } else {
-                    toastr.warning("Please Upload a Driver Photo", "Validation Error");
+                    });
+                }
+                // Case 3: No files at all — save with empty string
+                else {
+                    SaveDriver("", function (driverId) {
+                        if (driverId > 0) {
+                            window.location.href = "../Dashboard/Dashboard";
+                        }
+                    });
                 }
             });
-            $("#btnUpdateDriver").on('click',function (event) {
+
+            $("#btnUpdateDriver").on('click', function (event) {
                 event.preventDefault();
+
                 if (!ValidationCheck()) {
                     return false;
                 }
-                if (dz.files.length > 0) {
-                    if (dz.getQueuedFiles().length > 0) {
-                        dz.processQueue();
-                    } else {
-                        if (uploadedFileName) {
-                            UpdateDriver(uploadedFileName);
-                        } else {
-                            toastr.warning("Please Upload a Driver Photo For The Update", "Validation Error");
-                        }
-                    }
-                } else {
+
+                // Case 1: Files exist and are queued for upload
+                if (dz.files.length > 0 && dz.getQueuedFiles().length > 0) {
+                    dz.processQueue(); // Will call UpdateDriver in Dropzone 'success' handler
+                }
+                // Case 2: Files exist but already uploaded
+                else if (dz.files.length > 0 && dz.getQueuedFiles().length === 0) {
+                    UpdateDriver(uploadedFileName || "");
+                }
+                // Case 3: No new file uploaded, use existing photo if any
+                else {
                     var existingPhoto = $("#txtUploadedPhoto").val();
-                    if (existingPhoto) {
-                        UpdateDriver(existingPhoto);
-                    } else {
-                        toastr.warning("Please Upload a Driver Photo For The Update", "Validation Error");
-                    }
+
+                    UpdateDriver(existingPhoto || "");
                 }
             });
 
-            $("#btnSaveNewDriver").on('click',function (event) {
+
+            $("#btnSaveNewDriver").on('click', function (event) {
                 event.preventDefault();
 
-                if (!isDLEKycClicked) {
-                    toastr.warning("Please Complete DL E-KYC Before Saving!");
-                    return false;
-                }
                 if (!ValidationCheck()) {
                     return false;
                 }
+
                 if (dz.files.length > 0) {
                     if (dz.getQueuedFiles().length > 0) {
-                        dz.processQueue();
+                        dz.processQueue(); // Waits for Dropzone to upload
                     } else {
-                        if (uploadedFileName) {
-                            SaveDriver(uploadedFileName, function (driverId) {
-                                if (driverId > 0) {
-                                    $("#btnSaveDriver").show();
-                                    $("#btnUpdateDriver").hide();
-                                    $("#btnSaveNewDriver").show();
-                                    ResetForm();
-                                    setTimeout(() => {
-                                        ResetAttachmentRepeater();
-                                    }, 1000);
-                                }
-                            })
-                        } else {
-                            toastr.warning("Please Upload a Driver Photo", "Validation Error");
-                        }
+                        SaveDriver(uploadedFileName || "", function (driverId) {
+                            if (driverId > 0) {
+                                $("#btnSaveDriver").show();
+                                $("#btnUpdateDriver").hide();
+                                $("#btnSaveNewDriver").show();
+                                ResetForm();
+                                setTimeout(() => {
+                                    ResetAttachmentRepeater();
+                                }, 1000);
+                            }
+                        });
                     }
                 } else {
-                    toastr.warning("Please Upload a Driver Photo", "Validation Error");
+                    // No files to upload, proceed to save without a photo
+                    SaveDriver("", function (driverId) {
+                        if (driverId > 0) {
+                            $("#btnSaveDriver").show();
+                            $("#btnUpdateDriver").hide();
+                            $("#btnSaveNewDriver").show();
+                            ResetForm();
+                            setTimeout(() => {
+                                ResetAttachmentRepeater();
+                            }, 1000);
+                        }
+                    });
                 }
-
             });
+
         },
         success: function (file, response) {
             uploadedFileName = response.fileName;
-            if ($(this).attr("id") === "btnSaveDriver") {
+
+            if (clickedButton === "btnSaveDriver") {
                 SaveDriver(uploadedFileName, function (driverId) {
                     if (driverId > 0) {
-                        window.location.href = "../Dashboard/Dashboard";
+                        // Redirect replaced with FetchDriverList function
+                        FetchDriverList();
                     }
-                }) 
-            } else if ($(this).attr("id") === "btnUpdateDriver") {
+                });
+            } else if (clickedButton === "btnUpdateDriver") {
                 UpdateDriver(uploadedFileName);
-            } else if ($(this).attr("id") === "btnSaveNewDriver") {
+            } else if (clickedButton === "btnSaveNewDriver") {
                 SaveDriver(uploadedFileName, function (driverId) {
                     if (driverId > 0) {
                         $("#btnSaveDriver").show();
@@ -181,28 +195,35 @@ function DropzoneInitialize() {
                         setTimeout(() => {
                             ResetAttachmentRepeater();
                         }, 1000);
+
+                        // Optionally call FetchDriverList here too if needed
+                        FetchDriverList();
                     }
-                })
+                });
             }
         }
+
+
     });
 }
-function SaveDriver(uploadedFileName,callback) {
+function SaveDriver(uploadedFileName, callback) {
+    debugger;
     var driverType = $("#ddlDriverType").val();
     var licenseNo = $("#numLicenseNo").val();
-    var driverName = $("#txtDriverName").val();
-    var dlIssueDate = $("#txtDLIssueDate").val();
-    var dlIssueRto = $("#txtDLIssuingRTO").val();
+    var driverName = $("#txtDriverName").val() ? $("#txtDriverName").val() : null;
+    var dlIssueDate = $("#txtDLIssueDate").val() ? $("#txtDLIssueDate").val() : null;
+    var dlIssueRto = $("#txtDLIssuingRTO").val() ? $("#txtDLIssuingRTO").val() : null;
     var dateOfBirth = $("#txtDateOfBirth").val();
     var driverCode = $("#txtDriverCode").val();
-    var dlExpiryDate = $("#txtDLExpiryDate").val();
+    var dlExpiryDate = $("#txtDLExpiryDate").val() ? $("#txtDLExpiryDate").val() : null;
     var whatsappNumber = $("#numWhatsapp").val();
-    var address = $("#txtAddress").val();
+    var address = $("#txtAddress").val() ? $("#txtAddress").val() : null;
     var city = $("#ddlCity").val();
-    var mobileNumber = $("#numMobile").val();
-    var pincode = $("#numPincode").val();
+    var mobileNumber = $("#numMobile").val() ? $("#numMobile").val() : null;
+    var pincode = $("#numPincode").val() ? $("#numPincode").val() : null;   
     // var verifiedOn = $("#txtVerifiedOn").val();
-    var uploadPhoto = uploadedFileName;
+    var uploadPhoto = uploadedFileName ? uploadedFileName : null;
+    var createUser = $("#createlogin").is(":checked");
     var driverId = 0;
 
     var saveUrl = '/Driver/DriverSave';
@@ -224,6 +245,34 @@ function SaveDriver(uploadedFileName,callback) {
         DriverImagePath: uploadPhoto
     };
 
+    if (createUser) {
+        debugger;
+        var userCreate = {
+            //LocationId: locationId,
+            ProfileId: EnumProfile.Driver,
+            LoginId: whatsappNumber,
+            Password: whatsappNumber,
+            CompanyId: companyId
+        }
+        $.ajax({
+            url: '/Home/UserSave/',
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(userCreate),
+            dataType: "json",
+            success: function (response) {
+                if (response.result == "success") {
+                    toastr.success("Driver Login Create Successfully!");
+                }
+                else {
+                    toastr.error("Failed to Create Driver Login", "Error");
+                }
+            },
+            error: function (req, status, error) {
+                toastr.error("Failed to Create Driver Login", "Error");
+            }
+        });
+    }
 
     $.ajax({
         url: saveUrl,
@@ -631,10 +680,10 @@ function InitializeFields() {
 }
 function ValidationCheck() {
 
-    if (IsNullOrEmpty($("#txtDriverName").val())) {
-        toastr.warning("Please complete DL E-KYC before saving!","Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#txtDriverName").val())) {
+    //    toastr.warning("Please complete DL E-KYC before saving!","Validation Error");
+    //    return false;
+    //}
 
     if (IsNullOrEmpty($("#ddlDriverType").val())) {
         toastr.warning("Please select a valid Driver Type", "Validation Error");
@@ -666,9 +715,10 @@ function ValidationCheck() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#numMobile").val()) || !isMobile($("#numMobile").val())) {
-        toastr.warning("Please enter a valid Mobile No", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#numMobile").val()) || !isMobile($("#numMobile").val())) {
+    //    toastr.warning("Please enter a valid Mobile No", "Validation Error");
+    //    return false;
+    //}
     return true;
 }
+

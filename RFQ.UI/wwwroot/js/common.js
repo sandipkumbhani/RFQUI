@@ -294,7 +294,6 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.driverName}</td>
                         <td>${driverTypeMap[item.driverTypeId] ?? `Unknown Type`}</td>
                         <td>${item.mobNo}</td>
-                        <td>${item.addressLine}</td>
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditDriver(${item.driverId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteDriver(${item.driverId},'${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>

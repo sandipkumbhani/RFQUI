@@ -35,5 +35,6 @@ const EnumProfile = Object.freeze({
     Branch :2,
     Corporate : 3,
     Franchise : 4,
-    Vendor : 5
+    Vendor: 5,
+    Driver:6
 });
