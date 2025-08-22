@@ -34,14 +34,10 @@ namespace RFQ.UI.Infrastructure.Provider
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return "Product Saved";
-                    else
-                        return responseModel.ErrorMessage;
-                }
+                        return responseModel.Data.ToString();
+                };
             }
             catch (Exception ex)
             {

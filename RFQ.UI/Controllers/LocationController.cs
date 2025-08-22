@@ -22,7 +22,7 @@ namespace RFQ.UI.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult LocationSave([FromBody] LocationRequestDto locationRequestDto)
+        public async Task<IActionResult> LocationSave([FromBody] LocationRequestDto locationRequestDto)
         {
             try
             {
@@ -35,14 +35,13 @@ namespace RFQ.UI.Controllers
                     locationRequestDto.CompanyId = Convert.ToInt32(companyid);
                     locationRequestDto.CreatedBy = Convert.ToInt32(userid);
                     locationRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                    //locationRequestDto.ProfileId = Convert.ToInt32(profileid);
 
-                    var result = _locationService.AddLocation(locationRequestDto);
-                    return Json(new { result = "success" });
+                    var result = await _locationService.AddLocation(locationRequestDto);
+                    return Json(result);
                 }
                 else
                 {
-                    return Json(new { result = "fail" });
+                    return Json("fail");
                 }
             }
             catch (Exception ex)

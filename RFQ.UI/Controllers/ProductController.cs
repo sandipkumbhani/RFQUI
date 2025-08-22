@@ -40,11 +40,11 @@ namespace RFQ.UI.Controllers
                     productRequestDto.UpdatedOn = DateTime.Now;
 
                     var result = await _productService.AddProduct(productRequestDto);
-                    return Json(new { result = "Success" });
+                    return Json(result);
                 }
                 else
                 {
-                    return Json(new { result = "Failed" });
+                    return Json(null);
                 }
             }
             catch (Exception ex)

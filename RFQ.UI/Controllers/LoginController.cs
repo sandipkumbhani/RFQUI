@@ -61,7 +61,7 @@ namespace RFQ.UI.Controllers
                 if (ModelState.IsValid)
                 {
                     response = await _loginServcies.Login(input);
-                    
+
                     if (response.Data != null && response.StatusCode == 200)
                     {
                         var handler = new JwtSecurityTokenHandler();
@@ -180,5 +180,93 @@ namespace RFQ.UI.Controllers
             }
             return Json(new { success = false });
         }
+
+        [HttpGet("Login/GetByLoginIdAsync")]
+        public async Task<IActionResult> GetByLoginIdAsync([FromQuery] string txtLoginName)
+        {
+            try
+            {
+                var user = await _usersService.GetByLoginIdAsync(txtLoginName);
+
+                if (user == null)
+                {
+                    return NotFound(new NewCommonResponseDto
+                    {
+                        Data = null,
+                        StatusCode = 404,
+                        Message = "User not found"
+                    });
+                }
+
+                return Ok(new NewCommonResponseDto
+                {
+                    Data = user,
+                    StatusCode = 200,
+                    Message = "User found"
+                });
+            }
+            catch (Exception ex)
+            {
+                // Log exception here
+                return StatusCode(500, new NewCommonResponseDto
+                {
+                    Data = null,
+                    StatusCode = 500,
+                    Message = "An error occurred while processing the request.",
+                    ErrorMessage = ex.InnerException?.Message ?? ex.Message
+                });
+            }
+        }
+
+        [HttpGet("Login/SendNewPassword")]
+        public async Task<IActionResult> SendNewPassword(string emailId, string newPassword)
+        {
+            UserResponseDto user = new();
+
+            // Validate user exists
+            if (string.IsNullOrEmpty(emailId))
+                return Ok(new NewCommonResponseDto { Data = null, StatusCode = 404, Message = "Invalid login name" });
+
+            if (string.IsNullOrEmpty(newPassword))
+                return Ok(new NewCommonResponseDto { Data = null, StatusCode = 404, Message = "newPassword not found or email missing" });
+
+            // Prepare email
+            var subject = "Your New Password";
+            string body = "";
+            body += "Dear User,\n\n";
+            body += "We have reset your password as requested.\n\n";
+            body += $"Your new password is: {newPassword}\n\n";
+            body += "Please log in using this password and change it immediately.\n\n";
+            body += "Thank you,\n";
+            body += "FleetLynk";
+
+            try
+            {
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("amit.dev1018@gmail.com", "fqrf srsh rllg cpwl"), // <-- Gmail App password
+                    EnableSsl = true,
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("amit.dev1018@gmail.com", "FleetLynk"),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = false
+                };
+                mailMessage.To.Add(emailId);
+
+                smtpClient.Send(mailMessage);
+
+                return Ok(new NewCommonResponseDto() { Data = user, StatusCode = 200, Message = "New password sent successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Failed to send email", error = ex.Message });
+            }
+        }
+
     }
 }

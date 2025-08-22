@@ -1,7 +1,16 @@
 ﻿var orderColumn = '';
 var orderDir = '';
+var profileId;
+var companyID;
 $(document).ready(function () {
-    GetAllFranchiseList();
+    profileId = getCookieValue('profileid');
+    companyID = getCookieValue('companyid');
+    GetAllFranchiseList(function () {
+        if (profileId == EnumProfile.Franchise) {
+            $('#ddlFranchisename').val(Number(companyID)).trigger('change');
+            $('#ddlFranchisename').prop('disabled', true);
+        }
+    });
     GetAllCityList("ddlCity");
     CheckValidation();
     FetchCorporateCompany();
@@ -83,19 +92,7 @@ function CheckValidation() {
             toastr.warning("Please enter a valid WhatsApp Number", "Validation Error");
             return;
         }
-    });
-    $("#txtMobileNumber").on("blur", function () {
-        if (!isMobile($(this).val())) {
-            toastr.warning("Please enter a valid Mobile Number", "Validation Error");
-            return;
-        }
-    });
-    $("#txtContactNumber").on("blur", function () {
-        if (!isMobile($(this).val())) {
-            toastr.warning("Please enter a valid Contact Number", "Validation Error");
-            return;
-        }
-    });
+    })
     $("#txtAddress").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a valid Address", "Validation Error");
@@ -114,16 +111,15 @@ function CheckValidation() {
             return;
         }
     });
-    $("#txtPerson").on("blur", function () {
+    $("#txtEmail").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a valid Contact Person", "Validation Error");
             return;
         }
-    });
-    $("#txtEmail").on("blur", function () {
-        if (!isValidateEmail($(this).val())) {
-            toastr.warning("Please enter a valid Email Id", "Validation Error");
-            return;
+        else {
+            if (!isValidateEmail($(this).val())) {
+                toastr.warning("Please enter a valid Email Id", "Validation Error");
+                return;
+            }
         }
     });
     $("#txtPanNumber").on("blur", function () {
@@ -133,9 +129,14 @@ function CheckValidation() {
         }
     });
     $("#txtGstNumber").on("blur", function () {
-        if (!ValidateGstNumber($(this).val())) {
-            toastr.warning("Please enter a valid GST Number", "Validation Error");
+        if (IsNullOrEmpty($(this).val())) {
             return;
+        }
+        else {
+            if (!ValidateGstNumber($(this).val())) {
+                toastr.warning("Please enter a valid GST Number", "Validation Error");
+                return;
+            }
         }
     });
     $("#ddlFranchisename").on("keypress", function () {
@@ -172,23 +173,8 @@ function OnSubmitCheckValidation() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#txtPerson").val()) || !isAlphabets($("#txtPerson").val())) {
-        toastr.warning("Please enter a valid Contact Person", "Validation Error");
-        return false;
-    }
-
     if (IsNullOrEmpty($("#txtWhatsAppNumber").val()) || !isMobile($("#txtWhatsAppNumber").val())) {
         toastr.warning("Please enter a valid whatsApp Number", "Validation Error");
-        return false;
-    }
-
-    if (IsNullOrEmpty($("#txtMobileNumber").val()) || !isMobile($("#txtMobileNumber").val())) {
-        toastr.warning("Please enter a valid Mobile Number", "Validation Error");
-        return false;
-    }
-
-    if (IsNullOrEmpty($("#txtContactNumber").val()) || !isMobile($("#txtContactNumber").val())) {
-        toastr.warning("Please enter a valid Contact Number", "Validation Error");
         return false;
     }
 
@@ -196,51 +182,39 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a valid PAN Number", "Validation Error");
         return false;
     }
-
-    if (IsNullOrEmpty($("#txtEmail").val()) || !isValidateEmail($("#txtEmail").val())) {
-        toastr.warning("Please enter a valid Email Id", "Validation Error");
-        return false;
-    }
-
-    if (IsNullOrEmpty($("#txtGstNumber").val()) || !ValidateGstNumber($("#txtGstNumber").val())) {
-        toastr.warning("Please enter a valid GST Number", "Validation Error");
-        return false;
-    }
     return true;
 }
-function GetAllFranchiseList() {
+function GetAllFranchiseList(callback) {
     var franchiseUrl = '/CorporateCompany/GetAllFranchise';
     $.ajax({
         url: franchiseUrl,
         type: "GET",
         dataType: "json",
         success: function (response) {
-            var data = response.filter(x => x.companyTypeId == 2);
-            BindDropDownData(data)
+            var data = response.filter(x => x.companyTypeId == EnumInternalMaster.FRANCHISE);
+            const select = document.getElementById("ddlFranchisename");
+            select.innerHTML = "";
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Franchise";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            data.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.companyId;
+                opt.textContent = option.companyName;
+                select.appendChild(opt);
+            });
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
         }
     });
-}
-function BindDropDownData(data) {
-    const select = document.getElementById("ddlFranchisename");
-    select.innerHTML = "";
-
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
-    placeholderOption.textContent = "Select a Franchise";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-
-    data.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.companyId;
-        opt.textContent = option.companyName;
-        select.appendChild(opt);
-    });
-
 }
 function ButtonUpdateClick() {
     $("#btnupdate").click(function (e) {
