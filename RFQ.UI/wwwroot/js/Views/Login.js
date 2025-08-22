@@ -96,29 +96,59 @@
             }
         });
     });
-    setupRememberMe("loginForm", "txtLoginName", "chkRememberMe", "/home");
+
+    setupRememberMe();
 });
 
-function setupRememberMe(formId, usernameFieldId, checkboxId, redirectUrl) {
-    const form = document.getElementById(formId);
-    const usernameField = document.getElementById(usernameFieldId);
-    const rememberCheckbox = document.getElementById(checkboxId);
-    // Load saved username if exists
-    if (localStorage.getItem("rememberMe") === "true") {
-        usernameField.value = localStorage.getItem("username") || "";
-        rememberCheckbox.checked = true;
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ") c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    document.cookie = name + "=; Max-Age=-99999999; path=/";
+}
+
+function setupRememberMe() {
+    const form = $("#loginForm");
+    const usernameField = $("#txtLoginName");
+    const passWordFiled = $("#Password");
+    const rememberCheckbox = $("#chkRememberMe");
+
+    // Load saved cookies if exist
+    if (getCookie("rememberMe") === "true") {
+        usernameField.val(getCookie("username") || "");
+        passWordFiled.val(getCookie("passWord") || "");
+        rememberCheckbox.prop("checked", true);
     }
 
     // Handle form submit
-    form.addEventListener("submit", function (e) {
-        e.preventDefault(); // prevent actual submit for demo
-
-        if (rememberCheckbox.checked) {
-            localStorage.setItem("username", usernameField.value);
-            localStorage.setItem("rememberMe", "true");
+    form.on("submit", function () {
+        if (rememberCheckbox.is(":checked")) {
+            setCookie("username", usernameField.val(), 7);   // store for 7 days
+            setCookie("passWord", passWordFiled.val(), 7);
+            setCookie("rememberMe", "true", 7);
         } else {
-            localStorage.removeItem("username");
-            localStorage.setItem("rememberMe", "false");
+            eraseCookie("username");
+            eraseCookie("passWord");
+            setCookie("rememberMe", "false", 7);
         }
     });
 }
+
