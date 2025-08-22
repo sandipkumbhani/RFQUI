@@ -3,27 +3,26 @@ var companyConfigResponseDto;
 var orderColumn = '';
 var orderDir = '';
 var fetchUrl = '/CompanyConfiguration/GetAllCompanyConfiguration'
-
+var companyId;
 $(document).ready(function () {
-
+    companyId = getCookieValue('companyid');
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
         orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
-        $(this).data('order', orderDir); // update for next click
+        $(this).data('order', orderDir);
 
         $('th.sortable').not(this).data('order', 'asc');
         FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
     });
 
-    // Optionally, add "Cancel" to go back to the list
     $("#btnCancel").on("click", function () {
         window.location.reload(true);
     });
-    $('#listSectionLink').on('click', function (e) {
-        e.preventDefault(); // prevent default anchor behavior
-        $('#formSection').hide(); // hide the add/edit form
-        $('#listSection').show(); // show the list
+    $('#ListSectionLink').on('click', function (e) {
+        e.preventDefault();
+        $('#formSection').hide();
+        $('#listSection').show();
     });
     Initializejquery();
     CheckValidation();
@@ -61,110 +60,70 @@ function Initializejquery() {
 }
 function GetAllCompany() {
     $("#tableDiv").show();
-    var fetchFranchiseUrl = '/Home/GetAllCompanyAndFranchise';
     $.ajax({
-        url: fetchFranchiseUrl,
-        type: 'GET',
-        dataType: 'json',
+        url: '/Customer/GetDrpCustomerList',
+        type: "GET",
+        data: { companyId: companyId },
+        dataType: "json",
         success: function (response) {
-            response = response.filter(x => x.companyTypeId == 2);
-          
-            sessionStorage.setItem("CompanyList", JSON.stringify(response));
-            const companydropdown = document.getElementById("ddlCompany");
+            const selectCustomer = document.getElementById("ddlCompany");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
-            placeholderOption.textContent = "Select Company";
+            placeholderOption.textContent = "Select Customer Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            companydropdown.appendChild(placeholderOption);
-            // Add Other Options
-            response.forEach(category => {
+            selectCustomer.appendChild(placeholderOption);
+            response.forEach(name => {
                 const option = document.createElement("option");
-                option.value = category.companyId;
-                option.textContent = category.companyName;
-                companydropdown.appendChild(option);
+                option.value = name.partyId;
+                option.textContent = name.partyName;
+                selectCustomer.appendChild(option);
             });
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
+            toastr.error("Failed to Fetch Customer Name!", "Error");
         }
     });
 };
 function CheckValidation() {
     $("#txtSmsAuthKey").on("blur", function () {
-        if (!IsValidAuthKey($(this).val())) {
-            toastr.warning("Please enter a valid SMS authorization Key", "Validation Error");
-            return;
+        if (IsNullOrEmpty($(this).val())) {
+            return; 
+        }
+        else {
+            if (!IsValidAuthKey($(this).val())) {
+                toastr.warning("Please enter a valid SMS authorization Key", "Validation Error");
+                return;
+            }
         }
     });
     $("#txtWhatsappAuthKey").on("blur", function () {
-        if (!IsValidAuthKey($(this).val())) {
-            toastr.warning("Please enter a valid whatsapp authorization Key", "Validation Error");
+        if (IsNullOrEmpty($(this).val())){
             return;
         }
-    });
-    $("#txtSmtpHost").on("blur", function () {
-        if (!isAlphaNumeric($(this).val())) {
-            toastr.warning("Please enter a valid smtp Host", "Validation Error");
-            return;
-        }
-    });
-    $("#txtSmtpPort").on("blur", function () {
-        if (!isNumeric($(this).val())) {
-            toastr.warning("Please enter a valid smtp Port", "Validation Error");
-            return;
-        }
-    });
-    $("#txtSmtpUserName").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a valid smtp User Name", "Validation Error");
-            return;
+        else {
+            if (!IsValidAuthKey($(this).val())) {
+                toastr.warning("Please enter a valid whatsapp authorization Key", "Validation Error");
+                return;
+            }
         }
     });
     $("#txtSmtpPassword").on("blur", function () {
-        if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test($(this).val())) {
-            $("#txtPassword").val('');
-            toastr.warning("Please enter a valid password", "Validation Error");
+        if ($(this).val() == "" || ($(this).val() == null)) {
             return;
+        }
+        else {
+            if (!/^[a-zA-Z0-9\x40!#$%^&*(),.?":{}|<>]+$/.test($(this).val())) {
+                $("#txtPassword").val('');
+                toastr.warning("Please enter a valid password", "Validation Error");
+                return;
+            }
         }
     });
 }
 function OnSubmitValidation() {
     if (!isValidateSelect($('#ddlCompany').val())) {
-        toastr.warning("Please enter company", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($('#ddlSmsProvider').val())) {
-        toastr.warning("Please enter smsProvider", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($('#ddlWhatsappProvider').val())) {
-        toastr.warning("Please enter whatsappProvider", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($('#txtSmsAuthKey').val())) {
-        toastr.warning("Please enter a valid SMS authorization Key", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($('#txtWhatsappAuthKey').val())) {
-        toastr.warning("Please enter a valid whatsapp authorization Key", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($('#txtSmtpHost').val())) {
-        toastr.warning("Please enter a valid smtp Host", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($('#txtSmtpPort').val())) {
-        toastr.warning("Please enter a valid smtp Port", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($('#txtSmtpUserName').val())) {
-        toastr.warning("Please enter a valid smtp User Name", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($('#txtSmtpPassword').val())) {
-        toastr.warning("Please enter a valid password", "Validation Error");
+        toastr.warning("Please Select Customer Name", "Validation Error");
         return false;
     }
     return true;
@@ -236,14 +195,14 @@ function SaveCompanyConfiguration(action) {
         let formData = {
             CompanyConfigId: 0,
             CompanyId: Number(company),
-            SMSProvider: smsProvider || null,
-            SMSAuthKey: smsAuthKey || null,
-            WhatsAppProvider: whatsappProvider || null,
-            WhatsAppAuthKey: whatsappAuthKey || null,
-            SMTPHost: smtpHost || null,
-            SMTPPort: Number(smtpPort) || 0,
-            SMTPUsername: smtpUserName || null,
-            SMTPPassword: smtpPassword || null
+            SMSProvider: smsProvider ,
+            SMSAuthKey: smsAuthKey ,
+            WhatsAppProvider: whatsappProvider ,
+            WhatsAppAuthKey: whatsappAuthKey ,
+            SMTPHost: smtpHost ,
+            SMTPPort: Number(smtpPort) ,
+            SMTPUsername: smtpUserName ,
+            SMTPPassword: smtpPassword 
         };
         if (action == "save") {
             $.ajax({
@@ -284,7 +243,7 @@ function SaveCompanyConfiguration(action) {
 }
 function FetchCompanyConfiguration() {
     $("#listSection").show();
-    
+
     FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
 }
 

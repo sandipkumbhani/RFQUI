@@ -89,8 +89,8 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
                 var baseurl = $"{_fleetLynkApiUrl}{_config["Franchise:UpdateFranchise"]}{companyId}";
-                var vehicle = JsonConvert.SerializeObject(franchiseRequestDto);
-                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
+                var franchise = JsonConvert.SerializeObject(franchiseRequestDto);
+                var requestContent = new StringContent(franchise, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);

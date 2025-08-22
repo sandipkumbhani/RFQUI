@@ -64,7 +64,7 @@ function AllowAlphaNumericOnly(e) {
 
 // isValidateEmail function
 function isValidateEmail(email) {
-    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+    return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email);
 }
 
 // isValidateSelect function (checks if a select value is chosen and not empty)

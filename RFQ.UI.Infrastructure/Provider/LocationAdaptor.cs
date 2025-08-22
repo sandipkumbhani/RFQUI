@@ -41,7 +41,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (result == 200)
                     {
-                        return "Location Saved";
+                        return responseModel.Data.ToString();
                     }
                     else
                     {

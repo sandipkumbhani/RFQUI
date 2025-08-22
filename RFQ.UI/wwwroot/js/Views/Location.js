@@ -59,28 +59,6 @@ function Initialization() {
             return;
         }
     });
-    $("#txtPerson").on("blur", function () {
-        var person = $(this).val();
-        if (IsNullOrEmpty(person)) {
-            toastr.warning("Please enter a Contact Person", "Validation Error");
-            return;
-        }
-    });
-    $("#txtMobileNumber").on("blur", function () {
-        var mobileNum = $(this).val();
-        if (!isMobile(mobileNum)) {
-            toastr.warning("Please enter a valid 10-digit Mobile number", "Validation Error");
-            return;
-        }
-    });
-    $("#txtLocationCode").on("blur", function () {
-        var locationcode = $(this).val();
-        if (!isAlphabets(locationcode)) {
-            $("#txtLocationCode").val('');
-            toastr.warning("Please enter a Location Code", "Validation Error");
-            return;
-        }
-    });
     $("#txtPinCode").on("blur", function () {
         var pinc = $(this).val();
         if (!ValidatePinCode(pinc)) {
@@ -96,17 +74,14 @@ function Initialization() {
         }
     });
     $("#txtEmail").on("blur", function () {
-        var email = $(this).val();
-        if (!isValidateEmail(email)) {
-            toastr.warning("Please enter a valid email", "Validation Error");
+        if (IsNullOrEmpty($(this).val())) {
             return;
         }
-    });
-    $("#txtContactNumber").on("blur", function () {
-        var contactnumber = $(this).val();
-        if (!isMobile(contactnumber)) {
-            toastr.warning("Please enter a contact number", "Validation Error");
-            return;
+        else {
+            if (!isValidateEmail(email)) {
+                toastr.warning("Please enter a valid email", "Validation Error");
+                return;
+            }
         }
     });
     $('#backButton').on('click', function () {
@@ -163,8 +138,16 @@ function SaveLocation(action) {
             dataType: "json",
             data: JSON.stringify(formdata),
             success: function (response) {
-                toastr.success("Location Details Submitted Successfully!");
-                window.location.href = "../Dashboard/Dashboard";
+                if (response == "Location Already Exists") {
+                    toastr.error("Location already exists for this Company", "Error");
+                }
+                else if (response == "Location Saved") {
+                    toastr.success("Location Details Submitted Successfully!");
+                    window.location.href = "../Dashboard/Dashboard";
+                }
+                else {
+                    toastr.error("Failed to Submit Location Details", "Error");
+                }
             },
             error: function (req, status, error) {
                 toastr.error("Failed to Submit Location Details", "Error");
@@ -179,9 +162,17 @@ function SaveLocation(action) {
             dataType: "json",
             data: JSON.stringify(formdata),
             success: function (response) {
-                toastr.success("Location Details Submitted Successfully!");
-                $('#LocationForm')[0].reset();
-                $('#ddlCity').val(null).trigger('change');
+                if (response == "Location Already Exists") {
+                    toastr.error("Location already exists for this Company", "Error");
+                }
+                else if (response == "Location Saved") {
+                    toastr.success("Location Details Submitted Successfully!");
+                    $('#LocationForm')[0].reset();
+                    $('#ddlCity').val(null).trigger('change');
+                }
+                else {
+                    toastr.error("Failed to Submit Location Details", "Error");
+                }
             },
             error: function (req, status, error) {
                 toastr.error("Failed to Submit Location Details", "Error");
@@ -300,10 +291,6 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid Location Name", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtPerson").val())) {
-        toastr.warning("Please enter a valid Contact Person", "Validation Error");
-        return false;
-    }
     if (IsNullOrEmpty($("#txtAddress").val())) {
         toastr.warning("Address is Required", "Validation Error");
         return false;
@@ -313,27 +300,12 @@ function ValidationCheck() {
         toastr.warning("Please select a City", "Validation Error");
         return false;
     }
-    if (!isValidateEmail($("#txtEmail").val())) {
-        toastr.warning("Please enter a valid email", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtMobileNumber").val()) || !isMobile($("#txtMobileNumber").val())) {
-        toastr.warning("Please enter a valid Mobile Number", "Validation Error");
-        return false;
-    }
-
     if (IsNullOrEmpty($("#txtPinCode").val()) || !ValidatePinCode($("#txtPinCode").val())) {
         toastr.warning("Please enter a valid Pincode", "Validation Error");
         return false;
     }
-
     if (IsNullOrEmpty($("#txtWhatsAppNumber").val()) || !isMobile($("#txtWhatsAppNumber").val())) {
         toastr.warning("Please enter a valid WhatsApp Number", "Validation Error");
-        return false;
-    }
-
-    if (IsNullOrEmpty($("#txtContactNumber").val()) || !isMobile($("#txtContactNumber").val())) {
-        toastr.warning("Please enter a valid Contact No", "Validation Error");
         return false;
     }
     return true;
