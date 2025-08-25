@@ -87,27 +87,25 @@ function DropzoneInitialize() {
                     return false;
                 }
 
-                // Case 1: Files exist and are queued for upload
                 if (dz.files.length > 0 && dz.getQueuedFiles().length > 0) {
                     dz.processQueue(); // Upload first, then SaveDriver will be triggered in Dropzone success handler
                 }
-                // Case 2: Files exist but already uploaded
                 else if (dz.files.length > 0 && dz.getQueuedFiles().length === 0) {
                     SaveDriver(uploadedFileName || "", function (driverId) {
                         if (driverId > 0) {
-                            window.location.href = "../Dashboard/Dashboard";
+                            FetchDriverList(); // <-- Replaced here
                         }
                     });
                 }
-                // Case 3: No files at all — save with empty string
                 else {
                     SaveDriver("", function (driverId) {
                         if (driverId > 0) {
-                            window.location.href = "../Dashboard/Dashboard";
+                            FetchDriverList(); 
                         }
                     });
                 }
             });
+
 
             $("#btnUpdateDriver").on('click', function (event) {
                 event.preventDefault();
@@ -217,7 +215,7 @@ function SaveDriver(uploadedFileName, callback) {
     var driverCode = $("#txtDriverCode").val();
     var dlExpiryDate = $("#txtDLExpiryDate").val() ? $("#txtDLExpiryDate").val() : null;
     var whatsappNumber = $("#numWhatsapp").val();
-    var address = $("#txtAddress").val() ? $("#txtAddress").val() : null;
+    var address = $("#from-search-box").val() ? $("#from-search-box").val() : null;
     var city = $("#ddlCity").val();
     var mobileNumber = $("#numMobile").val() ? $("#numMobile").val() : null;
     var pincode = $("#numPincode").val() ? $("#numPincode").val() : null;   
@@ -281,22 +279,32 @@ function SaveDriver(uploadedFileName, callback) {
         data: JSON.stringify(formData),
         success: function (response) {
             debugger;
-            var driverId = response.result.result.driverId;
-            Saveattachment(driverId);
-            toastr.success("Driver Details Submitted Successfully!");
-            if (typeof callback === "function") {
-                callback(driverId);
+
+            
+            var driverId = response?.result?.result?.driverId;
+
+            if (driverId) {
+                Saveattachment(driverId);
+                toastr.success("Driver Details Submitted Successfully!");
+            } else {
+                toastr.error("Driver ID missing in server response", "Error");
             }
+
+            if (typeof callback === "function") {
+                callback(driverId || null);
+            }
+
+            console.log(driverId); 
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Submit Driver Details", "Error");
+
             if (typeof callback === "function") {
                 callback(null);
             }
         }
     });
-    console.log(driverId);
-    return driverId;
+
 }
 function FetchDriverList() {
     $("#tableDiv").css('display', 'block');
@@ -346,7 +354,7 @@ function EditDriver(driverId) {
         $("#txtDLIssueDate").val(formData.licenseIssueDate);
         $("#txtDLExpiryDate").val(formData.licenseExpDate);
         $("#numWhatsapp").val(formData.whatsAppNo);
-        $("#txtAddress").val(formData.addressLine);
+        $("#from-search-box").val(formData.addressLine);
         $("#numMobile").val(formData.mobNo);
         $("#numPincode").val(formData.pinCode);
         $("#txtDriverName").val(formData.driverName);
@@ -362,23 +370,25 @@ function EditDriver(driverId) {
 }
 function UpdateDriver(fileName) {
 
-    var logoFileName = fileName || $("#txtUploadedPhoto").val();
+    var logoFileName = fileName || $("#txtUploadedPhoto").val() ? $("#txtUploadedPhoto").val() : null;
     var formData = {
         DriverId: $("#hdDriverId").val(),
         DriverTypeId: $("#ddlDriverType").val(),
         LicenseNo: $("#numLicenseNo").val(),
-        DriverName: $("#txtDriverName").val(),
-        LicenseIssueDate: $("#txtDLIssueDate").val(),
+        DriverName: $("#txtDriverName").val() ? $("#txtDriverName").val() : null,
+        LicenseIssueDate: $("#txtDLIssueDate").val() ? $("#txtDLIssueDate").val() : null,
+        //DlIssueDate = $("#txtDLIssueDate").val() ? $("#txtDLIssueDate").val() : null,
         DateOfBirth: $("#txtDateOfBirth").val(),
         DriverCode: $("#txtDriverCode").val(),
-        LicenseExpDate: $("#txtDLExpiryDate").val(),
+        LicenseExpDate: $("#txtDLExpiryDate").val() ? $("#txtDLExpiryDate").val() : null,
         WhatsAppNo: $("#numWhatsapp").val(),
-        AddressLine: $("#txtAddress").val(),
+        AddressLine: $("#from-search-box").val() ? $("#from-search-box").val() : null,
         CityId: $("#ddlCity").val(),
-        MobNo: $("#numMobile").val(),
-        PinCode: $("#numPincode").val(),
+        MobNo: $("#numMobile").val() ? $("#numMobile").val() : null,
+        PinCode: $("#numPincode").val() ? $("#numPincode").val() : null,
         LinkId: linkId,
         DriverImagePath: logoFileName
+        //DriverImagePath: logoFileName ? logoFileName : null
     }
     let repeaterItems = document.querySelectorAll("[data-repeater-item]");
     let updateAttachmentDetails = [];
@@ -501,8 +511,8 @@ function DlEKycclick() {
                 $("#txtDLIssueDate").val(FormatDateForInput(drivingLicenseModel.validityIssueDate));
                 $("#txtDLExpiryDate").val(FormatDateForInput(drivingLicenseModel.validityExpiryDate));
                 // $("#txtDLIssuingRTO").val(drivingLicenseModel.rtoAuthority),
-                $("#txtAddress").val(drivingLicenseModel.presentAddress);
-                    $("#numPincode").val(drivingLicenseModel.pincode);
+                $("#from-search-box").val(drivingLicenseModel.presentAddress);
+                $("#numPincode").val(drivingLicenseModel.pincode);
 
                 document.getElementById("txtUploadedPhoto").value = base64String;
                 $("#txtUploadedPhoto").val(drivingLicenseModel.photo);
@@ -671,12 +681,12 @@ function InitializeFields() {
         }
     });
 
-    $("#numMobile").on("blur", function () {
-        if (!isMobile($(this).val())) {
-            toastr.warning("Please enter a valid Mobile No", "Validation Error");
-            return;
-        }
-    });
+    //$("#numMobile").on("blur", function () {
+    //    if (!isMobile($(this).val())) {
+    //        toastr.warning("Please enter a valid Mobile No", "Validation Error");
+    //        return;
+    //    }
+    //});
 }
 function ValidationCheck() {
 

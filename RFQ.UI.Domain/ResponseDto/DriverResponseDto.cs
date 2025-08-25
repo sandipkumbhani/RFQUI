@@ -7,10 +7,10 @@
         public string DriverName { get; set; }
         public string DriverCode { get; set; }
         public string LicenseNo { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public DateTime LicenseIssueDate { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public DateTime? LicenseIssueDate { get; set; }
         public int LicenseIssueCityId { get; set; }
-        public DateTime LicenseExpDate { get; set; }
+        public DateTime? LicenseExpDate { get; set; }
         public string MobNo { get; set; }
         public string WhatsAppNo { get; set; }
         public string AddressLine { get; set; }

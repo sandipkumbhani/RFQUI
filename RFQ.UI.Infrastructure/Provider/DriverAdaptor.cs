@@ -90,7 +90,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var driver = JsonConvert.SerializeObject(driverRequestDto);
                 var requestContent = new StringContent(driver, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
+                var responseData = await response.Content.ReadAsStringAsync();  
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)
                 {
