@@ -42,14 +42,14 @@ $(document).ready(function () {
         $('#updateButton').addClass('d-none');
     })
     $(document).on('click', 'th.sortable', function () {
-       orderColumn = $(this).data('column');
-       let currentOrder = $(this).data('order') || 'asc';
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
         orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
         $(this).data('order', orderDir); // update for next click
-        
+
         $('th.sortable').not(this).data('order', 'asc');
-       
-       FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+
+        FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
     });
     UpdateVechileType();
     FetchVehicleTypes();
@@ -68,7 +68,8 @@ function OnSubmitValidation() {
 
 function FetchVehicleTypes() {
     $('#tableDiv').show();
-
+    $("#addVehicleTypeDiv").addClass("d-none");
+    $('#btnAddVehicleType').removeClass('d-none');
     FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
 }
 
@@ -100,11 +101,21 @@ function SaveVehicleType(action) {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    toastr.success("Vehicle Type Details Submitted Successfully!");
-                    window.location.href = "../Dashboard/Dashboard";
+                    if (response.result == "success") {
+                        toastr.success("Vehicle Type Details Submitted Successfully!", "Success");
+                        if (typeof this.completeOnSuccess === "function") {
+                            this.completeOnSuccess();
+                        }
+                    }
+                    else {
+                        toastr.error("Failed to Submit Vehicle Type Details!", "Error");
+                    }
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Submit Vehicle Type Details!", "Error");
+                },
+                completeOnSuccess: function () {
+                    FetchVehicleTypes();
                 }
             });
 
@@ -115,8 +126,13 @@ function SaveVehicleType(action) {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    toastr.success("Vehicle Type Details Submitted Successfully!");
-                    $('#VehicleTypeForm')[0].reset();
+                    if (response.result == "success") {
+                        toastr.success("Vehicle Type Details Submitted Successfully!");
+                        $('#VehicleTypeForm')[0].reset();
+                    }
+                    else {
+                        toastr.error("Failed to Submit Vehicle Type Details!", "Error");
+                    }
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Submit Vehicle Type Details!", "Error");

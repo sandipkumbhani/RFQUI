@@ -36,23 +36,12 @@ $(document).ready(function () {
     });
 
     $("#btnSaveCustomer, #SavenewButton").on('click', function () {
-        var action = $(this).data('action'); // "save" or "saveNew"
+        var action = $(this).data('action');
         if (ValidationCheck()) {
             SaveCustomer(action);
         }
 
     });
-
-    //$("#btnSaveCustomer, #SavenewButton").on('click', function () {
-    //    var action = $(this).data('action');
-    //    if (isGstEKycClicked && isPanEKycClicked) {
-    //        SaveCustomer(action);
-    //    }
-
-    //    //else {
-    //    //    toastr.warning("Please complete GST and PAN E-KYC before saving!");
-    //    //}
-    //});
     $("#btnCancel").on("click", function () {
         FetchCustomerList();
     });
@@ -97,7 +86,7 @@ $('#pageLength').off('change').on('change', function () {
 });
 
 function SaveCustomer(action) {
-    debugger;
+
     var isvalid = ValidationCheck();
     if (!isvalid) {
         return;
@@ -115,7 +104,7 @@ function SaveCustomer(action) {
     var panKyc = $("#txtPanNumber").val();
     var customerName = $("#txtCustomerName").val();
     //var customerCode = $("#txtCustomerCode").val();
-    var address = $("#txtaddress").val();
+    var address = $("#from-search-box").val();
     var city = $("#ddlCity").val();
     var selectedIndex = $("#ddlCity").prop("selectedIndex");
     var contactPerson = $("#txtContactPerson").val();
@@ -156,7 +145,6 @@ function SaveCustomer(action) {
         LinkId: linkId
 
     }
-    console.log(formData);
     if (action == "save") {
         $.ajax({
             url: saveUrl,
@@ -166,15 +154,26 @@ function SaveCustomer(action) {
             success: function (response) {
                 if (response != null) {
                     partyId = response.result.partyId;
-                    Saveattachment(partyId);
-                    window.location.href = "../Dashboard/Dashboard";
-                    toastr.success("Customer Details Submitted Successfully!");
+                    if (partyId != null) {
+                        Saveattachment(partyId);
+                        toastr.success("Customer Details Submitted Successfully!");
+                        if (typeof this.completeOnSuccess === "function") {
+                            this.completeOnSuccess();
+                        }
+                    }
+                    else {
+                        toastr.error("Failed to Submit Customer Details", "Error");
+
+                    }
                 } else {
                     toastr.error("Failed to Submit Customer Details", "Error");
                 }
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Submit Customer Details", "Error");
+            },
+            completeOnSuccess: function () {
+                FetchCustomerList();
             }
         });
     }
@@ -232,7 +231,7 @@ function EditCustomer(partyId) {
         $("#txtPanNumber").val(formData.panNo).prop("disabled", true);
         $("#txtCustomerName").val(formData.partyName);
         //$("#txtCustomerCode").val(formData.customerCode);
-        $("#txtaddress").val(formData.addressLine);
+        $("#from-search-box").val(formData.addressLine);
         $('#ddlCity').val(formData.cityId).trigger('change');
         $("#txtContactPerson").val(formData.contactPerson);
         $("#numMobile").val(formData.mobNo);
@@ -268,7 +267,7 @@ function UpdateCustomer() {
             PANVerifiedOn: $("#txtPanVerifiedOn").val(),
             PartyName: $("#txtCustomerName").val(),
             //CustomerCode: $("#txtCustomerCode").val(),
-            AddressLine: $("#txtaddress").val(),
+            AddressLine: $("#from-search-box").val(),
             CityId: $("#ddlCity").val(),
             ContactPerson: $("#txtContactPerson").val(),
             MobNo: $("#numMobile").val(),
@@ -411,9 +410,11 @@ function GstEKycClick() {
                         $("#txtTypeBusiness").val(gstModel.constitutionOfBusiness),
                         $("#txtGstStatus").val(gstModel.gstStatus),
                         $("#txtGstAddress").val(gstModel.principalAddress),
+                        $("#from-search-box").val(gstModel.principalAddress),
                         $("#txtTradeName").val(gstModel.tradeName),
+                        $("#txtCustomerName").val(gstModel.tradeName),
                         $("#txtAadharVerified").val(gstModel.aadhaarVerified),
-                        $("#txtGstVerifiedOn").val(new Date(gstModel.dateOfRegistration).toISOString().split('T')[0]),
+                        $("#txtGstVerifiedOn").val(new Date().toISOString().split('T')[0]),
                         $("#txtVerifiedGstNo").val()
                 } else {
                     toastr.warning(response.messageDescription, "Error");
@@ -453,7 +454,7 @@ function PanEKycClick() {
                     $("#txtPanName").val(panModel.fullName),
                         $("#txtAadharLinked").val(panModel.aadhaarLinked),
                         $("#txtPanStatus").val(panModel.message),
-                        $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0])
+                        $("#txtPanVerifiedOn ").val(new Date().toISOString().split('T')[0])
                 } else {
                     toastr.warning(response.messageDescription, "Error");
                     ClearPanFields();
@@ -511,7 +512,14 @@ function InitializeFields() {
         }
     });
 
-    $("#txtaddress").on("blur", function () {
+    $("#numMobile").on("blur", function () {
+        if (!IsNullOrEmpty($(this).val()) && !isMobile($(this).val())) {
+            toastr.warning("Please enter a valid Mobile No", "Validation Error");
+            return;
+        }
+    });
+
+    $("#from-search-box").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a valid Address", "Validation Error");
             return;
@@ -525,22 +533,8 @@ function InitializeFields() {
         }
     });
 
-    //$("#txtContactPerson").on("blur", function () {
-    //    if (IsNullOrEmpty($(this).val())) {
-    //        toastr.warning("Please enter a valid Contact Person", "Validation Error");
-    //        return;
-    //    }
-    //});
-
-    //$("#numMobile").on("blur", function () {
-    //    if (!isMobile($(this).val())) {
-    //        toastr.warning("Please enter a valid Mobile No", "Validation Error");
-    //        return;
-    //    }
-    //});
-
     $("#numContact").on("blur", function () {
-        if (!isMobile($(this).val())) {
+        if (!IsNullOrEmpty($(this).val()) && !isMobile($(this).val())) {
             toastr.warning("Please enter a valid Contact No", "Validation Error");
             return;
         }
@@ -561,27 +555,13 @@ function InitializeFields() {
     });
 
     $("#txtEmail").on("blur", function () {
-        if (!isValidateEmail($(this).val())) {
+        if (!IsNullOrEmpty($(this).val()) && !isValidateEmail($(this).val())) {
             toastr.warning("Please enter a valid Email", "Validation Error");
             return;
         }
     });
 }
 function ValidationCheck() {
-
-    //if (IsNullOrEmpty($("#txtGstStatus").val())) {
-    //    toastr.warning("Please complete GST and PAN E-KYC before saving!");
-    //    return false;
-    //}
-
-    //if (IsNullOrEmpty($("#txtPanStatus").val())) {
-    //    toastr.warning("Please complete GST and PAN E-KYC before saving!");
-    //    return false;
-    //}
-    //if (!IsNullOrEmpty($("#numGstNumber").val()) && !ValidateGstNumber($("#numGstNumber").val())) {
-    //    toastr.warning("Please enter a valid GST No", "Validation Error");
-    //    return false;
-    //}
 
     if (IsNullOrEmpty($("#numPan").val()) || !ValidatePanNumber($("#numPan").val())) {
         toastr.warning("Please enter a valid PAN No", "Validation Error");
@@ -593,7 +573,7 @@ function ValidationCheck() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#txtaddress").val())) {
+    if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Please enter a valid Address", "Validation Error");
         return false;
     }
@@ -603,21 +583,6 @@ function ValidationCheck() {
         return false;
     }
 
-    //if (IsNullOrEmpty($("#txtContactPerson").val()) || !isAlphabets($("#txtContactPerson").val())) {
-    //    toastr.warning("Please enter a valid Contact Person", "Validation Error");
-    //    return false;
-    //}
-
-    //if (IsNullOrEmpty($("#numMobile").val()) || !isMobile($("#numMobile").val())) {
-    //    toastr.warning("Please enter a valid Mobile No", "Validation Error");
-    //    return false;
-    //}
-
-    //if (IsNullOrEmpty($("#txtEmail").val()) || !isValidateEmail($("#txtEmail").val())) {
-    //    toastr.warning("Please enter a valid Email", "Validation Error");
-    //    return false;
-    //}
-
     if (IsNullOrEmpty($("#numPincode").val()) || !/^\d{6}$/.test($("#numPincode").val())) {
         toastr.warning("Please enter a valid Pincode", "Validation Error");
         return false;
@@ -625,11 +590,6 @@ function ValidationCheck() {
 
     if (IsNullOrEmpty($("#numWhatsApp").val()) || !isMobile($("#numWhatsApp").val())) {
         toastr.warning("Please enter a valid WhatsApp No", "Validation Error");
-        return false;
-    }
-
-    if (IsNullOrEmpty($("#numContact").val()) || !isMobile($("#numContact").val())) {
-        toastr.warning("Please enter a valid Contact No", "Validation Error");
         return false;
     }
     return true;

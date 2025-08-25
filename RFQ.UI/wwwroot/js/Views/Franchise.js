@@ -68,7 +68,7 @@ function Initialize() {
                     else {
                         SaveFranchise(null, function (companyId) {
                             if (companyId > 0) {
-                                window.location.href = "../Dashboard/Dashboard";
+                                FetchFranchise();
                             }
                         });
                     }
@@ -146,7 +146,7 @@ function Initialize() {
                             }, 1000);
                         }
                         else {
-                            window.location.href = "../Dashboard/Dashboard";
+                            FetchFranchise();
                         }
                     }
                 })
@@ -195,6 +195,18 @@ function CheckValidation() {
     $("#from-search-box").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a valid Franchise  Address", "Validation Error");
+            return;
+        }
+    });
+    $("#txtContactNumber").on("blur", function () {
+        if (!IsNullOrEmpty($(this).val()) && !isMobile($(this).val())) {
+            toastr.warning("Please enter a valid Contact No", "Validation Error");
+            return;
+        }
+    });
+    $("#txtMobileNumber").on("blur", function () {
+        if (!IsNullOrEmpty($(this).val()) && !isMobile($(this).val())) {
+            toastr.warning("Please enter a valid Mobile No", "Validation Error");
             return;
         }
     });

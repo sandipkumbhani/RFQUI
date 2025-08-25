@@ -7,6 +7,9 @@
 @section Scripts {
     <script src="~/js/AttachmentDetails.js"></script>
     <script src="~/js/Views/Vendor.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
+    </script>
 }
 
 <div id="tableDiv">
@@ -43,7 +46,6 @@
                         <thead>
                             <tr class="text-center">
                                 <th class="sortable text-center" data-column="PartyName" data-order="asc">Vendor Name</th>
-                                <th class="sortable text-center" data-column="AddressLine" data-order="asc">Address</th>
                                 <th class="sortable text-center" data-column="PinCode" data-order="asc">PinCode</th>
                                 <th class="sortable text-center" data-column="ContactPerson" data-order="asc">ContactPerson</th>
                                 <th class="sortable text-center" data-column="MobNo" data-order="asc">Mobile No</th>
@@ -195,7 +197,7 @@
                             <div class="col-lg-4">
                                 <div class="item-input">
                                     <label class="form-label">PAN Verified On</label>
-                                    <input type="text" class="form-control" placeholder="PAN Verified On" id="txtPanVerifiedOn" disabled />
+                                    <input type="date" class="form-control" placeholder="PAN Verified On" id="txtPanVerifiedOn" disabled />
 
                                 </div>
                             </div>
@@ -221,7 +223,12 @@
                             <div class="col-lg-12">
                                 <div class="item-input">
                                     <label class="form-label">Address <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="Address" id="txtAddress" maxlength="200" />
+                                    <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
+                                    <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 95%; display: none;"></ul>
+                                    <input type="hidden" id="fromLat">
+                                    <input type="hidden" id="fromLng">
+                                    <input type="hidden" id="fromState">
+                                    <input type="hidden" id="fromCity">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -279,7 +286,7 @@
                                     <ul class="profile-check-box">
                                         <li>
                                             <label class="check-box-custom">
-                                                <input class="form-check-input" type="checkbox" value="" name="user_view">
+                                                <input class="form-check-input" type="checkbox" value="" name="user_view" id="createuser">
                                                 <span class="checkmark"></span>
                                                 <span class="form-check-label">
                                                     Create User
@@ -294,7 +301,7 @@
                                     <ul class="profile-check-box">
                                         <li>
                                             <label class="check-box-custom">
-                                                <input class="form-check-input" type="checkbox" value="" name="user_view">
+                                                <input class="form-check-input" type="checkbox" value="" name="user_view" id="shareapplink">
                                                 <span class="checkmark"></span>
                                                 <span class="form-check-label">
                                                     Share App Link

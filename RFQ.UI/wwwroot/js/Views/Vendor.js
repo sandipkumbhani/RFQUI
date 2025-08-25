@@ -72,17 +72,17 @@ $(document).ready(function () {
                 data: JSON.stringify(Body),
                 dataType: "json",
                 success: function (response) {
-                    console.log(response);
                     var gstModel = response.gstModel
-                    console.log(gstModel);
                     if (gstModel != null) {
                         $("#txtLegalName").val(gstModel.legalName);
                         $("#txtTypeBusiness").val(gstModel.constitutionOfBusiness);
                         $("#txtGstStatus").val(gstModel.gstStatus);
                         $("#txtGstAddress").val(gstModel.principalAddress);
+                        $("#from-search-box").val(gstModel.principalAddress);
                         $("#txtTradeName").val(gstModel.tradeName);
+                        $("#txtVendorName").val(gstModel.tradeName);
                         $("#txtAadharVerified").val(gstModel.aadhaarVerified);
-                        $("#txtGstVerifiedOn").val(new Date(gstModel.dateOfRegistration).toISOString().split('T')[0]);
+                        $("#txtGstVerifiedOn").val(new Date().toISOString().split('T')[0]);
                         $("#txtVerifiedGstNo").val();
                     } else {
                         toastr.warning(response.messageDescription, "Warning");
@@ -116,14 +116,12 @@ $(document).ready(function () {
                 dataType: "json",
                 data: JSON.stringify(Body),
                 success: function (response) {
-                    console.log(response);
                     var panModel = response.panModel;
-                    console.log(panModel);
                     if (panModel != null) {
                         $("#txtPanName").val(panModel.fullName);
                         $("#txtAadharLinked").val(panModel.aadhaarLinked);
                         $("#txtPanStatus").val(panModel.message);
-                        $("#txtPanVerifiedOn ").val(new Date(panModel.logDateTime).toISOString().split('T')[0]);
+                        $("#txtPanVerifiedOn ").val(new Date().toISOString().split('T')[0]);
                     }
                     else {
                         toastr.warning(response.messageDescription, "Warning");
@@ -194,7 +192,7 @@ function CheckValidation() {
             return;
         }
     });
-    $("#txtAddress").on("blur", function () {
+    $("#from-search-box").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a valid Address", "Validation Error");
             return;
@@ -203,6 +201,12 @@ function CheckValidation() {
     $("#ddlCity").on("keypress", function () {
         if (!isValidateSelect($(this).val())) {
             toastr.warning("Please enter a valid Vendor City", "Validation Error");
+            return;
+        }
+    });
+    $("#txtMobileNumber").on("blur", function () {
+        if (!IsNullOrEmpty($(this).val()) && !isMobile($(this).val())) {
+            toastr.warning("Please enter a valid Mobile No", "Validation Error");
             return;
         }
     });
@@ -254,7 +258,7 @@ function OnSubmitValidation() {
         toastr.warning("Please enter a valid Vendor Category", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtAddress").val())) {
+    if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Please enter a valid Vendor Address", "Validation Error");
         return false;
     }
@@ -363,7 +367,7 @@ function SaveVendor(action) {
         var panVerifiedOn = $("#txtPanVerifiedOn").val();
         var vendorName = $("#txtVendorName").val();
         var vendorCategory = $("#ddlVendorCategory").val();
-        var vendorAddress = $("#txtAddress").val();
+        var vendorAddress = $("#from-search-box").val();
         var vendorCity = $("#ddlCity").val();
         var vendorPincode = $("#txtPinCode").val();
         var contactPerson = $("#txtContactPerson").val();
@@ -406,7 +410,7 @@ function SaveVendor(action) {
             TypeOfBusiness: typeBusiness,
             AadharVerified: adharVerified,
             GSTStatus: gstStatus,
-            GSTVarifiedOn: gstVerifiedOn? new Date(gstVerifiedOn).toISOString() : null,
+            GSTVarifiedOn: gstVerifiedOn ? new Date(gstVerifiedOn).toISOString() : null,
             PANStatus: panStatus,
             PANLinkedWithAdhar: adharLinked,
             PANVerifiedOn: panVerifiedOn ? new Date(panVerifiedOn).toISOString() : null,
@@ -414,6 +418,32 @@ function SaveVendor(action) {
             VendorVehicleTypes: vendorVehicleTypes,
             VendorApplicableRoutes: vendorApplicableRoutes
         };
+        if (createUser) {
+            var userCreate = {
+                ProfileId: EnumProfile.Vendor,
+                LoginId: whatsappNumber,
+                Password: whatsappNumber,
+                CompanyId: companyId
+            }
+            $.ajax({
+                url: '/Home/UserSave/',
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(userCreate),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result == "success") {
+                        toastr.success("Vendor Login Create Successfully!");
+                    }
+                    else {
+                        toastr.error("Failed to Create Vendor Login", "Error");
+                    }
+                },
+                error: function (req, status, error) {
+                    toastr.error("Failed to Create Vendor Login", "Error");
+                }
+            });
+        }
         if (action == "save") {
             $.ajax({
                 url: saveVendorUrl,
@@ -422,12 +452,21 @@ function SaveVendor(action) {
                 data: JSON.stringify(formData),
                 success: function (response) {
                     let partyId = response.result.partyId;
-                    Saveattachment(partyId);
-                    toastr.success("Vendor Details Submitted Successfully!");
-                    window.location.href = "../Dashboard/Dashboard";
+                    if (partyId != null) {
+                        Saveattachment(partyId);
+                        toastr.success("Vendor Details Submitted Successfully!");
+                        if (typeof this.completeOnSuccess === "function") {
+                            this.completeOnSuccess();
+                        }
+                    } else {
+                        toastr.error("Failed to Submit Vendor Details!", "Error");
+                    }
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Submit Vendor Details!", "Error");
+                },
+                completeOnSuccess: function () {
+                    FetchVendor();
                 }
             });
         }
@@ -533,7 +572,7 @@ function EditVendor(partyId) {
         $("#txtPanNumber").val(formData.panNo);
         $("#txtVendorName").val(formData.partyName);
         $("#ddlVendorCategory").val(formData.partyCategoryId).trigger('change');
-        $("#txtAddress").val(formData.addressLine);
+        $("#from-search-box").val(formData.addressLine);
         $("#ddlCity").val(formData.cityId).trigger('change');
         $("#txtContactPerson").val(formData.contactPerson);
         $("#txtMobileNumber").val(formData.mobNo);
@@ -553,7 +592,7 @@ function UpdateVendor() {
         PartyId: $("#hdnPartyId").val(),
         PartyName: $("#txtVendorName").val(),
         PartyCategoryId: $("#ddlVendorCategory").val(),
-        AddressLine: $("#txtAddress").val(),
+        AddressLine: $("#from-search-box").val(),
         CityId: $("#ddlCity").val(),
         PinCode: $("#txtPinCode").val(),
         ContactPerson: $("#txtContactPerson").val(),
@@ -568,10 +607,10 @@ function UpdateVendor() {
         TypeOfBusiness: $("#txtTypeBusiness").val(),
         AadharVerified: $("#txtAadharVerified").val(),
         GSTStatus: $("#txtGstStatus").val(),
-        GSTVarifiedOn: $("#txtGstVerifiedOn").val(),
+        GSTVarifiedOn: $("#txtGstVerifiedOn").val() ? new Date($("#txtGstVerifiedOn").val()).toISOString() : null,
         PANStatus: $("#txtPanStatus").val(),
         PANLinkedWithAdhar: $("#txtAadharLinked").val(),
-        PANVerifiedOn: $("#txtPanVerifiedOn").val(),
+        PANVerifiedOn: $("#txtPanVerifiedOn").val() ? new Date($("#txtPanVerifiedOn").val()).toISOString() : null,
         LinkId: linkId,
         VendorVehicleTypes: vehicleTypeNameList.map(item => ({
             PartyVehicleTypeId: item.PartyVehicleTypeId,
@@ -715,6 +754,13 @@ function VehicleTypeDetailsTable() {
             toastr.warning("Please Select Vehcile Type Name!", "Warning");
             return;
         }
+        const isExist = vehicleTypeNameList.some(x =>
+            x.VehicleTypeId == getSelectVehicleTypeID
+        );
+        if (isExist) {
+            toastr.warning("This Vehicle Type already exists in list!", "Warning");
+            return;
+        }
         const getvehicleTypeName = $('#ddlvendorVehicleTypeTable option:selected').text();
         vehicleTypeNameList.push({
             VehicleTypeId: getSelectVehicleTypeID,
@@ -747,61 +793,6 @@ function VehicleTypeDetailsTable() {
         });
         RenderVehicleTypeDetailsTable();
     });
-    $('#vendorVehicleTypeTable').on('click', '.editVehicleType', function () {
-        const rowIndex = $(this).closest('tr').data('index');
-        const vehicleType = vehicleTypeNameList[rowIndex];
-        const selectHtml = `<select id="editVehicleTypeSelect"  class="select2-custom form-control" placeholdeeer="Select a Vehicle Type">  
-          ${$('#ddlvendorVehicleTypeTable').html()}  
-        </select>`;
-        $(this).closest('tr').find('td:nth-child(2)').html(selectHtml);
-        //$('#editVehicleTypeSelect').select2('refresh');
-        //$('#editVehicleTypeSelect').val(vehicleType.VehicleTypeId);  
-
-        const actionButtonsHtml = `
-              <button type="button" class="saveEditVehicleType" style="color:blue;border:none;background:none;">Save</button> /
-              <button type="button" class="cancelEditVehicleType" style="color:blue;border:none;background:none;">Cancel</button>
-          `;
-        $(this).closest('tr').find('td:nth-child(3)').html(actionButtonsHtml);
-
-        $('.saveEditVehicleType').on('click', function () {
-            const selectedVehicleTypeId = $('#editVehicleTypeSelect').val();
-            const selectedVehicleTypeName = $('#editVehicleTypeSelect option:selected').text();
-
-            if (!selectedVehicleTypeId) {
-                toastr.warning("Please select a valid Vehicle Type!", "Validation Error");
-                return;
-            }
-
-            vehicleTypeNameList[rowIndex] = {
-                PartyVehicleTypeId: vehicleType.PartyVehicleTypeId,
-                VehicleTypeId: selectedVehicleTypeId,
-                VehicleTypeName: selectedVehicleTypeName
-            };
-
-            RenderVehicleTypeDetailsTable();
-        });
-
-        $('.cancelEditVehicleType').on('click', function () {
-            RenderVehicleTypeDetailsTable();
-        });
-
-        $('#btnEditAddVehicleType').on('click', function () {
-            const selectedVehicleTypeId = $('#editVehicleTypeSelect').val();
-            const selectedVehicleTypeName = $('#editVehicleTypeSelect option:selected').text();
-
-            if (!selectedVehicleTypeId) {
-                toastr.warning("Please select a valid Vehicle Type!", "Validation Error");
-                return;
-            }
-
-            vehicleTypeNameList[rowIndex] = {
-                VehicleTypeId: selectedVehicleTypeId,
-                VehicleTypeName: selectedVehicleTypeName
-            };
-
-            RenderVehicleTypeDetailsTable();
-        });
-    });
     return;
 }
 function RenderVehicleTypeDetailsTable() {
@@ -813,9 +804,8 @@ function RenderVehicleTypeDetailsTable() {
       <tr data-index="${index}">
         <td class="text-center">${index + 1}</td>
         <td class="text-center">${item.VehicleTypeName}</td>
-        <td class="text-center">
-          <button type="button" class="editVehicleType" style="color:blue;border:none;background:none;">Edit</button> /
-          <button type="button" class="deleteVehicleType" style="color:blue;border:none;background:none;">Delete</button>
+        <td class="text-center" style="cursor:pointer;">
+          <a class="icon-btn deleteVehicleType"  style="color:#F24B5A;"><i class="ri-delete-bin-3-line"></i></a>
         </td>
       </tr>
     `;
@@ -841,6 +831,15 @@ function ApplicableRouteDetailsTable() {
         }
         if (getSelectToStateID == null || getSelectToStateID == '') {
             toastr.warning("Please Select To State!", "Warning");
+            return;
+        }
+        const isExist = applicableRouteList.some(x =>
+            x.FromCityId == getSelectFromCityID &&
+            x.FromStateId == getSelectFromStateID &&
+            x.ToStateId == getSelectToStateID
+        );
+        if (isExist) {
+            toastr.warning("This route already exists in list!", "Warning");
             return;
         }
         const getFromCityName = $('#ddlvendorFromCityTable option:selected').text();
@@ -881,69 +880,6 @@ function ApplicableRouteDetailsTable() {
         });
         RenderApplicableRouteDetailsTable();
     });
-    $('#applicableRouteDetails').on('click', '.editApplicableRouteDetails', function () {
-        const rowIndex = $(this).closest('tr').data('index');
-        const routeDetails = applicableRouteList[rowIndex];
-
-        const fromCitySelectHtml = `<select id="editFromCitySelect" class="select2-custom form-control">  
-           ${$('#ddlvendorFromCityTable').html()}  
-       </select>`;
-        const fromStateSelectHtml = `<select id="editFromStateSelect" class="select2-custom form-control">  
-           ${$('#ddlvendorFromStateTable').html()}  
-       </select>`;
-        const toStateSelectHtml = `<select id="editToStateSelect" class="select2-custom form-control">  
-           ${$('#ddlvendorToStateTable').html()}  
-       </select>`;
-
-        $(this).closest('tr').find('td:nth-child(2)').html(fromCitySelectHtml);
-        $(this).closest('tr').find('td:nth-child(3)').html(fromStateSelectHtml);
-        $(this).closest('tr').find('td:nth-child(4)').html(toStateSelectHtml);
-
-        $('#editFromCitySelect').val(routeDetails.FromCityId).trigger('change');
-        $('#editFromStateSelect').val(routeDetails.FromStateId).trigger('change');
-        $('#editToStateSelect').val(routeDetails.ToStateId).trigger('change');
-
-        const actionButtonsHtml = `  
-           <button type="button" class="saveEditApplicableRouteDetails" style="color:blue;border:none;background:none;">Save</button> /  
-           <button type="button" class="cancelEditApplicableRouteDetails" style="color:blue;border:none;background:none;">Cancel</button>  
-       `;
-        $(this).closest('tr').find('td:nth-child(5)').html(actionButtonsHtml);
-        $('#editFromCitySelect').on('change', function () {
-            const stateId = $('option:selected', this).data('stateid');
-            $('#editFromStateSelect').val(stateId).change();
-        });
-
-
-        $('.saveEditApplicableRouteDetails').on('click', function () {
-            const selectedFromCityId = $('#editFromCitySelect').val();
-            const selectedFromCityName = $('#editFromCitySelect option:selected').text();
-            const selectedFromStateId = $('#editFromStateSelect').val();
-            const selectedFromStateName = $('#editFromStateSelect option:selected').text();
-            const selectedToStateId = $('#editToStateSelect').val();
-            const selectedToStateName = $('#editToStateSelect option:selected').text();
-
-            if (!selectedFromCityId || !selectedFromStateId || !selectedToStateId) {
-                toastr.warning("Please select valid route details!", "Validation Error");
-                return;
-            }
-
-            applicableRouteList[rowIndex] = {
-                PartyRouteId: routeDetails.PartyRouteId,
-                FromCityId: selectedFromCityId,
-                FromCity: selectedFromCityName,
-                FromStateId: selectedFromStateId,
-                FromState: selectedFromStateName,
-                ToStateId: selectedToStateId,
-                ToState: selectedToStateName
-            };
-
-            RenderApplicableRouteDetailsTable();
-        });
-
-        $('.cancelEditApplicableRouteDetails').on('click', function () {
-            RenderApplicableRouteDetailsTable();
-        });
-    });
     return;
 }
 function RenderApplicableRouteDetailsTable() {
@@ -957,9 +893,8 @@ function RenderApplicableRouteDetailsTable() {
         <td class="text-center">${item.FromCity}</td>
         <td class="text-center">${item.FromState}</td>
         <td class="text-center">${item.ToState}</td>
-        <td class="text-center">
-          <button type="button" class="editApplicableRouteDetails" style="color:blue;border:none;background:none;">Edit</button> /
-          <button type="button" class="deleteApplicableRouteDetails" style="color:blue;border:none;background:none;">Delete</button>
+        <td class="text-center" style="cursor:pointer;">
+          <a class="icon-btn deleteApplicableRouteDetails"  style="color:#F24B5A;"><i class="ri-delete-bin-3-line"></i></a>
         </td>
       </tr>
     `;

@@ -72,19 +72,24 @@ function SaveProduct(action) {
             dataType: "json",
             data: JSON.stringify(formData),
             success: function (response) {
-                debugger;
                 response = JSON.parse(response)
                 if (response.success) {
                     toastr.success("Item Save Successfully!");
-                    window.location.href = "../Dashboard/Dashboard";
+                    if (typeof this.completeOnSuccess === "function") {
+                        this.completeOnSuccess();
+                    }
                 } else {
-                    toastr.warning(response.message,"warning");
+                    toastr.error("Failed to Product Details!", "warning");
                 }
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Product Details!", "Error");
 
+            },
+            completeOnSuccess: function () {
+                FetchProduct();
             }
+
         });
     }
     else if (action == "saveNew") {
@@ -95,7 +100,7 @@ function SaveProduct(action) {
             dataType: "json",
             data: JSON.stringify(formData),
             success: function (response) {
-                response  = JSON.parse(response)
+                response = JSON.parse(response)
                 if (response.success) {
                     toastr.success("Item Save Successfully!");
                     $('#productForm')[0].reset();

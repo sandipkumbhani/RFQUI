@@ -67,6 +67,13 @@ $('#addCompany').click(function () {
 });
 function FetchCorporateCompany() {
     $("#tableDiv").show();
+    $("#formDiv").css('display', 'none');
+    $('#CompanyTypeForm')[0].reset();
+    $('#ddlFranchisename').val(null).trigger('change');
+    $('#ddlCity').val(null).trigger('change');
+    $("#btnupdate").hide();
+    $("#btnsaveandnew").show();
+    $("#btnSaveCompanyType").show();
     FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', null, null);
 }
 $('#corporateTableSearch').off('keyup').on('keyup', function () {
@@ -158,7 +165,7 @@ function OnSubmitCheckValidation() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#txtAddress").val())) {
+    if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Please enter a valid Address", "Validation Error");
         return false;
     }
@@ -228,7 +235,7 @@ function ButtonUpdateClick() {
                 CompanyName: $("#txtCompanyName").val(),
                 MobNo: $("#txtMobileNumber").val(),
                 ContactNo: $("#txtContactNumber").val(),
-                AddressLine: $("#txtAddress").val(),
+                AddressLine: $("#from-search-box").val(),
                 CityId: $("#ddlCity").val(),
                 PinCode: $("#txtPinCode").val(),
                 ContactPerson: $("#txtPerson").val(),
@@ -365,7 +372,7 @@ function DeleteCorporateCompany(companyId, linkId) {
 function SaveCorporateCompany(action) {
     var companyName = $("#txtCompanyName").val();
     var franchiseName = $("#ddlFranchisename").val();
-    var address = $("#txtAddress").val();
+    var address = $("#from-search-box").val();
     var city = $("#ddlCity").val();
     var pincode = $("#txtPinCode").val();
     var contactPerson = $("#txtPerson").val();
@@ -403,11 +410,22 @@ function SaveCorporateCompany(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 let companyId = response.result.companyId;
-                Saveattachment(companyId);
-                window.location.href = "../Dashboard/Dashboard";
+                if (companyId != null) {
+                    Saveattachment(companyId);
+                    toastr.success("Corporate Company Details Submitted Successfully");
+                    if (typeof this.completeOnSuccess === "function") {
+                        this.completeOnSuccess();
+                    }
+                }
+                else {
+                    toastr.error("Failed to Submit Corporate Company Details!", "Error");
+                }
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Submit Corporate Company Details!", "Error");
+            },
+            completeOnSuccess: function () {
+                FetchCorporateCompany();
             }
         });
     }
@@ -461,7 +479,7 @@ function EditCorporateCompany(companyId) {
         $("#txtPerson").val(formData.contactPerson);
         $("#txtMobileNumber").val(formData.mobNo);
         $("#txtContactNumber").val(formData.contactNo);
-        $("#txtAddress").val(formData.addressLine);
+        $("#from-search-box").val(formData.addressLine);
         $("#ddlCity").val(formData.cityId).trigger('change');
         $("#txtPinCode").val(formData.pinCode);
         $("#txtEmail").val(formData.email);
