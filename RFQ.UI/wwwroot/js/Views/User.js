@@ -192,7 +192,9 @@ function SaveUser(action) {
             success: function (response) {
                 if (response.result == "success") {
                     toastr.success("User Details Submitted Successfully!");
-                    FetchUser();
+                    if (typeof this.completeOnSuccess === "function") {
+                        this.completeOnSuccess();
+                    }
                 }
                 else {
                     toastr.error("User already exists", "Error");
@@ -200,6 +202,9 @@ function SaveUser(action) {
             },
             error: function (req, status, error) {
                 toastr.error("Failed to Save User Details", "Error");
+            },
+            completeOnSuccess: function () {
+                FetchUser();
             }
         });
     }
@@ -414,7 +419,6 @@ function GetAllUser() {
         dataType: 'json',
         success: function (response) {
             allUserList = response;
-            console.log("All Users Loaded:", allUserList);
         },
         error: function (xhr, status, error) {
             console.log(error);

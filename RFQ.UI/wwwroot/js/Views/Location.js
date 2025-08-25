@@ -45,7 +45,7 @@ function Initialization() {
             return;
         }
     });
-    $("#txtAddress").on("blur", function () {
+    $("#from-search-box").on("blur", function () {
         var Address = $(this).val();
         if (IsNullOrEmpty(Address)) {
             toastr.warning("Please enter a Address", "Validation Error");
@@ -56,6 +56,12 @@ function Initialization() {
         var city = $(this).val();
         if (!isValidateSelect(city)) {
             toastr.warning("Please enter a City", "Validation Error");
+            return;
+        }
+    });
+    $("#txtMobileNumber").on("blur", function () {
+        if (!IsNullOrEmpty($(this).val()) && !isMobile($(this).val())) {
+            toastr.warning("Please enter a valid Mobile No", "Validation Error");
             return;
         }
     });
@@ -74,14 +80,16 @@ function Initialization() {
         }
     });
     $("#txtEmail").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
+        if (!IsNullOrEmpty($(this).val()) && !isValidateEmail($(this).val())) {
+            toastr.warning("Please enter a valid email", "Validation Error");
             return;
         }
-        else {
-            if (!isValidateEmail(email)) {
-                toastr.warning("Please enter a valid email", "Validation Error");
-                return;
-            }
+    });
+
+    $("#txtContactNumber").on("blur", function () {
+        if (!IsNullOrEmpty($(this).val()) && !isMobile($(this).val())) {
+            toastr.warning("Please enter a valid Contact No", "Validation Error");
+            return;
         }
     });
     $('#backButton').on('click', function () {
@@ -98,7 +106,13 @@ function Initialization() {
     });
 }
 function FetchLocationList() {
-    $("#FetchLocationList").show();
+    $("#locationFormSection").hide();
+    $("#locationListSection").show();
+    $('#LocationForm')[0].reset();
+    $('#ddlCity').val(null).trigger('change');
+    $("#btnUpdate").hide();
+    $("#btnSaveAndNewForm").show();
+    $("#btnSaveForm").show();
     FetchDataForTable('tablelocation', '/Location/ViewLocationList', null, null);
 }
 function SaveLocation(action) {
@@ -107,7 +121,7 @@ function SaveLocation(action) {
         return;
     }
     var locationname = $('#txtLocationName').val();
-    var address = $('#txtAddress').val();
+    var address = $('#from-search-box').val();
     var city = $("#ddlCity").val();
     var pincode = $("#txtPinCode").val();
     var contactPerson = $("#txtPerson").val();
@@ -143,7 +157,9 @@ function SaveLocation(action) {
                 }
                 else if (response == "Location Saved") {
                     toastr.success("Location Details Submitted Successfully!");
-                    window.location.href = "../Dashboard/Dashboard";
+                    if (typeof this.completeOnSuccess === "function") {
+                        this.completeOnSuccess();
+                    }
                 }
                 else {
                     toastr.error("Failed to Submit Location Details", "Error");
@@ -151,6 +167,9 @@ function SaveLocation(action) {
             },
             error: function (req, status, error) {
                 toastr.error("Failed to Submit Location Details", "Error");
+            },
+            completeOnSuccess: function () {
+                FetchLocationList();
             }
         });
     }
@@ -191,7 +210,7 @@ function UpdateLocation() {
         var locationmodel = {
             LocationId: $('#hdnLocationId').val(),
             LocationName: $('#txtLocationName').val(),
-            AddressLine: $('#txtAddress').val(),
+            AddressLine: $('#from-search-box').val(),
             CityId: $("#ddlCity").val(),
             PinCode: $("#txtPinCode").val(),
             ContactPerson: $("#txtPerson").val(),
@@ -244,7 +263,7 @@ function EditLocation(locationId) {
     $("#btnSaveAndNewForm").prop("disabled", true);
     $('#hdnLocationId').val(formdata.locationId);
     $('#txtLocationName').val(formdata.locationName);
-    $('#txtAddress').val(formdata.addressLine);
+    $('#from-search-box').val(formdata.addressLine);
     $('#ddlCity').val(formdata.cityId).trigger('change');
     $("#txtPinCode").val(formdata.pinCode);
     $("#txtPerson").val(formdata.contactPerson);
@@ -291,7 +310,7 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid Location Name", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtAddress").val())) {
+    if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Address is Required", "Validation Error");
         return false;
     }

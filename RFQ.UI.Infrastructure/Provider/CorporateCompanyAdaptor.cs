@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
@@ -109,7 +110,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 if (responseModel != null)
                 {
                     var franchiselist = JsonConvert.DeserializeObject<List<FranchiseListDto>>(Convert.ToString(responseModel.Data!));
-                    franchiselist = franchiselist.Where(x => x.CompanyTypeId == 2).ToList();
+                    franchiselist = franchiselist.Where(x => x.CompanyTypeId == (int)EnumInternalMaster.FRANCHISE).ToList();
                     return franchiselist;
                 }
                 return null;

@@ -7,24 +7,10 @@
 
 @section Scripts {
 	<script src="~/js/Views/Location.js"></script>
+	<script async defer
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
+	</script>
 }
-@* <head> *@
-@* 	<!-- Latest compiled and minified CSS --> *@
-@* 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"> *@
-@* 	<!-- Latest compiled and minified JavaScript --> *@
-@* 	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> *@
-@* 	<!-- (Optional) Latest compiled and minified JavaScript translation files --> *@
-@* 	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script> *@
-@* 	<style> *@
-@* 		.item-input { *@
-@* 			margin-bottom: 0.75rem; *@
-@* 		} *@
-
-@* 		.form-label span { *@
-@* 			color: red; *@
-@* 		} *@
-@* 	</style> *@
-@* </head> *@
 
 <div id="locationListSection">
 	<div class="row">
@@ -136,7 +122,12 @@
 					<div class="col-xl-12 col-lg-6">
 						<div class="item-input">
 							<label class="form-label">Address <span>*</span></label>
-							<input type="text" class="form-control" placeholder="Map Based Search" id="txtAddress" maxlength="200" />
+							<input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
+							<ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 93%; display: none;"></ul>
+							<input type="hidden" id="fromLat">
+							<input type="hidden" id="fromLng">
+							<input type="hidden" id="fromState">
+							<input type="hidden" id="fromCity">
 						</div>
 					</div>
 					<div class="col-xl-6 col-lg-6">

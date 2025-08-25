@@ -251,7 +251,6 @@ function GetGridHtml(response, gridTableName) {
             rowsHtml += `
                     <tr> 
                         <td>${item.partyName}</td>
-                        <td>${item.addressLine}</td>
                         <td>${item.pinCode}</td>
                         <td>${item.contactPerson}</td>
                         <td>${item.mobNo}</td>
@@ -429,7 +428,6 @@ function GetGridHtml(response, gridTableName) {
         });
     }
     if (gridTableName == "rfqFinalizationTable") {
-        console.log(response.data);
         response.data.forEach(item => {
             rowsHtml += `
                       <tr>

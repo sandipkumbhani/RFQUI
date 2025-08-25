@@ -61,22 +61,22 @@ function Initializejquery() {
 function GetAllCompany() {
     $("#tableDiv").show();
     $.ajax({
-        url: '/Customer/GetDrpCustomerList',
+        url: '/CompanyConfiguration/GetAllCompany',
         type: "GET",
-        data: { companyId: companyId },
         dataType: "json",
         success: function (response) {
+            response = response.filter(x => x.companyTypeId == EnumInternalMaster.CORPORATE);
             const selectCustomer = document.getElementById("ddlCompany");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
-            placeholderOption.textContent = "Select Customer Name";
+            placeholderOption.textContent = "Select Company Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             selectCustomer.appendChild(placeholderOption);
             response.forEach(name => {
                 const option = document.createElement("option");
-                option.value = name.partyId;
-                option.textContent = name.partyName;
+                option.value = name.companyId;
+                option.textContent = name.companyName;
                 selectCustomer.appendChild(option);
             });
         },
@@ -88,7 +88,7 @@ function GetAllCompany() {
 function CheckValidation() {
     $("#txtSmsAuthKey").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
-            return; 
+            return;
         }
         else {
             if (!IsValidAuthKey($(this).val())) {
@@ -98,7 +98,7 @@ function CheckValidation() {
         }
     });
     $("#txtWhatsappAuthKey").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())){
+        if (IsNullOrEmpty($(this).val())) {
             return;
         }
         else {
@@ -195,14 +195,14 @@ function SaveCompanyConfiguration(action) {
         let formData = {
             CompanyConfigId: 0,
             CompanyId: Number(company),
-            SMSProvider: smsProvider ,
-            SMSAuthKey: smsAuthKey ,
-            WhatsAppProvider: whatsappProvider ,
-            WhatsAppAuthKey: whatsappAuthKey ,
-            SMTPHost: smtpHost ,
-            SMTPPort: Number(smtpPort) ,
-            SMTPUsername: smtpUserName ,
-            SMTPPassword: smtpPassword 
+            SMSProvider: smsProvider,
+            SMSAuthKey: smsAuthKey,
+            WhatsAppProvider: whatsappProvider,
+            WhatsAppAuthKey: whatsappAuthKey,
+            SMTPHost: smtpHost,
+            SMTPPort: Number(smtpPort),
+            SMTPUsername: smtpUserName,
+            SMTPPassword: smtpPassword
         };
         if (action == "save") {
             $.ajax({
@@ -212,11 +212,20 @@ function SaveCompanyConfiguration(action) {
                 dataType: "json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    window.location.href = "../Dashboard/Dashboard";
-                    toastr.success("Company Configuration Details Submitted Successfully!");
+                    if (response.result == "Success") {
+                        toastr.success("Company Configuration Details Submitted Successfully!");
+                        if (typeof this.completeOnSuccess === "function") {
+                            this.completeOnSuccess();
+                        }
+                    } else {
+                        toastr.error("Failed to Save Company Configuration Details!", "Error");
+                    }
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Save Company Configuration Details!", "Error");
+                },
+                completeOnSuccess: function () {
+                    FetchCompanyConfiguration();
                 }
             });
         }
@@ -242,8 +251,15 @@ function SaveCompanyConfiguration(action) {
     }
 }
 function FetchCompanyConfiguration() {
+    $("#formSection").hide();
     $("#listSection").show();
-
+    $('#companyConfigurationForm')[0].reset();
+    $('#ddlSmsProvider').val(null).trigger('change');
+    $('#ddlWhatsappProvider').val(null).trigger('change');
+    $('#ddlCompany').val(null).trigger('change');
+    $("#btnUpdate").hide();
+    $("#btnSaveAndNewForm").show();
+    $("#btnSaveForm").show();
     FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
 }
 
@@ -302,14 +318,14 @@ function UpdateCompanyConfiguration(companyConfigId) {
         let formData = {
             CompanyConfigId: Number(companyConfigId),
             CompanyId: Number(company),
-            SMSProvider: smsProvider || null,
-            SMSAuthKey: smsAuthKey || null,
-            WhatsAppProvider: whatsappProvider || null,
-            WhatsAppAuthKey: whatsappAuthKey || null,
-            SMTPHost: smtpHost || null,
-            SMTPPort: Number(smtpPort) || 0,
-            SMTPUsername: smtpUserName || null,
-            SMTPPassword: smtpPassword || null
+            SMSProvider: smsProvider ,
+            SMSAuthKey: smsAuthKey ,
+            WhatsAppProvider: whatsappProvider ,
+            WhatsAppAuthKey: whatsappAuthKey ,
+            SMTPHost: smtpHost ,
+            SMTPPort: Number(smtpPort) ,
+            SMTPUsername: smtpUserName ,
+            SMTPPassword: smtpPassword 
         };
         $.ajax({
             url: updateUrl,
@@ -320,7 +336,6 @@ function UpdateCompanyConfiguration(companyConfigId) {
                 if (response.result == 'success') {
                     FetchCompanyConfiguration();
                     toastr.success("Company Configuration Details Updated Successfully!");
-
                     $("#formSection").hide();
                     $("#listSection").show();
                     $('#companyConfigurationForm')[0].reset();
@@ -359,8 +374,14 @@ function DeleteCompanyConfiguration(CompanyConfigrationId) {
                 dataType: "json",
                 data: JSON.stringify(CompanyConfigrationId),
                 success: function (response) {
-                    toastr.success("Company Configuration Details Deleted Successfully!");
-                    FetchCompanyConfiguration();
+                    if (response.result == "success") {
+                        toastr.success("Company Configuration Details Deleted Successfully!");
+                        FetchCompanyConfiguration();
+                        $('#currentPage').val(1);
+                    }
+                    else {
+                        toastr.error("Failed to Delete Company Configuration Details!", "Error");
+                    }
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Delete Company Configuration Details!", "Error");

@@ -6,27 +6,29 @@ function initMap() {
     autocompleteService = new google.maps.places.AutocompleteService();
     geocoder = new google.maps.Geocoder();
 
-    // Initialize both inputs
-    setupLocationSearch(
-        "from-search-box",
-        "from-location-suggestions",
-        "fromLat",
-        "fromLng",
-        "fromState",
-        "fromCity"
-    );
-
-    setupLocationSearch(
-        "to-search-box",
-        "to-location-suggestions",
-        "toLat",
-        "toLng",
-        "toState",
-        "toCity"
-    );
+    if (document.getElementById("from-search-box")) {
+        setupLocationSearch(
+            "from-search-box",
+            "from-location-suggestions",
+            "fromLat",
+            "fromLng",
+            "fromState",
+            "fromCity"
+        );
+    }
+    if (document.getElementById("to-search-box")) {
+        setupLocationSearch(
+            "to-search-box",
+            "to-location-suggestions",
+            "toLat",
+            "toLng",
+            "toState",
+            "toCity"
+        );
+    }
 }
 
-function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId,cityId) {
+function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, cityId) {
     const input = document.getElementById(inputId);
     const suggestionsBox = document.getElementById(suggestionListId);
     let currentFocus = -1;
@@ -106,7 +108,7 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId,ci
     });
 }
 
-function getLatLngAndState(placeId, latId, lngId, stateId,cityId) {
+function getLatLngAndState(placeId, latId, lngId, stateId, cityId) {
     geocoder.geocode({ placeId: placeId }, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK && results[0]) {
             let location = results[0].geometry.location;
@@ -133,7 +135,7 @@ function getLatLngAndState(placeId, latId, lngId, stateId,cityId) {
             document.getElementById(latId).value = lat.toFixed(6);
             document.getElementById(lngId).value = lng.toFixed(6);
             document.getElementById(stateId).value = state;
-            document.getElementById(cityId).value = city; 
+            document.getElementById(cityId).value = city;
         } else {
             console.error("Geocoder failed or no result:", status);
         }

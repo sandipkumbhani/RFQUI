@@ -20,7 +20,9 @@ $(document).ready(function () {
 
     $("#btnSaveVehicle, #btnSaveNewVehicle").on('click', function () {
         var action = $(this).data('action');
-        SaveVehicle(action);
+        SaveVehicle(action, function () {
+            FetchVehicleList();
+        });
     });
 
     $('#btnAddVehicle').click(function () {
@@ -57,7 +59,7 @@ $(document).ready(function () {
 
 
 });
-function SaveVehicle(action) {
+function SaveVehicle(action, callback) {
 
     var isValid = OnSubmitValidation();
     if (!isValid) {
@@ -139,7 +141,10 @@ function SaveVehicle(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response.result == "success") {
-                    window.location.href = "../Dashboard/Dashboard";
+                    toastr.success("Vehicle Details Submitted Successfully!");
+                    if (callback && typeof callback === 'function') {
+                        callback();
+                    }
                 } else {
                     toastr.error("Something went wrong!");
                 }
@@ -361,6 +366,8 @@ function DeleteVehicle(vehicleId) {
 
 function FetchVehicleList() {
     $("#tableDiv").show();
+    $('#btnAddVehicle').removeClass('d-none');
+    $("#addVehicleDiv").addClass('d-none');
     FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase());
 }
 
