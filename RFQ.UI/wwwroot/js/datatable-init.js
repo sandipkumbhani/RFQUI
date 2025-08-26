@@ -4,8 +4,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#remindersTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#remindersTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("remindersTable", csvData);
+                }
             },
         ],
 
@@ -63,8 +82,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#franchiseTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#franchiseTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("franchiseTable", csvData);
+                }
             },
         ],
         paging: false,
@@ -104,8 +142,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#driverTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#driverTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("driverTable", csvData);
+                }
             },
         ],
         paging: false,
@@ -147,8 +204,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#vendorTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#vendorTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("vendorTable", csvData);
+                }
             },
         ],
         paging: false,
@@ -186,8 +262,26 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+                   
+                    $('#customerTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#customerTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("customerTable", csvData);
+                }
             },
         ],
         paging: false,
@@ -227,8 +321,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#vehicleTypesTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#vehicleTypesTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("vehicleTypesTable", csvData);
+                }
             },
         ],
         paging: false,
@@ -279,8 +392,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#applicableRouteTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#applicableRouteTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("applicableRouteTable", csvData);
+                }
             },
         ],
         paging: true,
@@ -336,8 +468,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#corporateTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#corporateTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("corporateTable", csvData);
+                }
             }
         ],
 
@@ -407,8 +558,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#vehicleTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#vehicleTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("vehicleTable", csvData);
+                }
             },
         ],
         paging: false,
@@ -443,8 +613,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+               // extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#tablelocation thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#tablelocation tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("tablelocation", csvData);
+                }
             },
         ],
         paging: true,
@@ -493,8 +682,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#tableuser thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#tableuser tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("tableuser", csvData);
+                }
             },
         ],
         paging: true,
@@ -543,8 +751,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#tableCmpConfig thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#tableCmpConfig tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("tableCmpConfig", csvData);
+                }
             },
         ],
         paging: true,
@@ -593,8 +820,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#productTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#productTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("productTable", csvData);
+                }
             },
         ],
         paging: false,
@@ -632,8 +878,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#rfqTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#rfqTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("rfqTable", csvData);
+                }
             },
         ],
         paging: false,
@@ -670,8 +935,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#rfqFinalizationTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#rfqFinalizationTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("rfqFinalizationTable", csvData);
+                }
             },
         ],
         paging: false,
@@ -708,8 +992,27 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'csv',
+                //extend: 'csv',
                 text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#IndentTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#IndentTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("IndentTable", csvData);
+                }
             }
         ],
 
