@@ -25,7 +25,7 @@ namespace RFQ.UI.Infrastructure.Provider
         }
 
 
-        public async Task<string> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto)
+        public async Task<NewCommonResponseDto> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto)
         {
             try
             {
@@ -37,19 +37,15 @@ namespace RFQ.UI.Infrastructure.Provider
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return "Vehicle Saved";
-                    else
-                        return responseModel?.ErrorMessage ?? "";
+                    return JsonConvert.DeserializeObject<NewCommonResponseDto>(responseModel.Data.ToString());
                 }
-                return string.Empty;
+                return new NewCommonResponseDto();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return new NewCommonResponseDto() { Data = null, Message = ex.InnerException.ToString(),ErrorMessage= ex.StackTrace };
             }
         }
 

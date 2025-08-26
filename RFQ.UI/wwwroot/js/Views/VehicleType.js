@@ -101,14 +101,15 @@ function SaveVehicleType(action) {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    if (response.result == "success") {
-                        toastr.success("Vehicle Type Details Submitted Successfully!", "Success");
+                    debugger;
+                    if (response.statusCode == 200) {
+                        toastr.success(response.message, "Success");
                         if (typeof this.completeOnSuccess === "function") {
                             this.completeOnSuccess();
                         }
                     }
                     else {
-                        toastr.error("Failed to Submit Vehicle Type Details!", "Error");
+                        toastr.warning(response.message, "warning");
                     }
                 },
                 error: function (xhr, status, error) {
@@ -126,12 +127,12 @@ function SaveVehicleType(action) {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    if (response.result == "success") {
-                        toastr.success("Vehicle Type Details Submitted Successfully!");
+                    if (response.statusCode == 200) {
+                        toastr.success(response.message, "Success");
                         $('#VehicleTypeForm')[0].reset();
                     }
                     else {
-                        toastr.error("Failed to Submit Vehicle Type Details!", "Error");
+                        toastr.warning(response.message, "warning");
                     }
                 },
                 error: function (xhr, status, error) {
