@@ -429,7 +429,7 @@
                                     <span>ChangePassword</span>
                                 </a>
                                 <!-- item-->
-                                <a href="@Url.Action("ResetPassword", "Login")" class="dropdown-item">
+                                <a href="@Url.Action("ResetPassword", "Login")" class="dropdown-item d-none" id="resetPassword">
                                     <span>Reset Password</span>
                                 </a>
                                 <!-- item-->
@@ -525,10 +525,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
+           var profileid = getCookieValue("profileid");
            var UserEmail = getCookieValue("UserEmail");
            var PersonName = getCookieValue("PersonName");
+
+           if(profileid != 1)
+              $("#resetPassword").addClass('d-none');
+           else
+                $("#resetPassword").removeClass('d-none');
+
             $("#UserEmail").text(decodeURIComponent(UserEmail));
             $("#PersonName").text(PersonName);
+
             showInitial(PersonName); // Calling function
             $.ajax({
                 url: '/Home/GetMenu',
