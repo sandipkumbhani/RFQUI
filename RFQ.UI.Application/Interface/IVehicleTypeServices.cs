@@ -6,7 +6,7 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IVehicleTypeServices
     {
-        Task<string> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto);
+        Task<NewCommonResponseDto> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto);
 
         Task<PageList<VehicleTypeResponseDto>> GetVehicleTypeAll(PagingParam pagingParam);
 

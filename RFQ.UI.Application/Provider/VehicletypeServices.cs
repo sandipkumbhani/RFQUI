@@ -14,7 +14,7 @@ namespace RFQ.UI.Application.Provider
         {
             _vehicleTypeAdaptor = vehicleTypeAdaptor;
         }
-        public async Task<string> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto)
+        public async Task<NewCommonResponseDto> AddVehicleType(VehicleTypeRequestDto vehicleTypeRequestDto)
         {
             return await _vehicleTypeAdaptor.AddVehicleType(vehicleTypeRequestDto);
         }

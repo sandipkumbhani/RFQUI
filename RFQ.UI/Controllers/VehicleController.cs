@@ -34,10 +34,10 @@ namespace RFQ.UI.Controllers
         {
             return View();
         }
-        
+
 
         [HttpPost]
-        public IActionResult VehicleTypeSave([FromBody] VehicleTypeRequestDto vehicleTypeRequestDto)
+        public async Task<IActionResult> VehicleTypeSave([FromBody] VehicleTypeRequestDto vehicleTypeRequestDto)
         {
             try
             {
@@ -51,18 +51,14 @@ namespace RFQ.UI.Controllers
                     vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(userid);
                     vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
-                    var result = _vehicleTypeServices.AddVehicleType(vehicleTypeRequestDto);
-                    return Json(new { result = "success" });
+                    var result = await _vehicleTypeServices.AddVehicleType(vehicleTypeRequestDto);
+                    return Json(result);
                 }
-                else
-                {
-                    return Json(new { result = "fail" });
-
-                }
+                return null;
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                return Json(new NewCommonResponseDto { Data = null, Message = ex.Message.ToString() });
             }
         }
 
@@ -146,7 +142,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewVehicle([FromBody] PagingParam pagingParam )
+        public async Task<IActionResult> ViewVehicle([FromBody] PagingParam pagingParam)
         {
             try
             {
