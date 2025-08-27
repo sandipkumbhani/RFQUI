@@ -2,6 +2,7 @@
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -26,13 +27,12 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (productRequestDto != null)
                 {
+                    var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                    string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+                    string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                    string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                     productRequestDto.CompanyId = Convert.ToInt32(companyId);
                     productRequestDto.CreatedBy = Convert.ToInt32(userid);
                     productRequestDto.UpdatedBy = Convert.ToInt32(userid);
@@ -42,14 +42,11 @@ namespace RFQ.UI.Controllers
                     var result = await _productService.AddProduct(productRequestDto);
                     return Json(result);
                 }
-                else
-                {
-                    return Json(null);
-                }
+                return null;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return Json(new NewCommonResponseDto { Data = null, Message = ex.Message.ToString() });
             }
         }
 

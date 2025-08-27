@@ -13,7 +13,7 @@ namespace RFQ.UI.Application.Provider
         {
             _productAdaptor = productAdaptor;
         }
-        public Task<string> AddProduct(ProductRequestDto productRequestDto)
+        public Task<NewCommonResponseDto> AddProduct(ProductRequestDto productRequestDto)
         {
             return _productAdaptor.AddProduct(productRequestDto);
         }

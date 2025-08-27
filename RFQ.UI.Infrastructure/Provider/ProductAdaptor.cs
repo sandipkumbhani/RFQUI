@@ -22,7 +22,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
-        public async Task<string> AddProduct(ProductRequestDto productRequestDto)
+        public async Task<NewCommonResponseDto> AddProduct(ProductRequestDto productRequestDto)
         {
             try
             {
@@ -36,14 +36,14 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                        return responseModel.Data.ToString();
-                };
+                    return JsonConvert.DeserializeObject<NewCommonResponseDto>(responseModel.Data.ToString());
+                }
+                return new NewCommonResponseDto();
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return new NewCommonResponseDto() { Data = null, Message = ex.InnerException.ToString(), ErrorMessage = ex.StackTrace };
             }
-            return string.Empty;
         }
 
         public async Task<string> DeleteProduct(int productId)

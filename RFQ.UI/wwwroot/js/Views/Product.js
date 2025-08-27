@@ -72,14 +72,14 @@ function SaveProduct(action) {
             dataType: "json",
             data: JSON.stringify(formData),
             success: function (response) {
-                response = JSON.parse(response)
-                if (response.success) {
+                
+                if (response.statusCode == 200) {
                     toastr.success("Item Save Successfully!");
                     if (typeof this.completeOnSuccess === "function") {
                         this.completeOnSuccess();
                     }
                 } else {
-                    toastr.error("Failed to Product Details!", "warning");
+                    toastr.warning(response.message, "warning");
                 }
             },
             error: function (xhr, status, error) {

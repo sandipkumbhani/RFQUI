@@ -7,7 +7,7 @@ namespace RFQ.UI.Application.Interface
     public interface IProductService
     {
         Task<PageList<ProductResponseDto>> GetAllProducts(PagingParam pagingParam);
-        Task<string> AddProduct(ProductRequestDto productRequestDto);
+        Task<NewCommonResponseDto> AddProduct(ProductRequestDto productRequestDto);
         Task<string> EditProduct(int productId, ProductRequestDto productRequestDto);
         Task<string> DeleteProduct(int productId);
         Task<IEnumerable<ProductResponseDto>> GetDrpProductList(int companyId);
