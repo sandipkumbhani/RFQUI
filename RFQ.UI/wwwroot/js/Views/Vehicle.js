@@ -20,34 +20,19 @@ $(document).ready(function () {
 
     $("#btnSaveVehicle, #btnSaveNewVehicle").on('click', function () {
         var action = $(this).data('action');
-        SaveVehicle(action, function () {
-            FetchVehicleList();
-        });
+        SaveVehicle(action);
     });
-
-    $('#btnAddVehicle').click(function () {
-        $('#btnAddVehicle').addClass('d-none');
-        $('#tableDiv').addClass('d-none')
-        $('#addVehicleDiv').removeClass('d-none');
-        $('#btnCancel').removeClass('d-none');
-        $('#vehicleNo').prop('disabled', false);
-        $('#btnSaveVehicle').show();
-        $('#btnSaveNewVehicle').removeClass('d-none')
-        $('#btnUpdateVehicle').addClass('d-none');
-        $('#vehicleForm')[0].reset();
-        $('#ddlOwnerName').val(null).trigger('change');
-        $('#ddlCity').val(null).trigger('change');
-        $('#ddlVehicleCategory').val(null).trigger('change');
-        $('#ddlVehicleType').val(null).trigger('change');
-        $('#vehicleCapacity').val(null).trigger('change');
-        $('#ddlTrackingProvider').val(null).trigger('change');
+    $('#tableDivLink').on('click', function (e) {
+        e.preventDefault();
+        FetchVehicleList();
+    });
+    $("#btnAddVehicle").on("click", function () {
+        $("#tableDiv").css('display', 'none ');
+        $("#addVehicleDiv").css('display', 'block');
     });
 
     $("#btnCancel").on('click', function () {
         FetchVehicleList();
-        $("#addVehicleDiv").addClass('d-none');
-        $("#tableDiv").removeClass('d-none')
-        $("#btnAddVehicle").removeClass('d-none');
     });
     FetchVehicleList();
     GetAllOwnerOrVendor();
@@ -59,7 +44,19 @@ $(document).ready(function () {
 
 
 });
-function SaveVehicle(action, callback) {
+$("#ddlVehicleCategory").on('change', function () {
+    if ($(this).val() == null) {
+        return;
+    }
+    if ($(this).find('option:selected').text() === "OWNED") {
+        $("#ddlOwnerName").val(null).trigger('change');
+        $("#ddlOwnerName").prop('disabled', true);
+    }
+    else {
+        $("#ddlOwnerName").prop('disabled', false);
+    }
+})
+function SaveVehicle(action) {
 
     var isValid = OnSubmitValidation();
     if (!isValid) {
@@ -71,8 +68,7 @@ function SaveVehicle(action, callback) {
     var vehicleType = $("#ddlVehicleType").val();
     var vehicleCapacity = $("#vehicleCapacity").val();
     var ownerName = $("#ddlOwnerName").val();
-    //var trackingProvider = $("#ddlTrackingProvider").val();
-    var trackingProvider = 1;
+    var trackingProvider = $("#ddlTrackingProvider").val();
     var vehicleStatus = $("#vehicleStatusInput").val();
     var blacklistStatus = $("#blacklistStatusInput").val();
     var regdOwner = $("#regdOwnerInput").val();
@@ -104,9 +100,9 @@ function SaveVehicle(action, callback) {
         VehicleNo: vehicleNo,
         VehicleCategoryId: vehicleCategory,
         VehicleTypeId: vehicleType,
-        VehicleCapacity: vehicleCapacity,
-        OwnerVendorId: ownerName,
-        TrackingProviderId: trackingProvider,
+        VehicleCapacity: vehicleCapacity ? vehicleCapacity : null,
+        OwnerVendorId: ownerName ? ownerName : 0,
+        TrackingProviderId: trackingProvider ? trackingProvider : null,
         VehicleStatus: vehicleStatus,
         BlacklistStatus: blacklistStatus,
         RegdOwner: regdOwner,
@@ -122,8 +118,8 @@ function SaveVehicle(action, callback) {
         RTORegistration: rtoRegistration,
         RegistrationDate: registrationDate ? new Date(registrationDate).toISOString() : null,
         PermanentAddress: permanentAddress,
-        GrossWeight: parseFloat(grossWeight).toFixed(2),
-        UnladenWeight: parseFloat(unladenWeight).toFixed(2),
+        GrossWeight: grossWeight ? parseFloat(grossWeight).toFixed(2) : null,
+        UnladenWeight: unladenWeight ? parseFloat(unladenWeight).toFixed(2) : null,
         FitnessExpiryDate: fitnessExpDate ? new Date(fitnessExpDate).toISOString() : null,
         TaxExpiryDate: taxExpDate ? new Date(taxExpDate).toISOString() : null,
         PermitNo: permitNo,
@@ -140,17 +136,21 @@ function SaveVehicle(action, callback) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response.result == "success") {
-                    toastr.success("Vehicle Details Submitted Successfully!");
-                    if (callback && typeof callback === 'function') {
-                        callback();
-                    }
+                response = JSON.parse(response);
+                if (response.success === false) {
+                    toastr.warning(response.message, "Warning");
                 } else {
-                    toastr.error("Something went wrong!");
+                    toastr.success("Vehicle Details Submitted Successfully!");
+                    if (typeof this.completeOnSuccess === "function") {
+                        this.completeOnSuccess();
+                    }
                 }
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Submit Vehicle Details", "Error");
+            },
+            completeOnSuccess: function () {
+                FetchVehicleList();
             }
         });
     } else {
@@ -160,15 +160,16 @@ function SaveVehicle(action, callback) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response.result == "success") {
+                response = JSON.parse(response);
+                if (response.success === false) {
+                    toastr.warning(response.message, "Warning");
+                } else {
                     toastr.success("Vehicle Details Submitted Successfully!");
                     $("#vehicleForm")[0].reset();
-                    $("#ddlVehicleCategory").val("");
-                    $("#ddlVehicleType").val("");
-                    $("#ddlOwnerName").val("");
-                    $("#ddlTrackingProvider").val("");
-                } else {
-                    toastr.error("Something went wrong!");
+                    $("#ddlOwnerName").prop('disabled', false);
+                    $("select.select2-custom").each(function () {
+                        $(this).val(null).trigger('change');
+                    });
                 }
             },
             error: function (xhr, status, error) {
@@ -181,19 +182,16 @@ function EditVehicle(vehicleId) {
     var data = viewModelDto.filter(x => x.vehicleId === vehicleId);
     var formData = data[0];
 
-    $('#tableDiv').hide();
-    $('#btnAddVehicle').addClass('d-none');
-    $("#addVehicleDiv").removeClass('d-none');
+    $('#tableDiv').css('display', 'none');
+    $("#addVehicleDiv").css('display', 'block');
     $("#btnSaveVehicle").hide();
     $("#btnUpdateVehicle").removeClass('d-none')
-    $("#btnCancel").removeClass('d-none');
-    $("#btnSaveNewVehicle").addClass('d-none')
-
+    $("#btnSaveNewVehicle").hide();
     $("#vehicleNo").val(formData.vehicleNo).prop("disabled", true);
     $("#hdVehicleId").val(formData.vehicleId);
     $('#ddlVehicleCategory').val(formData.vehicleCategoryId).trigger('change');
     $('#ddlVehicleType').val(formData.vehicleTypeId).trigger('change');
-    $("#vehicleCapacity").val(formData.vehicleCapacity);
+    $("#vehicleCapacity").val(formData.vehicleCapacity ? formData.vehicleCapacity : "");
     $('#ddlOwnerName').val(formData.ownerVendorId).trigger('change');
     //$('#ddlTrackingProvider').val(formData.trackingProviderId).trigger('change');
     $("#vehicleStatusInput").val(formData.vehicleStatus);
@@ -214,8 +212,8 @@ function EditVehicle(vehicleId) {
     var regDate = new Date(formData.registrationDate).toLocaleDateString('en-CA');
     $("#registrationDateInput").val(regDate);
     $("#permanentAddressInput").val(formData.permanentAddress);
-    $("#grossWeightInput").val(formData.grossWeight);
-    $("#unladenWeightInput").val(formData.unladenWeight);
+    $("#grossWeightInput").val(formData.grossWeight ? formData.grossWeight : "");
+    $("#unladenWeightInput").val(formData.unladenWeight ? formData.unladenWeight : "");
     var fitExpDate = new Date(formData.fitnessExpiryDate).toLocaleDateString('en-CA');
     $("#fitnessExpiryInput").val(fitExpDate);
     var taxxExpDate = new Date(formData.taxExpiryDate).toLocaleDateString('en-CA');
@@ -225,7 +223,7 @@ function EditVehicle(vehicleId) {
     $("#permitExpiryInput").val(perExpDate);
     var npermitExpDate = new Date(formData.npExpiryDate).toLocaleDateString('en-CA');
     $("#npExpiryInput").val(npermitExpDate);
-    $("#vehicleCapacityInput").val(formData.vehicleCapacity);
+    $("#vehicleCapacityInput").val(formData.vehicleCapacity ? formData.vehicleCapacity : "");
     $("#policyNoInput").val(formData.policyNo);
     var poliExpDate = new Date(formData.policyExpiryDate).toLocaleDateString('en-CA');
     $("#policyExpiryInput").val(poliExpDate);
@@ -238,47 +236,14 @@ function UpdateVehicle() {
             return;
         }
 
-        //var formData = {
-        //    VehicleId: $("#hdVehicleId").val(),
-        //    VehicleNo: $("#vehicleNo").val(),
-        //    VehicleCategoryId: $("#ddlVehicleCategory").val(),
-        //    VehicleTypeId: $("#ddlVehicleType").val(),
-        //    VehicleCapacity: $("#vehicleCapacity").val(),
-        //    OwnerVendorId: $("#ddlOwnerName").val(),
-        //    TrackingProviderId: 1,
-        //    VehicleStatus: $("#vehicleStatusInput").val(),
-        //    BlacklistStatus: $("#blacklistStatusInput").val(),
-        //    RegdOwner: $("#regdOwnerInput").val(),
-        //    EngineNo: $("#engineNoInput").val(),
-        //    ChassisNo: $("#chasisNoInput").val(),
-        //    MakeModel: $("#makeModelInput").val(),
-        //    PUCExpiryDate: $("#pucExpiryInput").val(),
-        //    Financer: $("#financerInput").val(),
-        //    OwnerSerialNo: $("#ownerSerialNoInput").val(),
-        //    NPNo: $("#npNoInput").val(),
-        //    InsuranceCo: $("#insuranceCoInput").val(),
-        //    VerifiedOn: $("#verifiedOnInput").val(),
-        //    RTORegistration: $("#rtoRegistrationInput").val(),
-        //    RegistrationDate: $("#registrationDateInput").val(),
-        //    PermanentAddress: $("#permanentAddressInput").val(),
-        //    GrossWeight: $("#grossWeightInput").val(),
-        //    UnladenWeight: $("#unladenWeightInput").val(),
-        //    FitnessExpiryDate: $("#fitnessExpiryInput").val(),
-        //    TaxExpiryDate: $("#taxExpiryInput").val(),
-        //    PermitNo: $("#permitNoInput").val(),
-        //    PermitExpiryDate: $("#permitExpiryInput").val(),
-        //    NPExpiryDate: $("#npExpiryInput").val(),
-        //    PolicyNo: $("#policyNoInput").val(),
-        //    PolicyExpiryDate: $("#policyExpiryInput").val()
-        //};
         var formData = {
             VehicleId: $("#hdVehicleId").val(),
             VehicleNo: $("#vehicleNo").val(),
             VehicleCategoryId: $("#ddlVehicleCategory").val(),
             VehicleTypeId: $("#ddlVehicleType").val(),
-            VehicleCapacity: $("#vehicleCapacity").val(),
-            OwnerVendorId: $("#ddlOwnerName").val(),
-            TrackingProviderId: 1,
+            VehicleCapacity: $("#vehicleCapacity").val() ? $("#vehicleCapacity").val() : null,
+            OwnerVendorId: $("#ddlOwnerName").val() ? $("#ddlOwnerName").val() : 0,
+            TrackingProviderId: $("#ddlTrackingProvider").val() ? $("#ddlTrackingProvider").val() : null,
             VehicleStatus: $("#vehicleStatusInput").val(),
             BlacklistStatus: $("#blacklistStatusInput").val(),
             RegdOwner: $("#regdOwnerInput").val(),
@@ -294,8 +259,8 @@ function UpdateVehicle() {
             RTORegistration: $("#rtoRegistrationInput").val(),
             RegistrationDate: $("#registrationDateInput").val() ? new Date($("#registrationDateInput").val()).toISOString() : null,
             PermanentAddress: $("#permanentAddressInput").val(),
-            GrossWeight: parseFloat($("#grossWeightInput").val()).toFixed(2),
-            UnladenWeight: parseFloat($("#unladenWeightInput").val()).toFixed(2),
+            GrossWeight: $("#grossWeightInput").val() ? parseFloat($("#grossWeightInput").val()).toFixed(2) : null,
+            UnladenWeight: $("#unladenWeightInput").val() ? parseFloat($("#unladenWeightInput").val()).toFixed(2) : null,
             FitnessExpiryDate: $("#fitnessExpiryInput").val() ? new Date($("#fitnessExpiryInput").val()).toISOString() : null,
             TaxExpiryDate: $("#taxExpiryInput").val() ? new Date($("#taxExpiryInput").val()).toISOString() : null,
             PermitNo: $("#permitNoInput").val(),
@@ -315,8 +280,6 @@ function UpdateVehicle() {
             success: function (result) {
                 if (result.result === "success") {
                     toastr.success("Vehicle Details Updated Successfully!");
-                    $("#addVehicleDiv").addClass('d-none');
-                    $('#btnAddVehicle').removeClass('d-none');
                     FetchVehicleList();
                 } else {
                     toastr.error("Failed to Update Vehicle Details", "Error");
@@ -348,10 +311,10 @@ function DeleteVehicle(vehicleId) {
                 success: function (response) {
                     if (response && response.result === "success") {
                         toastr.success("Vehicle Details Deleted Successfully!");
-                        $("#addVehicleDiv").addClass('d-none');
                         $('#currentPage').val(1);
                         FetchVehicleList();
-                    } else {
+                    }
+                    else {
                         toastr.error("Failed to Delete Vehicle Details!", "Error");
                     }
                 },
@@ -363,11 +326,18 @@ function DeleteVehicle(vehicleId) {
     });
 }
 
-
 function FetchVehicleList() {
-    $("#tableDiv").show();
-    $('#btnAddVehicle').removeClass('d-none');
-    $("#addVehicleDiv").addClass('d-none');
+    $("#addVehicleDiv").css('display', 'none');
+    $("#tableDiv").css('display', 'block');
+    $("#vehicleForm")[0].reset();
+    $("#btnSaveNewVehicle").show();
+    $("#btnSaveVehicle").show();
+    $("#btnUpdateVehicle").addClass('d-none')
+    $("#vehicleNo").prop("disabled", false);
+    $("select.select2-custom").each(function () {
+        $(this).val(null).trigger('change');
+    });
+    $("#ddlOwnerName").prop('disabled', false);
     FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase());
 }
 
@@ -417,7 +387,7 @@ function VehicleEKycClick() {
                     $("#ownerSerialNoInput").val(rcModel.ownerSerialNo);
                     $("#npNoInput").val(rcModel.nationalPermitNumber);
                     $("#insuranceCoInput").val(rcModel.insuranceCompany);
-                    rcModel.issueDate ? $("#verifiedOnInput").val(new Date(rcModel.issueDate).toISOString().split('T')[0]) : "";
+                    $("#verifiedOnInput").val(new Date().toISOString().split('T')[0]);
                     $("#rtoRegistrationInput").val(rcModel.registeredAt);
                     rcModel.issueDate ? $("#registrationDateInput").val(new Date(rcModel.issueDate).toISOString().split('T')[0]) : "";
                     $("#permanentAddressInput").val(rcModel.permanentAddress);
@@ -429,6 +399,7 @@ function VehicleEKycClick() {
                     rcModel.permitExpiryDate ? $("#permitExpiryInput").val(new Date(rcModel.permitExpiryDate).toISOString().split('T')[0]) : "";
                     rcModel.nationalPermitExpiryDate ? $("#npExpiryInput").val(new Date(rcModel.nationalPermitExpiryDate).toISOString().split('T')[0]) : "";
                     $("#vehicleCapacityInput").val(rcModel.vehicleCubicCapacity);
+                    $("#vehicleCapacity").val(rcModel.vehicleCubicCapacity);
                     $("#policyNoInput").val(rcModel.pucNumber);
                     rcModel.insuranceExpiryDate ? $("#policyExpiryInput").val(new Date(rcModel.insuranceExpiryDate).toISOString().split('T')[0]) : "";
                 }
@@ -509,12 +480,6 @@ function CheckValidation() {
             return;
         }
     });
-    $("#vehicleCapacity").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a valid VehicleCapacity", "Validation Error");
-            return;
-        }
-    });
 
 }
 function OnSubmitValidation() {
@@ -527,7 +492,7 @@ function OnSubmitValidation() {
         toastr.warning("Please select a valid VehicleType", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#ddlOwnerName").val())) {
+    if (!$("#ddlOwnerName").prop("disabled") && IsNullOrEmpty($("#ddlOwnerName").val())) {
         toastr.warning("Please select a valid OwnerName", "Validation Error");
         return false;
     }
@@ -535,15 +500,6 @@ function OnSubmitValidation() {
         toastr.warning("Please select a valid VehicleCategory", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#vehicleCapacity").val())) {
-        toastr.warning("Please enter a valid VehicleCapacity", "Validation Error");
-        return false;
-    }
-    //if (IsNullOrEmpty($("#ddlTrackingProvider").val())) {
-    //    toastr.warning("Please select a valid TrackingProvider", "Validation Error");
-    //    return false;
-    //}
-
     return true;
 }
 function ClearFields() {

@@ -142,7 +142,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     var result = responseModel.StatusCode;
                     if (result == 200)
                     {
-                        return responseModel.Message;
+                        return responseModel.Data.ToString();
                     }
                     else
                     {
