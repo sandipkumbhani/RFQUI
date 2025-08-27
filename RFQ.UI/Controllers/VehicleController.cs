@@ -183,23 +183,17 @@ namespace RFQ.UI.Controllers
                 {
                     vehicleRequestDto.CreatedBy = Convert.ToInt32(userid);
                     vehicleRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                    vehicleRequestDto.CreatedOn = DateTime.Now;
-                    vehicleRequestDto.UpdatedOn = DateTime.Now;
                     var result = await _vehicleServices.AddVehicle(vehicleRequestDto);
                     if (!String.IsNullOrEmpty(result))
                     {
-                        return Json(new { result = "success" });
-                    }
-                    else
-                    {
-                        return Json(new { result = "fail" });
+                        return Json(result);
                     }
                 }
-                return Json(new { result = "fail" });
+                return Json(new { result = "failure" });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return Json(new { result = "error", message = ex.Message });
             }
         }
 
@@ -215,8 +209,6 @@ namespace RFQ.UI.Controllers
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 vehicleRequestDto.CreatedBy = Convert.ToInt32(userid);
                 vehicleRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                vehicleRequestDto.CreatedOn = DateTime.Now;
-                vehicleRequestDto.UpdatedOn = DateTime.Now;
 
                 var result = await _vehicleServices.EditVehicle(vehicleId, vehicleRequestDto);
                 if (!String.IsNullOrEmpty(result))
