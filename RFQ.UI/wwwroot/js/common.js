@@ -235,7 +235,7 @@ function GetGridHtml(response, gridTableName) {
             rowsHtml += `
                         <tr>
                             <td>${item.vehicleNo}</td>
-                            <td>${item.partyName}</td>
+                            <td>${item.partyName ? item.partyName : ""}</td>
                             <td>${item.vehicleTypeName}</td>
                             <td>${item.internalMasterName}</td>
                             
