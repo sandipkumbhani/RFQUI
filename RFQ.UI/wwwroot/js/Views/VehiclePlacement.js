@@ -622,14 +622,45 @@ function DriverPopUp() {
                 return false;
             }
             if (uploadedFileName) {
-                SaveDriverDetails(uploadedFileName); 
+                SaveDriverDetails(uploadedFileName);
             } else {
                 toastr.warning("Please Upload a Driver Photo", "Validation Error");
             }
         });
         $("#driverPopupModal").modal("show");
     });
-}
+
+    $('#driverPopupModal').on('hide.bs.modal', function (event) {
+        var closepop = false;
+        if ($(event.target).hasClass('modal')) {
+            // Modal itself is clicked (backdrop close)
+            console.log("Closed by clicking outside (backdrop).");
+            closepop = true;
+        } else if (event.keyCode === 27) {
+            // ESC pressed
+            console.log("Closed by pressing ESC.");
+            closepop = true;
+        } else if ($(event.relatedTarget).hasClass('close')) {
+            // Close button
+            console.log("Closed by close button.");
+            closepop = true;
+        } else {
+            console.log("Closed by other way (maybe programmatically).");
+            closepop = true;
+        }
+        if (closepop) {
+            const form = $(this).find('driverForm')[0];
+            if (form) {
+                form.reset(); // reset all form inputs
+            }
+        }
+    });
+
+    $('#driverPopupModal').on('shown.bs.modal', function () {
+        GetDriverType();
+        GetAllCityList("ddlCity");
+    });
+}   
 function SaveDriverDetails(uploadedFileName) {
     var driverType = $("#ddlDriverType").val();
     var licenseNo = $("#numLicenseNo").val();
@@ -676,12 +707,46 @@ function SaveDriverDetails(uploadedFileName) {
             var driverId = response.result.result.driverId;
             Saveattachment(driverId);
             toastr.success("Driver Details Submitted Successfully!");
-             $("#driverPopupModal").modal("hide");
-             GetAllDriver();
+            $("#driverPopupModal").modal("hide");
+            GetAllDriver();
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Submit Driver Details", "Error");
         }
     });
     console.log(driverId);
+}
+
+function GetDriverType() {
+    var GetUrl = '/Driver/GetDriverType';
+    $.ajax({
+        url: GetUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+
+            response.forEach(category => {
+                driverTypeMap[category.internalMasterId] = category.internalMasterName;
+            });
+            const dropdown = document.getElementById("ddlDriverType");
+            dropdown.innerHTML = "";
+            debugger;
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select Driver Type";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            dropdown.appendChild(placeholderOption);
+
+            response.forEach(category => {
+                const option = document.createElement("option");
+                option.value = category.internalMasterId;
+                option.textContent = category.internalMasterName;
+                dropdown.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
 }
