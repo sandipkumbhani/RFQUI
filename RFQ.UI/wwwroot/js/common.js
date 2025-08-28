@@ -451,14 +451,21 @@ function GetGridHtml(response, gridTableName) {
                         <tr>
                         <td>${item.locationName}</td>
                         <td>${item.indentNo}</td>
-                        <td>${item.indentDate}</td>
-                        <td>${item.vehicleReqOn}</td>
+                        <td>${item.indentDate ? new Date(item.indentDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+                        <td>${item.vehicleReqOn ? new Date(item.vehicleReqOn).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
                         <td>${item.partyName}</td>
                         <td>${item.fromLocation}</td>
                         <td>${item.toLocation}</td>
                         <td>${item.vehicleTypeName}</td>
                         <td>${item.requiredVehicles}</td>
-                        <td>${item.expiryDate}</td>
+                        <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
                         <td>${item.consignerName}</td>
                         <td>${item.pickUpAddress}</td>
                         <td>${item.consigneeName}</td>

@@ -22,14 +22,12 @@ $(document).ready(function () {
 
 
     $('#tableDivLink').on('click', function (e) {
-        e.preventDefault(); // prevent default anchor behavior
-        $('#formDiv').hide(); // hide the add/edit form
-        $('#tableDiv').show(); // show the list
+        FetchCorporateCompany();
     });
 
 
     $("#btnCancel").on("click", function () {
-        window.location.reload(true);
+        FetchCorporateCompany();
     });
 
     $(document).on('click', 'th.sortable', function () {

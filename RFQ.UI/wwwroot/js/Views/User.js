@@ -15,12 +15,10 @@ $(document).ready(function () {
         $('#ddlLocation').prop('disabled', true);
     }
     $("#btnCancel").on("click", function () {
-        window.location.reload(true);
+        FetchUser();
     });
     $('#userListSectionLink').on('click', function (e) {
-        e.preventDefault(); // prevent default anchor behavior
-        $('#userFormSection').hide(); // hide the add/edit form
-        $('#userListSection').show(); // show the list
+        FetchUser();
     });
 
     $(document).on('click', 'th.sortable', function () {

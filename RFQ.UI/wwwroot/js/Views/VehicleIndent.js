@@ -4,7 +4,6 @@ var myDropzone;
 var orderColumn = '';
 var orderDir = '';
 var fetchVehicleIndentUrl = '/VehicleIndent/GetAllVehicleIndent';
-
 var companyId;
 var profileId;
 var locationId;
@@ -55,7 +54,6 @@ $(document).ready(function () {
         FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase());
     });
 
-
     $("#btnSave, #btnsaveandnew").on('click', function () {
         $(this).prop('disabled', true);
         var action = $(this).data('action');
@@ -86,7 +84,6 @@ $('#IndentTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchVehicleIndent();
 });
-
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
@@ -499,7 +496,6 @@ function DeleteVehicleIndent(indentId) {
         }
     });
 }
-
 function formatDateForInput(dateString) {
     if (!dateString) return '';
 
@@ -512,7 +508,6 @@ function formatDateForInput(dateString) {
 
     return `${year}-${month}-${day}`;
 }
-
 function UpdateVehicleIndent(indentId) {
     var data = viewModelDto.filter(x => x.indentId == indentId);
     var formData = data[0];

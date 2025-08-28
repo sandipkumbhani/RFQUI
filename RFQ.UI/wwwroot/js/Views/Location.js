@@ -2,14 +2,8 @@
 var orderDir = '';
 var locationResponseDto;
 $(document).ready(function () {
-    // Optionally, add "Cancel" to go back to the list
-    $("#btnCancel").on("click", function () {
-        window.location.reload(true);
-    });
     $('#locationListSectionLink').on('click', function (e) {
-        e.preventDefault(); // prevent default anchor behavior
-        $('#locationFormSection').hide(); // hide the add/edit form
-        $('#locationListSection').show(); // show the list
+        FetchLocationList();
     });
 
     $(document).on('click', 'th.sortable', function () {
@@ -92,13 +86,8 @@ function Initialization() {
             return;
         }
     });
-    $('#backButton').on('click', function () {
-        window.location.reload(true);
-    });
     $("#btnCancel").on("click", function () {
         FetchLocationList();
-        $("#AddLocationDiv").css('display', 'none');
-        $("#backButton").css('display', 'Block');
     });
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
         var action = $(this).data('action');

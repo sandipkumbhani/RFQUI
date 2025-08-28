@@ -15,14 +15,8 @@ $(document).ready(function () {
         $('th.sortable').not(this).data('order', 'asc');
         FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
     });
-
-    $("#btnCancel").on("click", function () {
-        window.location.reload(true);
-    });
     $('#ListSectionLink').on('click', function (e) {
-        e.preventDefault();
-        $('#formSection').hide();
-        $('#listSection').show();
+        FetchCompanyConfiguration();
     });
     Initializejquery();
     CheckValidation();
@@ -53,9 +47,6 @@ function Initializejquery() {
     });
     $("#btnCancel").on('click', function () {
         FetchCompanyConfiguration();
-        $("#tableDiv").removeClass('d-none');
-        $("#addCompanyConfigDiv").addClass('d-none');
-        $("#backButton").removeClass('d-none');
     });
 }
 function GetAllCompany() {
