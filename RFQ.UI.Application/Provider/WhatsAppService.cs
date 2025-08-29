@@ -16,7 +16,7 @@ namespace RFQ.UI.Application.Provider
         {
             _config = configuration;
         }
-        public async Task SendWhatsAppMessageAsync(string toNumber, string messageText)
+        public async Task<bool> SendWhatsAppMessageAsync(string toNumber, string messageText)
         {
             // Read values
             string accessToken = _config["WhatsAppService:AccessToken"];
@@ -56,11 +56,12 @@ namespace RFQ.UI.Application.Provider
                     var response = await client.SendAsync(request);
                     response.EnsureSuccessStatusCode();
                     Console.WriteLine(await response.Content.ReadAsStringAsync());
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                return false;
             }
         }
 

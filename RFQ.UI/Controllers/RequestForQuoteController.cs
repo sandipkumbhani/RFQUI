@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using RFQ.UI.Domain.Helper;
 using System.Net.Mail;
+using System.Text;
 
 namespace RFQ.UI.Controllers
 {
@@ -96,6 +97,8 @@ namespace RFQ.UI.Controllers
                             {
                                 data.VendorId = vendor.VendorId;
                                 string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", data, Request.Scheme) ?? string.Empty;
+                                //string? link = await GetShortUrl(formLink);
+                                //bool check = await _whatsAppService.SendWhatsAppMessageAsync(data.WhatsAppNo, link);
                                 bool check = SendEmail(vendor, formLink);
                                 if (check)
                                 {
@@ -108,8 +111,6 @@ namespace RFQ.UI.Controllers
                                         CreatedOn = DateTime.UtcNow
                                     });
                                     bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
-                                   
-
                                 }
                             }
                         }
@@ -199,7 +200,7 @@ namespace RFQ.UI.Controllers
                     return Json(new { result = "failure" });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
             }
@@ -300,6 +301,17 @@ namespace RFQ.UI.Controllers
             {
                 return false;
             }
+        }
+
+        public static async Task<string> GetShortUrl(string longUrl)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string requestUrl = $"https://tinyurl.com/api-create.php?url={Uri.EscapeDataString(longUrl)}";
+                string response = await client.GetStringAsync(requestUrl);
+                return response;
+            }
+
         }
     }
 }

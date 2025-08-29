@@ -8,6 +8,6 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IWhatsAppService
     {
-        Task SendWhatsAppMessageAsync(string toNumber, string messageText);
+        Task<bool> SendWhatsAppMessageAsync(string toNumber, string messageText);
     }
 }
