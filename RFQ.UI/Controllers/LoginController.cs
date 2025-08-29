@@ -17,12 +17,15 @@ namespace RFQ.UI.Controllers
         private readonly ILogger<LoginController> _logger;
         private static Dictionary<string, string> otpStore = new();
         private readonly IUsersService _usersService;
+        private readonly IWhatsAppService _whatsAppService;
 
-        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger, IUsersService usersService)
+        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger, IUsersService usersService, IWhatsAppService whatsAppService)
         {
             _loginServcies = loginServcies;
             _logger = logger;
             _usersService = usersService;
+            _whatsAppService =
+            _whatsAppService = whatsAppService;
         }
         public IActionResult Login()
         {
@@ -110,63 +113,78 @@ namespace RFQ.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> SendOtp(string txtLoginName)
         {
-            UserResponseDto user = new();
-
-            // Validate email exists (dummy check)
-            if (string.IsNullOrEmpty(txtLoginName)) return Ok(user);
-            else
-                user = await _usersService.GetByLoginIdAsync(txtLoginName);
-
-            // Generate OTP
-            var otp = new Random().Next(1000, 9999).ToString();
-
-            // Store OTP
-            otpStore[user.LoginId] = otp;
-
-            // Prepare email
-            var subject = "Your OTP Code";
-            string body = "";
-            body += "Dear User,\n\n";
-            body += "We received a request to verify your email address.\n\n";
-            body += $"Your One-Time Password (OTP) is: {otp}\n\n";
-            body += "Please enter this OTP in the application to complete your verification.\n\n";
-            body += "If you did not request this, you can safely ignore this email.\n\n";
-            body += "Thank you,\n";
-            body += "FleetLynk";
 
             try
             {
-                var smtpClient = new SmtpClient("smtp.gmail.com")
+                UserResponseDto user = new();
+                // Validate email exists (dummy check)
+                if (string.IsNullOrEmpty(txtLoginName)) return Ok(user);
+                else
+                    user = await _usersService.GetByLoginIdAsync(txtLoginName);
+
+                if (user != null)
                 {
-                    Port = 587,
-                    Credentials = new NetworkCredential("amit.dev1018@gmail.com", "fqrf srsh rllg cpwl"), // <-- App password here
-                    EnableSsl = true,
-                };
+                    // Generate OTP
+                    var otp = new Random().Next(1000, 9999).ToString();
 
-                var mailMessage = new MailMessage
+                    // Store OTP
+                    otpStore[user.LoginId] = otp;
+
+                    // Prepare email
+                    var subject = "Your OTP Code";
+                    string body = "";
+                    body += "Dear User,\n\n";
+                    body += "We received a request to verify your email address.\n\n";
+                    body += $"Your One-Time Password (OTP) is: {otp}\n\n";
+                    body += "Please enter this OTP in the application to complete your verification.\n\n";
+                    body += "If you did not request this, you can safely ignore this email.\n\n";
+                    body += "Thank you,\n";
+                    body += "FleetLynk";
+
+
+                    var smtpClient = new SmtpClient("smtp.gmail.com")
+                    {
+                        Port = 587,
+                        Credentials = new NetworkCredential("amit.dev1018@gmail.com", "fqrf srsh rllg cpwl"), // <-- App password here
+                        EnableSsl = true,
+                    };
+
+                    var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress("amit.dev1018@gmail.com", "FleetLynk"),  // your Gmail address
+                        Subject = subject,
+                        Body = body,
+                        IsBodyHtml = false
+                    };
+                    mailMessage.To.Add(user.EmailId);
+
+                    smtpClient.Send(mailMessage);
+
+                    return Ok(new NewCommonResponseDto
+                    {
+                        Data = user,
+                        StatusCode = 200,
+                        Message = "Successfully sent OTP"
+                    });
+                }
+                else
                 {
-                    From = new MailAddress("amit.dev1018@gmail.com", "FleetLynk"),  // your Gmail address
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = false
-                };
-                mailMessage.To.Add(user.EmailId);
-
-                smtpClient.Send(mailMessage);
-
-                return Ok(new NewCommonResponseDto() { Data = user, StatusCode = 200, Message = "Successfully send email" });
+                    return Ok(new NewCommonResponseDto
+                    {
+                        Data = null,
+                        StatusCode = 404,
+                        Message = "User Not Found - Failed to send OTP"
+                    });
+                }
             }
             catch (Exception ex)
             {
-                NewCommonResponseDto newCommonResponseDto = new()
+                return NotFound(new NewCommonResponseDto
                 {
-                    Data = null,
-                    ErrorMessage = ex.InnerException.ToString(),
-                    StatusCode = 404
-                };
-                return Json(new { success = false, message = "Failed to send email", error = ex.Message });
+                    Data = false,
+                    Message = ex.Message
+                });
             }
-
         }
 
         [HttpPost]
