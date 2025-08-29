@@ -293,11 +293,11 @@ namespace RFQ.UI.Infrastructure.Provider
                 var baseUrl = _fleetLynkApiUrl + _config["Users:GetByLoginIdAsync"] + LoginId;
 
                 var response = await httpClient.GetAsync(baseUrl);
-                response.EnsureSuccessStatusCode();
+                //response.EnsureSuccessStatusCode();
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 //var user = JsonConvert.DeserializeObject<UserResponseDto>(responseData);
-                if (responseModel != null && responseModel.Data != null)
+                if (responseModel.StatusCode == 200 && responseModel != null && responseModel.Data != null)
                 {
                     var json = JsonConvert.SerializeObject(responseModel.Data);
                     var user = JsonConvert.DeserializeObject<UserResponseDto>(json);

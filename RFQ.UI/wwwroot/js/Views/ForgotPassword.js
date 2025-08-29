@@ -24,11 +24,10 @@
             data: { txtLoginName },
             success: function (res) {
                 if (res.statusCode == 200) {
-                    debugger;
                     window.location.href = '/Login/Verification?loginId=' + encodeURIComponent(res.data.loginId);
                 } else {
                     $("#continueButton").prop("disabled", false);
-                    toastr.error("Email not registered or OTP sending failed.","error");
+                    toastr.warning(res.message,"warning");
                 }
             },
             error: function () {

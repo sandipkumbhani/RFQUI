@@ -20,34 +20,49 @@ namespace RFQ.UI.Application.Provider
         {
             // Read values
             string accessToken = _config["WhatsAppService:AccessToken"];
-            string phoneNumberId = _config["WhatsAppService:PhoneNumberId"];
-            using (var client = new HttpClient())
+            string vendorUid = _config["WhatsAppService:VendorUid"];       // comes from rlogic9
+            string WhatsAppApiUrl = _config["WhatsAppService:WhatsAppApiUrl"];
+
+            var url = $"{WhatsAppApiUrl}/{vendorUid}/contact/send-message";
+            try
             {
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
-
-                var url = $"https://graph.facebook.com/v17.0/{phoneNumberId}/messages";
-
-                var payload = new
+                using (var client = new HttpClient())
                 {
-                    messaging_product = "whatsapp",
-                    to = toNumber, // Example: "919876543210"
-                    type = "text",
-                    text = new { body = messageText }
-                };
+                    var request = new HttpRequestMessage(HttpMethod.Post, url);
+                    var payload = new
+                    {
+                        from_phone_number_id = string.Empty,   // optional
+                        phone_number = toNumber,                    // Example: "919876543210"
+                        message_body = messageText,                 // Your message text
 
-                var jsonPayload = JsonConvert.SerializeObject(payload);
-                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                var response = await client.PostAsync(url, content);
-                var result = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"Error sending WhatsApp message: {result}");
+                        // optional contact details
+                        contact = new
+                        {
+                            first_name = "Johan",
+                            last_name = "Doe",
+                            email = "johndoe@domain.com",
+                            country = "india",
+                            language_code = "en",
+                            groups = "examplegroup1,examplegroup2",
+                            custom_fields = new
+                            {
+                                BDay = "2025-09-04"
+                            }
+                        }
+                    };
+                    var jsonPayload = JsonConvert.SerializeObject(payload);
+                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                    request.Content = content;
+                    var response = await client.SendAsync(request);
+                    response.EnsureSuccessStatusCode();
+                    Console.WriteLine(await response.Content.ReadAsStringAsync());
                 }
-
-                Console.WriteLine($"WhatsApp message sent successfully: {result}");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
+
     }
 }
