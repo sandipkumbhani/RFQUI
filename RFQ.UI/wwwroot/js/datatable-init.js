@@ -266,7 +266,7 @@ $(document).ready(function () {
                 action: function (e, dt, node, config) {
                     let headers = [];
                     let csvData = [];
-                   
+
                     $('#customerTable thead th').each(function () {
                         headers.push($(this).text().trim());
                     });
@@ -312,7 +312,7 @@ $(document).ready(function () {
     $('#pageLength').on('change', function () {
         table.page.len(this.value).draw();
     });
-})
+});
 $(document).ready(function () {
 
     const table = $('#vehicleTypesTable').DataTable({
@@ -867,6 +867,13 @@ $(document).ready(function () {
 });
 $(document).ready(function () {
     const table = $('#awardedVendorTable').DataTable({
+        responsive: false,
+        paging: false,
+        ordering: false
+    });
+});
+$(document).ready(function () {
+    const table = $('#rcostingReceivedTable').DataTable({
         responsive: false,
         paging: false,
         ordering: false

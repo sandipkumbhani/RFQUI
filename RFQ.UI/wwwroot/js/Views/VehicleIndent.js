@@ -23,24 +23,17 @@ $(document).ready(function () {
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllItemName("ddlItemName", companyId);
     GetAllConsignorList();
-    GetAllConsigneeList();
+    GetAllConsigneeList(); 
     GetAllPakingType("ddlPackingType");
     FetchVehicleIndent();
     ButtonUpdateClick();
-    $(document).on("click", "#btnView", function () {
-        FetchVehicleIndent();
-        $("#formDiv").css('display', 'none')
-        $("#backButton").css('display', 'Block');
-    });
 
     $('#tableDivLink').on('click', function (e) {
-        e.preventDefault(); // prevent default anchor behavior
-        $('#formDiv').hide(); // hide the add/edit form
-        $('#tableDiv').show(); // show the list
+        FetchVehicleIndent();
     });
 
     $("#btnCancel").on("click", function () {
-        window.location.reload(true);
+        FetchVehicleIndent();
     });
 
     $(document).on('click', 'th.sortable', function () {
@@ -370,7 +363,6 @@ function GetDropdownValue(inputId) {
     return result;
 }
 function ButtonUpdateClick() {
-    debugger;
     $("#btnupdate").on('click', function (e) {
         e.preventDefault();
         debugger;
@@ -522,7 +514,7 @@ function UpdateVehicleIndent(indentId) {
     $("#btnCancel").removeClass('d-none');
     $("#btnsaveandnew").hide();
     $("#txtIndentId").val(formData.indentId);
-    $("#ddlLocation").val(formData.locationId);
+    $("#ddlLocation").val(formData.locationId).trigger('change');
     $("#txtIndentNo").val(formData.indentNo);
     $("#txtIndentDate").val(formatDateForInput(formData.indentDate));
     $("#txtVehicleReqDate").val(formatDateForInput(formData.vehicleReqOn));

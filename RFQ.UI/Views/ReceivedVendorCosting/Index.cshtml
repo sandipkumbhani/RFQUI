@@ -8,66 +8,55 @@
     <script src="~/js/views/ReceivedVendorCosting.js"></script>
 }
 
-<div class="tab-pane fade show active" id="costingReceived" role="tabpanel" aria-labelledby="costingReceived-tab">
-    <div class="card com-profile-info">
-        <!-- Top Header -->
-        <div class="table-top-header">
-            <h4>Costing Received from Vendor</h4>
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box add">
+            <h1 class="page-title">Costing Received From Vendor</h1>
         </div>
-
-        <div class="table-responsive">
-            <table id="costingReceivedTable" class="table dt-responsive nowrap w-100">
-                <thead>
-                    <tr class="text-center">
-                        <th>Sr. No.</th>
-                        <th>Indent No</th>
-                        <th>Indent Date</th>
-                        <th>RFQ No</th>
-                        <th>RFQ Date</th>
-                        <th>Customer Name</th>
-                        <th>RFQ Expired On</th>
-                        <th>Vehicle Req On</th>
-                        <th>Origin</th>
-                        <th>Destination</th>
-                        <th>Vehicle Type</th>
-                        <th>Available Vehicle</th>
-                        <th>Vendor Name</th>
-                        <th>Total Hire Cost</th>
-                        <th>Vendor Position</th>
-                        <th>View Quote Rate</th>
-                        <th>Ask for Re-Bid</th>
-                    </tr>
-                </thead>
-                <tbody id="costingReceivedTableBody" class="text-center">
-                </tbody>
-            </table>
-        </div>
-        <!-- Bottom Area -->
-        <div class="datatable-footer-bottom">
-            <div class="totle-left">
-                <span id="totalList">Total List: 3</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card com-profile-info">
+            <!-- Top Header -->
+            <div class="table-top-header">
+                <h4>List of Received Quote</h4>
             </div>
-            <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
-            <input type="hidden" id="currentPage" value="1">
-            <div class="show-page">
-                <span>Show per page:</span>
-                <select id="pageLength" class="form-select">
-                    <option value="5">5 </option>
-                    <option value="10" selected>10 </option>
-                    <option value="25">25</option>
-                </select>
+            <div class="table-responsive">
+                <table id="rcostingReceivedTable" class="table dt-responsive nowrap w-100">
+                    <thead>
+                        <tr class="text-center">
+                            <th class="text-center">Sr. No.</th>
+                            <th class="text-center">Indent No</th>
+                            <th class="text-center">Indent Date</th>
+                            <th class="text-center">RFQ No</th>
+                            <th class="text-center">RFQ Date</th>
+                            <th class="text-center">Customer Name</th>
+                            <th class="text-center">RFQ Expired On</th>
+                            <th class="text-center">Vehicle Req On</th>
+                            <th class="text-center">Origin</th>
+                            <th class="text-center">Destination</th>
+                            <th class="text-center">Vehicle Type</th>
+                            <th class="text-center">Available Vehicle</th>
+                            <th class="text-center">Vendor Name</th>
+                            <th class="text-center">Total Hire Cost</th>
+                            <th class="text-center">Vendor Position</th>
+                            <th class="text-center">View Quote Rate</th>
+                            <th class="text-center">Ask for Re-Bid</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <div class="button-main">
-            <a href="#" class="card-link me-3" id="btnSave" data-action="save">
-                <i class="ri-save-line"></i>
-                <span>Save</span>
-            </a>
-            <a href="#" class="card-link" id="btnSaveAndNew" data-action="saveNew">
-                <i class="ri-save-line"></i>
-                <span>Save & New</span>
-            </a>
+            <div class="button-main">
+                <a href="#" class="card-link" id="" type="button">
+                    <i class="ri-send-plane-line"></i>
+                    <span>
+                        Send
+                    </span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -93,19 +82,19 @@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">RFQ Date</label>
-                                <input disabled type="text" class="form-control" placeholder="RFQ Date" id="txtRFQDate" />
+                                <input disabled type="date" class="form-control" placeholder="RFQ Date" id="txtRFQDate" />
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">RFQ Expire On</label>
-                                <input disabled type="text" class="form-control" placeholder="Expire On" id="txtExpireOn" />
+                                <input disabled type="datetime-local" class="form-control" placeholder="Expire On" id="txtExpireOn"/>
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Vehicle Req On</label>
-                                <input disabled type="text" class="form-control" placeholder="Vehicle Req On" id="txtVehicleReqOn" />
+                                <input disabled type="date" class="form-control" placeholder="Vehicle Req On" id="txtVehicleReqOn" />
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -170,25 +159,25 @@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Available Vehicle Count</label>
-                                <input type="text" class="form-control" placeholder="Available Vehicle Count" id="txtAvailableVehicle" onkeypress="return isNumber(event)" />
+                                <input disabled type="text" class="form-control" placeholder="Available Vehicle Count" id="txtAvailableVehicle" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Total Hire Cost</label>
-                                <input type="text" class="form-control" placeholder="Total Hire Cost" id="txtHireCost" onkeypress="return isNumber(event)" />
+                                <input disabled type="text" class="form-control" placeholder="Total Hire Cost" id="txtHireCost" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Detention Per Day</label>
-                                <input type="text" class="form-control" placeholder="Detention Per Day" id="txtDetentionDay" onkeypress="return isNumber(event)" />
+                                <input disabled type="text" class="form-control" placeholder="Detention Per Day" id="txtDetentionDay" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Detention Free Days</label>
-                                <input type="text" class="form-control" placeholder="Detention Free Days" id="txtDetentionFreeDays" onkeypress="return isNumber(event)" />
+                                <input disabled type="text" class="form-control" placeholder="Detention Free Days" id="txtDetentionFreeDays" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                     </div>

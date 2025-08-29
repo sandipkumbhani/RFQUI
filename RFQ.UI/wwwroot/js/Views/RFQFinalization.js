@@ -24,7 +24,7 @@ $("#ddlRfqStatus").on('change', function () {
             $("#remarksDiv").addClass('col-lg-9');
             $("#awardedDiv").removeClass('d-none');
             $("#billingDiv").removeClass('d-none');
-            FetchAwarderVendorDetails();
+            FetchAwardedVendorDetails();
         }
     }
     else {
@@ -83,7 +83,7 @@ $(document).ready(function () {
     })
     $("#txtBillingRate").on('change', function () {
         if ($(this).val() != null) {
-            FetchAwarderVendorDetails(function () {
+            FetchAwardedVendorDetails(function () {
                 FetchRfqAwardedVendorList();
             });
         }
@@ -316,6 +316,7 @@ function FetchRfqFinalizationList() {
     $("#btnUpdateRfqFinalization").hide();
     $("#btnSave").show();
     $("#btnSaveAndNew").show();
+    $('#RFQForm')[0].reset();
     $('.select2-custom').val(null).trigger('change');
     $("#txtRfqNumber").prop('disabled', false);
     ClearDisabledFields();
@@ -333,7 +334,6 @@ $('#pageLength').off('change').on('change', function () {
 function EditRfqFinalizatioin(rfqFinalIdId) {
     var data = viewModelDto.filter(x => x.rfqFinalIdId == rfqFinalIdId);
     var formData = data[0];
-    console.log(formData);
     $('#tableDiv').css('display', 'none');
     $("#formDiv").css('display', 'Block');
     $("#btnUpdateRfqFinalization").show();
@@ -353,7 +353,7 @@ function EditRfqFinalizatioin(rfqFinalIdId) {
             $("#txtBillingRate").val(formData.billingRate);
             $("#txtPerDay").val(formData.detentionPerDay);
             $("#txtFreeDays").val(formData.detentionFreeDays);
-            FetchAwarderVendorDetails(function () {
+            FetchAwardedVendorDetails(function () {
                 FetchRfqAwardedVendorList();
             })
         }
@@ -462,7 +462,6 @@ function FetchRfqAwardedVendorList() {
         data: { rfqFinalId: rfqFinalId },
         contentType: "application/json",
         success: function (response) {
-            console.log(response);
             $("#awardedVendorTable tbody tr").each(function () {
                 var checkbox = $(this).find('input[type="checkbox"]');
                 var vendorId = checkbox.data('vendorid');
@@ -484,7 +483,7 @@ function FetchRfqAwardedVendorList() {
         }
     })
 }
-function FetchAwarderVendorDetails(callback) {
+function FetchAwardedVendorDetails(callback) {
     var rfqId = $("#txtRfqId").val();
     var getAwardedVendorUrl = '/RFQFinalization/AwardedVendor/' + rfqId;
     $.ajax({
@@ -498,7 +497,6 @@ function FetchAwarderVendorDetails(callback) {
                 $("#awardedVendorTable tbody").append('<tr><td colspan="16" class="text-center">No records found</td></tr>');
                 return;
             }
-            console.log(response);
             $.each(response, function (index, vendor) {
                 let difference = 0;
                 const billingRate = parseFloat($("#txtBillingRate").val()) || 0;
@@ -573,7 +571,7 @@ function ValidateTotalForVendor(vehicleCount) {
 
     if (totalAssigned > vehicleCount) {
         toastr.warning(`Total assigned vehicles cannot exceed total vehicles (${vehicleCount}).`);
-        $("#txtassignedVehicle").val('');
+        $("#awardedVendorTable tbody tr").find('input[type="text"]').val('');
         return false;
     }
     return true;
