@@ -24,5 +24,6 @@
         public int PackingTypeId { get; set; }
         public string PackingTypeName { get; set; }
         public string? SpecialInstruction { get; set; }
+        public string? WhatsAppNo { get; set; }
     }
 }
