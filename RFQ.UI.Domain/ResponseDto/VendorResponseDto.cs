@@ -49,7 +49,7 @@
         public string? PANLinkedWithAdhar { get; set; }
 
         public DateTime PANVerifiedOn { get; set; }
-
+        public string? GSTAddress { get; set; }
         public int LinkId { get; set; }
         public int CreatedBy { get; set; }
 

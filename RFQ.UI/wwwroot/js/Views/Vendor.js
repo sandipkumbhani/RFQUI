@@ -376,6 +376,7 @@ function SaveVendor(action) {
         var emailId = $("#txtEmailId").val();
         var panNumber = $("#numPanNumber").val();
         var gstNubmer = $("#numGstNumber").val();
+        var gstAddress = $("#txtGstAddress").val();
         var createUser = $("#createuser").is(":checked");
         var shareAppLink = $("#shareapplink").is(":checked");
         var partyId = 0;
@@ -414,6 +415,7 @@ function SaveVendor(action) {
             PANStatus: panStatus,
             PANLinkedWithAdhar: adharLinked,
             PANVerifiedOn: panVerifiedOn ? new Date(panVerifiedOn).toISOString() : null,
+            GSTAddress: gstAddress,
             LinkId: linkId,
             VendorVehicleTypes: vendorVehicleTypes,
             VendorApplicableRoutes: vendorApplicableRoutes
@@ -524,6 +526,7 @@ $('#pageLength').off('change').on('change', function () {
 function EditVendor(partyId) {
     var data = viewModelDto.filter(x => x.partyId == partyId);
     var formData = data[0];
+    console.log(formData)
     var vehicleTypeTableData = FetchVendorVehicleTypeList(partyId);
     var applicableRouteTableData = FetchVendorApplicableRouteList(partyId);
     vehicleTypeNameList = vehicleTypeTableData.map(item => ({
@@ -581,6 +584,7 @@ function EditVendor(partyId) {
         $("#txtEmailId").val(formData.email);
         $("#numGstNumber").val(formData.gstNo);
         $("#numPanNumber").val(formData.panNo);
+        $("#txtGstAddress").val(formData.gstAddress);
         if (attachmentData.length > 0) {
             EditMasterAttachment(attachmentData);
         }
@@ -611,6 +615,7 @@ function UpdateVendor() {
         PANStatus: $("#txtPanStatus").val(),
         PANLinkedWithAdhar: $("#txtAadharLinked").val(),
         PANVerifiedOn: $("#txtPanVerifiedOn").val() ? new Date($("#txtPanVerifiedOn").val()).toISOString() : null,
+        GSTAddress: $("#txtGstAddress").val(),
         LinkId: linkId,
         VendorVehicleTypes: vehicleTypeNameList.map(item => ({
             PartyVehicleTypeId: item.PartyVehicleTypeId,

@@ -14,7 +14,7 @@
         public int PartyTypeId { get; set; }
 
         public string? PartyName { get; set; }
-
+        public string? Code { get; set; }
         public int PartyCategoryId { get; set; }
 
         public string? AddressLine { get; set; }
@@ -54,6 +54,7 @@
         public string? PANLinkedWithAdhar { get; set; }
 
         public DateTime? PANVerifiedOn { get; set; }
+        public string? GSTAddress { get; set; }
 
         public int LinkId { get; set; }
         public int CreatedBy { get; set; }
