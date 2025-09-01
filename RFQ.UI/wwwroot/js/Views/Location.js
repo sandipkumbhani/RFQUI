@@ -79,7 +79,12 @@ function Initialization() {
             return;
         }
     });
-
+    $("#txtCode").on("blur", function () {
+        if (IsNullOrEmpty($(this).val()) || !isAlphaNumeric($(this).val())) {
+            toastr.warning("Please enter a valid Location Code", "Validation Error");
+            return;
+        }
+    })
     $("#txtContactNumber").on("blur", function () {
         if (!IsNullOrEmpty($(this).val()) && !isMobile($(this).val())) {
             toastr.warning("Please enter a valid Contact No", "Validation Error");
@@ -119,6 +124,7 @@ function SaveLocation(action) {
     var whatsAppNumber = $("#txtWhatsAppNumber").val();
     var email = $("#txtEmail").val();
     var linkid = GetQueryParam("LinkId");
+    var locationCode = $("#txtCode").val();
 
     var formdata = {
         LinkId: linkid,
@@ -130,7 +136,8 @@ function SaveLocation(action) {
         ContactNo: contactNumber,
         MobNo: mobileNumber,
         WhatsAppNo: whatsAppNumber,
-        Email: email
+        Email: email,
+        Code: locationCode
     };
 
     if (action === "save") {
@@ -207,7 +214,8 @@ function UpdateLocation() {
             MobNo: $("#txtMobileNumber").val(),
             WhatsAppNo: $("#txtWhatsAppNumber").val(),
             Email: $("#txtEmail").val(),
-            LinkId: GetQueryParam("LinkId")
+            LinkId: GetQueryParam("LinkId"),
+            Code: $("#txtCode").val()
         };
         var editlocationlist = '/Location/EditLocationList';
         $.ajax({
@@ -260,6 +268,7 @@ function EditLocation(locationId) {
     $("#txtMobileNumber").val(formdata.mobNo);
     $("#txtWhatsAppNumber").val(formdata.whatsAppNo);
     $("#txtEmail").val(formdata.email);
+    $("#txtCode").val(formdata.code);
     $("#btnSaveForm").hide();
     $("#btnSaveAndNewForm").hide();
     $("#btnViewForm").hide();
@@ -298,6 +307,10 @@ function ValidationCheck() {
     if (IsNullOrEmpty($("#txtLocationName").val())) {
         toastr.warning("Please enter a valid Location Name", "Validation Error");
         return false;
+    }
+    if (IsNullOrEmpty($("#txtCode").val()) || !isAlphaNumeric($("#txtCode").val())) {
+        toastr.warning("Please enter a valid Location Code", "Validation Error");
+        return;
     }
     if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Address is Required", "Validation Error");
