@@ -84,7 +84,6 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchCustomerList();
 });
-
 function SaveCustomer(action) {
 
     var isvalid = ValidationCheck();
@@ -218,7 +217,7 @@ function EditCustomer(partyId) {
         $("#btnSaveCustomer").hide();
         $("#btnUpdate").show();
         $("#SavenewButton").hide();
-        $("#txtGstNumber").val(formData.gstNo).prop("disabled", true);
+        $("#txtGstNumber").val(formData.gstNo);
         $("#hdnPartyId").val(formData.partyId);
         $("#txtLinkId").val(formData.linkId);
         $("#txtLegalName").val(formData.legalName);
@@ -232,7 +231,7 @@ function EditCustomer(partyId) {
         $("#txtPanStatus").val(formData.panStatus);
         var panVerifiedDate = new Date(formData.panVerifiedOn).toLocaleDateString('en-CA');
         $("#txtPanVerifiedOn").val(panVerifiedDate);
-        $("#txtPanNumber").val(formData.panNo).prop("disabled", true);
+        $("#txtPanNumber").val(formData.panNo);
         $("#txtCustomerName").val(formData.partyName);
         //$("#txtCustomerCode").val(formData.customerCode);
         $("#from-search-box").val(formData.addressLine);
@@ -396,7 +395,6 @@ function DeleteCustomer(partyId, linkId) {
         }
     });
 }
-
 function GstEKycClick() {
     $("#gstEKycButton").on("click", function () {
         var gstNumber = $("#txtGstNumber").val();
