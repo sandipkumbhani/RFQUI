@@ -98,8 +98,8 @@ namespace RFQ.UI.Controllers
                                 data.VendorId = vendor.VendorId;
                                 string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", data, Request.Scheme) ?? string.Empty;
                                 //string? link = await GetShortUrl(formLink);
-                                //bool check = await _whatsAppService.SendWhatsAppMessageAsync(data.WhatsAppNo, link);
-                                bool check = SendEmail(vendor, formLink);
+                                bool check = await _whatsAppService.SendWhatsAppMessageAsync(data.WhatsAppNo, formLink);
+                                //bool check = SendEmail(vendor, formLink);
                                 if (check)
                                 {
                                     RfqSendlinkList.Add(new RfqLinkRequestDto
