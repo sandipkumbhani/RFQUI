@@ -17,6 +17,8 @@
         public int CityId { get; set; }
         public string PinCode { get; set; }
         public string DriverImagePath { get; set; }
+        public string? DLIssuingRto { get; set; }
+        public DateTime? VarifiedOn { get; set; }
         public int LinkId { get; set; }
         public int StatusId { get; set; }
         public int CreatedBy { get; set; }

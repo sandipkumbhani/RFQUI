@@ -205,21 +205,20 @@ function DropzoneInitialize() {
     });
 }
 function SaveDriver(uploadedFileName, callback) {
-    debugger;
     var driverType = $("#ddlDriverType").val();
     var licenseNo = $("#numLicenseNo").val();
-    var driverName = $("#txtDriverName").val() ? $("#txtDriverName").val() : null;
+    var driverName = $("#txtDriverName").val();
     var dlIssueDate = $("#txtDLIssueDate").val() ? $("#txtDLIssueDate").val() : null;
-    var dlIssueRto = $("#txtDLIssuingRTO").val() ? $("#txtDLIssuingRTO").val() : null;
+    var dlIssueRto = $("#txtDLIssuingRTO").val();
     var dateOfBirth = $("#txtDateOfBirth").val();
     var driverCode = $("#txtDriverCode").val();
     var dlExpiryDate = $("#txtDLExpiryDate").val() ? $("#txtDLExpiryDate").val() : null;
     var whatsappNumber = $("#numWhatsapp").val();
-    var address = $("#from-search-box").val() ? $("#from-search-box").val() : null;
+    var address = $("#from-search-box").val();
     var city = $("#ddlCity").val();
-    var mobileNumber = $("#numMobile").val() ? $("#numMobile").val() : null;
-    var pincode = $("#numPincode").val() ? $("#numPincode").val() : null;   
-    // var verifiedOn = $("#txtVerifiedOn").val();
+    var mobileNumber = $("#numMobile").val();
+    var pincode = $("#numPincode").val();
+    var verifiedOn = $("#txtVerifiedOn").val() ? $("#txtVerifiedOn").val() : null;
     var uploadPhoto = uploadedFileName ? uploadedFileName : null;
     var createUser = $("#createlogin").is(":checked");
     var driverId = 0;
@@ -240,6 +239,8 @@ function SaveDriver(uploadedFileName, callback) {
         MobNo: mobileNumber,
         PinCode: pincode,
         LinkId: linkId,
+        DLIssuingRto: dlIssueRto,
+        VarifiedOn: verifiedOn,
         DriverImagePath: uploadPhoto
     };
 
@@ -332,6 +333,7 @@ function FormatDateToLocal(dateString) {
 }
 function EditDriver(driverId) {
     var data = viewModelDto.filter(x => x.driverId == driverId);
+    debugger;
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, driverId, function (list) {
         var attachmentData = list;
@@ -352,6 +354,9 @@ function EditDriver(driverId) {
         $("#txtDateOfBirth").val(FormatDateToLocal(formData.dateOfBirth)).prop("disabled", true);
         $("#txtDriverCode").val(formData.driverCode);
         $("#txtDLIssueDate").val(formData.licenseIssueDate);
+        $("#txtDLIssuingRTO").val(formData.dlIssuingRto);
+
+        //var dlIssueRto = $("#txtDLIssuingRTO").val();
         $("#txtDLExpiryDate").val(formData.licenseExpDate);
         $("#numWhatsapp").val(formData.whatsAppNo);
         $("#from-search-box").val(formData.addressLine);
@@ -361,13 +366,16 @@ function EditDriver(driverId) {
         $("#ddlCity").val(formData.cityId).trigger('change');
         var uploadPhoto = formData.driverImagePath;
         $("#txtUploadedPhoto").val(uploadPhoto);
+        $("#txtVerifiedOn").val(formData.varifiedOn);
         $("#dropzone").append('<div class="dz-preview dz-image-preview"><div class="dz-image"><img data-dz-thumbnail style="width: 120px; height: 120px; object-fit: cover;" src="../../driverphoto/' + uploadPhoto + '"></div></div>');
         $(".dz-message").hide();
         if (attachmentData.length > 0) {
             EditMasterAttachment(attachmentData);
         }
+        console.log(formData);
     });
 }
+
 function UpdateDriver(fileName) {
 
     var logoFileName = fileName || $("#txtUploadedPhoto").val() ? $("#txtUploadedPhoto").val() : null;
@@ -375,17 +383,19 @@ function UpdateDriver(fileName) {
         DriverId: $("#hdDriverId").val(),
         DriverTypeId: $("#ddlDriverType").val(),
         LicenseNo: $("#numLicenseNo").val(),
-        DriverName: $("#txtDriverName").val() ? $("#txtDriverName").val() : null,
+        DriverName: $("#txtDriverName").val(),
         LicenseIssueDate: $("#txtDLIssueDate").val() ? $("#txtDLIssueDate").val() : null,
-        //DlIssueDate = $("#txtDLIssueDate").val() ? $("#txtDLIssueDate").val() : null,
+        DLIssuingRto : $("#txtDLIssuingRTO").val(),
         DateOfBirth: $("#txtDateOfBirth").val(),
         DriverCode: $("#txtDriverCode").val(),
         LicenseExpDate: $("#txtDLExpiryDate").val() ? $("#txtDLExpiryDate").val() : null,
         WhatsAppNo: $("#numWhatsapp").val(),
-        AddressLine: $("#from-search-box").val() ? $("#from-search-box").val() : null,
+        AddressLine: $("#from-search-box").val(),
         CityId: $("#ddlCity").val(),
-        MobNo: $("#numMobile").val() ? $("#numMobile").val() : null,
-        PinCode: $("#numPincode").val() ? $("#numPincode").val() : null,
+        MobNo: $("#numMobile").val(),
+        PinCode: $("#numPincode").val(),
+        VarifiedOn: $("txtVerifiedOn").val() ? $("txtVerifiedOn").val() : null,
+
         LinkId: linkId,
         DriverImagePath: logoFileName
         //DriverImagePath: logoFileName ? logoFileName : null
@@ -510,9 +520,10 @@ function DlEKycclick() {
                 $("#txtDriverName").val(drivingLicenseModel.fullName);
                 $("#txtDLIssueDate").val(FormatDateForInput(drivingLicenseModel.validityIssueDate));
                 $("#txtDLExpiryDate").val(FormatDateForInput(drivingLicenseModel.validityExpiryDate));
-                // $("#txtDLIssuingRTO").val(drivingLicenseModel.rtoAuthority),
+                $("#txtDLIssuingRTO").val(drivingLicenseModel.rtoAuthority),
                 $("#from-search-box").val(drivingLicenseModel.presentAddress);
                 $("#numPincode").val(drivingLicenseModel.pincode);
+                $("#txtVerifiedOn").val(new Date().toISOString().split('T')[0]),
 
                 document.getElementById("txtUploadedPhoto").value = base64String;
                 $("#txtUploadedPhoto").val(drivingLicenseModel.photo);

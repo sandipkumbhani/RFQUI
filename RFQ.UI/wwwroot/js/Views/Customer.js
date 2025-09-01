@@ -103,7 +103,7 @@ function SaveCustomer(action) {
     var panVerifiedOn = $("#txtPanVerifiedOn").val() ? $("#txtPanVerifiedOn").val() : null;
     var panKyc = $("#txtPanNumber").val();
     var customerName = $("#txtCustomerName").val();
-    //var customerCode = $("#txtCustomerCode").val();
+    var code = $("#txtCustomerCode").val();
     var address = $("#from-search-box").val();
     var city = $("#ddlCity").val();
     var selectedIndex = $("#ddlCity").prop("selectedIndex");
@@ -114,6 +114,7 @@ function SaveCustomer(action) {
     var whatsAppNumber = $("#numWhatsApp").val();
     var contactNo = $("#numContact").val();
     var email = $("#txtEmail").val();
+    var gstaddress = $("#txtGstAddress").val();
     var gstNumber = $("#numGstNumber").val();
     var partyId = 0;
 
@@ -130,7 +131,7 @@ function SaveCustomer(action) {
         PANVerifiedOn: panVerifiedOn,
         PANNo: panKyc,
         PartyName: customerName,
-        //CustomerCode: customerCode,
+        Code: code,
         AddressLine: address,
         CityId: city,
         ContactPerson: contactPerson,
@@ -142,28 +143,32 @@ function SaveCustomer(action) {
         Email: email,
         GSTNo: gstNumber,
         PANLinkedWithAdhar: adharLinked,
+        GSTAddress: gstaddress,
         LinkId: linkId
 
     }
+    
     if (action == "save") {
+        var completeOnSuccess = function () {
+            FetchCustomerList();
+        };
+
         $.ajax({
             url: saveUrl,
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response != null) {
+                if (response != null && response.result != null) {
                     partyId = response.result.partyId;
                     if (partyId != null) {
                         Saveattachment(partyId);
                         toastr.success("Customer Details Submitted Successfully!");
-                        if (typeof this.completeOnSuccess === "function") {
-                            this.completeOnSuccess();
+                        if (typeof completeOnSuccess === "function") {
+                            completeOnSuccess();
                         }
-                    }
-                    else {
+                    } else {
                         toastr.error("Failed to Submit Customer Details", "Error");
-
                     }
                 } else {
                     toastr.error("Failed to Submit Customer Details", "Error");
@@ -171,12 +176,10 @@ function SaveCustomer(action) {
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Submit Customer Details", "Error");
-            },
-            completeOnSuccess: function () {
-                FetchCustomerList();
             }
         });
     }
+
     else {
         $.ajax({
             url: saveUrl,
@@ -205,6 +208,7 @@ function SaveCustomer(action) {
     return partyId;
 };
 function EditCustomer(partyId) {
+    
     var data = viewModelDto.filter(x => x.partyId === partyId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
@@ -241,13 +245,16 @@ function EditCustomer(partyId) {
         $("#numWhatsApp").val(formData.whatsAppNo);
         $("#txtEmail").val(formData.email);
         $("#numGstNumber").val(formData.gstNo);
-
+        $("#txtGstAddress").val(formData.gstAddress);
+        $("#txtCustomerCode").val(formData.code);
         if (attachmentData.length > 0) {
             EditMasterAttachment(attachmentData);
         }
+        
     });
 }
 function UpdateCustomer() {
+    debugger;
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
         var isvalid = ValidationCheck();
@@ -263,8 +270,10 @@ function UpdateCustomer() {
             TradeName: $("#txtTradeName").val(),
             AadharVerified: $("#txtAadharVerified").val(),
             PanStatus: $("#txtPanStatus").val(),
-            GSTVarifiedOn: $("#txtGstVerifiedOn").val(),
-            PANVerifiedOn: $("#txtPanVerifiedOn").val(),
+            GSTVarifiedOn: $("#txtGstVerifiedOn").val() ? $("#txtGstVerifiedOn").val() : null,
+            //var gstVerifiedOn = $("#txtGstVerifiedOn").val() ? $("#txtGstVerifiedOn").val() : null;
+            PANVerifiedOn: $("#txtPanVerifiedOn").val() ? $("#txtPanVerifiedOn").val() : null,
+            //var panVerifiedOn = $("#txtPanVerifiedOn").val() ? $("#txtPanVerifiedOn").val() : null;
             PartyName: $("#txtCustomerName").val(),
             //CustomerCode: $("#txtCustomerCode").val(),
             AddressLine: $("#from-search-box").val(),
@@ -278,8 +287,12 @@ function UpdateCustomer() {
             Email: $("#txtEmail").val(),
             GSTNo: $("#numGstNumber").val(),
             PANLinkedWithAdhar: $("#txtAadharLinked").val(),
+            Code: $("#txtCustomerCode").val(),
+            GSTAddress: $("#txtGstAddress").val(),
             LinkId: linkId
+            
         };
+        console.log(formData);
 
         let repeaterItems = document.querySelectorAll("[data-repeater-item]");
         let updateAttachmentDetails = [];
@@ -512,6 +525,13 @@ function InitializeFields() {
         }
     });
 
+    $("#txtCustomerCode").on("blur", function () {
+        if (IsNullOrEmpty($(this).val())) {
+            toastr.warning("Please enter a valid Customer Code", "Validation Error");
+            return;
+        }
+    });
+
     $("#numMobile").on("blur", function () {
         if (!IsNullOrEmpty($(this).val()) && !isMobile($(this).val())) {
             toastr.warning("Please enter a valid Mobile No", "Validation Error");
@@ -572,6 +592,12 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid CustomerName", "Validation Error");
         return false;
     }
+
+    if (IsNullOrEmpty($("#txtCustomerCode").val()) || !isAlphabets($("#txtCustomerCode").val())) {
+        toastr.warning("Please enter a valid Customer code", "Validation Error");
+        return false;
+    }
+
 
     if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Please enter a valid Address", "Validation Error");

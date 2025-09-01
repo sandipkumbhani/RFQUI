@@ -10,6 +10,8 @@
 
         public string? PartyName { get; set; }
 
+        public string Code { get; set; }
+
         public int PartyCategoryId { get; set; } = 1;
 
         public string? AddressLine { get; set; }
@@ -47,6 +49,8 @@
         public string? PANStatus { get; set; }
 
         public string? PANLinkedWithAdhar { get; set; }
+
+        public string? GSTAddress { get; set; }
 
         public DateTime? PANVerifiedOn { get; set; }
 
