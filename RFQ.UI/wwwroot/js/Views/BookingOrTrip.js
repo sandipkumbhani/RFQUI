@@ -5,8 +5,6 @@ $(document).ready(function () {
     GetAllDriver();
     GetAllVehicleNumber();
     GetAllPakingType("ddlPackingType");
-    GetAllStateList("ddlOrigin");
-    GetAllStateList("ddlDestination");
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
     GetAllItemName("ddlItemName", companyId);
@@ -15,8 +13,7 @@ $(document).ready(function () {
     GetAllConsigneeList(); 
 
 });
-function GetAllConsignorList()
-
+function GetAllConsignorList() {
     var getUrl = '/Vendor/GetAllVendorList'
     $.ajax({
         url: getUrl,
@@ -70,7 +67,7 @@ function GetAllConsigneeList() {
             toastr.error("Failed to Fetch Consignee Name!", "Error");
         }
     });
-};
+}
 function GetAllDriver() {
     $.ajax({
         url: '/Driver/GetAllDriverList',

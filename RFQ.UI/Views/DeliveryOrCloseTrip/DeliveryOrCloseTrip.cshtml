@@ -8,6 +8,9 @@
 @section Scripts {
     <script src="~/js/views/deliveryorclosetrip.js"></script>
     <script src="~/js/AttachmentDetails.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
+    </script>
 }
 
 
@@ -55,14 +58,14 @@
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">LR No</label>
-                        <input type="text" class="form-control" id="txtLRNo" />
+                        <input type="date" class="form-control" id="txtLRNo" />
                     </div>
                 </div>
 
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">LR Date</label>
-                        <input type="text" class="form-control" id="txtLRDate" />
+                        <input type="date" class="form-control" aria-label="LR Date" placeholder="Date Selection" id="txtLrDate" />
                     </div>
                 </div>
 
@@ -97,14 +100,14 @@
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">Consignor</label>
-                        <input type="text" class="form-control" id="txtConsignor" />
+                        <select class="select2-custom form-control" id="ddlConsignorInput" style="width: 100%;"></select>
                     </div>
                 </div>
 
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">Consignee</label>
-                        <input type="text" class="form-control" id="txtConsignee" />
+                        <select class="select2-custom form-control" id="ddlConsigneeInput" style="width: 100%;"></select>
                     </div>
                 </div>
 
@@ -147,7 +150,7 @@
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">Trip Date</label>
-                        <input type="text" class="form-control" id="txtTripDate" />
+                        <input type="date" class="form-control" aria-label="Trip Date" placeholder="Date Selection" id="txttripDate" />
                     </div>
                 </div>
 

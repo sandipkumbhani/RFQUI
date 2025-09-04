@@ -7,6 +7,9 @@
 @section Scripts {
     <script src="~/js/views/bookingortrip.js"></script>
     <script src="~/js/AttachmentDetails.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
+    </script>
 }
 
 
@@ -78,20 +81,30 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label "><span>*</span>Origin/From</label>
-                            <select class="select2-custom form-control" data-control="select2" id="ddlOrigin" style="width: 100%;">
-                            </select>
+                        <div class="item-input position-relative">
+                            <label class="form-label"><span>*</span>Origin/From</label>
+                            <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                            <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                            <input type="hidden" id="fromLat">
+                            <input type="hidden" id="fromLng">
+                            <input type="hidden" id="fromState">
+                            <input type="hidden" id="fromCity">
                         </div>
                     </div>
 
+                    <!-- TO Input -->
                     <div class="col-lg-3">
-                        <div class="item-input">
+                        <div class="item-input position-relative">
                             <label class="form-label"><span>*</span>Destination/To</label>
-                            <select class="select2-custom form-control" data-control="select2" id="ddlDestination" style="width: 100%;">
-                            </select>
+                            <input id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                            <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                            <input type="hidden" id="toLat">
+                            <input type="hidden" id="toLng">
+                            <input type="hidden" id="toState">
+                            <input type="hidden" id="toCity">
                         </div>
                     </div>
+
 
                     <div class="col-lg-6">
                         <div class="item-input">
