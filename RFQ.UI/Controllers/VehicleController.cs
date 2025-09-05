@@ -320,14 +320,14 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllOwnerOrVendor()
+        public async Task<IActionResult> GetAllOwnerOrVendor([FromQuery] int companyId)
         {
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 int profileID = Convert.ToInt32(profileid);
-                var OwnerOrVendorList = await _vehicleServices.GetAllOwnerOrVendor();
+                var OwnerOrVendorList = await _vehicleServices.GetAllOwnerOrVendor(companyId);
                 if (OwnerOrVendorList != null && OwnerOrVendorList.Count() > 0)
                 {
                     return Json(OwnerOrVendorList);

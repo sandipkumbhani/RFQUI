@@ -11,13 +11,13 @@
     // Handle form submit
     $('#continueButton').on('click', function (e) {
         e.preventDefault();
-        $("#continueButton").prop("disabled", true).text("Sending Otp..");
+        
         const txtLoginName = $('#txtLoginName').val().trim();
         if (IsNullOrEmpty(txtLoginName)) {
             toastr.warning("Please enter a Login User Name", "Validation Error");
             return;
         }
-
+        $("#continueButton").prop("disabled", true).text("Sending Otp..");
         $.ajax({
             type: "POST",
             url: '/Login/SendOtp',

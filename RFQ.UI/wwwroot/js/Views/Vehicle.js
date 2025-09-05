@@ -41,8 +41,6 @@ $(document).ready(function () {
     CheckValidation();
     VehicleEKycClick();
     UpdateVehicle();
-
-
 });
 $("#ddlVehicleCategory").on('change', function () {
     if ($(this).val() == null) {
@@ -325,7 +323,6 @@ function DeleteVehicle(vehicleId) {
         }
     });
 }
-
 function FetchVehicleList() {
     $("#addVehicleDiv").css('display', 'none');
     $("#tableDiv").css('display', 'block');
@@ -341,8 +338,6 @@ function FetchVehicleList() {
     FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase());
 }
 
-
-//Bind events
 $('#vehicleTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchVehicleList();
@@ -449,6 +444,7 @@ function GetAllOwnerOrVendor() {
         url: getAllOwnerOrVendorUrl,
         type: "GET",
         dataType: "json",
+        data: { companyId: companyId },
         success: function (response) {
             const ownerdropdown = document.getElementById("ddlOwnerName");
             let placeholderOption = document.createElement("option");

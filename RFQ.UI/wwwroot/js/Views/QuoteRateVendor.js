@@ -285,7 +285,6 @@ function Save(action) {
 function UrlParamBind() {
     const urlParams = new URLSearchParams(window.location.search);
     for (const [key, value] of urlParams.entries()) {
-        console.log(`${key}: ${value}`);
     }
 
     const rfqNo = urlParams.get("RfqNo");

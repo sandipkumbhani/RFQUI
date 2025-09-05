@@ -23,9 +23,8 @@ function getUserByLoginId() {
     $.ajax({
         url: '/Login/GetByLoginIdAsync',
         type: 'GET',
-        data: { txtLoginName: loginName }, // query string
+        data: { txtLoginName: loginName },
         success: function (response) {
-            console.log("Response:", response);
             if (response.statusCode === 200) {
                 user = response.data;
                 UpdateUserPassword(); 
@@ -34,7 +33,7 @@ function getUserByLoginId() {
             }
         },
         error: function (xhr) {
-            console.error("Error:", xhr.responseText);
+            toastr.error("User not Exists!","Error");
         }
     });
 }
@@ -95,7 +94,6 @@ function UpdateUserPassword() {
 }
 
 function sendNewPassword() {
-    debugger;
     $.ajax({
         url: '/Login/SendNewPassword',
         type: 'GET',   // because your API is GET
@@ -104,7 +102,6 @@ function sendNewPassword() {
             newPassword: user.password
         },
         success: function (response) {
-            console.log("Response:", response);
 
             if (response.statusCode === 200) {
                 toastr.success(response.message, "Success");
@@ -113,7 +110,6 @@ function sendNewPassword() {
             }
         },
         error: function (xhr) {
-            console.error("Error:", xhr.responseText);
             toastr.error("Something went wrong", "Error");
         }
     });

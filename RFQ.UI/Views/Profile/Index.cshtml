@@ -147,7 +147,6 @@
             ProfileName : ProfileName,
             CompanyTypeId : companyId
         };
-        console.log(formdata)
         $.ajax({
             url: '/Profile/Profilesave/',
             type: "POST",
@@ -155,11 +154,11 @@
             dataType: "json",
             data: JSON.stringify(formdata),
             success: function (response) {
-                console.log(response);
                 toastr.success("Profile submitted successfully!");
             },
             error: function (req, status, error) {
-                console.log(error);
+                                toastr.error("Profile Failed to Submit!");
+
             }
         });
     }
@@ -195,7 +194,6 @@
                 $('.selectpicker').selectpicker('refresh');
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
                 toastr.error("Failed to fetch data!", "Error");
             }
         });

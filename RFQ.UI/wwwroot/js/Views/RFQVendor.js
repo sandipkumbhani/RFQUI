@@ -478,7 +478,6 @@ function collectRfqFormData() {
     };
 }
 function SaveAndSaveNew(action) {
-    console.log("Action received:", action);
 
     if (action === "save") {
         const data = collectRfqFormData();
@@ -488,7 +487,6 @@ function SaveAndSaveNew(action) {
             contentType: "application/json",
             data: JSON.stringify(data),
             success: function (response) {
-                console.log("Success:", response);
             },
             error: function (xhr, status, error) {
             

@@ -419,7 +419,6 @@ function GetAllUser() {
             allUserList = response;
         },
         error: function (xhr, status, error) {
-            console.log(error);
             toastr.error("Failed to Fetch Data!", "Error");
         }
     });

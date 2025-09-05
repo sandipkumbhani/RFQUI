@@ -39,7 +39,7 @@ $(document).on('click', '.upload-btn', function () {
     const fileInput = $row.find('.file-upload')[0].files[0];
     const spanText = $row.find('#spanText');
     if (!fileInput) {
-        alert("Please choose a file.");
+        toastr.warning("Please Choose a file!", "Warning");
         return;
     }
     const formData = new FormData();

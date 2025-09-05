@@ -53,7 +53,7 @@ function SaveProfileRights() {
             toastr.success("Profilerigt submitted successfully!");
         },
         error: function (req, status, error) {
-            console.log(error);
+            toastr.error("Failed to submit Profile Rights!");
         }
     });
 }
@@ -81,7 +81,6 @@ function GetAllProfileName() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
             toastr.error("Failed to fetch data!", "Error");
         }
     });
@@ -92,7 +91,6 @@ function GetAllMenuName() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            console.log(response);
             var data = response
             const selectProfileRightsName = document.getElementById("txtMenu");
             let placeholderOption = document.createElement("option");
@@ -111,8 +109,6 @@ function GetAllMenuName() {
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
-            console.log("Response Text:", xhr.response.Text);
             toastr.error("Failed to fetch data!", "Error");
         }
     });
@@ -157,7 +153,6 @@ function GetLinkItemList(linkGroupId, profileId) {
                     linkItemData = filtered;
                 }
             }
-            console.log(linkItemData)
             //linkItemData.forEach((item, index) => {
             //    var html = '';
             //    html
@@ -248,7 +243,6 @@ function GetLinkItemList(linkGroupId, profileId) {
 
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
             toastr.error("Failed to submit LinkMenu Item ", "Error");
         }
     });
@@ -274,9 +268,6 @@ function OnChangeViewCheckbox(checkbox, item) {
             "status": checkbox.checked
         });
     }
-    console.log(ViewCheckboxData);
-    console.log("Checkbox changed for:", item);
-    console.log("Is checked:", checkbox.checked);
 }
 function OnChangeAddCheckbox(checkbox, item) {
     var index = AddCheckboxData.findIndex(obj => obj.linkId === item.linkId);
@@ -293,9 +284,6 @@ function OnChangeAddCheckbox(checkbox, item) {
             "status": checkbox.checked
         });
     }
-    console.log(AddCheckboxData);
-    console.log("Add checkbox changed for:", item);
-    console.log("Is checked:", checkbox.checked);
 }
 function OnChangeEditCheckbox(checkbox, item) {
     var index = EditCheckboxData.findIndex(obj => obj.linkId === item.linkId);
@@ -312,9 +300,6 @@ function OnChangeEditCheckbox(checkbox, item) {
             "status": checkbox.checked
         });
     }
-    console.log(EditCheckboxData);
-    console.log("Edit checkbox changed for:", item);
-    console.log("Is checked:", checkbox.checked);
 }
 function OnChangeCancelCheckbox(checkbox, item) {
     var index = CancelCheckboxData.findIndex(obj => obj.linkId === item.linkId);
@@ -331,9 +316,6 @@ function OnChangeCancelCheckbox(checkbox, item) {
             "status": checkbox.checked
         });
     }
-    console.log(CancelCheckboxData);
-    console.log("Cancel checkbox changed for:", item);
-    console.log("Is checked:", checkbox.checked);
 }
 function GetAllProfileRightsData() {
     var AllProfileRightsData = [];
@@ -389,18 +371,14 @@ function GetAllProfileRightsData() {
                         }
                         AllProfileRightsData.push(rightList);
                     });
-                    console.log(AllProfileRightsData);
                 }
-                debugger;
                 AddOrUpdateProfileRights(AllProfileRightsData);
             },
             error: function (xhr, status, error) {
-                console.error("Error fetching profile rights:", error);
                 toastr.error("Failed to fetch profile rights", "Error");
             }
         });
     } else {
-        console.warn("Invalid profile ID entered.");
         toastr.warning("Please enter a valid profile ID", "Warning");
     }
 }
@@ -413,11 +391,9 @@ function AddOrUpdateProfileRights(AllProfileRightsData) {
         dataType: "json",
         data: JSON.stringify(AllProfileRightsData),
         success: function (response) {
-            console.log(response)
             toastr.success("Profile Rights Saved successfully", "success");
         },
         error: function (xhr, status, error) {
-            console.error("Error fetching profile rights:", error);
             toastr.error("Failed to fetch profile rights", "Error");
         }
     });
@@ -443,6 +419,5 @@ function CheckAll() {
         if (CancelCheckboxData.length > 0) {
             CancelCheckboxData.forEach((item) => { item.status = isChecked });
         }
-        console.log(AddCheckboxData);
     });
 }

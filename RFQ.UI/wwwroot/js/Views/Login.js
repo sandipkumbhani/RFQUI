@@ -72,8 +72,6 @@
                 "Accept": "application/json"
             },
             success: function (response) {
-                console.log(response);
-                debugger;
                 if (response != null && response.statusCode == 200) {
                     sessionStorage.setItem("authToken", response.data);
                     toastr.success(response.message, "success");

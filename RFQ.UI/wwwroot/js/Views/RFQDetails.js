@@ -765,7 +765,6 @@ $('#pageLength').off('change').on('change', function () {
 function SaveRfqVendorDetails() {
     var saveUrl = '/RfqRecipient/AddRfqRecipient';
     $("#btnSaveRfqVendorDetails").on('click', function () {
-        debugger;
         var formData = fetchedVendorDataList.map(vendor => ({
             RfqId: rfqId,
             VendorId: vendor.partyId,
@@ -812,11 +811,9 @@ function sendQuoteLinksForVendors(vendorList) {
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function (response) {
-            console.log("Links generated successfully:", response.links);
 
             // Example: Display or send links via WhatsApp
             response.links.forEach(linkInfo => {
-                console.log(`Vendor ${linkInfo.VendorId} - Link: ${linkInfo.Link}`);
 
                 // Send via WhatsApp browser link (optional)
                 if (linkInfo.WhatsAppNo) {
@@ -827,8 +824,7 @@ function sendQuoteLinksForVendors(vendorList) {
             });
         },
         error: function (xhr) {
-            console.error("Error sending quote links", xhr);
-            alert("Failed to send links.");
+            toastr.error("Failed to send links.", "Error");
         }
     });
 }
