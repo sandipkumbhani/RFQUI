@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RFQ.UI.Domain.ResponseDto
 {
-    public class VendorCostingList
+    public class VendorCostingListResponseDto
     {
         public int RfqId { get; set; }
         public int PartyId { get; set; }
