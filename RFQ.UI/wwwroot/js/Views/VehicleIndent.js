@@ -23,7 +23,7 @@ $(document).ready(function () {
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllItemName("ddlItemName", companyId);
     GetAllConsignorList();
-    GetAllConsigneeList(); 
+    GetAllConsigneeList();
     GetAllPakingType("ddlPackingType");
     FetchVehicleIndent();
     ButtonUpdateClick();
@@ -64,12 +64,13 @@ function FetchVehicleIndent() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
     $('#vehicleIndentForm')[0].reset();
-    //myDropzone.removeAllFiles();
-    //$('#ddlCity').val(null).trigger('change');
+    FetchIndentNo();
+    $('.select2-custom').val(null).trigger('change');
     $("#btnSave").show();
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
-    //ResetAttachmentRepeater();
+    GetAllConsignorList();
+    GetAllConsigneeList();
     FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase());
 }
 
@@ -92,6 +93,7 @@ function GetAllConsignorList() {
         data: { companyId: companyId },
         contentType: "application/json",
         success: function (response) {
+            $("#ddlConsignorInput").empty();
             const consignorListDropdown = document.getElementById("ddlConsignorInput");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -120,6 +122,7 @@ function GetAllConsigneeList() {
         data: { companyId: companyId },
         dataType: "json",
         success: function (response) {
+            $("#ddlConsigneeInput").empty();
             const selectConsignee = document.getElementById("ddlConsigneeInput");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -205,34 +208,6 @@ function OnSubmitCheckValidation() {
         $("#txtRfqExpiredOn").val('');
         return false;
     }
-    if (IsNullOrEmpty($("#ddlConsignorInput").val())) {
-        toastr.warning("Please enter a Consignor", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtPickupAddress").val())) {
-        toastr.warning("Please enter a Pickup Address", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#ddlConsigneeInput").val())) {
-        toastr.warning("Please enter a Consignee", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtDeliveryAddress").val())) {
-        toastr.warning("Please enter a Delivery Address", "Validation Error");
-        return false;
-    }
-    if (!isValidateSelect($("#ddlItemName").val())) {
-        toastr.warning("Please Select a Item Name", "Validation Error");
-        return false;
-    }
-    if (!isValidateSelect($("#ddlPackingType").val())) {
-        toastr.warning("Please Select a Packing Type", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtRemarks").val())) {
-        toastr.warning("Please enter a Remarks", "Validation Error");
-        return false;
-    }
     return true;
 }
 function SaveVehicleIndent(action) {
@@ -265,8 +240,8 @@ function SaveVehicleIndent(action) {
         ConsigneeName: consigneeResult.name,
         PickUpAddress: $('#txtPickupAddress').val(),
         DeliveryAddress: $('#txtDeliveryAddress').val(),
-        ItemId: $('#ddlItemName').val(),
-        PackingTypeId: $('#ddlPackingType').val(),
+        ItemId: $('#ddlItemName').val() ? $('#ddlItemName').val() : 0,
+        PackingTypeId: $('#ddlPackingType').val() ? $('#ddlPackingType').val() : 0,
         Remarks: $('#txtRemarks').val(),
         LinkId: GetQueryParam("LinkId")
     };
@@ -282,13 +257,19 @@ function SaveVehicleIndent(action) {
                 if (response) {
                     $("#btnSave").prop('disabled', false);
                     $("#btnsaveandnew").prop('disabled', false);
-                    window.location.href = "../Dashboard/Dashboard";
+                    toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    if (typeof this.completeOnSuccess === "function") {
+                        this.completeOnSuccess();
+                    }
                 } else {
                     toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
                 }
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
+            },
+            completeOnSuccess: function () {
+                FetchVehicleIndent();
             }
         });
     }
@@ -304,12 +285,7 @@ function SaveVehicleIndent(action) {
                     $("#btnSave").prop('disabled', false);
                     $("#btnsaveandnew").prop('disabled', false);
                     $('#vehicleIndentForm')[0].reset();
-                    $('#ddlCustomerName').val(null).trigger('change');
-                    $('#ddlVehicleType').val(null).trigger('change');
-                    $('#ddlItemName').val(null).trigger('change');
-                    $('#ddlPackingType').val(null).trigger('change');
-                    $('#ddlConsignorInput').val(null).trigger('change');
-                    $('#ddlConsigneeInput').val(null).trigger('change');
+                    $('.select2-custom').val(null).trigger('change');
                     FetchIndentNo();
 
                     if (profileId == EnumProfile.Branch) {
@@ -346,9 +322,16 @@ function FetchIndentNo() {
     });
 }
 function GetDropdownValue(inputId) {
+    let result;
+    if ($("#" + inputId).val() == null) {
+        return result = {
+            id: 0,
+            name: ""
+        }
+    }
     const selectedValue = $("#" + inputId).val();
     const selectedText = $("#" + inputId).find("option:selected").text();
-    let result;
+
     if (selectedValue === selectedText) {
         result = {
             id: 0,
@@ -374,7 +357,7 @@ function ButtonUpdateClick() {
         var consigneeResult = GetDropdownValue("ddlConsigneeInput");
 
         var formData = {
-            
+
             IndentId: $("#txtIndentId").val(),
             LocationId: $("#ddlLocation").val(),
             IndentNo: $("#txtIndentNo").val(),
@@ -382,7 +365,7 @@ function ButtonUpdateClick() {
             VehicleReqOn: $("#txtVehicleReqDate").val(),
             PartyId: $("#ddlCustomerName").val(),
             FromLocation: $("#from-search-box").val(),
-            FromLocationState: $('#fromState').val(),  
+            FromLocationState: $('#fromState').val(),
             FromLocationCity: $('#fromCity').val(),
             FromLatitude: $('#fromLat').val(),
             FromLongitude: $('#fromLng').val(),
@@ -395,15 +378,15 @@ function ButtonUpdateClick() {
             RequiredVehicles: $("#txtNoofVehicles").val(),
             ExpiryDate: $("#txtRfqExpiredOn").val(),
             PickUpAddress: $("#txtPickupAddress").val(),
-  
+
             ConsignerId: consignorResult.id,
             ConsignerName: consignorResult.name,
             ConsigneeId: consigneeResult.id,
             ConsigneeName: consigneeResult.name,
 
             DeliveryAddress: $("#txtDeliveryAddress").val(),
-            ItemId: $("#ddlItemName").val(),
-            PackingTypeId: $("#ddlPackingType").val(),
+            ItemId: $('#ddlItemName').val() ? $('#ddlItemName').val() : 0,
+            PackingTypeId: $("#ddlPackingType").val() ? $("#ddlPackingType").val() : 0,
             Remarks: $("#txtRemarks").val(),
             LinkId: GetQueryParam("LinkId")
         };
@@ -534,12 +517,38 @@ function UpdateVehicleIndent(indentId) {
 
     $("#ddlVehicleType").val(formData.vehicleTypeId).trigger('change');
     $("#txtNoofVehicles").val(formData.requiredVehicles);
-    $("#ddlConsignorInput").val(formData.consignerId).trigger('change');
+    if (formData.consignerId == 0 && formData.consignerName) {
+        if ($("#ddlConsignorInput").find("option[value='" + formData.consignerName + "']").length === 0) {
+            var newOption = new Option(formData.consignerName, formData.consignerName, true, true);
+            $("#ddlConsignorInput").append(newOption).trigger("change");
+        } else {
+            $("#ddlConsignorInput").val(formData.consignerName).trigger("change");
+        }
+    }
+    else if (formData.consignerId == 0) {
+        $("#ddlConsignorInput").val(null).trigger("change");
+    }
+    else {
+        $("#ddlConsignorInput").val(formData.consignerId).trigger("change");
+    }
+    if (formData.consigneeId == 0 && formData.consigneeName) {
+        if ($("#ddlConsigneeInput").find("option[value='" + formData.consigneeName + "']").length === 0) {
+            var newOption = new Option(formData.consigneeName, formData.consigneeName, true, true);
+            $("#ddlConsigneeInput").append(newOption).trigger("change");
+        } else {
+            $("#ddlConsigneeInput").val(formData.consigneeName).trigger("change");
+        }
+    }
+    else if (formData.consignerId == 0) {
+        $("#ddlConsigneeInput").val(null).trigger("change");
+    }
+    else {
+        $("#ddlConsigneeInput").val(formData.consigneeId).trigger("change");
+    }
     $("#txtPickupAddress").val(formData.pickUpAddress);
-    $("#ddlConsigneeInput").val(formData.consigneeId).trigger('change');
     $("#txtDeliveryAddress").val(formData.deliveryAddress);
-    $("#ddlItemName").val(formData.itemId).trigger('change');
-    $("#ddlPackingType").val(formData.packingTypeId).trigger('change');
+    $("#ddlItemName").val(formData.itemId == 0 ? null : formData.itemId).trigger('change');
+    $("#ddlPackingType").val(formData.packingTypeId == 0 ? null : formData.packingTypeId).trigger('change');
     $("#txtRemarks").val(formData.remarks);
 
 

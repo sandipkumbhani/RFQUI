@@ -450,8 +450,8 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.pickUpAddress}</td>
                         <td>${item.consigneeName}</td>
                         <td>${item.deliveryAddress}</td>
-                        <td>${item.itemName}</td>
-                        <td>${item.pakingName}</td>
+                        <td>${item.itemName ? item.itemName : ""}</td>
+                        <td>${item.pakingName ? item.pakingName : ""}</td>
                         <td>${item.remarks}</td>
 
                         <td class="text-center action-items" style="cursor:pointer;">

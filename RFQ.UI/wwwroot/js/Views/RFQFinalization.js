@@ -277,12 +277,18 @@ function SaveAndSaveNew(action) {
             success: function (response) {
                 if (response) {
                     toastr.success("RFQ Finalization Submitted Successfully!", "Success");
+                    if (typeof this.completeOnSuccess === "function") {
+                        this.completeOnSuccess();
+                    }
                 } else {
                     toastr.error("Failed to Submit RFQ Finalization.", "Error");
                 }
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Submit RFQ Finalization.", "Error");
+            },
+            completeOnSuccess: function () {
+                FetchRfqFinalizationList();
             }
         });
     }
@@ -297,9 +303,7 @@ function SaveAndSaveNew(action) {
                 if (response) {
                     toastr.success("Vehicle Indent Saved Successfully!", "Success");
                     $('#RFQForm')[0].reset();
-                    $('#ddlCustomerName').val(null).trigger('change');
-                    $('#ddlVehicleType').val(null).trigger('change');
-                    $('#ddlRfqStatus').val(null).trigger('change');
+                    $('.select2-custom').val(null).trigger('change');
                 } else {
                     toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
                 }

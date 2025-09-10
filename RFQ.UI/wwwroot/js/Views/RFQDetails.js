@@ -40,6 +40,10 @@ $(document).ready(function () {
         $("#tableDiv").show();
         $("#formDiv").hide();
     });
+    $("#ddlLocation").on('change', function () {
+        let selectLocationId = $(this).val();
+        GetAllVehicleIndent(selectLocationId);
+    })
     $('#ddlIndent').on('change', function () {
         const selectedValue = $(this).val();
         if (!selectedValue) {
@@ -62,8 +66,9 @@ $(document).ready(function () {
             $('#toCity').val(selectedIndent.toLocationCity);
             $('#toLat').val(selectedIndent.toLatitude);
             $('#toLng').val(selectedIndent.toLongitude);
-            $("#ddlItemName").val(selectedIndent.itemId).trigger('change');
-            $("#ddlPackingType").val(selectedIndent.packingTypeId).trigger('change');
+            $("#ddlItemName").val(selectedIndent.itemId == 0 ? null : selectedIndent.itemId).trigger('change');
+            $("#ddlPackingType").val(selectedIndent.packingTypeId == 0 ? null : selectedIndent.packingTypeId).trigger('change');
+            $("#hdnIndentExpiryDate").val(selectedIndent.expiryDate);
         }
     });
     FetchRfqList();
@@ -74,7 +79,6 @@ $(document).ready(function () {
             $('#ddlLocation').prop('disabled', true);
         }
     });
-    GetAllVehicleIndent();
     GetRfqType();
     GetRfqPriority();
     FetchRfqNo();
@@ -100,9 +104,8 @@ function CheckValidation() {
         }
     });
     $("#txtRfqExpiredOn").on("change", function () {
-        var expireDate = $(this).val().split('T')[0];
-        if (expireDate <= $('#txtVehicleReqDate').val()) {
-            toastr.warning("Indent Expired On date must be greater than Vehicle Req On Date.", "Warning");
+        if ($(this).val() > $("#hdnIndentExpiryDate").val()) {
+            toastr.warning("Enter valid Indent Expired On !", "Warning");
             $(this).val('');
         }
     });
@@ -165,8 +168,8 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a RFQ Expired On", "Validation Error");
         return false;
     }
-    if ($("#txtRfqExpiredOn").val().split('T')[0] <= $('#txtVehicleReqDate').val()) {
-        toastr.warning("Indent Expired On date must be greater than Vehicle Req On Date.", "Warning");
+    if ($("#txtRfqExpiredOn").val() > $("#hdnIndentExpiryDate").val()) {
+        toastr.warning("The RFQ Expiry Date must not be later than the Indent Expiry Date.", "Warning");
         $("#txtRfqExpiredOn").val('');
         return false;
     }
@@ -226,7 +229,7 @@ function OnSubmitCheckValidation() {
 
     return true;
 }
-function GetAllVehicleIndent() {
+function GetAllVehicleIndent(selectLocationId) {
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
     $.ajax({
         url: getVehicleTypeUrl,
@@ -235,7 +238,8 @@ function GetAllVehicleIndent() {
         contentType: "application/json",
         success: function (response) {
             response = response.result;
-            VehicIndentList = response;
+            VehicIndentList = response.filter(x => x.locationId == selectLocationId);
+            $("#ddlIndent").empty();
             const Indentdropdown = document.getElementById("ddlIndent");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -243,7 +247,7 @@ function GetAllVehicleIndent() {
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             Indentdropdown.appendChild(placeholderOption);
-            response.forEach(item => {
+            VehicIndentList.forEach(item => {
                 const option = document.createElement("option");
                 option.value = item.indentId;
                 option.textContent = item.indentNo;
