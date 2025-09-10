@@ -56,24 +56,18 @@ function Initialization() {
         }
     });
 
-    $("#txtPANNo").on("blur", function () {
-        if (!ValidatePanNumber($(this).val())) {
-            toastr.warning("Please enter a valid PAN No", "Validation Error");
-            return;
-        }
-    });
-    $("#ddlRFQPriority").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Rfq Priority", "Validation Error");
-            return;
-        }
-    });
-    $("#txtVednorName").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Vednor Name", "Validation Error");
-            return;
-        }
-    });
+    //$("#ddlRFQPriority").on("blur", function () {
+    //    if (!isValidateSelect($(this).val())) {
+    //        toastr.warning("Please select a Rfq Priority", "Validation Error");
+    //        return;
+    //    }
+    //});
+    //$("#txtVednorName").on("blur", function () {
+    //    if (!isValidateSelect($(this).val())) {
+    //        toastr.warning("Please select a Vednor Name", "Validation Error");
+    //        return;
+    //    }
+    //});
     $("#txtOriginFrom").on("blur", function () {
         if (!isValidateSelect($(this).val())) {
             toastr.warning("Please select a Origin From", "Validation Error");
@@ -113,19 +107,19 @@ function Initialization() {
         }
     });
 
-    $("#ddlItemName").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Item Name", "Validation Error");
-            return;
-        }
-    });
+    //$("#ddlItemName").on("blur", function () {
+    //    if (!isValidateSelect($(this).val())) {
+    //        toastr.warning("Please select a Item Name", "Validation Error");
+    //        return;
+    //    }
+    //});
 
-    $("#ddlPackingType").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Paking Type", "Validation Error");
-            return;
-        }
-    });
+    //$("#ddlPackingType").on("blur", function () {
+    //    if (!isValidateSelect($(this).val())) {
+    //        toastr.warning("Please select a Paking Type", "Validation Error");
+    //        return;
+    //    }
+    //});
     $("#txtHireCost").on("blur", function () {
         var hirecost = $(this).val();
         if (IsNullOrEmpty(hirecost)) {
@@ -177,14 +171,14 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid Vehicle Req On", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtVednorName").val())) {
-        toastr.warning("Please Select a Vendor Name", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtPANNo").val()) || !ValidatePanNumber($("#txtPANNo").val())) {
-        toastr.warning("Please enter a valid PAN No", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#txtVednorName").val())) {
+    //    toastr.warning("Please Select a Vendor Name", "Validation Error");
+    //    return false;
+    //}
+    //if (IsNullOrEmpty($("#txtPANNo").val()) || !ValidatePanNumber($("#txtPANNo").val())) {
+    //    toastr.warning("Please enter a valid PAN No", "Validation Error");
+    //    return false;
+    //}
     if (!isValidateSelect($("#ddlRFQPriority").val())) {
         toastr.warning("Please select a Rfq Priority", "Validation Error");
         return false;
@@ -197,14 +191,14 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid Destination", "Validation Error");
         return false;
     }
-    if (!isValidateSelect($("#ddlItemName").val())) {
-        toastr.warning("Please select a Item Name", "Validation Error");
-        return false;
-    }
-    if (!isValidateSelect($("#ddlPackingType").val())) {
-        toastr.warning("Please select a Paking Type", "Validation Error");
-        return false;
-    }
+    //if (!isValidateSelect($("#ddlItemName").val())) {
+    //    toastr.warning("Please select a Item Name", "Validation Error");
+    //    return false;
+    //}
+    //if (!isValidateSelect($("#ddlPackingType").val())) {
+    //    toastr.warning("Please select a Paking Type", "Validation Error");
+    //    return false;
+    //}
     if (!isValidateSelect($("#txtRFQOn").val())) {
         toastr.warning("Please select a Rfq On", "Validation Error");
         return false;
@@ -248,7 +242,7 @@ function Save(action) {
     var availVehicleCount = $("#txtAvailableVehicle").val();
     var RfqId = $("#RfqId").val();
     var vendorId = $("#vendorId").val();
-
+    debugger;
     var formdata = {
         rfqRateId: 0,
         rfqId: parseInt(RfqId),
@@ -281,43 +275,86 @@ function Save(action) {
     }
 
 }
-
 function UrlParamBind() {
     const urlParams = new URLSearchParams(window.location.search);
     for (const [key, value] of urlParams.entries()) {
     }
-
-    const rfqNo = urlParams.get("RfqNo");
-    const rfqDate = urlParams.get("RfqDate");
-    const expiryDate = urlParams.get("ExpiryDate");
-    const PartyName = urlParams.get("PartyName");
-    const vehicleReqOn = urlParams.get("VehicleReqOn");
-    const fromLocation = urlParams.get("FromLocation");
-    const toLocation = urlParams.get("ToLocation");
-    const vehicleTypeId = urlParams.get("VehicleTypeId");
-    const VehicleTypeName = urlParams.get("VehicleTypeName");
-    const vehicleCount = urlParams.get("VehicleCount");
-    const ItemName = urlParams.get("ItemName");
-    const PackingTypeName = urlParams.get("PackingTypeName");
-    const specialInstruction = urlParams.get("SpecialInstruction");
+    console.log(urlParams);
     const VendorId = urlParams.get("VendorId");
-    const RFQId = urlParams.get("RfqId");
-    const PanNo = urlParams.get("PANNo");
-
-    $("#RfqId").val(RFQId);
+    const RfqId = urlParams.get("RfqId");
     $("#vendorId").val(VendorId);
-    $("#txtRFQNo").val(rfqNo);
-    $("#txtExpireOn").val(formatDate(expiryDate));
-    $("#txtVednorName").val(PartyName);
-    $("#txtPANNo").val(PanNo);
-    $("#ddlOrigin").val(fromLocation);
-    $("#ddlDestination").val(toLocation);
-    $("#ddlVehicleType").val(VehicleTypeName);
-    $("#txtNoOfVehicles").val(vehicleCount);
-    $("#ddlItemName").val(ItemName);
-    $("#ddlPackingType").val(PackingTypeName);
-    $("#txtInstruction").val(specialInstruction);
-    $("#txtRFQDate").val(formatDate(rfqDate).substring(0, 11));
-    $("#txtVehicleReqOn").val(formatDate(vehicleReqOn).substring(0, 11));
+    $("#RfqId").val(RfqId);
+    getRfqQuoteRateVendorDetails(RfqId, VendorId);
+    //const rfqNo = urlParams.get("RfqNo");
+    //const rfqDate = urlParams.get("RfqDate");
+    //const expiryDate = urlParams.get("ExpiryDate");
+    //const PartyName = urlParams.get("PartyName");
+    //const vehicleReqOn = urlParams.get("VehicleReqOn");
+    //const fromLocation = urlParams.get("FromLocation");
+    //const toLocation = urlParams.get("ToLocation");
+    //const vehicleTypeId = urlParams.get("VehicleTypeId");
+    //const VehicleTypeName = urlParams.get("VehicleTypeName");
+    //const vehicleCount = urlParams.get("VehicleCount");
+    //const ItemName = urlParams.get("ItemName");
+    //const PackingTypeName = urlParams.get("PackingTypeName");
+    //const specialInstruction = urlParams.get("SpecialInstruction");
+    //const VendorId = urlParams.get("VendorId");
+    //const RFQId = urlParams.get("RfqId");
+    //const PanNo = urlParams.get("PANNo");
+
+    //$("#RfqId").val(RFQId);
+    //$("#vendorId").val(VendorId);
+    //$("#txtRFQNo").val(rfqNo);
+    //$("#txtExpireOn").val(formatDate(expiryDate));
+    //$("#txtVednorName").val(PartyName);
+    //$("#txtPANNo").val(PanNo);
+    //$("#ddlOrigin").val(fromLocation);
+    //$("#ddlDestination").val(toLocation);
+    //$("#ddlVehicleType").val(VehicleTypeName);
+    //$("#txtNoOfVehicles").val(vehicleCount);
+    //$("#ddlItemName").val(ItemName);
+    //$("#ddlPackingType").val(PackingTypeName);
+    //$("#txtInstruction").val(specialInstruction);
+    //$("#txtRFQDate").val(formatDate(rfqDate).substring(0, 11));
+    //$("#txtVehicleReqOn").val(formatDate(vehicleReqOn).substring(0, 11));
 }
 
+function getRfqQuoteRateVendorDetails(RfqId, VendorId) {
+    // Request Body
+    var Body = {
+        RfqId: RfqId,
+        VendorId: VendorId
+    }
+    $.ajax({
+        url: '/QuoteRateVendor/GetRfqQuoteRateVendorDetailsqById',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(Body),
+        success: function (response) {
+            if (response.statusCode == 200) {
+                var data = response.data;
+                console.log(response);
+                $("#RfqId").val(data.rfqId);
+                $("#RfqId").val(data.rfqId);
+                $("#txtRFQNo").val(data.rfqNo);
+                $("#txtExpireOn").val(formatDate(data.expiryDate));
+                $("#ddlOrigin").val(data.fromLocation);
+                $("#ddlDestination").val(data.toLocation);
+                $("#ddlVehicleType").val(data.vehicleTypeName);
+                $("#txtNoOfVehicles").val(data.vehicleCount);
+                $("#txtRFQDate").val(formatDate(data.rfqDate).substring(0, 11));
+                $("#txtVehicleReqOn").val(formatDate(data.vehicleReqOn).substring(0, 11));
+                //$("#txtVednorName").val(partyName);
+                //$("#txtPANNo").val(panNo);
+                //$("#vendorId").val(VendorId);
+                //$("#ddlItemName").val(ItemName);
+                //$("#ddlPackingType").val(PackingTypeName);
+                //$("#txtInstruction").val(specialInstruction);
+            }
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Get GstEkyc-Detail", "Error");
+            ClearGstFields();
+        }
+    });
+}
