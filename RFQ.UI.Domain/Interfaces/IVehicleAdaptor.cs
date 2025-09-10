@@ -14,7 +14,7 @@ namespace RFQ.UI.Domain.Interfaces
         Task<IEnumerable<InternalMasterModel>> GetAllVehicleCategory();
         Task<VehicleRCModelDto> GetVehicleKycDetails(VehicleKycRequestDto vehicleKycRequestDto);
         Task<IEnumerable<ComMstVehicleTypeDto>> GetAllMasterVehicleType(int companyId); 
-        Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor();
+        Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor(int companyId);
         Task<List<VehicleResponseDto?>> GetVehicleNumber();
     }
 }

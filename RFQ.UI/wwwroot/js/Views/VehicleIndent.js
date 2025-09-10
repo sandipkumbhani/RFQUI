@@ -365,7 +365,6 @@ function GetDropdownValue(inputId) {
 function ButtonUpdateClick() {
     $("#btnupdate").on('click', function (e) {
         e.preventDefault();
-        debugger;
         var isValid = OnSubmitCheckValidation();
         if (!isValid) {
             return;
@@ -503,7 +502,6 @@ function formatDateForInput(dateString) {
 function UpdateVehicleIndent(indentId) {
     var data = viewModelDto.filter(x => x.indentId == indentId);
     var formData = data[0];
-    debugger;
     $('#tableDiv').css('display', 'none');
     $("#formDiv").css('display', 'Block');
     $("#backButton").css('display', 'none');

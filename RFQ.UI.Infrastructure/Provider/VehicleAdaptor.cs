@@ -103,13 +103,14 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor()
+        public async Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor(int companyId)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Vehicle:GetAllOwnerOrVendor"]);
+                var baseUrl = $"{_fleetLynkApiUrl}{_config["Vehicle:GetAllOwnerOrVendor"]}?companyId={companyId}";
+                var response = await _httpClient.GetAsync(baseUrl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null)

@@ -9,6 +9,7 @@ using RFQ.UI.Domain.RequestDto;
 using System.Numerics;
 using RFQ.UI.Domain.ResponseDto;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RFQ.UI.Controllers
 {
@@ -57,6 +58,24 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        public async Task<IActionResult> GetRfqQuoteRateVendorDetailsqById([FromBody] QuoteRateVendorRequestDto rfqRateRequestDto)
+        {
+            try
+            {
+                if (rfqRateRequestDto != null)
+                {
+                    rfqRateRequestDto.UpdatedOn = DateTime.Now;
+                    var result = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsqById((int)rfqRateRequestDto.RfqId);
+                    return Json(new { Data = result, StatusCode = 200 });
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = ex.InnerException, message = ex.Message, StatusCode =404 });
             }
         }
     }

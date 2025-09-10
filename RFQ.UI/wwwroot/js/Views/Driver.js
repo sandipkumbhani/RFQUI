@@ -245,7 +245,6 @@ function SaveDriver(uploadedFileName, callback) {
     };
 
     if (createUser) {
-        debugger;
         var userCreate = {
             //LocationId: locationId,
             ProfileId: EnumProfile.Driver,
@@ -279,7 +278,6 @@ function SaveDriver(uploadedFileName, callback) {
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
-            debugger;
 
             
             var driverId = response?.result?.result?.driverId;
@@ -295,7 +293,6 @@ function SaveDriver(uploadedFileName, callback) {
                 callback(driverId || null);
             }
 
-            console.log(driverId); 
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Submit Driver Details", "Error");
@@ -333,7 +330,6 @@ function FormatDateToLocal(dateString) {
 }
 function EditDriver(driverId) {
     var data = viewModelDto.filter(x => x.driverId == driverId);
-    debugger;
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, driverId, function (list) {
         var attachmentData = list;
@@ -372,7 +368,6 @@ function EditDriver(driverId) {
         if (attachmentData.length > 0) {
             EditMasterAttachment(attachmentData);
         }
-        console.log(formData);
     });
 }
 
@@ -512,7 +507,6 @@ function DlEKycclick() {
             data: JSON.stringify(Body),
             success: function (response) {
                 var Data = response;
-                console.log(Data);
                 var drivingLicenseModel = response.drivingLicenseModel;
                 var base64String = Data.drivingLicenseModel.photo;
 
@@ -550,9 +544,7 @@ function DlEKycclick() {
                     myDropzone.addFile(file);
 
                     myDropzone.processQueue();
-                } else {
-                    console.error("Dropzone is not initialized.");
-                }
+                } 
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Submit Driver", "Validation Error");

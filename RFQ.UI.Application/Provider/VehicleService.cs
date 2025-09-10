@@ -26,9 +26,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehicleAdaptor.GetAllMasterVehicleType(companyId);
         }
-        public async Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor()
+        public async Task<IEnumerable<MasterPartyDto>> GetAllOwnerOrVendor(int companyId)
         {
-            return await _vehicleAdaptor.GetAllOwnerOrVendor();
+            return await _vehicleAdaptor.GetAllOwnerOrVendor(companyId);
         }
 
         public async Task<string> AddVehicle(VehicleRequestDto vehicleRequestDto)

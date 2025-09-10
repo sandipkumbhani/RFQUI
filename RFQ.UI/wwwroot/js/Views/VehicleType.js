@@ -101,7 +101,6 @@ function SaveVehicleType(action) {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    debugger;
                     if (response.statusCode == 200) {
                         toastr.success(response.message, "Success");
                         if (typeof this.completeOnSuccess === "function") {

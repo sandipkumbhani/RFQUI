@@ -1,7 +1,5 @@
 ﻿let autocompleteService;
 let geocoder;
-
-// Google Maps API will call this function automatically after loading
 function initMap() {
     autocompleteService = new google.maps.places.AutocompleteService();
     geocoder = new google.maps.Geocoder();
@@ -35,7 +33,7 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, c
 
     input.addEventListener("input", function () {
         let query = this.value.trim();
-        currentFocus = -1; // Reset focus
+        currentFocus = -1; 
         if (query.length > 2) {
             autocompleteService.getPlacePredictions({
                 input: query,
@@ -74,7 +72,7 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, c
             currentFocus--;
             highlightItem(items);
         } else if (e.key === "Enter") {
-            e.preventDefault(); // Prevent form submission
+            e.preventDefault(); 
             if (currentFocus > -1 && items[currentFocus]) {
                 items[currentFocus].click();
             }
@@ -124,20 +122,12 @@ function getLatLngAndState(placeId, latId, lngId, stateId, cityId) {
                     city = component.long_name;
                 }
             });
-            console.log("Selected Location Details:");
-            console.log("Latitude:", lat.toFixed(6));
-            console.log("Longitude:", lng.toFixed(6));
-            console.log("State:", state);
-            console.log("City:", city);
-
-
-            // Store values in hidden inputs
             document.getElementById(latId).value = lat.toFixed(6);
             document.getElementById(lngId).value = lng.toFixed(6);
             document.getElementById(stateId).value = state;
             document.getElementById(cityId).value = city;
         } else {
-            console.error("Geocoder failed or no result:", status);
+            toastr.error("Geocoder failed or no result:","Error");
         }
     });
 }

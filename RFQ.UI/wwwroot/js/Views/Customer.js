@@ -253,7 +253,6 @@ function EditCustomer(partyId) {
     });
 }
 function UpdateCustomer() {
-    debugger;
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
         var isvalid = ValidationCheck();
@@ -291,7 +290,6 @@ function UpdateCustomer() {
             LinkId: linkId
             
         };
-        console.log(formData);
 
         let repeaterItems = document.querySelectorAll("[data-repeater-item]");
         let updateAttachmentDetails = [];

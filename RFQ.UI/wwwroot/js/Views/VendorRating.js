@@ -38,7 +38,6 @@ $(document).ready(function () {
         const selectedValue = $(this).val();
         const selectedText = $(this).find("option:selected").text();
         const selectedVendor = vendorlist.filter(x => x.partyName == selectedText);
-        console.log("Selected Text:", selectedText);
         if (selectedVendor.length > 0) {
             $("#txtPanNumber").val(selectedVendor[0].panNo);
             $("#txtVendorCategory").val(selectedVendor[0].vendorCategoryName);
@@ -72,7 +71,6 @@ function fetchVendorList() {
         url: '/Vendor/GetAllVendorList',
         type: 'GET',
         success: function (data) {
-            console.log("Vendor List:", data);
             vendorlist = data;
             const select = document.getElementById("ddlVendor");
             select.innerHTML = "";

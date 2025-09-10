@@ -34,34 +34,43 @@ function initilization() {
 function OnSubmit() {
     $('#continue').on('click',function (e) {
         e.preventDefault();
-        debugger;
-        const otp = $('#otp0').val() + $('#otp1').val() + $('#otp2').val() + $('#otp3').val()
+        const otp = $('#otp0').val() + $('#otp1').val() + $('#otp2').val() + $('#otp3').val();
+        if (otp == null || otp == "") {
+            toastr.warning("Please Enter Otp!", "Warning");
+            return;
+        }
+        if ($(".verification-time span").text().trim() === "00:00") {
+            toastr.error("Invalid Otp!", "Error");
+            return;
+        }
         const currentUrl = window.location.href;
         const url = new URL(currentUrl);
         const params = new URLSearchParams(url.search);
         const loginId = params.get("loginId");
-
+        if(otp)
         $.post('/Login/VerifyOtp', { loginId, otp }, function (res) {
             if (res.success) {
                 window.location.href = '/Login/SetNewPassword?loginId=' + encodeURIComponent(loginId);
             } else {
-                toastr.error("Failed to Update User Password", "Error");
+                toastr.error("Invalid otp!", "Error");
             }
         });
     });
 }
 function ResendOtp() {
-    $('#btnResendOtp').submit(function (e) {
+    $('#btnResendOtp').on('click',function (e) {
         e.preventDefault();
 
-        const email = $('input[type="email"]').val();
+        const txtLoginName = GetQueryParam("loginId");
         $.ajax({
             type: "POST",
             url: '/Login/SendOtp',
-            data: { email },
+            data: { txtLoginName },
             success: function (res) {
-                if (res.success) {
+                if (res.statusCode == 200) {
                     toastr.success("OTP sent successfully!", "Success");
+                    countdownSeconds = 30;
+                    startCountdown();
                 } else {
                     toastr.error("Email not registered or OTP sending failed.", "Error");
                 }
@@ -82,8 +91,7 @@ function startCountdown() {
             // Format the time as MM:SS
             let minutes = Math.floor(countdownSeconds / 60);
             let seconds = countdownSeconds % 60;
-            let formattedTime =
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            let formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             document.querySelector('.verification-time span').innerText = formattedTime;
         } else {
             clearInterval(timerInterval);

@@ -11,19 +11,15 @@ function ValidateTextbox(inputId) {
     }
     return true;
 }
-
 function ClearControl() {
     $('.text-primary').val();
 }
 function IsNullOrEmpty(value) {
     return value === "null" || value === null || value === undefined || (typeof value === "string" && value.trim() === "" ? true : false);
 }
-
-// isNumeric function
 function isNumeric(value) {
     return /^[0-9]+$/.test(value);
 }
-
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -32,17 +28,12 @@ function isNumber(evt) {
     }
     return true;
 }
-
-// isAlphabets function
 function isAlphabets(value) {
     return /^[A-Za-z\s]+$/.test(value.key);
 }
-
-// isAlphaNumeric function
 function isAlphaNumeric(value) {
     return /^[A-Za-z0-9]+$/.test(value);
 }
-
 function AllowAlphaNumericOnly(e) {
     // Allow control keys like Shift, Ctrl, Alt, etc.
     //if (e.shiftKey || e.ctrlKey || e.altKey) {
@@ -61,32 +52,23 @@ function AllowAlphaNumericOnly(e) {
         e.preventDefault(); // Block non-alphanumeric keys
     }
 }
-
-// isValidateEmail function
 function isValidateEmail(email) {
     return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email);
 }
-
-// isValidateSelect function (checks if a select value is chosen and not empty)
 function isValidateSelect(value, selectedIndex) {
     return value !== "" && value !== null && value !== undefined && selectedIndex !== 0;
 }
-
-// isMobile function (validates a standard 10-digit mobile number)
 function isMobile(number) {
     return /^[0-9]{10}$/.test(number);
 }
-
 function IsValidAuthKey(key) {
     const regex = /^[A-Za-z0-9-_]{20,}$/;
     return regex.test(key);
 }
-
 function IsValidVehicleNumber(vehicleNumber) {
     var pattern = /^([A-Z]{2}\d{1,2}[A-Z]{1,2}\d{4})$/;
     return pattern.test(vehicleNumber);
 }
-
 function GetQueryParam(name) {
     var url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -96,10 +78,8 @@ function GetQueryParam(name) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
-
 // set all Input Box and select option is blue Border
 window.addEventListener('DOMContentLoaded', function () {
-    // Select all input elements on the page
     const inputs = document.querySelectorAll('input,select');
 
     // Loop through each input and set the border color to blue
@@ -754,17 +734,12 @@ function formatDate(dateString) {
 
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
-
-// Show loader
 function showLoader() {
     document.getElementById("loader").style.display = "block";
 }
-
-// Hide loader
 function hideLoader() {
     document.getElementById("loader").style.display = "none";
 }
-
 function exportToCSV(filename, rows) {
     let csvContent = rows.map(row =>
         row.map(item => `"${item}"`).join(",")
@@ -782,8 +757,3 @@ function exportToCSV(filename, rows) {
         document.body.removeChild(link);
     }
 }
-
-
-
-
-

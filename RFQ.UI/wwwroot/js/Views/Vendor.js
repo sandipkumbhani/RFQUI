@@ -526,7 +526,6 @@ $('#pageLength').off('change').on('change', function () {
 function EditVendor(partyId) {
     var data = viewModelDto.filter(x => x.partyId == partyId);
     var formData = data[0];
-    console.log(formData)
     var vehicleTypeTableData = FetchVendorVehicleTypeList(partyId);
     var applicableRouteTableData = FetchVendorApplicableRouteList(partyId);
     vehicleTypeNameList = vehicleTypeTableData.map(item => ({

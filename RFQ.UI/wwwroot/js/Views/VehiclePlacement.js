@@ -1,11 +1,16 @@
 ﻿var companyId;
-
+var driverDrpList;
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
     $('#ddlIndentNo').on('change', function () {
-        AutoFetch();
+        if ($(this).val() != null) {
+            AutoFetch();
+        }
+        else {
+            return;
+        }
     });
     $('#ddlVehicleNo').on('change', function () {
         const selectedValue = $(this).val();
@@ -21,15 +26,16 @@ $(document).ready(function () {
         }
     });
 
-
-    //GetAllLocation("ddlLocation",companyId); 
     GetAllDriver();
+    GetAllTrackingType();
     GetAllVehicleIndent();
     GetAllVehicleNumber();
     FetchPlacementNo();
     GetAllOwnerOrVendor();
+    GetAllBrokerVendor();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
+    GetAllLocation("ddlIndentBranch", companyId);
     GetAllLocation("ddlLocation", companyId, function () {
         if (profileId == EnumProfile.Branch) {
             $('#ddlLocation').val(Number(locationId)).trigger('change');
@@ -37,6 +43,21 @@ $(document).ready(function () {
         }
     });
 });
+$("#txtAdvancePayable").on('change', function () {
+    var hireAmt = Number($("#txtTotalHairAmt").val());
+    var advancePay = Number($("#txtAdvancePayable").val());
+    var payable = Number(hireAmt - advancePay);
+    $("#txtBalancePayable").val(payable);
+})
+$("#ddlDriverName").on('change', function () {
+    if ($(this).val() != null) {
+        var filterData = driverDrpList.find(x => x.driverId == $(this).val());
+        $("#txtMobileNo").val(filterData.mobNo);
+    }
+    else {
+        return;
+    }
+})
 function OnSubmitCheckValidation() {
     if (!isValidateSelect($("#ddlIndentNo").val())) {
         toastr.warning("Please Select a Indent No", "Validation Error");
@@ -72,13 +93,43 @@ function OnSubmitCheckValidation() {
     }
     return true;
 }
+function GetAllTrackingType() {
+    var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
+    $.ajax({
+        url: getInternalMasterUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.TRACKING_TYPE);
+            const select = document.getElementById("ddlTrakingType");
+            select.innerHTML = "";
+
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Tracking Type";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            internalData.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.internalMasterId;
+                opt.textContent = option.internalMasterName;
+                select.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
 function GetAllDriver() {
     $.ajax({
         url: '/Driver/GetAllDriverList',
         type: "GET",
         dataType: "json",
         success: function (response) {
-            var data = response
+            driverDrpList = response;
             const selectLocation = document.getElementById("ddlDriverName");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -86,13 +137,12 @@ function GetAllDriver() {
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             selectLocation.appendChild(placeholderOption);
-            data.forEach(option => {
+            driverDrpList.forEach(option => {
                 let opt = document.createElement("option");
                 opt.value = option.driverId;
                 opt.textContent = option.driverName;
                 selectLocation.appendChild(opt);
             });
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -157,7 +207,6 @@ function GetAllVehicleNumber() {
             }
         },
         error: function (xhr, status, error) {
-            debugger;
             toastr.error("Failed to Fetch Data!", "Error");
         }
     });
@@ -183,8 +232,8 @@ function GetAllOwnerOrVendor() {
         url: getAllOwnerOrVendorUrl,
         type: "GET",
         dataType: "json",
+        data: { companyId: companyId },
         success: function (response) {
-            debugger;
             const ownerdropdown = document.getElementById("ddlOwnerName");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -200,11 +249,40 @@ function GetAllOwnerOrVendor() {
                 option.textContent = item.partyName;
                 ownerdropdown.appendChild(option);
             });
-
-            $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to fetch Owner/Vendor Data!", "Error");
+        }
+    });
+}
+function GetAllBrokerVendor() {
+    var getAllBrokerVendorUrl = "/Vendor/GetAllVendorList";
+
+    $.ajax({
+        url: getAllBrokerVendorUrl,
+        type: "GET",
+        dataType: "json",
+        data: { companyId: companyId },
+        success: function (response) {
+            var data = response.filter(x => x.partyCategoryId == EnumInternalMaster.BROKER);
+            const brokerdropdown = document.getElementById("ddlBrokerName");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Broker Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            brokerdropdown.appendChild(placeholderOption);
+
+
+            data.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.partyId;
+                option.textContent = item.partyName;
+                brokerdropdown.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to fetch Broker Vendor Data!", "Error");
         }
     });
 }
@@ -217,7 +295,6 @@ function AutoFetch() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            console.log(response);
 
             // Check if response is a non-empty array
             if (Array.isArray(response) && response.length > 0) {
@@ -235,7 +312,6 @@ function AutoFetch() {
                 } else {
                     $('#txtIndentDate').val('');
                 }
-
                 $("#txtRFQNo").val(data.rfqNo);
 
                 $("#ddlCustomerName").val(data.partyId).trigger('change');
@@ -243,7 +319,7 @@ function AutoFetch() {
                 $('#from-search-box').val(data.fromLocation);
                 $('#to-search-box').val(data.toLocation);
                 $('#txtNoOfVehicles').val(data.requiredVehicles);
-                $('#txtIndentBranch').val(data.locationId);
+                $('#ddlIndentBranch').val(data.locationId).trigger('change');
                 $('#txtPendingVehicles').val(data.pendingVehicles);
 
                 // Format vehicleReqOn
@@ -286,7 +362,6 @@ function VehiclePopUp() {
             VehicleEKycClick();
         });
         $("#btnSaveVehicle").on('click', function () {
-            debugger;
             var action = $(this).data('action');
             if (VehicleValidationCheck()) {
                 SaveVehicle(action);
@@ -634,18 +709,14 @@ function DriverPopUp() {
         var closepop = false;
         if ($(event.target).hasClass('modal')) {
             // Modal itself is clicked (backdrop close)
-            console.log("Closed by clicking outside (backdrop).");
             closepop = true;
         } else if (event.keyCode === 27) {
             // ESC pressed
-            console.log("Closed by pressing ESC.");
             closepop = true;
         } else if ($(event.relatedTarget).hasClass('close')) {
             // Close button
-            console.log("Closed by close button.");
             closepop = true;
         } else {
-            console.log("Closed by other way (maybe programmatically).");
             closepop = true;
         }
         if (closepop) {
@@ -660,7 +731,7 @@ function DriverPopUp() {
         GetDriverType();
         GetAllCityList("ddlCity");
     });
-}   
+}
 function SaveDriverDetails(uploadedFileName) {
     var driverType = $("#ddlDriverType").val();
     var licenseNo = $("#numLicenseNo").val();
@@ -714,9 +785,7 @@ function SaveDriverDetails(uploadedFileName) {
             toastr.error("Failed to Submit Driver Details", "Error");
         }
     });
-    console.log(driverId);
 }
-
 function GetDriverType() {
     var GetUrl = '/Driver/GetDriverType';
     $.ajax({
@@ -730,7 +799,6 @@ function GetDriverType() {
             });
             const dropdown = document.getElementById("ddlDriverType");
             dropdown.innerHTML = "";
-            debugger;
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select Driver Type";

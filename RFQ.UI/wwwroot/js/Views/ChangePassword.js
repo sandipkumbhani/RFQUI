@@ -8,10 +8,16 @@ $(document).ready(function () {
     if (!IsNullOrEmpty(userid)) {
         userid = parseInt(userid);
     }
-    getUserById(userid);
+    //getUserById(userid);
     Initialization();
 });
 function Initialization() {
+    $("#txtCurrentPassword").on("blur", function () {
+        if (IsNullOrEmpty($(this).val())) {
+            toastr.warning("Please Enter your Current Password!", "Warning");
+            return;
+        }
+    });
     $("#txtNewPassword").on("blur", function () {
         const Password = $(this).val().trim();
         if (!passwordPattern.test(Password)) {
@@ -39,15 +45,20 @@ function getUserById(userId) {
         data: { UserId: userId },
         success: function (response) {
             user = response;
-            $('#txtCurrentPassword').val(response.password);
+            //$('#txtCurrentPassword').val(response.password);
         },
         error: function (xhr, status, error) {
-            console.error("Error:", error);
+            toastr.error("User not Exists!","Error");
         }
     });
 }
 function CheckValidation() {
-
+    $("#txtCurrentPassword").on("blur", function () {
+        if (IsNullOrEmpty($("#txtCurrentPassword").val())) {
+            toastr.warning("Please Enter your Current Password!", "Warning");
+            return false;
+        }
+    });
     // Password validation
     var newPassword = $("#txtNewPassword").val()
     if (!passwordPattern.test(newPassword)) {

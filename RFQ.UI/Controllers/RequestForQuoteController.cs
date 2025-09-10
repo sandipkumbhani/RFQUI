@@ -92,10 +92,14 @@ namespace RFQ.UI.Controllers
                         RfqRecipientsList = result.RfqRecipients;
                         foreach (var vendor in RfqRecipientsList)
                         {
-                            RfqQuoteRateVendorDetails data = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsqById(vendor.RfqId);
+                            //RfqQuoteRateVendorDetails data = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsqById(vendor.RfqId);
+                            var data = new
+                            {
+                                VendorId = vendor.VendorId,
+                                RfqId = vendor.RfqId
+                            };
                             if (data != null)
                             {
-                                data.VendorId = vendor.VendorId;
                                 string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", data, Request.Scheme) ?? string.Empty;
                                 //string? link = await GetShortUrl(formLink);
                                 //bool check = await _whatsAppService.SendWhatsAppMessageAsync(data.WhatsAppNo, formLink);
