@@ -396,10 +396,10 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.detentionPerDay}</td>
                         <td>${item.detentionFreeDays}</td>
                         <td>${item.rfqSubject}</td>
-                        <td>${item.rfqPriority}</td>
-                        <td>${item.rfqType}</td>
-                        <td>${item.itemName}</td>
-                        <td>${item.packingTypeName}</td>
+                        <td>${item.rfqPriority ? item.rfqPriority : ""}</td>
+                        <td>${item.rfqType ? item.rfqType : ""}</td>
+                        <td>${item.itemName ? item.itemName : ""}</td>
+                        <td>${item.packingTypeName ? item.packingTypeName : ""}</td>
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditRfq(${item.rfqId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteRfq(${item.rfqId})"><i class="ri-delete-bin-3-line"></i></a>
