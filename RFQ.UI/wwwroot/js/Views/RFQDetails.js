@@ -186,42 +186,42 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a No. of Vehicles", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtMaxCosting").val())) {
-        toastr.warning("Please enter a Max Costing", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtPerDay").val())) {
-        toastr.warning("Please enter a Detention Per Day", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtFreeDay").val())) {
-        toastr.warning("Please enter a Detention Free Days", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtRfqSubject").val())) {
-        toastr.warning("Please enter a RFQ Subject", "Validation Error");
-        return false;
-    }
-    if (!isValidateSelect($("#ddlRfqPriority").val())) {
-        toastr.warning("Please Select a RFQ Priority", "Validation Error");
-        return false;
-    }
-    if (!isValidateSelect($("#ddlRfqType").val())) {
-        toastr.warning("Please Select a RFQ Type", "Validation Error");
-        return false;
-    }
-    if (!isValidateSelect($("#ddlItemName").val())) {
-        toastr.warning("Please Select a Item Name", "Validation Error");
-        return false;
-    }
-    if (!isValidateSelect($("#ddlPackingType").val())) {
-        toastr.warning("Please Select a Packing Type", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtSpecialInstructions").val())) {
-        toastr.warning("Please enter a Special Instructions", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#txtMaxCosting").val())) {
+    //    toastr.warning("Please enter a Max Costing", "Validation Error");
+    //    return false;
+    //}
+    //if (IsNullOrEmpty($("#txtPerDay").val())) {
+    //    toastr.warning("Please enter a Detention Per Day", "Validation Error");
+    //    return false;
+    //}
+    //if (IsNullOrEmpty($("#txtFreeDay").val())) {
+    //    toastr.warning("Please enter a Detention Free Days", "Validation Error");
+    //    return false;
+    //}
+    //if (IsNullOrEmpty($("#txtRfqSubject").val())) {
+    //    toastr.warning("Please enter a RFQ Subject", "Validation Error");
+    //    return false;
+    //}
+    //if (!isValidateSelect($("#ddlRfqPriority").val())) {
+    //    toastr.warning("Please Select a RFQ Priority", "Validation Error");
+    //    return false;
+    //}
+    //if (!isValidateSelect($("#ddlRfqType").val())) {
+    //    toastr.warning("Please Select a RFQ Type", "Validation Error");
+    //    return false;
+    //}
+    //if (!isValidateSelect($("#ddlItemName").val())) {
+    //    toastr.warning("Please Select a Item Name", "Validation Error");
+    //    return false;
+    //}
+    //if (!isValidateSelect($("#ddlPackingType").val())) {
+    //    toastr.warning("Please Select a Packing Type", "Validation Error");
+    //    return false;
+    //}
+    //if (IsNullOrEmpty($("#txtSpecialInstructions").val())) {
+    //    toastr.warning("Please enter a Special Instructions", "Validation Error");
+    //    return false;
+    //}
 
 
     return true;
