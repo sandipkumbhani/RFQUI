@@ -81,14 +81,11 @@ namespace RFQ.UI.Controllers
             var subject = "Quote Request - FleetLynk";
             string baseUrl = $"{Request.Scheme}://{Request.Host}/QuoteRateVendor/QuoteRateVendor";
             string longUrl = $"{baseUrl}?RfqId={vendor.RfqId}&VendorId={vendor.PartyId}";
-            string shortUrl = ShortenUrl(longUrl);
-
-
             string body = "";
 
             body += "Dear Vendor,\n\n";
             body += "You are requested to provide your quote for the requested services/products. Please use the link below to submit your quotation:\n\n";
-            body += shortUrl + "\n\n";  // use short link here
+            body += longUrl + "\n\n";  // use short link here
             body += "Kindly ensure that you submit your response before the specified deadline.\n\n";
             body += "If you have any questions, feel free to contact us.\n\n";
             body += "Thank you,\n";
@@ -122,30 +119,5 @@ namespace RFQ.UI.Controllers
                 return false;
             }
         }
-
-        private string ShortenUrl(string longUrl)
-        {
-            using var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "YOUR_BITLY_ACCESS_TOKEN");
-
-            var payload = new
-            {
-                long_url = longUrl
-            };
-
-            var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-            var response = httpClient.PostAsync("https://api-ssl.bitly.com/v4/shorten", content).Result;
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = response.Content.ReadAsStringAsync().Result;
-                dynamic json = JsonConvert.DeserializeObject(responseContent);
-                return json.link;
-            }
-
-            return longUrl; // fallback
-        }
-
-
     }
 }
