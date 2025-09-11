@@ -5,8 +5,8 @@ var orderColumn = '';
 var orderDir = '';
 $("#ddlRfqStatus").on('change', function () {
     if ($(this).val() != null) {
-        if ($("#txtRfqNo").val() == null || $("#txtRfqNo").val() == "") {
-            toastr.warning("Please Enter Rfq No!", "Warning");
+        if ($("#ddlRfqNo").val() == null) {
+            toastr.warning("Please Select Rfq No!", "Warning");
             ClearDisabledFields();
             $("#ddlRfqStatus").val(null).trigger('change');
             return;
@@ -35,7 +35,7 @@ $("#ddlRfqStatus").on('change', function () {
 });
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
-    $("#txtRfqNumber").prop('disabled', false);
+    $("#ddlRfqNo").prop('disabled', false);
     $('#tableDivLink').on('click', function (e) {
         e.preventDefault();
         $("#tableDiv").show();
@@ -66,15 +66,16 @@ $(document).ready(function () {
     $("#btnCancel").on('click', function () {
         FetchRfqFinalizationList();
     });
+    GetRfqDrpList();
     GetRfqStatus();
     GetRfqFailureReason();
     FetchRfqFinalizationList();
     UpdateRfqFinalization();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
-    $("#btnGetRfqData").on('click', function () {
-        if (IsNullOrEmpty($("#txtRfqNumber").val())) {
-            toastr.warning("Please Enter Rfq No", "Warning");
+    $("#ddlRfqNo").on('change', function () {
+        debugger;
+        if (!isValidateSelect($("#ddlRfqNo").val())) {
             ClearDisabledFields();
             return;
         }
@@ -92,16 +93,12 @@ $(document).ready(function () {
 });
 
 function OnSubmitCheckValidation() {
-    if (IsNullOrEmpty($("#txtRfqNumber").val())) {
+    if (!isValidateSelect($("#ddlRfqNo").val())) {
         toastr.warning("Please enter a RFQ No", "Validation Error");
         return false;
     }
     if (!isValidateSelect($("#ddlRfqStatus").val())) {
         toastr.warning("Please Select a RFQ Status", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtRemarks").val())) {
-        toastr.warning("Please enter a Remarks", "Validation Error");
         return false;
     }
     if ($("#ddlRfqStatus").find('option:selected').text() === "AWARDED") {
@@ -129,6 +126,36 @@ function OnSubmitCheckValidation() {
         }
     }
     return true;
+}
+function GetRfqDrpList() {
+    var getRfqDrpListUrl = '/RFQFinalization/GetRfqDrpList'
+    $.ajax({
+        url: getRfqDrpListUrl,
+        type: "GET",
+        dataType: "json",
+        data: { companyId: companyId },
+        success: function (response) {
+            $("#ddlRfqNo").empty();
+            const select = document.getElementById("ddlRfqNo");
+            select.innerHTML = "";
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a RFQ No";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            response.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.rfqId;
+                opt.textContent = option.rfqNo;
+                select.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
 }
 function GetRfqStatus() {
     var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
@@ -161,7 +188,7 @@ function GetRfqStatus() {
     });
 }
 function GetRfqDetailsByRfqNo(callback) {
-    var rfqNumber = $("#txtRfqNumber").val();
+    var rfqNumber = $("#ddlRfqNo").find('option:selected').text();
     var getUrl = '/RequestForQuote/GetRfqByRfqNo/' + rfqNumber;
     $.ajax({
         url: getUrl,
@@ -322,7 +349,7 @@ function FetchRfqFinalizationList() {
     $("#btnSaveAndNew").show();
     $('#RFQForm')[0].reset();
     $('.select2-custom').val(null).trigger('change');
-    $("#txtRfqNumber").prop('disabled', false);
+    $("#ddlRfqNo").prop('disabled', false);
     ClearDisabledFields();
     FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase());
 }
@@ -343,8 +370,8 @@ function EditRfqFinalizatioin(rfqFinalIdId) {
     $("#btnUpdateRfqFinalization").show();
     $("#btnSave").hide();
     $("#btnSaveAndNew").hide();
-    $("#txtRfqNumber").val(formData.rfqNo);
-    $("#txtRfqNumber").prop('disabled', true);
+    $("#ddlRfqNo").val(formData.rfqId).trigger('change');
+    $("#ddlRfqNo").prop('disabled', true);
     $("#txtRfqId").val(formData.rfqId);
     $("#hdnRFQFinalizationId").val(formData.rfqFinalIdId);
     $("#txtRemarks").val(formData.remarks);
@@ -613,12 +640,8 @@ function GetSelectedVendor() {
     return selectedVendor;
 }
 function ClearDisabledFields() {
-    // Clear disabled text, date, datetime-local inputs
     $('input:disabled').val('');
-    $("#txtRfqNumber").val('');
     $('input[type="hidden"]').val('');
-    // Clear disabled select2 dropdowns
-    $('select.select2-custom:disabled').each(function () {
-        $(this).val(null).trigger('change');
-    });
+    $("#ddlCustomerName").val(null).trigger('change');
+    $("#ddlVehicleType").val(null).trigger('change');
 }

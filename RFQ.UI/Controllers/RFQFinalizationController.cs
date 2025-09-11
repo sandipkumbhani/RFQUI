@@ -167,5 +167,26 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRfqDrpList([FromQuery]int companyId)
+        {
+            try
+            {
+                var result = await _rfqFinalService.GetRfqDrpList(companyId);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return View(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

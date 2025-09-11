@@ -12,5 +12,6 @@ namespace RFQ.UI.Application.Interface
         Task<IEnumerable<VendorFinalizationResposeDto>> AwardedVendor(int id);
         Task<PageList<RfqFinalizationResponseDto>> GetAllRfqFinalization(PagingParam pagingParam);
         Task<IEnumerable<RfqFinalRateReponseDto>> GetRfqFinalRateList(int rfqFinalId);
+        Task<IEnumerable<RfqDrpListResponseDto>> GetRfqDrpList(int companyId);
     }
 }
