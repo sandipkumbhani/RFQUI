@@ -186,5 +186,29 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             return false;
         }
+
+        public async Task<IEnumerable<RfqDrpListResponseDto>> GetRfqDrpList(int companyId)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl =  $"{_fleetLynkApiUrl}{_config["RfqFinal:GetRfqDrpList"]}?companyId={companyId}";
+                var response = await _httpClient.GetAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                {
+                    var resultList = JsonConvert.DeserializeObject<IEnumerable<RfqDrpListResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return resultList;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in Get Rfq DrpList: " + ex.Message);
+            }
+            return null;
+        }
     }
 }

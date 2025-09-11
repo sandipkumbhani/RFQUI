@@ -33,6 +33,11 @@ namespace RFQ.UI.Application.Provider
             return await _rfqFinalAdaptor.GetAllRfqFinalization(pagingParam);
         }
 
+        public async Task<IEnumerable<RfqDrpListResponseDto>> GetRfqDrpList(int companyId)
+        {
+            return await _rfqFinalAdaptor.GetRfqDrpList(companyId);
+        }
+
         public async Task<IEnumerable<RfqFinalRateReponseDto>> GetRfqFinalRateList(int rfqFinalId)
         {
             return await _rfqFinalAdaptor.GetRfqFinalRateList(rfqFinalId);
