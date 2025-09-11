@@ -38,6 +38,7 @@ namespace RFQ.UI.Infrastructure.Extension
             services.AddScoped<IRfqRateAdaptor, RfqRateAdaptor>();
             services.AddScoped<IRfqLinkAdaptor, RfqLinkAdaptor>();
             services.AddScoped<IReceivedVendorCostingAdaptor, ReceivedVendorCostingAdaptor>();
+            services.AddScoped<IEmailAdaptor, EmailAdaptor>();
             return services;
         }
     }

@@ -10,6 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using RFQ.UI.Application.Provider;
 
 namespace RFQ.UI.Controllers
 {
@@ -17,10 +18,13 @@ namespace RFQ.UI.Controllers
     {
         private readonly GlobalClass _globalClass;
         private readonly IReceivedVendorCostingService _receivedVendorCostingService;
-        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService)
+        private readonly IEmailService _emailService;
+
+        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService, IEmailService emailService)
         {
             _globalClass = globalClass;
             _receivedVendorCostingService = receivedVendorCostingService;
+            _emailService = emailService;
         }
         public IActionResult Index()
         {
@@ -35,7 +39,7 @@ namespace RFQ.UI.Controllers
                 ReceivedVendorCosting request = new();
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
 
-                
+
 
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
@@ -57,9 +61,9 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public bool SendEmail([FromBody] VendorCostingListResponseDto vendor)
+        public async Task<bool> SendEmail([FromBody] VendorCostingListResponseDto vendor)
         {
-            if (vendor == null || string.IsNullOrEmpty(vendor.Email)) return false;
+            if (string.IsNullOrWhiteSpace(vendor.Email) || string.IsNullOrEmpty(vendor.Email)) return false;
             RfqQuoteRateVendorDetails newData = new();
             newData.PartyName = vendor.PackingName;
             newData.RfqNo = vendor.RFQNumber;
@@ -77,8 +81,6 @@ namespace RFQ.UI.Controllers
             newData.RfqId = vendor.RfqId;
             newData.VendorId = vendor.PartyId;
 
-
-            var subject = "Quote Request - FleetLynk";
             string baseUrl = $"{Request.Scheme}://{Request.Host}/QuoteRateVendor/QuoteRateVendor";
             string longUrl = $"{baseUrl}?RfqId={vendor.RfqId}&VendorId={vendor.PartyId}";
             string body = "";
@@ -91,33 +93,13 @@ namespace RFQ.UI.Controllers
             body += "Thank you,\n";
             body += "FleetLynk Team";
 
-
-            try
+            var emailRequest = new EmailRequest
             {
-                var smtpClient = new SmtpClient("smtp.gmail.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential("amit.dev1018@gmail.com", "fqrf srsh rllg cpwl"),
-                    EnableSsl = true,
-                };
-
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress("amit.dev1018@gmail.com", "FleetLynk"),
-                    Subject = subject,  
-                    Body = body,
-                    IsBodyHtml = false
-                };
-                mailMessage.To.Add(vendor.Email);
-
-                smtpClient.Send(mailMessage);
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+                ToEmail = vendor.Email,
+                Subject = "Quote Request - FleetLynk",
+                Body = body
+            };
+            return await _emailService.SendEmailAsync(emailRequest);
         }
     }
 }
