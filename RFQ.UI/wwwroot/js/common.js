@@ -696,21 +696,23 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
         data: { companyId: companyIdParam },
         dataType: "json",
         success: function (response) {
-            var data = response
-            const selectVehicleType = document.getElementById(dropdownId);
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Vehicle Type";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            selectVehicleType.appendChild(placeholderOption);
+            if (response != null) {
+                var data = response
+                const selectVehicleType = document.getElementById(dropdownId);
+                let placeholderOption = document.createElement("option");
+                placeholderOption.value = "";
+                placeholderOption.textContent = "Select a Vehicle Type";
+                placeholderOption.disabled = true;
+                placeholderOption.selected = true;
+                selectVehicleType.appendChild(placeholderOption);
 
-            data.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.vehicleTypeId;
-                option.textContent = item.vehicleTypeName;
-                selectVehicleType.appendChild(option);
-            });
+                data.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.vehicleTypeId;
+                    option.textContent = item.vehicleTypeName;
+                    selectVehicleType.appendChild(option);
+                });
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Vehicle Type!", "Error");
