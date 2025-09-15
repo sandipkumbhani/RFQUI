@@ -28,10 +28,10 @@ $(document).ready(function () {
             $("#ddlOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');
         }
     });
-    
+
     GetAllDriver();
     GetAllTrackingType();
-    GetAllVehicleIndent();
+    //GetAllVehicleIndent();
     GetAllVehicleNumber();
     FetchPlacementNo();
     GetAllOwnerOrVendor();
@@ -79,7 +79,6 @@ $(document).ready(function () {
         }
     });
     $("#ddlLocation").on('change', function () {
-        debugger;
         let selectLocationId = $(this).val();
         GetAllVehicleIndent(selectLocationId);
     })
@@ -127,7 +126,7 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchVehiclePlacement();
 });
-function GetAllVehicleIndent(selectLocationId) {
+function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
 
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
     $.ajax({
@@ -146,13 +145,16 @@ function GetAllVehicleIndent(selectLocationId) {
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             Indentdropdown.appendChild(placeholderOption);
-            debugger;
             VehicIndentList.forEach(item => {
                 const option = document.createElement("option");
                 option.value = item.indentId;
                 option.textContent = item.indentNo;
                 Indentdropdown.appendChild(option);
             });
+            if (selectedIndentId) {
+                $("#ddlIndentNo").val(Number(selectedIndentId)).trigger('change');
+                $("#ddlIndentNo").prop('disabled', true);
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Indent No!", "Error");
@@ -164,7 +166,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please Select a Location", "Validation Error");
         return false;
     }
-    
+
     if (!isValidateSelect($("#ddlIndentNo").val())) {
         toastr.warning("Please Select a IndentNo", "Validation Error");
         return false;
@@ -917,7 +919,7 @@ function SaveVehiclePlacement(action) {
     var saveUrl = '/VehiclePlacement/AddVehiclePlacement';
     var driverResult = GetDropdownValue("ddlDriverName");
     const formData = {
-        
+
         LocationId: $('#ddlLocation').val(),
         PlacementNo: $('#txtPlacementNo').val(),
         PlacementDate: $('#txtPlacementDate').val(),
@@ -1121,7 +1123,7 @@ function UpdateVehiclePlacement(placementId) {
     $("#ddlLocation").val(formData.locationId).trigger('change');
     $("#txtPlacementNo").val(formData.placementNo);
     $("#txtPlacementDate").val(formatDateForInput(formData.placementDate));
-    $("#ddlIndentNo").val(formData.indentId).trigger('change');
+    ////$("#ddlIndentNo").val(formData.indentId).trigger('change');
     GetAllVehicleIndent(formData.locationId, formData.indentId);
     $("#ddlVehicleNo").val(formData.vehicleId).trigger('change');
     $("#ddlTrakingType").val(formData.trackingTypeId).trigger('change');
