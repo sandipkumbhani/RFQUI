@@ -9,6 +9,7 @@ using System.Net;
 using RFQ.UI.Domain.Helper;
 using System.Net.Mail;
 using System.Text;
+using RFQ.UI.Application.Provider;
 
 namespace RFQ.UI.Controllers
 {
@@ -19,13 +20,16 @@ namespace RFQ.UI.Controllers
         private readonly ILogger<RequestForQuoteController> _logger;
         private readonly IRfqLinkService _rfqLinkService;
         private readonly IWhatsAppService _whatsAppService;
-        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService)
+        private readonly IEmailService _emailService;
+
+        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService)
         {
             _globalClass = globalClass;
             _requestForQuoteService = requestForQuoteService;
             _logger = logger;
             _rfqLinkService = rfqLinkService;
             _whatsAppService = whatsAppService;
+            _emailService = emailService;
         }
         public ActionResult VendorRequest()
         {
@@ -103,7 +107,7 @@ namespace RFQ.UI.Controllers
                                 string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", data, Request.Scheme) ?? string.Empty;
                                 //string? link = await GetShortUrl(formLink);
                                 //bool check = await _whatsAppService.SendWhatsAppMessageAsync(data.WhatsAppNo, formLink);
-                                bool check = SendEmail(vendor, formLink);
+                                bool check = await SendEmail(vendor, formLink);
                                 if (check)
                                 {
                                     RfqSendlinkList.Add(new RfqLinkRequestDto
@@ -262,14 +266,11 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        private bool SendEmail(RfqRecipientResponseDto vendor, string formLink)
+        private async Task<bool> SendEmail(RfqRecipientResponseDto vendor, string formLink)
         {
+            if (string.IsNullOrEmpty(vendor.EmailId) || string.IsNullOrWhiteSpace(vendor.EmailId)) return false;
 
-            if (string.IsNullOrEmpty(vendor.EmailId)) return false;
-
-            var subject = "Quote Request - FleetLynk";
             string body = "";
-
             body += "Dear Vendor,\n\n";
             body += "You are requested to provide your quote for the requested services/products. Please use the link below to submit your quotation:\n\n";
             body += formLink + "\n\n";
@@ -278,44 +279,14 @@ namespace RFQ.UI.Controllers
             body += "Thank you,\n";
             body += "FleetLynk Team";
 
-
-            try
+            var emailRequest = new EmailRequest
             {
-                var smtpClient = new SmtpClient("smtp.gmail.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential("amit.dev1018@gmail.com", "fqrf srsh rllg cpwl"), // <-- App password here
-                    EnableSsl = true,
-                };
+                ToEmail = vendor.EmailId,
+                Subject = "Quote Request - FleetLynk",
+                Body = body
+            };
 
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress("amit.dev1018@gmail.com", "FleetLynk"),  // your Gmail address
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = false
-                };
-                mailMessage.To.Add(vendor.EmailId);
-
-                smtpClient.Send(mailMessage);
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public static async Task<string> GetShortUrl(string longUrl)
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                string requestUrl = $"https://tinyurl.com/api-create.php?url={Uri.EscapeDataString(longUrl)}";
-                string response = await client.GetStringAsync(requestUrl);
-                return response;
-            }
-
+            return await _emailService.SendEmailAsync(emailRequest);
         }
     }
 }

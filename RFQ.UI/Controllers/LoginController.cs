@@ -9,6 +9,8 @@ using RFQ.UI.Application.Provider;
 using System.Threading.Tasks;
 using RFQ.UI.Domain.ResponseDto;
 
+using System.Numerics;
+
 namespace RFQ.UI.Controllers
 {
     public class LoginController : Controller
@@ -18,14 +20,16 @@ namespace RFQ.UI.Controllers
         private static Dictionary<string, string> otpStore = new();
         private readonly IUsersService _usersService;
         private readonly IWhatsAppService _whatsAppService;
+        private readonly IEmailService _emailService;
 
-        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger, IUsersService usersService, IWhatsAppService whatsAppService)
+        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger, IUsersService usersService, IWhatsAppService whatsAppService, IEmailService emailService)
         {
             _loginServcies = loginServcies;
             _logger = logger;
             _usersService = usersService;
             _whatsAppService =
             _whatsAppService = whatsAppService;
+            _emailService = emailService;
         }
         public IActionResult Login()
         {
@@ -114,52 +118,39 @@ namespace RFQ.UI.Controllers
         public async Task<IActionResult> SendOtp(string txtLoginName)
         {
 
-            try
+
+            UserResponseDto user = new();
+            // Validate email exists (dummy check)
+            if (string.IsNullOrEmpty(txtLoginName)) return Ok(user);
+            else
+                user = await _usersService.GetByLoginIdAsync(txtLoginName);
+
+            if (user != null)
             {
-                UserResponseDto user = new();
-                // Validate email exists (dummy check)
-                if (string.IsNullOrEmpty(txtLoginName)) return Ok(user);
-                else
-                    user = await _usersService.GetByLoginIdAsync(txtLoginName);
+                // Generate OTP
+                var otp = new Random().Next(1000, 9999).ToString();
 
-                if (user != null)
+                // Store OTP
+                otpStore[user.LoginId] = otp;
+                var subject = "Your OTP Code";
+                var body = $"Dear User,\n\n" +
+                           $"We received a request to verify your email address.\n\n" +
+                           $"Your One-Time Password (OTP) is: {otp}\n\n" +
+                           $"Please enter this OTP in the application to complete your verification.\n\n" +
+                           $"If you did not request this, you can safely ignore this email.\n\n" +
+                           $"Thank you,\nFleetLynk";
+
+
+                var emailRequest = new Domain.RequestDto.EmailRequest
                 {
-                    // Generate OTP
-                    var otp = new Random().Next(1000, 9999).ToString();
+                    ToEmail = user.EmailId,
+                    Subject = subject,
+                    Body = body
+                };
 
-                    // Store OTP
-                    otpStore[user.LoginId] = otp;
-
-                    // Prepare email
-                    var subject = "Your OTP Code";
-                    string body = "";
-                    body += "Dear User,\n\n";
-                    body += "We received a request to verify your email address.\n\n";
-                    body += $"Your One-Time Password (OTP) is: {otp}\n\n";
-                    body += "Please enter this OTP in the application to complete your verification.\n\n";
-                    body += "If you did not request this, you can safely ignore this email.\n\n";
-                    body += "Thank you,\n";
-                    body += "FleetLynk";
-
-
-                    var smtpClient = new SmtpClient("smtp.gmail.com")
-                    {
-                        Port = 587,
-                        Credentials = new NetworkCredential("amit.dev1018@gmail.com", "fqrf srsh rllg cpwl"), // <-- App password here
-                        EnableSsl = true,
-                    };
-
-                    var mailMessage = new MailMessage
-                    {
-                        From = new MailAddress("amit.dev1018@gmail.com", "FleetLynk"),  // your Gmail address
-                        Subject = subject,
-                        Body = body,
-                        IsBodyHtml = false
-                    };
-                    mailMessage.To.Add(user.EmailId);
-
-                    smtpClient.Send(mailMessage);
-
+                bool check = await _emailService.SendEmailAsync(emailRequest);
+                if (check)
+                {
                     return Ok(new NewCommonResponseDto
                     {
                         Data = user,
@@ -169,22 +160,24 @@ namespace RFQ.UI.Controllers
                 }
                 else
                 {
-                    return Ok(new NewCommonResponseDto
+                    return NotFound(new NewCommonResponseDto
                     {
-                        Data = null,
-                        StatusCode = 404,
-                        Message = "User Not Found - Failed to send OTP"
+                        Data = false,
+                        Message = string.Empty
                     });
                 }
+
             }
-            catch (Exception ex)
+            else
             {
-                return NotFound(new NewCommonResponseDto
+                return Ok(new NewCommonResponseDto
                 {
-                    Data = false,
-                    Message = ex.Message
+                    Data = null,
+                    StatusCode = 404,
+                    Message = "User Not Found - Failed to send OTP"
                 });
             }
+
         }
 
         [HttpPost]
@@ -240,8 +233,6 @@ namespace RFQ.UI.Controllers
         public async Task<IActionResult> SendNewPassword(string emailId, string newPassword)
         {
             UserResponseDto user = new();
-
-            // Validate user exists
             if (string.IsNullOrEmpty(emailId))
                 return Ok(new NewCommonResponseDto { Data = null, StatusCode = 404, Message = "Invalid login name" });
 
@@ -249,7 +240,7 @@ namespace RFQ.UI.Controllers
                 return Ok(new NewCommonResponseDto { Data = null, StatusCode = 404, Message = "newPassword not found or email missing" });
 
             // Prepare email
-            var subject = "Your New Password";
+
             string body = "";
             body += "Dear User,\n\n";
             body += "We have reset your password as requested.\n\n";
@@ -258,33 +249,17 @@ namespace RFQ.UI.Controllers
             body += "Thank you,\n";
             body += "FleetLynk";
 
-            try
+            var emailRequest = new Domain.RequestDto.EmailRequest
             {
-                var smtpClient = new SmtpClient("smtp.gmail.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential("amit.dev1018@gmail.com", "fqrf srsh rllg cpwl"), // <-- Gmail App password
-                    EnableSsl = true,
-                };
-
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress("amit.dev1018@gmail.com", "FleetLynk"),
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = false
-                };
-                mailMessage.To.Add(emailId);
-
-                smtpClient.Send(mailMessage);
-
+                ToEmail = emailId,
+                Subject = "Your New Password",
+                Body = body
+            };
+            bool check = await _emailService.SendEmailAsync(emailRequest);
+            if (check)
                 return Ok(new NewCommonResponseDto() { Data = user, StatusCode = 200, Message = "New password sent successfully" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Failed to send email", error = ex.Message });
-            }
+            else
+                return Json(new { success = false, message = "Failed to send email" });
         }
-
     }
 }

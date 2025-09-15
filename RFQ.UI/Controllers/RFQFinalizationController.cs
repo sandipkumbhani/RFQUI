@@ -3,6 +3,7 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -12,10 +13,14 @@ namespace RFQ.UI.Controllers
     {
         private readonly GlobalClass _globalClass;
         private readonly IRfqFinalService _rfqFinalService;
-        public RFQFinalizationController(IRfqFinalService rfqFinalService, GlobalClass globalClass)
+        private readonly IEmailService _emailService;
+        private readonly IConfiguration _config;
+        public RFQFinalizationController(IRfqFinalService rfqFinalService, GlobalClass globalClass, IEmailService emailService, IConfiguration config)
         {
             _rfqFinalService = rfqFinalService;
             _globalClass = globalClass;
+            _emailService = emailService;
+            _config = config;
         }
         public IActionResult Index()
         {
@@ -53,7 +58,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateRfqFinal([FromBody]RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
+        public async Task<IActionResult> UpdateRfqFinal([FromBody] RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
         {
             try
             {
@@ -66,7 +71,7 @@ namespace RFQ.UI.Controllers
                 {
                     rfqFinalizationSaveRequestDto.RfqFinalDto.CreatedBy = Convert.ToInt32(userid);
                     rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy = Convert.ToInt32(userid);
-                    var result = await _rfqFinalService.UpdateRfqFinal(rfqFinalId,rfqFinalizationSaveRequestDto);
+                    var result = await _rfqFinalService.UpdateRfqFinal(rfqFinalId, rfqFinalizationSaveRequestDto);
                     return Json(result);
                 }
                 else
@@ -147,6 +152,7 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpDelete("RFQFinalization/DeleteRfqFinal/{rfqFinalId}")]
         public async Task<IActionResult> DeleteRfqFinal(int rfqFinalId)
         {
@@ -169,7 +175,7 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRfqDrpList([FromQuery]int companyId)
+        public async Task<IActionResult> GetRfqDrpList([FromQuery] int companyId)
         {
             try
             {
@@ -186,6 +192,47 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SendAssignOrder([FromBody] List<VendorFinalizationResposeDto>? CheckBoxData)
+        {
+            try
+            {
+                foreach (var item in CheckBoxData)
+                {
+                    var emailRequest = new EmailRequest
+                    {
+                        ToEmail = item.Email,
+                        Subject = $"New Order Assigned",
+
+                        Body = $@"
+                        <html>
+                            <body style='font-family: Arial, sans-serif;'>
+                                <h2>Dear {item.VendorName},</h2>
+                                <p>
+                                    We are pleased to inform you that you have been 
+                                    <strong>assigned a new order</strong>.
+                                </p>
+                                <p>
+                                    <b>Order Details:</b><br/>
+                                    Order Date: {DateTime.Now:dd MMM yyyy}<br/>
+                                    Vehicle Count: {item.VehicleCount}
+                                </p>
+                                <p style='margin-top:20px;'>Best Regards,<br/>FleetLynk Team</p>
+                            </body>
+                        </html>",
+                        IsHtml = true
+                    };
+                    bool check = await _emailService.SendEmailAsync(emailRequest);
+                }
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return Ok(false);
             }
         }
     }
