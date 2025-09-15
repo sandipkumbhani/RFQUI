@@ -92,9 +92,11 @@ $('#addPlacement').click(function () {
 $("#txtAdvancePayable").on('change', function () {
     var hireAmt = Number($("#txtTotalHairAmt").val());
     var advancePay = Number($("#txtAdvancePayable").val());
-    var payable = Number(hireAmt - advancePay);
+    var payable = hireAmt - advancePay;
     $("#txtBalancePayable").val(payable);
-})
+});
+
+
 $("#ddlDriverName").on('change', function () {
     if ($(this).val() != null) {
         var filterData = driverDrpList.find(x => x.driverId == $(this).val());
@@ -104,6 +106,16 @@ $("#ddlDriverName").on('change', function () {
         return;
     }
 })
+
+$('#PlacementTableSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchVehiclePlacement();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchVehiclePlacement();
+});
 
 function FetchVehiclePlacement() {
     $("#tableDiv").css('display', 'block');
@@ -117,15 +129,6 @@ function FetchVehiclePlacement() {
     //ResetAttachmentRepeater();
     FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase());
 }
-$('#PlacementTableSearch').off('keyup').on('keyup', function () {
-    $('#currentPage').val(1);
-    FetchVehiclePlacement();
-});
-
-$('#pageLength').off('change').on('change', function () {
-    $('#currentPage').val(1);
-    FetchVehiclePlacement();
-});
 function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
 
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
@@ -187,18 +190,18 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Mobile No", "Validation Error");
         return false;
     }
-    if (!isValidateSelect($("#ddlBrokerName").val())) {
-        toastr.warning("Please Select a Broker Name", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtTotalHairAmt").val())) {
-        toastr.warning("Please enter a Total Hair Amt", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtAdvancePayable").val())) {
-        toastr.warning("Please enter a Advance Payable", "Validation Error");
-        return false;
-    }
+    //if (!isValidateSelect($("#ddlBrokerName").val())) {
+    //    toastr.warning("Please Select a Broker Name", "Validation Error");
+    //    return false;
+    //}
+    //if (IsNullOrEmpty($("#txtTotalHairAmt").val())) {
+    //    toastr.warning("Please enter a Total Hair Amt", "Validation Error");
+    //    return false;
+    //}
+    //if (IsNullOrEmpty($("#txtAdvancePayable").val())) {
+    //    toastr.warning("Please enter a Advance Payable", "Validation Error");
+    //    return false;
+    //}
     return true;
 }
 function GetAllTrackingType() {
@@ -926,14 +929,13 @@ function SaveVehiclePlacement(action) {
         IndentId: $('#ddlIndentNo').val(),
         VehicleId: $('#ddlVehicleNo').val(),
         TrackingTypeId: $('#ddlTrakingType').val(),
-        //DriverId: $('#ddlDriverName').val(),
         DriverId: driverResult.id,
         DriverName: driverResult.name,
         MobileNo: $('#txtMobileNo').val(),
-        OwnerVendorId: $('#ddlOwnerName').val(),
-        BrokerVendorId: $('#ddlBrokerName').val(),
-        TotalHireAmount: $('#txtTotalHairAmt').val(),
-        AdvancePayable: $('#txtAdvancePayable').val(),
+        OwnerVendorId: $('#ddlOwnerName').val() ? $('#ddlOwnerName').val() : 0,
+        BrokerVendorId: $('#ddlBrokerName').val() ? $('#ddlBrokerName').val() : 0,
+        TotalHireAmount: $("#txtTotalHairAmt").val() ? $("#txtTotalHairAmt").val() : 0,
+        AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
         LinkId: GetQueryParam("LinkId")
     };
     console.log(formData);
@@ -971,7 +973,7 @@ function SaveVehiclePlacement(action) {
                     $("#btnSaveAndNewForm").prop('disabled', false);
                     $('#vehiclePlacementForm')[0].reset();
                     $('.select2-custom').val(null).trigger('change');
-                    FetchIndentNo();
+                    FetchVehiclePlacement();
 
                     if (profileId == EnumProfile.Branch) {
                         $('#ddlLocation').val(Number(locationId)).trigger('change');
@@ -1014,10 +1016,10 @@ function ButtonUpdateClick() {
             DriverId: driverResult.id,
             DriverName: driverResult.name,
             MobileNo: $("#txtMobileNo").val(),
-            OwnerVendorId: $("#ddlOwnerName").val(),
-            BrokerVendorId: $("#ddlBrokerName").val(),
-            TotalHireAmount: $("#txtTotalHairAmt").val(),
-            AdvancePayable: $("#txtAdvancePayable").val(),
+            OwnerVendorId: $('#ddlOwnerName').val() ? $('#ddlOwnerName').val() : 0,
+            BrokerVendorId: $('#ddlBrokerName').val() ? $('#ddlBrokerName').val() : 0,
+            TotalHireAmount: $("#txtTotalHairAmt").val() ? $("#txtTotalHairAmt").val() : 0,
+            AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
             LinkId: GetQueryParam("LinkId")
         };
 
@@ -1105,7 +1107,6 @@ function DeleteVehiclePlacement(placementId) {
         }
     });
 }
-
 function UpdateVehiclePlacement(placementId) {
     debugger;
     var data = viewModelDto.filter(x => x.placementId == placementId);
