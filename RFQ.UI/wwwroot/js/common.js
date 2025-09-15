@@ -123,7 +123,6 @@ function ValidatePinCode(number) {
     return /^\d{6}$/.test(number);
 }
 function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
-
     const companyid = getCookieValue('companyid');
     const profileid = getCookieValue('profileid');
     $('#tableDiv').show();
@@ -461,7 +460,32 @@ function GetGridHtml(response, gridTableName) {
                     </tr>`;
         });
     }
+    if (gridTableName == "PlacementTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                        <tr>
+                        <td>${item.locationName}</td>
+                        <td>${item.placementNo}</td>
+                        <td>${item.placementDate ? new Date(item.placementDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+                        <td>${item.indentNo}</td>
+                        <td>${item.vehicleNo}</td>
+                        <td>${item.internalMasterName}</td>
+                        <td>${item.driverName}</td>
+                        <td>${item.mobileNo}</td>
+                        <td>${item.ownerVendorName}</td>
+                        <td>${item.brokerVendorName}</td>
+                        <td>${item.totalHireAmount}</td>
+                        <td>${item.advancePayable}</td>
+                        
+                        <td class="text-center action-items" style="cursor:pointer;">
+                            <a class="icon-btn" onclick="UpdateVehiclePlacement(${item.placementId})"><i class="ri-edit-2-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteVehiclePlacement(${item.placementId})"><i class="ri-delete-bin-3-line"></i></a>
+                        </td>
+                    </tr>`;
+        });
+    }
     return rowsHtml;
+
 }
 function generatePagination(totalRecords, pageSize, currentPage, gridTableName, url) {
     const paginationContainer = $('#customPagination');

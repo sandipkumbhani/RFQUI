@@ -11,258 +11,360 @@
     </script>
 }
 
+<div id="tableDiv">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Vehicle Placement</h1>
 
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box add">
-            <h1 class="page-title">Vehicle Placement </h1>
+                <div class="add-btn">
+                    <a href="#" id="addPlacement">
+                        <i class="ri-add-line"></i> <span>Add</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <!-- Top Header -->
+                <div class="table-top-header">
+                    <h4>List of Vehicle Placement</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="PlacementTableSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div id="exportPlacementButtons" class="btn-group" role="group"></div>
+                    </div>
+                </div>
 
-<div id="AddVehiclePlacementDiv" class="card com-profile-info">
-    <div class="top-details">
-        <form class="row all-custom-class" id="vehiclePlacementForm" method="post">
-            <input type="hidden" id="vehiclePlacementId" />
-            <div class="row all-custom-class">
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>Location</label>
-                        <select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table id="PlacementTable" class="table dt-responsive nowrap w-100">
+                        <thead>
+                            <tr class="text-center">
+                                <th class="sortable text-center" data-column="LocationName" data-order="asc">Location</th>
+                                <th class="sortable text-center" data-column="PlacementNo" data-order="asc">Placement No</th>
+                                <th class="sortable text-center" data-column="PlacementDate" data-order="asc">Placement Date</th>
+                                <th class="sortable text-center" data-column="IndentNo" data-order="asc">Indent No</th>
+                                <th class="sortable text-center" data-column="VehicleNo" data-order="asc">Vehicle No</th>
+                                <th class="sortable text-center" data-column="InternalMasterName" data-order="asc">Traking Type</th>
+                                <th class="sortable text-center" data-column="DriverName" data-order="asc">Driver Name</th>
+                                <th class="sortable text-center" data-column="MobileNo" data-order="asc">Mobile No</th>
+                                <th class="sortable text-center" data-column="OwnerVendorId" data-order="asc">Owner Name</th>
+                                <th class="sortable text-center" data-column="BrokerVendorId" data-order="asc">Broker Name</th>
+                                <th class="sortable text-center" data-column="TotalHireAmount" data-order="asc">Total Hair Amt</th>
+                                <th class="sortable text-center" data-column="AdvancePayable" data-order="asc">Advance Payable</th>
+                                
+
+                                <th class="text-center no-sort">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="text-center">
+                            <!-- Example data -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
+                    <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Placement No </label>
-                        <input type="text" class="form-control" placeholder="Auto Generated" disabled id="txtPlacementNo" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>Placement Date</label>
-                        <input type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="RFQ Date" id="txtPlacementDate" />
-                    </div>
-                </div>
-            </div>
-            <hr />
-            <div class="Indent Details">
-                <h3 class="page-form-title">Indent Details</h3>
-                <div class="row all-custom-class">
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label"><span>*</span>Indent No</label>
-                            <select class="select2-custom form-control" id="ddlIndentNo" style="width: 100%;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Indent Date</label>
-                            <input type="date" class="form-control" placeholder="Auto Display" disabled id="txtIndentDate" />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Indent Branch</label>
-                            <select class="select2-custom form-control" data-control="select2" disabled id="ddlIndentBranch" style="width: 100%;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Vehicle Req On</label>
-                            <input type="date" class="form-control" placeholder="Auto Display" disabled id="txtVehicleReqOn" />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">RFQ NO </label>
-                            <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtRFQNo" />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">RFQ Date</label>
-                            <input type="date" class="form-control" placeholder="Auto Display" disabled id="txtRFQDate" />
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="item-input">
-                            <label class="form-label">Customer</label>
-                            <select class="select2-custom form-control" data-control="select2" disabled id="ddlCustomerName" style="width: 100%;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input position-relative">
-                            <label class="form-label">Origin/From</label>
-                            <input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
-                            <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-                            <input type="hidden" id="fromLat">
-                            <input type="hidden" id="fromLng">
-                            <input type="hidden" id="fromState">
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <div class="item-input position-relative">
-                            <label class="form-label">Destination/To</label>
-                            <input disabled id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
-                            <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-                            <input type="hidden" id="toLat">
-                            <input type="hidden" id="toLng">
-                            <input type="hidden" id="toState">
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Vehicle Type</label>
-                            <select class="select2-custom form-control" data-control="select2" disabled id="ddlVehicleType" style="width: 100%;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">No.of Vehicles</label>
-                            <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtNoOfVehicles" />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Pending Vehicles</label>
-                            <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtPendingVehicles" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <hr />
-            <div class="Vehicle Placement Details">
-                <h3 class="page-form-title">Vehicle Placement Details</h3>
-                <div class="row all-custom-class">
-                    <div class="col-lg-3">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="item-input">
-                                    <label class="form-label"><span>*</span>Vehicle No</label>
-                                    <select class="select2-custom form-control" id="ddlVehicleNo" style="width: 100%;">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4 d-flex align-items-center">
-                                <a href="#" onclick="VehiclePopUp()">Create</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label"><span>*</span>Traking Type</label>
-                            <select class="select2-custom form-control" id="ddlTrakingType" style="width: 100%;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="item-input">
-                                    <label class="form-label"><span>*</span>Driver Name</label>
-                                    <select class="select2-custom form-control" id="ddlDriverName" style="width: 100%;" data-control="select2">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4 d-flex align-items-center">
-                                <a href="#" onclick="DriverPopUp()">Create</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label"><span>*</span>Mobile No</label>
-                            <input type="text" class="form-control" placeholder="Mobile No" id="txtMobileNo" onkeypress="return isNumber(event)" />
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="item-input">
-                            <label class="form-label">Owner Name</label>
-                            <select class="select2-custom form-control" disabled id="ddlOwnerName" style="width: 100%;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="item-input">
-                            <label class="form-label">Broker Name</label>
-                            <select class="select2-custom form-control" id="ddlBrokerName" style="width: 100%;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Total Hair Amt</label>
-                            <input type="text" class="form-control" placeholder="Amount" id="txtTotalHairAmt" />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Advance Payable</label>
-                            <input type="text" class="form-control" placeholder="Amount" id="txtAdvancePayable" />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item-input">
-                            <label class="form-label">Balance Payable</label>
-                            <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtBalancePayable" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="button-main">
-                <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="saveNew">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Save
-                    </span>
-                </a>
-                <a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Save & New
-                    </span>
-                </a>
-                <a href="#" class="card-link" id="btnUpdate" style="display:none;">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Update
-                    </span>
-                </a>
-            </div>
-        </form>
-    </div>
-</div>
-<div class="modal fade" id="vehiclePopupModal" tabindex="-1" aria-labelledby="driverPopupModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content" style="max-width:100%;width:100%">
-            <div class="modal-header">
-                <h5 class="modal-title" id="driverPopupModalLabel">Add Vehicle</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="max-width:100%;width:100%">
-                <!-- Form will be loaded here -->
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Add Driver Modal -->
-<div class="modal fade" id="driverPopupModal" tabindex="-1" aria-labelledby="driverPopupLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" >
-        <div class="modal-content" style="max-width:100%;width:100%">
-            <div class="modal-header">
-                <h5 class="modal-title" id="driverPopupLabel">Add Driver</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="max-width:100%;width:100%">
-                <!-- Form will be loaded here dynamically -->
             </div>
         </div>
     </div>
 </div>
 
+
+
+
+<div id="formDiv" style="display:none;">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Vehicle Placement </h1>
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#" id="tableDivLink">Vehicle Placement</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Vehicle Placement</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-12">
+            <div id="AddVehiclePlacementDiv" class="card com-profile-info">
+                <div class="top-details">
+                    <form class="row all-custom-class" id="vehiclePlacementForm" method="post">
+                        <input type="hidden" id="vehiclePlacementId" />
+                        <div class="row all-custom-class">
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label"><span>*</span>Location</label>
+                                    <select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Placement No </label>
+                                    <input type="text" class="form-control" placeholder="Auto Generated" disabled id="txtPlacementNo" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label"><span>*</span>Placement Date</label>
+                                    <input type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="RFQ Date" id="txtPlacementDate" />
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="Indent Details">
+                            <h3 class="page-form-title">Indent Details</h3>
+                            <div class="row all-custom-class">
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label"><span>*</span>Indent No</label>
+                                        <select class="select2-custom form-control" id="ddlIndentNo" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">Indent Date</label>
+                                        <input type="date" class="form-control" placeholder="Auto Display" disabled id="txtIndentDate" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">Indent Branch</label>
+                                        <select class="select2-custom form-control" data-control="select2" disabled id="ddlIndentBranch" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">Vehicle Req On</label>
+                                        <input type="date" class="form-control" placeholder="Auto Display" disabled id="txtVehicleReqOn" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">RFQ NO </label>
+                                        <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtRFQNo" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">RFQ Date</label>
+                                        <input type="date" class="form-control" placeholder="Auto Display" disabled id="txtRFQDate" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Customer</label>
+                                        <select class="select2-custom form-control" data-control="select2" disabled id="ddlCustomerName" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input position-relative">
+                                        <label class="form-label">Origin/From</label>
+                                        <input disabled id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                                        <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                                        <input type="hidden" id="fromLat">
+                                        <input type="hidden" id="fromLng">
+                                        <input type="hidden" id="fromState">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <div class="item-input position-relative">
+                                        <label class="form-label">Destination/To</label>
+                                        <input disabled id="to-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" />
+                                        <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                                        <input type="hidden" id="toLat">
+                                        <input type="hidden" id="toLng">
+                                        <input type="hidden" id="toState">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">Vehicle Type</label>
+                                        <select class="select2-custom form-control" data-control="select2" disabled id="ddlVehicleType" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">No.of Vehicles</label>
+                                        <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtNoOfVehicles" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">Pending Vehicles</label>
+                                        <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtPendingVehicles" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="Vehicle Placement Details">
+                            <h3 class="page-form-title">Vehicle Placement Details</h3>
+                            <div class="row all-custom-class">
+                                <div class="col-lg-3">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="item-input">
+                                                <label class="form-label"><span>*</span>Vehicle No</label>
+                                                <select class="select2-custom form-control" id="ddlVehicleNo" style="width: 100%;">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 d-flex align-items-center">
+                                            <a href="#" onclick="VehiclePopUp()">Create</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label"><span>*</span>Traking Type</label>
+                                        <select class="select2-custom form-control" id="ddlTrakingType" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="item-input">
+                                                <label class="form-label"><span>*</span>Driver Name</label>
+                                                <select class="select2-custom form-control" id="ddlDriverName" style="width: 100%;" data-control="select2">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 d-flex align-items-center">
+                                            <a href="#" onclick="DriverPopUp()">Create</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label"><span>*</span>Mobile No</label>
+                                        <input type="text" class="form-control" placeholder="Mobile No" id="txtMobileNo" onkeypress="return isNumber(event)" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Owner Name</label>
+                                        <select class="select2-custom form-control" disabled id="ddlOwnerName" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Broker Name</label>
+                                        <select class="select2-custom form-control" id="ddlBrokerName" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">Total Hair Amt</label>
+                                        <input type="text" class="form-control" placeholder="Amount" id="txtTotalHairAmt" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">Advance Payable</label>
+                                        <input type="text" class="form-control" placeholder="Amount" id="txtAdvancePayable" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="item-input">
+                                        <label class="form-label">Balance Payable</label>
+                                        <input type="text" class="form-control" placeholder="Auto Display" disabled id="txtBalancePayable" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button-main">
+                            <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
+                                <i class="ri-save-line"></i>
+                                <span>
+                                    Save
+                                </span>
+                            </a>
+                            <a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
+                                <i class="ri-save-line"></i>
+                                <span>
+                                    Save & New
+                                </span>
+                            </a>
+                            <a href="#" class="card-link" id="btnUpdate" style="display:none;">
+                                <i class="ri-save-line"></i>
+                                <span>
+                                    Update
+                                </span>
+                            </a>
+                            <a href="#" class="card-link" id="btnCancel">
+                                <i class="ri-close-line"></i>
+                                <span>
+                                    Cancel
+                                </span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal fade" id="vehiclePopupModal" tabindex="-1" aria-labelledby="driverPopupModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content" style="max-width:100%;width:100%">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="driverPopupModalLabel">Add Vehicle</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="max-width:100%;width:100%">
+                            <!-- Form will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Add Driver Modal -->
+            <div class="modal fade" id="driverPopupModal" tabindex="-1" aria-labelledby="driverPopupLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content" style="max-width:100%;width:100%">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="driverPopupLabel">Add Driver</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="max-width:100%;width:100%">
+                            <!-- Form will be loaded here dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

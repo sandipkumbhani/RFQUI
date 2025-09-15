@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -115,6 +116,104 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception ex)
             {
                 throw new Exception("An error in AutoFetchPlacement.", ex);
+            }
+        }
+
+        public async Task<PageList<VehiclePlacementResponseDto>> GetAllVehiclePlacement(PagingParam pagingParam)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                    var requestDto = JsonConvert.SerializeObject(pagingParam);
+                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+                    var baseUrl = _fleetLynkApiUrl + _config["VehiclePlacement:GetAllVehiclePlacement"];
+                    var response = await httpClient.PostAsync(baseUrl, requestContent);
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                    if (responseModel?.Data?.result != null)
+                    {
+                        var vehicleList = JsonConvert.DeserializeObject<List<VehiclePlacementResponseDto>>(
+                            JsonConvert.SerializeObject(responseModel.Data.result)
+                        );
+                        int pageNumber = responseModel.Data.pageNumber;
+                        int pageSize = responseModel.Data.pageSize;
+                        int totalRecordCount = responseModel.Data.totalRecordCount;
+                        return new PageList<VehiclePlacementResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize);
+                    }
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> UpdateVehiclePlacement(int placementId, VehiclePlacementRequestDto vehiclePlacementRequestDto)
+        {
+            try
+            {
+
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}/VehiclePlacement/UpdateVehiclePlacement/{placementId}";
+                var vehicle = JsonConvert.SerializeObject(vehiclePlacementRequestDto);
+                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(baseurl, requestContent);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "VehiclePlacement Updated";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
+                }
+                return "Failed to update VehiclePlacement";
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteVehiclePlacement(int placementId)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseurl = $"{_fleetLynkApiUrl}/VehiclePlacement/DeleteVehiclePlacement/{placementId}";
+                var response = await _httpClient.DeleteAsync(baseurl);
+                var responseData = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                    {
+                        return "VehicleIndent Deleted";
+                    }
+                    else
+                    {
+                        return responseModel.ErrorMessage;
+                    }
+                }
+                return "Failed to Delete VehicleIndent";
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -28,9 +29,24 @@ namespace RFQ.UI.Application.Provider
             return await _vehiclePlacementAdaptor.AutoFetchPlacement(id);
         }
 
+        public async Task<string> DeleteVehiclePlacement(int placementId)
+        {
+            return await _vehiclePlacementAdaptor.DeleteVehiclePlacement(placementId);
+        }
+
+        public async Task<PageList<VehiclePlacementResponseDto>> GetAllVehiclePlacement(PagingParam pagingParam)
+        {
+            return await _vehiclePlacementAdaptor.GetAllVehiclePlacement(pagingParam);
+        }
+
         public Task<string> GetPlacementNo()
         {
             return _vehiclePlacementAdaptor.GetPlacementNo();
+        }
+
+        public async Task<string> UpdateVehiclePlacement(int placementId, VehiclePlacementRequestDto vehiclePlacementRequestDto)
+        {
+            return await _vehiclePlacementAdaptor.UpdateVehiclePlacement(placementId, vehiclePlacementRequestDto);
         }
     }
 }

@@ -1,5 +1,14 @@
-﻿var companyId;
+﻿const urlParams = new URLSearchParams(window.location.search);
+const linkId = urlParams.get('LinkId');
+var companyId;
 var driverDrpList;
+var orderColumn = '';
+var orderDir = '';
+var companyId;
+var profileId;
+var locationId;
+var FetchVehiclePlacementUrl = '/VehiclePlacement/GetAllVehiclePlacement';
+var VehicIndentList;
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
@@ -19,13 +28,7 @@ $(document).ready(function () {
             $("#ddlOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');
         }
     });
-    $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
-        var action = $(this).data('action');
-        if (OnSubmitCheckValidation()) {
-            SaveVehicleIndent(action);
-        }
-    });
-
+    
     GetAllDriver();
     GetAllTrackingType();
     GetAllVehicleIndent();
@@ -33,16 +36,60 @@ $(document).ready(function () {
     FetchPlacementNo();
     GetAllOwnerOrVendor();
     GetAllBrokerVendor();
+    FetchVehiclePlacement();
+    ButtonUpdateClick();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
-    GetAllLocation("ddlIndentBranch", companyId);
+    //GetAllLocation("ddlIndentBranch", companyId);
     GetAllLocation("ddlLocation", companyId, function () {
         if (profileId == EnumProfile.Branch) {
             $('#ddlLocation').val(Number(locationId)).trigger('change');
             $('#ddlLocation').prop('disabled', true);
         }
     });
+    $("#ddlLocation").on('change', function () {
+        let selectLocationId = $(this).val();
+        GetAllVehicleIndent(selectLocationId);
+    })
+
+    $('#tableDivLink').on('click', function (e) {
+        FetchVehiclePlacement();
+    });
+
+    $("#btnCancel").on("click", function () {
+        FetchVehiclePlacement();
+    });
+
+    $(document).on('click', 'th.sortable', function () {
+        orderColumn = $(this).data('column');
+        let currentOrder = $(this).data('order') || 'asc';
+        orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
+        $(this).data('order', orderDir); // update for next click
+
+        $('th.sortable').not(this).data('order', 'asc');
+
+        FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase());
+    });
+
+    $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
+        $(this).prop('disabled', true);
+        var action = $(this).data('action');
+        if (OnSubmitCheckValidation()) {
+            SaveVehiclePlacement(action);
+        }
+    });
+    $("#ddlLocation").on('change', function () {
+        debugger;
+        let selectLocationId = $(this).val();
+        GetAllVehicleIndent(selectLocationId);
+    })
 });
+
+$('#addPlacement').click(function () {
+    $('#formDiv').css("display", "block");
+    $('#tableDiv').css("display", "none");
+});
+
 $("#txtAdvancePayable").on('change', function () {
     var hireAmt = Number($("#txtTotalHairAmt").val());
     var advancePay = Number($("#txtAdvancePayable").val());
@@ -58,9 +105,68 @@ $("#ddlDriverName").on('change', function () {
         return;
     }
 })
+
+function FetchVehiclePlacement() {
+    $("#tableDiv").css('display', 'block');
+    $("#formDiv").css('display', 'none');
+    $('#vehiclePlacementForm')[0].reset();
+    ////myDropzone.removeAllFiles();
+    ////$('#ddlCity').val(null).trigger('change');
+    $("#btnSaveForm").show();
+    $("#btnUpdate").hide();
+    $("#btnSaveAndNewForm").show();
+    //ResetAttachmentRepeater();
+    FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase());
+}
+$('#PlacementTableSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchVehiclePlacement();
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchVehiclePlacement();
+});
+function GetAllVehicleIndent(selectLocationId) {
+
+    var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
+    $.ajax({
+        url: getVehicleTypeUrl,
+        type: "GET",
+        data: { companyId: companyId },
+        contentType: "application/json",
+        success: function (response) {
+            response = response.result;
+            VehicIndentList = response.filter(x => x.locationId == selectLocationId);
+            $("#ddlIndentNo").empty();
+            const Indentdropdown = document.getElementById("ddlIndentNo");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Indent No";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            Indentdropdown.appendChild(placeholderOption);
+            debugger;
+            VehicIndentList.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.indentId;
+                option.textContent = item.indentNo;
+                Indentdropdown.appendChild(option);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Indent No!", "Error");
+        }
+    });
+}
 function OnSubmitCheckValidation() {
+    if (!isValidateSelect($("#ddlLocation").val())) {
+        toastr.warning("Please Select a Location", "Validation Error");
+        return false;
+    }
+    
     if (!isValidateSelect($("#ddlIndentNo").val())) {
-        toastr.warning("Please Select a Indent No", "Validation Error");
+        toastr.warning("Please Select a IndentNo", "Validation Error");
         return false;
     }
     if (!isValidateSelect($("#ddlVehicleNo").val())) {
@@ -146,35 +252,6 @@ function GetAllDriver() {
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-}
-function GetAllVehicleIndent() {
-    var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
-    $.ajax({
-        url: getVehicleTypeUrl,
-        type: "GET",
-        data: { companyId: companyId },
-        contentType: "application/json",
-        success: function (response) {
-            response = response.result;
-            VehicIndentList = response;
-            const Indentdropdown = document.getElementById("ddlIndentNo");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Indent No";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            Indentdropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.indentId;
-                option.textContent = item.indentNo;
-                Indentdropdown.appendChild(option);
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Indent No!", "Error");
         }
     });
 }
@@ -818,3 +895,242 @@ function GetDriverType() {
         }
     });
 }
+function GetDropdownValue(inputId) {
+    const selectedValue = $("#" + inputId).val();
+    const selectedText = $("#" + inputId).find("option:selected").text();
+    let result;
+    if (selectedValue === selectedText) {
+        result = {
+            id: 0,
+            name: selectedValue
+        };
+    } else {
+        result = {
+            id: selectedValue,
+            name: selectedText
+        };
+    }
+    return result;
+}
+function SaveVehiclePlacement(action) {
+    debugger;
+    var saveUrl = '/VehiclePlacement/AddVehiclePlacement';
+    var driverResult = GetDropdownValue("ddlDriverName");
+    const formData = {
+        
+        LocationId: $('#ddlLocation').val(),
+        PlacementNo: $('#txtPlacementNo').val(),
+        PlacementDate: $('#txtPlacementDate').val(),
+        IndentId: $('#ddlIndentNo').val(),
+        VehicleId: $('#ddlVehicleNo').val(),
+        TrackingTypeId: $('#ddlTrakingType').val(),
+        //DriverId: $('#ddlDriverName').val(),
+        DriverId: driverResult.id,
+        DriverName: driverResult.name,
+        MobileNo: $('#txtMobileNo').val(),
+        OwnerVendorId: $('#ddlOwnerName').val(),
+        BrokerVendorId: $('#ddlBrokerName').val(),
+        TotalHireAmount: $('#txtTotalHairAmt').val(),
+        AdvancePayable: $('#txtAdvancePayable').val(),
+        LinkId: GetQueryParam("LinkId")
+    };
+    console.log(formData);
+    if (action === "save") {
+
+        $.ajax({
+            url: saveUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response) {
+                    $("#btnSaveForm").prop('disabled', false);
+                    $("#btnSaveAndNewForm").prop('disabled', false);
+                    window.location.href = "../Dashboard/Dashboard";
+                } else {
+                    toastr.error("Failed to Submit Vehicle Placement Details.", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Vehicle Placement Details.", "Error");
+            }
+        });
+    }
+    else if (action === "saveNew") {
+        $.ajax({
+            url: saveUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response) {
+                    toastr.success("Vehicle Placement Saved Successfully!", "Success");
+                    $("#btnSaveForm").prop('disabled', false);
+                    $("#btnSaveAndNewForm").prop('disabled', false);
+                    $('#vehiclePlacementForm')[0].reset();
+                    $('.select2-custom').val(null).trigger('change');
+                    FetchIndentNo();
+
+                    if (profileId == EnumProfile.Branch) {
+                        $('#ddlLocation').val(Number(locationId)).trigger('change');
+                        $('#ddlLocation').prop('disabled', true);
+                    }
+                    else {
+                        $('#ddlLocation').val(null).trigger('change');
+                        $('#ddlLocation').prop('disabled', false);
+                    }
+
+                } else {
+                    toastr.error("Failed to Submit Vehicle Placement Details.", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Vehicle Placement Details.", "Error");
+            }
+        });
+    }
+}
+function ButtonUpdateClick() {
+    $("#btnUpdate").on('click', function (e) {
+        e.preventDefault();
+        var isValid = OnSubmitCheckValidation();
+        if (!isValid) {
+            return;
+        }
+
+        var driverResult = GetDropdownValue("ddlDriverName");
+
+        var formData = {
+
+            PlacementId: $("#vehiclePlacementId").val(),
+            LocationId: $("#ddlLocation").val(),
+            PlacementNo: $("#txtPlacementNo").val(),
+            PlacementDate: $("#txtPlacementDate").val(),
+            IndentId: $("#ddlIndentNo").val(),
+            VehicleId: $("#ddlVehicleNo").val(),
+            TrackingTypeId: $("#ddlTrakingType").val(),
+            DriverId: driverResult.id,
+            DriverName: driverResult.name,
+            MobileNo: $("#txtMobileNo").val(),
+            OwnerVendorId: $("#ddlOwnerName").val(),
+            BrokerVendorId: $("#ddlBrokerName").val(),
+            TotalHireAmount: $("#txtTotalHairAmt").val(),
+            AdvancePayable: $("#txtAdvancePayable").val(),
+            LinkId: GetQueryParam("LinkId")
+        };
+
+        var linkd = GetQueryParam("LinkId");
+
+
+        // First AJAX call
+        $.ajax({
+            type: "PUT",
+            url: "/VehiclePlacement/UpdateVehiclePlacement",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(formData),
+            dataType: "json",
+            success: function (result) {
+                if (result.result == "success") {
+                    toastr.success("Vehicle Placement Details Updated Successfully!");
+                    $("#formDiv").css('display', 'none');
+                    FetchVehiclePlacement();
+                    $('#vehiclePlacementForm')[0].reset();
+                    $('#ddlLocation').val(null).trigger('change');
+                    $('#ddlIndentNo').val(null).trigger('change');
+                    $('#ddlVehicleNo').val(null).trigger('change');
+                    $('#ddlDriverName').val(null).trigger('change');
+                    $('#ddlOwnerName').val(null).trigger('change');
+                    $('#ddlBrokerName').val(null).trigger('change');
+                    $("#btnUpdate").hide();
+                    $("#btnSaveAndNewForm").show();
+                    $("#btnSaveForm").show();
+
+                } else {
+                    toastr.error("Failed to Update Vehicle Placement Details!", "Error");
+                }
+
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Update Vehicle Placement Details!", "Error");
+            }
+        });
+    });
+};
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    if (isNaN(date)) return '';
+
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+
+    return `${year}-${month}-${day}`;
+}
+function DeleteVehiclePlacement(placementId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var deleteVehicleIndentUrl = `/VehiclePlacement/DeleteVehiclePlacement/${placementId}`;
+
+            $.ajax({
+                url: deleteVehicleIndentUrl,
+                type: "DELETE",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (response) {
+                    if (response && response.result === "success") {
+                        toastr.success("Vehicle Placement has been deleted successfully.");
+                        $("#addReqBranchDiv").addClass('d-none');
+                        $('#currentPage').val(1);
+                        FetchVehiclePlacement();
+                    } else {
+                        toastr.error("Failed to delete Vehicle Placement.", "Error");
+                    }
+                },
+                error: function () {
+                    toastr.error("Failed to delete Vehicle Placement.", "Error");
+                }
+            });
+        }
+    });
+}
+
+function UpdateVehiclePlacement(placementId) {
+    debugger;
+    var data = viewModelDto.filter(x => x.placementId == placementId);
+    var formData = data[0];
+    $('#tableDiv').css('display', 'none');
+    $("#formDiv").css('display', 'Block');
+    $("#backButton").css('display', 'none');
+    $("#formDiv").css('display', 'Block');
+    $("#btnSaveForm").hide();
+    $("#btnUpdate").show();
+    $("#btnView").hide();
+    $("#btnCancel").removeClass('d-none');
+    $("#btnSaveAndNewForm").hide();
+    $("#vehiclePlacementId").val(formData.placementId);
+    $("#ddlLocation").val(formData.locationId).trigger('change');
+    $("#txtPlacementNo").val(formData.placementNo);
+    $("#txtPlacementDate").val(formatDateForInput(formData.placementDate));
+    $("#ddlIndentNo").val(formData.indentId).trigger('change');
+    GetAllVehicleIndent(formData.locationId, formData.indentId);
+    $("#ddlVehicleNo").val(formData.vehicleId).trigger('change');
+    $("#ddlTrakingType").val(formData.trackingTypeId).trigger('change');
+    $("#ddlDriverName").val(formData.driverId).trigger('change');
+    $("#txtMobileNo").val(formData.mobileNo);
+    $("#ddlOwnerName").val(formData.ownerVendorId).trigger('change');
+    $("#ddlBrokerName").val(formData.brokerVendorId).trigger('change');
+    $("#txtTotalHairAmt").val(formData.totalHireAmount);
+    $("#txtAdvancePayable").val(formData.advancePayable);
+
+
+} 

@@ -50,17 +50,19 @@ namespace RFQ.UI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddVehiclePlacement([FromBody] VehiclePlacementRequestDto vehiclePlacementRequestDto)
-        {
+        {   
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (vehiclePlacementRequestDto != null)
                 {
+
                     vehiclePlacementRequestDto.CreatedBy = Convert.ToInt32(userid);
                     vehiclePlacementRequestDto.UpdatedBy = Convert.ToInt32(userid);
-
+                    vehiclePlacementRequestDto.CompanyId = Convert.ToInt32(companyId);
                     var result = await _vehiclePlacementService.AddVehiclePlacement(vehiclePlacementRequestDto);
                     return Json(new { result });
                 }
@@ -97,5 +99,86 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllVehiclePlacement([FromBody] PagingParam pagingParam)
+        {
+            try
+            {
+                var vehiclePlacementViewModel = new VehiclePlacementResponseDto();
+                var result = await _vehiclePlacementService.GetAllVehiclePlacement(pagingParam);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
+                }
+                else
+                {
+                    return View(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateVehiclePlacement([FromBody] VehiclePlacementRequestDto vehiclePlacementRequestDto)
+        {
+            try
+            {
+                int placementId = vehiclePlacementRequestDto.PlacementId;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                vehiclePlacementRequestDto.CreatedBy = Convert.ToInt32(userid);
+                vehiclePlacementRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                vehiclePlacementRequestDto.CompanyId = Convert.ToInt32(companyId);
+                var result = await _vehiclePlacementService.UpdateVehiclePlacement(placementId, vehiclePlacementRequestDto);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+        [HttpDelete("VehiclePlacement/DeleteVehiclePlacement/{placementId}")]
+        public async Task<IActionResult> DeleteVehiclePlacement(int placementId)
+        {
+            try
+            {
+                var result = await _vehiclePlacementService.DeleteVehiclePlacement(placementId);
+                if (result != null)
+                {
+                    return Json(new { result = "success" });
+                }
+                else
+                {
+                    return Json(new { result = "failure" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "error", message = ex.Message });
+            }
+
+        }
     }
 }
+
