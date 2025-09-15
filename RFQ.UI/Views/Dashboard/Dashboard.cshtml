@@ -7,52 +7,103 @@
     <script src="~/js/Views/Dashboard.js"></script>
 }
 
-<div class="app-toolbar  pt-3 px-lg-3">
-    <div class="app-container  container-fluid d-flex flex-stack flex-wrap">
-        <div class="app-toolbar-wrapper d-flex flex-stack flex-wrap gap-4 w-100">
-            <div class="page-title d-flex align-items-center gap-1 me-3">
-                <h1 class="page-heading d-flex flex-column justify-content-center text-primary lh-1 fw-bolder fs-2x my-0 me-5">
-                    Dashboard
-                </h1>
-                @* <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
-                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-                        <a href="#" class="text-gray-500"><i class="fa-solid fa-house"></i></a>
-                    </li>
-                    <li class="breadcrumb-item"><i class="fa-solid fa-chevron-right fs-4 text-gray-700 mx-n1"></i></li>
-                    <li class="breadcrumb-item text-primary">
-                        
-                    </li>
-                </ul> *@
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="app-content px-lg-3">
-    <div class="app-container container-fluid">
-        <div class="card">
-           @*  <div id="tableDiv" class="card card-flush shadow-sm rounded-2xl d-none">
-                <div class="card-header p-4">
-                    <h4 class="fw-bold m-0 text-lg">User List</h4>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fleetlynk Dashboard</title>
+    <link rel="stylesheet" href="~/css/DashboardStyle.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="layout">
+        <!-- Main Area -->
+        <div class="main">
+            <!-- Stat Cards -->
+            <section class="cards">
+                <div class="card">
+                    <h3>Active Vehicles</h3>
+                    <p>152</p>
                 </div>
-                <div class="card-body">
-                    <table id="tableDashboard" class="table table-striped align-middle fs-6 mb-0">
-                        <thead class="bg-light">
+                <div class="card">
+                    <h3>Trips Today</h3>
+                    <p>87</p>
+                </div>
+                <div class="card">
+                    <h3>Fuel Consumption</h3>
+                    <p>2,340 L</p>
+                </div>
+                <div class="card">
+                    <h3>Breakdowns</h3>
+                    <p>3</p>
+                </div>
+                <div class="card">
+                    <h3>Revenue</h3>
+                    <p>₹ 1,24,500</p>
+                </div>
+            </section>
+
+            <!-- Charts / Tables -->
+            <section class="charts">
+                <div class="chart">
+                    <h3>Vehicle Usage (Last 7 Days)</h3>
+                    <canvas id="vehicleChart"></canvas>
+                </div>
+
+                <div class="chart">
+                    <h3>Fuel Consumption Trend</h3>
+                    <canvas id="fuelChart"></canvas>
+                </div>
+
+                <div class="chart">
+                    <h3>Breakdown Causes</h3>
+                    <canvas id="breakdownChart"></canvas>
+                </div>
+
+                <div class="table-container">
+                    <h3>Recent Trips</h3>
+                    <table>
+                        <thead>
                             <tr>
-                                <th>UserName</th>
-                                <th>Company</th>
-                                <th>Location</th>
-                                <th>MobileNo</th>
-                                <th>EmailId</th>
-                                <th>Action</th>
+                                <th>ID</th>
+                                <th>Driver</th>
+                                <th>Route</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Dynamic rows go here -->
+                            <tr><td>#101</td><td>Rajesh</td><td>Ahmedabad → Surat</td><td>✅ Completed</td></tr>
+                            <tr><td>#102</td><td>Amit</td><td>Vadodara → Mumbai</td><td>🚚 Ongoing</td></tr>
+                            <tr><td>#103</td><td>Neha</td><td>Surat → Pune</td><td>🕒 Pending</td></tr>
+                            <tr><td>#104</td><td>Vikram</td><td>Mumbai → Nashik</td><td>✅ Completed</td></tr>
+                            <tr><td>#105</td><td>Manoj</td><td>Pune → Delhi</td><td>🚚 Ongoing</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div> *@
+
+                <div class="table-container">
+                    <h3>Top Drivers</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Driver</th>
+                                <th>Trips</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Rajesh</td><td>48</td><td>⭐ 4.9</td></tr>
+                            <tr><td>Amit</td><td>45</td><td>⭐ 4.7</td></tr>
+                            <tr><td>Neha</td><td>42</td><td>⭐ 4.8</td></tr>
+                            <tr><td>Vikram</td><td>40</td><td>⭐ 4.6</td></tr>
+                            <tr><td>Manoj</td><td>38</td><td>⭐ 4.5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
     </div>
-</div>
+</body>
+
+
