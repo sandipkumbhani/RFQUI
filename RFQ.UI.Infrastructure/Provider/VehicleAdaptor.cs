@@ -90,7 +90,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var response = await _httpClient.GetAsync(url);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     var vehicleTypelist = JsonConvert.DeserializeObject<List<ComMstVehicleTypeDto>>(Convert.ToString(responseModel.Data!));
                     return vehicleTypelist;
