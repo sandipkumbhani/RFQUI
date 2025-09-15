@@ -454,7 +454,7 @@ function SaveVendor(action) {
                 data: JSON.stringify(formData),
                 success: function (response) {
                     if (response != null) {
-                        if (response.result.partyId! = null) {
+                        if (response.result.partyId != null) {
                             Saveattachment(response.result.partyId);
                             toastr.success("Vendor Details Submitted Successfully!");
                         }
