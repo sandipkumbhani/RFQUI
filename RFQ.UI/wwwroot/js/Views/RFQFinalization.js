@@ -78,7 +78,6 @@ $(document).ready(function () {
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
     $("#ddlRfqNo").on('change', function () {
-        debugger;
         if (!isValidateSelect($("#ddlRfqNo").val())) {
             ClearDisabledFields();
             return;
@@ -534,7 +533,6 @@ function FetchAwardedVendorDetails(callback) {
         contentType: "application/json",
         success: function (response) {
             awardedVendorDetails = response
-            console.log(awardedVendorDetails);
             const tbody = $("#awardedVendorTable tbody");
             tbody.empty();
             if (!response || response.length === 0) {
@@ -609,7 +607,12 @@ function ValidateTotalForVendor(vehicleCount) {
     $("#awardedVendorTable tbody tr").each(function () {
         let checkbox = $(this).find('input[type="checkbox"]');
         if (checkbox.is(":checked")) {
-            let val = parseInt($(this).find("#txtassignedVehicle").val()) || 0;
+            let val = parseInt($(this).find("#txtassignedVehicle").val());
+            if (val == null || isNaN(val)) {
+                toastr.warning("Please Enter Assigned vehicle number", "Warning");
+                checkbox.prop('checked', false);
+                return;
+            }
             totalAssigned += val;
         }
     });
