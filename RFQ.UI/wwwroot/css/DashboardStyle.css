@@ -135,17 +135,8 @@ body {
     transition: transform 0.2s ease;
 }
 
-    .card h3 {
-        color: #0466C8;
-    }
-
     .card:hover {
         transform: translateY(-4px);
-    }
-
-    .card h3 {
-        font-size: 1rem;
-        opacity: 0.9;
     }
 
     .card p {
@@ -169,10 +160,11 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-    .chart h3, .table-container h3 {
+    .card h3 ,.chart h3, .table-container h3 {
         font-size: 1rem;
         margin-bottom: 0.5rem;
-        color: #2563eb;
+        color: #1d68a7;
+        text-align:center;
     }
 
     .table-container table {
