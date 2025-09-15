@@ -453,10 +453,11 @@ function SaveVendor(action) {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    let partyId = response.result.partyId;
-                    if (partyId != null) {
-                        Saveattachment(partyId);
-                        toastr.success("Vendor Details Submitted Successfully!");
+                    if (response != null) {
+                        if (response.result.partyId! = null) {
+                            Saveattachment(response.result.partyId);
+                            toastr.success("Vendor Details Submitted Successfully!");
+                        }
                         if (typeof this.completeOnSuccess === "function") {
                             this.completeOnSuccess();
                         }
