@@ -19,10 +19,10 @@ namespace RFQ.UI.Domain.RequestDto
         public int DriverId { get; set; }
         public string DriverName { get; set; }
         public string MobileNo { get; set; }
-        public int OwnerVendorId { get; set; }
-        public int BrokerVendorId { get; set; }
-        public int TotalHireAmount { get; set; }
-        public int AdvancePayable { get; set; }
+        public int? OwnerVendorId { get; set; }
+        public int? BrokerVendorId { get; set; }
+        public int? TotalHireAmount { get; set; }
+        public int? AdvancePayable { get; set; }
         public int LinkId { get; set; }
         public int StatusId { get; set; }
         public int CreatedBy { get; set; }

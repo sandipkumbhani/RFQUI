@@ -472,8 +472,10 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.internalMasterName}</td>
                         <td>${item.driverName}</td>
                         <td>${item.mobileNo}</td>
-                        <td>${item.ownerVendorName}</td>
-                        <td>${item.brokerVendorName}</td>
+                        
+                        <td>${item.ownerVendorName ? item.ownerVendorName : ""}</td>
+                        
+                        <td>${item.brokerVendorName ? item.brokerVendorName : ""}</td>
                         <td>${item.totalHireAmount}</td>
                         <td>${item.advancePayable}</td>
                         
