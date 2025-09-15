@@ -14,7 +14,7 @@ $(document).ready(function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
         orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
-        $(this).data('order', orderDir); 
+        $(this).data('order', orderDir);
 
         $('th.sortable').not(this).data('order', 'asc');
 
@@ -36,7 +36,7 @@ $(document).ready(function () {
         $("#formDiv").css('display', 'block');
     });
     $('#tableDivLink').on('click', function (e) {
-        e.preventDefault(); 
+        e.preventDefault();
         $("#tableDiv").show();
         $("#formDiv").hide();
     });
@@ -229,7 +229,7 @@ function OnSubmitCheckValidation() {
 
     return true;
 }
-function GetAllVehicleIndent(selectLocationId) {
+function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
     $.ajax({
         url: getVehicleTypeUrl,
@@ -253,6 +253,10 @@ function GetAllVehicleIndent(selectLocationId) {
                 option.textContent = item.indentNo;
                 Indentdropdown.appendChild(option);
             });
+            if (selectedIndentId) {
+                $("#ddlIndent").val(selectedIndentId).trigger('change');
+                $("#ddlIndent").prop('disabled', true);
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Indent No!", "Error");
@@ -511,7 +515,7 @@ function SaveAndSaveNew(action) {
                 } else {
                     toastr.error("Failed to Submit Request For Quote.", "Error");
                 }
-               
+
             },
             complete: function () {
                 hideLoader();
@@ -559,15 +563,14 @@ function EditRfq(rfqID) {
         $('#tableDiv').css('display', 'none');
         $("#formDiv").css('display', 'Block');
         $("#button-main").css('display', 'Block');
-        $("#vendorDetails-tab").prop('disabled', true);
-        $("#previousQuotes-tab").prop('disabled', true);
+        $("#vendorDetails-tab").prop('disabled', false);
+        $("#previousQuotes-tab").prop('disabled', false);
         $("#txtRfqDetailsId").val(formData.rfqId);
         $("#ddlLocation").val(formData.locationId).trigger('change');
         $("#txtRfqNo").val(formData.rfqNo);
         $("#txtRfqDate").val(formData.rfqDate.split('T')[0]);
         $("#txtRfqExpiredOn").val(formData.expiryDate);
-        $("#ddlIndent").val(formData.indentId).trigger('change');
-        $("#ddlIndent").prop('disabled', true);
+        GetAllVehicleIndent(formData.locationId, formData.indentId);
         $("#ddlCustomerName").val(formData.partyId).trigger('change');
         $("#txtVehicleReqDate").val(formData.vehicleReqOn.split('T')[0]);
         $("#from-search-box").val(formData.fromLocation);
@@ -746,13 +749,15 @@ function FetchRfqList() {
     $("#btnSaveAndNew").show();
     $("#ddlIndent").prop('disabled', false);
     $('.select2-custom').val(null).trigger('change');
+    $("#vendorDetails-tab").prop('disabled', false);
+    $("#previousQuotes-tab").prop('disabled', false);
     GetAllLocation("ddlLocation", companyId, function () {
         if (profileId == EnumProfile.Branch) {
             $('#ddlLocation').val(Number(locationId)).trigger('change');
             $('#ddlLocation').prop('disabled', true);
         }
     });
-    FetchRfqNo(); 
+    FetchRfqNo();
     ResetAttachmentRepeater();
     FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase());
 }

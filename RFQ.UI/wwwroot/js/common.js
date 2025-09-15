@@ -413,7 +413,7 @@ function GetGridHtml(response, gridTableName) {
                       <tr>
                         <td>${item.rfqNo}</td>
                         <td>${item.rfqStatus}</td>
-                        <td>${item.reason}</td>
+                        <td>${item.reason ? item.reason : ""}</td>
                         <td>${item.billingRate}</td>
                         <td>${item.detentionPerDay}</td>
                         <td>${item.detentionFreeDays}</td>
