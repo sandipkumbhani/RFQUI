@@ -6,7 +6,7 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IVendorService
     {
-        Task<VendorRequestDto?> AddVendor(VendorRequestDto vendorRequestDto);
+        Task<NewCommonResponseDto?> AddVendor(VendorRequestDto vendorRequestDto);
 
         Task<PageList<VendorResponseDto>> GetAllVendor(PagingParam pagingParam);
 

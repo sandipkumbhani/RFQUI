@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -72,14 +74,10 @@ namespace RFQ.UI.Controllers
                     vendorRequestDto.UpdatedBy = Convert.ToInt32(userid);
                     vendorRequestDto.PartyTypeId = (int)EnumInternalMaster.VENDOR;
 
-                    var result = await _vendorService.AddVendor(vendorRequestDto);
-                    return Json(new { result });
+                    var response = await _vendorService.AddVendor(vendorRequestDto);
+                    return Ok(response);
                 }
-                else
-                {
-                    return Json(new { result = "Failed" });
-
-                }
+                return null;
             }
             catch (Exception ex)
             {

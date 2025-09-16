@@ -14,7 +14,7 @@ namespace RFQ.UI.Application.Provider
             _vendorAdaptor = vendorAdaptor;
         }
 
-        public async Task<VendorRequestDto?> AddVendor(VendorRequestDto vendorRequestDto)
+        public async Task<NewCommonResponseDto?> AddVendor(VendorRequestDto vendorRequestDto)
         {
             return await _vendorAdaptor.AddVendor(vendorRequestDto);
         }

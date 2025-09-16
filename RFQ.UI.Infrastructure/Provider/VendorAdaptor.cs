@@ -5,6 +5,7 @@ using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using System.Data;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -23,37 +24,72 @@ namespace RFQ.UI.Infrastructure.Provider
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
 
-        public async Task<VendorRequestDto> AddVendor(VendorRequestDto vendorRequestDto)
+        public async Task<NewCommonResponseDto> AddVendor(VendorRequestDto vendorRequestDto)
         {
             try
             {
                 _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
                 var baseurl = _fleetLynkApiUrl + _config["Vendor:AddMasterParty"];
                 var vendor = JsonConvert.SerializeObject(vendorRequestDto);
                 var requestContent = new StringContent(vendor, Encoding.UTF8, "application/json");
+
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
+
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+
+                if (responseModel == null)
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
+                    return new NewCommonResponseDto
                     {
-                        var savedVendor = JsonConvert.DeserializeObject<VendorRequestDto>(responseModel.Data.ToString());
-                        return savedVendor;
-                    }
-                    else
-                        return null;
+                        StatusCode = (int)response.StatusCode,
+                        Message = "No response received from API",
+                        Data = null
+                    };
                 }
+
+                if (responseModel.StatusCode == 200)
+                {
+                    var vendorData = JsonConvert.DeserializeObject<VendorRequestDto>(responseModel.Data.ToString());
+                    return new NewCommonResponseDto
+                    {
+                        StatusCode = 200,
+                        Message = responseModel.Message,
+                        Data = vendorData
+                    };
+                }
+
+                if (responseModel.StatusCode == 409)
+                {
+                    return new NewCommonResponseDto
+                    {
+                        StatusCode = 409,
+                        Message = "Duplicate record found. Party details already exist.",
+                        Data = null
+                    };
+                }
+
+                return new NewCommonResponseDto
+                {
+                    StatusCode = (int)response.StatusCode,
+                    Message = "Unexpected response from API",
+                    Data = null
+                };
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                return new NewCommonResponseDto
+                {
+                    StatusCode = 500,
+                    Message = $"Error while saving vendor: {ex.Message}",
+                    Data = null
+                };
             }
-
-            return null;
         }
+
 
         public async Task<string> DeleteVendor(int PartyId)
         {
@@ -214,7 +250,7 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception: {ex.Message}");
-                throw ;
+                throw;
             }
         }
 

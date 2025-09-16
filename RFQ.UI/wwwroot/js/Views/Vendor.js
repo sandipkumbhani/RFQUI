@@ -452,21 +452,29 @@ function SaveVendor(action) {
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(formData),
+                dataType: "json",
                 success: function (response) {
                     if (response != null) {
-                        if (response.result.partyId != null) {
-                            Saveattachment(response.result.partyId);
+                        if (response.statusCode == 200) {
+                            let partyId = response.data.partyId
+                            Saveattachment(partyId);
                             toastr.success("Vendor Details Submitted Successfully!");
+                            if (typeof this.completeOnSuccess === "function") {
+                                this.completeOnSuccess();
+                            }
                         }
-                        if (typeof this.completeOnSuccess === "function") {
-                            this.completeOnSuccess();
-                        }
-                    } else {
-                        toastr.error("Failed to Submit Vendor Details!", "Error");
+                        else if (response.statusCode === 409)
+                            toastr.warning(response.message, "Duplicate Entry");
+                        else
+                            toastr.error(response.message || "Unexpected error occurred.", "Error");
                     }
+                    else {
+                        toastr.error("Unable to submit vendor details.", "Error");
+                    }
+
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Failed to Submit Vendor Details!", "Error");
+                    toastr.error("Unable to submit vendor details", "Error");
                 },
                 completeOnSuccess: function () {
                     FetchVendor();
@@ -478,20 +486,35 @@ function SaveVendor(action) {
                 url: saveVendorUrl,
                 type: "POST",
                 contentType: "application/json",
+                dataType: "json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    let partyId = response.result.partyId;
-                    Saveattachment(partyId);
-                    toastr.success("Vendor Details Submitted Successfully!");
-                    $('#vendorForm')[0].reset();
-                    $('#ddlCity').val('');
-                    $('#ddlVendorCategory').val(null).trigger('');
-                    setTimeout(() => {
-                        ResetAttachmentRepeater();
-                    }, 1000);
+                    if (response) {
+                        if (response.statusCode === 200) {
+                            let partyId = response.data.partyId;
+                            Saveattachment(partyId);
+                            toastr.success("Vendor details submitted successfully!");
+                            //// Reset form
+                            $('#vendorForm')[0].reset();
+                            $('#ddlCity').val(0).trigger("change");
+                            $('#ddlVendorCategory').val(0).trigger("change");
+
+                            setTimeout(() => {
+                                ResetAttachmentRepeater();
+                            }, 1000);
+                        }
+                        else if (response.statusCode === 409) {
+                            toastr.warning(response.message, "Duplicate Entry");
+                        }
+                        else {
+                            toastr.error(response.message || "Unexpected error occurred.", "Error");
+                        }
+                    } else {
+                        toastr.error("Unable to submit vendor details.", "Error");
+                    }
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Failed to Submit Vendor Details", "Error");
+                    toastr.error("Unable to submit vendor details.", "Error");
                 }
             });
         }
