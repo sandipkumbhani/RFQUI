@@ -456,7 +456,7 @@ function SaveVendor(action) {
                 success: function (response) {
                     if (response != null) {
                         if (response.statusCode == 200) {
-                            let partyId = response.data.partyId
+                            partyId = response.data.partyId
                             Saveattachment(partyId);
                             toastr.success("Vendor Details Submitted Successfully!");
                             if (typeof this.completeOnSuccess === "function") {
@@ -491,7 +491,7 @@ function SaveVendor(action) {
                 success: function (response) {
                     if (response) {
                         if (response.statusCode === 200) {
-                            let partyId = response.data.partyId;
+                            partyId = response.data.partyId;
                             Saveattachment(partyId);
                             toastr.success("Vendor details submitted successfully!");
                             //// Reset form

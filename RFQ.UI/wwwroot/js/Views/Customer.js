@@ -158,17 +158,21 @@ function SaveCustomer(action) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response != null && response.result != null) {
-                    partyId = response.result.partyId;
-                    if (partyId != null) {
+                debugger;
+                if (response != null) {
+                    if (response.statusCode == 200) {
+                        partyId = response.data.partyId;
                         Saveattachment(partyId);
                         toastr.success("Customer Details Submitted Successfully!");
                         if (typeof completeOnSuccess === "function") {
                             completeOnSuccess();
                         }
-                    } else {
-                        toastr.error("Failed to Submit Customer Details", "Error");
                     }
+                    else if (response.statusCode === 409)
+                        toastr.warning(response.message, "Duplicate Entry");
+                    else
+                        toastr.error(response.message || "Unexpected error occurred.", "Error");
+                    
                 } else {
                     toastr.error("Failed to Submit Customer Details", "Error");
                 }
@@ -187,14 +191,22 @@ function SaveCustomer(action) {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response != null) {
-                    partyId = response.result.partyId;
-                    Saveattachment(partyId);
-                    toastr.success("Customer Details Submitted Successfully!");
-                    $('#customerForm')[0].reset();
-                    $('#ddlCity').val(null).trigger('change');
-                    setTimeout(() => {
-                        ResetAttachmentRepeater();
-                    }, 1000);
+                    if (response.statusCode == 200) {
+                        partyId = response.data.partyId;
+                        Saveattachment(partyId);
+                        toastr.success("Customer Details Submitted Successfully!");
+                        $('#customerForm')[0].reset();
+                        $('#ddlCity').val(null).trigger('change');
+                        setTimeout(() => {
+                            ResetAttachmentRepeater();
+                        }, 1000);
+                    }
+                    else if (response.statusCode === 409) {
+                        toastr.warning(response.message, "Duplicate Entry");
+                    }
+                    else {
+                        toastr.error(response.message || "Unexpected error occurred.", "Error");
+                    }
                 } else {
                     toastr.error("Failed to Submit Customer Details", "Error");
                 }

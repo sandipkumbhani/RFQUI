@@ -14,7 +14,7 @@ namespace RFQ.UI.Application.Provider
             _customerAdaptor = customerAdaptor;
         }
 
-        public Task<CustomerRequestDto> AddCustomer(CustomerRequestDto customerRequestDto)
+        public Task<NewCommonResponseDto> AddCustomer(CustomerRequestDto customerRequestDto)
         {
             return _customerAdaptor.AddCustomer(customerRequestDto);
         }

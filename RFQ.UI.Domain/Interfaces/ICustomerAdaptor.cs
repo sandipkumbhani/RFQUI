@@ -6,7 +6,7 @@ namespace RFQ.UI.Domain.Interfaces
 {
     public interface ICustomerAdaptor
     {
-        Task<CustomerRequestDto> AddCustomer(CustomerRequestDto customerRequestDto);
+        Task<NewCommonResponseDto> AddCustomer(CustomerRequestDto customerRequestDto);
 
         Task<PageList<CustomerResponseDto>> GetAllCustomer(PagingParam pagingParam);
 

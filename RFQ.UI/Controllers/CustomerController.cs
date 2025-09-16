@@ -38,13 +38,9 @@ namespace RFQ.UI.Controllers
                     customerRequestDto.UpdatedBy = Convert.ToInt32(userid);
 
                     var result = await _customerServices.AddCustomer(customerRequestDto);
-                    return Json(new { result });
+                    return Json(result);
                 }
-                else
-                {
-                    return Json(new { result = "fail" });
-
-                }
+                return null;
             }
             catch (Exception ex)
             {

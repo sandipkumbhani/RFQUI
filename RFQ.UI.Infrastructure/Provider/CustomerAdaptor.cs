@@ -23,7 +23,7 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
-        public async Task<CustomerRequestDto> AddCustomer(CustomerRequestDto customerRequestDto)
+        public async Task<NewCommonResponseDto> AddCustomer(CustomerRequestDto customerRequestDto)
         {
             try
             {
@@ -35,22 +35,47 @@ namespace RFQ.UI.Infrastructure.Provider
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                if (responseModel == null)
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
+                    return new NewCommonResponseDto
                     {
-                        return JsonConvert.DeserializeObject<CustomerRequestDto>(responseModel.Data.ToString());
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                        StatusCode = (int)response.StatusCode,
+                        Message = "No response received from API",
+                        Data = null
+                    };
                 }
+
+                if (responseModel.StatusCode == 200)
+                {
+                    var customerData = JsonConvert.DeserializeObject<CustomerRequestDto>(responseModel.Data.ToString());
+                    return new NewCommonResponseDto
+                    {
+                        StatusCode = 200,
+                        Message = responseModel.Message,
+                        Data = customerData
+                    };
+                }
+
+                if (responseModel.StatusCode == 409)
+                {
+                    return new NewCommonResponseDto
+                    {
+                        StatusCode = 409,
+                        Message = "Duplicate record found. Party details already exist.",
+                        Data = null
+                    };
+                }
+
+                return new NewCommonResponseDto
+                {
+                    StatusCode = (int)response.StatusCode,
+                    Message = "Unexpected response from API",
+                    Data = null
+                };
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                return null;
             }
             return null;
         }
