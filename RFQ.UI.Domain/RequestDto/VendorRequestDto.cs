@@ -9,7 +9,7 @@
         }
         public int PartyId { get; set; }
 
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
 
         public int PartyTypeId { get; set; }
 
