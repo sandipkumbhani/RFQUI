@@ -41,7 +41,6 @@ $(document).ready(function () {
     });
     GetFranchiseAndCorporateName();
     UpdateUser();
-    GetAllUser();
     FetchUser();
 });
 
@@ -409,20 +408,7 @@ function ValidationCheck() {
     }
     return true;
 }
-function GetAllUser() {
-    var getUrl = '/Dashboard/Dashboard';
-    $.ajax({
-        url: getUrl,
-        type: 'GET',
-        dataType: 'json',
-        success: function (response) {
-            allUserList = response;
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
-        }
-    });
-};
+
 
 // Bind events
 $('#tableuserSearch').off('keyup').on('keyup', function () {
