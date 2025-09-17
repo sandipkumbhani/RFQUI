@@ -160,7 +160,9 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
             // Condition hide login user from user list
             if (gridTableName == 'tableuser') {
                 var userid = decodeURIComponent(getCookieValue('userid'));
-                const filteredUsers = response.data.filter(user => user.userid !== userid);
+                const filteredUsers = Array.isArray(response?.data)
+                    ? response.data.filter(user => user.userId !== Number(userid))
+                    : [];
                 response.data = filteredUsers;
             }
             viewModelDto = response.data;

@@ -543,9 +543,14 @@
                 type: "GET",
                 dataType: 'json',
                 success: function (response) {
+                    if(response != null && profileid != 1)
+                    {
+                            response = response.filter(x=>x.linkId !=12); // Profile Rights Page Shows only Admin
+                    }
                     let menuList = response;
                     let sidebarHtml = '';
                     let groupedItems = {};
+                    
 
                     groupedItems = response.reduce((acc, item) => {
                         const groupId = item.linkGroupId;
