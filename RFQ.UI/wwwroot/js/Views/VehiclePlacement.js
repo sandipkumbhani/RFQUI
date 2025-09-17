@@ -95,7 +95,12 @@ $("#txtAdvancePayable").on('change', function () {
     var payable = hireAmt - advancePay;
     $("#txtBalancePayable").val(payable);
 });
-
+$("#txtTotalHairAmt").on('change', function () {
+    var hireAmt = Number($("#txtTotalHairAmt").val());
+    var advancePay = Number($("#txtAdvancePayable").val());
+    var payable = hireAmt - advancePay;
+    $("#txtBalancePayable").val(payable);
+});
 
 $("#ddlDriverName").on('change', function () {
     if ($(this).val() != null) {
