@@ -4,7 +4,7 @@
     {
         public int LocationId { get; set; }
 
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
 
         public string? LocationName { get; set; }
 
