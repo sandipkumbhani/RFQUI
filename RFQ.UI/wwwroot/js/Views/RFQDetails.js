@@ -751,12 +751,12 @@ function FetchRfqList() {
     $('.select2-custom').val(null).trigger('change');
     $("#vendorDetails-tab").prop('disabled', false);
     $("#previousQuotes-tab").prop('disabled', false);
-    GetAllLocation("ddlLocation", companyId, function () {
-        if (profileId == EnumProfile.Branch) {
-            $('#ddlLocation').val(Number(locationId)).trigger('change');
-            $('#ddlLocation').prop('disabled', true);
-        }
-    });
+    //GetAllLocation("ddlLocation", companyId, function () {
+    //    if (profileId == EnumProfile.Branch) {
+    //        $('#ddlLocation').val(Number(locationId)).trigger('change');
+    //        $('#ddlLocation').prop('disabled', true);
+    //    }
+    //});
     FetchRfqNo();
     ResetAttachmentRepeater();
     FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase());
