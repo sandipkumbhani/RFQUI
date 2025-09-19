@@ -345,7 +345,7 @@ function UpdateUser() {
     });
 }
 function GetFranchiseAndCorporateName() {
-
+    debugger;
     var GetUrl = '/Home/GetAllCompanyAndFranchise';
     $.ajax({
         url: GetUrl,
@@ -355,7 +355,7 @@ function GetFranchiseAndCorporateName() {
             var data = response.filter(x => x.companyTypeId == 2 || x.companyTypeId == 3);
             const CompanyAndFranchiseDrp = document.getElementById("ddlCompanyAndFranchise");
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Franchise/Corporate Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
