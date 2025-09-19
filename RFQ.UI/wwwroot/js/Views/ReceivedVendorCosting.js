@@ -7,10 +7,11 @@ function loadVendorCosting() {
         url: "/ReceivedVendorCosting/GetAllReceivedVendorCosting",
         contentType: "application/json; charset=utf-8",
         success: function (response) {
-            if (response != null && response.length > 0) {
-                BindTable(response)
+            if (response.statusCode === 200) {
+                console.log("✅ Data received:", response.data);
+                BindTable(response.data)
             } else {
-                toastr.error("Somthing Went Wrong", "error");
+                console.warn("⚠️ " + response.message);
             }
         },
         error: function (xhr, status, error) {

@@ -39,26 +39,42 @@ namespace RFQ.UI.Controllers
                 ReceivedVendorCosting request = new();
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
 
-
-
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
 
-                //string rfqId = jwt.Claims.First(c => c.Type == "rfqid").Value;
-                //string partyId = jwt.Claims.First(c => c.Type == "partyid").Value;
                 request.CompanyId = Convert.ToInt32(companyId);
+
                 var result = await _receivedVendorCostingService.GetAllReceivedVendorCosting(request);
+
                 if (result == null || !result.Any())
-                    return Json(new { success = false, message = "No data found." });
-                else
-                    return Json(result);
+                {
+                    return Json(new NewCommonResponseDto
+                    {
+                        Data = null,
+                        StatusCode = 404,
+                        Message = "No data found."
+                    });
+                }
+
+                return Json(new NewCommonResponseDto
+                {
+                    Data = result,
+                    StatusCode = 200,
+                    Message = "Success"
+                });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return Json(new NewCommonResponseDto
+                {
+                    Data = null,
+                    StatusCode = 500,
+                    Message = $"Error: {ex.Message}"
+                });
             }
         }
+
 
         [HttpPost]
         public async Task<bool> SendEmail([FromBody] VendorCostingListResponseDto vendor)

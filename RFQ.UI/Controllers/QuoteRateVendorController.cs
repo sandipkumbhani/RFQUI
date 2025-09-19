@@ -69,13 +69,35 @@ namespace RFQ.UI.Controllers
                 {
                     rfqRateRequestDto.UpdatedOn = DateTime.Now;
                     var result = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsqById((int)rfqRateRequestDto.RfqId);
-                    return Json(new { Data = result, StatusCode = 200 });
+
+                    if (result == null)
+                    {
+                        return Json(new NewCommonResponseDto
+                        {
+                            Data = null,
+                            StatusCode = 404,
+                            Message = "No data found."
+                        });
+                    }
+
+                    return Json(new NewCommonResponseDto
+                    {
+                        Data = result,
+                        StatusCode = 200,
+                        Message = "Success"
+                    });
+                    
                 }
                 return null;
             }
             catch (Exception ex)
             {
-                return Json(new { result = ex.InnerException, message = ex.Message, StatusCode =404 });
+                return Json(new NewCommonResponseDto
+                {
+                    Data = null,
+                    StatusCode = 500,
+                    Message = $"Error: {ex.Message}"
+                });
             }
         }
     }
