@@ -20,6 +20,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowLocalhost",
         builder => builder.WithOrigins("https://localhost:7265")
                           .WithOrigins("https://localhost:7075")
+                          .WithOrigins("https://localhost:443")
+                          .WithOrigins("https://192.168.0.72:443")
+                          .WithOrigins("https://192.168.0.72:7075")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials());
