@@ -4,7 +4,7 @@
     {
         public int ItemId { get; set; }
         public string ItemName { get; set; }
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
         public string Description { get; set; } = "null";
         public int StatusId { get; set; } = 1;
         public int CreatedBy { get; set; }
