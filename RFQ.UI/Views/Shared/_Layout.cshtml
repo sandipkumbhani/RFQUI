@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using RFQ.UI.Domain.Model
+@{
+    var menuList = ViewBag.menulist as List<MenulistModel>;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap"
-          rel="stylesheet">
+    rel="stylesheet">
     <link href="~/css/intlTelInput-largeFlags.css" rel="stylesheet" type="text/css" />
     <link href="~/css/select2.min.css" rel="stylesheet" type="text/css" />
     <link href="~/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
@@ -23,7 +28,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css"
-          rel="stylesheet">
+    rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
 </head>
 
@@ -58,20 +63,20 @@
                     <ul class="topbar-menu d-flex align-items-center">
                         <li class="dropdown search-mobile">
                             <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#"
-                               role="button" aria-haspopup="false" aria-expanded="false">
+                            role="button" aria-haspopup="false" aria-expanded="false">
                                 <i class="ri-search-line"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end dropdown-lg py-0">
                                 <form class="p-2">
                                     <input type="search" class="form-control" placeholder="Search ..."
-                                           aria-label="Recipient's username">
+                                    aria-label="Recipient's username">
                                 </form>
                             </div>
                         </li>
 
                         <li class="dropdown notification-list">
                             <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#"
-                               role="button" aria-haspopup="false" aria-expanded="false">
+                            role="button" aria-haspopup="false" aria-expanded="false">
                                 <i class="ri-mail-open-line"></i>
                                 <span class="noti-icon-badge"></span>
                             </a>
@@ -94,7 +99,7 @@
                                     <!-- item-->
 
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -123,7 +128,7 @@
 
                                     <!-- item-->
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -154,7 +159,7 @@
 
                                     <!-- item-->
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -184,7 +189,7 @@
 
                                     <!-- item-->
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -208,7 +213,7 @@
 
                                     <!-- item-->
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -239,7 +244,7 @@
                         </li>
                         <li class="dropdown notification-list">
                             <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#"
-                               role="button" aria-haspopup="false" aria-expanded="false">
+                            role="button" aria-haspopup="false" aria-expanded="false">
                                 <i class="ri-notification-3-line font-22"></i>
                                 <span class="noti-icon-badge"></span>
                             </a>
@@ -262,7 +267,7 @@
                                     <!-- item-->
 
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -291,7 +296,7 @@
 
                                     <!-- item-->
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -322,7 +327,7 @@
 
                                     <!-- item-->
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -352,7 +357,7 @@
 
                                     <!-- item-->
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -376,7 +381,7 @@
 
                                     <!-- item-->
                                     <a href="javascript:void(0);"
-                                       class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
                                         <div class="card-body">
                                             <span class="float-end noti-close-btn text-muted">
                                                 <i class="ri-close-line"></i>
@@ -405,14 +410,14 @@
                                 </div>
                                 <!-- All-->
                                 <a href="javascript:void(0);"
-                                   class="dropdown-item text-center notify-item-all border-top py-2">
+                                class="dropdown-item text-center notify-item-all border-top py-2">
                                     View All
                                 </a>
                             </div>
                         </li>
                         <li class="dropdown user-listitem">
                             <a class="nav-link dropdown-toggle arrow-none nav-user" data-bs-toggle="dropdown" href="#"
-                               role="button" aria-haspopup="false" aria-expanded="false">
+                            role="button" aria-haspopup="false" aria-expanded="false">
                                 <div id="avatarImage"></div>
                                 <span class="d-lg-flex flex-column gap-1 d-none">
                                     <h5 class="my-0" id="PersonName"></h5>
@@ -464,48 +469,45 @@
                     <i class="ri-close-line"></i>
                 </button>
             </div>
+
             <div class="leftbar custom-scroll" id="leftbar">
                 <div class="left-sidebar-wrap" id="left-sidebar-wrap">
                     <div class="sidebar-menu-area" id="sidebar-menu-area">
                         <!--- Sidemenu -->
-                        <ul id="leftside-menu-container" class="side-nav">
+                        <ul id="leftside-menu-container" class="side-nav" style="padding:initial;">
+                            @if (menuList != null && menuList.Any())
+                            {
+                                 var groupedMenus = menuList
+                                .GroupBy(x => new { x.LinkGroupId, x.LinkGroupName, x.LinkGroupIcon })
+                                .OrderBy(g => g.Min(m => m.SequenceNo)); // optional ordering
 
-                            <li class="side-nav-item dropdown" id="side-nav-vehicle-dropdown">
-                                <a href="javascript:void(0)" class="side-nav-link">
-                                    <i class="ri-car-line"></i>
-                                    <i class="ri-car-fill"></i>
-                                    <span> Vehicle </span>
-                                </a>
-                                <ul class="sidebar-submenu" id="sidebar-submenu-vehicle">
-                                    <li>
-                                        <a href="javascript:void(0)" class="sidebar-title" id="sidebar-title-vehicle">
-                                            vehicle <i class="ri-arrow-right-s-line"></i>
+                                foreach (var group in groupedMenus)
+                                {
+                                    <li class="side-nav-item dropdown">
+                                        <a class="side-nav-link" href="javascript:void(0)">
+                                            <i class="@group.Key.LinkGroupIcon"></i>
+                                            <span>@group.Key.LinkGroupName</span>
                                         </a>
-                                        <ul class="nav-sub-childmenu submenu-content" id="submenu-content-vehicle">
-                                            <li>
-                                                <a href="vehicle.html" id="submenu-vehicle-link">Vehicle</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">text</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">text</a>
-                                            </li>
+
+                                        <ul class="sidebar-submenu">
+                                            @foreach (var item in group.OrderBy(x => x.SequenceNo))
+                                            {
+                                                <li>
+                                                    <a href="@item.LinkUrl">
+                                                        <i class="@item.LinkIcon"></i>
+                                                        <span>@item.LinkName</span>
+                                                    </a>
+                                                </li>
+                                            }
                                         </ul>
                                     </li>
-                                    <li>
-                                        <a href="invoice-preview.html" id="submenu-invoice-preview">
-                                            Preview <i class="ri-arrow-right-s-line"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="invoice-add.html" id="submenu-invoice-add">
-                                            Add new <i class="ri-arrow-right-s-line"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                                }
+                            }else
+                            {
+                                <p>NO Menu</p>
+                            }
                         </ul>
+
                         <!--- End Sidemenu -->
                         <div class="clearfix"></div>
                     </div>
@@ -538,89 +540,68 @@
             $("#PersonName").text(PersonName);
 
             showInitial(PersonName); // Calling function
-            $.ajax({
-                url: '/Home/GetMenu',
-                type: "GET",
-                dataType: 'json',
-                success: function (response) {
-                    if(response != null && profileid != 1)
-                    {
-                            response = response.filter(x=>x.linkId !=12); // Profile Rights Page Shows only Admin
-                    }
-                    let menuList = response;
-                    let sidebarHtml = '';
-                    let groupedItems = {};
-                    
+            // $.ajax({
+            //     url: '/Home/GetMenu',
+            //     type: "GET",
+            //     dataType: 'json',
+            //     success: function (response) {
+            //         console.log(response);
+            //         // if(response != null && profileid != 1)
+            //         // {
+            //         //         response = response.filter(x=>x.linkId !=12); // Profile Rights Page Shows only Admin
+            //         // }
+            //         // let menuList = response;
+            //         // let sidebarHtml = '';
+            //         // let groupedItems = {};
 
-                    groupedItems = response.reduce((acc, item) => {
-                        const groupId = item.linkGroupId;
-                        if (!acc[groupId]) {
-                            acc[groupId] = {
-                                groupName: item.linkGroupName,
-                                linkGroupIcon: item.linkGroupIcon,
-                                items: []
-                            };
-                        }
-                        acc[groupId].items.push(item);
-                        return acc;
-                    }, {});
 
-                    // for (let groupId in groupedItems) {
-                    //     let group = groupedItems[groupId];
-                    //     let collapseId = 'submenu-' + groupId;
-                    //     sidebarHtml += `<li class="side-nav-item dropdown " id="group-${groupId}">
-                    //     <a href="javascript:void(0)" class="side-nav-link" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
-                    //         <i class="${group.linkGroupIcon}"></i>
-                    //         <span> ${group.groupName} </span>
-                    //     </a>
-                    //     <ul class="sidebar-submenu collapse" id="${collapseId}">`;
+            //         // groupedItems = response.reduce((acc, item) => {
+            //         //     const groupId = item.linkGroupId;
+            //         //     if (!acc[groupId]) {
+            //         //         acc[groupId] = {
+            //         //             groupName: item.linkGroupName,
+            //         //             linkGroupIcon: item.linkGroupIcon,
+            //         //             items: []
+            //         //         };
+            //         //     }
+            //         //     acc[groupId].items.push(item);
+            //         //     return acc;
+            //         // }, {});
 
-                    //     group.items.forEach((item, idx) => {
-                    //         sidebarHtml += `
-                    //     <li>
-                    //         <a href="${item.linkUrl}" class="side-nav-link" data-id="menuitem-${groupId}-${idx}">
-                    //             <i class="${item.linkIcon}"></i>
-                    //             <span> ${item.linkName} </span>
-                    //         </a>
-                    //     </li>`;
-                    //     });
+            //         // for (let groupId in groupedItems) {
+            //         //     let group = groupedItems[groupId];
+            //         //     let collapseId = 'submenu-' + groupId;
 
-                    //     sidebarHtml += '</ul></li>';
-                    // }
-                    for (let groupId in groupedItems) {
-                        let group = groupedItems[groupId];
-                        let collapseId = 'submenu-' + groupId;
+            //         //     sidebarHtml += '<li class="side-nav-item dropdown" onclick="toggleDropdown(this)"   >';
 
-                        sidebarHtml += '<li class="side-nav-item dropdown" onclick="toggleDropdown(this)"   >';
+            //         //     sidebarHtml += '<a href="javascript:void(0)" class="side-nav-link" data-bs-toggle="collapse" data-bs-target="#' + collapseId + '" aria-expanded="false" aria-controls="' + collapseId + '">';
+            //         //     sidebarHtml += '<i class="'+group.linkGroupIcon+'"></i>';
+            //         //     sidebarHtml += '<i class="'+group.linkGroupIcon+'"></i>';
+            //         //     sidebarHtml += '<span> ' + group.groupName + ' </span>';
+            //         //     sidebarHtml += '</a>';
 
-                        sidebarHtml += '<a href="javascript:void(0)" class="side-nav-link" data-bs-toggle="collapse" data-bs-target="#' + collapseId + '" aria-expanded="false" aria-controls="' + collapseId + '">';
-                        sidebarHtml += '<i class="'+group.linkGroupIcon+'"></i>';
-                        sidebarHtml += '<i class="'+group.linkGroupIcon+'"></i>';
-                        sidebarHtml += '<span> ' + group.groupName + ' </span>';
-                        sidebarHtml += '</a>';
+            //         //     sidebarHtml += '<ul class="sidebar-submenu collapse" id="' + collapseId + '">';
 
-                        sidebarHtml += '<ul class="sidebar-submenu collapse" id="' + collapseId + '">';
+            //         //     group.items.forEach((item, idx) => {
+            //         //         sidebarHtml += '<li>';
+            //         //         sidebarHtml += '<a href="' + item.linkUrl + '" class="side-nav-link" data-id="menuitem-' + groupId + '-' + idx + '">';
+            //         //         sidebarHtml += '<i class="' + item.linkIcon + '"></i>';
+            //         //         sidebarHtml += '<span> ' + item.linkName + ' </span>';
+            //         //         sidebarHtml += '</a>';
+            //         //         sidebarHtml += '</li>';
+            //         //     });
 
-                        group.items.forEach((item, idx) => {
-                            sidebarHtml += '<li>';
-                            sidebarHtml += '<a href="' + item.linkUrl + '" class="side-nav-link" data-id="menuitem-' + groupId + '-' + idx + '">';
-                            sidebarHtml += '<i class="' + item.linkIcon + '"></i>';
-                            sidebarHtml += '<span> ' + item.linkName + ' </span>';
-                            sidebarHtml += '</a>';
-                            sidebarHtml += '</li>';
-                        });
+            //         //     sidebarHtml += '</ul>';
+            //         //     sidebarHtml += '</li>';
+            //         // }
 
-                        sidebarHtml += '</ul>';
-                        sidebarHtml += '</li>';
-                    }
-
-                    $('#leftside-menu-container').html(sidebarHtml);
-                    DropdownManageScript();
-                },
-                error: function () {
-                    toastr.error("Failed to load menu.","Error");
-                }
-            });
+            //         // $('#leftside-menu-container').html(sidebarHtml);
+            //         // DropdownManageScript();
+            //     },
+            //     error: function () {
+            //         toastr.error("Failed to load menu.","Error");
+            //     }
+            // });
         });
 
         function toggleDropdown(element) {

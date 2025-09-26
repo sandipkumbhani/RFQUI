@@ -9,25 +9,30 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class RFQFinalizationController : Controller
+    public class RFQFinalizationController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly IRfqFinalService _rfqFinalService;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _config;
-        public RFQFinalizationController(IRfqFinalService rfqFinalService, GlobalClass globalClass, IEmailService emailService, IConfiguration config)
+        private readonly IMenuServices _menuServices;
+
+        public RFQFinalizationController(IRfqFinalService rfqFinalService, GlobalClass globalClass, IEmailService emailService, IConfiguration config, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _rfqFinalService = rfqFinalService;
             _globalClass = globalClass;
             _emailService = emailService;
             _config = config;
+            _menuServices = menuServices;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
-        public IActionResult RFQFinalization()
+        public async Task<IActionResult> RFQFinalization()
         {
+            await SetMenuAsync();
             return View("Views/RFQ/RFQFinalization.cshtml");
         }
         [HttpPost]

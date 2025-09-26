@@ -10,18 +10,21 @@ using System.IdentityModel.Tokens.Jwt;
 namespace RFQ.UI.Controllers
 {
 
-    public class CorporateCompanyController : Controller
+    public class CorporateCompanyController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly ICorporateCompanyService _corporateCompanyService;
+        private readonly IMenuServices _menuServices;
 
-        public CorporateCompanyController(ICorporateCompanyService corporateCompanyService, GlobalClass globalClass)
+        public CorporateCompanyController(ICorporateCompanyService corporateCompanyService, GlobalClass globalClass, IMenuServices menuServices): base(menuServices, globalClass)
         {
             _corporateCompanyService = corporateCompanyService;
             _globalClass = globalClass;
+            _menuServices = menuServices;
         }
-        public IActionResult CorporateCompany()
+        public async Task<IActionResult> CorporateCompany()
         {
+            await SetMenuAsync();
             return View();
         }
 

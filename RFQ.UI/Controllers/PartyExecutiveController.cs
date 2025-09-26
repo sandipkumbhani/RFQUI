@@ -1,11 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Model;
 
 namespace RFQ.UI.Controllers
 {
-    public class PartyExecutiveController : Controller
+    public class PartyExecutiveController : BaseController
     {
-        public IActionResult PartyExecutive()
+        private readonly GlobalClass _globalClass;
+        private readonly IMenuServices _menuServices;
+
+        public PartyExecutiveController(GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
+            _globalClass = globalClass;
+            _menuServices = menuServices;
+        }
+        public async Task<IActionResult> PartyExecutive()
+        {
+            await SetMenuAsync();
             return View();
         }
     }

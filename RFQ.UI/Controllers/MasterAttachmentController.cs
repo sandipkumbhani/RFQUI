@@ -7,17 +7,19 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class MasterAttachmentController : Controller
+    public class MasterAttachmentController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly IMasterAttachmentService _masterAttachmentService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IMenuServices _menuServices;
 
-        public MasterAttachmentController(IMasterAttachmentService masterAttachmentService, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment)
+        public MasterAttachmentController(IMasterAttachmentService masterAttachmentService, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _masterAttachmentService = masterAttachmentService;
             _globalClass = globalClass;
             _webHostEnvironment = webHostEnvironment;
+            _menuServices = menuServices;
         }
 
 

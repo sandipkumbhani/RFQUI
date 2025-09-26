@@ -8,20 +8,21 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly IUsersService _usersService;
         private readonly IMenuServices _menuServices;
 
-        public UserController(IMenuServices menuServices, GlobalClass globalClass, IUsersService usersService)
+        public UserController(IMenuServices menuServices, GlobalClass globalClass, IUsersService usersService) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _usersService = usersService;
             _menuServices = menuServices;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
 
@@ -61,7 +62,5 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
-      
     }
 }

@@ -38,6 +38,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton(globalclass);
 builder.Services.AddAutoMapper(typeof(AutoMappersRegister));
+
 try
 {
     var app = builder.Build();

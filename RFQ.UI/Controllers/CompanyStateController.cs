@@ -6,19 +6,22 @@ using RFQ.UI.Extension;
 
 namespace RFQ.UI.Controllers
 {
-    public class CompanyStateController : Controller
+    public class CompanyStateController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly ICompanyStateService _companyStateService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public CompanyStateController(ICompanyStateService companyStateService, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment)
+        private readonly IMenuServices _menuServices;
+        public CompanyStateController(ICompanyStateService companyStateService, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _companyStateService = companyStateService;
             _globalClass = globalClass;
             _webHostEnvironment = webHostEnvironment;
+            _menuServices = menuServices;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
 

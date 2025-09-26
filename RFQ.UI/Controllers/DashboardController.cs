@@ -1,20 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class DashboardController : Controller
+    public class DashboardController : BaseController
     {
         private readonly IDashboardServices _dashBoardServices;
+        private readonly GlobalClass _globalClass;
+        private readonly IMenuServices _menuServices;
 
-        public DashboardController(IDashboardServices dashBoardServices)
+        public DashboardController(IDashboardServices dashBoardServices, IMenuServices menuServices,GlobalClass globalClass) : base(menuServices, globalClass)
         {
             _dashBoardServices = dashBoardServices;
-
+            _menuServices = menuServices;
+            _globalClass = globalClass;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
         }
@@ -23,16 +29,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-
-                if (Request.IsAjaxRequest())
-                {
-                    var userlist = await _dashBoardServices.GetAllUsers();
-                    if (userlist != null && userlist.Count() > 0)
-                    {
-                        companyUserResponseDto.responseDto.AddRange(userlist);
-                    }
-                    return Json(userlist);
-                }
+                await SetMenuAsync();
                 return View();
             }
             catch (Exception)

@@ -9,19 +9,22 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class VehicleIndentController : Controller
+    public class VehicleIndentController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly IVehicleIndentService _vehicleIndentService;
         private readonly ILogger<VehicleIndentController> _logger;
-        public VehicleIndentController(GlobalClass globalClass, IVehicleIndentService vehicleIndentService, ILogger<VehicleIndentController> logger)
+        private readonly IMenuServices _menuServices;
+        public VehicleIndentController(GlobalClass globalClass, IVehicleIndentService vehicleIndentService, ILogger<VehicleIndentController> logger, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _vehicleIndentService = vehicleIndentService;
             _logger = logger;
+            _menuServices = menuServices;
         }
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
 

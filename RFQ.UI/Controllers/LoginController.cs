@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 using RFQ.UI.Domain.ResponseDto;
 
 using System.Numerics;
+using RFQ.UI.Domain.Model;
 
 namespace RFQ.UI.Controllers
 {
-    public class LoginController : Controller
+    public class LoginController : BaseController
     {
         private readonly ILoginServices _loginServcies;
         private readonly ILogger<LoginController> _logger;
@@ -21,8 +22,10 @@ namespace RFQ.UI.Controllers
         private readonly IUsersService _usersService;
         private readonly IWhatsAppService _whatsAppService;
         private readonly IEmailService _emailService;
+        private readonly GlobalClass _globalClass;
+        private readonly IMenuServices _menuServices;
 
-        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger, IUsersService usersService, IWhatsAppService whatsAppService, IEmailService emailService)
+        public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger, IUsersService usersService, IWhatsAppService whatsAppService, IEmailService emailService, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _loginServcies = loginServcies;
             _logger = logger;
@@ -30,6 +33,8 @@ namespace RFQ.UI.Controllers
             _whatsAppService =
             _whatsAppService = whatsAppService;
             _emailService = emailService;
+            _menuServices = menuServices;
+            _globalClass = globalClass;
         }
         public IActionResult Login()
         {
@@ -51,12 +56,14 @@ namespace RFQ.UI.Controllers
         {
             return View("~/Views/Login/sign-up.cshtml");
         }
-        public IActionResult ResetPassword()
+        public async Task<IActionResult> ResetPassword()
         {
+            await SetMenuAsync();
             return View();
         }
-        public IActionResult ChangePassword()
+        public async Task<IActionResult> ChangePassword()
         {
+            await SetMenuAsync();
             return View();
         }
         [HttpPost]

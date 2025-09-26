@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -9,29 +10,34 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class VehicleController : Controller
+    public class VehicleController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly IVehicleTypeServices _vehicleTypeServices;
         private readonly IVehicleService _vehicleServices;
+        private readonly IMenuServices _menuServices;
 
-        public VehicleController(IVehicleTypeServices vehicleTypeServices, GlobalClass globalClass, IVehicleService vehicleService)
+        public VehicleController(IVehicleTypeServices vehicleTypeServices, GlobalClass globalClass, IVehicleService vehicleService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _vehicleTypeServices = vehicleTypeServices;
             _globalClass = globalClass;
             _vehicleServices = vehicleService;
+            _menuServices = menuServices;
         }
-        public IActionResult Vehicle()
+        public async Task<IActionResult> Vehicle()
         {
+            await SetMenuAsync();
             return View();
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
 
-        public IActionResult VehicleType()
+        public async Task<IActionResult> VehicleType()
         {
+            await SetMenuAsync();
             return View();
         }
 

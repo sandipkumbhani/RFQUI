@@ -7,19 +7,22 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class FranchiseController : Controller
+    public class FranchiseController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly IFranchiseService _fanchiseService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public FranchiseController(IFranchiseService franchiseService, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment)
+        private readonly IMenuServices _menuServices;
+        public FranchiseController(IFranchiseService franchiseService, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _fanchiseService = franchiseService;
             _globalClass = globalClass;
             _webHostEnvironment = webHostEnvironment;
+            _menuServices = menuServices;
         }
-        public IActionResult Franchise()
+        public async Task<IActionResult> Franchise()
         {
+            await SetMenuAsync();
             return View();
         }
 

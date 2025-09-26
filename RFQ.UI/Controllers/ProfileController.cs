@@ -1,30 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 
 namespace RFQ.UI.Controllers
 {
-    public class ProfileController : Controller
+    public class ProfileController : BaseController
     {
 
         private readonly IProfileServices _profileServices;
+        private readonly GlobalClass _globalClass;
+        private readonly IMenuServices _menuServices;
 
-        public ProfileController(IProfileServices profileServices)
+        public ProfileController(IProfileServices profileServices, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _profileServices = profileServices;
+            _globalClass = globalClass;
+            _menuServices = menuServices;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
+            await SetMenuAsync();
             return View();
         }
-        public IActionResult ProfileRight()
+        public async Task<IActionResult> ProfileRight()
         {
+            await SetMenuAsync();
             return View();
         }
 
@@ -166,7 +174,6 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
         public async Task<IActionResult> AddOrUpdateProfileRights([FromBody] List<ProfileRightsResponseDto> requestDto)
         {
             try
@@ -190,6 +197,5 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
     }
 }

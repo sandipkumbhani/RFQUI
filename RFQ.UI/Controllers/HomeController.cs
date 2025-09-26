@@ -16,7 +16,7 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IUsersService _usersService;
         private readonly IMenuServices _menuServices;
-        public HomeController(IMenuServices menuServices, GlobalClass globalClass, IUsersService usersService)
+        public HomeController(IMenuServices menuServices, GlobalClass globalClass, IUsersService usersService) 
         {
             _globalClass = globalClass;
             _usersService = usersService;
@@ -196,22 +196,18 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                List<MenulistModel> menulistModels = new List<MenulistModel>();
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 int profileID = Convert.ToInt32(profileid);
                 var menulist = await _menuServices.GetMenu(profileID);
                 if (menulist != null && menulist.Count() > 0)
                 {
-                    menulistModels.AddRange(menulist);
-                }
-                if (Request.IsAjaxRequest())
-                {
-                    return Json(menulistModels);
+                    ViewBag.menulist = menulist;
+                    return Json(menulist);
                 }
                 else
                 {
-                    return View(menulistModels);
+                    return null;
                 }
             }
             catch (Exception)

@@ -13,34 +13,38 @@ using RFQ.UI.Application.Provider;
 
 namespace RFQ.UI.Controllers
 {
-    public class RequestForQuoteController : Controller
+    public class RequestForQuoteController : BaseController
     {
-        private readonly GlobalClass _globalClass;
         private readonly IRequestForQuoteService _requestForQuoteService;
         private readonly ILogger<RequestForQuoteController> _logger;
         private readonly IRfqLinkService _rfqLinkService;
         private readonly IWhatsAppService _whatsAppService;
         private readonly IEmailService _emailService;
+        private readonly GlobalClass _globalClass;
+        private readonly IMenuServices _menuServices;
 
-        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService)
+        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
-            _globalClass = globalClass;
             _requestForQuoteService = requestForQuoteService;
             _logger = logger;
             _rfqLinkService = rfqLinkService;
             _whatsAppService = whatsAppService;
             _emailService = emailService;
+            _globalClass = globalClass;
+            _menuServices = menuServices;
         }
-        public ActionResult VendorRequest()
+        public async Task<ActionResult> VendorRequest()
         {
+            await SetMenuAsync();
             return View();
         }
         public ActionResult Details(int id)
         {
             return View();
         }
-        public ActionResult RFQDetails()
+        public async Task<ActionResult> RFQDetails()
         {
+            await SetMenuAsync();
             return View();
         }
 
