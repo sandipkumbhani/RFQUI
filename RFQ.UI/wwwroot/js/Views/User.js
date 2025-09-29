@@ -82,7 +82,7 @@ function Initialization() {
     $("#txtLoginName").on("blur", function () {
         var loginname = $(this).val();
         if (!/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginname)) {
-            toastr.warning("Please enter a valid LoginName", "Validation Error");
+            toastr.warning("Login Name must be 3–20 characters, start with a letter, and contain only letters,No numbers and WhightSpace, . or _ (no consecutive symbols)", "Invalid Format");
             return;
         }
     });
@@ -303,6 +303,7 @@ function UpdateUser() {
         if (!isvalid) {
             return;
         }
+        debugger;
         var UserViewModel = {
             UserId: $('#hdnUserId').val(),
             PersonName: $('#txtName').val(),
@@ -352,7 +353,14 @@ function GetFranchiseAndCorporateName() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            var data = response.filter(x => x.companyTypeId == 2 || x.companyTypeId == 3);
+            var data = null
+            var profileid = getCookieValue("profileid");
+            if (!IsNullOrEmpty(profileid)) {
+                if (profileid == ProfileType.ADMIN)
+                    data = response.filter(x => x.companyTypeId == 2);
+                if (profileid == ProfileType.Franchise || profileid == ProfileType.Corporate || profileid == ProfileType.Vendor)
+                    data = response.filter(x => x.companyTypeId == 3);
+            }
             const CompanyAndFranchiseDrp = document.getElementById("ddlCompanyAndFranchise");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = 0;
@@ -374,11 +382,12 @@ function GetFranchiseAndCorporateName() {
 }
 function ValidationCheck() {
     if (IsNullOrEmpty($("#txtName").val())) {
+        debugger;
         toastr.warning("Please enter a valid User Name", "Validation Error");
         return false;
     }
     if (IsNullOrEmpty($("#txtLoginName").val()) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test($("#txtLoginName").val())) {
-        toastr.warning("Login Name is Required", "Validation Error");
+        toastr.warning("Login Name must be 3–20 characters, start with a letter, and contain only letters,No numbers and WhightSpace, . or _ (no consecutive symbols)", "Invalid Format");
         return false;
     }
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
@@ -391,6 +400,7 @@ function ValidationCheck() {
     //    toastr.warning("Please enter a valid email", "Validation Error");
     //    return false;
     //}
+
     if (IsNullOrEmpty($("#ddlCompanyAndFranchise").val()) || !isValidateSelect($("#ddlCompanyAndFranchise").val())) {
         toastr.warning("Please select a Corporate Name", "Validation Error");
         return false;
