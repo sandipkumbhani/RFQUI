@@ -9,9 +9,14 @@ using System.Threading.Tasks;
 
 namespace RFQ.UI.Application.Provider
 {
-    class MasterUserActivityLogServices : IMasterUserActivityLogServices
+    public class MasterUserActivityLogServices : IMasterUserActivityLogServices
     {
         private readonly IMasterUserActivityLogAdaptor _masterUserActivityLogAdaptor;
+
+        public MasterUserActivityLogServices(IMasterUserActivityLogAdaptor masterUserActivityLogAdaptor)
+        {
+            _masterUserActivityLogAdaptor = masterUserActivityLogAdaptor;
+        }
 
         public Task<MasterUserActivityLogRequestDto?> AddMasterUserActivityLog(MasterUserActivityLogRequestDto masterUserActivityLogRequestDto)
         {

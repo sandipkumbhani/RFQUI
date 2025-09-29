@@ -14,6 +14,7 @@ namespace RFQ.UI.Application.Provider
     public class VehiclePlacementService : IVehiclePlacementService
     {
         private readonly IVehiclePlacementAdaptor _vehiclePlacementAdaptor;
+
         public VehiclePlacementService(IVehiclePlacementAdaptor vehiclePlacementAdaptor)
         {
             _vehiclePlacementAdaptor = vehiclePlacementAdaptor;
