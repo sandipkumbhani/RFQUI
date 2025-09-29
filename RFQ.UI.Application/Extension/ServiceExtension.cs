@@ -40,6 +40,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IReceivedVendorCostingService, ReceivedVendorCostingService>();
             services.AddScoped<IWhatsAppService, WhatsAppService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IMasterUserActivityLogServices, MasterUserActivityLogServices>();
             return services;
         }
     }

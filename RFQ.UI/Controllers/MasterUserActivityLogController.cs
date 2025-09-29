@@ -21,13 +21,13 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddMasterUserActivityLog([FromBody] MasterUserActivityLogRequestDto masterUserActivityLogRequestDto)
+        public async Task<IActionResult> AddMasterUserActivityLog(MasterUserActivityLogRequestDto masterUserActivityLogRequestDto)
         {
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
+                //string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+                //string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (masterUserActivityLogRequestDto != null)
                 {
@@ -49,5 +49,27 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> AddMasterUserActivityLog([FromBody] MasterUserActivityLogRequestDto masterUserActivityLogRequestDto)
+        //{
+        //    try
+        //    {
+        //        if (masterUserActivityLogRequestDto == null)
+        //        {
+        //            return Json(new { result = "fail", message = "Request data is null." });
+        //        }
+
+        //        var result = await _masterUserActivityLogServices.AddMasterUserActivityLog(masterUserActivityLogRequestDto);
+        //        return Json(new { result });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Consider logging the exception here for debugging
+        //        return Json(new { result = "error", message = ex.Message });
+        //    }
+        //}
+
     }
 }

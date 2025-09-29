@@ -1,5 +1,6 @@
 ﻿var orderColumnName = '';
 var orderDirName = '';
+const linkId = urlParams.get('LinkId');
 function ValidateTextbox(inputId) {
     var value = $(inputId).val();
     //var pattern = /^[A-Za-z0-9]+$/; 
@@ -786,4 +787,79 @@ function exportToCSV(filename, rows) {
         link.click();
         document.body.removeChild(link);
     }
+}
+
+
+//function addMasterUserActivityLog(LogUid, LogTypeId, Description ) {
+//    console.log("Calling AJAX..."); // Add this
+//    debugger;
+
+//    var logData = {
+//        //UserActivityLogId: null,
+//        LogUid: LogUid ??0,
+//        LogLinkId: linkId,
+//        //LinkId: linkId,
+//        LogTypeId: LogTypeId ??0,
+//        //UserId: 999,
+//        LogDateTime: new Date().toISOString(),
+//        Description: Description ?? null
+//    };
+
+//    $.ajax({
+//        url: '/MasterUserActivityLog/AddMasterUserActivityLog',
+//        type: 'POST',
+//        contentType: "application/json",
+//        data: JSON.stringify(logData),
+//        success: function (response) {
+//            console.log("API response:", response);
+//            if (response.result) {
+//                toastr.success("Activity logged successfully!");
+//            } else {
+//                toastr.warning("Failed to log activity.");
+//            }
+//        },
+//        error: function (xhr, status, error) {
+//            console.error("Error calling API:", error);
+//            toastr.error("An error occurred while logging activity.");
+//        }
+//    });
+//}
+
+// In your common.js (or shared util file)
+function addMasterUserActivityLog(LogUid, LogTypeId, Description = null, linkId = 0, UserId = 0) {
+    console.log("Logging activity with data:", {
+        LogUid,
+        LogTypeId,
+        Description,
+        linkId,
+        UserId
+    });
+
+    const logData = {
+        LogUid: LogUid ?? 0,
+        LogLinkId: linkId ?? 0,
+        LogTypeId: LogTypeId ?? 0,
+        UserId: UserId ?? 0,
+        LogDateTime: new Date().toISOString(),
+        Description: Description ?? null
+    };
+
+    $.ajax({
+        url: '/MasterUserActivityLog/AddMasterUserActivityLog',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(logData),
+        success: function (response) {
+            console.log("API response:", response);
+            if (response.result) {
+                toastr.success("Activity logged successfully!");
+            } else {
+                toastr.warning("Failed to log activity.");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error calling API:", error, xhr, status);
+            toastr.error("An error occurred while logging activity.");
+        }
+    });
 }
