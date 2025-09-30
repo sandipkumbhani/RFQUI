@@ -7,12 +7,13 @@ var companyid = ''
 var locationid;
 $(document).ready(function () {
 
-    // Get profileid from cookies value and if user is admin then Disable location dropdwn
     profileid = getCookieValue('profileid');
     companyid = getCookieValue('companyid');
     locationid = getCookieValue('locationid');
+
     if (profileid == EnumInternalMaster.ADMIN) {
         $('#ddlLocation').prop('disabled', true);
+        $("#btnActivitylog").removeClass('d-none');
     }
     $("#btnCancel").on("click", function () {
         FetchUser();
