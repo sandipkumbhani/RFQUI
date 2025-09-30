@@ -470,41 +470,6 @@
                         <!--- Sidemenu -->
                         <ul id="leftside-menu-container" class="side-nav">
 
-                            <li class="side-nav-item dropdown" id="side-nav-vehicle-dropdown">
-                                <a href="javascript:void(0)" class="side-nav-link">
-                                    <i class="ri-car-line"></i>
-                                    <i class="ri-car-fill"></i>
-                                    <span> Vehicle </span>
-                                </a>
-                                <ul class="sidebar-submenu" id="sidebar-submenu-vehicle">
-                                    <li>
-                                        <a href="javascript:void(0)" class="sidebar-title" id="sidebar-title-vehicle">
-                                            vehicle <i class="ri-arrow-right-s-line"></i>
-                                        </a>
-                                        <ul class="nav-sub-childmenu submenu-content" id="submenu-content-vehicle">
-                                            <li>
-                                                <a href="vehicle.html" id="submenu-vehicle-link">Vehicle</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">text</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">text</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="invoice-preview.html" id="submenu-invoice-preview">
-                                            Preview <i class="ri-arrow-right-s-line"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="invoice-add.html" id="submenu-invoice-add">
-                                            Add new <i class="ri-arrow-right-s-line"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
                         </ul>
                         <!--- End Sidemenu -->
                         <div class="clearfix"></div>
@@ -524,6 +489,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+
         $(document).ready(function () {
            var profileid = getCookieValue("profileid");
            var UserEmail = getCookieValue("UserEmail");
@@ -565,28 +531,6 @@
                         return acc;
                     }, {});
 
-                    // for (let groupId in groupedItems) {
-                    //     let group = groupedItems[groupId];
-                    //     let collapseId = 'submenu-' + groupId;
-                    //     sidebarHtml += `<li class="side-nav-item dropdown " id="group-${groupId}">
-                    //     <a href="javascript:void(0)" class="side-nav-link" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
-                    //         <i class="${group.linkGroupIcon}"></i>
-                    //         <span> ${group.groupName} </span>
-                    //     </a>
-                    //     <ul class="sidebar-submenu collapse" id="${collapseId}">`;
-
-                    //     group.items.forEach((item, idx) => {
-                    //         sidebarHtml += `
-                    //     <li>
-                    //         <a href="${item.linkUrl}" class="side-nav-link" data-id="menuitem-${groupId}-${idx}">
-                    //             <i class="${item.linkIcon}"></i>
-                    //             <span> ${item.linkName} </span>
-                    //         </a>
-                    //     </li>`;
-                    //     });
-
-                    //     sidebarHtml += '</ul></li>';
-                    // }
                     for (let groupId in groupedItems) {
                         let group = groupedItems[groupId];
                         let collapseId = 'submenu-' + groupId;
@@ -626,6 +570,7 @@
         function toggleDropdown(element) {
             element.classList.toggle('dropdown-open');
         }
+
         function DropdownManageScript(){
             setTimeout(function () {
                         var currentUrl = window.location.pathname.toLowerCase();

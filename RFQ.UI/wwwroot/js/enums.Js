@@ -28,14 +28,22 @@ const EnumInternalMasterType = Object.freeze({
     WHATSAPP_PROVIDER: 10,
     RFQ_STATUS: 11,
     FAILURE_REASONS: 12,
-    TRACKING_TYPE:13
+    TRACKING_TYPE: 13
 });
 
 const EnumProfile = Object.freeze({
-    Admin : 1,
-    Branch :2,
-    Corporate : 3,
-    Franchise : 4,
+    Admin: 1,
+    Branch: 2,
+    Corporate: 3,
+    Franchise: 4,
     Vendor: 5,
-    Driver:6
+    Driver: 6
+});
+
+export const LogType = Object.freeze({
+    Login: 35,
+    Logout: 36,
+    Create: 37,
+    Update: 38,
+    Delete: 39
 });

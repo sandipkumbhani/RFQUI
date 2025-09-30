@@ -1,6 +1,5 @@
 ﻿var orderColumnName = '';
 var orderDirName = '';
-
 function ValidateTextbox(inputId) {
     var value = $(inputId).val();
     //var pattern = /^[A-Za-z0-9]+$/; 
@@ -79,6 +78,7 @@ function GetQueryParam(name) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
 // set all Input Box and select option is blue Border
 window.addEventListener('DOMContentLoaded', function () {
     const inputs = document.querySelectorAll('input,select');
@@ -380,13 +380,13 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.location}</td>
                         <td>${item.rfqDate ? new Date(item.rfqDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
                         <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true
-                        }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
                         <td>${item.indentNo}</td>
                         <td>${item.customerName}</td>
                         <td>${item.vehicleReqOn ? new Date(item.vehicleReqOn).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
@@ -441,13 +441,13 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.vehicleTypeName}</td>
                         <td>${item.requiredVehicles}</td>
                         <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true
-                        }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
                         <td>${item.consignerName}</td>
                         <td>${item.pickUpAddress}</td>
                         <td>${item.consigneeName}</td>
@@ -652,7 +652,7 @@ function GetAllPakingType(dropdownId) {
         }
     });
 }
-function GetAllLocation(dropdownId,companyIdParam,callback) {
+function GetAllLocation(dropdownId, companyIdParam, callback) {
     $.ajax({
         url: '/Location/GetAllLocationList',
         type: "GET",
@@ -741,7 +741,7 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
 }
 function GetAllItemName(dropdownId, companyIdParam) {
     $.ajax({
-        url: '/Product/GetDrpProductList', 
+        url: '/Product/GetDrpProductList',
         type: "GET",
         data: { companyId: companyIdParam },
         dataType: "json",
@@ -805,74 +805,26 @@ function exportToCSV(filename, rows) {
         document.body.removeChild(link);
     }
 }
-
-
-//function addMasterUserActivityLog(LogUid, LogTypeId, Description ) {
-//    console.log("Calling AJAX..."); // Add this
-//    debugger;
-
-//    var logData = {
-//        //UserActivityLogId: null,
-//        LogUid: LogUid ??0,
-//        LogLinkId: linkId,
-//        //LinkId: linkId,
-//        LogTypeId: LogTypeId ??0,
-//        //UserId: 999,
-//        LogDateTime: new Date().toISOString(),
-//        Description: Description ?? null
-//    };
-
-//    $.ajax({
-//        url: '/MasterUserActivityLog/AddMasterUserActivityLog',
-//        type: 'POST',
-//        contentType: "application/json",
-//        data: JSON.stringify(logData),
-//        success: function (response) {
-//            console.log("API response:", response);
-//            if (response.result) {
-//                toastr.success("Activity logged successfully!");
-//            } else {
-//                toastr.warning("Failed to log activity.");
-//            }
-//        },
-//        error: function (xhr, status, error) {
-//            console.error("Error calling API:", error);
-//            toastr.error("An error occurred while logging activity.");
-//        }
-//    });
-//}
-
-// In your common.js (or shared util file)
-function addMasterUserActivityLog(LogUid, LogTypeId, Description = null, linkId = 0, UserId = 0) {
-    console.log("Logging activity with data:", {
-        LogUid,
-        LogTypeId,
-        Description,
-        linkId,
-        UserId
-    });
-
-    const logData = {
-        LogUid: LogUid ?? 0,
-        LogLinkId: linkId ?? 0,
-        LogTypeId: LogTypeId ?? 0,
-        UserId: UserId ?? 0,
+function addMasterUserActivityLog(LogUid, LogTypeId, Description, UserId) {
+    debugger;
+    var urlParams = new URLSearchParams(window.location.search);
+    var linkId = urlParams.get('LinkId');
+    const body = {
+        LogUid: LogUid ?? 0,                
+        LogLinkId: linkId ?? 0,              
+        LogTypeId: LogTypeId ?? 0,                
+        UserId: UserId ?? 0,                
         LogDateTime: new Date().toISOString(),
-        Description: Description ?? null
+        Description: Description ?? null,
     };
 
     $.ajax({
         url: '/MasterUserActivityLog/AddMasterUserActivityLog',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(logData),
+        data: JSON.stringify(body),
         success: function (response) {
             console.log("API response:", response);
-            if (response.result) {
-                toastr.success("Activity logged successfully!");
-            } else {
-                toastr.warning("Failed to log activity.");
-            }
         },
         error: function (xhr, status, error) {
             console.error("Error calling API:", error, xhr, status);

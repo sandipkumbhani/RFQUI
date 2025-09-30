@@ -5,6 +5,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
+using RFQ.UI.Domain.ResponseDto;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -13,7 +14,7 @@ namespace RFQ.UI.Controllers
     {
         private readonly GlobalClass _globalClass;
         private readonly IMasterUserActivityLogServices _masterUserActivityLogServices;
-        private readonly ILogger <MasterUserActivityLogController> _logger;
+        private readonly ILogger<MasterUserActivityLogController> _logger;
 
         public MasterUserActivityLogController(GlobalClass globalClass, IMasterUserActivityLogServices masterUserActivityLogServices, ILogger<MasterUserActivityLogController> logger)
         {
@@ -27,32 +28,34 @@ namespace RFQ.UI.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AddMasterUserActivityLog(MasterUserActivityLogRequestDto masterUserActivityLogRequestDto)
+        public async Task<IActionResult> AddMasterUserActivityLog([FromBody] MasterUserActivityLogRequestDto RequestDto)
         {
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                //string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                //string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                if (masterUserActivityLogRequestDto != null)
+                RequestDto.UserId = Convert.ToInt32(userid);
+                if (RequestDto != null)
                 {
+                    var result = await _masterUserActivityLogServices.AddMasterUserActivityLog(RequestDto);
+                    return Json(new NewCommonResponseDto
+                    {
+                        Data = result,
+                        Message = "Sucsess",
+                        StatusCode = 200
 
-                    //masterUserActivityLogRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    //masterUserActivityLogRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                    //masterUserActivityLogRequestDto.CompanyId = Convert.ToInt32(companyId);
-                    var result = await _masterUserActivityLogServices.AddMasterUserActivityLog(masterUserActivityLogRequestDto);
-                    return Json(new { result });
+                    });
                 }
                 else
-                {
-                    return Json(new { result = "fail" });
-
-                }
+                    return Json(new NewCommonResponseDto
+                    {
+                        Data = null,
+                        StatusCode = 404
+                    });
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                return Json(new NewCommonResponseDto { Data = "error", Message = ex.Message, StatusCode = 500 });
             }
         }
 
