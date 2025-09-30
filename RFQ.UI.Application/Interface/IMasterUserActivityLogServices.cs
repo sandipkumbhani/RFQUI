@@ -10,7 +10,5 @@ namespace RFQ.UI.Application.Interface
     public interface IMasterUserActivityLogServices
     {
         Task<MasterUserActivityLogRequestDto?> AddMasterUserActivityLog(MasterUserActivityLogRequestDto masterUserActivityLogRequestDto);
-
-
     }
 }

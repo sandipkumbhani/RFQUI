@@ -47,11 +47,21 @@ $(document).ready(function () {
 $("#btnAddUser").on("click", function (e) {
     e.preventDefault();
     $("#userListSection").hide();
+    $("#btnUpdate").hide();
     $("#userFormSection").show();
+    $("#btnSaveForm").show();
+    $("#btnSaveAndNewForm").show();
+    $("#txtPassword").prop("disabled", false);
     $('#ddlCompanyAndFranchise').val(Number(companyid)).trigger('change');
+    
 
-    if (profileid != EnumProfile.Admin)
+    if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
         $('#ddlCompanyAndFranchise').prop('disabled', true);
+    }
+    else {
+        $('#ddlCompanyAndFranchise').val(0).trigger('change');
+        $('#ddlCompanyAndFranchise').prop('disabled', false);
+    }
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -259,9 +269,17 @@ function EditUser(userId) {
     if (formdata.locationId != 0) {
         $('#ddlLocation').val(formdata.locationId).trigger('change');
     }
-    if (profileid != EnumInternalMaster.ADMIN) {
+    //if (profileid != EnumInternalMaster.ADMIN) {
+    //    $('#ddlCompanyAndFranchise').prop('disabled', true);
+    //}
+    if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
         $('#ddlCompanyAndFranchise').prop('disabled', true);
     }
+    else {
+        $('#ddlCompanyAndFranchise').val(0).trigger('change');
+        $('#ddlCompanyAndFranchise').prop('disabled', false);
+    }
+
     if (profileid == EnumProfile.Branch) {
         $('#ddlLocation').val(Number(formdata.locationId)).trigger('change');
         $('#ddlLocation').prop('disabled', true);
@@ -303,7 +321,6 @@ function UpdateUser() {
         if (!isvalid) {
             return;
         }
-        debugger;
         var UserViewModel = {
             UserId: $('#hdnUserId').val(),
             PersonName: $('#txtName').val(),
@@ -356,9 +373,9 @@ function GetFranchiseAndCorporateName() {
             var data = null
             var profileid = getCookieValue("profileid");
             if (!IsNullOrEmpty(profileid)) {
-                if (profileid == ProfileType.ADMIN)
+                if (profileid == EnumProfile.Admin)
                     data = response.filter(x => x.companyTypeId == 2);
-                if (profileid == ProfileType.Franchise || profileid == ProfileType.Corporate || profileid == ProfileType.Vendor)
+                if (profileid == EnumProfile.Franchise || profileid == EnumProfile.Corporate || profileid == EnumProfile.Vendor)
                     data = response.filter(x => x.companyTypeId == 3);
             }
             const CompanyAndFranchiseDrp = document.getElementById("ddlCompanyAndFranchise");

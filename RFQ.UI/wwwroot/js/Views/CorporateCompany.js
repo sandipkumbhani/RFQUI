@@ -200,7 +200,7 @@ function GetAllFranchiseList(callback) {
             const select = document.getElementById("ddlFranchisename");
             select.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Franchise";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
