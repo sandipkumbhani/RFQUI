@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RFQ.UI.Domain.Helper;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -57,6 +58,39 @@ namespace RFQ.UI.Infrastructure.Provider
             }
 
             return null;
+        }
+
+        public async Task<PageList<MasterUserActivityLogResponseDto>> GetAllMasterUserActivityLogList(PagingParam pagingParam)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                    var requestDto = JsonConvert.SerializeObject(pagingParam);
+                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
+                    var baseUrl = _fleetLynkApiUrl + _config["MasterUserActivityLog:GetAllMasterUserActivityLogList"];
+                    var response = await httpClient.PostAsync(baseUrl, requestContent);
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                    if (responseModel?.Data?.result != null)
+                    {
+                        var activityLog = JsonConvert.DeserializeObject<List<MasterUserActivityLogResponseDto>>(
+                            JsonConvert.SerializeObject(responseModel.Data.result)
+                        );
+                        int pageNumber = responseModel.Data.pageNumber;
+                        int pageSize = responseModel.Data.pageSize;
+                        int totalRecordCount = responseModel.Data.totalRecordCount;
+                        return new PageList<MasterUserActivityLogResponseDto>(activityLog, totalRecordCount, pageNumber, pageSize);
+                    }
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

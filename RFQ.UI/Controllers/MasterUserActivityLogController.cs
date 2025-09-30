@@ -3,6 +3,8 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -20,6 +22,10 @@ namespace RFQ.UI.Controllers
             _logger = logger;
         }
 
+        public IActionResult MasterUserActivityLog()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> AddMasterUserActivityLog(MasterUserActivityLogRequestDto masterUserActivityLogRequestDto)
         {
@@ -50,26 +56,35 @@ namespace RFQ.UI.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetAllMasterUserActivityLogList([FromBody] PagingParam pagingParam)
+        {
+            try
+            {
+                var masterUserActivityLogViewModel = new MasterUserActivityLogResponseDto();
+                var result = await _masterUserActivityLogServices.GetAllMasterUserActivityLogList(pagingParam);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new
+                    {
+                        draw = result.PageNumber,
+                        recordsTotal = result.TotalRecordCount,
+                        recordsFiltered = result.TotalRecordCount,
+                        data = result.Result
+                    });
+                }
+                else
+                {
+                    return View(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
 
-        //[HttpPost]
-        //public async Task<IActionResult> AddMasterUserActivityLog([FromBody] MasterUserActivityLogRequestDto masterUserActivityLogRequestDto)
-        //{
-        //    try
-        //    {
-        //        if (masterUserActivityLogRequestDto == null)
-        //        {
-        //            return Json(new { result = "fail", message = "Request data is null." });
-        //        }
+        }
 
-        //        var result = await _masterUserActivityLogServices.AddMasterUserActivityLog(masterUserActivityLogRequestDto);
-        //        return Json(new { result });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Consider logging the exception here for debugging
-        //        return Json(new { result = "error", message = ex.Message });
-        //    }
-        //}
 
     }
 }

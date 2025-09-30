@@ -1167,3 +1167,92 @@ $(document).ready(function () {
 
 
 });
+
+$(document).ready(function () {
+    const table = $('#ActivityLogTable').DataTable({
+        responsive: false,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                //extend: 'csv',
+                text: '<i class="ri-file-excel-line"></i> Export All',
+                action: function (e, dt, node, config) {
+                    let headers = [];
+                    let csvData = [];
+
+                    $('#ActivityLogTable thead th').each(function () {
+                        headers.push($(this).text().trim());
+                    });
+                    csvData.push(headers); // push header row as array
+
+                    $('#ActivityLogTable tbody tr').each(function () {
+                        let row = [];
+                        $(this).find('td').each(function () {
+                            row.push($(this).text().trim() || "");
+                        });
+                        csvData.push(row); // push row as array
+                    });
+
+                    exportToCSV("ActivityLogTable", csvData);
+                }
+            }
+        ],
+
+        paging: false,
+        info: true,
+        lengthChange: false,
+        pageLength: 10,
+        columnDefs: [
+            // { orderable: false, className: 'details-control', targets: 0 }, // Expand control
+            { orderable: false, targets: 'no-sort' }
+        ],
+        language: {
+            paginate: {
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
+            }
+        }
+    });
+
+    // Add child row toggle
+    $('#ActivityLogTable tbody').on('click', 'td.details-control', function () {
+        debugger;
+        const tr = $(this).closest('tr');
+        const row = table.row(tr);
+
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass('shown fulltable');
+        } else {
+            row.child(format(row.data())).show();
+            tr.addClass('shown fulltable'); // Add your custom class here
+        }
+    });
+
+
+    // Move export buttons
+    table.buttons().container().appendTo('#exportPlacementButtons');
+
+    // Search
+    $('#PlacementTableSearch').on('keyup', function () {
+        table.search(this.value).draw();
+    });
+
+    // Move pagination
+    $('#PlacementTable_paginate').appendTo('#customPagination');
+
+    // Filter dropdown
+    $('.filter-option-corporate').on('click', function () {
+        const value = $(this).data('value');
+        const label = $(this).text();
+        $('#filterDropdownCorporate').text(label === 'All Status' ? 'Filter' : `${label}`);
+        table.column(2).search(value).draw();
+    });
+
+    // Page length
+    $('#pageLength').on('change', function () {
+        table.page.len(this.value).draw();
+    });
+
+
+});
