@@ -13,6 +13,7 @@ namespace RFQ.UI.Domain.ResponseDto
         public int LogLinkId { get; set; }
         public string LinkName { get; set; }
         public int LogTypeId { get; set; }
+        public string InternalMasterName { get; set; }
         public int UserId { get; set; }
         public string PersonName { get; set; }
         public DateTime LogDateTime { get; set; }

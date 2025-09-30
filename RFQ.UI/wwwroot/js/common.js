@@ -495,14 +495,11 @@ function GetGridHtml(response, gridTableName) {
                       <tr>
                         <td>${item.logUid}</td>
                         <td>${item.linkName}</td>
-                        <td>${item.logTypeId}</td>
+                        <td>${item.internalMasterName}</td>
                         <td>${item.personName}</td>
                         <td>${item.logDateTime}</td>
                         <td>${item.description}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditRfqFinalizatioin(${item.rfqFinalIdId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteRfqFinalizatioin(${item.rfqFinalIdId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
+                        
                     </tr>`;
         });
     }

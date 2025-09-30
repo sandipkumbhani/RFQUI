@@ -3,13 +3,13 @@
     public class UserRequestDto
     {
         public int UserId { get; set; }
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
         public string? LocationId { get; set; }
         public int ProfileId { get; set; }
         public string? PersonName { get; set; }
         public string? LoginId { get; set; }
         public string? Password { get; set; }
-        public string EmailId { get; set; }
+        public string? EmailId { get; set; }
         public string? MobileNo { get; set; }
         public int StatusId { get; set; } = 30;
         public int CreatedBy { get; set; }
