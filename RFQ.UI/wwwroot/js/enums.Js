@@ -40,7 +40,7 @@ const EnumProfile = Object.freeze({
     Driver: 6
 });
 
-export const LogType = Object.freeze({
+ const LogType = Object.freeze({
     Login: 35,
     Logout: 36,
     Create: 37,
