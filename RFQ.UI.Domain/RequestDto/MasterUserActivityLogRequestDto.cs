@@ -18,7 +18,7 @@ namespace RFQ.UI.Domain.RequestDto
 
         public int? UserId { get; set; }
 
-        public DateTime LogDateTime { get; set; }
+        public DateTime? LogDateTime { get; set; }
 
         public string? Description { get; set; }
 

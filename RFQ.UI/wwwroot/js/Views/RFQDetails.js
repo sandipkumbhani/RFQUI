@@ -512,6 +512,7 @@ function SaveAndSaveNew(action) {
                     rfqId = response.rfqRequestDto.rfqId;
                     Saveattachment(rfqId);
                     toastr.success("Request For Quote Saved Sucessfully", "success");
+                    addMasterUserActivityLog(0, LogType.Create, "Request For Quote Saved Sucessfully", 0);
                 } else {
                     toastr.error("Failed to Submit Request For Quote.", "Error");
                 }
@@ -539,6 +540,7 @@ function SaveAndSaveNew(action) {
                     rfqId = response.rfqRequestDto.rfqId;
                     Saveattachment(rfqId);
                     toastr.success("Request For Quote Saved Sucessfully", "success");
+                    addMasterUserActivityLog(0, LogType.Create, "Request For Quote Saved Sucessfully", 0);
                     $('#RfqDetailsForm')[0].reset();
                     $('.select2-custom').val(null).trigger('change');
                     FetchRfqNo();
@@ -667,6 +669,7 @@ function UpdateRfq() {
             success: function (result) {
                 if (result.result === "success") {
                     toastr.success("Rfq Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "Rfq Details Updated Successfully!", 0);
                     FetchRfqList();
                 } else {
                     toastr.error("Failed to Update Rfq Details", "Error");
@@ -729,6 +732,7 @@ function DeleteRfq(rfqID) {
                             DeleteMasterAttachment(result[0].attachmentId);
                         }
                         toastr.success("Rfq Details Deleted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Delete, "Rfq Details Deleted Successfully!", 0);
                         $('#currentPage').val(1);
                         FetchRfqList();
                     },

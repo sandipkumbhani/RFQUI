@@ -497,7 +497,14 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.linkName}</td>
                         <td>${item.internalMasterName}</td>
                         <td>${item.personName}</td>
-                        <td>${item.logDateTime}</td>
+                        <td>
+                            ${item.logDateTime
+                                ? new Date(item.logDateTime).toLocaleString('en-GB', {
+                                    day: '2-digit', month: '2-digit', year: 'numeric',
+                                    hour: '2-digit', minute: '2-digit', second: '2-digit'
+                                }).replace(',', '')
+                                : ''}
+                        </td>
                         <td>${item.description}</td>
                         
                     </tr>`;
@@ -811,7 +818,7 @@ function addMasterUserActivityLog(LogUid, LogTypeId, Description, UserId) {
         LogLinkId: linkId ?? 0,              
         LogTypeId: LogTypeId ?? 0,                
         UserId: UserId ?? 0,                
-        LogDateTime: new Date().toISOString(),
+        LogDateTime: null,
         Description: Description ?? null,
     };
 

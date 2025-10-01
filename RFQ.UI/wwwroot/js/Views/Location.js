@@ -153,6 +153,7 @@ function SaveLocation(action) {
                 }
                 else if (response == "Location Saved") {
                     toastr.success("Location Details Submitted Successfully!");
+                    addMasterUserActivityLog(0, LogType.Create, "Location Details Submitted Successfully!", 0);
                     if (typeof this.completeOnSuccess === "function") {
                         this.completeOnSuccess();
                     }
@@ -182,6 +183,7 @@ function SaveLocation(action) {
                 }
                 else if (response == "Location Saved") {
                     toastr.success("Location Details Submitted Successfully!");
+                    addMasterUserActivityLog(0, LogType.Create, "Location Details Submitted Successfully!", 0);
                     $('#LocationForm')[0].reset();
                     $('#ddlCity').val(null).trigger('change');
                 }
@@ -228,6 +230,7 @@ function UpdateLocation() {
                 if (result.result == "success") {
                     FetchLocationList();
                     toastr.success("Location Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "Location Details Updated Successfully!", 0);
                     $("#locationFormSection").hide();
                     $("#locationListSection").show();
                     $('#LocationForm')[0].reset();
@@ -294,6 +297,7 @@ function DeleteLocation(locationId) {
                 success: function (response) {
                     FetchLocationList();
                     toastr.success("Location Details Deleted Successfully!");
+                    addMasterUserActivityLog(0, LogType.Delete, "Location Details Deleted Successfully!", 0);
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Delete Location Details!", "Error");
