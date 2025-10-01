@@ -54,7 +54,7 @@ $("#btnAddUser").on("click", function (e) {
     $("#btnSaveAndNewForm").show();
     $("#txtPassword").prop("disabled", false);
     $('#ddlCompanyAndFranchise').val(Number(companyid)).trigger('change');
-    
+
 
     if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
         $('#ddlCompanyAndFranchise').prop('disabled', true);
@@ -426,10 +426,14 @@ function ValidationCheck() {
     if ($('#ddlLocation').is(':disabled')) {
         return true;
     }
-    //else if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
-    //    toastr.warning("Please select a Location", "Validation Error");
-    //    return false;
-    //}
+
+    if (profileid == EnumProfile.Corporate) {
+        if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
+            toastr.warning("Please select a Location", "Validation Error");
+            return false;
+        }
+    }
+
     if (IsNullOrEmpty($("#txtMobileNo").val()) || !isMobile($("#txtMobileNo").val())) {
         toastr.warning("Please enter a valid Mobile Number", "Validation Error");
         return false;

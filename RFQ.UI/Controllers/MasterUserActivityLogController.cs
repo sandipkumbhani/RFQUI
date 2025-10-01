@@ -5,7 +5,6 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
-using RFQ.UI.Domain.ResponseDto;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
