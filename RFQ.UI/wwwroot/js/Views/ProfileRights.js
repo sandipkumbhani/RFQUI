@@ -51,6 +51,7 @@ function SaveProfileRights() {
         data: JSON.stringify(formdata),
         success: function (response) {
             toastr.success("Profilerigt submitted successfully!");
+            addMasterUserActivityLog(0, LogType.Create, "Profilerigt submitted successfully!", 0);
         },
         error: function (req, status, error) {
             toastr.error("Failed to submit Profile Rights!");

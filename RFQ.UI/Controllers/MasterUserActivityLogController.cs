@@ -34,6 +34,7 @@ namespace RFQ.UI.Controllers
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                RequestDto.LogDateTime = DateTime.Now;
                 RequestDto.UserId = Convert.ToInt32(userid);
                 if (RequestDto != null)
                 {

@@ -309,6 +309,7 @@ function SaveAndSaveNew(action) {
             success: function (response) {
                 if (response) {
                     toastr.success("RFQ Finalization Submitted Successfully!", "Success");
+                    addMasterUserActivityLog(0, LogType.Create, "RFQ Finalization Submitted Successfully!", 0);
                     var selectedCheckBoxData = GetSelectedVendors()
                     SendAssignOrder(selectedCheckBoxData);
                     if (typeof this.completeOnSuccess === "function") {
@@ -336,6 +337,7 @@ function SaveAndSaveNew(action) {
             success: function (response) {
                 if (response) {
                     toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    addMasterUserActivityLog(0, LogType.Create, "RFQ Finalization Submitted Successfully!", 0);
                     $('#RFQForm')[0].reset();
                     $('.select2-custom').val(null).trigger('change');
                 } else {
@@ -447,6 +449,7 @@ function UpdateRfqFinalization() {
             success: function (result) {
                 if (result) {
                     toastr.success("Rfq Finalization Updated Successfully!", "Success");
+                    addMasterUserActivityLog(0, LogType.Update, "Rfq Finalization Updated Successfully!", 0);
                     var selectedCheckBoxData = GetSelectedVendors()
                     SendAssignOrder(selectedCheckBoxData);
                     FetchRfqFinalizationList();
@@ -479,6 +482,7 @@ function DeleteRfqFinalizatioin(rfqFinalIdId) {
                 success: function (response) {
                     if (response) {
                         toastr.success("Rfq Finalization Details Deleted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Delete, "Rfq Finalization Details Deleted Successfully!", 0);
                         $('#currentPage').val(1);
                         FetchRfqFinalizationList();
                     }

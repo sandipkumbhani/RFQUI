@@ -164,6 +164,8 @@ function SaveCustomer(action) {
                         partyId = response.data.partyId;
                         Saveattachment(partyId);
                         toastr.success("Customer Details Submitted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Create, "Customer Details Submitted Successfully!", 0);
+
                         if (typeof completeOnSuccess === "function") {
                             completeOnSuccess();
                         }
@@ -195,6 +197,7 @@ function SaveCustomer(action) {
                         partyId = response.data.partyId;
                         Saveattachment(partyId);
                         toastr.success("Customer Details Submitted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Create, "Customer Details Submitted Successfully!", 0);
                         $('#customerForm')[0].reset();
                         $('#ddlCity').val(null).trigger('change');
                         setTimeout(() => {
@@ -334,6 +337,7 @@ function UpdateCustomer() {
             success: function (result) {
                 if (result.result === "success") {
                     toastr.success("Customer Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "Customer Details Updated Successfully!", 0);
                     $("#addCustomerDiv").css('display', 'none');
                     FetchCustomerList();
                 } else {
@@ -355,6 +359,7 @@ function UpdateCustomer() {
                 if (response.result == "success") {
                     partyId = $("#hdnPartyId").val();
                     Saveattachment(partyId);
+
                 } else {
                     $("#dataDiv").html("Failed to update profile.");
                 }
@@ -394,6 +399,7 @@ function DeleteCustomer(partyId, linkId) {
                             DeleteMasterAttachment(attachments[0].attachmentId);
                         }
                         toastr.success("Customer details have been deleted successfully.");
+                        addMasterUserActivityLog(0, LogType.Delete, "Customer details have been deleted successfully.", 0);
                         $('#currentPage').val(1);
                         FetchCustomerList();
                     },

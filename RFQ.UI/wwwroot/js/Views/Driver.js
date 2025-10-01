@@ -285,6 +285,7 @@ function SaveDriver(uploadedFileName, callback) {
             if (driverId) {
                 Saveattachment(driverId);
                 toastr.success("Driver Details Submitted Successfully!");
+                addMasterUserActivityLog(0, LogType.Create, "Driver Details Submitted Successfully!", 0);
             } else {
                 toastr.error("Driver ID missing in server response", "Error");
             }
@@ -424,6 +425,7 @@ function UpdateDriver(fileName) {
         success: function (response) {
             if (response.result === "success") {
                 toastr.success("Driver Details Updated Successfully!");
+                addMasterUserActivityLog(0, LogType.Update, "Driver Details Updated Successfully!", 0);
                 FetchDriverList();
             }
             else {
@@ -610,6 +612,7 @@ function DeleteDriver(driverId, fileName, linkId) {
                             DeleteMasterAttachment(result[0].attachmentId);
                         }
                         toastr.success("Driver Details Deleted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Delete, "Driver Details Deleted Successfully!", 0);
                         $('#currentPage').val(1);
                         FetchDriverList();
 

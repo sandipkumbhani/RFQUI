@@ -956,6 +956,7 @@ function SaveVehiclePlacement(action) {
                     $("#btnSaveForm").prop('disabled', false);
                     $("#btnSaveAndNewForm").prop('disabled', false);
                     window.location.href = "../Dashboard/Dashboard";
+                    addMasterUserActivityLog(0, LogType.Create, "Vehicle Placement Submitted Successfully!", 0);
                 } else {
                     toastr.error("Failed to Submit Vehicle Placement Details.", "Error");
                 }
@@ -974,6 +975,7 @@ function SaveVehiclePlacement(action) {
             success: function (response) {
                 if (response) {
                     toastr.success("Vehicle Placement Saved Successfully!", "Success");
+                    addMasterUserActivityLog(0, LogType.Create, "Vehicle Placement Submitted Successfully!", 0);
                     $("#btnSaveForm").prop('disabled', false);
                     $("#btnSaveAndNewForm").prop('disabled', false);
                     $('#vehiclePlacementForm')[0].reset();
@@ -1041,6 +1043,7 @@ function ButtonUpdateClick() {
             success: function (result) {
                 if (result.result == "success") {
                     toastr.success("Vehicle Placement Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "Vehicle Placement Details Updated Successfully!", 0);
                     $("#formDiv").css('display', 'none');
                     FetchVehiclePlacement();
                     $('#vehiclePlacementForm')[0].reset();
@@ -1098,6 +1101,7 @@ function DeleteVehiclePlacement(placementId) {
                 success: function (response) {
                     if (response && response.result === "success") {
                         toastr.success("Vehicle Placement has been deleted successfully.");
+                        addMasterUserActivityLog(0, LogType.Delete, "Vehicle Placement has been deleted successfully.", 0);
                         $("#addReqBranchDiv").addClass('d-none');
                         $('#currentPage').val(1);
                         FetchVehiclePlacement();

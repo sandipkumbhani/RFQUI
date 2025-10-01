@@ -323,6 +323,7 @@ function SaveFranchise(fileName, callback) {
             let companyId = response.result.companyId;
             Saveattachment(companyId);
             toastr.success("Franchise Detials Submitted Successfully!");
+            addMasterUserActivityLog(0, LogType.Create, "Franchise Detials Submitted Successfully!", 0);
             if (typeof callback === "function") {
                 callback(companyId);
             }
@@ -457,6 +458,7 @@ function UpdateFranchise(fileName) {
         success: function (response) {
             if (response.result == "Success") {
                 toastr.success("Franchise Details Updated Successfully!");
+                addMasterUserActivityLog(0, LogType.Update, "Franchise Details Updated Successfully!", 0);
                 FetchFranchise();
             }
             else {
@@ -532,6 +534,7 @@ function DeleteFranchise(companyId, fileName, linkId) {
                             DeleteMasterAttachment(result[0].attachmentId);
                         }
                         toastr.success("Franchise Details Deleted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Delete, "Franchise Details Deleted Successfully!", 0);
                         $('#currentPage').val(1);
                         FetchFranchise();
 
