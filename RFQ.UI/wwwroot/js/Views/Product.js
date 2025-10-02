@@ -93,26 +93,25 @@ function SaveProduct(action) {
 
         });
     }
-    else if (action == "saveNew") {
+    
+    else if (action === "saveNew") {
         $.ajax({
             url: saveProductUrl,
-            method: 'POST',
+            type: 'POST',
             contentType: 'application/json',
-            dataType: "json",
             data: JSON.stringify(formData),
             success: function (response) {
-                response = JSON.parse(response)
-                if (response.success) {
-                    toastr.success("Item Save Successfully!");
+                if (response) {
+                    toastr.success("Item Save Successfully!", "Success");
                     addMasterUserActivityLog(0, LogType.Create, "Item Save Successfully!", 0);
                     $('#productForm')[0].reset();
+                    
                 } else {
-                    toastr.warning(response.message, "warning");
+                    toastr.error("Failed to productForm.", "Error");
                 }
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Product Details!", "Error");
-
             }
         });
     }

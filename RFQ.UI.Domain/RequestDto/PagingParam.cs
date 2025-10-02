@@ -10,5 +10,6 @@
         public string SearchValue { get; set; }
         public string OrderColumn { get; set; }
         public string OrderDir { get; set; }
+        public int UserId { get; set; }
     }
 }

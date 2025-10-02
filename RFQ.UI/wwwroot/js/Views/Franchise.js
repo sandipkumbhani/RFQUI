@@ -52,7 +52,7 @@ function Initialize() {
         paramName: "file",
         maxFiles: 1,
         parallelUploads: 1,
-        maxFilesize: 1,
+        maxFilesize: 4,
         addRemoveLinks: true,
         autoProcessQueue: false,
         acceptedFiles: "image/*",
