@@ -320,21 +320,40 @@ function SaveFranchise(fileName, callback) {
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function (response) {
-            let companyId = response.result.companyId;
-            Saveattachment(companyId);
-            toastr.success("Franchise Detials Submitted Successfully!");
-            addMasterUserActivityLog(0, LogType.Create, "Franchise Detials Submitted Successfully!", 0);
-            if (typeof callback === "function") {
-                callback(companyId);
+            if (response && response.success === true) {
+                let companyId = response.data.companyId;
+
+                Saveattachment(companyId);
+                toastr.success("Franchise Details Submitted Successfully!");
+                addMasterUserActivityLog(0, LogType.Create, "Franchise Details Submitted Successfully!", 0);
+
+                if (typeof callback === "function") {
+                    callback(companyId);
+                }
+            } else {
+                // Backend returned success: false (e.g., duplicate)
+                toastr.warning(response.message || "Franchise could not be saved.");
+
+                if (typeof callback === "function") {
+                    callback(null);
+                }
             }
         },
         error: function (xhr, status, error) {
+            console.error("AJAX Error:", {
+                status: status,
+                error: error,
+                responseText: xhr.responseText
+            });
+
             toastr.error("Failed to Submit Franchise Details!", "Error");
+
             if (typeof callback === "function") {
                 callback(null);
             }
         }
     });
+
     return companyId;
 };
 function FetchFranchise() {

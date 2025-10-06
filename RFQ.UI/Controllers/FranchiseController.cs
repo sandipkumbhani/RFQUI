@@ -70,39 +70,89 @@ namespace RFQ.UI.Controllers
             }
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> FranchiseSave([FromBody] FranchiseRequestDto franchiseRequestDto)
+        //{
+        //    try
+        //    {
+        //        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+
+        //        string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
+        //        string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
+        //        string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+
+        //        if (franchiseRequestDto != null)
+        //        {
+        //            franchiseRequestDto.CompanyTypeId = 2;
+        //            franchiseRequestDto.ParentCompanyId = Convert.ToInt32(companyId);
+        //            franchiseRequestDto.CreatedBy = Convert.ToInt32(userid);
+        //            franchiseRequestDto.UpdatedBy = Convert.ToInt32(userid);
+        //            franchiseRequestDto.CreatedOn = DateTime.Now;
+        //            franchiseRequestDto.UpdatedOn = DateTime.Now;
+
+        //            var result = await _fanchiseService.AddFranchise(franchiseRequestDto);
+        //            return Json(new { result });
+        //        }
+        //        else
+        //        {
+        //            return Json(new { result = "Failed" });
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //}
+
+
         [HttpPost]
         public async Task<IActionResult> FranchiseSave([FromBody] FranchiseRequestDto franchiseRequestDto)
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-
-                if (franchiseRequestDto != null)
+                if (franchiseRequestDto == null)
                 {
-                    franchiseRequestDto.CompanyTypeId = 2;
-                    franchiseRequestDto.ParentCompanyId = Convert.ToInt32(companyId);
-                    franchiseRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    franchiseRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                    franchiseRequestDto.CreatedOn = DateTime.Now;
-                    franchiseRequestDto.UpdatedOn = DateTime.Now;
+                    return Json(new { success = false, message = "Invalid franchise data." });
+                }
 
-                    var result = await _fanchiseService.AddFranchise(franchiseRequestDto);
-                    return Json(new { result });
-                }
-                else
+                // Parse JWT token to extract claims
+                var jwtHandler = new JwtSecurityTokenHandler();
+                var jwtToken = jwtHandler.ReadJwtToken(_globalClass.Token);
+
+                string profileId = jwtToken.Claims.FirstOrDefault(c => c.Type == "profileid")?.Value;
+                string companyId = jwtToken.Claims.FirstOrDefault(c => c.Type == "companyid")?.Value;
+                string userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "userid")?.Value;
+
+                if (string.IsNullOrEmpty(companyId) || string.IsNullOrEmpty(userId))
                 {
-                    return Json(new { result = "Failed" });
+                    return Json(new { success = false, message = "Token is missing required claims." });
                 }
+
+                // Set metadata
+                franchiseRequestDto.CompanyTypeId = 2;
+                franchiseRequestDto.ParentCompanyId = Convert.ToInt32(companyId);
+                franchiseRequestDto.CreatedBy = Convert.ToInt32(userId);
+                franchiseRequestDto.UpdatedBy = Convert.ToInt32(userId);
+                franchiseRequestDto.CreatedOn = DateTime.Now;
+                franchiseRequestDto.UpdatedOn = DateTime.Now;
+
+                var result = await _fanchiseService.AddFranchise(franchiseRequestDto);
+
+                if (result == null)
+                {
+                    return Json(new { success = false, message = "Franchise already exists with the same name." });
+
+                }
+
+                return Json(new { success = true, data = result });
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+   
+                return StatusCode(500, "An internal error occurred while saving the franchise.");
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> GetAllFranchise([FromBody] PagingParam pagingParam)

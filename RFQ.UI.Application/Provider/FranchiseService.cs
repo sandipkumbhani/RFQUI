@@ -13,10 +13,16 @@ namespace RFQ.UI.Application.Provider
         {
             _franchiseAdaptor = franchiseAdaptor;
         }
+        //public Task<FranchiseRequestDto> AddFranchise(FranchiseRequestDto franchiseRequestDto)
+        //{
+        //    return _franchiseAdaptor.AddFranchise(franchiseRequestDto);
+        //}
+
         public Task<FranchiseRequestDto> AddFranchise(FranchiseRequestDto franchiseRequestDto)
         {
             return _franchiseAdaptor.AddFranchise(franchiseRequestDto);
         }
+
 
         public Task<string> DeleteFranchise(int companyId)
         {
