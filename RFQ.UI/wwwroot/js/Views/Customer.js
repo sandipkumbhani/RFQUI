@@ -158,7 +158,6 @@ function SaveCustomer(action) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                debugger;
                 if (response != null) {
                     if (response.statusCode == 200) {
                         partyId = response.data.partyId;
@@ -247,6 +246,7 @@ function EditCustomer(partyId) {
         var panVerifiedDate = new Date(formData.panVerifiedOn).toLocaleDateString('en-CA');
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
+        $("#panEKycButton").click();
         $("#txtCustomerName").val(formData.partyName);
         //$("#txtCustomerCode").val(formData.customerCode);
         $("#from-search-box").val(formData.addressLine);
