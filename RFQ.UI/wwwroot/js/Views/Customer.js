@@ -146,7 +146,7 @@ function SaveCustomer(action) {
         LinkId: linkId
 
     }
-    
+
     if (action == "save") {
         var completeOnSuccess = function () {
             FetchCustomerList();
@@ -173,7 +173,7 @@ function SaveCustomer(action) {
                         toastr.warning(response.message, "Duplicate Entry");
                     else
                         toastr.error(response.message || "Unexpected error occurred.", "Error");
-                    
+
                 } else {
                     toastr.error("Failed to Submit Customer Details", "Error");
                 }
@@ -221,17 +221,19 @@ function SaveCustomer(action) {
     return partyId;
 };
 function EditCustomer(partyId) {
-    
+
     var data = viewModelDto.filter(x => x.partyId === partyId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
         var attachmentData = list;
+        debugger;
         $('#tableDiv').css('display', 'none');
         $("#formDiv").css('display', 'Block');
         $("#btnSaveCustomer").hide();
         $("#btnUpdate").show();
         $("#SavenewButton").hide();
         $("#txtGstNumber").val(formData.gstNo);
+        $("#txtVerifiedGstNo").val(formData.gstNo);
         $("#hdnPartyId").val(formData.partyId);
         $("#txtLinkId").val(formData.linkId);
         $("#txtLegalName").val(formData.legalName);
@@ -264,7 +266,7 @@ function EditCustomer(partyId) {
         if (attachmentData.length > 0) {
             EditMasterAttachment(attachmentData);
         }
-        
+
     });
 }
 function UpdateCustomer() {
@@ -303,7 +305,7 @@ function UpdateCustomer() {
             Code: $("#txtCustomerCode").val(),
             GSTAddress: $("#txtGstAddress").val(),
             LinkId: linkId
-            
+
         };
 
         let repeaterItems = document.querySelectorAll("[data-repeater-item]");
@@ -442,7 +444,7 @@ function GstEKycClick() {
                         $("#txtCustomerName").val(gstModel.tradeName),
                         $("#txtAadharVerified").val(gstModel.aadhaarVerified),
                         $("#txtGstVerifiedOn").val(new Date().toISOString().split('T')[0]),
-                        $("#txtVerifiedGstNo").val()
+                        $("#txtVerifiedGstNo").val(gstModel.gstNo)
                 } else {
                     toastr.warning(response.messageDescription, "Error");
                     ClearGstFields();
