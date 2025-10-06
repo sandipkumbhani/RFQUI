@@ -293,5 +293,35 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<string?> GetAutoCustomerCode()
+        {
+            try
+            {
+                using var _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var url = _fleetLynkApiUrl + _config["Customer:GetAutoCustomerCode"];
+                var response = await _httpClient.GetAsync(url);
+
+                response.EnsureSuccessStatusCode(); // throws if status != 200-299
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseContent);
+                if (responseModel != null && responseModel.Data != null)
+                {
+                    return responseModel.Data.ToString();
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error fetching auto customer code.", ex);
+            }
+        }
+
     }
 }

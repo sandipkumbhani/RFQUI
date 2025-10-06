@@ -54,6 +54,7 @@ $(document).ready(function () {
         FetchCustomerList();
     });
     InitializeFields();
+    getAutoCustomerCode();
     GetAllCityList("ddlCity");
     UpdateCustomer();
     GstEKycClick();
@@ -635,4 +636,18 @@ function ValidationCheck() {
         return false;
     }
     return true;
+}
+
+function getAutoCustomerCode() {
+    $.ajax({
+        url: '/Customer/GetAutoCustomerCode', // Replace with your controller name
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            $("#txtCustomerCode").val(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching customer code:', error);
+        }
+    });
 }

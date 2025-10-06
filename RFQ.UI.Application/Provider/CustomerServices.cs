@@ -51,5 +51,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _customerAdaptor.GetDrpCustomerList(companyId);
         }
+        public async Task<string?> GetAutoCustomerCode()
+        {
+            return await _customerAdaptor.GetAutoCustomerCode();
+        }
     }
 }
