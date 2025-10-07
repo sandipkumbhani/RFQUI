@@ -149,7 +149,7 @@ function SaveLocation(action) {
             data: JSON.stringify(formdata),
             success: function (response) {
                 if (response == "Location Already Exists") {
-                    toastr.error("Location already exists for this Company", "Error");
+                    toastr.warning("This location already exists for the selected company.", "Warning");
                 }
                 else if (response == "Location Saved") {
                     toastr.success("Location Details Submitted Successfully!");
@@ -179,7 +179,7 @@ function SaveLocation(action) {
             data: JSON.stringify(formdata),
             success: function (response) {
                 if (response == "Location Already Exists") {
-                    toastr.error("Location already exists for this Company", "Error");
+                    toastr.warning("This location already exists for the selected company.", "Warning");
                 }
                 else if (response == "Location Saved") {
                     toastr.success("Location Details Submitted Successfully!");
