@@ -187,6 +187,10 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a valid PAN Number", "Validation Error");
         return false;
     }
+    if (IsNullOrEmpty($("#txtGstNumber").val()) || !ValidateGstNumber($("#txtGstNumber").val())) {
+        toastr.warning("Please enter a valid GST Number", "Validation Error");
+        return false;
+    }
     return true;
 }
 function GetAllFranchiseList(callback) {

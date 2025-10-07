@@ -8,7 +8,7 @@ $(document).ready(function () {
     if (!IsNullOrEmpty(userid)) {
         userid = parseInt(userid);
     }
-    //getUserById(userid);
+    getUserById(userid);
     Initialization();
 });
 function Initialization() {
@@ -70,11 +70,18 @@ function CheckValidation() {
         toastr.warning("txtReTypePassword must be at least 6 characters and contain at least one digit One Uppercase letter.", "warning");
         return false;
     }
+    var CurrentPassword = $("#txtCurrentPassword").val();
+    if (!IsNullOrEmpty(CurrentPassword) && CurrentPassword != user.password) { 
+        toastr.warning("Invalid CurrentPassword", "CurrentPasswordg");
+        return false;
+
+    }
     return true;
 }
 
 function OnSubmit() {
-
+    debugger;
+    var userid = getCookieValue('userid');
     if (!CheckValidation()) {
         return;
     }
@@ -89,7 +96,8 @@ function OnSubmit() {
 
     var UserViewModel = {
         Password: newPassword,
-        LoginId: user.loginId,
+        UserId: parseInt(userid),
+        //LoginId: user.LoginId,
     }
 
     var UpdatePassWordUrl = '/User/UpdateUserPassword';
@@ -101,6 +109,8 @@ function OnSubmit() {
         dataType: "json",
         success: function (result) {
             if (result) {
+                $('#successCard').removeClass('d-none');
+                $('#formDiv').addClass('d-none');
                 toastr.success("Successfully Update User Password", "success");
             }
             else
