@@ -189,6 +189,7 @@ function EditVehicle(vehicleId) {
     $("#btnUpdateVehicle").removeClass('d-none')
     $("#btnSaveNewVehicle").hide();
     $("#vehicleNo").val(formData.vehicleNo).prop("disabled", true);
+    $("#btnVehicleKyc").click();
     $("#hdVehicleId").val(formData.vehicleId);
     $('#ddlVehicleCategory').val(formData.vehicleCategoryId).trigger('change');
     $('#ddlVehicleType').val(formData.vehicleTypeId).trigger('change');
