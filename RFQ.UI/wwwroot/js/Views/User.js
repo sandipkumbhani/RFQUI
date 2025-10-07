@@ -200,6 +200,7 @@ function SaveUser(action) {
             success: function (response) {
                 if (response.result == "success") {
                     toastr.success("User Details Submitted Successfully!");
+                    addMasterUserActivityLog(0, LogType.Create, "User Details Submitted Successfully!", 0);
                     if (typeof this.completeOnSuccess === "function") {
                         this.completeOnSuccess();
                     }
@@ -227,6 +228,7 @@ function SaveUser(action) {
                 success: function (response) {
                     if (response.result == "success") {
                         toastr.success("User Details Submitted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Create, "User Details Submitted Successfully!", 0);
                         $('#userbodyform')[0].reset();
                         $('#ddlCompanyAndFranchise').val(null).trigger('change');
                         $('#ddlLocation').val(null).trigger('change');
@@ -307,6 +309,7 @@ function DeleteUser(userId) {
                 success: function (response) {
                     FetchUser();
                     toastr.success("User details have been deleted successfully.");
+                    addMasterUserActivityLog(0, LogType.Delete, "User details have been deleted successfully.", 0);
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to delete user details.", "Error");
@@ -344,6 +347,7 @@ function UpdateUser() {
                 if (result.result == "success") {
                     FetchUser();
                     toastr.success("User Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "User Details Updated Successfully!", 0);
                     $('#userbodyform')[0].reset();
                     $('#ddlCompanyAndFranchise').val(null).trigger('change');
                     $('#ddlLocation').val(null).trigger('change');
