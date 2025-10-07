@@ -21,3 +21,14 @@ $(document).ready(function () {
 function FetchActivityLog() {
     FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase());
 }
+
+// Bind events
+$('#ActivityLogTableSearch').off('keyup').on('keyup', function () {
+    $('#currentPage').val(1);
+    FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase());
+});
+
+$('#pageLength').off('change').on('change', function () {
+    $('#currentPage').val(1);
+    FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase());
+})

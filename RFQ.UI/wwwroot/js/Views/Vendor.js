@@ -83,7 +83,7 @@ $(document).ready(function () {
                         $("#txtVendorName").val(gstModel.tradeName);
                         $("#txtAadharVerified").val(gstModel.aadhaarVerified);
                         $("#txtGstVerifiedOn").val(new Date().toISOString().split('T')[0]);
-                        $("#txtVerifiedGstNo").val();
+                        $("#txtVerifiedGstNo").val(gstModel.gstNo);
                     } else {
                         toastr.warning(response.messageDescription, "Warning");
                         ClearGstFields();
@@ -598,6 +598,7 @@ function EditVendor(partyId) {
         var panVerifiedDate = new Date(formData.panVerifiedOn).toISOString().split('T')[0];
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
+        $("#panEKycButton").click();
         $("#txtVendorName").val(formData.partyName);
         $("#ddlVendorCategory").val(formData.partyCategoryId).trigger('change');
         $("#from-search-box").val(formData.addressLine);
