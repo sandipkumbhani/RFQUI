@@ -507,7 +507,7 @@ function UpdateVehicleIndent(indentId) {
     $("#ddlCustomerName").val(formData.partyId).trigger('change');
 
     $("#from-search-box").val(formData.fromLocation);
-    $("fromState").val(formData.fromLocationState);
+    $("#fromState").val(formData.fromLocationState);
     $("#fromCity").val(formData.fromLocationCity);
     $("#fromLat").val(formData.fromLatitude);
     $("#fromLng").val(formData.fromLongitude);
