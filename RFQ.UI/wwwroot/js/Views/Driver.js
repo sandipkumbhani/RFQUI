@@ -33,6 +33,7 @@ $(document).ready(function () {
     GetAllCityList("ddlCity");
     GetDriverType();
     DlEKycclick();
+    FetchDriverCode();
     FetchDriverList();
     $("#btnAddDriver").on("click", function () {
         $("#tableDiv").css('display', 'none ');
@@ -205,6 +206,7 @@ function DropzoneInitialize() {
     });
 }
 function SaveDriver(uploadedFileName, callback) {
+    debugger;
     var driverType = $("#ddlDriverType").val();
     var licenseNo = $("#numLicenseNo").val();
     var driverName = $("#txtDriverName").val();
@@ -273,35 +275,33 @@ function SaveDriver(uploadedFileName, callback) {
     }
 
     $.ajax({
+        
         url: saveUrl,
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
-
-            
-            var driverId = response?.result?.result?.driverId;
-
-            if (driverId) {
-                Saveattachment(driverId);
-                toastr.success("Driver Details Submitted Successfully!");
-                addMasterUserActivityLog(0, LogType.Create, "Driver Details Submitted Successfully!", 0);
+            if (response) {
+                //$("#btnSave").prop('disabled', false);
+                //$("#btnsaveandnew").prop('disabled', false);
+                toastr.success("Driver Details Saved Successfully!", "Success");
+                addMasterUserActivityLog(0, LogType.Create, "Driver Details Saved Successfully!", 0);
+                if (typeof this.completeOnSuccess === "function") {
+                    this.completeOnSuccess();
+                }
             } else {
-                toastr.error("Driver ID missing in server response", "Error");
+                toastr.error("Failed to Submit Driver Details.", "Error");
             }
-
-            if (typeof callback === "function") {
-                callback(driverId || null);
-            }
+            
 
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Submit Driver Details", "Error");
-
-            if (typeof callback === "function") {
-                callback(null);
-            }
+            toastr.error("Failed to Submit Driver Details.", "Error");
+        },
+        completeOnSuccess: function () {
+            FetchDriverList();
         }
+        
     });
 
 }
@@ -736,5 +736,20 @@ function ValidationCheck() {
     //    return false;
     //}
     return true;
+}
+
+function FetchDriverCode() {
+
+    $.ajax({
+        url: "/Driver/GetDriverCode",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            $("#txtDriverCode").val(response.result);
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Driver Code!", "Error");
+        }
+    });
 }
 

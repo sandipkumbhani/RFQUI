@@ -13,5 +13,6 @@ namespace RFQ.UI.Application.Interface
         Task<LicenseKycDetailsResponseDto> GetDlKycDetails(LicenseKycDetailsRequestDto licenseKycDetailsRequestDto);
         Task<IEnumerable<InternalMasterResponseDto>> GetDriverType();
         Task<IEnumerable<DriverResponseDto>> GetAllDriverList();
+        Task<string> GetDriverCode();
     }
 }

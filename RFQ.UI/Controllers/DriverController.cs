@@ -293,5 +293,18 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> GetDriverCode()
+        {
+            try
+            {
+                var result = await _driverServices.GetDriverCode();
+                return Json(new { result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
     }
 }

@@ -235,5 +235,37 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<string> GetDriverCode()
+        {
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseurl = _fleetLynkApiUrl + _config["Driver:GenerateDriverCode"];
+                var response = await _httpClient.GetAsync(baseurl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    return null;
+                }
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(responseData))
+                    return null;
+
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                if (responseModel?.Data != null)
+                {
+                    var driverCode = responseModel.Data.ToString();
+                    return driverCode;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+        }
     }
 }
