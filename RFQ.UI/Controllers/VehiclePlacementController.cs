@@ -179,6 +179,19 @@ namespace RFQ.UI.Controllers
             }
 
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAllVehiclePlacementNo([FromQuery] int companyId)
+        {
+            try
+            {
+                var result = await _vehiclePlacementService.GetAllVehiclePlacementNo(companyId);
+                return Json(new { result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
     }
 }
 

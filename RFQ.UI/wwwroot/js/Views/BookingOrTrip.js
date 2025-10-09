@@ -9,8 +9,12 @@ $(document).ready(function () {
     GetAllVehicleType("ddlVehicleType", companyId);
     GetAllItemName("ddlItemName", companyId);
     GetAllItemName("ddlItemName");
+    GetAllLocation("ddlLocation", companyId);
+    GetAllStateList("ewayBillState");
     GetAllConsignorList();
     GetAllConsigneeList(); 
+    GetTrakingType();
+    GetAllPlacementNo();
 
 });
 function GetAllConsignorList() {
@@ -113,6 +117,62 @@ function GetAllVehicleNumber() {
                 opt.value = option.vehicleId;
                 opt.textContent = option.vehicleNo;
                 selectVehicleNumber.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
+function GetTrakingType() {
+    var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
+    $.ajax({
+        url: getInternalMasterUrl,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.TRACKING_TYPE);
+            const select = document.getElementById("trackingType");
+            select.innerHTML = "";
+
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select a Tracking Type";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+
+            internalData.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.internalMasterId;
+                opt.textContent = option.internalMasterName;
+                select.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
+function GetAllPlacementNo() {
+    $.ajax({
+        url: '/VehiclePlacement/GetAllVehiclePlacementNo',
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            driverDrpList = response.result;
+            const selectLocation = document.getElementById("placementNo");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = "";
+            placeholderOption.textContent = "Select placement No";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            selectLocation.appendChild(placeholderOption);
+            driverDrpList.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.placementId;
+                opt.textContent = option.placementNo;
+                selectLocation.appendChild(opt);
             });
         },
         error: function (xhr, status, error) {

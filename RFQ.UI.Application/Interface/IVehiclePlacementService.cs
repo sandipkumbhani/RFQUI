@@ -17,5 +17,6 @@ namespace RFQ.UI.Application.Interface
         Task<PageList<VehiclePlacementResponseDto>> GetAllVehiclePlacement(PagingParam pagingParam);
         Task<string> UpdateVehiclePlacement(int placementId, VehiclePlacementRequestDto vehiclePlacementRequestDto);
         Task<string> DeleteVehiclePlacement(int placementId);
+        Task<IEnumerable<VehiclePlacementResponseDto>> GetAllVehiclePlacementNo(int companyId);
     }
 }

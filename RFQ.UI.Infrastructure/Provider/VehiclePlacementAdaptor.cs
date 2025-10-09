@@ -216,5 +216,42 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<IEnumerable<VehiclePlacementResponseDto>> GetAllVehiclePlacementNo(int companyId)
+        {
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                var baseUrl = $"{_fleetLynkApiUrl}{_config["VehiclePlacement:GetAllVehiclePlacementNo"]}?companyId={companyId}";
+                var response = await _httpClient.GetAsync(baseUrl);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    return Enumerable.Empty<VehiclePlacementResponseDto>();
+                }
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(responseData))
+                    return Enumerable.Empty<VehiclePlacementResponseDto>();
+
+                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+
+                if (responseModel?.Data != null)
+                {
+                    var indents = JsonConvert.DeserializeObject<IEnumerable<VehiclePlacementResponseDto>>(responseModel.Data.ToString());
+                    return indents ?? Enumerable.Empty<VehiclePlacementResponseDto>();
+                }
+
+                return Enumerable.Empty<VehiclePlacementResponseDto>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in GetAllVehiclePlacementNo: {ex}");
+                return Enumerable.Empty<VehiclePlacementResponseDto>();
+            }
+        }
     }
 }

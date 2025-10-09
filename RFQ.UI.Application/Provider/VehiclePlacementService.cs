@@ -40,6 +40,11 @@ namespace RFQ.UI.Application.Provider
             return await _vehiclePlacementAdaptor.GetAllVehiclePlacement(pagingParam);
         }
 
+        public Task<IEnumerable<VehiclePlacementResponseDto>> GetAllVehiclePlacementNo(int companyId)
+        {
+            return _vehiclePlacementAdaptor.GetAllVehiclePlacementNo(companyId);
+        }
+
         public Task<string> GetPlacementNo()
         {
             return _vehiclePlacementAdaptor.GetPlacementNo();
