@@ -495,6 +495,9 @@ function SaveCorporateCompany(action) {
 
 }
 function EditCorporateCompany(companyId) {
+    if ($("#btnupdate").hasClass('d-none')) {
+        $("#btnupdate").removeClass('d-none');
+    }
     var data = viewModelDto.filter(x => x.companyId == companyId);
     if (data.length === 0) {
         return;
@@ -533,3 +536,9 @@ function EditCorporateCompany(companyId) {
         }
     });
 } 
+
+function ViewCorporateCompany(companyId) {
+    EditCorporateCompany(companyId);
+    $('#CompanyTypeForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnupdate").addClass('d-none');
+}

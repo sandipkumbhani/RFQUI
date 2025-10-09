@@ -47,6 +47,7 @@ $(document).ready(function () {
 
 $("#btnAddUser").on("click", function (e) {
     e.preventDefault();
+    $('#userbodyform').find('input, select, textarea, button, a').prop('disabled', false);
     $("#userListSection").hide();
     $("#btnUpdate").hide();
     $("#userFormSection").show();
@@ -248,6 +249,10 @@ function SaveUser(action) {
     }
 }
 function EditUser(userId) {
+    if ($("#btnUpdate").hasClass('d-none')) {
+        $("#btnUpdate").removeClass('d-none');
+        $('#userbodyform').find('input, select, textarea, button, a').prop('disabled', false);
+    }
     var data = viewModelDto.filter(x => x.userId == userId);
     var formdata = data[0];
     $('#userListSection').css('display', 'none');
@@ -445,7 +450,6 @@ function ValidationCheck() {
     return true;
 }
 
-
 // Bind events
 $('#tableuserSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
@@ -456,3 +460,9 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchUser('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
 }); 
+
+function ViewUser(userId) {
+    EditUser(userId);
+    $('#userbodyform').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdate").addClass('d-none');
+}

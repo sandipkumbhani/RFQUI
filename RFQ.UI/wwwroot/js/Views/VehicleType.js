@@ -145,6 +145,7 @@ function SaveVehicleType(action) {
 }
 function EditVehicleType(vehicleTypeId) {
     //var data = vehicleTypeViewModelDtos.filter(x => x.vehicleTypeId == vehicleTypeId);
+    $("#updateButton").removeClass('d-none')
     var data = viewModelDto.filter(x => x.vehicleTypeId == vehicleTypeId);
     EditVehicleTypeModelDtos = data[0];
     $('#tableDiv').hide();
@@ -225,5 +226,10 @@ function DeleteVehicleType(vehicleTypeId) {
     });
 }
 
+function ViewVehicleType(vehicleTypeId) {
+    EditVehicleType(vehicleTypeId);
+    $('#VehicleTypeForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#updateButton").addClass('d-none');
+}
 
 

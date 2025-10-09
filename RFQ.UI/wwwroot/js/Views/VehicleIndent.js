@@ -33,6 +33,9 @@ $(document).ready(function () {
     });
 
     $("#btnCancel").on("click", function () {
+        $('#formDiv')
+            .find('input, select, textarea, button, a')
+            .prop('disabled', false);
         FetchVehicleIndent();
     });
 
@@ -55,6 +58,7 @@ $(document).ready(function () {
         }
     });
 });
+
 $('#addCompany').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
@@ -392,7 +396,7 @@ function ButtonUpdateClick() {
             Remarks: $("#txtRemarks").val(),
             LinkId: GetQueryParam("LinkId")
         };
-
+        debugger;
 
         var linkd = GetQueryParam("LinkId");
 
@@ -487,6 +491,9 @@ function formatDateForInput(dateString) {
     return `${year}-${month}-${day}`;
 }
 function UpdateVehicleIndent(indentId) {
+    if ($("#btnupdate").hasClass('d-none')) {
+        $("#btnupdate").removeClass('d-none');
+    }
     var data = viewModelDto.filter(x => x.indentId == indentId);
     var formData = data[0];
     $('#tableDiv').css('display', 'none');
@@ -557,3 +564,9 @@ function UpdateVehicleIndent(indentId) {
 
 
 } 
+
+function ViewVehicleIndent(indentId) {
+    UpdateVehicleIndent(indentId);
+    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnupdate").addClass('d-none');
+}

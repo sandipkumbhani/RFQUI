@@ -330,6 +330,9 @@ function FormatDateToLocal(dateString) {
     return localDate.toISOString().split('T')[0];
 }
 function EditDriver(driverId) {
+    if ($("#btnUpdateDriver").hasClass('d-none')) {
+        $("#btnUpdateDriver").removeClass('d-none');
+    }
     var data = viewModelDto.filter(x => x.driverId == driverId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, driverId, function (list) {
@@ -736,5 +739,11 @@ function ValidationCheck() {
     //    return false;
     //}
     return true;
+}
+
+function ViewDriver(driverId) {
+    EditDriver(driverId);
+    $('#driverForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdateDriver").addClass('d-none');
 }
 

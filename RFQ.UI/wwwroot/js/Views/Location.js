@@ -25,6 +25,7 @@ $("#btnAddLocation").on("click", function (e) {
     e.preventDefault();
     $("#locationListSection").hide();
     $("#locationFormSection").show();
+    $('#LocationForm').find('input, select, textarea, button, a').prop('disabled', false);
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -250,6 +251,10 @@ function UpdateLocation() {
     });
 }
 function EditLocation(locationId) {
+    if ($("#btnUpdate").hasClass('d-none')) {
+        $("#btnUpdate").removeClass('d-none');
+        $('#LocationForm').find('input, select, textarea, button, a').prop('disabled', false);
+    }
     var data = viewModelDto.filter(x => x.locationId == locationId);
     var formdata = data[0];
 
@@ -335,6 +340,8 @@ function ValidationCheck() {
     }
     return true;
 }
+
+
 // Bind events
 $('#tablelocationSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
@@ -345,3 +352,9 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchLocationList('tablelocation', '/Location/ViewLocationList', orderColumn, orderDir.toUpperCase());
 })
+
+function ViewLocation(locationId) {
+    EditLocation(locationId);
+    $('#LocationForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdate").addClass('d-none');
+}

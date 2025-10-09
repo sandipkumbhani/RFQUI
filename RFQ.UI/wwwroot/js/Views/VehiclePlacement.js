@@ -1117,7 +1117,9 @@ function DeleteVehiclePlacement(placementId) {
     });
 }
 function UpdateVehiclePlacement(placementId) {
-    debugger;
+    if ($("#updateButton").hasClass('d-none')) {
+        $("#updateButton").removeClass('d-none');
+    }
     var data = viewModelDto.filter(x => x.placementId == placementId);
     var formData = data[0];
     $('#tableDiv').css('display', 'none');
@@ -1143,6 +1145,10 @@ function UpdateVehiclePlacement(placementId) {
     $("#ddlBrokerName").val(formData.brokerVendorId).trigger('change');
     $("#txtTotalHairAmt").val(formData.totalHireAmount);
     $("#txtAdvancePayable").val(formData.advancePayable);
-
-
 } 
+
+function ViewVehiclePlacement(placementId) {
+    UpdateVehiclePlacement(placementId);
+    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#updateButton").addClass('d-none');
+}

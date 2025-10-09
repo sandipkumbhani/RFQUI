@@ -191,6 +191,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
+                            <a onclick="ViewVehicleType(${item.vehicleTypeId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -208,6 +209,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
+                            <a onclick="ViewCompanyConfiguration(${item.companyConfigId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -224,6 +226,7 @@ function GetGridHtml(response, gridTableName) {
                             <td class="text-center action-items" style="cursor:pointer;">
                                 <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
                                 <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
+                                <a onclick="ViewVehicle(${item.vehicleId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                             </td>
                         </tr>`;
         });
@@ -243,6 +246,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditVendor(${item.partyId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteVendor(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+                            <a onclick="ViewVendor(${item.partyId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -262,6 +266,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditFranchise(${item.companyId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteFranchise(${item.companyId},'${item.logoImage}')"><i class="ri-delete-bin-3-line"></i></a>
+                            <a onclick="ViewFranchise(${item.companyId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -278,6 +283,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditDriver(${item.driverId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteDriver(${item.driverId},'${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>
+                            <a onclick="ViewDriver(${item.driverId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -295,6 +301,7 @@ function GetGridHtml(response, gridTableName) {
                             <td class="text-center action-items" style="cursor:pointer;">
                                 <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
                                 <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
+                                <a onclick="ViewCustomer(${item.partyId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                             </td>
                         </tr>
                     `;
@@ -309,6 +316,7 @@ function GetGridHtml(response, gridTableName) {
             <td class="text-center action-items" style="cursor:pointer;">
                 <a class="icon-btn" onclick="EditProduct(${item.itemId})"><i class="ri-edit-2-line"></i></a>
                 <a class="icon-btn" onclick="DeleteProduct(${item.itemId})"><i class="ri-delete-bin-3-line"></i></a>
+                <a onclick="ViewProduct(${item.itemId})" class="icon-btn"><i class="ri-eye-line"></i></a>
             </td>
         </tr>`;
         });
@@ -332,6 +340,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditCorporateCompany(${item.companyId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteCorporateCompany(${item.companyId})"><i class="ri-delete-bin-3-line"></i></a>
+                            <a onclick="ViewCorporateCompany(${item.companyId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -348,6 +357,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditUser(${item.userId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>
+                            <a onclick="ViewUser(${item.userId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -367,7 +377,8 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.email}</td>
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditLocation(${item.locationId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>
+                            <a class="icon-btn" onclick="DeleteLocation(${item.Location})"><i class="ri-delete-bin-3-line"></i></a>
+                              <a onclick="ViewLocation(${item.locationId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -405,6 +416,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditRfq(${item.rfqId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteRfq(${item.rfqId})"><i class="ri-delete-bin-3-line"></i></a>
+                             <a onclick="ViewRfq(${item.rfqId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -423,6 +435,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="EditRfqFinalizatioin(${item.rfqFinalIdId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteRfqFinalizatioin(${item.rfqFinalIdId})"><i class="ri-delete-bin-3-line"></i></a>
+                            <a onclick="ViewRfqFinalizatioin(${item.rfqFinalIdId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -459,6 +472,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="UpdateVehicleIndent(${item.indentId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteVehicleIndent(${item.indentId})"><i class="ri-delete-bin-3-line"></i></a>
+                             <a onclick="ViewVehicleIndent(${item.indentId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });
@@ -485,6 +499,7 @@ function GetGridHtml(response, gridTableName) {
                         <td class="text-center action-items" style="cursor:pointer;">
                             <a class="icon-btn" onclick="UpdateVehiclePlacement(${item.placementId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteVehiclePlacement(${item.placementId})"><i class="ri-delete-bin-3-line"></i></a>
+                             <a onclick="ViewVehiclePlacement(${item.placementId})" class="icon-btn"><i class="ri-eye-line"></i></a>
                         </td>
                     </tr>`;
         });

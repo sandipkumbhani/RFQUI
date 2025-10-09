@@ -34,6 +34,7 @@ $(document).ready(function () {
     $("#btnAddRfq").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
+        $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
     });
     $('#tableDivLink').on('click', function (e) {
         e.preventDefault();
@@ -341,6 +342,7 @@ function GetAllVendorList() {
     $("#ddlRFQVendorList").empty();
     var getUrl = '/RequestForQuote/GetAllVendorListForRfq'
     let fromStateName = $("#fromState").val().toUpperCase();
+    debugger;
     let toStateName = $("#toState").val().toUpperCase();
     var formData = {
         OriginFrom: fromStateName,
@@ -558,6 +560,10 @@ function SaveAndSaveNew(action) {
     }
 }
 function EditRfq(rfqID) {
+    if ($("#btnUpdateRfq").hasClass('d-none')) {
+        $("#btnUpdateRfq").removeClass('d-none');
+        $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
+    }
     var data = viewModelDto.filter(x => x.rfqId === rfqID);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, rfqID, function (list) {
@@ -878,4 +884,9 @@ function GetPreviousQuotesList() {
             toastr.error('Failed to fetch previous quotes:', "Error");
         }
     });
+}
+function ViewRfq(rfqId) {
+    EditRfq(rfqId);
+    $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdateRfq").addClass('d-none');
 }

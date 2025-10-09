@@ -33,6 +33,7 @@ $(document).ready(function () {
 
     $("#btnCancel").on('click', function () {
         FetchVehicleList();
+        $('#vehicleForm').find('input, select, textarea, button, a').prop('disabled', false);
     });
     FetchVehicleList();
     GetAllOwnerOrVendor();
@@ -180,6 +181,10 @@ function SaveVehicle(action) {
     }
 }
 function EditVehicle(vehicleId) {
+    if ($("#btnUpdateVehicle").hasClass('d-none')) {
+        $("#btnUpdateVehicle").removeClass('d-none');
+        $('#vehicleForm').find('input, select, textarea, button, a').prop('disabled', false);
+    }
     var data = viewModelDto.filter(x => x.vehicleId === vehicleId);
     var formData = data[0];
 
@@ -530,4 +535,10 @@ function ClearFields() {
     $("#vehicleCapacityInput").val("");
     $("#policyNoInput").val("");
     $("#policyExpiryInput").val("");
+}
+
+function ViewVehicle(vehicleId) {
+    EditVehicle(vehicleId);
+    $('#vehicleForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdateVehicle").addClass('d-none');
 }

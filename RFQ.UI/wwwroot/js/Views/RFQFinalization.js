@@ -66,6 +66,7 @@ $(document).ready(function () {
     $("#btnAddRfqFinalization").on('click', function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
+        $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', false);
     })
     $("#btnCancel").on('click', function () {
         FetchRfqFinalizationList();
@@ -373,6 +374,10 @@ $('#pageLength').off('change').on('change', function () {
     FetchRfqFinalizationList();
 });
 function EditRfqFinalizatioin(rfqFinalIdId) {
+    if ($("#btnUpdateRfqFinalization").hasClass('d-none')) {
+        $("#btnUpdateRfqFinalization").removeClass('d-none');
+        $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', false);
+    }
     var data = viewModelDto.filter(x => x.rfqFinalIdId == rfqFinalIdId);
     var formData = data[0];
     $('#tableDiv').css('display', 'none');
@@ -679,7 +684,6 @@ function GetSelectedVendors() {
     });
     return selectedData;
 }
-
 function SendAssignOrder(selectedVendors) {
     if (selectedVendors.length === 0) {
         toastr.warning("No vendors selected for assignment.");
@@ -699,5 +703,10 @@ function SendAssignOrder(selectedVendors) {
         });
     }
 
+}
+function ViewRfqFinalizatioin(rfqFinalIdId) {
+    EditRfqFinalizatioin(rfqFinalIdId);
+    $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdateRfqFinalization").addClass('d-none');
 }
 

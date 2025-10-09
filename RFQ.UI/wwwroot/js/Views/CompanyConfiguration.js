@@ -268,6 +268,10 @@ $('#pageLength').off('change').on('change', function () {
 });
 
 function EditCompanyConfiguration(companyConfigId) {
+    if ($("#btnUpdate").hasClass('d-none')) {
+        $("#btnUpdate").removeClass('d-none');
+        $('#formSection').find('input, select, textarea, button, a').prop('disabled', false);
+    }
     var data = viewModelDto.filter(x => x.companyConfigId == companyConfigId);
     var formdata = data[0];
     $('#listSection').css('display', 'none');
@@ -386,3 +390,8 @@ function DeleteCompanyConfiguration(CompanyConfigrationId) {
     });
 }
 
+function ViewCompanyConfiguration(CompanyConfigrationId) {
+    EditCompanyConfiguration(CompanyConfigrationId);
+    $('#formSection').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdate").addClass('d-none');
+}

@@ -550,6 +550,7 @@ $('#pageLength').off('change').on('change', function () {
     FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase());
 });
 function EditVendor(partyId) {
+    $("#btnupdate").removeClass('d-none');
     var data = viewModelDto.filter(x => x.partyId == partyId);
     var formData = data[0];
     var vehicleTypeTableData = FetchVendorVehicleTypeList(partyId);
@@ -973,4 +974,10 @@ function FetchVendorApplicableRouteList(partyId) {
         }
     });
     return result;
+}
+
+function ViewVendor(partyId) {
+    EditVendor(partyId);
+    $('#formDiv').find('input, select, textarea, button , a').prop('disabled', true);
+    $("#btnupdate").addClass('d-none');
 }
