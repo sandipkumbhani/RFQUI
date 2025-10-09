@@ -1,183 +1,194 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-	Layout = "_Layout";
-	ViewData["Title"] = "user";
+    Layout = "_Layout";
+    ViewData["Title"] = "user";
 }
 
 @section Scripts {
-	<script src="~/js/Views/User.js"></script>
+    <script src="~/js/Views/User.js"></script>
 }
 
 <div id="userListSection">
-	<div class="row">
-		<div class="col-12">
-			<div class="page-title-box add">
-				<h1 class="page-title">User</h1>
-				<div class="add-btn">
-					<a href="#" id="btnAddUser">
-						<i class="ri-add-line"></i> <span>Add</span>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-12">
-			<div class="card com-profile-info">
-				<!-- Top Header -->
-				<div class="table-top-header">
-					<h4>List of User</h4>
-					<div class="d-flex gap-2">
-						<div class="table-search-box">
-							<input type="text" id="tableuserSearch" class="form-control form-control-sm" placeholder="Search...">
-							<button type="submit"><i class="ri-search-line"></i></button>
-						</div>
-						<div id="exporttableuser" class="btn-group" role="group"></div>
-					</div>
-				</div>
-				<!-- Table -->
-				<div class="table-responsive">
-					<table id="tableuser"
-						   class="table dt-responsive nowrap w-100">
-						<thead>
-							<tr class="text-center">
-								<th class="sortable text-center" data-column="PersonName" data-order="asc">User Name</th>
-								<th class="sortable text-center" data-column="Company" data-order="asc">Franchise/Corporate Name</th>
-								<th class="sortable text-center" data-column="Location" data-order="asc">Location</th>
-								<th class="sortable text-center" data-column="MobileNo" data-order="asc">Phone Number</th>
-								<th class="sortable text-center" data-column="EmailId" data-order="asc">Email</th>
-								<th class="text-center no-sort">Action</th>
-							</tr>
-						</thead>
-						<tbody class="text-center">
-							<!-- Dynamic rows go here -->
-						</tbody>
-					</table>
-				</div>
-				<!-- Bottom Area -->
-				<div class="datatable-footer-bottom">
-					<div class="totle-left">
-						<span id="totalList">Total List: 3</span>
-					</div>
-					<div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
-					<input type="hidden" id="currentPage" value="1">
-					<div class="show-page">
-						<span>Show per page:</span>
-						<select id="pageLength" class="form-select">
-							<option value="5">5 </option>
-							<option value="10" selected>10 </option>
-							<option value="25">25</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-flex align-items-center justify-content-between">
+                <div class="col-md-6">
+                    <h1 class="page-title">User</h1>
+                </div>
+                <div class="col-md-6 d-flex justify-content-end">
+                    <div class="add-btn me-2 ">
+                        <a href="@Url.Action("MasterUserActivityLog", "MasterUserActivityLog")" class="d-none" id="btnActivitylog">
+                            <i class="ri-file-list-line"></i> <span>Activity Log</span>
+                        </a>
+                    </div>
+                    <div class="add-btn">
+                        <a href="#" id="btnAddUser">
+                            <i class="ri-add-line"></i> <span>Add</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <!-- Top Header -->
+                <div class="table-top-header">
+                    <h4>List of User</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="tableuserSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div id="exporttableuser" class="btn-group" role="group"></div>
+                    </div>
+                </div>
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table id="tableuser"
+                           class="table dt-responsive nowrap w-100">
+                        <thead>
+                            <tr class="text-center">
+                                <th class="sortable text-center" data-column="PersonName" data-order="asc">User Name</th>
+                                <th class="sortable text-center" data-column="Company" data-order="asc">Franchise/Corporate Name</th>
+                                <th class="sortable text-center" data-column="Location" data-order="asc">Location</th>
+                                <th class="sortable text-center" data-column="MobileNo" data-order="asc">Phone Number</th>
+                                <th class="sortable text-center" data-column="EmailId" data-order="asc">Email</th>
+                                <th class="text-center no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <!-- Dynamic rows go here -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
+                    <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                            <option value="-1">All</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 <div id="userFormSection" style="display: none;">
-	<div class="row">
-		<div class="col-12">
-			<div class="page-title-box add">
-				<h1 class="page-title">Add User</h1>
-				<div class="add-breadcrumb">
-					<nav aria-label="breadcrumb">
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item">
-								<a href="#" id="userListSectionLink">User</a>
-							</li>
-							<li class="breadcrumb-item active" aria-current="page"> Add User</li>
-						</ol>
-					</nav>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-12">
-			<div class="card com-profile-info">
-				<div class="top-details">
-					<h2 class="page-form-title">User Details</h2>
-					<form class="row all-custom-class" id="userbodyform" method="post">
-						<input type="hidden" hidden id="hdnUserId" />
-						<div class="col-xl-4 col-lg-6">
-							<div class="item-input">
-								<label class="form-label">User Name <span>*</span></label>
-								<input id="txtName" type="text" class="form-control" minlength="4" maxlength="50" placeholder="User Name" onkeypress="return isAlphabets(event)" readonly="readonly"
-									   onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}" />
-							</div>
-						</div>
-						<div class="col-xl-4 col-lg-6">
-							<div class="item-input">
-								<label class="form-label">Login Name <span>*</span></label>
-								<input type="text" class="form-control" minlength="6" maxlength="30" placeholder="Login Name" id="txtLoginName" />
-							</div>
-						</div>
-						<div class="col-xl-4 col-lg-6">
-							<div class="item-input">
-								<label class="form-label">Password <span>*</span></label>
-								<input type="password" class="form-control" minlength="8" maxlength="500" placeholder="Password" id="txtPassword" readonly="readonly"
-									   onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}" />
-							</div>
-						</div>
-						<div class="col-xl-4 col-lg-6">
-							<div class="item-input">
-								<label class="form-label">Email</label>
-								<input type="email" class="form-control" maxlength="200" placeholder="name@example.com" id="txtEmailid" />
-							</div>
-						</div>
-						<div class="col-xl-4 col-lg-6">
-							<div class="item-input">
-								<label class="form-label">Franchise/Corporate Name <span>*</span></label>
-								<select class="select2-custom form-control" id="ddlCompanyAndFranchise" style="width: 100%;">
-								</select>
-							</div>
-						</div>
-						<div class="col-xl-4 col-lg-6">
-							<div class="item-input">
-								<label class="form-label">Location</label>
-								<select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
-								</select>
-							</div>
-						</div>
-						<div class="col-xl-4 col-lg-6">
-							<div class="item-input">
-								<label class="form-label">Phone Number <span>*</span></label>
-								<input type="tel" id="txtMobileNo" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="button-main">
-					<a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
-						<i class="ri-save-line"></i>
-						<span>
-							Save
-						</span>
-					</a>
-					<a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
-						<i class="ri-save-line"></i>
-						<span>
-							Save & New
-						</span>
-					</a>
-					<a href="#" class="card-link" id="btnUpdate" style="display:none;">
-						<i class="ri-save-line"></i>
-						<span>
-							Update
-						</span>
-					</a>
-					<a href="#" class="card-link" id="btnCancel">
-						<i class="ri-close-line"></i>
-						<span>
-							Cancel
-						</span>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Add User</h1>
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="#" id="userListSectionLink">User</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add User</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <div class="top-details">
+                    <h2 class="page-form-title">User Details</h2>
+                    <form class="row all-custom-class" id="userbodyform" method="post">
+                        <input type="hidden" hidden id="hdnUserId" />
+                        <div class="col-xl-4 col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">User Name <span>*</span></label>
+                                <input id="txtName" type="text" class="form-control" minlength="4" maxlength="50" placeholder="User Name" onkeypress="return isAlphabets(event)" readonly="readonly"
+                                       onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}" />
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Login Name <span>*</span></label>
+                                <input type="text" class="form-control" minlength="6" maxlength="30" placeholder="Login Name" id="txtLoginName" />
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Password <span>*</span></label>
+                                <input type="password" class="form-control" minlength="8" maxlength="500" placeholder="Password" id="txtPassword" readonly="readonly"
+                                       onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}" />
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" maxlength="200" placeholder="name@example.com" id="txtEmailid" />
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Franchise/Corporate Name <span>*</span></label>
+                                <select class="select2-custom form-control" id="ddlCompanyAndFranchise" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Location</label>
+                                <select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-6">
+                            <div class="item-input">
+                                <label class="form-label">Mobile Number <span>*</span></label>
+                                <input type="tel" id="txtMobileNo" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="button-main">
+                    <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save
+                        </span>
+                    </a>
+                    <a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Save & New
+                        </span>
+                    </a>
+                    <a href="#" class="card-link" id="btnUpdate" style="display:none;">
+                        <i class="ri-save-line"></i>
+                        <span>
+                            Update
+                        </span>
+                    </a>
+                    <a href="#" class="card-link" id="btnCancel">
+                        <i class="ri-close-line"></i>
+                        <span>
+                            Cancel
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 

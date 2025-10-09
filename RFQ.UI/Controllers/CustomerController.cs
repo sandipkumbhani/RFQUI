@@ -199,5 +199,19 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<IActionResult> GetAutoCustomerCode()
+        {
+            try
+            {
+                var code = await _customerServices.GetAutoCustomerCode();
+                return Json(code);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

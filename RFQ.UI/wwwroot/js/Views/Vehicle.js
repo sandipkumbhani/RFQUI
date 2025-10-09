@@ -139,6 +139,8 @@ function SaveVehicle(action) {
                     toastr.warning(response.message, "Warning");
                 } else {
                     toastr.success("Vehicle Details Submitted Successfully!");
+                    addMasterUserActivityLog(0, LogType.Create, "Vehicle Details Submitted Successfully!", 0);
+
                     if (typeof this.completeOnSuccess === "function") {
                         this.completeOnSuccess();
                     }
@@ -163,6 +165,7 @@ function SaveVehicle(action) {
                     toastr.warning(response.message, "Warning");
                 } else {
                     toastr.success("Vehicle Details Submitted Successfully!");
+                    addMasterUserActivityLog(0, LogType.Create, "Vehicle Details Submitted Successfully!", 0);
                     $("#vehicleForm")[0].reset();
                     $("#ddlOwnerName").prop('disabled', false);
                     $("select.select2-custom").each(function () {
@@ -186,6 +189,7 @@ function EditVehicle(vehicleId) {
     $("#btnUpdateVehicle").removeClass('d-none')
     $("#btnSaveNewVehicle").hide();
     $("#vehicleNo").val(formData.vehicleNo).prop("disabled", true);
+    $("#btnVehicleKyc").click();
     $("#hdVehicleId").val(formData.vehicleId);
     $('#ddlVehicleCategory').val(formData.vehicleCategoryId).trigger('change');
     $('#ddlVehicleType').val(formData.vehicleTypeId).trigger('change');
@@ -278,6 +282,7 @@ function UpdateVehicle() {
             success: function (result) {
                 if (result.result === "success") {
                     toastr.success("Vehicle Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "Vehicle Details Updated Successfully!", 0);
                     FetchVehicleList();
                 } else {
                     toastr.error("Failed to Update Vehicle Details", "Error");
@@ -308,7 +313,8 @@ function DeleteVehicle(vehicleId) {
                 dataType: "json",
                 success: function (response) {
                     if (response && response.result === "success") {
-                        toastr.success("Vehicle Details Deleted Successfully!");
+                        toastr.success("Vehicle Details c Successfully!");
+                        addMasterUserActivityLog(0, LogType.Delete, "Vehicle Details Delete Successfully!", 0);
                         $('#currentPage').val(1);
                         FetchVehicleList();
                     }

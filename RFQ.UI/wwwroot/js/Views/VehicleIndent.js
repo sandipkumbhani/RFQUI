@@ -258,6 +258,7 @@ function SaveVehicleIndent(action) {
                     $("#btnSave").prop('disabled', false);
                     $("#btnsaveandnew").prop('disabled', false);
                     toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    addMasterUserActivityLog(0, LogType.Create, "Vehicle Indent Saved Successfully!", 0);
                     if (typeof this.completeOnSuccess === "function") {
                         this.completeOnSuccess();
                     }
@@ -282,6 +283,7 @@ function SaveVehicleIndent(action) {
             success: function (response) {
                 if (response) {
                     toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    addMasterUserActivityLog(0, LogType.Create, "Vehicle Indent Saved Successfully!", 0);
                     $("#btnSave").prop('disabled', false);
                     $("#btnsaveandnew").prop('disabled', false);
                     $('#vehicleIndentForm')[0].reset();
@@ -405,6 +407,7 @@ function ButtonUpdateClick() {
             success: function (result) {
                 if (result.result == "success") {
                     toastr.success("Vehicle Indent Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "Vehicle Indent Details Updated Successfully!", 0);
                     $("#formDiv").css('display', 'none');
                     FetchVehicleIndent();
                     $('#vehicleIndentForm')[0].reset();
@@ -456,6 +459,7 @@ function DeleteVehicleIndent(indentId) {
                 success: function (response) {
                     if (response && response.result === "success") {
                         toastr.success("Vehicle Indent has been deleted successfully.");
+                        addMasterUserActivityLog(0, LogType.Delete, "Vehicle Indent has been deleted successfully.", 0);
                         $("#addReqBranchDiv").addClass('d-none');
                         $('#currentPage').val(1);
                         FetchVehicleIndent();
@@ -503,7 +507,7 @@ function UpdateVehicleIndent(indentId) {
     $("#ddlCustomerName").val(formData.partyId).trigger('change');
 
     $("#from-search-box").val(formData.fromLocation);
-    $("fromState").val(formData.fromLocationState);
+    $("#fromState").val(formData.fromLocationState);
     $("#fromCity").val(formData.fromLocationCity);
     $("#fromLat").val(formData.fromLatitude);
     $("#fromLng").val(formData.fromLongitude);

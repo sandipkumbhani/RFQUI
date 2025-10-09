@@ -54,6 +54,7 @@ $(document).ready(function () {
         FetchCustomerList();
     });
     InitializeFields();
+    getAutoCustomerCode();
     GetAllCityList("ddlCity");
     UpdateCustomer();
     GstEKycClick();
@@ -146,7 +147,7 @@ function SaveCustomer(action) {
         LinkId: linkId
 
     }
-    
+
     if (action == "save") {
         var completeOnSuccess = function () {
             FetchCustomerList();
@@ -158,12 +159,13 @@ function SaveCustomer(action) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                debugger;
                 if (response != null) {
                     if (response.statusCode == 200) {
                         partyId = response.data.partyId;
                         Saveattachment(partyId);
                         toastr.success("Customer Details Submitted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Create, "Customer Details Submitted Successfully!", 0);
+
                         if (typeof completeOnSuccess === "function") {
                             completeOnSuccess();
                         }
@@ -172,7 +174,7 @@ function SaveCustomer(action) {
                         toastr.warning(response.message, "Duplicate Entry");
                     else
                         toastr.error(response.message || "Unexpected error occurred.", "Error");
-                    
+
                 } else {
                     toastr.error("Failed to Submit Customer Details", "Error");
                 }
@@ -195,6 +197,7 @@ function SaveCustomer(action) {
                         partyId = response.data.partyId;
                         Saveattachment(partyId);
                         toastr.success("Customer Details Submitted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Create, "Customer Details Submitted Successfully!", 0);
                         $('#customerForm')[0].reset();
                         $('#ddlCity').val(null).trigger('change');
                         setTimeout(() => {
@@ -219,17 +222,19 @@ function SaveCustomer(action) {
     return partyId;
 };
 function EditCustomer(partyId) {
-    
+
     var data = viewModelDto.filter(x => x.partyId === partyId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
         var attachmentData = list;
+        debugger;
         $('#tableDiv').css('display', 'none');
         $("#formDiv").css('display', 'Block');
         $("#btnSaveCustomer").hide();
         $("#btnUpdate").show();
         $("#SavenewButton").hide();
         $("#txtGstNumber").val(formData.gstNo);
+        $("#txtVerifiedGstNo").val(formData.gstNo);
         $("#hdnPartyId").val(formData.partyId);
         $("#txtLinkId").val(formData.linkId);
         $("#txtLegalName").val(formData.legalName);
@@ -244,6 +249,7 @@ function EditCustomer(partyId) {
         var panVerifiedDate = new Date(formData.panVerifiedOn).toLocaleDateString('en-CA');
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
+        $("#panEKycButton").click();
         $("#txtCustomerName").val(formData.partyName);
         //$("#txtCustomerCode").val(formData.customerCode);
         $("#from-search-box").val(formData.addressLine);
@@ -261,7 +267,7 @@ function EditCustomer(partyId) {
         if (attachmentData.length > 0) {
             EditMasterAttachment(attachmentData);
         }
-        
+
     });
 }
 function UpdateCustomer() {
@@ -300,7 +306,7 @@ function UpdateCustomer() {
             Code: $("#txtCustomerCode").val(),
             GSTAddress: $("#txtGstAddress").val(),
             LinkId: linkId
-            
+
         };
 
         let repeaterItems = document.querySelectorAll("[data-repeater-item]");
@@ -334,6 +340,7 @@ function UpdateCustomer() {
             success: function (result) {
                 if (result.result === "success") {
                     toastr.success("Customer Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "Customer Details Updated Successfully!", 0);
                     $("#addCustomerDiv").css('display', 'none');
                     FetchCustomerList();
                 } else {
@@ -355,6 +362,7 @@ function UpdateCustomer() {
                 if (response.result == "success") {
                     partyId = $("#hdnPartyId").val();
                     Saveattachment(partyId);
+
                 } else {
                     $("#dataDiv").html("Failed to update profile.");
                 }
@@ -394,6 +402,7 @@ function DeleteCustomer(partyId, linkId) {
                             DeleteMasterAttachment(attachments[0].attachmentId);
                         }
                         toastr.success("Customer details have been deleted successfully.");
+                        addMasterUserActivityLog(0, LogType.Delete, "Customer details have been deleted successfully.", 0);
                         $('#currentPage').val(1);
                         FetchCustomerList();
                     },
@@ -436,7 +445,7 @@ function GstEKycClick() {
                         $("#txtCustomerName").val(gstModel.tradeName),
                         $("#txtAadharVerified").val(gstModel.aadhaarVerified),
                         $("#txtGstVerifiedOn").val(new Date().toISOString().split('T')[0]),
-                        $("#txtVerifiedGstNo").val()
+                        $("#txtVerifiedGstNo").val(gstModel.gstNo)
                 } else {
                     toastr.warning(response.messageDescription, "Error");
                     ClearGstFields();
@@ -627,4 +636,18 @@ function ValidationCheck() {
         return false;
     }
     return true;
+}
+
+function getAutoCustomerCode() {
+    $.ajax({
+        url: '/Customer/GetAutoCustomerCode', // Replace with your controller name
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            $("#txtCustomerCode").val(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching customer code:', error);
+        }
+    });
 }

@@ -22,35 +22,75 @@ namespace RFQ.UI.Infrastructure.Provider
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
         }
+        //public async Task<FranchiseRequestDto> AddFranchise(FranchiseRequestDto franchiseRequestDto)
+        //{
+        //    try
+        //    {
+        //        _httpClient = new HttpClient();
+        //        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+        //        var baseurl = _fleetLynkApiUrl + _config["Franchise:AddFranchise"];
+        //        var franchise = JsonConvert.SerializeObject(franchiseRequestDto);
+        //        var requestContent = new StringContent(franchise, Encoding.UTF8, "application/json");
+        //        var response = await _httpClient.PostAsync(baseurl, requestContent);
+        //        var responseData = await response.Content.ReadAsStringAsync();
+        //        var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+        //        if (responseModel != null)
+        //        {
+        //            var result = responseModel.StatusCode;
+        //            if (result == 200)
+        //            {
+        //                return JsonConvert.DeserializeObject<FranchiseRequestDto>(responseModel.Data.ToString());
+        //            }
+        //            else
+        //            {
+        //                return null;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+        //    return null;
+        //}
         public async Task<FranchiseRequestDto> AddFranchise(FranchiseRequestDto franchiseRequestDto)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Franchise:AddFranchise"];
-                var franchise = JsonConvert.SerializeObject(franchiseRequestDto);
-                var requestContent = new StringContent(franchise, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                using (var httpClient = new HttpClient())
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
+                    httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+
+                    string url = _fleetLynkApiUrl + _config["Franchise:AddFranchise"];
+
+                    var jsonContent = JsonConvert.SerializeObject(franchiseRequestDto);
+                    var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                    var response = await httpClient.PostAsync(url, content);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine($"API call failed with status: {response.StatusCode}");
+                        return null;
+                    }
+
+                    var responseData = await response.Content.ReadAsStringAsync();
+
+                    var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                    if (responseModel?.StatusCode == 200 && responseModel.Data != null)
                     {
                         return JsonConvert.DeserializeObject<FranchiseRequestDto>(responseModel.Data.ToString());
                     }
-                    else
-                    {
-                        return null;
-                    }
+
+                    Console.WriteLine($"Unexpected response: {responseData}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Exception in AddFranchise: {ex.Message}");
             }
+
             return null;
         }
 

@@ -78,6 +78,7 @@ function GetQueryParam(name) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
 // set all Input Box and select option is blue Border
 window.addEventListener('DOMContentLoaded', function () {
     const inputs = document.querySelectorAll('input,select');
@@ -379,13 +380,13 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.location}</td>
                         <td>${item.rfqDate ? new Date(item.rfqDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
                         <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true
-                        }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
                         <td>${item.indentNo}</td>
                         <td>${item.customerName}</td>
                         <td>${item.vehicleReqOn ? new Date(item.vehicleReqOn).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
@@ -440,13 +441,13 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.vehicleTypeName}</td>
                         <td>${item.requiredVehicles}</td>
                         <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true
-                        }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
                         <td>${item.consignerName}</td>
                         <td>${item.pickUpAddress}</td>
                         <td>${item.consigneeName}</td>
@@ -485,6 +486,27 @@ function GetGridHtml(response, gridTableName) {
                             <a class="icon-btn" onclick="UpdateVehiclePlacement(${item.placementId})"><i class="ri-edit-2-line"></i></a>
                             <a class="icon-btn" onclick="DeleteVehiclePlacement(${item.placementId})"><i class="ri-delete-bin-3-line"></i></a>
                         </td>
+                    </tr>`;
+        });
+    }
+    if (gridTableName == "ActivityLogTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+                      <tr>
+                        <td>${item.logUid}</td>
+                        <td>${item.linkName}</td>
+                        <td>${item.internalMasterName}</td>
+                        <td>${item.personName}</td>
+                        <td>
+                            ${item.logDateTime
+                                ? new Date(item.logDateTime).toLocaleString('en-GB', {
+                                    day: '2-digit', month: '2-digit', year: 'numeric',
+                                    hour: '2-digit', minute: '2-digit', second: '2-digit'
+                                }).replace(',', '')
+                                : ''}
+                        </td>
+                        <td>${item.description}</td>
+                        
                     </tr>`;
         });
     }
@@ -634,7 +656,7 @@ function GetAllPakingType(dropdownId) {
         }
     });
 }
-function GetAllLocation(dropdownId,companyIdParam,callback) {
+function GetAllLocation(dropdownId, companyIdParam, callback) {
     $.ajax({
         url: '/Location/GetAllLocationList',
         type: "GET",
@@ -723,7 +745,7 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
 }
 function GetAllItemName(dropdownId, companyIdParam) {
     $.ajax({
-        url: '/Product/GetDrpProductList', 
+        url: '/Product/GetDrpProductList',
         type: "GET",
         data: { companyId: companyIdParam },
         dataType: "json",
@@ -786,4 +808,31 @@ function exportToCSV(filename, rows) {
         link.click();
         document.body.removeChild(link);
     }
+}
+function addMasterUserActivityLog(LogUid, LogTypeId, Description, UserId) {
+    debugger;
+    var urlParams = new URLSearchParams(window.location.search);
+    var linkId = urlParams.get('LinkId');
+    const body = {
+        LogUid: LogUid ?? 0,                
+        LogLinkId: linkId ?? 0,              
+        LogTypeId: LogTypeId ?? 0,                
+        UserId: UserId ?? 0,                
+        LogDateTime: null,
+        Description: Description ?? null,
+    };
+
+    $.ajax({
+        url: '/MasterUserActivityLog/AddMasterUserActivityLog',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(body),
+        success: function (response) {
+            console.log("API response:", response);
+        },
+        error: function (xhr, status, error) {
+            console.error("Error calling API:", error, xhr, status);
+            toastr.error("An error occurred while logging activity.");
+        }
+    });
 }

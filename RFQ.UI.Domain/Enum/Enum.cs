@@ -31,4 +31,12 @@
         WHATSAPP_PROVIDER = 10,
         RFQ_STATUS = 11
     }
+    public enum ProfileType
+    {
+        Admin = 1,       // CompanyTypeId = 1
+        Branch = 2,      // CompanyTypeId = 4
+        Corporate = 3,   // CompanyTypeId = 3
+        Franchise = 4,   // CompanyTypeId = 2
+        Vendor = 5       // CompanyTypeId = 2
+    }
 }

@@ -52,7 +52,7 @@ function Initialize() {
         paramName: "file",
         maxFiles: 1,
         parallelUploads: 1,
-        maxFilesize: 1,
+        maxFilesize: 4,
         addRemoveLinks: true,
         autoProcessQueue: false,
         acceptedFiles: "image/*",
@@ -320,20 +320,40 @@ function SaveFranchise(fileName, callback) {
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function (response) {
-            let companyId = response.result.companyId;
-            Saveattachment(companyId);
-            toastr.success("Franchise Detials Submitted Successfully!");
-            if (typeof callback === "function") {
-                callback(companyId);
+            if (response && response.success === true) {
+                let companyId = response.data.companyId;
+
+                Saveattachment(companyId);
+                toastr.success("Franchise Details Submitted Successfully!");
+                addMasterUserActivityLog(0, LogType.Create, "Franchise Details Submitted Successfully!", 0);
+
+                if (typeof callback === "function") {
+                    callback(companyId);
+                }
+            } else {
+                // Backend returned success: false (e.g., duplicate)
+                toastr.warning(response.message || "Franchise could not be saved.");
+
+                if (typeof callback === "function") {
+                    callback(null);
+                }
             }
         },
         error: function (xhr, status, error) {
+            console.error("AJAX Error:", {
+                status: status,
+                error: error,
+                responseText: xhr.responseText
+            });
+
             toastr.error("Failed to Submit Franchise Details!", "Error");
+
             if (typeof callback === "function") {
                 callback(null);
             }
         }
     });
+
     return companyId;
 };
 function FetchFranchise() {
@@ -457,6 +477,7 @@ function UpdateFranchise(fileName) {
         success: function (response) {
             if (response.result == "Success") {
                 toastr.success("Franchise Details Updated Successfully!");
+                addMasterUserActivityLog(0, LogType.Update, "Franchise Details Updated Successfully!", 0);
                 FetchFranchise();
             }
             else {
@@ -532,6 +553,7 @@ function DeleteFranchise(companyId, fileName, linkId) {
                             DeleteMasterAttachment(result[0].attachmentId);
                         }
                         toastr.success("Franchise Details Deleted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Delete, "Franchise Details Deleted Successfully!", 0);
                         $('#currentPage').val(1);
                         FetchFranchise();
 

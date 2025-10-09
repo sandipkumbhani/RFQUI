@@ -205,6 +205,7 @@ function SaveCompanyConfiguration(action) {
                 success: function (response) {
                     if (response.result == "Success") {
                         toastr.success("Company Configuration Details Submitted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Create, "Company Configuration Details Submitted Successfully!", 0);
                         if (typeof this.completeOnSuccess === "function") {
                             this.completeOnSuccess();
                         }
@@ -229,6 +230,7 @@ function SaveCompanyConfiguration(action) {
                 data: JSON.stringify(formData),
                 success: function (response) {
                     toastr.success("Company Configuration Details Submitted Successfully!");
+                    addMasterUserActivityLog(0, LogType.Create, "Company Configuration Details Submitted Successfully!", 0);
                     $('#companyConfigurationForm')[0].reset();
                     $('#ddlSmsProvider').val(null).trigger('change');
                     $('#ddlWhatsappProvider').val(null).trigger('change');
@@ -327,6 +329,7 @@ function UpdateCompanyConfiguration(companyConfigId) {
                 if (response.result == 'success') {
                     FetchCompanyConfiguration();
                     toastr.success("Company Configuration Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "Company Configuration Details Updated Successfully!", 0);
                     $("#formSection").hide();
                     $("#listSection").show();
                     $('#companyConfigurationForm')[0].reset();
@@ -367,6 +370,7 @@ function DeleteCompanyConfiguration(CompanyConfigrationId) {
                 success: function (response) {
                     if (response.result == "success") {
                         toastr.success("Company Configuration Details Deleted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Delete, "Company Configuration Details Deleted Successfully!", 0);
                         FetchCompanyConfiguration();
                         $('#currentPage').val(1);
                     }

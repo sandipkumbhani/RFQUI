@@ -61,8 +61,12 @@ namespace RFQ.UI.Controllers
         {
             try
             {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 var UserViewModel = new UserResponseDto();
+                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+                pagingParam.UserId = Convert.ToInt32(userid);
                 var result = await _usersService.GetAllUser(pagingParam);
+                
                 if (Request.IsAjaxRequest())
                 {
                     return Json(new
@@ -70,7 +74,8 @@ namespace RFQ.UI.Controllers
                         draw = result.PageNumber,
                         recordsTotal = result.TotalRecordCount,
                         recordsFiltered = result.TotalRecordCount,
-                        data = result.Result
+                        data = result.Result,
+                        UserId = result.Equals(userid)
                     });
                 }
                 else

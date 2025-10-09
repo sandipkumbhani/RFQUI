@@ -83,7 +83,7 @@ $(document).ready(function () {
                         $("#txtVendorName").val(gstModel.tradeName);
                         $("#txtAadharVerified").val(gstModel.aadhaarVerified);
                         $("#txtGstVerifiedOn").val(new Date().toISOString().split('T')[0]);
-                        $("#txtVerifiedGstNo").val();
+                        $("#txtVerifiedGstNo").val(gstModel.gstNo);
                     } else {
                         toastr.warning(response.messageDescription, "Warning");
                         ClearGstFields();
@@ -459,6 +459,7 @@ function SaveVendor(action) {
                             partyId = response.data.partyId
                             Saveattachment(partyId);
                             toastr.success("Vendor Details Submitted Successfully!");
+                            addMasterUserActivityLog(0, LogType.Create, "Vendor Details Submitted Successfully!", 0);
                             if (typeof this.completeOnSuccess === "function") {
                                 this.completeOnSuccess();
                             }
@@ -494,6 +495,7 @@ function SaveVendor(action) {
                             partyId = response.data.partyId;
                             Saveattachment(partyId);
                             toastr.success("Vendor details submitted successfully!");
+                            addMasterUserActivityLog(0, LogType.Create, "Vendor Details Submitted Successfully!", 0);
                             //// Reset form
                             $('#vendorForm')[0].reset();
                             $('#ddlCity').val(0).trigger("change");
@@ -596,6 +598,7 @@ function EditVendor(partyId) {
         var panVerifiedDate = new Date(formData.panVerifiedOn).toISOString().split('T')[0];
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
+        $("#panEKycButton").click();
         $("#txtVendorName").val(formData.partyName);
         $("#ddlVendorCategory").val(formData.partyCategoryId).trigger('change');
         $("#from-search-box").val(formData.addressLine);
@@ -683,6 +686,7 @@ function UpdateVendor() {
             if (result.result == "Success") {
                 $("#addVendorDiv").css('display', 'none')
                 toastr.success("Vendor Details Updated Successfully!");
+                addMasterUserActivityLog(0, LogType.Update, "Vendor Details Updated Successfully!", 0);
                 FetchVendor();
                 $("#backButton").show();
             }
@@ -744,6 +748,7 @@ function DeleteVendor(partyId, linkId) {
                             DeleteMasterAttachment(result[0].attachmentId);
                         }
                         toastr.success("Vendor Details Deleted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Delete, "Vendor Details Deleted Successfully!", 0);
                         $('#currentPage').val(1);
                         FetchVendor();
                         $("#backButton").css('display', 'block');

@@ -187,6 +187,10 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a valid PAN Number", "Validation Error");
         return false;
     }
+    if (IsNullOrEmpty($("#txtGstNumber").val()) || !ValidateGstNumber($("#txtGstNumber").val())) {
+        toastr.warning("Please enter a valid GST Number", "Validation Error");
+        return false;
+    }
     return true;
 }
 function GetAllFranchiseList(callback) {
@@ -200,7 +204,7 @@ function GetAllFranchiseList(callback) {
             const select = document.getElementById("ddlFranchisename");
             select.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Franchise";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -279,6 +283,7 @@ function ButtonUpdateClick() {
                 success: function (result) {
                     if (result.result == "success") {
                         toastr.success("Corporate Company Details Updated Successfully!");
+                        addMasterUserActivityLog(0, LogType.Update, "Corporate Company Details Updated Successfully", 0);
                         $("#formDiv").css('display', 'none');
                         FetchCorporateCompany();
                         $('#CompanyTypeForm')[0].reset();
@@ -354,6 +359,9 @@ function DeleteCorporateCompany(companyId, linkId) {
                         }
 
                         toastr.success("Corporate Company has been deleted successfully.");
+
+                        addMasterUserActivityLog(0, LogType.Delete, "Corporate Company has been deleted successfully.", 0);
+
                         $('#currentPage').val(1);
                         FetchCorporateCompany();
                         $("#backButton").css('display', 'block');
@@ -400,6 +408,33 @@ function SaveCorporateCompany(action) {
         GSTNo: gSTNumber,
         ParentCompanyId: franchiseName
     };
+    //if (action == "save") {
+    //    $.ajax({
+    //        url: saveUrl,
+    //        type: "POST",
+    //        contentType: "application/json",
+    //        data: JSON.stringify(formData),
+    //        success: function (response) {
+    //            let companyId = response.result.companyId;
+    //            if (companyId != null) {
+    //                Saveattachment(companyId);
+    //                toastr.success("Corporate Company Details Submitted Successfully");
+    //                if (typeof this.completeOnSuccess === "function") {
+    //                    this.completeOnSuccess();
+    //                }
+    //            }
+    //            else {
+    //                toastr.error("Failed to Submit Corporate Company Details!", "Error");
+    //            }
+    //        },
+    //        error: function (xhr, status, error) {
+    //            toastr.error("Failed to Submit Corporate Company Details!", "Error");
+    //        },
+    //        completeOnSuccess: function () {
+    //            FetchCorporateCompany();
+    //        }
+    //    });
+    //}
     if (action == "save") {
         $.ajax({
             url: saveUrl,
@@ -411,6 +446,9 @@ function SaveCorporateCompany(action) {
                 if (companyId != null) {
                     Saveattachment(companyId);
                     toastr.success("Corporate Company Details Submitted Successfully");
+
+                    addMasterUserActivityLog(0, LogType.Create,"Corporate Company Details Submitted Successfully",0);
+
                     if (typeof this.completeOnSuccess === "function") {
                         this.completeOnSuccess();
                     }
@@ -427,6 +465,7 @@ function SaveCorporateCompany(action) {
             }
         });
     }
+
     else if (action == "saveNew") {
         $.ajax({
             url: saveUrl,
@@ -437,6 +476,9 @@ function SaveCorporateCompany(action) {
                 let companyId = response.result.companyId;
                 Saveattachment(companyId);
                 toastr.success("Corporate Company Details Submitted Successfully");
+
+                addMasterUserActivityLog(0, LogType.Create, "Corporate Company Details Submitted Successfully", 0);
+
                 $('#CompanyTypeForm')[0].reset();
                 $('#ddlFranchisename').val(null).trigger('change');
                 $('#ddlCity').val(null).trigger('change');

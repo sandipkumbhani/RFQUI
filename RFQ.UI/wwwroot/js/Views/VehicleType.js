@@ -103,6 +103,7 @@ function SaveVehicleType(action) {
                 success: function (response) {
                     if (response.statusCode == 200) {
                         toastr.success(response.message, "Success");
+                        addMasterUserActivityLog(0, LogType.Create, "VehicleType Details Submitted Successfully!", 0);
                         if (typeof this.completeOnSuccess === "function") {
                             this.completeOnSuccess();
                         }
@@ -128,6 +129,7 @@ function SaveVehicleType(action) {
                 success: function (response) {
                     if (response.statusCode == 200) {
                         toastr.success(response.message, "Success");
+                        addMasterUserActivityLog(0, LogType.Create, "VehicleType Details Submitted Successfully!", 0);
                         $('#VehicleTypeForm')[0].reset();
                     }
                     else {
@@ -176,7 +178,8 @@ function UpdateVechileType() {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    toastr.success("Vehicle Type Details Submitted Successfully!");
+                    toastr.success("Vehicle Type Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "VehicleType Details Updated Successfully!", 0);
                     $("#addVehicleTypeDiv").addClass("d-none");
                     $('#btnAddVehicleType').removeClass('d-none');
                     FetchVehicleTypes();
@@ -212,6 +215,7 @@ function DeleteVehicleType(vehicleTypeId) {
                     $('#currentPage').val(1);
                     FetchVehicleTypes();
                     toastr.success("Vehicle Type has been deleted successfully!");
+                    addMasterUserActivityLog(0, LogType.Delete, "Vehicle Type has been deleted successfully!", 0);
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to delete Vehicle Type details!", "Error");

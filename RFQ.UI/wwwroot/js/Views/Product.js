@@ -75,6 +75,7 @@ function SaveProduct(action) {
                 
                 if (response.statusCode == 200) {
                     toastr.success("Item Save Successfully!");
+                    addMasterUserActivityLog(0, LogType.Create, "Item Save Successfully!", 0);
                     if (typeof this.completeOnSuccess === "function") {
                         this.completeOnSuccess();
                     }
@@ -92,25 +93,25 @@ function SaveProduct(action) {
 
         });
     }
-    else if (action == "saveNew") {
+    
+    else if (action === "saveNew") {
         $.ajax({
             url: saveProductUrl,
-            method: 'POST',
+            type: 'POST',
             contentType: 'application/json',
-            dataType: "json",
             data: JSON.stringify(formData),
             success: function (response) {
-                response = JSON.parse(response)
-                if (response.success) {
-                    toastr.success("Item Save Successfully!");
+                if (response) {
+                    toastr.success("Item Save Successfully!", "Success");
+                    addMasterUserActivityLog(0, LogType.Create, "Item Save Successfully!", 0);
                     $('#productForm')[0].reset();
+                    
                 } else {
-                    toastr.warning(response.message, "warning");
+                    toastr.error("Failed to productForm.", "Error");
                 }
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Product Details!", "Error");
-
             }
         });
     }
@@ -170,6 +171,7 @@ function UpdateProduct() {
             success: function (response) {
                 if (response.result == 'Success') {
                     toastr.success("Product Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "Product Updated Successfully!", 0);
                     FetchProduct();
 
                 }
@@ -203,6 +205,7 @@ function DeleteProduct(itemId) {
                 data: JSON.stringify(itemId),
                 success: function (response) {
                     toastr.success("Product Deleted Successfully!");
+                    addMasterUserActivityLog(0, LogType.Delete, "Product Deleted Successfully!", 0);
                     $('#currentPage').val(1);
                     FetchProduct();
                 },

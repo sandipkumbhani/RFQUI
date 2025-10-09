@@ -7,12 +7,13 @@ var companyid = ''
 var locationid;
 $(document).ready(function () {
 
-    // Get profileid from cookies value and if user is admin then Disable location dropdwn
     profileid = getCookieValue('profileid');
     companyid = getCookieValue('companyid');
     locationid = getCookieValue('locationid');
+
     if (profileid == EnumInternalMaster.ADMIN) {
         $('#ddlLocation').prop('disabled', true);
+        $("#btnActivitylog").removeClass('d-none');
     }
     $("#btnCancel").on("click", function () {
         FetchUser();
@@ -47,11 +48,21 @@ $(document).ready(function () {
 $("#btnAddUser").on("click", function (e) {
     e.preventDefault();
     $("#userListSection").hide();
+    $("#btnUpdate").hide();
     $("#userFormSection").show();
+    $("#btnSaveForm").show();
+    $("#btnSaveAndNewForm").show();
+    $("#txtPassword").prop("disabled", false);
     $('#ddlCompanyAndFranchise').val(Number(companyid)).trigger('change');
 
-    if (profileid != EnumProfile.Admin)
+
+    if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
         $('#ddlCompanyAndFranchise').prop('disabled', true);
+    }
+    else {
+        $('#ddlCompanyAndFranchise').val(0).trigger('change');
+        $('#ddlCompanyAndFranchise').prop('disabled', false);
+    }
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -82,7 +93,7 @@ function Initialization() {
     $("#txtLoginName").on("blur", function () {
         var loginname = $(this).val();
         if (!/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginname)) {
-            toastr.warning("Please enter a valid LoginName", "Validation Error");
+            toastr.warning("Login Name must be 3–20 characters, start with a letter, and contain only letters,No numbers and WhightSpace, . or _ (no consecutive symbols)", "Invalid Format");
             return;
         }
     });
@@ -189,6 +200,7 @@ function SaveUser(action) {
             success: function (response) {
                 if (response.result == "success") {
                     toastr.success("User Details Submitted Successfully!");
+                    addMasterUserActivityLog(0, LogType.Create, "User Details Submitted Successfully!", 0);
                     if (typeof this.completeOnSuccess === "function") {
                         this.completeOnSuccess();
                     }
@@ -216,6 +228,7 @@ function SaveUser(action) {
                 success: function (response) {
                     if (response.result == "success") {
                         toastr.success("User Details Submitted Successfully!");
+                        addMasterUserActivityLog(0, LogType.Create, "User Details Submitted Successfully!", 0);
                         $('#userbodyform')[0].reset();
                         $('#ddlCompanyAndFranchise').val(null).trigger('change');
                         $('#ddlLocation').val(null).trigger('change');
@@ -259,9 +272,17 @@ function EditUser(userId) {
     if (formdata.locationId != 0) {
         $('#ddlLocation').val(formdata.locationId).trigger('change');
     }
-    if (profileid != EnumInternalMaster.ADMIN) {
+    //if (profileid != EnumInternalMaster.ADMIN) {
+    //    $('#ddlCompanyAndFranchise').prop('disabled', true);
+    //}
+    if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
         $('#ddlCompanyAndFranchise').prop('disabled', true);
     }
+    else {
+        $('#ddlCompanyAndFranchise').val(0).trigger('change');
+        $('#ddlCompanyAndFranchise').prop('disabled', false);
+    }
+
     if (profileid == EnumProfile.Branch) {
         $('#ddlLocation').val(Number(formdata.locationId)).trigger('change');
         $('#ddlLocation').prop('disabled', true);
@@ -288,6 +309,7 @@ function DeleteUser(userId) {
                 success: function (response) {
                     FetchUser();
                     toastr.success("User details have been deleted successfully.");
+                    addMasterUserActivityLog(0, LogType.Delete, "User details have been deleted successfully.", 0);
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to delete user details.", "Error");
@@ -325,6 +347,7 @@ function UpdateUser() {
                 if (result.result == "success") {
                     FetchUser();
                     toastr.success("User Details Updated Successfully!");
+                    addMasterUserActivityLog(0, LogType.Update, "User Details Updated Successfully!", 0);
                     $('#userbodyform')[0].reset();
                     $('#ddlCompanyAndFranchise').val(null).trigger('change');
                     $('#ddlLocation').val(null).trigger('change');
@@ -352,7 +375,14 @@ function GetFranchiseAndCorporateName() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            var data = response.filter(x => x.companyTypeId == 2 || x.companyTypeId == 3);
+            var data = null
+            var profileid = getCookieValue("profileid");
+            if (!IsNullOrEmpty(profileid)) {
+                if (profileid == EnumProfile.Admin)
+                    data = response.filter(x => x.companyTypeId == 2);
+                if (profileid == EnumProfile.Franchise || profileid == EnumProfile.Corporate || profileid == EnumProfile.Vendor)
+                    data = response.filter(x => x.companyTypeId == 3);
+            }
             const CompanyAndFranchiseDrp = document.getElementById("ddlCompanyAndFranchise");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = 0;
@@ -374,11 +404,12 @@ function GetFranchiseAndCorporateName() {
 }
 function ValidationCheck() {
     if (IsNullOrEmpty($("#txtName").val())) {
+        debugger;
         toastr.warning("Please enter a valid User Name", "Validation Error");
         return false;
     }
     if (IsNullOrEmpty($("#txtLoginName").val()) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test($("#txtLoginName").val())) {
-        toastr.warning("Login Name is Required", "Validation Error");
+        toastr.warning("Login Name must be 3–20 characters, start with a letter, and contain only letters,No numbers and WhightSpace, . or _ (no consecutive symbols)", "Invalid Format");
         return false;
     }
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
@@ -391,6 +422,7 @@ function ValidationCheck() {
     //    toastr.warning("Please enter a valid email", "Validation Error");
     //    return false;
     //}
+
     if (IsNullOrEmpty($("#ddlCompanyAndFranchise").val()) || !isValidateSelect($("#ddlCompanyAndFranchise").val())) {
         toastr.warning("Please select a Corporate Name", "Validation Error");
         return false;
@@ -398,10 +430,14 @@ function ValidationCheck() {
     if ($('#ddlLocation').is(':disabled')) {
         return true;
     }
-    //else if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
-    //    toastr.warning("Please select a Location", "Validation Error");
-    //    return false;
-    //}
+
+    if (profileid == EnumProfile.Corporate) {
+        if (IsNullOrEmpty($("#ddlLocation").val()) || !isValidateSelect($("#ddlLocation").val())) {
+            toastr.warning("Please select a Location", "Validation Error");
+            return false;
+        }
+    }
+
     if (IsNullOrEmpty($("#txtMobileNo").val()) || !isMobile($("#txtMobileNo").val())) {
         toastr.warning("Please enter a valid Mobile Number", "Validation Error");
         return false;
