@@ -193,9 +193,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>`
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-eye-line" ></i></a>`
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-eye-line" ></i></a>`
+            //}
             if (IsCancel) {
                 rowsHtml += `<a onclick="ViewVehicleType(${item.vehicleTypeId})" class="icon-btn"><i class="ri-delete-bin-3-line"></i></a>`
             }
@@ -216,9 +216,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>`
             }
-            if (IsView) {
-                rowsHtml += `<a onclick="ViewCompanyConfiguration(${item.companyConfigId})" class="icon-btn"><i class="ri-eye-line"></i></a>`
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a onclick="ViewCompanyConfiguration(${item.companyConfigId})" class="icon-btn"><i class="ri-eye-line"></i></a>`
+            //}
             if (IsCancel) {
                 rowsHtml += ` <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>`
             }
@@ -238,9 +238,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewVehicle(${item.vehicleId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewVehicle(${item.vehicleId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -266,9 +266,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditVendor(${item.partyId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewVendor(${item.partyId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewVendor(${item.partyId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteVendor(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -293,9 +293,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditFranchise(${item.companyId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewFranchise(${item.companyId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewFranchise(${item.companyId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteFranchise(${item.companyId}, '${item.logoImage}')"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -318,9 +318,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditDriver(${item.driverId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewDriver(${item.driverId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewDriver(${item.driverId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteDriver(${item.driverId}, '${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -345,9 +345,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewCustomer(${item.partyId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewCustomer(${item.partyId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -366,9 +366,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditProduct(${item.itemId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewProduct(${item.itemId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewProduct(${item.itemId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteProduct(${item.itemId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -395,9 +395,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditCorporateCompany(${item.companyId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewCorporateCompany(${item.companyId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewCorporateCompany(${item.companyId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteCorporateCompany(${item.companyId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -420,9 +420,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditUser(${item.userId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewUser(${item.userId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewUser(${item.userId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -449,9 +449,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditLocation(${item.locationId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewLocation(${item.locationId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewLocation(${item.locationId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -495,9 +495,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditRfq(${item.rfqId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewRfq(${item.rfqId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewRfq(${item.rfqId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteRfq(${item.rfqId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -522,9 +522,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditRfqFinalization(${item.rfqFinalId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewRfqFinalization(${item.rfqFinalId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewRfqFinalization(${item.rfqFinalId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteRfqFinalization(${item.rfqFinalId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -566,9 +566,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="UpdateVehicleIndent(${item.indentId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewVehicleIndent(${item.indentId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewVehicleIndent(${item.indentId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteVehicleIndent(${item.indentId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -598,9 +598,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="UpdateVehiclePlacement(${item.placementId})"><i class="ri-edit-2-line"></i></a>`;
             }
-            if (IsView) {
-                rowsHtml += `<a class="icon-btn" onclick="ViewVehiclePlacement(${item.placementId})"><i class="ri-eye-line"></i></a>`;
-            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewVehiclePlacement(${item.placementId})"><i class="ri-eye-line"></i></a>`;
+            //}
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteVehiclePlacement(${item.placementId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
@@ -785,6 +785,7 @@ function GetAllLocation(dropdownId, companyIdParam, callback) {
         success: function (response) {
             var data = response
             const selectLocation = document.getElementById(dropdownId);
+            selectLocation.innerHTML = "";
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select Location";

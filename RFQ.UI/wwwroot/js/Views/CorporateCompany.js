@@ -5,7 +5,7 @@ var companyID;
 $(document).ready(function () {
     profileId = getCookieValue('profileid');
     companyID = getCookieValue('companyid');
-    GetAllFranchiseList(function () {
+    GetFranchiseAndCorporateName(function () {
         if (profileId == EnumProfile.Franchise) {
             $('#ddlFranchisename').val(Number(companyID)).trigger('change');
             $('#ddlFranchisename').prop('disabled', true);
@@ -57,8 +57,11 @@ $(document).ready(function () {
         window.location.reload(true);
 
     });
+
+
     ButtonUpdateClick();
 });
+
 $('#addCompany').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
@@ -74,6 +77,7 @@ function FetchCorporateCompany() {
     $("#btnSaveCompanyType").show();
     FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', null, null, IsEdit, IsView, IsCancel);
 }
+
 $('#corporateTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
@@ -374,7 +378,6 @@ function DeleteCorporateCompany(companyId, linkId) {
         }
     });
 }
-
 function SaveCorporateCompany(action) {
     var companyName = $("#txtCompanyName").val();
     var franchiseName = $("#ddlFranchisename").val();
@@ -447,7 +450,7 @@ function SaveCorporateCompany(action) {
                     Saveattachment(companyId);
                     toastr.success("Corporate Company Details Submitted Successfully");
 
-                    addMasterUserActivityLog(0, LogType.Create,"Corporate Company Details Submitted Successfully",0);
+                    addMasterUserActivityLog(0, LogType.Create, "Corporate Company Details Submitted Successfully", 0);
 
                     if (typeof this.completeOnSuccess === "function") {
                         this.completeOnSuccess();
@@ -535,10 +538,41 @@ function EditCorporateCompany(companyId) {
             EditMasterAttachment(attachmantData);
         }
     });
-} 
-
+}
 function ViewCorporateCompany(companyId) {
     EditCorporateCompany(companyId);
     $('#CompanyTypeForm').find('input, select, textarea, button, a').prop('disabled', true);
     $("#btnupdate").addClass('d-none');
+}
+function GetFranchiseAndCorporateName() {
+    var GetUrl = '/Home/GetAllCompanyAndFranchise';
+    $.ajax({
+        url: GetUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            var data = null
+            var profileid = getCookieValue("profileid");
+            var userid = getCookieValue("userid");
+            if (!IsNullOrEmpty(profileid)) {
+                data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
+            }
+            const CompanyAndFranchiseDrp = document.getElementById("ddlFranchisename");
+            let placeholderOption = document.createElement("option");
+            placeholderOption.value = 0;
+            placeholderOption.textContent = "Franchise/Corporate Name";
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            CompanyAndFranchiseDrp.appendChild(placeholderOption);
+            data.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.companyId;
+                opt.textContent = option.companyName;
+                CompanyAndFranchiseDrp.appendChild(opt);
+            });
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
 }

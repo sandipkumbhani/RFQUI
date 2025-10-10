@@ -139,6 +139,18 @@ function Initialization() {
         var action = $(this).data('action');
         SaveUser(action);
     });
+
+    $("#ddlCompanyAndFranchise").on("change", function () {
+        const selectedValue = $(this).val();
+
+        GetAllLocation("ddlLocation", selectedValue, function () {
+            if (profileid == EnumProfile.Branch) {
+                $('#ddlLocation').val(Number(locationid)).trigger('change');
+                $('#ddlLocation').prop('disabled', true);
+            }
+        });
+    });
+
 }
 function FetchUser() {
     $('#userListSection').show();
@@ -381,11 +393,12 @@ function GetFranchiseAndCorporateName() {
         success: function (response) {
             var data = null
             var profileid = getCookieValue("profileid");
+            var userid = getCookieValue("userid");
             if (!IsNullOrEmpty(profileid)) {
                 if (profileid == EnumProfile.Admin)
-                    data = response.filter(x => x.companyTypeId == 2);
+                    data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
                 if (profileid == EnumProfile.Franchise || profileid == EnumProfile.Corporate || profileid == EnumProfile.Vendor)
-                    data = response.filter(x => x.companyTypeId == 3);
+                    data = response.filter(x => x.companyTypeId == 3 && x.createdBy == userid);
             }
             const CompanyAndFranchiseDrp = document.getElementById("ddlCompanyAndFranchise");
             let placeholderOption = document.createElement("option");
@@ -457,7 +470,7 @@ $('#tableuserSearch').off('keyup').on('keyup', function () {
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchUser('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
-}); 
+});
 
 function ViewUser(userId) {
     EditUser(userId);

@@ -524,7 +524,7 @@ select {
         }
 
 .sidebar-menu-area li.dropdown.open > a i {
-    display: none;
+    /*display: none;*/
 }
 
     .sidebar-menu-area li.dropdown.open > a i + i {
