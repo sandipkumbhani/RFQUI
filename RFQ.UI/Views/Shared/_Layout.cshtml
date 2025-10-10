@@ -488,10 +488,10 @@
                                     <li class="side-nav-item dropdown">
                                         <a class="side-nav-link"
                                            data-bs-toggle="collapse"
-                                           data-bs-target="#' + @collapseId + '"
+                                           data-bs-target="@collapseId"
                                            aria-expanded="false"
-                                           aria-controls="' + @collapseId + '">
-                                            <i class="@group.Key.LinkGroupIcon" style="fs-2"></i>
+                                           aria-controls="@collapseId">
+                                             <i class="@group.Key.LinkGroupIcon"></i>
                                             <span>@group.Key.LinkGroupName</span>
                                         </a>
                                         <ul class="sidebar-submenu collapse" id="@collapseId" data-bs-parent="@collapseId">
@@ -615,6 +615,7 @@
         function toggleDropdown(element) {
             element.classList.toggle('dropdown-open');
         }
+
         // function DropdownManageScript(){
         //     setTimeout(function () {
         //                 var currentUrl = window.location.pathname.toLowerCase();
