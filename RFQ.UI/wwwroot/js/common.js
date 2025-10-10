@@ -785,6 +785,7 @@ function GetAllLocation(dropdownId, companyIdParam, callback) {
         success: function (response) {
             var data = response
             const selectLocation = document.getElementById(dropdownId);
+            selectLocation.innerHTML = "";
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select Location";
