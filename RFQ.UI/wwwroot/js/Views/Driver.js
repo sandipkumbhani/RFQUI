@@ -33,11 +33,12 @@ $(document).ready(function () {
     GetAllCityList("ddlCity");
     GetDriverType();
     DlEKycclick();
-    FetchDriverCode();
+    
     FetchDriverList();
     $("#btnAddDriver").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
+        FetchDriverCode();
     });
     $("#btnCancel").on("click", function () {
         FetchDriverList();
@@ -265,7 +266,7 @@ function SaveDriver(uploadedFileName, callback) {
                     toastr.success("Driver Login Create Successfully!");
                 }
                 else {
-                    toastr.error("User already exists", "Error");
+                    toastr.error("User with this WhatsApp number already exists.", "Error");
                 }
             },
             error: function (req, status, error) {
@@ -699,10 +700,7 @@ function InitializeFields() {
 }
 function ValidationCheck() {
 
-    //if (IsNullOrEmpty($("#txtDriverName").val())) {
-    //    toastr.warning("Please complete DL E-KYC before saving!","Validation Error");
-    //    return false;
-    //}
+    
 
     if (IsNullOrEmpty($("#ddlDriverType").val())) {
         toastr.warning("Please select a valid Driver Type", "Validation Error");
@@ -716,6 +714,19 @@ function ValidationCheck() {
 
     if (IsNullOrEmpty($("#txtDateOfBirth").val())) {
         toastr.warning("Please enter a valid DateOfBirth", "Validation Error");
+        return false;
+    }
+
+    if (IsNullOrEmpty($("#txtDriverName").val())) {
+        toastr.warning("Please enter a valid Driver Name","Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtDLIssueDate").val())) {
+        toastr.warning("Please enter a DL Issue Date", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtDLExpiryDate").val())) {
+        toastr.warning("Please enter a valid DL Expiry Date ", "Validation Error");
         return false;
     }
 

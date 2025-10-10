@@ -463,7 +463,7 @@ function SaveVendor(action) {
                         toastr.success("Vendor Login Create Successfully!");
                     }
                     else {
-                        toastr.error("User already exists", "Error");
+                        toastr.error("User with this WhatsApp number already exists.", "Error");
                     }
                 },
                 error: function (req, status, error) {
