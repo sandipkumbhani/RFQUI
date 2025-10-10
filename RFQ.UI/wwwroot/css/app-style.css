@@ -931,30 +931,34 @@ select {
     display: flex;
     align-items: center;
 }
-.button-main .card-link{
-  font-size: 1rem;
-  font-weight: bold;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--ft-white);
-  padding: 0.8125rem 1rem;
-  background: var(--ft-primary);
-  border-radius: 8px;
-  max-width: 160px;
-  width: 100%;
-}
-.button-main .card-link i{
-  font-size: 1.375rem;
-  font-weight: normal;
-  line-height: 22px;
-}
-.button-main .card-link.outline-bar{
-  border: 1px solid var(--ft-primary);
-  background: transparent;
-  color: var(--ft-primary);
-}
+
+    .button-main .card-link {
+        font-size: 1rem;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: var(--ft-white);
+        padding: 0.8125rem 1rem;
+        background: var(--ft-primary);
+        border-radius: 8px;
+        max-width: 160px;
+        width: 100%;
+    }
+
+        .button-main .card-link i {
+            font-size: 1.375rem;
+            font-weight: normal;
+            line-height: 22px;
+        }
+
+        .button-main .card-link.outline-bar {
+            border: 1px solid var(--ft-primary);
+            background: transparent;
+            color: var(--ft-primary);
+        }
+
 .user-image {
     width: 73px;
     height: 73px;
@@ -1202,7 +1206,7 @@ table.dataTable thead > tr > th.sorting::before, table.dataTable thead > tr > th
     font-size: 1rem;
     margin-left: 0.5rem;
     color: #6c757d;
-}   
+}
 
 /* Ascending sort */
 table.dataTable thead > tr > th.sorting::after, table.dataTable thead > tr > th.sorting_asc::after, table.dataTable thead > tr > th.sorting_desc::after, table.dataTable thead > tr > th.sorting_asc_disabled::after, table.dataTable thead > tr > th.sorting_desc_disabled::after, table.dataTable thead > tr > td.sorting::after, table.dataTable thead > tr > td.sorting_asc::after, table.dataTable thead > tr > td.sorting_desc::after, table.dataTable thead > tr > td.sorting_asc_disabled::after, table.dataTable thead > tr > td.sorting_desc_disabled::after {
@@ -1351,7 +1355,6 @@ table.dataTable thead th.sorting_desc::after {
 }
 
 .action-items a:nth-of-type(1) {
-    color: var(--ft-icon-green);
 }
 
 .action-items a:nth-of-type(2) {
@@ -1360,6 +1363,18 @@ table.dataTable thead th.sorting_desc::after {
 
 .action-items a:nth-of-type(3) {
     color: var(--ft-icon-primary);
+}
+
+.ri-edit-2-line {
+    color: var(--ft-icon-primary);
+}
+
+.ri-eye-line {
+    color: var(--ft-icon-green);
+}
+
+.ri-delete-bin-3-line {
+    color: var(--ft-icon-red);
 }
 
 .datatable-footer-bottom .dataTables_paginate ul li.page-item a {
@@ -1401,13 +1416,13 @@ table.dataTable thead th.sorting_desc::after {
     font-weight: normal;
 }
 
-.datatable-footer-bottom .dataTables_paginate ul li.page-item.arrow a:hover {
-    color: var(--ft-primary);
-}
+    .datatable-footer-bottom .dataTables_paginate ul li.page-item.arrow a:hover {
+        color: var(--ft-primary);
+    }
 
-.datatable-footer-bottom .dataTables_paginate ul li.page-item.arrow a:hover {
-    color: var(--ft-primary);
-}
+    .datatable-footer-bottom .dataTables_paginate ul li.page-item.arrow a:hover {
+        color: var(--ft-primary);
+    }
 
 .page-link:focus {
     box-shadow: none;
@@ -1579,7 +1594,8 @@ table.dataTable thead th.sorting_desc::after {
     display: inline-flex;
     color: var(--ft-primary);
 }
-.add-btn a{
+
+.add-btn a {
     font-size: 1rem;
     font-weight: 600;
     display: flex;
@@ -1830,11 +1846,11 @@ table.dataTable thead th.sorting_desc::after {
     border: 1px solid rgb(var(--ft-icon-primary-rgb), 0.5);
 }
 
-    .btn-btn-light-primary i {
-        font-size: 1.375rem;
-        font-weight: normal;
-        line-height: 22px;
-    }
+.btn-btn-light-primary i {
+    font-size: 1.375rem;
+    font-weight: normal;
+    line-height: 22px;
+}
 
 
 .kyc-input {
@@ -2591,8 +2607,9 @@ body.overlay-active {
     text-align: center;
     margin-bottom: 30px;
 }
-.phone-input{
-    padding-left:90px;
+
+.phone-input {
+    padding-left: 90px;
 }
 
 

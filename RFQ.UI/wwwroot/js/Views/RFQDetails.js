@@ -18,7 +18,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
     $("#btnCancel").on("click", function () {
         FetchRfqList();
@@ -34,6 +34,7 @@ $(document).ready(function () {
     $("#btnAddRfq").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
+        $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
     });
     $('#tableDivLink').on('click', function (e) {
         e.preventDefault();
@@ -558,6 +559,10 @@ function SaveAndSaveNew(action) {
     }
 }
 function EditRfq(rfqID) {
+    if ($("#btnUpdateRfq").hasClass('d-none')) {
+        $("#btnUpdateRfq").removeClass('d-none');
+        $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
+    }
     var data = viewModelDto.filter(x => x.rfqId === rfqID);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, rfqID, function (list) {
@@ -763,7 +768,7 @@ function FetchRfqList() {
     //});
     FetchRfqNo();
     ResetAttachmentRepeater();
-    FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 $('#rfqTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
@@ -878,4 +883,9 @@ function GetPreviousQuotesList() {
             toastr.error('Failed to fetch previous quotes:', "Error");
         }
     });
+}
+function ViewRfq(rfqId) {
+    EditRfq(rfqId);
+    $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdateRfq").addClass('d-none');
 }

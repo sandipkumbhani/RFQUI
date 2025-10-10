@@ -242,7 +242,6 @@ function Save(action) {
     var availVehicleCount = $("#txtAvailableVehicle").val();
     var RfqId = $("#RfqId").val();
     var vendorId = $("#vendorId").val();
-    debugger;
     var formdata = {
         rfqRateId: 0,
         rfqId: parseInt(RfqId),

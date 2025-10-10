@@ -26,7 +26,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     InitializeFields();
@@ -313,7 +313,7 @@ function FetchDriverList() {
     $("#btnSaveNewDriver").show();
     ResetForm();
     ResetAttachmentRepeater();
-    FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 };
 
 $('#driverTableSearch').off('keyup').on('keyup', function () {
@@ -330,6 +330,9 @@ function FormatDateToLocal(dateString) {
     return localDate.toISOString().split('T')[0];
 }
 function EditDriver(driverId) {
+    if ($("#btnUpdateDriver").hasClass('d-none')) {
+        $("#btnUpdateDriver").removeClass('d-none');
+    }
     var data = viewModelDto.filter(x => x.driverId == driverId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, driverId, function (list) {
@@ -736,6 +739,12 @@ function ValidationCheck() {
     //    return false;
     //}
     return true;
+}
+
+function ViewDriver(driverId) {
+    EditDriver(driverId);
+    $('#driverForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdateDriver").addClass('d-none');
 }
 
 function FetchDriverCode() {

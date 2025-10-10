@@ -49,7 +49,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
     UpdateVechileType();
     FetchVehicleTypes();
@@ -70,18 +70,18 @@ function FetchVehicleTypes() {
     $('#tableDiv').show();
     $("#addVehicleTypeDiv").addClass("d-none");
     $('#btnAddVehicleType').removeClass('d-none');
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 
 $('#vehicleTypesTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 })
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 });
 function SaveVehicleType(action) {
     if (OnSubmitValidation()) {
@@ -145,6 +145,7 @@ function SaveVehicleType(action) {
 }
 function EditVehicleType(vehicleTypeId) {
     //var data = vehicleTypeViewModelDtos.filter(x => x.vehicleTypeId == vehicleTypeId);
+    $("#updateButton").removeClass('d-none')
     var data = viewModelDto.filter(x => x.vehicleTypeId == vehicleTypeId);
     EditVehicleTypeModelDtos = data[0];
     $('#tableDiv').hide();
@@ -225,5 +226,10 @@ function DeleteVehicleType(vehicleTypeId) {
     });
 }
 
+function ViewVehicleType(vehicleTypeId) {
+    EditVehicleType(vehicleTypeId);
+    $('#VehicleTypeForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#updateButton").addClass('d-none');
+}
 
 

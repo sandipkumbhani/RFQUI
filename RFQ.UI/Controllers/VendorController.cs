@@ -10,30 +10,36 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class VendorController : Controller
+    public class VendorController : BaseController
     {
         private readonly IVendorService _vendorService;
         private readonly GlobalClass _globalClass;
-        public VendorController(IVendorService vendorService, GlobalClass globalClass)
+        private readonly IMenuServices _menuServices;
+        public VendorController(IVendorService vendorService, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _vendorService = vendorService;
             _globalClass = globalClass;
+            _menuServices = menuServices;
         }
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
 
-        public ActionResult VendorRating()
+        public async Task<ActionResult> VendorRating()
         {
+            await SetMenuAsync();
             return View();
         }
-        public ActionResult VendorRequest()
+        public async Task<ActionResult> VendorRequest()
         {
+            await SetMenuAsync();
             return View();
         }
-        public ActionResult QuoteRoleVendor()
+        public async Task<ActionResult> QuoteRoleVendor()
         {
+            await SetMenuAsync();
             return View();
         }
         [HttpGet]

@@ -3,10 +3,20 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Tracking Provider";
+    bool IsAdd = (bool)ViewData["IsAdd"];
+    bool IsEdit = (bool)ViewData["IsEdit"];
+    bool IsView = (bool)ViewData["IsView"];
+    bool IsCancel = (bool)ViewData["IsCancel"];
+
 }
 
 @section Scripts {
-
+    <script>
+        var IsAdd = @IsAdd.ToString().ToLower();
+        var IsEdit = @IsEdit.ToString().ToLower();
+        var IsView = @IsView.ToString().ToLower();
+        var IsCancel = @IsCancel.ToString().ToLower();
+    </script>
 }
 
 <div id="formDiv">

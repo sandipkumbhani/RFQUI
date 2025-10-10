@@ -9,28 +9,33 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class VehiclePlacementController : Controller
+    public class VehiclePlacementController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly IVehiclePlacementService _vehiclePlacementService;
         private readonly ILogger<VehiclePlacementController> _logger;
-        public VehiclePlacementController(IVehiclePlacementService vehiclePlacementService, GlobalClass globalClass, ILogger<VehiclePlacementController> logger)
+        private readonly IMenuServices _menuServices;
+        public VehiclePlacementController(IVehiclePlacementService vehiclePlacementService, GlobalClass globalClass, ILogger<VehiclePlacementController> logger, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _vehiclePlacementService = vehiclePlacementService;
             _logger = logger;
+            _menuServices = menuServices;
         }
-        public IActionResult VehiclePlacement()
+        public async Task<IActionResult> VehiclePlacement()
         {
+            await SetMenuAsync();
             return View();
         }
-        
-        public IActionResult CreateVehicle()
+
+        public async Task<IActionResult> CreateVehicle()
         {
+            await SetMenuAsync();
             return View("_CreateVehicle");
         }
-        public IActionResult CreateDriver()
+        public async Task<IActionResult> CreateDriver()
         {
+            await SetMenuAsync();
             return View("_CreateDriver");
         }
 
@@ -50,7 +55,7 @@ namespace RFQ.UI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddVehiclePlacement([FromBody] VehiclePlacementRequestDto vehiclePlacementRequestDto)
-        {   
+        {
             try
             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);

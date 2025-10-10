@@ -1,21 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class RfqLinkController : Controller
+    public class RfqLinkController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly ILogger<RfqLinkController> _logger;    
         private readonly IRfqLinkService _rfqLinkService;
-        
-        public RfqLinkController(ILogger<RfqLinkController> logger, IRfqLinkService rfqLinkService)
+        private readonly IMenuServices _menuServices;
+
+        public RfqLinkController(ILogger<RfqLinkController> logger, IRfqLinkService rfqLinkService, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _logger = logger;
             _rfqLinkService = rfqLinkService;
+            _globalClass = globalClass;
+            _menuServices = menuServices;
         }
 
         public async Task<IActionResult> AddRfqLinkData([FromBody] RfqLinkRequestDto rfqLinkRequestDto)

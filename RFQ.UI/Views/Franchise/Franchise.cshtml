@@ -3,8 +3,20 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Franchise";
+    bool IsAdd = (bool)ViewData["IsAdd"];
+    bool IsEdit = (bool)ViewData["IsEdit"];
+    bool IsView = (bool)ViewData["IsView"];
+    bool IsCancel = (bool)ViewData["IsCancel"];
+
+
 }
 @section Scripts {
+    <script>
+        var IsAdd = @IsAdd.ToString().ToLower();
+        var IsEdit = @IsEdit.ToString().ToLower();
+        var IsView = @IsView.ToString().ToLower();
+        var IsCancel = @IsCancel.ToString().ToLower();
+    </script>
     <script src="~/js/AttachmentDetails.js"></script>
     <script src="~/js/Views/Franchise.js"></script>
     <script async defer
@@ -12,36 +24,38 @@
     </script>
 }
 <div id="tableDiv">
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box add">
-            <h1 class="page-title">Franchise</h1>
-
-            <div class="add-btn">
-                <a href="#" id="btnAddFranchise">
-                    <i class="ri-add-line"></i> <span>Add</span>
-                </a>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Franchise</h1>
+                @if (IsAdd)
+                {
+                    <div class="add-btn">
+                        <a href="#" id="btnAddFranchise">
+                            <i class="ri-add-line"></i> <span>Add</span>
+                        </a>
+                    </div>
+                }
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <div class="card com-profile-info">
-            <!-- Top Header -->
-            <div class="table-top-header">
-                <h4>List of Franchise</h4>
-                <div class="d-flex gap-2">
-                    <div class="table-search-box">
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <!-- Top Header -->
+                <div class="table-top-header">
+                    <h4>List of Franchise</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
                             <input type="text" id="franchiseTableSearch" class="form-control form-control-sm" placeholder="Search...">
-                        <button type="submit"><i class="ri-search-line"></i></button>
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div id="exportFranchiseButtons" class="btn-group" role="group"></div>
                     </div>
-                    <div id="exportFranchiseButtons" class="btn-group" role="group"></div>
                 </div>
-            </div>
 
-            <!-- Table -->
-            <div class="table-responsive">
+                <!-- Table -->
+                <div class="table-responsive">
                     <table id="franchiseTable" class="table dt-responsive nowrap w-100">
                         <thead>
                             <tr class="text-center">
@@ -59,150 +73,150 @@
 
                         <tbody class="text-center"></tbody> <!-- This will be dynamically filled -->
                     </table>
-            </div>
-
-            <!-- Bottom Area -->
-            <div class="datatable-footer-bottom">
-                <div class="totle-left">
-                    <span id="totalList">Total List: 3</span>
                 </div>
+
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
                     <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
-                <input type="hidden" id="currentPage" value="1">
-                <div class="show-page">
-                    <span>Show per page:</span>
-                    <select id="pageLength" class="form-select">
-                        <option value="5">5 </option>
-                        <option value="10" selected>10 </option>
-                        <option value="25">25</option>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
                             <option value="-1">All</option>
-                    </select>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
-</div>
 </div>
 <div id="formDiv" style="display:none;">
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box add">
-            <h1 class="page-title">Add Franchise</h1>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Add Franchise</h1>
 
-            <div class="add-breadcrumb">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a id="tableDivLink" href="">Franchise</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"> Add Franchise</li>
-                    </ol>
-                </nav>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Franchise</li>
+                        </ol>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <div class="card com-franchise-info">
-            <form id="franchiseForm" class="" enctype="multipart/form-data" method="post">
-                <input type="hidden" id="hdnCompanyId" />
-                <div class="franchise-details">
-                    <h2 class="page-form-title">Franchise Details</h2>
-                    <div class=" all-custom-class">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="item-input">
-                                    <label class="form-label">Franchise Name <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="Enter Franchise Name" id="txtFranchiseName" maxlength="100" />
-                                </div>
-                                <div class="item-input">
-                                    <label class="form-label">City <span>*</span></label>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-franchise-info">
+                <form id="franchiseForm" class="" enctype="multipart/form-data" method="post">
+                    <input type="hidden" id="hdnCompanyId" />
+                    <div class="franchise-details">
+                        <h2 class="page-form-title">Franchise Details</h2>
+                        <div class=" all-custom-class">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Franchise Name <span>*</span></label>
+                                        <input type="text" class="form-control" placeholder="Enter Franchise Name" id="txtFranchiseName" maxlength="100" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">City <span>*</span></label>
                                         <select class="select2-custom form-control" style="width: 100%;" id="ddlCity">
                                         </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="file-upload-item">
-                                    <label class="form-label">Franchise Logo</label>
-                                        <div class="dropzone" id="dropzone">
-                                        <div class="dz-message needsclick">
-                                            <i class="ri-upload-cloud-2-fill"></i>
-                                            <h5>Drag & Drop your files here</h5>
-                                            <strong>OR</strong>
-                                            <span>Browse files</span>
-                                        </div>
                                     </div>
                                 </div>
-                                <input type="text" hidden id="hdnUploadedFile" />
+                                <div class="col-lg-6">
+                                    <div class="file-upload-item">
+                                        <label class="form-label">Franchise Logo</label>
+                                        <div class="dropzone" id="dropzone">
+                                            <div class="dz-message needsclick">
+                                                <i class="ri-upload-cloud-2-fill"></i>
+                                                <h5>Drag & Drop your files here</h5>
+                                                <strong>OR</strong>
+                                                <span>Browse files</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="text" hidden id="hdnUploadedFile" />
 
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-12">
-                            <div class="item-input">
-                                <label class="form-label">Address <span>*</span></label>
-                                @* <input type="text" class="form-control" placeholder="Enter Your Address" id="txtAddress" maxlength="200" /> *@
-                                        <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
+                            <div class="col-lg-12">
+                                <div class="item-input">
+                                    <label class="form-label">Address <span>*</span></label>
+                                    @* <input type="text" class="form-control" placeholder="Enter Your Address" id="txtAddress" maxlength="200" /> *@
+                                    <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
                                     <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 95%; display: none;"></ul>
                                     <input type="hidden" id="fromLat">
                                     <input type="hidden" id="fromLng">
                                     <input type="hidden" id="fromState">
                                     <input type="hidden" id="fromCity">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="item-input">
-                                    <label class="form-label">Contact Person</label>
-                                    <input type="text" class="form-control" placeholder="Enter Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
                                 </div>
-                                <div class="item-input">
-                                    <label class="form-label">Contact Number</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Contact Person</label>
+                                        <input type="text" class="form-control" placeholder="Enter Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">Contact Number</label>
                                         <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtContactNumber" maxlength="10" onkeypress="return isNumber(event)" />
-                                </div>
-                                <div class="item-input">
-                                    <label class="form-label">Mobile Number</label>
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">Mobile Number</label>
                                         <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtMobileNumber" onkeypress="return isNumber(event)" maxlength="10" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">Pan Number <span>*</span></label>
+                                        <input type="text" class="form-control" placeholder="xxxxxxxxxx" id="txtPanNumber" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                    </div>
                                 </div>
-                                <div class="item-input">
-                                    <label class="form-label">Pan Number <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="xxxxxxxxxx" id="txtPanNumber" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="item-input">
-                                    <label class="form-label">Pincode <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="Enter Your Pincode" id="txtPinCode" onkeypress="return isNumber(event)" maxlength="6" />
-                                </div>
-                                <div class="item-input">
-                                    <label class="form-label">WhatsApp Number <span>*</span></label>
-                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtWhatsAppNumber" onkeypress="return isNumber(event)" maxlength="10"/>
-                                </div>
-                                <div class="item-input">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" placeholder="Enter Your Email" id="txtEmailId" maxlength="50" />
-                                </div>
-                                <div class="item-input">
-                                    <label class="form-label">GST Number</label>
-                                    <input type="text" class="form-control" placeholder="xxxxx-xxxxx-xxxxx" id="txtGstNumber" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Pincode <span>*</span></label>
+                                        <input type="text" class="form-control" placeholder="Enter Your Pincode" id="txtPinCode" onkeypress="return isNumber(event)" maxlength="6" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">WhatsApp Number <span>*</span></label>
+                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtWhatsAppNumber" onkeypress="return isNumber(event)" maxlength="10" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" placeholder="Enter Your Email" id="txtEmailId" maxlength="50" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">GST Number</label>
+                                        <input type="text" class="form-control" placeholder="xxxxx-xxxxx-xxxxx" id="txtGstNumber" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
-                <div class="button-main">
+                    @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
+                    <div class="button-main">
                         <a href="#" class="card-link" id="btnSaveFranchise">
-                        <i class="ri-save-line"></i>
-                        <span>
-                            Save
-                        </span>
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save
+                            </span>
                         </a>
-                        <a href="#"  class="card-link" id="btnSavenewFranchise">
-                        <i class="ri-save-line"></i>
-                        <span>
-                            Save & New
-                        </span>
-                    </a>
+                        <a href="#" class="card-link" id="btnSavenewFranchise">
+                            <i class="ri-save-line"></i>
+                            <span>
+                                Save & New
+                            </span>
+                        </a>
                         <a href="#" class="card-link" id="btnUpdateFranchise" style="display:none;margin-left:0px;">
                             <i class="ri-save-line"></i>
                             <span>
@@ -210,14 +224,14 @@
                             </span>
                         </a>
                         <a href="#" class="card-link" id="btnCancel">
-                        <i class="ri-close-line"></i>
-                        <span>
-                            Cancel
-                        </span>
+                            <i class="ri-close-line"></i>
+                            <span>
+                                Cancel
+                            </span>
                         </a>
-                </div>
-            </form>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 </div>

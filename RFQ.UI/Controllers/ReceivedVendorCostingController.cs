@@ -14,20 +14,24 @@ using RFQ.UI.Application.Provider;
 
 namespace RFQ.UI.Controllers
 {
-    public class ReceivedVendorCostingController : Controller
+    public class ReceivedVendorCostingController : BaseController
     {
-        private readonly GlobalClass _globalClass;
+       
         private readonly IReceivedVendorCostingService _receivedVendorCostingService;
         private readonly IEmailService _emailService;
+        private readonly GlobalClass _globalClass;
+        private readonly IMenuServices _menuServices;
 
-        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService, IEmailService emailService)
+        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService, IEmailService emailService,IMenuServices menuServices) : base(menuServices, globalClass)
         {
-            _globalClass = globalClass;
             _receivedVendorCostingService = receivedVendorCostingService;
             _emailService = emailService;
+            _globalClass = globalClass;
+            _menuServices = menuServices;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
 

@@ -12,7 +12,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     $("#btnCancel").on("click", function () {
@@ -38,6 +38,7 @@ $("#btnAddProduct").on("click", function (e) {
     e.preventDefault();
     $("#listSection").hide();
     $("#formSection").show();
+    $('#productForm').find('input, select, textarea, button, a').prop('disabled', false);
 });
 function CheckValidation() {
     $("#txtItemName").on('blur', function () {
@@ -123,7 +124,7 @@ function FetchProduct() {
     $("#btnUpdateProduct").hide();
     $("#btnSavenewProduct").show();
     $("#btnSaveProduct").show();
-    FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 //Bind events
 $('#productTableSearch').off('keyup').on('keyup', function () {
@@ -137,6 +138,10 @@ $('#pageLength').off('change').on('change', function () {
 });
 
 function EditProduct(itemId) {
+    if ($("#btnUpdateProduct").hasClass('d-none')) {
+        $("#btnUpdateProduct").removeClass('d-none');
+        $('#productForm').find('input, select, textarea, button, a').prop('disabled', false);
+    }
     var data = viewModelDto.filter(x => x.itemId == itemId);
     var formData = data[0];
     $('#listSection').css('display', 'none');
@@ -215,4 +220,10 @@ function DeleteProduct(itemId) {
             });
         }
     });
+}
+
+function ViewProduct(itemId) {
+    EditProduct(itemId);
+    $('#productForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdateProduct").addClass('d-none');
 }

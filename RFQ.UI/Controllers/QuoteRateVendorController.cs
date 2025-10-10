@@ -13,28 +13,34 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RFQ.UI.Controllers
 {
-    public class QuoteRateVendorController : Controller
+    public class QuoteRateVendorController : BaseController
     {
 
         private readonly GlobalClass _globalClass;
         private readonly IQuoteRateVendorService _rfqRateService;
         private readonly IRequestForQuoteService _requestForQuoteService;
-        public QuoteRateVendorController(GlobalClass globalClass, IQuoteRateVendorService rfqRateService, IRequestForQuoteService requestForQuoteService)
+        private readonly IMenuServices _menuServices;
+
+        public QuoteRateVendorController(GlobalClass globalClass, IQuoteRateVendorService rfqRateService, IRequestForQuoteService requestForQuoteService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _rfqRateService = rfqRateService;
             _requestForQuoteService = requestForQuoteService;
+            _menuServices = menuServices;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
-        public ActionResult QuoteRateVendor()
+        public async Task<ActionResult> QuoteRateVendor()
         {
+            await SetMenuAsync();
             return View();
         }
-        public ActionResult QuoteRateBranch()
+        public async Task<ActionResult> QuoteRateBranch()
         {
+            await SetMenuAsync();
             return View();
         }
         public async Task<IActionResult> SaveQuoteRateVendor([FromBody] QuoteRateVendorRequestDto rfqRateRequestDto)
@@ -60,7 +66,6 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-
         public async Task<IActionResult> GetRfqQuoteRateVendorDetailsqById([FromBody] QuoteRateVendorRequestDto rfqRateRequestDto)
         {
             try

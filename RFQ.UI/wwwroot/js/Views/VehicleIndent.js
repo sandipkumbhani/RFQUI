@@ -33,6 +33,9 @@ $(document).ready(function () {
     });
 
     $("#btnCancel").on("click", function () {
+        $('#formDiv')
+            .find('input, select, textarea, button, a')
+            .prop('disabled', false);
         FetchVehicleIndent();
     });
 
@@ -44,7 +47,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     $("#btnSave, #btnsaveandnew").on('click', function () {
@@ -55,6 +58,7 @@ $(document).ready(function () {
         }
     });
 });
+
 $('#addCompany').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
@@ -71,7 +75,7 @@ function FetchVehicleIndent() {
     $("#btnsaveandnew").show();
     GetAllConsignorList();
     GetAllConsigneeList();
-    FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 $('#IndentTableSearch').off('keyup').on('keyup', function () {
@@ -392,8 +396,6 @@ function ButtonUpdateClick() {
             Remarks: $("#txtRemarks").val(),
             LinkId: GetQueryParam("LinkId")
         };
-
-
         var linkd = GetQueryParam("LinkId");
 
 
@@ -487,6 +489,9 @@ function formatDateForInput(dateString) {
     return `${year}-${month}-${day}`;
 }
 function UpdateVehicleIndent(indentId) {
+    if ($("#btnupdate").hasClass('d-none')) {
+        $("#btnupdate").removeClass('d-none');
+    }
     var data = viewModelDto.filter(x => x.indentId == indentId);
     var formData = data[0];
     $('#tableDiv').css('display', 'none');
@@ -557,3 +562,9 @@ function UpdateVehicleIndent(indentId) {
 
 
 } 
+
+function ViewVehicleIndent(indentId) {
+    UpdateVehicleIndent(indentId);
+    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnupdate").addClass('d-none');
+}

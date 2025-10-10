@@ -68,7 +68,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
@@ -132,7 +132,7 @@ function FetchVehiclePlacement() {
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
     //ResetAttachmentRepeater();
-    FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
 
@@ -923,7 +923,6 @@ function GetDropdownValue(inputId) {
     return result;
 }
 function SaveVehiclePlacement(action) {
-    debugger;
     var saveUrl = '/VehiclePlacement/AddVehiclePlacement';
     var driverResult = GetDropdownValue("ddlDriverName");
     const formData = {
@@ -1117,7 +1116,9 @@ function DeleteVehiclePlacement(placementId) {
     });
 }
 function UpdateVehiclePlacement(placementId) {
-    debugger;
+    if ($("#updateButton").hasClass('d-none')) {
+        $("#updateButton").removeClass('d-none');
+    }
     var data = viewModelDto.filter(x => x.placementId == placementId);
     var formData = data[0];
     $('#tableDiv').css('display', 'none');
@@ -1143,6 +1144,10 @@ function UpdateVehiclePlacement(placementId) {
     $("#ddlBrokerName").val(formData.brokerVendorId).trigger('change');
     $("#txtTotalHairAmt").val(formData.totalHireAmount);
     $("#txtAdvancePayable").val(formData.advancePayable);
-
-
 } 
+
+function ViewVehiclePlacement(placementId) {
+    UpdateVehiclePlacement(placementId);
+    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#updateButton").addClass('d-none');
+}

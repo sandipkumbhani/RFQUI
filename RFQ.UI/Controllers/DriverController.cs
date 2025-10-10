@@ -8,16 +8,25 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class DriverController : Controller
+    public class DriverController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly IDriverServices _driverServices;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public DriverController(IDriverServices driverServices, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment)
+        private readonly IMenuServices _menuServices;
+        public DriverController(IDriverServices driverServices, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _driverServices = driverServices;
             _globalClass = globalClass;
             _webHostEnvironment = webHostEnvironment;
+            _menuServices = menuServices;
+        }
+
+        // GET: DriverController
+        public async Task<ActionResult> Index()
+        {
+            await SetMenuAsync();
+            return View();
         }
 
         [HttpPost]
@@ -109,11 +118,7 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        // GET: DriverController
-        public ActionResult Index()
-        {
-            return View();
-        }
+        
 
         [HttpGet]
         public async Task<IActionResult> GetDriverType()

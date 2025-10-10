@@ -88,7 +88,6 @@ function setupRememberMe() {
     });
 }
 
-
 function loginUser() {
     $("#loginButton").prop("disabled", true).text("Logging in...");
 

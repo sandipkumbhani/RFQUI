@@ -123,7 +123,7 @@ function ValidateGstNumber(number) {
 function ValidatePinCode(number) {
     return /^\d{6}$/.test(number);
 }
-function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
+function FetchDataForTable(gridTableName, url, orderColumn, orderDir, IsEdit = null, IsView = null, IsCancel = null) {
     const companyid = getCookieValue('companyid');
     const profileid = getCookieValue('profileid');
     $('#tableDiv').show();
@@ -168,10 +168,10 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
             }
             viewModelDto = response.data;
             let rowsHtml = '';
-            rowsHtml = GetGridHtml(response, gridTableName);
+            rowsHtml = GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel);
             $('#' + gridTableName + ' tbody').html(rowsHtml);
             $('#totalList').text(`Total List: ${response.recordsTotal}`);
-            generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url);
+            generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url, IsEdit, IsView, IsCancel);
         },
         error: function () {
             $('#' + gridTableName + ' tbody').html('<tr><td colspan="20" class="text-center text-danger">Error loading data</td></tr>');
@@ -179,7 +179,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir) {
         }
     });
 }
-function GetGridHtml(response, gridTableName) {
+function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
     var rowsHtml = "";
     if (gridTableName == "vehicleTypesTable") {
         response.data.forEach(item => {
@@ -188,116 +188,171 @@ function GetGridHtml(response, gridTableName) {
                         <td>${item.companyName}</td>
                         <td>${item.vehicleTypeName}</td>
                         <td>${item.minimumKms}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+                        <td class="text-center s" style="cursor:pointer;">`
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>`
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-eye-line" ></i></a>`
+            }
+            if (IsCancel) {
+                rowsHtml += `<a onclick="ViewVehicleType(${item.vehicleTypeId})" class="icon-btn"><i class="ri-delete-bin-3-line"></i></a>`
+            }
+            rowsHtml += ` </td></tr> `;
         });
     }
     if (gridTableName == "tableCmpConfig") {
         response.data.forEach(item => {
             rowsHtml += `
-                      <tr>
+                < tr >
                         <td>${item.companyName}</td>
                         <td>${item.smsAuthKey}</td>
                         <td>${item.whatsAppAuthKey}</td>
                         <td>${item.smtpHost}</td>
                         <td>${item.smtpPort}</td>
                         <td>${item.smtpUsername}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+                        <td class="text-center s" style="cursor:pointer;">`
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditCompanyConfiguration(${item.companyConfigId})"><i class="ri-edit-2-line"></i></a>`
+            }
+            if (IsView) {
+                rowsHtml += `<a onclick="ViewCompanyConfiguration(${item.companyConfigId})" class="icon-btn"><i class="ri-eye-line"></i></a>`
+            }
+            if (IsCancel) {
+                rowsHtml += ` <a class="icon-btn" onclick="DeleteCompanyConfiguration(${item.companyConfigId})"><i class="ri-delete-bin-3-line"></i></a>`
+            }
+            rowsHtml += ` </td></tr> `;
         });
     }
     if (gridTableName == "vehicleTable") {
         response.data.forEach(item => {
             rowsHtml += `
-                        <tr>
-                            <td>${item.vehicleNo}</td>
-                            <td>${item.partyName ? item.partyName : ""}</td>
-                            <td>${item.vehicleTypeName}</td>
-                            <td>${item.internalMasterName}</td>
-                            
-                            <td class="text-center action-items" style="cursor:pointer;">
-                                <a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>
-                                <a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>
-                            </td>
-                        </tr>`;
+        <tr>
+            <td>${item.vehicleNo}</td>
+            <td>${item.partyName ? item.partyName : ""}</td>
+            <td>${item.vehicleTypeName}</td>
+            <td>${item.internalMasterName}</td>
+            <td class="text-center s" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditVehicle(${item.vehicleId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewVehicle(${item.vehicleId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteVehicle(${item.vehicleId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
     if (gridTableName == "vendorTable") {
         response.data.forEach(item => {
             rowsHtml += `
-                    <tr> 
-                        <td>${item.partyName}</td>
-                        <td>${item.pinCode}</td>
-                        <td>${item.contactPerson}</td>
-                        <td>${item.mobNo}</td>
-                        <td>${item.whatsAppNo}</td>
-                        <td>${item.email}</td>
-                        <td>${item.panNo}</td>
-                        <td>${item.gstNo}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditVendor(${item.partyId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteVendor(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+        <tr>
+            <td>${item.partyName}</td>
+            <td>${item.pinCode}</td>
+            <td>${item.contactPerson}</td>
+            <td>${item.mobNo}</td>
+            <td>${item.whatsAppNo}</td>
+            <td>${item.email}</td>
+            <td>${item.panNo}</td>
+            <td>${item.gstNo}</td>
+            <td class="text-center s" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditVendor(${item.partyId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewVendor(${item.partyId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteVendor(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
     }
     if (gridTableName == "franchiseTable") {
         response.data.forEach(item => {
             rowsHtml += `
-                    <tr>
-                        <td><img src="../../franchiselogo/${item.logoImage}" alt="Logo" height="40"></td>  
-                        <td>${item.companyName}</td>
-                        <td>${item.addressLine}</td>
-                        <td>${item.email}</td>
-                        <td>${item.contactPerson}</td>
-                        <td>${item.contactNo}</td>
-                        <td>${item.mobNo}</td>
-                        <td>${item.gstNo}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditFranchise(${item.companyId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteFranchise(${item.companyId},'${item.logoImage}')"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+        <tr>
+            <td><img src="../../franchiselogo/${item.logoImage}" alt="Logo" height="40"></td>  
+            <td>${item.companyName}</td>
+            <td>${item.addressLine}</td>
+            <td>${item.email}</td>
+            <td>${item.contactPerson}</td>
+            <td>${item.contactNo}</td>
+            <td>${item.mobNo}</td>
+            <td>${item.gstNo}</td>
+            <td class="text-center s" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditFranchise(${item.companyId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewFranchise(${item.companyId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteFranchise(${item.companyId}, '${item.logoImage}')"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
     if (gridTableName == 'driverTable') {
         response.data.forEach(item => {
             rowsHtml += `
-                    <tr>
-                        <td><img src="../../driverphoto/${item.driverImagePath}" alt="Photo" height="40"></td>  
-                        <td>${item.licenseNo}</td>
-                        <td>${item.driverName}</td>
-                        <td>${driverTypeMap[item.driverTypeId] ?? `Unknown Type`}</td>
-                        <td>${item.mobNo}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditDriver(${item.driverId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteDriver(${item.driverId},'${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+        <tr>
+            <td><img src="../../driverphoto/${item.driverImagePath}" alt="Photo" height="40"></td>  
+            <td>${item.licenseNo}</td>
+            <td>${item.driverName}</td>
+            <td>${driverTypeMap[item.driverTypeId] ?? 'Unknown Type'}</td>
+            <td>${item.mobNo}</td>
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditDriver(${item.driverId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewDriver(${item.driverId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteDriver(${item.driverId}, '${item.driverImagePath}')"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
-    if (gridTableName == "customerTable") {
+    if (gridTableName === "customerTable") {
+        console.log(window.userRights);
         response.data.forEach(item => {
             rowsHtml += `
-                        <tr>
-                            <td>${item.partyName}</td>
-                            <td>${item.pinCode}</td>
-                            <td>${item.mobNo}</td>
-                            <td>${item.email}</td>
-                            <td>${item.panNo}</td>
-                            <td>${item.gstNo}</td>
-                            <td class="text-center action-items" style="cursor:pointer;">
-                                <a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>
-                                <a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>
-                            </td>
-                        </tr>
-                    `;
+        <tr>
+            <td>${item.partyName}</td>
+            <td>${item.pinCode}</td>
+            <td>${item.mobNo}</td>
+            <td>${item.email}</td>
+            <td>${item.panNo}</td>
+            <td>${item.gstNo}</td>
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditCustomer(${item.partyId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewCustomer(${item.partyId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteCustomer(${item.partyId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
     }
     if (gridTableName == "productTable") {
@@ -306,80 +361,113 @@ function GetGridHtml(response, gridTableName) {
         <tr>
             <td>${item.companyName}</td>
             <td>${item.itemName}</td>
-            <td class="text-center action-items" style="cursor:pointer;">
-                <a class="icon-btn" onclick="EditProduct(${item.itemId})"><i class="ri-edit-2-line"></i></a>
-                <a class="icon-btn" onclick="DeleteProduct(${item.itemId})"><i class="ri-delete-bin-3-line"></i></a>
-            </td>
-        </tr>`;
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditProduct(${item.itemId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewProduct(${item.itemId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteProduct(${item.itemId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
     }
     if (gridTableName == "corporateTable") {
         response.data.forEach(item => {
             rowsHtml += `
-                        <tr>
-                        <td>${item.companyName}</td>
-                        <td>${item.addressLine}</td>
-                        <td>${item.pinCode}</td>
-                        <td>${item.contactPerson}</td>
-                        <td>${item.mobNo}</td>
-                        <td>${item.contactNo}</td>
-                        <td>${item.whatsAppNo}</td>
-                        <td>${item.email}</td>
-                        <td>${item.panNo}</td>
-                        <td>${item.gstNo}</td>
-                        
-                        
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditCorporateCompany(${item.companyId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteCorporateCompany(${item.companyId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+        <tr>
+            <td>${item.companyName}</td>
+            <td>${item.addressLine}</td>
+            <td>${item.pinCode}</td>
+            <td>${item.contactPerson}</td>
+            <td>${item.mobNo}</td>
+            <td>${item.contactNo}</td>
+            <td>${item.whatsAppNo}</td>
+            <td>${item.email}</td>
+            <td>${item.panNo}</td>
+            <td>${item.gstNo}</td>
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditCorporateCompany(${item.companyId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewCorporateCompany(${item.companyId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteCorporateCompany(${item.companyId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
     if (gridTableName == "tableuser") {
         response.data.forEach(item => {
             rowsHtml += `
-                      <tr>
-                        <td>${item.personName}</td>
-                        <td>${item.company}</td>
-                        <td>${item.location}</td>
-                        <td>${item.mobileNo}</td>
-                        <td>${item.emailId}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditUser(${item.userId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+        <tr>
+            <td>${item.personName}</td>
+            <td>${item.company}</td>
+            <td>${item.location}</td>
+            <td>${item.mobileNo}</td>
+            <td>${item.emailId}</td>
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditUser(${item.userId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewUser(${item.userId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
     if (gridTableName == "tablelocation") {
         response.data.forEach(item => {
             rowsHtml += `
-                      <tr>
-                        <td>${item.locationName}</td>
-                        <td>${item.addressLine}</td>
-                        <td>${item.city}</td>
-                        <td>${item.pinCode}</td>
-                        <td>${item.contactPerson}</td>
-                        <td>${item.mobNo}</td>
-                        <td>${item.contactNo}</td>
-                        <td>${item.whatsAppNo}</td>
-                        <td>${item.email}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditLocation(${item.locationId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+        <tr>
+            <td>${item.locationName}</td>
+            <td>${item.addressLine}</td>
+            <td>${item.city}</td>
+            <td>${item.pinCode}</td>
+            <td>${item.contactPerson}</td>
+            <td>${item.mobNo}</td>
+            <td>${item.contactNo}</td>
+            <td>${item.whatsAppNo}</td>
+            <td>${item.email}</td>
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditLocation(${item.locationId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewLocation(${item.locationId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
     if (gridTableName == "rfqTable") {
         response.data.forEach(item => {
             rowsHtml += `
-                      <tr>
-                        <td>${item.rfqNo}</td>
-                        <td>${item.location}</td>
-                        <td>${item.rfqDate ? new Date(item.rfqDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
-                        <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
+        <tr>
+            <td>${item.rfqNo}</td>
+            <td>${item.location}</td>
+            <td>${item.rfqDate ? new Date(item.rfqDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+            <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric',
@@ -387,60 +475,78 @@ function GetGridHtml(response, gridTableName) {
                 minute: '2-digit',
                 hour12: true
             }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
-                        <td>${item.indentNo}</td>
-                        <td>${item.customerName}</td>
-                        <td>${item.vehicleReqOn ? new Date(item.vehicleReqOn).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
-                        <td>${item.fromLocation}</td>
-                        <td>${item.toLocation}</td>
-                        <td>${item.vehicleTypeName}</td>
-                        <td>${item.vehicleCount}</td>
-                        <td>${item.maxCosting}</td>
-                        <td>${item.detentionPerDay}</td>
-                        <td>${item.detentionFreeDays}</td>
-                        <td>${item.rfqSubject}</td>
-                        <td>${item.rfqPriority ? item.rfqPriority : ""}</td>
-                        <td>${item.rfqType ? item.rfqType : ""}</td>
-                        <td>${item.itemName ? item.itemName : ""}</td>
-                        <td>${item.packingTypeName ? item.packingTypeName : ""}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditRfq(${item.rfqId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteRfq(${item.rfqId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+            <td>${item.indentNo}</td>
+            <td>${item.customerName}</td>
+            <td>${item.vehicleReqOn ? new Date(item.vehicleReqOn).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+            <td>${item.fromLocation}</td>
+            <td>${item.toLocation}</td>
+            <td>${item.vehicleTypeName}</td>
+            <td>${item.vehicleCount}</td>
+            <td>${item.maxCosting}</td>
+            <td>${item.detentionPerDay}</td>
+            <td>${item.detentionFreeDays}</td>
+            <td>${item.rfqSubject}</td>
+            <td>${item.rfqPriority ? item.rfqPriority : ''}</td>
+            <td>${item.rfqType ? item.rfqType : ''}</td>
+            <td>${item.itemName ? item.itemName : ''}</td>
+            <td>${item.packingTypeName ? item.packingTypeName : ''}</td>
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditRfq(${item.rfqId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewRfq(${item.rfqId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteRfq(${item.rfqId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
     if (gridTableName == "rfqFinalizationTable") {
         response.data.forEach(item => {
             rowsHtml += `
-                      <tr>
-                        <td>${item.rfqNo}</td>
-                        <td>${item.rfqStatus}</td>
-                        <td>${item.reason ? item.reason : ""}</td>
-                        <td>${item.billingRate}</td>
-                        <td>${item.detentionPerDay}</td>
-                        <td>${item.detentionFreeDays}</td>
-                        <td>${item.remarks}</td>
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="EditRfqFinalizatioin(${item.rfqFinalIdId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteRfqFinalizatioin(${item.rfqFinalIdId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+        <tr>
+            <td>${item.rfqNo}</td>
+            <td>${item.rfqStatus}</td>
+            <td>${item.reason ? item.reason : ''}</td>
+            <td>${item.billingRate}</td>
+            <td>${item.detentionPerDay}</td>
+            <td>${item.detentionFreeDays}</td>
+            <td>${item.remarks}</td>
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="EditRfqFinalization(${item.rfqFinalId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewRfqFinalization(${item.rfqFinalId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteRfqFinalization(${item.rfqFinalId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
     if (gridTableName == "IndentTable") {
         response.data.forEach(item => {
             rowsHtml += `
-                        <tr>
-                        <td>${item.locationName}</td>
-                        <td>${item.indentNo}</td>
-                        <td>${item.indentDate ? new Date(item.indentDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
-                        <td>${item.vehicleReqOn ? new Date(item.vehicleReqOn).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
-                        <td>${item.partyName}</td>
-                        <td>${item.fromLocation}</td>
-                        <td>${item.toLocation}</td>
-                        <td>${item.vehicleTypeName}</td>
-                        <td>${item.requiredVehicles}</td>
-                        <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
+        <tr>
+            <td>${item.locationName}</td>
+            <td>${item.indentNo}</td>
+            <td>${item.indentDate ? new Date(item.indentDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+            <td>${item.vehicleReqOn ? new Date(item.vehicleReqOn).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+            <td>${item.partyName}</td>
+            <td>${item.fromLocation}</td>
+            <td>${item.toLocation}</td>
+            <td>${item.vehicleTypeName}</td>
+            <td>${item.requiredVehicles}</td>
+            <td>${item.expiryDate ? new Date(item.expiryDate).toLocaleString('en-GB', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric',
@@ -448,72 +554,86 @@ function GetGridHtml(response, gridTableName) {
                 minute: '2-digit',
                 hour12: true
             }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
-                        <td>${item.consignerName}</td>
-                        <td>${item.pickUpAddress}</td>
-                        <td>${item.consigneeName}</td>
-                        <td>${item.deliveryAddress}</td>
-                        <td>${item.itemName ? item.itemName : ""}</td>
-                        <td>${item.pakingName ? item.pakingName : ""}</td>
-                        <td>${item.remarks}</td>
+            <td>${item.consignerName}</td>
+            <td>${item.pickUpAddress}</td>
+            <td>${item.consigneeName}</td>
+            <td>${item.deliveryAddress}</td>
+            <td>${item.itemName ? item.itemName : ''}</td>
+            <td>${item.pakingName ? item.pakingName : ''}</td>
+            <td>${item.remarks}</td>
+            <td class="text-center" style="cursor:pointer;">`;
 
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="UpdateVehicleIndent(${item.indentId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteVehicleIndent(${item.indentId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="UpdateVehicleIndent(${item.indentId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewVehicleIndent(${item.indentId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteVehicleIndent(${item.indentId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
     if (gridTableName == "PlacementTable") {
         response.data.forEach(item => {
             rowsHtml += `
-                        <tr>
-                        <td>${item.locationName}</td>
-                        <td>${item.placementNo}</td>
-                        <td>${item.placementDate ? new Date(item.placementDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
-                        <td>${item.indentNo}</td>
-                        <td>${item.vehicleNo}</td>
-                        <td>${item.internalMasterName}</td>
-                        <td>${item.driverName}</td>
-                        <td>${item.mobileNo}</td>
-                        
-                        <td>${item.ownerVendorName ? item.ownerVendorName : ""}</td>
-                        
-                        <td>${item.brokerVendorName ? item.brokerVendorName : ""}</td>
-                        <td>${item.totalHireAmount}</td>
-                        <td>${item.advancePayable}</td>
-                        
-                        <td class="text-center action-items" style="cursor:pointer;">
-                            <a class="icon-btn" onclick="UpdateVehiclePlacement(${item.placementId})"><i class="ri-edit-2-line"></i></a>
-                            <a class="icon-btn" onclick="DeleteVehiclePlacement(${item.placementId})"><i class="ri-delete-bin-3-line"></i></a>
-                        </td>
-                    </tr>`;
+        <tr>
+            <td>${item.locationName}</td>
+            <td>${item.placementNo}</td>
+            <td>${item.placementDate ? new Date(item.placementDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+            <td>${item.indentNo}</td>
+            <td>${item.vehicleNo}</td>
+            <td>${item.internalMasterName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.mobileNo}</td>
+            <td>${item.ownerVendorName ? item.ownerVendorName : ''}</td>
+            <td>${item.brokerVendorName ? item.brokerVendorName : ''}</td>
+            <td>${item.totalHireAmount}</td>
+            <td>${item.advancePayable}</td>
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="UpdateVehiclePlacement(${item.placementId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            if (IsView) {
+                rowsHtml += `<a class="icon-btn" onclick="ViewVehiclePlacement(${item.placementId})"><i class="ri-eye-line"></i></a>`;
+            }
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteVehiclePlacement(${item.placementId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
         });
+
     }
     if (gridTableName == "ActivityLogTable") {
         response.data.forEach(item => {
             rowsHtml += `
-                      <tr>
+                < tr >
                         <td>${item.logUid}</td>
                         <td>${item.linkName}</td>
                         <td>${item.internalMasterName}</td>
                         <td>${item.personName}</td>
                         <td>
                             ${item.logDateTime
-                                ? new Date(item.logDateTime).toLocaleString('en-GB', {
-                                    day: '2-digit', month: '2-digit', year: 'numeric',
-                                    hour: '2-digit', minute: '2-digit', second: '2-digit'
-                                }).replace(',', '')
-                                : ''}
+                    ? new Date(item.logDateTime).toLocaleString('en-GB', {
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit'
+                    }).replace(',', '')
+                    : ''}
                         </td>
                         <td>${item.description}</td>
                         
-                    </tr>`;
+                    </tr > `;
         });
     }
     return rowsHtml;
 
 }
-function generatePagination(totalRecords, pageSize, currentPage, gridTableName, url) {
+function generatePagination(totalRecords, pageSize, currentPage, gridTableName, url, IsEdit, IsView, IsCancel) {
     const paginationContainer = $('#customPagination');
     paginationContainer.empty();
 
@@ -550,7 +670,7 @@ function generatePagination(totalRecords, pageSize, currentPage, gridTableName, 
         const selectedPage = Number($(this).data('page'));
         if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
             $('#currentPage').val(selectedPage);
-            FetchDataForTable(gridTableName, url, orderColumnName, orderDirName);
+            FetchDataForTable(gridTableName, url, orderColumnName, orderDirName, IsEdit, IsView, IsCancel);
         }
         //$('html,body').animate({
         //    scrollTop: $("#customvehicleTypesPagination").offset().top
@@ -559,7 +679,7 @@ function generatePagination(totalRecords, pageSize, currentPage, gridTableName, 
     });
 }
 function getCookieValue(name) {
-    const value = `; ${document.cookie}`;
+    const value = `; ${document.cookie} `;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
@@ -784,7 +904,7 @@ function formatDate(dateString) {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    return `${day} /${month}/${year} ${hours}:${minutes}:${seconds} `;
 }
 function showLoader() {
     document.getElementById("loader").style.display = "block";
@@ -810,14 +930,13 @@ function exportToCSV(filename, rows) {
     }
 }
 function addMasterUserActivityLog(LogUid, LogTypeId, Description, UserId) {
-    debugger;
     var urlParams = new URLSearchParams(window.location.search);
     var linkId = urlParams.get('LinkId');
     const body = {
-        LogUid: LogUid ?? 0,                
-        LogLinkId: linkId ?? 0,              
-        LogTypeId: LogTypeId ?? 0,                
-        UserId: UserId ?? 0,                
+        LogUid: LogUid ?? 0,
+        LogLinkId: linkId ?? 0,
+        LogTypeId: LogTypeId ?? 0,
+        UserId: UserId ?? 0,
         LogDateTime: null,
         Description: Description ?? null,
     };

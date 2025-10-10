@@ -8,17 +8,20 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController : BaseController
     {
         private readonly IProductService _productService;
         private readonly GlobalClass _globalClass;
-        public ProductController(IProductService productService, GlobalClass globalClass)
+        private readonly IMenuServices _menuServices;
+        public ProductController(IProductService productService, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _productService = productService;
             _globalClass = globalClass;
+            _menuServices = menuServices;
         }
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            await SetMenuAsync();
             return View();
         }
 

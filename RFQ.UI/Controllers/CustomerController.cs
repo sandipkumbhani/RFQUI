@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -7,18 +8,21 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class CustomerController : Controller
+    public class CustomerController : BaseController
     {
-        private readonly GlobalClass _globalClass;
         private readonly ICustomerServices _customerServices;
+        private readonly GlobalClass _globalClass;
+        private readonly IMenuServices _menuServices;
 
-        public CustomerController(ICustomerServices customerServices, GlobalClass globalClass)
+        public CustomerController(ICustomerServices customerServices, GlobalClass globalClass,IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _customerServices = customerServices;
             _globalClass = globalClass;
+            _menuServices = menuServices;
         }
-        public IActionResult Customer()
+        public async Task<IActionResult> Customer()
         {
+            await SetMenuAsync();
             return View();
         }
 

@@ -1,210 +1,223 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-	Layout = "_Layout";
-	ViewData["Title"] = "Location";
+    Layout = "_Layout";
+    ViewData["Title"] = "Location";
+    bool IsAdd = (bool)ViewData["IsAdd"];
+    bool IsEdit = (bool)ViewData["IsEdit"];
+    bool IsView = (bool)ViewData["IsView"];
+    bool IsCancel = (bool)ViewData["IsCancel"];
 }
 
 @section Scripts {
-	<script src="~/js/Views/Location.js"></script>
-	<script async defer
-			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
-	</script>
+    <script>
+        var IsAdd = @IsAdd.ToString().ToLower();
+        var IsEdit = @IsEdit.ToString().ToLower();
+        var IsView = @IsView.ToString().ToLower();
+        var IsCancel = @IsCancel.ToString().ToLower();
+    </script>
+    <script src="~/js/Views/Location.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
+    </script>
 }
 
 <div id="locationListSection">
-	<div class="row">
-		<div class="col-12">
-			<div class="page-title-box add">
-				<h1 class="page-title">Location</h1>
-				<div class="add-btn">
-					<a href="#" id="btnAddLocation">
-						<i class="ri-add-line"></i> <span>Add </span>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-12">
-			<div class="card com-profile-info">
-				<!-- Top Header -->
-				<div class="table-top-header">
-					<h4>List of Location</h4>
-					<div class="d-flex gap-2">
-						<div class="table-search-box">
-							<input type="text" id="tablelocationSearch" class="form-control form-control-sm" placeholder="Search...">
-							<button type="submit"><i class="ri-search-line"></i></button>
-						</div>
-						<div id="exporttablelocation" class="btn-group" role="group"></div>
-					</div>
-				</div>
-				<!-- Table -->
-				<div class="table-responsive">
-					<table id="tablelocation"
-						   class="table dt-responsive nowrap w-100">
-						<thead>
-							<tr class ="text-center">
-								<th class="sortable text-center" data-column="LocationName" data-order="asc">LocationName</th>
-								<th class="sortable text-center" data-column="AddressLine" data-order="asc">Address</th>
-								<th class="sortable text-center" data-column="City" data-order="asc">City</th>
-								<th class="sortable text-center" data-column="PinCode" data-order="asc">PinCode</th>
-								<th class="sortable text-center" data-column="ContactPerson" data-order="asc">ContactPerson</th>
-								<th class="sortable text-center" data-column="ContactNo" data-order="asc">Contact No</th>
-								<th class="sortable text-center" data-column="MobNo" data-order="asc">MobNo</th>
-								<th class="sortable text-center" data-column="WhatsAppNo" data-order="asc">WhatsAppNo</th>
-								<th class="sortable text-center" data-column="Email" data-order="asc">EmailId</th>
-								<th class="text-center no-sort">Action</th>
-							</tr>
-						</thead>
-						<tbody class="text-center">
-							<!-- Dynamic rows go here -->
-						</tbody>
-					</table>
-				</div>
-				<!-- Bottom Area -->
-				<div class="datatable-footer-bottom">
-					<div class="totle-left">
-						<span id="totalList">Total List: 3</span>
-					</div>
-					<div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
-					<input type="hidden" id="currentPage" value="1">
-					<div class="show-page">
-						<span>Show per page:</span>
-						<select id="pageLength" class="form-select">
-							<option value="5">5 </option>
-							<option value="10" selected>10 </option>
-							<option value="25">25</option>
-							<option value="-1">All</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Location</h1>
+                @if (IsAdd)
+                {
+                    <div class="add-btn">
+                        <a href="#" id="btnAddLocation">
+                            <i class="ri-add-line"></i> <span>Add </span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <!-- Top Header -->
+                <div class="table-top-header">
+                    <h4>List of Location</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="tablelocationSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div id="exporttablelocation" class="btn-group" role="group"></div>
+                    </div>
+                </div>
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table id="tablelocation"
+                           class="table dt-responsive nowrap w-100">
+                        <thead>
+                            <tr class="text-center">
+                                <th class="sortable text-center" data-column="LocationName" data-order="asc">LocationName</th>
+                                <th class="sortable text-center" data-column="AddressLine" data-order="asc">Address</th>
+                                <th class="sortable text-center" data-column="City" data-order="asc">City</th>
+                                <th class="sortable text-center" data-column="PinCode" data-order="asc">PinCode</th>
+                                <th class="sortable text-center" data-column="ContactPerson" data-order="asc">ContactPerson</th>
+                                <th class="sortable text-center" data-column="ContactNo" data-order="asc">Contact No</th>
+                                <th class="sortable text-center" data-column="MobNo" data-order="asc">MobNo</th>
+                                <th class="sortable text-center" data-column="WhatsAppNo" data-order="asc">WhatsAppNo</th>
+                                <th class="sortable text-center" data-column="Email" data-order="asc">EmailId</th>
+                                <th class="text-center no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <!-- Dynamic rows go here -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
+                    <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                            <option value="-1">All</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="locationFormSection" style="display: none;">
-	<div class="row">
-		<div class="col-12">
-			<div class="page-title-box add">
-				<h1 class="page-title">Add Location</h1>
-				<div class="add-breadcrumb">
-					<nav aria-label="breadcrumb">
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item">
-								<a href="#" id="locationListSectionLink">Location</a>
-							</li>
-							<li class="breadcrumb-item active" aria-current="page"> Add Location</li>
-						</ol>
-					</nav>
-				</div>
-			</div>
-		</div>
-		<div id="AddLocationDiv" class="card com-profile-info">
-			<div class="top-details">
-				<h2 class="page-form-title">Location Details</h2>
-				<form class="row all-custom-class" id="LocationForm" method="post">
-					<input type="hidden" id="hdnLocationId" />
-					<!-- Row 1 -->
-					<div class="col-xl-6 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">Location Name <span>*</span></label>
-							<input id="txtLocationName" type="text" class="form-control" maxlength="50" placeholder="Location Name" onkeypress="return isAlphabets(event)" />
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">Location Code <span>*</span></label>
-							<input type="text" class="form-control" placeholder="Location Code" maxlength="50" id="txtCode" />
-						</div>
-					</div>
-					<!-- Row 2 -->
-					<div class="col-xl-12 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">Address <span>*</span></label>
-							<input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
-							<ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 93%; display: none;"></ul>
-							<input type="hidden" id="fromLat">
-							<input type="hidden" id="fromLng">
-							<input type="hidden" id="fromState">
-							<input type="hidden" id="fromCity">
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">City <span>*</span></label>
-							<select class="select2-custom form-control" id="ddlCity" style="width: 100%;">
-							</select>
-						</div>
-					</div>
-					<!-- Row 3 -->
-					<div class="col-xl-6 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">Email ID</label>
-							<input type="email" class="form-control" maxlength="200" placeholder="name@example.com" id="txtEmail" />
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">Mobile Number</label>
-							<input type="tel" id="txtMobileNumber" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
-						</div>
-					</div>
-					<!-- Row 4 -->
-					<div class="col-xl-6 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">Pincode <span>*</span></label>
-							<input type="text" class="form-control" placeholder="Pin Code" maxlength="6" id="txtPinCode" onkeypress="return isNumber(event)" />
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">WhatsApp Number <span>*</span></label>
-							<input type="tel" id="txtWhatsAppNumber" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
-						</div>
-					</div>
-					<!-- Row 5 -->
-					<div class="col-xl-6 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">Contact Number</label>
-							<input type="tel" id="txtContactNumber" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6">
-						<div class="item-input">
-							<label class="form-label">Contact Person</label>
-							<input type="text" class="form-control" placeholder="Contact Person" maxlength="50" id="txtPerson" onkeypress="return isAlphabets(event)" />
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="button-main">
-				<a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
-					<i class="ri-save-line"></i>
-					<span>
-						Save
-					</span>
-				</a>
-				<a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
-					<i class="ri-save-line"></i>
-					<span>
-						Save & New
-					</span>
-				</a>
-				<a href="#" class="card-link" id="btnUpdate" style="display:none;">
-					<i class="ri-save-line"></i>
-					<span>
-						Update
-					</span>
-				</a>
-				<a href="#" class="card-link" id="btnCancel">
-					<i class="ri-close-line"></i>
-					<span>
-						Cancel
-					</span>
-				</a>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Add Location</h1>
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="#" id="locationListSectionLink">Location</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Location</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div id="AddLocationDiv" class="card com-profile-info">
+            <div class="top-details">
+                <h2 class="page-form-title">Location Details</h2>
+                <form class="row all-custom-class" id="LocationForm" method="post">
+                    <input type="hidden" id="hdnLocationId" />
+                    <!-- Row 1 -->
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Location Name <span>*</span></label>
+                            <input id="txtLocationName" type="text" class="form-control" maxlength="50" placeholder="Location Name" onkeypress="return isAlphabets(event)" />
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Location Code <span>*</span></label>
+                            <input type="text" class="form-control" placeholder="Location Code" maxlength="50" id="txtCode" />
+                        </div>
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="col-xl-12 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Address <span>*</span></label>
+                            <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
+                            <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 93%; display: none;"></ul>
+                            <input type="hidden" id="fromLat">
+                            <input type="hidden" id="fromLng">
+                            <input type="hidden" id="fromState">
+                            <input type="hidden" id="fromCity">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">City <span>*</span></label>
+                            <select class="select2-custom form-control" id="ddlCity" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Row 3 -->
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Email ID</label>
+                            <input type="email" class="form-control" maxlength="200" placeholder="name@example.com" id="txtEmail" />
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="tel" id="txtMobileNumber" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
+                        </div>
+                    </div>
+                    <!-- Row 4 -->
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Pincode <span>*</span></label>
+                            <input type="text" class="form-control" placeholder="Pin Code" maxlength="6" id="txtPinCode" onkeypress="return isNumber(event)" />
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">WhatsApp Number <span>*</span></label>
+                            <input type="tel" id="txtWhatsAppNumber" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
+                        </div>
+                    </div>
+                    <!-- Row 5 -->
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" id="txtContactNumber" maxlength="10" class="form-control phone-input" placeholder="+1 (555) 000-0000" onkeypress="return isNumber(event)">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="item-input">
+                            <label class="form-label">Contact Person</label>
+                            <input type="text" class="form-control" placeholder="Contact Person" maxlength="50" id="txtPerson" onkeypress="return isAlphabets(event)" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="button-main">
+                <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
+                    <i class="ri-save-line"></i>
+                    <span>
+                        Save
+                    </span>
+                </a>
+                <a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
+                    <i class="ri-save-line"></i>
+                    <span>
+                        Save & New
+                    </span>
+                </a>
+                <a href="#" class="card-link" id="btnUpdate" style="display:none;">
+                    <i class="ri-save-line"></i>
+                    <span>
+                        Update
+                    </span>
+                </a>
+                <a href="#" class="card-link" id="btnCancel">
+                    <i class="ri-close-line"></i>
+                    <span>
+                        Cancel
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>

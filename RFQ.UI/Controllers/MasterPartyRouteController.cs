@@ -1,15 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Model;
 using RFQ.UI.Extension;
 
 namespace RFQ.UI.Controllers
 {
-    public class MasterPartyRouteController : Controller
+    public class MasterPartyRouteController : BaseController
     {
         private readonly IMasterPartyRouteService _masterPartyRouteService;
-        public MasterPartyRouteController(IMasterPartyRouteService masterPartyRouteService)
+        private readonly GlobalClass _globalClass;
+        private readonly IMenuServices _menuServices;
+        public MasterPartyRouteController(IMasterPartyRouteService masterPartyRouteService, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _masterPartyRouteService = masterPartyRouteService;
+            _menuServices = menuServices;
+            _globalClass = globalClass;
         }
 
         [HttpGet("MasterPartyRoute/GetMasterPartyRouteByPartyId/{partyId}")]

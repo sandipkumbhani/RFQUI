@@ -8,17 +8,20 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class LocationController : Controller
+    public class LocationController : BaseController
     {
-        private readonly GlobalClass _globalClass;
         private readonly ILocationService _locationService;
-        public LocationController(GlobalClass globalClass, ILocationService locationService)
+        private readonly GlobalClass _globalClass;
+        private readonly IMenuServices _menuServices;
+        public LocationController(GlobalClass globalClass, ILocationService locationService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _locationService = locationService;
+            _menuServices = menuServices;
         }
-        public IActionResult Location()
+        public async Task<IActionResult> Location()
         {
+            await SetMenuAsync();
             return View();
         }
         [HttpPost]

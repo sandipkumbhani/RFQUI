@@ -80,7 +80,6 @@ function CheckValidation() {
 }
 
 function OnSubmit() {
-    debugger;
     var userid = getCookieValue('userid');
     if (!CheckValidation()) {
         return;

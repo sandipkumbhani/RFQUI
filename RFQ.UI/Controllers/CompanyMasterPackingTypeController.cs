@@ -7,15 +7,17 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    public class CompanyMasterPackingTypeController : Controller
+    public class CompanyMasterPackingTypeController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly ICompanyMasterPackingTypeService _companyMasterPackingTypeServices;
+        private readonly IMenuServices _menuServices;
 
-        public CompanyMasterPackingTypeController(ICompanyMasterPackingTypeService companyMasterPackingTypeServices, GlobalClass globalClass)
+        public CompanyMasterPackingTypeController(ICompanyMasterPackingTypeService companyMasterPackingTypeServices, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _companyMasterPackingTypeServices = companyMasterPackingTypeServices;
             _globalClass = globalClass;
+            _menuServices = menuServices;
         }
 
         [HttpPost]

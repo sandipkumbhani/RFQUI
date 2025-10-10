@@ -14,7 +14,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
     GetAllCityList("ddlCity");
     CheckValidation();
@@ -28,6 +28,7 @@ $(document).ready(function () {
         FetchFranchise();
     });
     $("#btnAddFranchise").on("click", function () {
+        $('#franchiseForm').find('input, select, textarea, button, a').prop('disabled', false);
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
     });
@@ -366,7 +367,7 @@ function FetchFranchise() {
     $("#btnUpdateFranchise").hide();
     $("#btnSavenewFranchise").show();
     ResetAttachmentRepeater();
-    FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 
@@ -380,6 +381,10 @@ $('#pageLength').off('change').on('change', function () {
     FetchFranchise();
 });
 function EditFranchise(companyId) {
+    $('#franchiseForm').find('input, select, textarea, button, a').prop('disabled', false);
+    if ($("#btnUpdateFranchise").hasClass('d-none')) {
+        $("#btnUpdateFranchise").removeClass('d-none');
+    }
     var data = viewModelDto.filter(x => x.companyId == companyId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, companyId, function (list) {
@@ -579,5 +584,11 @@ function DeleteFranchise(companyId, fileName, linkId) {
             });
         }
     });
+}
+
+function ViewFranchise(companyId) {
+    EditFranchise(companyId);
+    $('#franchiseForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdateFranchise").addClass('d-none');
 }
 

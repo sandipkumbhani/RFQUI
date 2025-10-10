@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     document.getElementById("txtPanNumber").addEventListener("input", function () {
@@ -72,7 +72,7 @@ function FetchCustomerList() {
     $("#SavenewButton").show();
     ResetAttachmentRepeater();
 
-    FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 // Bind events
@@ -222,12 +222,14 @@ function SaveCustomer(action) {
     return partyId;
 };
 function EditCustomer(partyId) {
-
+    if ($("#btnUpdate").hasClass('d-none')) {
+        $("#btnUpdate").removeClass('d-none');
+     
+    }
     var data = viewModelDto.filter(x => x.partyId === partyId);
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
         var attachmentData = list;
-        debugger;
         $('#tableDiv').css('display', 'none');
         $("#formDiv").css('display', 'Block');
         $("#btnSaveCustomer").hide();
@@ -267,7 +269,6 @@ function EditCustomer(partyId) {
         if (attachmentData.length > 0) {
             EditMasterAttachment(attachmentData);
         }
-
     });
 }
 function UpdateCustomer() {
@@ -650,4 +651,10 @@ function getAutoCustomerCode() {
             console.error('Error fetching customer code:', error);
         }
     });
+}
+
+function ViewCustomer(partyId) {
+    EditCustomer(partyId);
+    $('#customerForm').find('input, select, textarea, button, a').prop('disabled', true);
+    $("#btnUpdate").addClass('d-none');
 }

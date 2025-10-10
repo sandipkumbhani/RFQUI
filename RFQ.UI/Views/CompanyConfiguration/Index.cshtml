@@ -1,193 +1,206 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-	Layout = "_Layout";
-	ViewData["Title"] = "CompanyConfiguration";
+    Layout = "_Layout";
+    ViewData["Title"] = "CompanyConfiguration";
+    bool IsAdd = (bool)ViewData["IsAdd"];
+    bool IsEdit = (bool)ViewData["IsEdit"];
+    bool IsView = (bool)ViewData["IsView"];
+    bool IsCancel = (bool)ViewData["IsCancel"];
 }
 @section Scripts {
-	<script src="~/js/Views/CompanyConfiguration.js"></script>
+    <script>
+        var IsAdd = @IsAdd.ToString().ToLower();
+        var IsEdit = @IsEdit.ToString().ToLower();
+        var IsView = @IsView.ToString().ToLower();
+        var IsCancel = @IsCancel.ToString().ToLower();
+    </script>
+    <script src="~/js/Views/CompanyConfiguration.js"></script>
 }
 
 <div id="listSection">
-	<div class="row">
-		<div class="col-12">
-			<div class="page-title-box add">
-				<h1 class="page-title">Company Configuration</h1>
-				<div class="add-btn">
-					<a href="#" id="btnAddconfiguration">
-						<i class="ri-add-line"></i> <span>Add</span>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-12">
-			<div class="card com-profile-info">
-				<!-- Top Header -->
-				<div class="table-top-header">
-					<h4>List of Company Configuration</h4>
-					<div class="d-flex gap-2">
-						<div class="table-search-box">
-							<input type="text" id="tableCmpConfigSearch" class="form-control form-control-sm" placeholder="Search...">
-							<button type="submit"><i class="ri-search-line"></i></button>
-						</div>
-						<div id="exporttableCC" class="btn-group" role="group"></div>
-					</div>
-				</div>
-				<!-- Table -->
-				<div class="table-responsive">
-					<table id="tableCmpConfig"
-						   class="table dt-responsive nowrap w-100">
-						<thead>
-							<tr class="text-center">
-								<th class="sortable text-center" data-column="companyName" data-order="asc">Company</th>
-								@* <th class="text-center">SMSProvider</th> *@
-								<th class="sortable text-center" data-column="smsAuthKey" data-order="asc">SMSAuthKey</th>
-								<th class="sortable text-center" data-column="whatsAppAuthKey" data-order="asc">WhatsAppAuthKey</th>
-								@* <th class="text-center">WhatsAppProvider</th> *@
-								<th class="sortable text-center" data-column="smtpHost" data-order="asc">SMTPHost</th>
-								<th class="sortable text-center" data-column="smtpPort" data-order="asc">SMTPPort</th>
-								<th class="sortable text-center" data-column="smtpUsername" data-order="asc">SMTPUsername</th>
-								<th class="text-center no-sort">Action</th>
-							</tr>
-						</thead>
-						<tbody class="text-center">
-							<!-- Dynamic rows go here -->
-						</tbody>
-					</table>
-				</div>
-				<!-- Bottom Area -->
-				<div class="datatable-footer-bottom">
-					<div class="totle-left">
-						<span id="totalList">Total List: 3</span>
-					</div>
-					<div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
-					<input type="hidden" id="currentPage" value="1">
-					<div class="show-page">
-						<span>Show per page:</span>
-						<select id="pageLength" class="form-select">
-							<option value="5">5 </option>
-							<option value="10" selected>10 </option>
-							<option value="25">25</option>
-							<option value="-1">All</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Company Configuration</h1>
+                @if (IsAdd)
+                {
+                    <div class="add-btn">
+                        <a href="#" id="btnAddconfiguration">
+                            <i class="ri-add-line"></i> <span>Add</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <!-- Top Header -->
+                <div class="table-top-header">
+                    <h4>List of Company Configuration</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="tableCmpConfigSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div id="exporttableCC" class="btn-group" role="group"></div>
+                    </div>
+                </div>
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table id="tableCmpConfig"
+                           class="table dt-responsive nowrap w-100">
+                        <thead>
+                            <tr class="text-center">
+                                <th class="sortable text-center" data-column="companyName" data-order="asc">Company</th>
+                                @* <th class="text-center">SMSProvider</th> *@
+                                <th class="sortable text-center" data-column="smsAuthKey" data-order="asc">SMSAuthKey</th>
+                                <th class="sortable text-center" data-column="whatsAppAuthKey" data-order="asc">WhatsAppAuthKey</th>
+                                @* <th class="text-center">WhatsAppProvider</th> *@
+                                <th class="sortable text-center" data-column="smtpHost" data-order="asc">SMTPHost</th>
+                                <th class="sortable text-center" data-column="smtpPort" data-order="asc">SMTPPort</th>
+                                <th class="sortable text-center" data-column="smtpUsername" data-order="asc">SMTPUsername</th>
+                                <th class="text-center no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <!-- Dynamic rows go here -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
+                    <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                            <option value="-1">All</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="formSection" style="display: none;">
-	<div class="row">
-		<div class="col-12">
-			<div class="page-title-box add">
-				<h1 class="page-title">Add Company Configuration</h1>
-				<div class="add-breadcrumb">
-					<nav aria-label="breadcrumb">
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item">
-								<a href="#" id="ListSectionLink">Company Configuration</a>
-							</li>
-							<li class="breadcrumb-item active" aria-current="page"> Add Customer Configuration</li>
-						</ol>
-					</nav>
-				</div>
-			</div>
-		</div>
-		<div id="addCompanyConfigDiv" class="card com-profile-info">
-			<div class="top-details">
-				<h2 class="page-form-title">Company Configuration Details</h2>
-				<form class="row all-custom-class" method="post" id="companyConfigurationForm">
-					<!-- Row 1 -->
-					<div class="col-lg-7">
-						<div class="item-input">
-							<label class="form-label">Company Name <span>*</span></label>
-							<select class="select2-custom form-control" id="ddlCompany" style="width: 100%;">
-							</select>
-						</div>
-					</div>
-					<div class="col-lg-5"></div>
-					<div class="col-lg-7">
-						<div class="item-input">
-							<label class="form-label">SMS Provider</label>
-							<select class="select2-custom form-control" id="ddlSmsProvider" style="width: 100%;">
-							</select>
-						</div>
-					</div>
-					<div class="col-lg-5">
-						<div class="item-input">
-							<label class="form-label">SMS Authorization Key</label>
-							<input id="txtSmsAuthKey" type="text" class="form-control" maxlength="200" />
-						</div>
-					</div>
-					<div class="col-lg-7">
-						<div class="item-input">
-							<label class="form-label">WhatsApp Provider</label>
-							<select class="select2-custom form-control" id="ddlWhatsappProvider" style="width: 100%;">
-							</select>
-						</div>
-					</div>
-					<div class="col-lg-5">
-						<div class="item-input">
-							<label class="form-label">WhatsApp Authorization Key</label>
-							<input type="text" id="txtWhatsappAuthKey" class="form-control" maxlength="200" />
-						</div>
-					</div>
-					<div class="col-lg-7">
-						<div class="item-input">
-							<label class="form-label">SMTP Host</label>
-							<input type="text" id="txtSmtpHost" class="form-control" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="50" />
-						</div>
-					</div>
-					<div class="col-lg-5">
-						<div class="item-input">
-							<label class="form-label">SMTP Port</label>
-							<input type="text" id="txtSmtpPort" class="form-control" onkeypress="return isNumber(event)" />
-						</div>
-					</div>
-					<div class="col-lg-7">
-						<div class="item-input">
-							<label class="form-label">SMTP User Name</label>
-							<input type="text" id="txtSmtpUserName" class="form-control " readonly="readonly" maxlength="50"
-								   onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}">
-						</div>
-					</div>
-					<div class="col-lg-5">
-						<div class="item-input">
-							<label class="form-label">SMTP Password</label>
-							<input type="password" id="txtSmtpPassword" class="form-control" readonly="readonly" maxlength="50"
-								   onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}">
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="button-main">
-				<a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
-					<i class="ri-save-line"></i>
-					<span>
-						Save
-					</span>
-				</a>
-				<a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
-					<i class="ri-save-line"></i>
-					<span>
-						Save & New
-					</span>
-				</a>
-				<a href="#" class="card-link" id="btnUpdate" style="display:none;">
-					<i class="ri-save-line"></i>
-					<span>
-						Update
-					</span>
-				</a>
-				<a href="#" class="card-link" id="btnCancel">
-					<i class="ri-close-line"></i>
-					<span>
-						Cancel
-					</span>
-				</a>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Add Company Configuration</h1>
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="#" id="ListSectionLink">Company Configuration</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Customer Configuration</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div id="addCompanyConfigDiv" class="card com-profile-info">
+            <div class="top-details">
+                <h2 class="page-form-title">Company Configuration Details</h2>
+                <form class="row all-custom-class" method="post" id="companyConfigurationForm">
+                    <!-- Row 1 -->
+                    <div class="col-lg-7">
+                        <div class="item-input">
+                            <label class="form-label">Company Name <span>*</span></label>
+                            <select class="select2-custom form-control" id="ddlCompany" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-5"></div>
+                    <div class="col-lg-7">
+                        <div class="item-input">
+                            <label class="form-label">SMS Provider</label>
+                            <select class="select2-custom form-control" id="ddlSmsProvider" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="item-input">
+                            <label class="form-label">SMS Authorization Key</label>
+                            <input id="txtSmsAuthKey" type="text" class="form-control" maxlength="200" />
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="item-input">
+                            <label class="form-label">WhatsApp Provider</label>
+                            <select class="select2-custom form-control" id="ddlWhatsappProvider" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="item-input">
+                            <label class="form-label">WhatsApp Authorization Key</label>
+                            <input type="text" id="txtWhatsappAuthKey" class="form-control" maxlength="200" />
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="item-input">
+                            <label class="form-label">SMTP Host</label>
+                            <input type="text" id="txtSmtpHost" class="form-control" onkeypress="return AllowAlphaNumericOnly(event)" maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="item-input">
+                            <label class="form-label">SMTP Port</label>
+                            <input type="text" id="txtSmtpPort" class="form-control" onkeypress="return isNumber(event)" />
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="item-input">
+                            <label class="form-label">SMTP User Name</label>
+                            <input type="text" id="txtSmtpUserName" class="form-control " readonly="readonly" maxlength="50"
+                                   onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}">
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="item-input">
+                            <label class="form-label">SMTP Password</label>
+                            <input type="password" id="txtSmtpPassword" class="form-control" readonly="readonly" maxlength="50"
+                                   onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="button-main">
+                <a href="#" class="card-link" id="btnSaveForm" type="button" data-action="save">
+                    <i class="ri-save-line"></i>
+                    <span>
+                        Save
+                    </span>
+                </a>
+                <a href="#" class="card-link" data-action="saveNew" id="btnSaveAndNewForm">
+                    <i class="ri-save-line"></i>
+                    <span>
+                        Save & New
+                    </span>
+                </a>
+                <a href="#" class="card-link" id="btnUpdate" style="display:none;">
+                    <i class="ri-save-line"></i>
+                    <span>
+                        Update
+                    </span>
+                </a>
+                <a href="#" class="card-link" id="btnCancel">
+                    <i class="ri-close-line"></i>
+                    <span>
+                        Cancel
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
