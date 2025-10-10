@@ -535,6 +535,12 @@ function InitializeFields() {
             return;
         }
     });
+    //$("#numGstNumber").on("blur", function () {
+    //    if (!ValidatePanNumber($(this).val())) {
+    //        toastr.warning("Please enter a valid GST No", "Validation Error");
+    //        return;
+    //    }
+    //});
 
     $("#txtCustomerName").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
@@ -601,9 +607,35 @@ function InitializeFields() {
 }
 function ValidationCheck() {
 
-    if (IsNullOrEmpty($("#numPan").val()) || !ValidatePanNumber($("#numPan").val())) {
-        toastr.warning("Please enter a valid PAN No", "Validation Error");
+    //if (IsNullOrEmpty($("#numPan").val()) || !ValidatePanNumber($("#numPan").val())) {
+    //    toastr.warning("Please enter a valid PAN No", "Validation Error");
+    //    return false;
+    //}
+    //if (IsNullOrEmpty($("#numGstNumber").val()) && !ValidatePanNumber($("#numGstNumber").val())) {
+    //    toastr.warning("Please enter a valid GST No", "Validation Error");
+    //    return false;
+    //}
+    var panNumber = $("#numPan").val().toUpperCase().trim();
+    var gstNumber = $("#numGstNumber").val().toUpperCase().trim();
+
+    if (IsNullOrEmpty(panNumber) || !ValidatePanNumber(panNumber)) {
+        toastr.warning("Please enter a valid PAN Number", "Validation Error");
         return false;
+    }
+
+
+    if (!IsNullOrEmpty(gstNumber)) {
+        if (!ValidateGstNumber(gstNumber)) {
+            toastr.warning("Please enter a valid GST Number", "Validation Error");
+            return false;
+        }
+
+        var panInGst = gstNumber.substring(2, 12); // GSTIN[2..11]
+
+        if (panInGst !== panNumber) {
+            toastr.warning("PAN in GST Number does not match the entered PAN Number", "Validation Error");
+            return false;
+        }
     }
 
     if (IsNullOrEmpty($("#txtCustomerName").val()) || !isAlphabets($("#txtCustomerName").val())) {
