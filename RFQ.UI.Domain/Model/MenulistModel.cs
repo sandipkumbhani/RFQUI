@@ -8,6 +8,8 @@
         public string? GroupId { get; set; }
         public string? LinkIcon { get; set; }
         public string? SequenceNo { get; set; }
+
+        public string? GroupSequenceNo { get; set; }
         public string? LinkUrl { get; set; }
         public string? AddUrl { get; set; }
         public string? EditUrl { get; set; }
