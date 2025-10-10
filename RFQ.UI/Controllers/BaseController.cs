@@ -33,6 +33,13 @@ namespace RFQ.UI.Controllers
                 ViewData["IsView"] = list.IsView;
                 ViewData["IsCancel"] = list.IsCancel;
             }
+            if (menuList.Count() > 0)
+            {
+                menuList = menuList
+                .Where(item => profileList.Any(x => x.LinkId == item.LinkId && x.IsView))
+                .ToList();
+                ViewData["menulist"] = menuList.ToList();
+            }
         }
     }
 }
