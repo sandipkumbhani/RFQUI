@@ -68,7 +68,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
@@ -132,7 +132,7 @@ function FetchVehiclePlacement() {
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
     //ResetAttachmentRepeater();
-    FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
 
@@ -923,7 +923,6 @@ function GetDropdownValue(inputId) {
     return result;
 }
 function SaveVehiclePlacement(action) {
-    debugger;
     var saveUrl = '/VehiclePlacement/AddVehiclePlacement';
     var driverResult = GetDropdownValue("ddlDriverName");
     const formData = {

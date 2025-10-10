@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     $("#btnSaveVehicle, #btnSaveNewVehicle").on('click', function () {
@@ -346,7 +346,7 @@ function FetchVehicleList() {
         $(this).val(null).trigger('change');
     });
     $("#ddlOwnerName").prop('disabled', false);
-    FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 $('#vehicleTableSearch').off('keyup').on('keyup', function () {

@@ -12,7 +12,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     $("#btnCancel").on("click", function () {
@@ -124,7 +124,7 @@ function FetchProduct() {
     $("#btnUpdateProduct").hide();
     $("#btnSavenewProduct").show();
     $("#btnSaveProduct").show();
-    FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('productTable', fetchProductUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 //Bind events
 $('#productTableSearch').off('keyup').on('keyup', function () {

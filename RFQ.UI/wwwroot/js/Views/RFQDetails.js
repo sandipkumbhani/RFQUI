@@ -18,7 +18,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
     $("#btnCancel").on("click", function () {
         FetchRfqList();
@@ -342,7 +342,6 @@ function GetAllVendorList() {
     $("#ddlRFQVendorList").empty();
     var getUrl = '/RequestForQuote/GetAllVendorListForRfq'
     let fromStateName = $("#fromState").val().toUpperCase();
-    debugger;
     let toStateName = $("#toState").val().toUpperCase();
     var formData = {
         OriginFrom: fromStateName,
@@ -769,7 +768,7 @@ function FetchRfqList() {
     //});
     FetchRfqNo();
     ResetAttachmentRepeater();
-    FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 $('#rfqTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);

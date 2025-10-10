@@ -26,7 +26,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     InitializeFields();
@@ -313,7 +313,7 @@ function FetchDriverList() {
     $("#btnSaveNewDriver").show();
     ResetForm();
     ResetAttachmentRepeater();
-    FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 };
 
 $('#driverTableSearch').off('keyup').on('keyup', function () {

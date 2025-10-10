@@ -38,7 +38,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
@@ -72,17 +72,17 @@ function FetchCorporateCompany() {
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
     $("#btnSaveCompanyType").show();
-    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', null, null);
+    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', null, null, IsEdit, IsView, IsCancel);
 }
 $('#corporateTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     //FetchCorporateCompany();
 });
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     //FetchCorporateCompany();
 });
 function CheckValidation() {

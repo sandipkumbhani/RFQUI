@@ -13,7 +13,7 @@ $(document).ready(function () {
         $(this).data('order', orderDir);
 
         $('th.sortable').not(this).data('order', 'asc');
-        FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
     $('#ListSectionLink').on('click', function (e) {
         FetchCompanyConfiguration();
@@ -253,7 +253,7 @@ function FetchCompanyConfiguration() {
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
     $("#btnSaveForm").show();
-    FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 // Bind events

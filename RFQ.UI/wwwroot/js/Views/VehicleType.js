@@ -49,7 +49,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
     UpdateVechileType();
     FetchVehicleTypes();
@@ -70,18 +70,18 @@ function FetchVehicleTypes() {
     $('#tableDiv').show();
     $("#addVehicleTypeDiv").addClass("d-none");
     $('#btnAddVehicleType').removeClass('d-none');
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 
 $('#vehicleTypesTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 })
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 });
 function SaveVehicleType(action) {
     if (OnSubmitValidation()) {

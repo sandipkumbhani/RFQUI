@@ -3,8 +3,18 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "RFQ Finalization";
+    bool IsAdd = (bool)ViewData["IsAdd"];
+    bool IsEdit = (bool)ViewData["IsEdit"];
+    bool IsView = (bool)ViewData["IsView"];
+    bool IsCancel = (bool)ViewData["IsCancel"];
 }
 @section Scripts {
+    <script>
+        var IsAdd = @IsAdd.ToString().ToLower();
+        var IsEdit = @IsEdit.ToString().ToLower();
+        var IsView = @IsView.ToString().ToLower();
+        var IsCancel = @IsCancel.ToString().ToLower();
+    </script>
     <script src="~/js/Views/RFQFinalization.js"></script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
@@ -34,7 +44,7 @@
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="item-input">
                         <label class="form-label">RFQ No</label>
-                        <select class="select2-custom form-control" data-control="select2" id="ddlRfqNo" style="width: 100%;" >
+                        <select class="select2-custom form-control" data-control="select2" id="ddlRfqNo" style="width: 100%;">
                         </select>
                     </div>
                 </div>
@@ -208,12 +218,14 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">RFQ Finalization</h1>
-
-                <div class="add-btn">
-                    <a href="#" id="btnAddRfqFinalization">
-                        <i class="ri-add-line"></i> <span>Add</span>
-                    </a>
-                </div>
+                @if (IsAdd)
+                {
+                    <div class="add-btn">
+                        <a href="#" id="btnAddRfqFinalization">
+                            <i class="ri-add-line"></i> <span>Add</span>
+                        </a>
+                    </div>
+                }
             </div>
         </div>
     </div>

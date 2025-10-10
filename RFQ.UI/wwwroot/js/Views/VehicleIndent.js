@@ -47,7 +47,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     $("#btnSave, #btnsaveandnew").on('click', function () {
@@ -75,7 +75,7 @@ function FetchVehicleIndent() {
     $("#btnsaveandnew").show();
     GetAllConsignorList();
     GetAllConsigneeList();
-    FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 $('#IndentTableSearch').off('keyup').on('keyup', function () {
@@ -396,8 +396,6 @@ function ButtonUpdateClick() {
             Remarks: $("#txtRemarks").val(),
             LinkId: GetQueryParam("LinkId")
         };
-        debugger;
-
         var linkd = GetQueryParam("LinkId");
 
 

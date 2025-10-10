@@ -2,10 +2,21 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "user";
+    bool IsAdd = (bool)ViewData["IsAdd"];
+    bool IsEdit = (bool)ViewData["IsEdit"];
+    bool IsView = (bool)ViewData["IsView"];
+    bool IsCancel = (bool)ViewData["IsCancel"];
+
 }
 
 @section Scripts {
     <script src="~/js/Views/User.js"></script>
+    <script>
+        var IsAdd = @IsAdd.ToString().ToLower();
+        var IsEdit = @IsEdit.ToString().ToLower();
+        var IsView = @IsView.ToString().ToLower();
+        var IsCancel = @IsCancel.ToString().ToLower();
+    </script>
 }
 
 <div id="userListSection">
@@ -21,11 +32,14 @@
                             <i class="ri-file-list-line"></i> <span>Activity Log</span>
                         </a>
                     </div>
-                    <div class="add-btn">
-                        <a href="#" id="btnAddUser">
-                            <i class="ri-add-line"></i> <span>Add</span>
-                        </a>
-                    </div>
+                    @if (IsAdd)
+                    {
+                        <div class="add-btn">
+                            <a href="#" id="btnAddUser">
+                                <i class="ri-add-line"></i> <span>Add</span>
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

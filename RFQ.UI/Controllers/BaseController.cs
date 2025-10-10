@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
-    
+
     public class BaseController : Controller
     {
         private readonly IMenuServices _menuServices;
@@ -22,6 +23,16 @@ namespace RFQ.UI.Controllers
             int profileID = Convert.ToInt32(profileid);
             var menuList = await _menuServices.GetMenu(profileID);
             ViewData["menulist"] = menuList.ToList();
+            var profileList = await _menuServices.GetProfileRightsByProfileId(profileID);
+            int LinkId = Request.Query.ContainsKey("LinkId") ? Convert.ToInt32(Request.Query["LinkId"]) : 0;
+            if (LinkId != 0)
+            {
+                var list = profileList.FirstOrDefault(x => x.LinkId == LinkId);
+                ViewData["IsAdd"] = list.IsAdd;
+                ViewData["IsEdit"] = list.IsEdit;
+                ViewData["IsView"] = list.IsView;
+                ViewData["IsCancel"] = list.IsCancel;
+            }
         }
     }
 }

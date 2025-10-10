@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
 
     document.getElementById("txtPanNumber").addEventListener("input", function () {
@@ -72,7 +72,7 @@ function FetchCustomerList() {
     $("#SavenewButton").show();
     ResetAttachmentRepeater();
 
-    FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 // Bind events
@@ -230,7 +230,6 @@ function EditCustomer(partyId) {
     var formData = data[0];
     FetchMasterAttachment(formData.linkId, partyId, function (list) {
         var attachmentData = list;
-        debugger;
         $('#tableDiv').css('display', 'none');
         $("#formDiv").css('display', 'Block');
         $("#btnSaveCustomer").hide();

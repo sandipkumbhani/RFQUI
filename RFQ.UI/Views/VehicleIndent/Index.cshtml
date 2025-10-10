@@ -3,15 +3,25 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Vehicle Indent";
+    bool IsAdd = (bool)ViewData["IsAdd"];
+    bool IsEdit = (bool)ViewData["IsEdit"];
+    bool IsView = (bool)ViewData["IsView"];
+    bool IsCancel = (bool)ViewData["IsCancel"];
+
+
 }
 
 @section Scripts {
+    <script>
+        var IsAdd = @IsAdd.ToString().ToLower();
+        var IsEdit = @IsEdit.ToString().ToLower();
+        var IsView = @IsView.ToString().ToLower();
+        var IsCancel = @IsCancel.ToString().ToLower();
+    </script>
     <script src="~/js/views/VehicleIndent.js"></script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
     </script>
-    
-
 }
 
 <div id="tableDiv">
@@ -19,12 +29,14 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Vehicle Indent</h1>
-
-                <div class="add-btn">
-                    <a href="#" id="addCompany">
-                        <i class="ri-add-line"></i> <span>Add</span>
-                    </a>
-                </div>
+                @if (@IsAdd)
+                {
+                    <div class="add-btn">
+                        <a href="#" id="addCompany">
+                            <i class="ri-add-line"></i> <span>Add</span>
+                        </a>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -65,7 +77,7 @@
                                 <th class="sortable text-center" data-column="ItemName" data-order="asc">Item Name</th>
                                 <th class="sortable text-center" data-column="PakingName" data-order="asc">Packing Type</th>
                                 <th class="sortable text-center" data-column="Remarks" data-order="asc">Remarks</th>
-                               
+
                                 <th class="text-center no-sort">Action</th>
                             </tr>
                         </thead>

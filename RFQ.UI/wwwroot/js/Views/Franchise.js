@@ -14,7 +14,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
     GetAllCityList("ddlCity");
     CheckValidation();
@@ -367,7 +367,7 @@ function FetchFranchise() {
     $("#btnUpdateFranchise").hide();
     $("#btnSavenewFranchise").show();
     ResetAttachmentRepeater();
-    FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 

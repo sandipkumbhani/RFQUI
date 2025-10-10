@@ -3,8 +3,19 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Vendor";
+    bool IsAdd = (bool)ViewData["IsAdd"];
+    bool IsEdit = (bool)ViewData["IsEdit"];
+    bool IsView = (bool)ViewData["IsView"];
+    bool IsCancel = (bool)ViewData["IsCancel"];
 }
+
 @section Scripts {
+    <script>
+        var IsAdd = @IsAdd.ToString().ToLower();
+        var IsEdit = @IsEdit.ToString().ToLower();
+        var IsView = @IsView.ToString().ToLower();
+        var IsCancel = @IsCancel.ToString().ToLower();
+    </script>
     <script src="~/js/AttachmentDetails.js"></script>
     <script src="~/js/Views/Vendor.js"></script>
     <script async defer
@@ -17,12 +28,14 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Vendor</h1>
-
-                <div class="add-btn">
-                    <a href="#" id="addVendor">
-                        <i class="ri-add-line"></i> <span>Add</span>
-                    </a>
-                </div>
+                @if(IsAdd)
+                {
+                    <div class="add-btn">
+                        <a href="#" id="addVendor">
+                            <i class="ri-add-line"></i> <span>Add</span>
+                        </a>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -273,13 +286,13 @@
                             <div class="col-lg-6">
                                 <div class="item-input">
                                     <label class="form-label">Pan Number <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="xxxxxxxxxx" id="numPanNumber" maxlength="10"/>
+                                    <input type="text" class="form-control" placeholder="xxxxxxxxxx" id="numPanNumber" maxlength="10" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="item-input">
                                     <label class="form-label">GST Number</label>
-                                    <input type="text" class="form-control" placeholder="xxxxx-xxxxx-xxxxx" id="numGstNumber" maxlength="15"/>
+                                    <input type="text" class="form-control" placeholder="xxxxx-xxxxx-xxxxx" id="numGstNumber" maxlength="15" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -316,85 +329,84 @@
                     </div>
                     <div class="franchise-owner-details">
                         <h2 class="page-form-title">Vendor Route Details</h2>
-                            <div class="col-xxl-6">
-                                <div class="card com-profile-info vendor-table">
-                                    <!-- Top Header -->
-                                    <div class="table-top-header">
-                                        <h4>Vehicle Types Details</h4>
-                                    </div>
+                        <div class="col-xxl-6">
+                            <div class="card com-profile-info vendor-table">
+                                <!-- Top Header -->
+                                <div class="table-top-header">
+                                    <h4>Vehicle Types Details</h4>
+                                </div>
 
-                                    <!-- Table -->
-                                    <div class="table-responsive">
-                                        <table id="vendorVehicleTypeTable" class="table dt-responsive nowrap w-100">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">Sr. No.</th>
-                                                    <th class="text-center no-sort">Vehicle Type</th>
-                                                    <th class="text-center no-sort">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                               
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <td></td>
-                                                    <td class="text-center">
-                                                        <select class="select2-custom form-control" id="ddlvendorVehicleTypeTable" style="width: 100%;"></select>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <a class="card-link w-50" id="btnAddVendorVehicleType" style="cursor:pointer;">Add</a> /
-                                                        <a class="w-50" id="btnCancelVendorVehicleType" style="cursor:pointer">Cancel</a>
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
+                                <!-- Table -->
+                                <div class="table-responsive">
+                                    <table id="vendorVehicleTypeTable" class="table dt-responsive nowrap w-100">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Sr. No.</th>
+                                                <th class="text-center no-sort">Vehicle Type</th>
+                                                <th class="text-center no-sort">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td class="text-center">
+                                                    <select class="select2-custom form-control" id="ddlvendorVehicleTypeTable" style="width: 100%;"></select>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a class="card-link w-50" id="btnAddVendorVehicleType" style="cursor:pointer;">Add</a> /
+                                                    <a class="w-50" id="btnCancelVendorVehicleType" style="cursor:pointer">Cancel</a>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="col-xxl-12">
-                                <div class="card com-profile-info vendor-table">
-                                    <!-- Top Header -->
-                                    <div class="table-top-header">
-                                        <h4>Applicable Route Details</h4>
-                                    </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="card com-profile-info vendor-table">
+                                <!-- Top Header -->
+                                <div class="table-top-header">
+                                    <h4>Applicable Route Details</h4>
+                                </div>
 
-                                    <!-- Table -->
-                                    <div class="table-responsive">
-                                        <table id="applicableRouteDetails" class="table dt-responsive nowrap w-100">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">Sr. No.</th>
-                                                    <th class="text-center no-sort">From City</th>
-                                                    <th class="text-center no-sort">From State</th>
-                                                    <th class="text-center no-sort">To State</th>
-                                                    <th class="text-center no-sort">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <td></td>
-                                                    <td class="text-center">
-                                                        <select class="select2-custom form-control" id="ddlvendorFromCityTable" style="width: 100%;"></select>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <select class="select2-custom form-control" id="ddlvendorFromStateTable" style="width: 100%;"></select>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <select class="select2-custom form-control" id="ddlvendorToStateTable" style="width: 100%;"></select>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <a class="card-link w-50" id="btnAddVendorApplicableRoute" style="cursor:pointer;">Add</a> /
-                                                        <a class="w-50" id="btnCancelVendorApplicableRoute" style="cursor:pointer">Cancel</a>
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
+                                <!-- Table -->
+                                <div class="table-responsive">
+                                    <table id="applicableRouteDetails" class="table dt-responsive nowrap w-100">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Sr. No.</th>
+                                                <th class="text-center no-sort">From City</th>
+                                                <th class="text-center no-sort">From State</th>
+                                                <th class="text-center no-sort">To State</th>
+                                                <th class="text-center no-sort">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td class="text-center">
+                                                    <select class="select2-custom form-control" id="ddlvendorFromCityTable" style="width: 100%;"></select>
+                                                </td>
+                                                <td class="text-center">
+                                                    <select class="select2-custom form-control" id="ddlvendorFromStateTable" style="width: 100%;"></select>
+                                                </td>
+                                                <td class="text-center">
+                                                    <select class="select2-custom form-control" id="ddlvendorToStateTable" style="width: 100%;"></select>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a class="card-link w-50" id="btnAddVendorApplicableRoute" style="cursor:pointer;">Add</a> /
+                                                    <a class="w-50" id="btnCancelVendorApplicableRoute" style="cursor:pointer">Cancel</a>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             </div>
+                        </div>
                     </div>
                     @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 

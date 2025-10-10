@@ -1216,7 +1216,6 @@ $(document).ready(function () {
 
     // Add child row toggle
     $('#ActivityLogTable tbody').on('click', 'td.details-control', function () {
-        debugger;
         const tr = $(this).closest('tr');
         const row = table.row(tr);
 

@@ -148,7 +148,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
     FetchVendor();
 });
@@ -537,17 +537,17 @@ function FetchVendor() {
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
     ResetAttachmentRepeater();
-    FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', null, null);
+    FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', null, null, IsEdit, IsView, IsCancel);
 }
 
 $('#vendorTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 });
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('vendorTable', '/Vendor/GetAllVendor', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 });
 function EditVendor(partyId) {
     $("#btnupdate").removeClass('d-none');

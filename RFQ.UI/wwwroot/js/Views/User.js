@@ -30,7 +30,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 
     });
     Initialization();
@@ -146,7 +146,7 @@ function FetchUser() {
     $('#userbodyform')[0].reset();
     $('#ddlCompanyAndFranchise').val(null).trigger('change');
     $('#ddlLocation').val(null).trigger('change');
-    FetchDataForTable('tableuser', '/Home/ViewUserList', null, null);
+    FetchDataForTable('tableuser', '/Home/ViewUserList', null, null, IsEdit, IsView, IsCancel);
 }
 function SaveUser(action) {
     var profile = '';
@@ -373,7 +373,6 @@ function UpdateUser() {
     });
 }
 function GetFranchiseAndCorporateName() {
-    debugger;
     var GetUrl = '/Home/GetAllCompanyAndFranchise';
     $.ajax({
         url: GetUrl,
@@ -409,7 +408,6 @@ function GetFranchiseAndCorporateName() {
 }
 function ValidationCheck() {
     if (IsNullOrEmpty($("#txtName").val())) {
-        debugger;
         toastr.warning("Please enter a valid User Name", "Validation Error");
         return false;
     }

@@ -53,7 +53,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase());
+        FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
     });
     $("#btnSave, #btnSaveAndNew").on('click', function () {
 
@@ -361,7 +361,7 @@ function FetchRfqFinalizationList() {
     $('.select2-custom').val(null).trigger('change');
     $("#ddlRfqNo").prop('disabled', false);
     ClearDisabledFields();
-    FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase());
+    FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
 }
 
 $('#rfqFinalizationTableSearch').off('keyup').on('keyup', function () {
