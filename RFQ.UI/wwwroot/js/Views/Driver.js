@@ -265,7 +265,7 @@ function SaveDriver(uploadedFileName, callback) {
                     toastr.success("Driver Login Create Successfully!");
                 }
                 else {
-                    toastr.error("Failed to Create Driver Login", "Error");
+                    toastr.error("User already exists", "Error");
                 }
             },
             error: function (req, status, error) {

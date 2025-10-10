@@ -250,6 +250,7 @@ function OnSubmitValidation() {
         toastr.warning("Please enter a valid PAN Nubmer", "Validation Error");
         return false;
     }
+
     if (IsNullOrEmpty($("#txtVendorName").val())) {
         toastr.warning("Please enter a valid Vendor Name", "Validation Error");
         return false;
@@ -278,14 +279,38 @@ function OnSubmitValidation() {
         toastr.warning("Please enter a valid Email", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#numPanNumber").val()) || !ValidatePanNumber($("#numPanNumber").val())) {
-        toastr.warning("Please enter a valid PAN Nubmer", "Validation Error");
+    //if (IsNullOrEmpty($("#numPanNumber").val()) || !ValidatePanNumber($("#numPanNumber").val())) {
+    //    toastr.warning("Please enter a valid PAN Nubmer", "Validation Error");
+    //    return false;
+    //}
+    //if (!IsNullOrEmpty($("#numGstNumber").val()) && !ValidateGstNumber($("#numGstNumber").val())) {
+    //    toastr.warning("Please enter a valid GST Number", "Validation Error");
+    //    return false;
+    //}
+    var panNumber = $("#numPanNumber").val().toUpperCase().trim();
+    var gstNumber = $("#numGstNumber").val().toUpperCase().trim();
+
+    if (IsNullOrEmpty(panNumber) || !ValidatePanNumber(panNumber)) {
+        toastr.warning("Please enter a valid PAN Number", "Validation Error");
         return false;
     }
-    if (!IsNullOrEmpty($("#numGstNumber").val()) && !ValidateGstNumber($("#numGstNumber").val())) {
-        toastr.warning("Please enter a valid GST Number", "Validation Error");
-        return false;
+
+    
+    if (!IsNullOrEmpty(gstNumber)) {
+        if (!ValidateGstNumber(gstNumber)) {
+            toastr.warning("Please enter a valid GST Number", "Validation Error");
+            return false;
+        }
+
+        var panInGst = gstNumber.substring(2, 12); // GSTIN[2..11]
+
+        if (panInGst !== panNumber) {
+            toastr.warning("PAN in GST Number does not match the entered PAN Number", "Validation Error");
+            return false;
+        }
     }
+
+    
     return true;
 }
 
@@ -438,7 +463,7 @@ function SaveVendor(action) {
                         toastr.success("Vendor Login Create Successfully!");
                     }
                     else {
-                        toastr.error("Failed to Create Vendor Login", "Error");
+                        toastr.error("User already exists", "Error");
                     }
                 },
                 error: function (req, status, error) {

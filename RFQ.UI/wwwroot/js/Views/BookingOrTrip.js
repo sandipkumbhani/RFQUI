@@ -15,6 +15,7 @@ $(document).ready(function () {
     GetAllConsigneeList(); 
     GetTrakingType();
     GetAllPlacementNo();
+    FetchPlacementNo();
 
 });
 function GetAllConsignorList() {
@@ -177,6 +178,20 @@ function GetAllPlacementNo() {
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
+        }
+    });
+}
+function FetchPlacementNo() {
+
+    $.ajax({
+        url: "/BookingOrTrip/GenerateLRNo",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+            $("#ddlLrNo").val(response.result);
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to Fetch LR No!", "Error");
         }
     });
 }

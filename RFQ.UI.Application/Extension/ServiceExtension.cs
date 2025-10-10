@@ -41,6 +41,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IWhatsAppService, WhatsAppService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IMasterUserActivityLogServices, MasterUserActivityLogServices>();
+            services.AddScoped<IBookingOrTripService, BookingOrTripService>();
             return services;
         }
     }
