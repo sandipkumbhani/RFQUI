@@ -197,7 +197,7 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             //    rowsHtml += `<a class="icon-btn" onclick="DeleteVehicleType(${item.vehicleTypeId})"><i class="ri-eye-line" ></i></a>`
             //}
             if (IsCancel) {
-                rowsHtml += `<a onclick="ViewVehicleType(${item.vehicleTypeId})" class="icon-btn"><i class="ri-delete-bin-3-line"></i></a>`
+                rowsHtml += `<a onclick="DeleteVehicleType(${item.vehicleTypeId})" class="icon-btn"><i class="ri-delete-bin-3-line"></i></a>`
             }
             rowsHtml += ` </td></tr> `;
         });
