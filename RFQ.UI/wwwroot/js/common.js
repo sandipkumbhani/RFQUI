@@ -614,9 +614,9 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
         response.data.forEach(item => {
             rowsHtml += `
             <tr>
-                <td>${item.linkName}</td>
-                <td>${item.internalMasterName}</td>
-                <td>${item.personName}</td>
+                <td>${item.linkName || ''}</td>
+                <td>${item.internalMasterName || ''}</td>
+                <td>${item.personName || ''}</td>
                 <td>${item.logDateTime
                     ? new Date(item.logDateTime).toLocaleString('en-GB', {
                         day: '2-digit',

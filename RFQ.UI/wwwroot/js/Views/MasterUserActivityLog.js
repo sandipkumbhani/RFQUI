@@ -14,21 +14,21 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), null, null, null);
     });
 });
 
 function FetchActivityLog() {
-    FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), null, null, null);
 }
 
 // Bind events
 $('#ActivityLogTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), null, null, null);
 });
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), null, null, null);
 })
