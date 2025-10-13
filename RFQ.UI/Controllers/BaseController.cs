@@ -40,10 +40,6 @@ namespace RFQ.UI.Controllers
                 .Where(item => profileList.Any(x => x.LinkId == item.LinkId && x.IsView))
                 .ToList();
                 ViewData["menulist"] = menuList.ToList();
-                ViewData["IsAdd"] = false;
-                ViewData["IsEdit"] = false;
-                ViewData["IsView"] = false;
-                ViewData["IsCancel"] = false;
             }
         }
     }
