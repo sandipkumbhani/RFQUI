@@ -28,12 +28,14 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Driver</h1>
-
-                <div class="add-btn">
-                    <a href="#" id="btnAddDriver">
-                        <i class="ri-add-line"></i> <span>Add</span>
-                    </a>
-                </div>
+                @if (IsAdd)
+                {
+                    <div class="add-btn">
+                        <a href="#" id="btnAddDriver">
+                            <i class="ri-add-line"></i> <span>Add</span>
+                        </a>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -60,7 +62,7 @@
                                 <th class="no-sort text-center ">Driver Photo</th>
                                 <th class="sortable text-center" data-column="LicenseNo" data-order="asc">License No</th>
                                 <th class="sortable text-center" data-column="DriverName" data-order="asc">Driver Name</th>
-                                <th class="text-center no-sort" >Driver Type</th>
+                                <th class="text-center no-sort">Driver Type</th>
                                 <th class="sortable text-center" data-column="MobNo" data-order="asc">Mobile Number</th>
                                 <th class="text-center no-sort">Action</th>
                             </tr>
@@ -144,15 +146,15 @@
                                 <div class="col-lg-6">
                                     <div class="item-input">
                                         <label class="form-label">Driver Name <span>*</span></label>
-                                        <input type="text" class="form-control" placeholder="Driver Name AutoFetched" id="txtDriverName"  />
+                                        <input type="text" class="form-control" placeholder="Driver Name AutoFetched" id="txtDriverName" />
                                     </div>
                                     <div class="item-input">
                                         <label class="form-label">DL Issue Date <span>*</span></label>
-                                        <input type="datetime-local" class="form-control" id="txtDLIssueDate"  />
+                                        <input type="datetime-local" class="form-control" id="txtDLIssueDate" />
                                     </div>
                                     <div class="item-input">
                                         <label class="form-label">DL Issuing RTO</label>
-                                        <input type="text" class="form-control" placeholder="DL Issuing RTO" id="txtDLIssuingRTO"  />
+                                        <input type="text" class="form-control" placeholder="DL Issuing RTO" id="txtDLIssuingRTO" />
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
@@ -162,7 +164,7 @@
                                     </div>
                                     <div class="item-input">
                                         <label class="form-label">DL Expiry Date <span>*</span></label>
-                                        <input type="datetime-local" class="form-control" id="txtDLExpiryDate"  />
+                                        <input type="datetime-local" class="form-control" id="txtDLExpiryDate" />
                                     </div>
                                     <div class="item-input">
                                         <label class="form-label">WhatsApp Number <span>*</span></label>
@@ -189,7 +191,7 @@
                                     <label class="form-label"><span>*</span>Address</label>
                                     <input id="from-search-box" type="text" class="form-control" placeholder="Address" autocomplete="off" />
                                     <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-                                    
+
                                 </div>
                             </div>
 
@@ -221,7 +223,7 @@
                                 <div class="col-lg-6">
                                     <div class="item-input">
                                         <label class="form-label">Pincode <span>*</span></label>
-                                        <input type="text" class="form-control" placeholder="Pincode" id="numPincode"  onkeypress="return isNumber(event)" />
+                                        <input type="text" class="form-control" placeholder="Pincode" id="numPincode" onkeypress="return isNumber(event)" />
                                     </div>
                                     <div class="item-input">
                                         <label class="form-label">Verified On</label>
