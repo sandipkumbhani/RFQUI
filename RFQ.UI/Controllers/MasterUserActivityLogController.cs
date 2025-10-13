@@ -6,24 +6,28 @@ using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 
 namespace RFQ.UI.Controllers
 {
-    public class MasterUserActivityLogController : Controller
+    public class MasterUserActivityLogController : BaseController
     {
         private readonly GlobalClass _globalClass;
         private readonly IMasterUserActivityLogServices _masterUserActivityLogServices;
         private readonly ILogger<MasterUserActivityLogController> _logger;
+        private readonly IMenuServices _menuServices; 
 
-        public MasterUserActivityLogController(GlobalClass globalClass, IMasterUserActivityLogServices masterUserActivityLogServices, ILogger<MasterUserActivityLogController> logger)
+        public MasterUserActivityLogController(GlobalClass globalClass, IMasterUserActivityLogServices masterUserActivityLogServices, ILogger<MasterUserActivityLogController> logger, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _masterUserActivityLogServices = masterUserActivityLogServices;
             _logger = logger;
+            _menuServices = menuServices;
         }
 
-        public IActionResult MasterUserActivityLog()
+        public async Task<IActionResult> MasterUserActivityLog()
         {
+            await SetMenuAsync();
             return View();
         }
         [HttpPost]

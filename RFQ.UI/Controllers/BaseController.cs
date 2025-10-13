@@ -2,6 +2,7 @@
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
@@ -39,6 +40,10 @@ namespace RFQ.UI.Controllers
                 .Where(item => profileList.Any(x => x.LinkId == item.LinkId && x.IsView))
                 .ToList();
                 ViewData["menulist"] = menuList.ToList();
+                ViewData["IsAdd"] = false;
+                ViewData["IsEdit"] = false;
+                ViewData["IsView"] = false;
+                ViewData["IsCancel"] = false;
             }
         }
     }
