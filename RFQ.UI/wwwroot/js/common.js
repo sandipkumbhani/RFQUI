@@ -609,25 +609,27 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
         });
 
     }
-    if (gridTableName == "ActivityLogTable") {
+    if (gridTableName === "ActivityLogTable") {
+        debugger;
         response.data.forEach(item => {
             rowsHtml += `
-                < tr >
-                        <td>${item.logUid}</td>
-                        <td>${item.linkName}</td>
-                        <td>${item.internalMasterName}</td>
-                        <td>${item.personName}</td>
-                        <td>
-                            ${item.logDateTime
+            <tr>
+                <td>${item.linkName}</td>
+                <td>${item.internalMasterName}</td>
+                <td>${item.personName}</td>
+                <td>${item.logDateTime
                     ? new Date(item.logDateTime).toLocaleString('en-GB', {
-                        day: '2-digit', month: '2-digit', year: 'numeric',
-                        hour: '2-digit', minute: '2-digit', second: '2-digit'
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
                     }).replace(',', '')
-                    : ''}
-                        </td>
-                        <td>${item.description}</td>
-                        
-                    </tr > `;
+                    : ''
+                }</td>
+                <td>${item.description || ''}</td>
+            </tr>`;
         });
     }
     return rowsHtml;
