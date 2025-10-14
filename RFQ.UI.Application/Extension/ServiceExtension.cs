@@ -42,6 +42,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IMasterUserActivityLogServices, MasterUserActivityLogServices>();
             services.AddScoped<IBookingOrTripService, BookingOrTripService>();
+            services.AddScoped<IEWayBillService, EWayBillService>();
             return services;
         }
     }

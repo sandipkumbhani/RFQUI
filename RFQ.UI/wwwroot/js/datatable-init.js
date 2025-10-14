@@ -1167,7 +1167,6 @@ $(document).ready(function () {
 
 
 });
-
 $(document).ready(function () {
     const table = $('#ActivityLogTable').DataTable({
         responsive: false,
@@ -1254,4 +1253,23 @@ $(document).ready(function () {
     });
 
 
+});
+
+$(document).ready(function () {
+    const table = $('#tripDetailsTable').DataTable({
+        responsive: false,
+        paging: false,
+        info: true,
+        lengthChange: false,
+        pageLength: 10,
+        columnDefs: [
+            { orderable: false, targets: 'no-sort' }
+        ],
+        language: {
+            paginate: {
+                previous: '<i class="ri-arrow-left-s-line"></i>',
+                next: '<i class="ri-arrow-right-s-line"></i>'
+            }
+        }
+    });
 });
