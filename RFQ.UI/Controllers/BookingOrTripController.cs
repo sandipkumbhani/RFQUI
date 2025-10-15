@@ -46,7 +46,7 @@ namespace RFQ.UI.Controllers
         public async Task<IActionResult> AddBookingOrTrip([FromBody] BookingOrTripRequestDto bookingOrTripRequestDto)
         {
             try
-            {
+             {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
