@@ -3,6 +3,7 @@
     public class Data
     {
         public List<object> result { get; set; }
+        public string? displayColumns { get; set; }
         public int pageNumber { get; set; }
         public int pageSize { get; set; }
         public int totalPage { get; set; }

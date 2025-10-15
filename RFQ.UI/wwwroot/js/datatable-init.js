@@ -1,4 +1,14 @@
 $(document).ready(function () {
+    
+}); 
+
+
+
+
+
+
+
+$(document).ready(function () {
     const table = $('#remindersTable').DataTable({
         responsive: true,
         dom: 'Bfrtip',

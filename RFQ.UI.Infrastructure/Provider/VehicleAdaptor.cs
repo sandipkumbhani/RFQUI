@@ -186,7 +186,7 @@ namespace RFQ.UI.Infrastructure.Provider
                         int pageSize = responseModel.Data.pageSize;
                         int totalRecordCount = responseModel.Data.totalRecordCount;
 
-                        return new PageList<VehicleSpResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize);
+                        return new PageList<VehicleSpResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize, responseModel.Data.displayColumns);
                     }
 
                     return null;
