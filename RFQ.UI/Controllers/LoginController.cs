@@ -273,27 +273,7 @@ namespace RFQ.UI.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
-            // --- 1. Sign out of Authentication ---
-            HttpContext.SignOutAsync();
-
-            // --- 2. Clear Session Completely ---
-            HttpContext.Session.Clear();
-
-            // --- 3. Expire All Cookies ---
-            if (Request.Cookies != null)
-            {
-                foreach (var key in Request.Cookies.Keys)
-                {
-                    Response.Cookies.Delete(key);
-                }
-            }
-
-            // --- 4. Disable Page Caching (Server + Client) ---
-            Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0";
-            Response.Headers["Pragma"] = "no-cache";
-            Response.Headers["Expires"] = "0";
-
-            // --- 5. Redirect to Login Page ---
+            _loginServcies.Logout();
             return RedirectToAction("Login", "Login");
         }
 
