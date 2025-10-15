@@ -4,18 +4,8 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Customer";
-    bool IsAdd = (bool)ViewData["IsAdd"];
-    bool IsEdit = (bool)ViewData["IsEdit"];
-    bool IsView = (bool)ViewData["IsView"];
-    bool IsCancel = (bool)ViewData["IsCancel"];
 }
 @section Scripts {
-    <script>
-        var IsAdd = @IsAdd.ToString().ToLower();
-        var IsEdit = @IsEdit.ToString().ToLower();
-        var IsView = @IsView.ToString().ToLower();
-        var IsCancel = @IsCancel.ToString().ToLower();
-    </script>
     <script src="~/js/Views/Customer.js"></script>
     <script src="~/js/AttachmentDetails.js"></script>
     <script async defer
@@ -253,15 +243,11 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Customer</h1>
-
-                @if (@IsAdd)
-                {
-                    <div class="add-btn">
-                        <a href="#" id="btnAddCustomer">
-                            <i class="ri-add-line"></i> <span>Add</span>
-                        </a>
-                    </div>
-                }
+                <div class="add-btn">
+                    <a href="#" id="btnAdd">
+                        <i class="ri-add-line"></i> <span>Add</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

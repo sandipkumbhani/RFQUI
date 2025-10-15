@@ -1,6 +1,11 @@
 ﻿@using RFQ.UI.Domain.Model
 @{
     var menuList = ViewBag.menulist as List<MenulistModel>;
+    bool IsAdd = ViewBag.IsAdd != null ? (bool)ViewBag.IsAdd : false;
+    bool IsEdit = ViewBag.IsEdit != null ? (bool)ViewBag.IsEdit : false;
+    bool IsView = ViewBag.IsView != null ? (bool)ViewBag.IsView : false;
+    bool IsCancel = ViewBag.IsCancel != null ? (bool)ViewBag.IsCancel : false;
+
 }
 
 <!DOCTYPE html>
@@ -30,6 +35,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css"
     rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+    <script type="text/javascript">
+        var IsAdd = '@IsAdd';
+        var IsEdit = '@IsEdit';
+        var IsView = '@IsView';
+        var IsCancel = '@IsCancel';
+    </script>
 </head>
 
 <body data-sidenav-size="default">

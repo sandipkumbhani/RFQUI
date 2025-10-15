@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), 'EditCustomer', 'DeleteCustomer', 'partyid');
     });
 
     document.getElementById("txtPanNumber").addEventListener("input", function () {
@@ -72,7 +72,7 @@ function FetchCustomerList() {
     $("#SavenewButton").show();
     ResetAttachmentRepeater();
 
-    FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), 'EditCustomer', 'DeleteCustomer','partyid');
 }
 
 // Bind events
