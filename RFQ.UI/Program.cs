@@ -38,6 +38,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton(globalclass);
 builder.Services.AddAutoMapper(typeof(AutoMappersRegister));
+builder.Services.AddSingleton(AppSettingsGlobal.FromConfiguration(builder.Configuration));
+builder.Services.AddSession();
+// Register CommonApiAdaptor for DI
+builder.Services.AddScoped<RFQ.UI.Infrastructure.Provider.CommonApiAdaptor>();
 try
 {
     var app = builder.Build();
@@ -68,6 +72,7 @@ try
     app.UseRouting();
     app.UseCors("AllowLocalhost");
     app.UseAuthorization();
+    app.UseSession();
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Login}/{action=Login}/{id?}");

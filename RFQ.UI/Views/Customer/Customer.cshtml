@@ -136,7 +136,7 @@
                             <div class="col-lg-6">
                                 <div class="item-input">
                                     <label class="form-label">Customer Name <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="Customer Name" id="txtCustomerName" maxlength="150"  />
+                                    <input type="text" class="form-control" placeholder="Customer Name" id="txtCustomerName" maxlength="150" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -201,7 +201,7 @@
                                     <label class="form-label">Email ID</label>
                                     <input type="email" class="form-control" placeholder="Email ID" id="txtEmail" maxlength="100" />
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -266,8 +266,14 @@
                     </div>
                 </div>
 
-                <!-- Table -->
                 <div class="table-responsive">
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
+                    </table>
+                </div>
+                <!-- Table -->
+                @* <div class="table-responsive">
                     <table id="customerTable" class="table dt-responsive nowrap w-100">
                         <thead class="text-center">
                             <tr>
@@ -282,7 +288,7 @@
                         </thead>
                         <tbody class="text-center"></tbody> <!-- This will be dynamically filled -->
                     </table>
-                </div>
+                </div> *@
 
                 <!-- Bottom Area -->
                 <div class="datatable-footer-bottom">

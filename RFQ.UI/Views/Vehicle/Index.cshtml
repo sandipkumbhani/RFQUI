@@ -281,6 +281,14 @@
                         <div id="exporttableVehicleButtons" class="btn-group" role="group"></div>
                     </div>
                 </div>
+
+                <div class="table-responsive">
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
+                    </table>
+                </div>
+
                 <!-- Table -->
                 <div class="table-responsive">
                     <table id="vehicleTable" class="table dt-responsive nowrap w-100">
@@ -298,25 +306,26 @@
                             <!-- Dynamic rows go here -->
                         </tbody>
                     </table>
-                    <!-- Bottom Area -->
-                    <div class="datatable-footer-bottom">
-                        <div class="totle-left">
-                            <span id="totalList">Total List: 3</span>
-                        </div>
-                        <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
-                        <input type="hidden" id="currentPage" value="1">
-                        <div class="show-page">
-                            <span>Show per page:</span>
-                            <select id="pageLength" class="form-select">
-                                <option value="5">5 </option>
-                                <option value="10" selected>10 </option>
-                                <option value="25">25</option>
-                                <option value="-1">All</option>
-                            </select>
-                        </div>
+                </div>
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
+                    <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                            <option value="-1">All</option>
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
