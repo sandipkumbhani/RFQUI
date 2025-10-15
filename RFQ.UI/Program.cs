@@ -38,6 +38,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton(globalclass);
 builder.Services.AddAutoMapper(typeof(AutoMappersRegister));
+builder.Services.AddSession();
 
 try
 {
@@ -69,6 +70,7 @@ try
     app.UseRouting();
     app.UseCors("AllowLocalhost");
     app.UseAuthorization();
+    app.UseSession();
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Login}/{action=Login}/{id?}");
