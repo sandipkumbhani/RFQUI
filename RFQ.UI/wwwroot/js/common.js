@@ -1,5 +1,5 @@
 ﻿$(document).ready(function (){
-    if (IsAdd.toLowerCase() != 'true') {
+    if (IsAdd != 'True') {
         $('#btnAdd').hide();
     }
 });
@@ -189,7 +189,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir, EditFuncti
 
 function CreateOrFillDataInDataTable(response, EditFunctionName = null, DeleteFunctionName = null, IdPropertyName = null) {
     var displayColumns = '';
-    if (typeof (response.displayColumn) != undefined) {
+    if (!IsNullOrEmpty(response.displayColumn)) {
         displayColumns = response.displayColumn.split(",");
     }
     CreateDataTableIfNotExists(displayColumns);
