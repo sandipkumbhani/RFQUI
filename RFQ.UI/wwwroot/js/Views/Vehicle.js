@@ -26,7 +26,7 @@ $(document).ready(function () {
         e.preventDefault();
         FetchVehicleList();
     });
-    $("#btnAddVehicle").on("click", function () {
+    $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#addVehicleDiv").css('display', 'block');
     });

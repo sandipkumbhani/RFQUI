@@ -14,64 +14,28 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public CompanyConfigurationAdaptor(GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public CompanyConfigurationAdaptor(GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
 
         public async Task<PageList<CompanyConfigurationResponseDto>> GetAllCompanyConfiguration(PagingParam pagingParam)
         {
             try
             {
-                using (var httpClient = new HttpClient())
-                {
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                    var requestDto = JsonConvert.SerializeObject(pagingParam);
-                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
-
-                    var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:GetAllCompanyConfiguration"];
-
-                    if (string.IsNullOrEmpty(baseurl))
-                    {
-                        throw new Exception("API URL is not configured correctly.");
-                    }
-
-                    var response = await httpClient.PostAsync(baseurl, requestContent);
-
-                    // Check API response status
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        var errorMessage = await response.Content.ReadAsStringAsync();
-                        throw new Exception($"API call failed: {response.StatusCode} - {errorMessage}");
-                    }
-
-                    var responseData = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-
-                    if (responseModel?.Data?.result != null)
-                    {
-                        var cmpConfigList = JsonConvert.DeserializeObject<List<CompanyConfigurationResponseDto>>(
-                            JsonConvert.SerializeObject(responseModel.Data.result)
-                        );
-
-                        int pageNumber = responseModel.Data.pageNumber;
-                        int pageSize = responseModel.Data.pageSize;
-                        int totalRecordCount = responseModel.Data.totalRecordCount;
-
-                        return new PageList<CompanyConfigurationResponseDto>(cmpConfigList, totalRecordCount, pageNumber, pageSize);
-                    }
-
-                    return new PageList<CompanyConfigurationResponseDto>(new List<CompanyConfigurationResponseDto>(), 0, pagingParam.Start / pagingParam.Length + 1, pagingParam.Length);
-                }
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetAllCompanyConfiguration;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
+                return _commonApiAdaptor.GenerateResponse<CompanyConfigurationResponseDto>(responseModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Error fetching company configuration: {ex.Message}");
-                return new PageList<CompanyConfigurationResponseDto>(new List<CompanyConfigurationResponseDto>(), 0, pagingParam.Start / pagingParam.Length + 1, pagingParam.Length);
+                throw;
             }
         }
 

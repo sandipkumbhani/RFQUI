@@ -13,7 +13,7 @@ $(document).ready(function () {
         $(this).data('order', orderDir);
 
         $('th.sortable').not(this).data('order', 'asc');
-        FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase(), 'EditCompanyConfiguration', 'DeleteCompanyConfiguration','companyConfigId');
     });
     $('#ListSectionLink').on('click', function (e) {
         FetchCompanyConfiguration();
@@ -35,7 +35,7 @@ async function loadAllData() {
     }
 }
 
-$("#btnAddconfiguration").on("click", function (e) {
+$("#btnAdd").on("click", function (e) {
     e.preventDefault();
     $("#listSection").hide();
     $("#formSection").show();
@@ -253,7 +253,7 @@ function FetchCompanyConfiguration() {
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
     $("#btnSaveForm").show();
-    FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase(), 'EditCompanyConfiguration', 'DeleteCompanyConfiguration', 'companyConfigId');
 }
 
 // Bind events
@@ -389,7 +389,6 @@ function DeleteCompanyConfiguration(CompanyConfigrationId) {
         }
     });
 }
-
 function ViewCompanyConfiguration(CompanyConfigrationId) {
     EditCompanyConfiguration(CompanyConfigrationId);
     $('#formSection').find('input, select, textarea, button, a').prop('disabled', true);

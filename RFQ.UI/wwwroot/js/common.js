@@ -129,7 +129,7 @@ function ValidateGstNumber(number) {
 function ValidatePinCode(number) {
     return /^\d{6}$/.test(number);
 }
-function FetchDataForTable(gridTableName, url, orderColumn, orderDir, EditFunctionName = null, DeleteFunctionName = null,IdPropertyName = null) {
+function FetchDataForTable(gridTableName, url, orderColumn, orderDir, EditFunctionName = null, DeleteFunctionName = null, IdPropertyName = null) {
     const companyid = getCookieValue('companyid');
     const profileid = getCookieValue('profileid');
     $('#tableDiv').show();
@@ -186,34 +186,33 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir, EditFuncti
         }
     });
 }
-
 function CreateOrFillDataInDataTable(response, EditFunctionName = null, DeleteFunctionName = null, IdPropertyName = null) {
     var displayColumns = '';
     if (!IsNullOrEmpty(response.displayColumn)) {
         displayColumns = response.displayColumn.split(",");
-    }
-    CreateDataTableIfNotExists(displayColumns);
-    $('#tableBody').html('');
-    response.data.forEach(row => {
-        var data = keysToLowerCase(row);
-        var tableDataHtml = `<tr>`;
-        displayColumns.forEach(col => {
-            var cols = col.split("as");
-            if (cols.length > 1) {
-                tableDataHtml += `<td>${data[cols[0].trim(' ').toLowerCase()] ?? ''}</td>`;
+        CreateDataTableIfNotExists(displayColumns);
+        $('#tableBody').html('');
+        response.data.forEach(row => {
+            var data = keysToLowerCase(row);
+            var tableDataHtml = `<tr>`;
+            displayColumns.forEach(col => {
+                var cols = col.split("as");
+                if (cols.length > 1) {
+                    tableDataHtml += `<td>${data[cols[0].trim(' ').toLowerCase()] ?? ''}</td>`;
+                }
+            });
+            tableDataHtml += '<td>';
+            if (IsEdit == 'True') {
+                tableDataHtml += '<a class="icon-btn" onclick="' + EditFunctionName + '(' + data[IdPropertyName.toLowerCase()] + ')"><i class="ri-edit-2-line"></i></a>';
             }
-        });
-        tableDataHtml += '<td>';
-        if (IsEdit == 'True') {
-            tableDataHtml += '<a class="icon-btn" onclick="' + EditFunctionName + '(' + data[IdPropertyName.toLowerCase()] +')"><i class="ri-edit-2-line"></i></a>';
-        }
-        if (IsCancel == 'True') {
-            tableDataHtml += '<a class="icon-btn" onclick="' + DeleteFunctionName + '(' + data[IdPropertyName.toLowerCase()] +')"><i class="ri-delete-bin-3-line"></i></a>';
-        }
+            if (IsCancel == 'True') {
+                tableDataHtml += '<a class="icon-btn" onclick="' + DeleteFunctionName + '(' + data[IdPropertyName.toLowerCase()] + ')"><i class="ri-delete-bin-3-line"></i></a>';
+            }
 
-        tableDataHtml += `</td></tr>`;
-        $('#tableBody').append(tableDataHtml);
-    });
+            tableDataHtml += `</td></tr>`;
+            $('#tableBody').append(tableDataHtml);
+        });
+    }
 }
 function keysToLowerCase(obj) {
     if ($.isArray(obj)) {
