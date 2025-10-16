@@ -145,7 +145,5 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw new Exception(ex.Message);
             }
         }
-
-
     }
 }
