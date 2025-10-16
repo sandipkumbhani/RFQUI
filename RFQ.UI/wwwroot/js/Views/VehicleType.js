@@ -21,8 +21,8 @@ $(document).ready(function () {
         SaveVehicleType(action);
     });
 
-    $('#btnAddVehicleType').on('click', function () {
-        $('#btnAddVehicleType').addClass('d-none');
+    $('#btnAdd').on('click', function () {
+        $('#btnAdd').addClass('d-none');
         $('#tableDiv').hide();
         $('#addVehicleTypeDiv').removeClass('d-none');
         $('#viewButton').addClass('d-none');
@@ -36,7 +36,7 @@ $(document).ready(function () {
     $("#btnCancel").on('click', function () {
         FetchVehicleTypes();
         $("#addVehicleTypeDiv").addClass('d-none');
-        $("#btnAddVehicleType").removeClass('d-none');
+        $("#btnAdd").removeClass('d-none');
         $('#btnSaveVehicleType').removeClass('d-none');
         $('#SavenewButton').removeClass('d-none')
         $('#updateButton').addClass('d-none');
@@ -69,8 +69,8 @@ function OnSubmitValidation() {
 function FetchVehicleTypes() {
     $('#tableDiv').show();
     $("#addVehicleTypeDiv").addClass("d-none");
-    $('#btnAddVehicleType').removeClass('d-none');
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    $('#btnAdd').removeClass('d-none');
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), 'EditVehicleType', 'DeleteVehicleType', 'vehicleTypeId');
 }
 
 
@@ -149,7 +149,7 @@ function EditVehicleType(vehicleTypeId) {
     var data = viewModelDto.filter(x => x.vehicleTypeId == vehicleTypeId);
     EditVehicleTypeModelDtos = data[0];
     $('#tableDiv').hide();
-    $('#btnAddVehicleType').addClass('d-none');
+    $('#btnAdd').addClass('d-none');
     $('#addVehicleTypeDiv').removeClass('d-none');
     $("#updateButton").removeClass('d-none');
     $("#btnSaveVehicleType").addClass('d-none');
@@ -182,7 +182,7 @@ function UpdateVechileType() {
                     toastr.success("Vehicle Type Details Updated Successfully!");
                     addMasterUserActivityLog(0, LogType.Update, "VehicleType Details Updated Successfully!", 0);
                     $("#addVehicleTypeDiv").addClass("d-none");
-                    $('#btnAddVehicleType').removeClass('d-none');
+                    $('#btnAdd').removeClass('d-none');
                     FetchVehicleTypes();
                 },
                 error: function (xhr, status, error) {
@@ -225,7 +225,6 @@ function DeleteVehicleType(vehicleTypeId) {
         }
     });
 }
-
 function ViewVehicleType(vehicleTypeId) {
     EditVehicleType(vehicleTypeId);
     $('#VehicleTypeForm').find('input, select, textarea, button, a').prop('disabled', true);

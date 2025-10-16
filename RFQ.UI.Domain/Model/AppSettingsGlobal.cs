@@ -11,11 +11,13 @@ namespace RFQ.UI.Domain.Model
         public string? DrivingLicenseAPI { get; set; }
         public string? CustomerGetAllCustomer { get; set; }
         public string? CustomerGetAutoCustomerCode { get; set; }
+        public string? GetAllVehicleType { get; set; }
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
         {
             var section = config.GetSection("ApiSettings");
             var customerSection = config.GetSection("Customer");
+            var VehicleTypeSection = config.GetSection("VehicleType");
             return new AppSettingsGlobal
             {
                 BaseUrl = section["BaseUrl"],
@@ -24,7 +26,7 @@ namespace RFQ.UI.Domain.Model
                 VehicleRCApiUrl = section["VehicleRCApiUrl"],
                 DrivingLicenseAPI = section["DrivingLicenseAPI"],
                 CustomerGetAllCustomer = customerSection["GetAllCustomer"],
-                CustomerGetAutoCustomerCode = customerSection["GetAutoCustomerCode"]
+                GetAllVehicleType = VehicleTypeSection["GetAllVehicleType"]
             };
         }
     }
