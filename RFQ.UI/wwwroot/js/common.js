@@ -1,5 +1,5 @@
 ﻿$(document).ready(function (){
-    if (IsAdd.toLowerCase() != 'true') {
+    if (IsAdd != 'True') {
         $('#btnAdd').hide();
     }
 });
