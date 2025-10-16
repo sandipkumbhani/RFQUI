@@ -15,13 +15,16 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public UsersAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public UsersAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
-
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<string> AddUsers(UserRequestDto userRequestDto)
         {
@@ -141,32 +144,15 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Users:GetUserAll"];
-                var param = JsonConvert.SerializeObject(pagingParam);
-                var requestContent = new StringContent(param, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-                if (responseModel != null && responseModel.Data != null)
-                {
-                    var json = JsonConvert.SerializeObject(responseModel.Data.result);
-                    var typedList = JsonConvert.DeserializeObject<List<UserResponseDto>>(json);
-                    dynamic parsed = JsonConvert.DeserializeObject<dynamic>(responseData);
-                    int pageNumber = parsed.data.pageNumber;
-                    int pageSize = parsed.data.pageSize;
-                    int totalPage = parsed.data.totalPage;
-                    int totalRecordCount = parsed.data.totalRecordCount;
-
-                    return new PageList<UserResponseDto>(typedList, totalRecordCount, pageNumber, pageSize);
-                }
-                return null;
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetUserAll;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
+                return _commonApiAdaptor.GenerateResponse<UserResponseDto>(responseModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
+            
         }
         public async Task<UserResponseDto> GetUserById(int userId)
         {

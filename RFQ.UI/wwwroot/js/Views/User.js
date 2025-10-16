@@ -30,7 +30,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase(), 'EditUser', 'DeleteUser', 'userId');
 
     });
     Initialization();
@@ -45,7 +45,7 @@ $(document).ready(function () {
     FetchUser();
 });
 
-$("#btnAddUser").on("click", function (e) {
+$("#btnAdd").on("click", function (e) {
     e.preventDefault();
     $('#userbodyform').find('input, select, textarea, button, a').prop('disabled', false);
     $("#userListSection").hide();
@@ -158,7 +158,7 @@ function FetchUser() {
     $('#userbodyform')[0].reset();
     $('#ddlCompanyAndFranchise').val(null).trigger('change');
     $('#ddlLocation').val(null).trigger('change');
-    FetchDataForTable('tableuser', '/Home/ViewUserList', null, null, IsEdit, IsView, IsCancel);
+    FetchDataForTable('tableuser', '/Home/ViewUserList', null, null, 'EditUser', 'DeleteUser', 'userId');
 }
 function SaveUser(action) {
     var profile = '';
