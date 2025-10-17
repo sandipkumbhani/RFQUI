@@ -26,7 +26,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase(), 'EditDriver', 'DeleteDriver', 'driverId');
     });
 
     InitializeFields();
@@ -35,7 +35,7 @@ $(document).ready(function () {
     DlEKycclick();
     
     FetchDriverList();
-    $("#btnAddDriver").on("click", function () {
+    $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
         FetchDriverCode();
@@ -314,7 +314,7 @@ function FetchDriverList() {
     $("#btnSaveNewDriver").show();
     ResetForm();
     ResetAttachmentRepeater();
-    FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase(), 'EditDriver', 'DeleteDriver', 'driverId');
 };
 
 $('#driverTableSearch').off('keyup').on('keyup', function () {

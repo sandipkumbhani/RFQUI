@@ -68,7 +68,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehiclePlacement', 'DeleteVehiclePlacement', 'placementId');
     });
 
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
@@ -84,7 +84,7 @@ $(document).ready(function () {
     })
 });
 
-$('#addPlacement').click(function () {
+$('#btnAdd').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
 });
@@ -132,7 +132,7 @@ function FetchVehiclePlacement() {
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
     //ResetAttachmentRepeater();
-    FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehiclePlacement', 'DeleteVehiclePlacement', 'placementId');
 }
 function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
 

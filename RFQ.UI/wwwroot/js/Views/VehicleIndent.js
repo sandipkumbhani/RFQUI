@@ -44,10 +44,8 @@ $(document).ready(function () {
         let currentOrder = $(this).data('order') || 'asc';
         orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
         $(this).data('order', orderDir); // update for next click
-
         $('th.sortable').not(this).data('order', 'asc');
-
-        FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehicleIndent', 'DeleteVehicleIndent', 'indentId');
     });
 
     $("#btnSave, #btnsaveandnew").on('click', function () {
@@ -59,7 +57,7 @@ $(document).ready(function () {
     });
 });
 
-$('#addCompany').click(function () {
+$('#btnAdd').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
 });
@@ -75,7 +73,7 @@ function FetchVehicleIndent() {
     $("#btnsaveandnew").show();
     GetAllConsignorList();
     GetAllConsigneeList();
-    FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehicleIndent', 'DeleteVehicleIndent','indentId');
 }
 
 $('#IndentTableSearch').off('keyup').on('keyup', function () {
@@ -562,7 +560,6 @@ function UpdateVehicleIndent(indentId) {
 
 
 } 
-
 function ViewVehicleIndent(indentId) {
     UpdateVehicleIndent(indentId);
     $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);

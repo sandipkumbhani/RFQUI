@@ -6,7 +6,7 @@ namespace RFQ.UI.Controllers
     {
         public IActionResult MapPartial()
         {
-            return PartialView("_MapPartial"); // Ensure _MapPartial.cshtml is correct
+            return PartialView("_MapPartial"); 
         }
     }
 }

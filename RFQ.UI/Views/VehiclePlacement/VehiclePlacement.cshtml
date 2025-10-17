@@ -3,18 +3,8 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Vehicle Placement";
-    bool IsAdd = (bool)ViewData["IsAdd"];
-    bool IsEdit = (bool)ViewData["IsEdit"];
-    bool IsView = (bool)ViewData["IsView"];
-    bool IsCancel = (bool)ViewData["IsCancel"];
 }
 @section Scripts {
-    <script>
-        var IsAdd = @IsAdd.ToString().ToLower();
-        var IsEdit = @IsEdit.ToString().ToLower();
-        var IsView = @IsView.ToString().ToLower();
-        var IsCancel = @IsCancel.ToString().ToLower();
-    </script>
     <script src="~/js/views/vehicleplacement.js"></script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
@@ -26,84 +16,88 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Vehicle Placement</h1>
-                @if (IsAdd)
-                {
-                    <div class="add-btn">
-                        <a href="#" id="addPlacement">
-                            <i class="ri-add-line"></i> <span>Add</span>
-                        </a>
-                    </div>
-                }
+                <div class="add-btn">
+                    <a href="#" id="btnAdd">
+                        <i class="ri-add-line"></i> <span>Add</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
+
             <div class="card com-profile-info">
-                <div class="card com-profile-info">
-                    <!-- Top Header -->
-                    <div class="table-top-header">
-                        <h4>List of Vehicle Placement</h4>
-                        <div class="d-flex gap-2">
-                            <div class="table-search-box">
-                                <input type="text" id="PlacementTableSearch" class="form-control form-control-sm" placeholder="Search...">
-                                <button type="submit"><i class="ri-search-line"></i></button>
-                            </div>
-                            <div id="exportPlacementButtons" class="btn-group" role="group"></div>
+                <!-- Top Header -->
+                <div class="table-top-header">
+                    <h4>List of Vehicle Placement</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="PlacementTableSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
                         </div>
+                        <div id="exportButtons" class="btn-group" role="group"></div>
                     </div>
+                </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <table id="PlacementTable" class="table dt-responsive nowrap w-100">
-                            <thead>
-                                <tr class="text-center">
-                                    <th class="sortable text-center" data-column="LocationName" data-order="asc">Location</th>
-                                    <th class="sortable text-center" data-column="PlacementNo" data-order="asc">Placement No</th>
-                                    <th class="sortable text-center" data-column="PlacementDate" data-order="asc">Placement Date</th>
-                                    <th class="sortable text-center" data-column="IndentNo" data-order="asc">Indent No</th>
-                                    <th class="sortable text-center" data-column="VehicleNo" data-order="asc">Vehicle No</th>
-                                    <th class="sortable text-center" data-column="InternalMasterName" data-order="asc">Traking Type</th>
-                                    <th class="sortable text-center" data-column="DriverName" data-order="asc">Driver Name</th>
-                                    <th class="sortable text-center" data-column="MobileNo" data-order="asc">Mobile No</th>
-                                    <th class="sortable text-center" data-column="OwnerVendorId" data-order="asc">Owner Name</th>
-                                    <th class="sortable text-center" data-column="BrokerVendorId" data-order="asc">Broker Name</th>
-                                    <th class="sortable text-center" data-column="TotalHireAmount" data-order="asc">Total Hair Amt</th>
-                                    <th class="sortable text-center" data-column="AdvancePayable" data-order="asc">Advance Payable</th>
+                <div class="table-responsive">
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
+                    </table>
+                </div>
+                <!-- Table -->
+                @* <div class="table-responsive"> *@
+                @*     <table id="PlacementTable" class="table dt-responsive nowrap w-100"> *@
+                @*         <thead> *@
+                @*             <tr class="text-center"> *@
+                @*                 <th class="sortable text-center" data-column="LocationName" data-order="asc">Location</th> *@
+                @*                 <th class="sortable text-center" data-column="PlacementNo" data-order="asc">Placement No</th> *@
+                @*                 <th class="sortable text-center" data-column="PlacementDate" data-order="asc">Placement Date</th> *@
+                @*                 <th class="sortable text-center" data-column="IndentNo" data-order="asc">Indent No</th> *@
+                @*                 <th class="sortable text-center" data-column="VehicleNo" data-order="asc">Vehicle No</th> *@
+                @*                 <th class="sortable text-center" data-column="InternalMasterName" data-order="asc">Traking Type</th> *@
+                @*                 <th class="sortable text-center" data-column="DriverName" data-order="asc">Driver Name</th> *@
+                @*                 <th class="sortable text-center" data-column="MobileNo" data-order="asc">Mobile No</th> *@
+                @*                 <th class="sortable text-center" data-column="OwnerVendorId" data-order="asc">Owner Name</th> *@
+                @*                 <th class="sortable text-center" data-column="BrokerVendorId" data-order="asc">Broker Name</th> *@
+                @*                 <th class="sortable text-center" data-column="TotalHireAmount" data-order="asc">Total Hair Amt</th> *@
+                @*                 <th class="sortable text-center" data-column="AdvancePayable" data-order="asc">Advance Payable</th> *@
 
 
-                                    <th class="text-center no-sort">Action</th>
-                                </tr>
-                            </thead>
+                @*                 <th class="text-center no-sort">Action</th> *@
+                @*             </tr> *@
+                @*         </thead> *@
 
-                            <tbody class="text-center">
-                                <!-- Example data -->
-                            </tbody>
-                        </table>
+                @*         <tbody class="text-center"> *@
+                @*             <!-- Example data --> *@
+                @*         </tbody> *@
+                @*     </table> *@
+                @* </div> *@
+
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
                     </div>
-
-                    <!-- Bottom Area -->
-                    <div class="datatable-footer-bottom">
-                        <div class="totle-left">
-                            <span id="totalList">Total List: 3</span>
-                        </div>
-                        <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
-                        <input type="hidden" id="currentPage" value="1">
-                        <div class="show-page">
-                            <span>Show per page:</span>
-                            <select id="pageLength" class="form-select">
-                                <option value="5">5 </option>
-                                <option value="10" selected>10 </option>
-                                <option value="25">25</option>
-                                <option value="-1">All</option>
-                            </select>
-                        </div>
+                    <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                            <option value="-1">All</option>
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 <div id="formDiv" style="display:none;">
     <div class="row">
         <div class="col-12">

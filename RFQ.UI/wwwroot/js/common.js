@@ -1,4 +1,10 @@
-﻿var orderColumnName = '';
+﻿$(document).ready(function (){
+    if (IsAdd != 'True') {
+        $('#btnAdd').hide();
+    }
+});
+
+var orderColumnName = '';
 var orderDirName = '';
 function ValidateTextbox(inputId) {
     var value = $(inputId).val();
@@ -123,7 +129,7 @@ function ValidateGstNumber(number) {
 function ValidatePinCode(number) {
     return /^\d{6}$/.test(number);
 }
-function FetchDataForTable(gridTableName, url, orderColumn, orderDir, IsEdit = null, IsView = null, IsCancel = null) {
+function FetchDataForTable(gridTableName, url, orderColumn, orderDir, EditFunctionName = null, DeleteFunctionName = null, IdPropertyName = null) {
     const companyid = getCookieValue('companyid');
     const profileid = getCookieValue('profileid');
     $('#tableDiv').show();
@@ -169,6 +175,7 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir, IsEdit = n
             viewModelDto = response.data;
             let rowsHtml = '';
             rowsHtml = GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel);
+            CreateOrFillDataInDataTable(response, EditFunctionName, DeleteFunctionName, IdPropertyName);
             $('#' + gridTableName + ' tbody').html(rowsHtml);
             $('#totalList').text(`Total List: ${response.recordsTotal}`);
             generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url, IsEdit, IsView, IsCancel);
@@ -179,7 +186,112 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir, IsEdit = n
         }
     });
 }
+function CreateOrFillDataInDataTable(response, EditFunctionName = null, DeleteFunctionName = null, IdPropertyName = null) {
+    var displayColumns = '';
+    if (!IsNullOrEmpty(response.displayColumn)) {
+        displayColumns = response.displayColumn.split(",");
+        CreateDataTableIfNotExists(displayColumns);
+        $('#tableBody').html('');
+        response.data.forEach(row => {
+            var data = keysToLowerCase(row);
+            var tableDataHtml = `<tr>`;
+            displayColumns.forEach(col => {
+                var cols = col.split("as");
+                if (cols.length > 1) {
+                    tableDataHtml += `<td>${data[cols[0].trim(' ').toLowerCase()] ?? ''}</td>`;
+                }
+            });
+            tableDataHtml += '<td>';
+            if (IsEdit == 'True') {
+                tableDataHtml += '<a class="icon-btn" onclick="' + EditFunctionName + '(' + data[IdPropertyName.toLowerCase()] + ')"><i class="ri-edit-2-line"></i></a>';
+            }
+            if (IsCancel == 'True') {
+                tableDataHtml += '<a class="icon-btn" onclick="' + DeleteFunctionName + '(' + data[IdPropertyName.toLowerCase()] + ')"><i class="ri-delete-bin-3-line"></i></a>';
+            }
+
+            tableDataHtml += `</td></tr>`;
+            $('#tableBody').append(tableDataHtml);
+        });
+    }
+}
+function keysToLowerCase(obj) {
+    if ($.isArray(obj)) {
+        return $.map(obj, function (item) {
+            return keysToLowerCase(item);
+        });
+    } else if ($.isPlainObject(obj)) {
+        var newObj = {};
+        $.each(obj, function (key, value) {
+            newObj[key.toLowerCase()] = keysToLowerCase(value);
+        });
+        return newObj;
+    }
+    return obj;
+}
+function CreateDataTableIfNotExists(displayColumns) {
+    if (!$.fn.DataTable.isDataTable('#GridListTable')) {
+        if (displayColumns.length > 0) {
+            var tableHeaderHtml = "";
+            tableHeaderHtml += `<tr>`;
+            displayColumns.forEach(col => {
+                var cols = col.split("as");
+                if (cols.length > 1) {
+                    tableHeaderHtml += `<th class="sortable text-center" data-column="${cols[0].trim(' ')}" data-order="asc">${cols[cols.length - 1].trim(' ')}</th>`;
+                }
+            });
+            tableHeaderHtml += `<th class="text-center no-sort" data-column="Action">Action</th>`;
+            tableHeaderHtml += `</tr>`;
+            $('#GridListTable thead').html(tableHeaderHtml);
+        }
+        const table = $('#GridListTable').DataTable({
+            responsive: true,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: '<i class="ri-file-excel-line"></i> Export All',
+                    action: function (e, dt, node, config) {
+                        let headers = [];
+                        let csvData = [];
+
+                        $('#GridListTable thead th').each(function () {
+                            headers.push($(this).text().trim());
+                        });
+                        csvData.push(headers); // push header row as array
+
+                        $('#GridListTable tbody tr').each(function () {
+                            let row = [];
+                            $(this).find('td').each(function () {
+                                row.push($(this).text().trim() || "");
+                            });
+                            csvData.push(row); // push row as array
+                        });
+
+                        exportToCSV("GridListTable", csvData);
+                    }
+                },
+            ],
+            paging: false,
+            info: true,
+            lengthChange: false,
+            pageLength: 10,
+            columnDefs: [
+                // { orderable: false, targets: [] } // all sortable
+                { orderable: false, targets: 'no-sort' }
+            ],
+            language: {
+                paginate: {
+                    previous: '<i class="ri-arrow-left-s-line"></i>',
+                    next: '<i class="ri-arrow-right-s-line"></i>'
+                }
+            }
+        });
+
+        // Move export buttons
+        table.buttons().container().appendTo('#exportButtons');
+    }
+}
 function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
+
     var rowsHtml = "";
     if (gridTableName == "vehicleTypesTable") {
         response.data.forEach(item => {

@@ -3,18 +3,8 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Vehicle";
-    bool IsAdd = (bool)ViewData["IsAdd"];
-    bool IsEdit = (bool)ViewData["IsEdit"];
-    bool IsView = (bool)ViewData["IsView"];
-    bool IsCancel = (bool)ViewData["IsCancel"];
 }
 @section Scripts {
-    <script>
-        var IsAdd = @IsAdd.ToString().ToLower();
-        var IsEdit = @IsEdit.ToString().ToLower();
-        var IsView = @IsView.ToString().ToLower();
-        var IsCancel = @IsCancel.ToString().ToLower();
-    </script>
     <script src="~/js/Views/Vehicle.js"></script>
 }
 
@@ -269,14 +259,11 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Vehicle</h1>
-                @if (IsAdd)
-                {
                     <div class="add-btn">
-                        <a href="#" id="btnAddVehicle">
+                        <a href="#" id="btnAdd">
                             <i class="ri-add-line"></i> <span>Add</span>
                         </a>
                     </div>
-                }
             </div>
         </div>
     </div>
@@ -290,12 +277,16 @@
                             <input type="text" id="vehicleTableSearch" class="form-control form-control-sm" placeholder="Search...">
                             <button type="submit"><i class="ri-search-line"></i></button>
                         </div>
-                        <div id="exporttableVehicleButtons" class="btn-group" role="group"></div>
+                        <div id="exportButtons" class="btn-group" role="group"></div>
                     </div>
                 </div>
                 <!-- Table -->
                 <div class="table-responsive">
-                    <table id="vehicleTable" class="table dt-responsive nowrap w-100">
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
+                    </table>
+                    @* <table id="vehicleTable" class="table dt-responsive nowrap w-100">
                         <thead>
                             <tr class="text-center">
                                 <th class="sortable text-center" data-column="VehicleNo" data-order="asc">VehicleNo</th>
@@ -309,26 +300,27 @@
                         <tbody class="text-center">
                             <!-- Dynamic rows go here -->
                         </tbody>
-                    </table>
-                    <!-- Bottom Area -->
-                    <div class="datatable-footer-bottom">
-                        <div class="totle-left">
-                            <span id="totalList">Total List: 3</span>
-                        </div>
-                        <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
-                        <input type="hidden" id="currentPage" value="1">
-                        <div class="show-page">
-                            <span>Show per page:</span>
-                            <select id="pageLength" class="form-select">
-                                <option value="5">5 </option>
-                                <option value="10" selected>10 </option>
-                                <option value="25">25</option>
-                                <option value="-1">All</option>
-                            </select>
-                        </div>
+                    </table> *@
+                </div>
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
+                    <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                            <option value="-1">All</option>
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>

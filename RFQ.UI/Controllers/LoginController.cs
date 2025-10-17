@@ -11,6 +11,7 @@ using RFQ.UI.Domain.ResponseDto;
 
 using System.Numerics;
 using RFQ.UI.Domain.Model;
+using Microsoft.AspNetCore.Authentication;
 
 namespace RFQ.UI.Controllers
 {
@@ -268,5 +269,13 @@ namespace RFQ.UI.Controllers
             else
                 return Json(new { success = false, message = "Failed to send email" });
         }
+
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            _loginServcies.Logout();
+            return RedirectToAction("Login", "Login");
+        }
+
     }
 }

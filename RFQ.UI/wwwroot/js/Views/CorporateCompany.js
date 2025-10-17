@@ -38,7 +38,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), 'EditCorporateCompany', 'DeleteCorporateCompany', 'companyId');
     });
 
     document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
@@ -62,7 +62,7 @@ $(document).ready(function () {
     ButtonUpdateClick();
 });
 
-$('#addCompany').click(function () {
+$('#btnAdd').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
 });
@@ -75,19 +75,19 @@ function FetchCorporateCompany() {
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
     $("#btnSaveCompanyType").show();
-    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', null, null, IsEdit, IsView, IsCancel);
+    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), 'EditCorporateCompany', 'DeleteCorporateCompany', 'companyId');
 }
 
 $('#corporateTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
-    //FetchCorporateCompany();
+    //FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), 'EditCorporateCompany', 'DeleteCorporateCompany', 'companyId');
+    FetchCorporateCompany();
 });
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
-    //FetchCorporateCompany();
+    //FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), 'EditCorporateCompany', 'DeleteCorporateCompany', 'companyId');
+    FetchCorporateCompany();
 });
 function CheckValidation() {
     $("#txtCompanyName").on("blur", function () {

@@ -19,14 +19,18 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
         private readonly IMapper _mapper;
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
 
-        public CorporateCompanyAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, IMapper mapper)
+        public CorporateCompanyAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, IMapper mapper, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _mapper = mapper;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
 
         public async Task<CorporateCompanyRequestDto?> AddCorporateCompany(CorporateCompanyRequestDto corporateCompanyRequestDto)
@@ -66,28 +70,10 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                using (var httpClient = new HttpClient())
-                {
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                    var requestDto = JsonConvert.SerializeObject(pagingParam);
-                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
-                    var baseUrl = _fleetLynkApiUrl + _config["CorporateCompany:GetAllCompany"];
-                    var response = await httpClient.PostAsync(baseUrl, requestContent);
-                    var responseData = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-                    if (responseModel?.Data?.result != null)
-                    {
-                        var vehicleList = JsonConvert.DeserializeObject<List<CorporateCompanyResponseDto>>(
-                            JsonConvert.SerializeObject(responseModel.Data.result)
-                        );
-                        int pageNumber = responseModel.Data.pageNumber;
-                        int pageSize = responseModel.Data.pageSize;
-                        int totalRecordCount = responseModel.Data.totalRecordCount;
-                        return new PageList<CorporateCompanyResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize);
-                    }
-                    return null;
-                }
+                var baseUrl = _appSettings.BaseUrl + _appSettings.CompanyGetAllCompany;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
+
+                return _commonApiAdaptor.GenerateResponse<CorporateCompanyResponseDto>(responseModel);
             }
             catch (Exception)
             {

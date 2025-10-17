@@ -10,6 +10,7 @@ using RFQ.UI.Domain.Helper;
 using System.Net.Mail;
 using System.Text;
 using RFQ.UI.Application.Provider;
+using RFQ.UI.Infrastructure.Provider;
 
 namespace RFQ.UI.Controllers
 {
@@ -22,6 +23,7 @@ namespace RFQ.UI.Controllers
         private readonly IEmailService _emailService;
         private readonly GlobalClass _globalClass;
         private readonly IMenuServices _menuServices;
+        
 
         public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
@@ -32,6 +34,7 @@ namespace RFQ.UI.Controllers
             _emailService = emailService;
             _globalClass = globalClass;
             _menuServices = menuServices;
+           
         }
         public async Task<ActionResult> VendorRequest()
         {
@@ -150,6 +153,7 @@ namespace RFQ.UI.Controllers
                         draw = result.PageNumber,
                         recordsTotal = result.TotalRecordCount,
                         recordsFiltered = result.TotalRecordCount,
+                        displayColumn = result.DisplayColumns,
                         data = result.Result
                     });
                 }

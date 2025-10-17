@@ -7,6 +7,7 @@ using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using System.ComponentModel.Design;
 using System.Text;
+using System.Text.Json;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -14,14 +15,15 @@ namespace RFQ.UI.Infrastructure.Provider
     {
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
-        private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;
-        public CustomerAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+
+        public CustomerAdaptor(HttpClient httpClient, GlobalClass globalClass, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
-            _config = configuration;
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<NewCommonResponseDto> AddCustomer(CustomerRequestDto customerRequestDto)
         {
@@ -29,7 +31,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Customer:AddMasterParty"];
+                var baseurl = _appSettings.BaseUrl + "/MasterParty/AddMasterParty";
                 var customer = JsonConvert.SerializeObject(customerRequestDto);
                 var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
@@ -86,7 +88,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Customer:DeleteMasterParty"] + PartyId;
+                var baseurl = _appSettings.BaseUrl + "/MasterParty/DeleteMasterParty/" + PartyId;
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
@@ -112,7 +114,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Customer:UpdateMasterParty"] + PartyId;
+                var baseurl = _appSettings.BaseUrl + "/MasterParty/UpdateMasterParty/" + PartyId;
                 var customer = JsonConvert.SerializeObject(customerRequestDto);
                 var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
@@ -138,34 +140,10 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                using (var httpClient = new HttpClient())
-                {
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.CustomerGetAllCustomer;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl,pagingParam, _globalClass.Token);
 
-                    var requestDto = JsonConvert.SerializeObject(pagingParam);
-                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
-
-                    var baseUrl = _fleetLynkApiUrl + _config["Customer:GetAllCustomer"];
-                    var response = await httpClient.PostAsync(baseUrl, requestContent);
-                    var responseData = await response.Content.ReadAsStringAsync();
-
-                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-
-                    if (responseModel?.Data?.result != null)
-                    {
-                        var profileList = JsonConvert.DeserializeObject<List<CustomerResponseDto>>(
-                            JsonConvert.SerializeObject(responseModel.Data.result)
-                        );
-
-                        int pageNumber = responseModel.Data.pageNumber;
-                        int pageSize = responseModel.Data.pageSize;
-                        int totalRecordCount = responseModel.Data.totalRecordCount;
-
-                        return new PageList<CustomerResponseDto>(profileList, totalRecordCount, pageNumber, pageSize);
-                    }
-                    return null;
-                }
+                return _commonApiAdaptor.GenerateResponse<CustomerResponseDto>(responseModel);
             }
             catch (Exception)
             {
@@ -180,7 +158,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = $"{_config["ApiSettings:GstApiUrl"]}GSTNo={gstKycDetailsRequestDto.GSTNo}&ccode={gstKycDetailsRequestDto.CCode}&UserId={gstKycDetailsRequestDto.UserId}";
+                var url = $"{_appSettings.GstApiUrl}GSTNo={gstKycDetailsRequestDto.GSTNo}&ccode={gstKycDetailsRequestDto.CCode}&UserId={gstKycDetailsRequestDto.UserId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                     return null;
@@ -208,7 +186,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = $"{_config["ApiSettings:PanApiUrl"]}PANNo={panKycDetailRequestDto.PANNo}&ccode={panKycDetailRequestDto.CCode}&UserId={panKycDetailRequestDto.UserId}";
+                var url = $"{_appSettings.PanApiUrl}PANNo={panKycDetailRequestDto.PANNo}&ccode={panKycDetailRequestDto.CCode}&UserId={panKycDetailRequestDto.UserId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                     return null;
@@ -235,7 +213,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = _fleetLynkApiUrl + _config["Customer:GetAllCity"];
+                var url = _appSettings.BaseUrl + "/CompanyCity/GetAllCity";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -268,7 +246,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = $"{_fleetLynkApiUrl}{_config["Customer:GetDrpCustomerList"]}?companyId={companyId}";
+                var url = $"{_appSettings.BaseUrl}/MasterParty/GetDrpCustomerList?companyId={companyId}";
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -302,7 +280,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var url = _fleetLynkApiUrl + _config["Customer:GetAutoCustomerCode"];
+                var url = _appSettings.BaseUrl + _appSettings.CustomerGetAutoCustomerCode;
                 var response = await _httpClient.GetAsync(url);
 
                 response.EnsureSuccessStatusCode(); // throws if status != 200-299

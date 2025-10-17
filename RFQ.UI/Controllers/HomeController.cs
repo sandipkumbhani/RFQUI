@@ -75,6 +75,7 @@ namespace RFQ.UI.Controllers
                         recordsTotal = result.TotalRecordCount,
                         recordsFiltered = result.TotalRecordCount,
                         data = result.Result,
+                        displayColumn = result.DisplayColumns,
                         UserId = result.Equals(userid)
                     });
                 }
