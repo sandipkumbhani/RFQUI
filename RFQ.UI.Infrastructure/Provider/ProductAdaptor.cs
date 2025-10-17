@@ -15,12 +15,16 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public ProductAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public ProductAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<NewCommonResponseDto> AddProduct(ProductRequestDto productRequestDto)
         {
@@ -104,35 +108,11 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = _fleetLynkApiUrl + _config["Product:GetAllProduct"];
-                var param = JsonConvert.SerializeObject(pagingParam);
-                var requestContent = new StringContent(param, Encoding.UTF8, "application/json");
-
-                var response = await _httpClient.PostAsync(baseUrl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-                if (responseModel != null && responseModel.Data != null)
-                {
-                    var json = JsonConvert.SerializeObject(responseModel.Data.result);
-                    var typedList = JsonConvert.DeserializeObject<List<ProductResponseDto>>(json);
-
-                    dynamic parsed = JsonConvert.DeserializeObject<dynamic>(responseData);
-                    int pageNumber = parsed.data.pageNumber;
-                    int pageSize = parsed.data.pageSize;
-                    int totalPage = parsed.data.totalPage;
-                    int totalRecordCount = parsed.data.totalRecordCount;
-
-                    return new PageList<ProductResponseDto>(typedList, totalRecordCount, pageNumber, pageSize);
-                }
-
-                return null;
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetAllProduct;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
+                return _commonApiAdaptor.GenerateResponse<ProductResponseDto>(responseModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -165,7 +145,5 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw new Exception(ex.Message);
             }
         }
-
-
     }
 }

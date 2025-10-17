@@ -2,21 +2,8 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Product";
-    bool IsAdd = (bool)ViewData["IsAdd"];
-    bool IsEdit = (bool)ViewData["IsEdit"];
-    bool IsView = (bool)ViewData["IsView"];
-    bool IsCancel = (bool)ViewData["IsCancel"];
-
-
-
 }
 @section Scripts {
-    <script>
-        var IsAdd = @IsAdd.ToString().ToLower();
-        var IsEdit = @IsEdit.ToString().ToLower();
-        var IsView = @IsView.ToString().ToLower();
-        var IsCancel = @IsCancel.ToString().ToLower();
-    </script>
     <script src="~/js/Views/Product.js"></script>
 }
 
@@ -43,14 +30,11 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Product</h1>
-                @if (IsAdd)
-                {
-                    <div class="add-btn">
-                        <a href="#" id="btnAddProduct">
-                            <i class="ri-add-line"></i> <span>Add</span>
-                        </a>
-                    </div>
-                }
+                <div class="add-btn">
+                    <a href="#" id="btnAdd">
+                        <i class="ri-add-line"></i> <span>Add</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -75,24 +59,28 @@
 								<li><a class="dropdown-item filter-option" data-value="Done">Done</a></li>
 							</ul>
 						</div> *@
-                        <div id="exporttableproduct" class="btn-group" role="group"></div>
+                        <div id="exportButtons" class="btn-group" role="group"></div>
                     </div>
                 </div>
                 <!-- Table -->
                 <div class="table-responsive">
-                    <table id="productTable"
-                           class="table dt-responsive nowrap w-100">
-                        <thead class="bg-light">
-                            <tr class="text-center">
-                                <th class="sortable text-center" data-column="CompanyName" data-order="asc">Company Name</th>
-                                <th class="sortable text-center" data-column="ItemName" data-order="asc">Item Name</th>
-                                <th class="sortable text-center no-sort">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            <!-- Dynamic rows go here -->
-                        </tbody>
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
                     </table>
+                    @* <table id="productTable" *@
+                    @*        class="table dt-responsive nowrap w-100"> *@
+                    @*     <thead class="bg-light"> *@
+                    @*         <tr class="text-center"> *@
+                    @*             <th class="sortable text-center" data-column="CompanyName" data-order="asc">Company Name</th> *@
+                    @*             <th class="sortable text-center" data-column="ItemName" data-order="asc">Item Name</th> *@
+                    @*             <th class="sortable text-center no-sort">Action</th> *@
+                    @*         </tr> *@
+                    @*     </thead> *@
+                    @*     <tbody class="text-center"> *@
+                    @*         <!-- Dynamic rows go here --> *@
+                    @*     </tbody> *@
+                    @* </table> *@
                 </div>
                 <!-- Bottom Area -->
                 <div class="datatable-footer-bottom">

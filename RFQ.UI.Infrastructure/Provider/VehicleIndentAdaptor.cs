@@ -16,12 +16,16 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public VehicleIndentAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public VehicleIndentAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<bool> AddVehicleIndent(VehicleIndentRequestDto vehicleIndentRequestDto)
         {
@@ -84,28 +88,9 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                using (var httpClient = new HttpClient())
-                {
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                    var requestDto = JsonConvert.SerializeObject(pagingParam);
-                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
-                    var baseUrl = _fleetLynkApiUrl + _config["VehicleIndent:GetAllVehicleIndent"];
-                    var response = await httpClient.PostAsync(baseUrl, requestContent);
-                    var responseData = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-                    if (responseModel?.Data?.result != null)
-                    {
-                        var vehicleList = JsonConvert.DeserializeObject<List<VehicleIndentResponseDto>>(
-                            JsonConvert.SerializeObject(responseModel.Data.result)
-                        );
-                        int pageNumber = responseModel.Data.pageNumber;
-                        int pageSize = responseModel.Data.pageSize;
-                        int totalRecordCount = responseModel.Data.totalRecordCount;
-                        return new PageList<VehicleIndentResponseDto>(vehicleList, totalRecordCount, pageNumber, pageSize);
-                    }
-                    return null;
-                }
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetAllVehicleIndent;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
+                return _commonApiAdaptor.GenerateResponse<VehicleIndentResponseDto>(responseModel);
             }
             catch (Exception)
             {

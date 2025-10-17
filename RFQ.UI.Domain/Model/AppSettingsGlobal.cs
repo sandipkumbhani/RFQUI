@@ -15,6 +15,9 @@ namespace RFQ.UI.Domain.Model
         public string? CompanyGetAllCompany { get; set; }
         public string? GetAllVehicleType { get; set; }
         public string? GetAllCompanyConfiguration { get; set; }
+        public string? GetUserAll { get; set; }
+        public string? GetAllProduct { get; set; }
+        public string? GetAllVehicleIndent { get; set; }
         public string? GetAllVendor { get; set; }
         public string? GetAllLocation { get; set; }
         public string? DriverGetAllDrivers { get; set; }
@@ -30,6 +33,9 @@ namespace RFQ.UI.Domain.Model
             var vendorSection = config.GetSection("Vendor");
             var locationSection = config.GetSection("Location");
             var driverSection = config.GetSection("Driver");
+            var usersConfiguration = config.GetSection("Users");
+            var ProductSection = config.GetSection("Product");
+            var vehicleIndentSection = config.GetSection("VehicleIndent");
             return new AppSettingsGlobal
             {
                 BaseUrl = section["BaseUrl"],
@@ -46,6 +52,10 @@ namespace RFQ.UI.Domain.Model
                 GetAllVendor = vendorSection["GetAllVendor"],
                 GetAllLocation = locationSection["GetAllLocation"],
                 DriverGetAllDrivers = driverSection["GetAllDriver"]
+                GetAllCompanyConfiguration = companyConfiguration["GetAllCompanyConfiguration"],
+                GetUserAll = usersConfiguration["GetUserAll"],
+                GetAllProduct = ProductSection["GetAllProduct"],
+                GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"]
             };
         }
     }
