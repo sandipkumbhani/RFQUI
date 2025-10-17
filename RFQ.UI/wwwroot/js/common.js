@@ -744,6 +744,38 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             </tr>`;
         });
     }
+    if (gridTableName == "BookingTable") {
+        response.data.forEach(item => {
+            rowsHtml += `
+        <tr>
+            <td>${item.locationName}</td>
+            <td>${item.bookingNo}</td>
+            <td>${item.bookingDate ? new Date(item.bookingDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+            <td>${item.fromLocation}</td>
+            <td>${item.toLocation}</td>
+            <td>${item.partyName}</td>
+            <td>${item.vehicleNo}</td>
+            <td>${item.vehicleTypeName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.driverMobNo}</td>
+            <td>${item.internalMasterName}</td>
+            
+            <td class="text-center" style="cursor:pointer;">`;
+
+            if (IsEdit) {
+                rowsHtml += `<a class="icon-btn" onclick="UpdateBooking(${item.bookingId})"><i class="ri-edit-2-line"></i></a>`;
+            }
+            //if (IsView) {
+            //    rowsHtml += `<a class="icon-btn" onclick="ViewVehicleIndent(${item.indentId})"><i class="ri-eye-line"></i></a>`;
+            //}
+            if (IsCancel) {
+                rowsHtml += `<a class="icon-btn" onclick="DeleteBooking(${item.bookingId})"><i class="ri-delete-bin-3-line"></i></a>`;
+            }
+
+            rowsHtml += `</td></tr>`;
+        });
+
+    }
     return rowsHtml;
 
 }

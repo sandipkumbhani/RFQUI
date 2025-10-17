@@ -12,6 +12,7 @@ namespace RFQ.UI.Domain.ResponseDto
         public string BookingNo { get; set; }
         public int CompanyId { get; set; }
         public int LocationId { get; set; }
+        public string LocationName { get; set; }
         public DateTime BookingDate { get; set; }
         public int PlacementId { get; set; }
         public int EWayBillStateId { get; set; }
@@ -23,12 +24,15 @@ namespace RFQ.UI.Domain.ResponseDto
         public string ToLatitude { get; set; }
         public string ToLongitude { get; set; }
         public int PartyId { get; set; }
+        public string PartyName { get; set; }
         public int VehicleTypeId { get; set; }
+        public string VehicleTypeName { get; set; }
         public string VehicleNo { get; set; }
         public int DriverId { get; set; }
         public string DriverName { get; set; }
         public string DriverMobNo { get; set; }
-        public int TrackingTypeId { get; set; }
+        public int InternalMasterId { get; set; }
+        public string InternalMasterName { get; set; }
         public string InvoiceNo { get; set; }
         public DateTime InvoiceDate { get; set; }
         public int InvoiceValue { get; set; }
