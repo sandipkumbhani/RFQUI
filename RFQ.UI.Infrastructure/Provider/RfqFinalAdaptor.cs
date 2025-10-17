@@ -15,12 +15,16 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly string _fleetLynkApiUrl;
-        public RfqFinalAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public RfqFinalAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _globalClass = globalClass;
             _httpClient = httpClient;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
 
         public async Task<bool> AddRfqFinal(RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
@@ -79,31 +83,10 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetAllRfqFinalization;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
 
-                var requestDto = JsonConvert.SerializeObject(pagingParam);
-                var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
-
-                var baseUrl = _fleetLynkApiUrl + _config["RfqFinal:GetAllRfqFinal"];
-                var response = await _httpClient.PostAsync(baseUrl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-
-                if (responseModel?.Data?.result != null)
-                {
-                    var rfqFinalizationList = JsonConvert.DeserializeObject<List<RfqFinalizationResponseDto>>(
-                        JsonConvert.SerializeObject(responseModel.Data.result)
-                    );
-
-                    int pageNumber = responseModel.Data.pageNumber;
-                    int pageSize = responseModel.Data.pageSize;
-                    int totalRecordCount = responseModel.Data.totalRecordCount;
-
-                    return new PageList<RfqFinalizationResponseDto>(rfqFinalizationList, totalRecordCount, pageNumber, pageSize);
-                }
-                return null;
+                return _commonApiAdaptor.GenerateResponse<RfqFinalizationResponseDto>(responseModel);
             }
             catch (Exception ex)
             {

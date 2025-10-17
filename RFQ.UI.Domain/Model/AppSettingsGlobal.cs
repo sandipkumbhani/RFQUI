@@ -21,6 +21,8 @@ namespace RFQ.UI.Domain.Model
         public string? GetAllVendor { get; set; }
         public string? GetAllLocation { get; set; }
         public string? DriverGetAllDrivers { get; set; }
+        public string? GetAllRfqFinalization { get; set; }
+        public string? GetAllVehiclePlacement { get; set; }
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
         {
@@ -36,6 +38,8 @@ namespace RFQ.UI.Domain.Model
             var usersConfiguration = config.GetSection("Users");
             var ProductSection = config.GetSection("Product");
             var vehicleIndentSection = config.GetSection("VehicleIndent");
+            var rfqFinalizationSection = config.GetSection("RfqFinal");
+            var vehiclePlacementSection = config.GetSection("VehiclePlacement");
             return new AppSettingsGlobal
             {
                 BaseUrl = section["BaseUrl"],
@@ -54,7 +58,9 @@ namespace RFQ.UI.Domain.Model
                 DriverGetAllDrivers = driverSection["GetAllDriver"],
                 GetUserAll = usersConfiguration["GetUserAll"],
                 GetAllProduct = ProductSection["GetAllProduct"],
-                GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"]
+                GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"],
+                GetAllRfqFinalization = rfqFinalizationSection["GetAllRfqFinal"],
+                GetAllVehiclePlacement = vehiclePlacementSection["GetAllVehiclePlacement"]
             };
         }
     }

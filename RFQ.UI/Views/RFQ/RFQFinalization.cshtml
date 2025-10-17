@@ -3,18 +3,8 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "RFQ Finalization";
-    bool IsAdd = (bool)ViewData["IsAdd"];
-    bool IsEdit = (bool)ViewData["IsEdit"];
-    bool IsView = (bool)ViewData["IsView"];
-    bool IsCancel = (bool)ViewData["IsCancel"];
 }
 @section Scripts {
-    <script>
-        var IsAdd = @IsAdd.ToString().ToLower();
-        var IsEdit = @IsEdit.ToString().ToLower();
-        var IsView = @IsView.ToString().ToLower();
-        var IsCancel = @IsCancel.ToString().ToLower();
-    </script>
     <script src="~/js/Views/RFQFinalization.js"></script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
@@ -218,14 +208,11 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">RFQ Finalization</h1>
-                @if (IsAdd)
-                {
                     <div class="add-btn">
-                        <a href="#" id="btnAddRfqFinalization">
+                        <a href="#" id="btnAdd">
                             <i class="ri-add-line"></i> <span>Add</span>
                         </a>
                     </div>
-                }
             </div>
         </div>
     </div>
@@ -240,28 +227,35 @@
                             <input type="text" id="rfqFinalizationTableSearch" class="form-control form-control-sm" placeholder="Search...">
                             <button type="submit"><i class="ri-search-line"></i></button>
                         </div>
-                        <div id="exportRfqFinalizationButtons" class="btn-group" role="group"></div>
+                        <div id="exportButtons" class="btn-group" role="group"></div>
                     </div>
                 </div>
 
-                <!-- Table -->
                 <div class="table-responsive">
-                    <table id="rfqFinalizationTable" class="table dt-responsive nowrap w-100">
-                        <thead class="text-center">
-                            <tr>
-                                <th class="sortable text-center" data-column="RfqNo" data-order="asc">Rfq No</th>
-                                <th class="sortable text-center" data-column="RfqStatus" data-order="asc">RfqStatus</th>
-                                <th class="sortable text-center" data-column="Reason" data-order="asc">Reason</th>
-                                <th class="sortable text-center" data-column="BillingRate" data-order="asc">BillingRate</th>
-                                <th class="sortable text-center" data-column="DetentionPerDay" data-order="asc">DetentionPerDay</th>
-                                <th class="sortable text-center" data-column="DetentionFreeDays" data-order="asc">DetentionFreeDays</th>
-                                <th class="sortable text-center" data-column="Remarks" data-order="asc">Remarks</th>
-                                <th class="text-center no-sort">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center"></tbody>
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
                     </table>
                 </div>
+
+                <!-- Table -->
+                @* <div class="table-responsive"> *@
+                @*     <table id="rfqFinalizationTable" class="table dt-responsive nowrap w-100"> *@
+                @*         <thead class="text-center"> *@
+                @*             <tr> *@
+                @*                 <th class="sortable text-center" data-column="RfqNo" data-order="asc">Rfq No</th> *@
+                @*                 <th class="sortable text-center" data-column="RfqStatus" data-order="asc">RfqStatus</th> *@
+                @*                 <th class="sortable text-center" data-column="Reason" data-order="asc">Reason</th> *@
+                @*                 <th class="sortable text-center" data-column="BillingRate" data-order="asc">BillingRate</th> *@
+                @*                 <th class="sortable text-center" data-column="DetentionPerDay" data-order="asc">DetentionPerDay</th> *@
+                @*                 <th class="sortable text-center" data-column="DetentionFreeDays" data-order="asc">DetentionFreeDays</th> *@
+                @*                 <th class="sortable text-center" data-column="Remarks" data-order="asc">Remarks</th> *@
+                @*                 <th class="text-center no-sort">Action</th> *@
+                @*             </tr> *@
+                @*         </thead> *@
+                @*         <tbody class="text-center"></tbody> *@
+                @*     </table> *@
+                @* </div> *@
 
                 <!-- Bottom Area -->
                 <div class="datatable-footer-bottom">

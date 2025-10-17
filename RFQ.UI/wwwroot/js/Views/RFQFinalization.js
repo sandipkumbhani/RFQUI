@@ -53,7 +53,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase(), 'EditRfqFinalizatioin', 'DeleteRfqFinalizatioin', 'rfqFinalIdId');
     });
     $("#btnSave, #btnSaveAndNew").on('click', function () {
 
@@ -63,7 +63,7 @@ $(document).ready(function () {
             SaveAndSaveNew(action);
         }
     });
-    $("#btnAddRfqFinalization").on('click', function () {
+    $("#btnAdd").on('click', function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
         $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', false);
@@ -361,7 +361,7 @@ function FetchRfqFinalizationList() {
     $('.select2-custom').val(null).trigger('change');
     $("#ddlRfqNo").prop('disabled', false);
     ClearDisabledFields();
-    FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase(), 'EditRfqFinalizatioin', 'DeleteRfqFinalizatioin', 'rfqFinalIdId');
 }
 
 $('#rfqFinalizationTableSearch').off('keyup').on('keyup', function () {
