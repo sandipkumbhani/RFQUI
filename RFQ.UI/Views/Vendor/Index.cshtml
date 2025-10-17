@@ -3,19 +3,9 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Vendor";
-    bool IsAdd = (bool)ViewData["IsAdd"];
-    bool IsEdit = (bool)ViewData["IsEdit"];
-    bool IsView = (bool)ViewData["IsView"];
-    bool IsCancel = (bool)ViewData["IsCancel"];
 }
 
 @section Scripts {
-    <script>
-        var IsAdd = @IsAdd.ToString().ToLower();
-        var IsEdit = @IsEdit.ToString().ToLower();
-        var IsView = @IsView.ToString().ToLower();
-        var IsCancel = @IsCancel.ToString().ToLower();
-    </script>
     <script src="~/js/AttachmentDetails.js"></script>
     <script src="~/js/Views/Vendor.js"></script>
     <script async defer
@@ -28,14 +18,13 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Vendor</h1>
-                @if(IsAdd)
-                {
+               
                     <div class="add-btn">
-                        <a href="#" id="addVendor">
+                    <a href="#" id="btnAdd">
                             <i class="ri-add-line"></i> <span>Add</span>
                         </a>
                     </div>
-                }
+                
             </div>
         </div>
     </div>
@@ -44,34 +33,42 @@
             <div class="card com-profile-info">
                 <!-- Top Header -->
                 <div class="table-top-header">
-                    <h4>List of Customer</h4>
+                    <h4>List of Vendor</h4>
                     <div class="d-flex gap-2">
                         <div class="table-search-box">
                             <input type="text" id="vendorTableSearch" class="form-control form-control-sm" placeholder="Search...">
                             <button type="submit"><i class="ri-search-line"></i></button>
                         </div>
-                        <div id="exportVendorButtons" class="btn-group" role="group"></div>
+                        <div id="exportButtons" class="btn-group" role="group"></div>
                     </div>
                 </div>
-                <!-- Table -->
+
                 <div class="table-responsive">
-                    <table id="vendorTable" class="table dt-responsive nowrap w-100">
-                        <thead>
-                            <tr class="text-center">
-                                <th class="sortable text-center" data-column="PartyName" data-order="asc">Vendor Name</th>
-                                <th class="sortable text-center" data-column="PinCode" data-order="asc">PinCode</th>
-                                <th class="sortable text-center" data-column="ContactPerson" data-order="asc">ContactPerson</th>
-                                <th class="sortable text-center" data-column="MobNo" data-order="asc">Mobile No</th>
-                                <th class="sortable text-center" data-column="WhatsAppNo" data-order="asc">WhatsApp No</th>
-                                <th class="sortable text-center" data-column="Email" data-order="asc">Email</th>
-                                <th class="sortable text-center" data-column="PANNo" data-order="asc">PAN No</th>
-                                <th class="sortable text-center" data-column="GSTNo" data-order="asc">GST No</th>
-                                <th class="text-center no-sort">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center"></tbody> <!-- This will be dynamically filled -->
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
                     </table>
                 </div>
+
+                <!-- Table -->
+                @* <div class="table-responsive"> *@
+                @*     <table id="vendorTable" class="table dt-responsive nowrap w-100"> *@
+                @*         <thead> *@
+                @*             <tr class="text-center"> *@
+                @*                 <th class="sortable text-center" data-column="PartyName" data-order="asc">Vendor Name</th> *@
+                @*                 <th class="sortable text-center" data-column="PinCode" data-order="asc">PinCode</th> *@
+                @*                 <th class="sortable text-center" data-column="ContactPerson" data-order="asc">ContactPerson</th> *@
+                @*                 <th class="sortable text-center" data-column="MobNo" data-order="asc">Mobile No</th> *@
+                @*                 <th class="sortable text-center" data-column="WhatsAppNo" data-order="asc">WhatsApp No</th> *@
+                @*                 <th class="sortable text-center" data-column="Email" data-order="asc">Email</th> *@
+                @*                 <th class="sortable text-center" data-column="PANNo" data-order="asc">PAN No</th> *@
+                @*                 <th class="sortable text-center" data-column="GSTNo" data-order="asc">GST No</th> *@
+                @*                 <th class="text-center no-sort">Action</th> *@
+                @*             </tr> *@
+                @*         </thead> *@
+                @*         <tbody class="text-center"></tbody> <!-- This will be dynamically filled --> *@
+                @*     </table> *@
+                @* </div> *@
                 <!-- Bottom Area -->
                 <div class="datatable-footer-bottom">
                     <div class="totle-left">

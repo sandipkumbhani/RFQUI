@@ -14,14 +14,14 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('tablelocation', '/Location/ViewLocationList', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('tablelocation', '/Location/ViewLocationList', orderColumn, orderDir.toUpperCase(), 'EditLocation', 'DeleteLocation', 'locationId');
     });
     Initialization();
     GetAllCityList("ddlCity");
     UpdateLocation();
     FetchLocationList();
 });
-$("#btnAddLocation").on("click", function (e) {
+$("#btnAdd").on("click", function (e) {
     e.preventDefault();
     $("#locationListSection").hide();
     $("#locationFormSection").show();
@@ -108,7 +108,7 @@ function FetchLocationList() {
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
     $("#btnSaveForm").show();
-    FetchDataForTable('tablelocation', '/Location/ViewLocationList', null, null, IsEdit, IsView, IsCancel);
+    FetchDataForTable('tablelocation', '/Location/ViewLocationList', null, null, 'EditLocation', 'DeleteLocation', 'locationId');
 }
 function SaveLocation(action) {
     var isvalid = ValidationCheck();

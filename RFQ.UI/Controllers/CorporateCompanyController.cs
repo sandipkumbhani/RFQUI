@@ -100,6 +100,7 @@ namespace RFQ.UI.Controllers
                         draw = result.PageNumber,
                         recordsTotal = result.TotalRecordCount,
                         recordsFiltered = result.TotalRecordCount,
+                        displayColumn = result.DisplayColumns,
                         data = result.Result
                     });
                 }

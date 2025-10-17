@@ -14,7 +14,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), 'EditFranchise', 'DeleteFranchise', 'companyId');
     });
     GetAllCityList("ddlCity");
     CheckValidation();
@@ -27,7 +27,7 @@ $(document).ready(function () {
     $("#btnCancel").on("click", function () {
         FetchFranchise();
     });
-    $("#btnAddFranchise").on("click", function () {
+    $("#btnAdd").on("click", function () {
         $('#franchiseForm').find('input, select, textarea, button, a').prop('disabled', false);
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
@@ -53,7 +53,7 @@ function Initialize() {
         paramName: "file",
         maxFiles: 1,
         parallelUploads: 1,
-        maxFilesize: 4,
+        maxFilesize: 5,
         addRemoveLinks: true,
         autoProcessQueue: false,
         acceptedFiles: "image/*",
@@ -367,7 +367,7 @@ function FetchFranchise() {
     $("#btnUpdateFranchise").hide();
     $("#btnSavenewFranchise").show();
     ResetAttachmentRepeater();
-    FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), 'EditFranchise', 'DeleteFranchise', 'companyId');
 }
 
 

@@ -3,19 +3,9 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Driver";
-    bool IsAdd = (bool)ViewData["IsAdd"];
-    bool IsEdit = (bool)ViewData["IsEdit"];
-    bool IsView = (bool)ViewData["IsView"];
-    bool IsCancel = (bool)ViewData["IsCancel"];
 
 }
 @section Scripts {
-    <script>
-        var IsAdd = @IsAdd.ToString().ToLower();
-        var IsEdit = @IsEdit.ToString().ToLower();
-        var IsView = @IsView.ToString().ToLower();
-        var IsCancel = @IsCancel.ToString().ToLower();
-    </script>
     <script src="~/js/views/driver.js"></script>
     <script src="~/js/AttachmentDetails.js"></script>
     <script async defer
@@ -28,14 +18,12 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Driver</h1>
-                @if (IsAdd)
-                {
+                
                     <div class="add-btn">
-                        <a href="#" id="btnAddDriver">
+                    <a href="#" id="btnAdd">
                             <i class="ri-add-line"></i> <span>Add</span>
                         </a>
                     </div>
-                }
             </div>
         </div>
     </div>
@@ -50,26 +38,34 @@
                             <input type="text" id="driverTableSearch" class="form-control form-control-sm" placeholder="Search...">
                             <button type="submit"><i class="ri-search-line"></i></button>
                         </div>
-                        <div id="exportDriverButtons" class="btn-group" role="group"></div>
+                        <div id="exportButtons" class="btn-group" role="group"></div>
                     </div>
                 </div>
 
-                <!-- Table -->
                 <div class="table-responsive">
-                    <table id="driverTable" class="table dt-responsive nowrap w-100">
-                        <thead>
-                            <tr class="text-center">
-                                <th class="no-sort text-center ">Driver Photo</th>
-                                <th class="sortable text-center" data-column="LicenseNo" data-order="asc">License No</th>
-                                <th class="sortable text-center" data-column="DriverName" data-order="asc">Driver Name</th>
-                                <th class="text-center no-sort">Driver Type</th>
-                                <th class="sortable text-center" data-column="MobNo" data-order="asc">Mobile Number</th>
-                                <th class="text-center no-sort">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center"></tbody> <!-- This will be dynamically filled -->
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
                     </table>
                 </div>
+
+
+                <!-- Table -->
+                @* <div class="table-responsive"> *@
+                @*     <table id="driverTable" class="table dt-responsive nowrap w-100"> *@
+                @*         <thead> *@
+                @*             <tr class="text-center"> *@
+                @*                 <th class="no-sort text-center ">Driver Photo</th> *@
+                @*                 <th class="sortable text-center" data-column="LicenseNo" data-order="asc">License No</th> *@
+                @*                 <th class="sortable text-center" data-column="DriverName" data-order="asc">Driver Name</th> *@
+                @*                 <th class="text-center no-sort">Driver Type</th> *@
+                @*                 <th class="sortable text-center" data-column="MobNo" data-order="asc">Mobile Number</th> *@
+                @*                 <th class="text-center no-sort">Action</th> *@
+                @*             </tr> *@
+                @*         </thead> *@
+                @*         <tbody class="text-center"></tbody> <!-- This will be dynamically filled --> *@
+                @*     </table> *@
+                @* </div> *@
 
                 <!-- Bottom Area -->
                 <div class="datatable-footer-bottom">

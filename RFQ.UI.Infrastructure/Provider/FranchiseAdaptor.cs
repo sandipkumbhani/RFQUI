@@ -13,14 +13,18 @@ namespace RFQ.UI.Infrastructure.Provider
     {
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public FranchiseAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        public FranchiseAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         //public async Task<FranchiseRequestDto> AddFranchise(FranchiseRequestDto franchiseRequestDto)
         //{
@@ -152,37 +156,15 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<PageList<FranchiseResponseDto>> GetAllFranchise(PagingParam pagingParam)
         {
+
             try
             {
-                using (var httpClient = new HttpClient())
-                {
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.FranchiseGetAllFranchise;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
 
-                    var requestDto = JsonConvert.SerializeObject(pagingParam);
-                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
-
-                    var baseUrl = _fleetLynkApiUrl + _config["Franchise:GetAllFranchise"];
-                    var response = await httpClient.PostAsync(baseUrl, requestContent);
-                    var responseData = await response.Content.ReadAsStringAsync();
-
-                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-
-                    if (responseModel?.Data?.result != null)
-                    {
-                        var franchiseList = JsonConvert.DeserializeObject<List<FranchiseResponseDto>>(
-                            JsonConvert.SerializeObject(responseModel.Data.result)
-                        );
-
-                        int pageNumber = responseModel.Data.pageNumber;
-                        int pageSize = responseModel.Data.pageSize;
-                        int totalRecordCount = responseModel.Data.totalRecordCount;
-
-                        return new PageList<FranchiseResponseDto>(franchiseList, totalRecordCount, pageNumber, pageSize);
-                    }
-                    return null;
-                }
+                return _commonApiAdaptor.GenerateResponse<FranchiseResponseDto>(responseModel);
             }
+
             catch (Exception)
             {
                 throw;
