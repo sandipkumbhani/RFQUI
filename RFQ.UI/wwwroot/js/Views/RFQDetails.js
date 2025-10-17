@@ -18,7 +18,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), 'EditRfq', 'DeleteRfq', 'rfqID');
     });
     $("#btnCancel").on("click", function () {
         FetchRfqList();
@@ -31,7 +31,7 @@ $(document).ready(function () {
             SaveAndSaveNew(action);
         }
     });
-    $("#btnAddRfq").on("click", function () {
+    $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
         $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
@@ -768,7 +768,7 @@ function FetchRfqList() {
     //});
     FetchRfqNo();
     ResetAttachmentRepeater();
-    FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), 'EditRfq', 'DeleteRfq','rfqID');
 }
 $('#rfqTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);

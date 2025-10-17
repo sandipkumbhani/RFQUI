@@ -15,12 +15,16 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
-        public RequestForQuoteAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public RequestForQuoteAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<IEnumerable<VehicleIndent>> GetAllVehicleIndentList(int companyId)
         {
@@ -267,6 +271,16 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetAllRfq;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
+                return _commonApiAdaptor.GenerateResponse<RfqListResponseDto>(responseModel);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            try
+            {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
@@ -321,7 +335,7 @@ namespace RFQ.UI.Infrastructure.Provider
                         return responseModel.ErrorMessage;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("Error in UpdateRfq: " + ex.Message);
             }
@@ -344,7 +358,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("Error in DeleteRfq: " + ex.Message);
             }
