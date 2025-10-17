@@ -51,8 +51,7 @@ namespace RFQ.UI.Domain.Model
                 GetAllCompanyConfiguration = companyConfiguration["GetAllCompanyConfiguration"],
                 GetAllVendor = vendorSection["GetAllVendor"],
                 GetAllLocation = locationSection["GetAllLocation"],
-                DriverGetAllDrivers = driverSection["GetAllDriver"]
-                GetAllCompanyConfiguration = companyConfiguration["GetAllCompanyConfiguration"],
+                DriverGetAllDrivers = driverSection["GetAllDriver"],
                 GetUserAll = usersConfiguration["GetUserAll"],
                 GetAllProduct = ProductSection["GetAllProduct"],
                 GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"]
