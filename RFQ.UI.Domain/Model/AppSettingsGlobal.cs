@@ -24,6 +24,7 @@ namespace RFQ.UI.Domain.Model
         public string? DriverGetAllDrivers { get; set; }
         public string? GetAllRfqFinalization { get; set; }
         public string? GetAllVehiclePlacement { get; set; }
+        public string? GetAllBookingOrTrip { get; set; }
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
         {
@@ -42,6 +43,7 @@ namespace RFQ.UI.Domain.Model
             var rfqFinalizationSection = config.GetSection("RfqFinal");
             var vehiclePlacementSection = config.GetSection("VehiclePlacement");
             var requestForQuoteSection = config.GetSection("RequestForQuote");
+            var bookingOrTripSection = config.GetSection("BookingOrTrip");
             return new AppSettingsGlobal
             {
                 BaseUrl = section["BaseUrl"],
@@ -63,7 +65,8 @@ namespace RFQ.UI.Domain.Model
                 GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"],
                 GetAllRfqFinalization = rfqFinalizationSection["GetAllRfqFinal"],
                 GetAllVehiclePlacement = vehiclePlacementSection["GetAllVehiclePlacement"],
-                GetAllRfq = requestForQuoteSection["GetAllRfq"]
+                GetAllRfq = requestForQuoteSection["GetAllRfq"],
+                GetAllBookingOrTrip = bookingOrTripSection["GetAllBookingOrTrip"]
             };
         }
     }

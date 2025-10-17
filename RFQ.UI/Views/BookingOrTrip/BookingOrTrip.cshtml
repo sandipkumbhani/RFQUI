@@ -3,19 +3,8 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Booking Or Trip";
-    bool IsAdd = (bool)ViewData["IsAdd"];
-    bool IsEdit = (bool)ViewData["IsEdit"];
-    bool IsView = (bool)ViewData["IsView"];
-    bool IsCancel = (bool)ViewData["IsCancel"];
-
 }
 @section Scripts {
-    <script>
-        var IsAdd = @IsAdd.ToString().ToLower();
-        var IsEdit = @IsEdit.ToString().ToLower();
-        var IsView = @IsView.ToString().ToLower();
-        var IsCancel = @IsCancel.ToString().ToLower();
-    </script>
     <script src="~/js/views/bookingortrip.js"></script>
     <script src="~/js/AttachmentDetails.js"></script>
     <script async defer
@@ -28,15 +17,12 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box add">
-                <h1 class="page-title">LR / Booking</h1>
-                @if (@IsAdd)
-                {
+                <h1 class="page-title">LR / Booking</h1> 
                     <div class="add-btn">
-                        <a href="#" id="addCompany">
+                    <a href="#" id="btnAdd">
                             <i class="ri-add-line"></i> <span>Add</span>
                         </a>
                     </div>
-                }
             </div>
         </div>
     </div>
@@ -51,37 +37,45 @@
                             <input type="text" id="BookingTableSearch" class="form-control form-control-sm" placeholder="Search...">
                             <button type="submit"><i class="ri-search-line"></i></button>
                         </div>
-                        <div id="exportIndentButtons" class="btn-group" role="group"></div>
+                        <div id="exportButtons" class="btn-group" role="group"></div>
                     </div>
                 </div>
 
-                <!-- Table -->
+
                 <div class="table-responsive">
-                    <table id="BookingTable" class="table dt-responsive nowrap w-100">
-                        <thead>
-                            <tr class="text-center">
-                                <th class="sortable text-center" data-column="LocationName" data-order="asc">Location Name</th>
-                                <th class="sortable text-center" data-column="BookingNo" data-order="asc">LR No</th>
-                                <th class="sortable text-center" data-column="BookingDate" data-order="asc">LR Date</th>
-                                <th class="sortable text-center" data-column="FromLocation" data-order="asc"> Origin/From</th>
-                                <th class="sortable text-center" data-column="ToLocation" data-order="asc">Destination/To</th>
-                                <th class="sortable text-center" data-column="PartyName" data-order="asc">Customer</th>
-                                <th class="sortable text-center" data-column="VehicleNo" data-order="asc">Vehicle No</th>
-                                <th class="sortable text-center" data-column="VehicleTypeName" data-order="asc">VehicleType Name</th>
-                                <th class="sortable text-center" data-column="DriverName" data-order="asc"> Driver Name</th>
-                                <th class="sortable text-center" data-column="DriverMobNo" data-order="asc">DriverMob No</th>
-                                <th class="sortable text-center" data-column="InternalMasterName" data-order="asc">TrackingType</th>
-
-
-                                <th class="text-center no-sort">Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody class="text-center">
-                            <!-- Example data -->
-                        </tbody>
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
                     </table>
                 </div>
+
+                <!-- Table -->
+                @* <div class="table-responsive"> *@
+                @*     <table id="BookingTable" class="table dt-responsive nowrap w-100"> *@
+                @*         <thead> *@
+                @*             <tr class="text-center"> *@
+                @*                 <th class="sortable text-center" data-column="LocationName" data-order="asc">Location Name</th> *@
+                @*                 <th class="sortable text-center" data-column="BookingNo" data-order="asc">LR No</th> *@
+                @*                 <th class="sortable text-center" data-column="BookingDate" data-order="asc">LR Date</th> *@
+                @*                 <th class="sortable text-center" data-column="FromLocation" data-order="asc"> Origin/From</th> *@
+                @*                 <th class="sortable text-center" data-column="ToLocation" data-order="asc">Destination/To</th> *@
+                @*                 <th class="sortable text-center" data-column="PartyName" data-order="asc">Customer</th> *@
+                @*                 <th class="sortable text-center" data-column="VehicleNo" data-order="asc">Vehicle No</th> *@
+                @*                 <th class="sortable text-center" data-column="VehicleTypeName" data-order="asc">VehicleType Name</th> *@
+                @*                 <th class="sortable text-center" data-column="DriverName" data-order="asc"> Driver Name</th> *@
+                @*                 <th class="sortable text-center" data-column="DriverMobNo" data-order="asc">DriverMob No</th> *@
+                @*                 <th class="sortable text-center" data-column="InternalMasterName" data-order="asc">TrackingType</th> *@
+
+
+                @*                 <th class="text-center no-sort">Action</th> *@
+                @*             </tr> *@
+                @*         </thead> *@
+
+                @*         <tbody class="text-center"> *@
+                @*             <!-- Example data --> *@
+                @*         </tbody> *@
+                @*     </table> *@
+                @* </div> *@
 
                 <!-- Bottom Area -->
                 <div class="datatable-footer-bottom">

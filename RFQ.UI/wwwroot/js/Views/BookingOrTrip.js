@@ -46,7 +46,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('BookingTable', fetchBookingUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('BookingTable', fetchBookingUrl, orderColumn, orderDir.toUpperCase(), 'UpdateBooking', 'DeleteBooking', 'bookingId');
     });
 
 
@@ -88,7 +88,7 @@ $(document).ready(function () {
     //});
 });
 
-$('#addCompany').click(function () {
+$('#btnAdd').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
 });
@@ -103,7 +103,7 @@ function FetchBookingOrTrip() {
     $("#btnSaveAndNewForm").show();
     GetAllConsignorList();
     GetAllConsigneeList();
-    FetchDataForTable('BookingTable', fetchBookingUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('BookingTable', fetchBookingUrl, orderColumn, orderDir.toUpperCase(), 'UpdateBooking', 'DeleteBooking', 'bookingId');
 }
 
 $('#BookingTableSearch').off('keyup').on('keyup', function () {
