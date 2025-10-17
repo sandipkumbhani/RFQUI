@@ -62,8 +62,7 @@ namespace RFQ.UI.Domain.Model
                 GetAllProduct = ProductSection["GetAllProduct"],
                 GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"],
                 GetAllRfqFinalization = rfqFinalizationSection["GetAllRfqFinal"],
-                GetAllVehiclePlacement = vehiclePlacementSection["GetAllVehiclePlacement"]
-                GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"],
+                GetAllVehiclePlacement = vehiclePlacementSection["GetAllVehiclePlacement"],
                 GetAllRfq = requestForQuoteSection["GetAllRfq"]
             };
         }
