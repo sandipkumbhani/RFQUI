@@ -16,6 +16,7 @@ namespace RFQ.UI.Domain.Model
         public string? GetUserAll { get; set; }
         public string? GetAllProduct { get; set; }
         public string? GetAllVehicleIndent { get; set; }
+        public string? GetAllRfq { get; set; }
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
         {
@@ -26,6 +27,7 @@ namespace RFQ.UI.Domain.Model
             var usersConfiguration = config.GetSection("Users");
             var ProductSection = config.GetSection("Product");
             var vehicleIndentSection = config.GetSection("VehicleIndent");
+            var requestForQuoteSection = config.GetSection("RequestForQuote");
             return new AppSettingsGlobal
             {
                 BaseUrl = section["BaseUrl"],
@@ -38,7 +40,8 @@ namespace RFQ.UI.Domain.Model
                 GetAllCompanyConfiguration = companyConfiguration["GetAllCompanyConfiguration"],
                 GetUserAll = usersConfiguration["GetUserAll"],
                 GetAllProduct = ProductSection["GetAllProduct"],
-                GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"]
+                GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"],
+                GetAllRfq = requestForQuoteSection["GetAllRfq"]
             };
         }
     }
