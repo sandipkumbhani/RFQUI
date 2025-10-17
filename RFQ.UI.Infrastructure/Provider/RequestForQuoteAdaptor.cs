@@ -279,39 +279,6 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 throw;
             }
-            try
-            {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var requestDto = JsonConvert.SerializeObject(pagingParam);
-                var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
-
-                var baseUrl = _fleetLynkApiUrl + _config["RequestForQuote:GetAllRfq"];
-                var response = await _httpClient.PostAsync(baseUrl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-
-                var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
-
-                if (responseModel?.Data?.result != null)
-                {
-                    var rfqList = JsonConvert.DeserializeObject<List<RfqListResponseDto>>(
-                        JsonConvert.SerializeObject(responseModel.Data.result)
-                    );
-
-                    int pageNumber = responseModel.Data.pageNumber;
-                    int pageSize = responseModel.Data.pageSize;
-                    int totalRecordCount = responseModel.Data.totalRecordCount;
-
-                    return new PageList<RfqListResponseDto>(rfqList, totalRecordCount, pageNumber, pageSize);
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in GetAllRfq: " + ex.Message);
-            }
-            return null;
         }
 
         public async Task<string> UpdateRfq(int rfqId, RequestForQuoteRequestDto requestForQuoteRequestDto)
