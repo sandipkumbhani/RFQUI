@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
+using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -72,7 +74,7 @@ namespace RFQ.UI.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
- 
+
         [HttpPost]
         public async Task<IActionResult> FranchiseSave([FromBody] FranchiseRequestDto franchiseRequestDto)
         {
@@ -82,41 +84,23 @@ namespace RFQ.UI.Controllers
                 {
                     return Json(new { success = false, message = "Invalid franchise data." });
                 }
-
-                // Parse JWT token to extract claims
-                var jwtHandler = new JwtSecurityTokenHandler();
-                var jwtToken = jwtHandler.ReadJwtToken(_globalClass.Token);
-
-                string profileId = jwtToken.Claims.FirstOrDefault(c => c.Type == "profileid")?.Value;
-                string companyId = jwtToken.Claims.FirstOrDefault(c => c.Type == "companyid")?.Value;
-                string userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "userid")?.Value;
-
-                if (string.IsNullOrEmpty(companyId) || string.IsNullOrEmpty(userId))
-                {
-                    return Json(new { success = false, message = "Token is missing required claims." });
-                }
-
-                // Set metadata
-                franchiseRequestDto.CompanyTypeId = 2;
-                franchiseRequestDto.ParentCompanyId = Convert.ToInt32(companyId);
-                franchiseRequestDto.CreatedBy = Convert.ToInt32(userId);
-                franchiseRequestDto.UpdatedBy = Convert.ToInt32(userId);
+                franchiseRequestDto.CompanyTypeId = (int)EnumInternalMaster.FRANCHISE;
+                franchiseRequestDto.ParentCompanyId = _globalClass.CompanyId;
+                franchiseRequestDto.CreatedBy = _globalClass.UserId;
+                franchiseRequestDto.UpdatedBy = _globalClass.UserId;
                 franchiseRequestDto.CreatedOn = DateTime.Now;
                 franchiseRequestDto.UpdatedOn = DateTime.Now;
 
                 var result = await _fanchiseService.AddFranchise(franchiseRequestDto);
-
                 if (result == null)
                 {
                     return Json(new { success = false, message = "Franchise already exists with the same name." });
-
                 }
-
                 return Json(new { success = true, data = result });
             }
             catch (Exception ex)
             {
-   
+
                 return StatusCode(500, "An internal error occurred while saving the franchise.");
             }
         }
@@ -155,27 +139,18 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                int companyId = franchiseRequestDto.CompanyId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string parentId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                franchiseRequestDto.CompanyTypeId = 2;
-                franchiseRequestDto.ParentCompanyId = Convert.ToInt32(parentId);
-                franchiseRequestDto.CreatedBy = Convert.ToInt32(userid);
-                franchiseRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                franchiseRequestDto.CompanyTypeId = (int)EnumInternalMaster.FRANCHISE;
+                franchiseRequestDto.ParentCompanyId = _globalClass.CompanyId;
+                franchiseRequestDto.CreatedBy = _globalClass.UserId;
+                franchiseRequestDto.UpdatedBy = _globalClass.UserId;
                 franchiseRequestDto.CreatedOn = DateTime.Now;
                 franchiseRequestDto.UpdatedOn = DateTime.Now;
 
-                var result = await _fanchiseService.EditFranchise(companyId, franchiseRequestDto);
+                var result = await _fanchiseService.EditFranchise(_globalClass.CompanyId, franchiseRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "Success" });
-                }
                 else
-                {
                     return Json(new { result = "Failed" });
-                }
             }
             catch (Exception ex)
             {
@@ -190,13 +165,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _fanchiseService.DeleteFranchise(companyId);
                 if (result != null)
-                {
                     return Json(new { result = "Success" });
-                }
                 else
-                {
                     return Json(new { result = "Failed" });
-                }
             }
             catch (Exception ex)
             {

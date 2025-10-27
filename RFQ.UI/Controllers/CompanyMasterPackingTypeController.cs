@@ -11,13 +11,12 @@ namespace RFQ.UI.Controllers
     {
         private readonly GlobalClass _globalClass;
         private readonly ICompanyMasterPackingTypeService _companyMasterPackingTypeServices;
-        private readonly IMenuServices _menuServices;
+        
 
         public CompanyMasterPackingTypeController(ICompanyMasterPackingTypeService companyMasterPackingTypeServices, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _companyMasterPackingTypeServices = companyMasterPackingTypeServices;
             _globalClass = globalClass;
-            _menuServices = menuServices;
         }
 
         [HttpPost]
@@ -25,14 +24,8 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
                 if (companyMasterPackingTypeRequestDto != null)
                 {
-
-
                     var result = await _companyMasterPackingTypeServices.AddMasterPackingType(companyMasterPackingTypeRequestDto);
                     return Json(new { result });
                 }
@@ -53,17 +46,11 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-
                 var PackingTypeList = await _companyMasterPackingTypeServices.GetAllMasterPackingType();
-
                 if (Request.IsAjaxRequest())
-                {
                     return Json(PackingTypeList);
-                }
                 else
-                {
                     return View(PackingTypeList);
-                }
             }
             catch (Exception ex)
             {

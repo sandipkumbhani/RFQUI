@@ -2,7 +2,6 @@
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -16,20 +15,11 @@ namespace RFQ.UI.Controllers
             _globalClass = globalClass;
         }
 
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
         [HttpPost]
         public async Task<IActionResult> AddRfqRate([FromBody] RfqRateRequestDto rfqRateRequestDto)
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (rfqRateRequestDto != null)
                 {
                     var result = await _rfqRateServices.AddRfqRate(rfqRateRequestDto);

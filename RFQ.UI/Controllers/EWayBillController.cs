@@ -9,12 +9,10 @@ namespace RFQ.UI.Controllers
     public class EWayBillController : BaseController
     {
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
         private readonly IEWayBillService _eWayBillService;
 
         public EWayBillController(IMenuServices menuServices, GlobalClass globalClass, IEWayBillService eWayBillService) : base(menuServices, globalClass)
         {
-            _menuServices = menuServices;
             _globalClass = globalClass;
             _eWayBillService = eWayBillService;
         }

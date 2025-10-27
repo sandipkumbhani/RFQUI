@@ -19,13 +19,9 @@ namespace RFQ.UI.Controllers
             try { 
                 var vehicleTypesList = await _masterPartyVehicleTypeService.GetMasterPartyVehicleTypeByPartyId(partyId);
                 if (Request.IsAjaxRequest())
-                {
                     return Json(vehicleTypesList);
-                }
                 else
-                {
                     return View(vehicleTypesList);
-                }
             }
             catch (Exception ex)
             {

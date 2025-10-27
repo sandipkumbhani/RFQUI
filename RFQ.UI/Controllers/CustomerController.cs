@@ -12,13 +12,10 @@ namespace RFQ.UI.Controllers
     {
         private readonly ICustomerServices _customerServices;
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
-
-        public CustomerController(ICustomerServices customerServices, GlobalClass globalClass,IMenuServices menuServices) : base(menuServices, globalClass)
+        public CustomerController(ICustomerServices customerServices, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _customerServices = customerServices;
             _globalClass = globalClass;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> Customer()
         {
@@ -31,15 +28,11 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (customerRequestDto != null)
                 {
-                    customerRequestDto.CompanyId = Convert.ToInt32(companyId);
-                    customerRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    customerRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                    customerRequestDto.CompanyId = _globalClass.CompanyId;
+                    customerRequestDto.CreatedBy = _globalClass.UserId;
+                    customerRequestDto.UpdatedBy = _globalClass.UserId;
 
                     var result = await _customerServices.AddCustomer(customerRequestDto);
                     return Json(result);
@@ -89,22 +82,14 @@ namespace RFQ.UI.Controllers
                     return Json(new { result = "error", message = "Invalid PartyId." });
                 }
                 int partyId = customerRequestDto.PartyId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                customerRequestDto.CompanyId = Convert.ToInt32(companyId);
-                customerRequestDto.CreatedBy = Convert.ToInt32(userid);
-                customerRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                customerRequestDto.CompanyId = _globalClass.CompanyId;
+                customerRequestDto.CreatedBy = _globalClass.UserId;
+                customerRequestDto.UpdatedBy = _globalClass.UserId;
                 var result = await _customerServices.EditCustomer(partyId, customerRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -120,13 +105,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _customerServices.DeleteCustomer(partyId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -169,15 +150,10 @@ namespace RFQ.UI.Controllers
             try
             {
                 var customerList = await _customerServices.GetAllCity();
-
                 if (Request.IsAjaxRequest())
-                {
                     return Json(customerList);
-                }
                 else
-                {
                     return View(customerList);
-                }
             }
             catch (Exception ex)
             {

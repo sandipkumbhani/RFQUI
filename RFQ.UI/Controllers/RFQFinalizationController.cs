@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -15,7 +13,6 @@ namespace RFQ.UI.Controllers
         private readonly IRfqFinalService _rfqFinalService;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _config;
-        private readonly IMenuServices _menuServices;
 
         public RFQFinalizationController(IRfqFinalService rfqFinalService, GlobalClass globalClass, IEmailService emailService, IConfiguration config, IMenuServices menuServices) : base(menuServices, globalClass)
         {
@@ -23,7 +20,6 @@ namespace RFQ.UI.Controllers
             _globalClass = globalClass;
             _emailService = emailService;
             _config = config;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> Index()
         {
@@ -40,14 +36,10 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (rfqFinalizationSaveRequestDto != null)
                 {
-                    rfqFinalizationSaveRequestDto.RfqFinalDto.CreatedBy = Convert.ToInt32(userid);
-                    rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy = Convert.ToInt32(userid);
+                    rfqFinalizationSaveRequestDto.RfqFinalDto.CreatedBy = _globalClass.UserId;
+                    rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy = _globalClass.UserId;
                     var result = await _rfqFinalService.AddRfqFinal(rfqFinalizationSaveRequestDto);
                     return Json(result);
                 }
@@ -67,15 +59,11 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 int rfqFinalId = rfqFinalizationSaveRequestDto.RfqFinalDto.RfqFinalIdId;
                 if (rfqFinalizationSaveRequestDto != null)
                 {
-                    rfqFinalizationSaveRequestDto.RfqFinalDto.CreatedBy = Convert.ToInt32(userid);
-                    rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy = Convert.ToInt32(userid);
+                    rfqFinalizationSaveRequestDto.RfqFinalDto.CreatedBy = _globalClass.UserId;
+                    rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy = _globalClass.UserId;
                     var result = await _rfqFinalService.UpdateRfqFinal(rfqFinalId, rfqFinalizationSaveRequestDto);
                     return Json(result);
                 }
@@ -97,13 +85,9 @@ namespace RFQ.UI.Controllers
             {
                 var routeList = await _rfqFinalService.AwardedVendor(id);
                 if (Request.IsAjaxRequest())
-                {
                     return Json(routeList);
-                }
                 else
-                {
                     return View(routeList);
-                }
             }
             catch (Exception ex)
             {
@@ -145,13 +129,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _rfqFinalService.GetRfqFinalRateList(rfqFinalId);
                 if (Request.IsAjaxRequest())
-                {
                     return Json(result);
-                }
                 else
-                {
                     return View(result);
-                }
             }
             catch (Exception ex)
             {
@@ -166,13 +146,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _rfqFinalService.DeleteRfqFinal(rfqFinalId);
                 if (result)
-                {
                     return Json(result);
-                }
                 else
-                {
                     return Json(false);
-                }
             }
             catch (Exception ex)
             {
@@ -187,20 +163,15 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _rfqFinalService.GetRfqDrpList(companyId);
                 if (Request.IsAjaxRequest())
-                {
                     return Json(result);
-                }
                 else
-                {
                     return View(result);
-                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
 
         [HttpPost]
         public async Task<IActionResult> SendAssignOrder([FromBody] List<VendorFinalizationResposeDto>? CheckBoxData)

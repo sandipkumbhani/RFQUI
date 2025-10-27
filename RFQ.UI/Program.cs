@@ -1,8 +1,11 @@
-﻿using RFQ.UI.Application.Extension;
+﻿using Newtonsoft.Json.Linq;
+using RFQ.UI.Application.Extension;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Infrastructure.Extension;
 using RFQ.UI.MapperProfile;
 using Serilog;
+using System.ComponentModel.Design;
+using System.IdentityModel.Tokens.Jwt;
 
 
 
@@ -60,11 +63,14 @@ try
     {
         // Read a specific cookie
         var token = context.Request.Cookies["AuthToken"];
-
         if (token != null)
         {
             globalclass.Token = token;
-        }
+            globalclass.jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            globalclass.UserId = Convert.ToInt32(globalclass.jwtToken.Claims.First(c => c.Type == "userid").Value);
+            globalclass.ProfileId = Convert.ToInt32(globalclass.jwtToken.Claims.First(c => c.Type == "profileid").Value);
+            globalclass.CompanyId = Convert.ToInt32(globalclass.jwtToken.Claims.First(c => c.Type == "companyid").Value);
+        };
         await next.Invoke();
     });
     // app.UseHttpsRedirection();

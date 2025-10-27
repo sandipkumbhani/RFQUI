@@ -12,12 +12,11 @@ namespace RFQ.UI.Controllers
     {
         private readonly IDashboardServices _dashBoardServices;
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
+
 
         public DashboardController(IDashboardServices dashBoardServices, IMenuServices menuServices,GlobalClass globalClass) : base(menuServices, globalClass)
         {
             _dashBoardServices = dashBoardServices;
-            _menuServices = menuServices;
             _globalClass = globalClass;
         }
         public async Task<IActionResult> Index()

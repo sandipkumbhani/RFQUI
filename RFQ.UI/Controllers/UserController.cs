@@ -12,13 +12,11 @@ namespace RFQ.UI.Controllers
     {
         private readonly GlobalClass _globalClass;
         private readonly IUsersService _usersService;
-        private readonly IMenuServices _menuServices;
 
         public UserController(IMenuServices menuServices, GlobalClass globalClass, IUsersService usersService) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _usersService = usersService;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> Index()
         {
@@ -31,13 +29,6 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                //var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                //string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                //string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                //userRequestDto.CreatedBy = Convert.ToInt32(userid);
-                //userRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                //userRequestDto.ProfileId = Convert.ToInt32(profileid);
-
                 var result = await _usersService.UpdateUserPassword(userRequestDto);
                 return Ok(result);
             }

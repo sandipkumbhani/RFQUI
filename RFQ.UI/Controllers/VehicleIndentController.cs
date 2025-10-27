@@ -14,13 +14,11 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IVehicleIndentService _vehicleIndentService;
         private readonly ILogger<VehicleIndentController> _logger;
-        private readonly IMenuServices _menuServices;
         public VehicleIndentController(GlobalClass globalClass, IVehicleIndentService vehicleIndentService, ILogger<VehicleIndentController> logger, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _vehicleIndentService = vehicleIndentService;
             _logger = logger;
-            _menuServices = menuServices;
         }
         public async Task<ActionResult> Index()
         {
@@ -28,21 +26,16 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> AddVehicleIndent([FromBody] VehicleIndentRequestDto vehicleIndentRequestDto)
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value; 
                 if (vehicleIndentRequestDto != null)
                 {
-                    vehicleIndentRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    vehicleIndentRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                    vehicleIndentRequestDto.CompanyId = Convert.ToInt32(companyId);
+                    vehicleIndentRequestDto.CreatedBy = _globalClass.UserId;
+                    vehicleIndentRequestDto.UpdatedBy = _globalClass.UserId;
+                    vehicleIndentRequestDto.CompanyId = _globalClass.CompanyId;
                     var result = await _vehicleIndentService.AddVehicleIndent(vehicleIndentRequestDto);
                     return Json(result);
                 }
@@ -107,22 +100,14 @@ namespace RFQ.UI.Controllers
             try
             {
                 int indentId = vehicleIndentRequestDto.IndentId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                vehicleIndentRequestDto.CreatedBy = Convert.ToInt32(userid);
-                vehicleIndentRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                vehicleIndentRequestDto.CompanyId = Convert.ToInt32(companyId);
+                vehicleIndentRequestDto.CreatedBy = _globalClass.UserId;
+                vehicleIndentRequestDto.UpdatedBy = _globalClass.UserId;
+                vehicleIndentRequestDto.CompanyId = _globalClass.CompanyId;
                 var result = await _vehicleIndentService.UpdateVehicleIndent(indentId, vehicleIndentRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -137,13 +122,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _vehicleIndentService.DeleteVehicleIndent(indentId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {

@@ -9,11 +9,9 @@ namespace RFQ.UI.Controllers
     {
         private readonly IMasterPartyRouteService _masterPartyRouteService;
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
         public MasterPartyRouteController(IMasterPartyRouteService masterPartyRouteService, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _masterPartyRouteService = masterPartyRouteService;
-            _menuServices = menuServices;
             _globalClass = globalClass;
         }
 
@@ -24,13 +22,9 @@ namespace RFQ.UI.Controllers
             {
                 var routeList = await _masterPartyRouteService.GetMasterPartyRouteByPartyId(partyId);
                 if (Request.IsAjaxRequest())
-                {
                     return Json(routeList);
-                }
                 else
-                {
                     return View(routeList);
-                }
             }
             catch (Exception ex)
             {

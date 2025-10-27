@@ -8,12 +8,9 @@ namespace RFQ.UI.Controllers
     public class PartyExecutiveController : BaseController
     {
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
-
         public PartyExecutiveController(GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> PartyExecutive()
         {

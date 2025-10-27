@@ -23,8 +23,6 @@ namespace RFQ.UI.Controllers
         private readonly IUsersService _usersService;
         private readonly IWhatsAppService _whatsAppService;
         private readonly IEmailService _emailService;
-        private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
 
         public LoginController(ILoginServices loginServcies, ILogger<LoginController> logger, IUsersService usersService, IWhatsAppService whatsAppService, IEmailService emailService, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
@@ -34,8 +32,6 @@ namespace RFQ.UI.Controllers
             _whatsAppService =
             _whatsAppService = whatsAppService;
             _emailService = emailService;
-            _menuServices = menuServices;
-            _globalClass = globalClass;
         }
         public IActionResult Login()
         {
@@ -206,7 +202,6 @@ namespace RFQ.UI.Controllers
             try
             {
                 var user = await _usersService.GetByLoginIdAsync(txtLoginName);
-
                 if (user == null)
                 {
                     return NotFound(new NewCommonResponseDto
@@ -226,7 +221,6 @@ namespace RFQ.UI.Controllers
             }
             catch (Exception ex)
             {
-                // Log exception here
                 return StatusCode(500, new NewCommonResponseDto
                 {
                     Data = null,
@@ -276,6 +270,5 @@ namespace RFQ.UI.Controllers
             _loginServcies.Logout();
             return RedirectToAction("Login", "Login");
         }
-
     }
 }

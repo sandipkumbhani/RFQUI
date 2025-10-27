@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -13,16 +11,13 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IDriverServices _driverServices;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IMenuServices _menuServices;
         public DriverController(IDriverServices driverServices, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _driverServices = driverServices;
             _globalClass = globalClass;
             _webHostEnvironment = webHostEnvironment;
-            _menuServices = menuServices;
         }
 
-        // GET: DriverController
         public async Task<ActionResult> Index()
         {
             await SetMenuAsync();
@@ -30,7 +25,6 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> ViewDriver([FromBody] PagingParam pagingParam)
         {
             try
@@ -119,18 +113,13 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        
-
         [HttpGet]
         public async Task<IActionResult> GetDriverType()
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
-                var driverTypeList = await _driverServices.GetDriverType();
 
+                var driverTypeList = await _driverServices.GetDriverType();
                 if (driverTypeList != null && driverTypeList.Count() > 0)
                     return Json(driverTypeList);
                 if (Request.IsAjaxRequest())
@@ -147,14 +136,10 @@ namespace RFQ.UI.Controllers
         [HttpPost]
         public IActionResult DriverSave([FromBody] DriverRequestDto driverRequestDto)
         {
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-            string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-            string userid = jwt.Claims.First(c => c.Type == "userid").Value;
             if (driverRequestDto != null)
             {
-                driverRequestDto.CreatedBy = Convert.ToInt32(userid);
-                driverRequestDto.UpdatedBy = Convert.ToInt32(userid);
-
+                driverRequestDto.CreatedBy = _globalClass.UserId;
+                driverRequestDto.UpdatedBy = _globalClass.UserId;
                 var result = _driverServices.AddDriver(driverRequestDto);
                 return Json(new { result });
             }
@@ -174,11 +159,8 @@ namespace RFQ.UI.Controllers
                     return Json(new { result = "error", message = "Invalid DriverId." });
                 }
                 int driverId = driverRequestDto.DriverId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                driverRequestDto.CreatedBy = Convert.ToInt32(userid);
-                driverRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                driverRequestDto.CreatedBy = _globalClass.UserId;
+                driverRequestDto.UpdatedBy = _globalClass.UserId;
                 var result = await _driverServices.EditDriver(driverId, driverRequestDto);
                 if (result != null)
                     return Json(new { result = "success" });
@@ -208,97 +190,23 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        // GET: DriverController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: DriverController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: DriverController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: DriverController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: DriverController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: DriverController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: DriverController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-
         [HttpGet]
         public async Task<IActionResult> GetAllDriverList()
         {
             try
             {
                 var driverlist = await _driverServices.GetAllDriverList();
-
                 if (Request.IsAjaxRequest())
-                {
                     return Json(driverlist);
-                }
                 else
-                {
                     return Json(driverlist);
-                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> GetDriverCode()
         {

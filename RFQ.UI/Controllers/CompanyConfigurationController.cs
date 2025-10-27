@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -13,7 +11,7 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly ICompanyConfigurationServices _companyConfigurationServices;
         private readonly IMenuServices _menuServices;
-        public CompanyConfigurationController(GlobalClass globalClass, ICompanyConfigurationServices companyConfigrationServices,IMenuServices menuServices) : base(menuServices, globalClass)
+        public CompanyConfigurationController(GlobalClass globalClass, ICompanyConfigurationServices companyConfigrationServices, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _companyConfigurationServices = companyConfigrationServices;
@@ -92,11 +90,6 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-
                 if (companyConfigrationRequestDto != null)
                 {
                     var result = await _companyConfigurationServices.AddCompanyConfiguration(companyConfigrationRequestDto);
@@ -129,6 +122,7 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
         [HttpDelete("CompanyConfiguration/DeleteCompanyConfiguration/{CompanyConfigId}")]
         public async Task<IActionResult> DeleteCompanyConfiguration(int CompanyConfigId)
         {

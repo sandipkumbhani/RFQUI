@@ -12,39 +12,30 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IMasterAttachmentService _masterAttachmentService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IMenuServices _menuServices;
 
         public MasterAttachmentController(IMasterAttachmentService masterAttachmentService, GlobalClass globalClass, IWebHostEnvironment webHostEnvironment, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _masterAttachmentService = masterAttachmentService;
             _globalClass = globalClass;
             _webHostEnvironment = webHostEnvironment;
-            _menuServices = menuServices;
         }
-
 
         [HttpPost]
         public IActionResult MasterAttachmentSave([FromBody] List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+              
+              
+              
                 if (masterAttachmentRequestDto != null)
                 {
-
-                    //masterAttachmentRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    //masterAttachmentRequestDto.UpdatedBy = Convert.ToInt32(userid);
-
-
                     var result = _masterAttachmentService.AddMasterAttachment(masterAttachmentRequestDto);
                     return Json(new { result = "success" });
                 }
                 else
                 {
                     return Json(new { result = "fail" });
-
                 }
             }
             catch (Exception ex)
@@ -58,12 +49,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
                 var attachmentList = await _masterAttachmentService.GetAllMasterAttachment();
-
-
                 if (attachmentList != null && attachmentList.Count() > 0)
                 {
                     var result = attachmentList.Where(x => x.TransactionId == transactionId && x.ReferenceLinkId == linkId).ToList();
@@ -85,28 +71,18 @@ namespace RFQ.UI.Controllers
             }
         }
 
-
         [HttpGet]
         public async Task<IActionResult> GetAllMasterAttachmentType()
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
                 var attachmentList = await _masterAttachmentService.GetAllMasterAttachmentType();
                 if (attachmentList != null && attachmentList.Count() > 0)
-                {
                     return Json(attachmentList);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(attachmentList);
-                }
                 else
-                {
                     return View(attachmentList);
-                }
             }
             catch (Exception ex)
             {
@@ -121,13 +97,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _masterAttachmentService.DeleteMasterAttachment(attachmentId);
                 if (result != null)
-                {
                     return Ok(result);
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -143,13 +115,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _masterAttachmentService.DeleteMasterAttachmentTable(attachmentId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -157,7 +125,6 @@ namespace RFQ.UI.Controllers
             }
 
         }
-
 
         [HttpPut]
         public async Task<IActionResult> UpdateMasterAttachment([FromBody] List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
@@ -169,18 +136,11 @@ namespace RFQ.UI.Controllers
                     return BadRequest("Request list is empty.");
                 }
                 int attachmentId = masterAttachmentRequestDto.First().AttachmentId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
                 var result = await _masterAttachmentService.UpdateMasterAttachment(masterAttachmentRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -188,16 +148,11 @@ namespace RFQ.UI.Controllers
             }
         }
 
-
         [HttpPost]
         public async Task<IActionResult> UploadAttachment(IFormFile file)
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-
                 string uniqueFileName = "";
                 if (file != null)
                 {
@@ -249,7 +204,5 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "Error", message = ex.Message });
             }
         }
-
-
     }
 }

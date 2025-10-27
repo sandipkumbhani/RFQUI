@@ -19,14 +19,12 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IQuoteRateVendorService _rfqRateService;
         private readonly IRequestForQuoteService _requestForQuoteService;
-        private readonly IMenuServices _menuServices;
 
         public QuoteRateVendorController(GlobalClass globalClass, IQuoteRateVendorService rfqRateService, IRequestForQuoteService requestForQuoteService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _rfqRateService = rfqRateService;
             _requestForQuoteService = requestForQuoteService;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> Index()
         {
@@ -47,9 +45,6 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                //var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                //string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-
                 if (rfqRateRequestDto != null)
                 {
                     rfqRateRequestDto.UpdatedOn = DateTime.Now;

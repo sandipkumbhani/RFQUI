@@ -8,11 +8,9 @@ namespace RFQ.UI.Controllers
     public class TrackingProviderController : BaseController
     {
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
         public TrackingProviderController(GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
-            _menuServices = menuServices;
         }
        
         public async Task<IActionResult> TrackingProvider()

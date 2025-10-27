@@ -15,14 +15,12 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IVehicleTypeServices _vehicleTypeServices;
         private readonly IVehicleService _vehicleServices;
-        private readonly IMenuServices _menuServices;
 
         public VehicleController(IVehicleTypeServices vehicleTypeServices, GlobalClass globalClass, IVehicleService vehicleService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _vehicleTypeServices = vehicleTypeServices;
             _globalClass = globalClass;
             _vehicleServices = vehicleService;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> Vehicle()
         {
@@ -49,13 +47,9 @@ namespace RFQ.UI.Controllers
             {
                 if (vehicleTypeRequestDto != null)
                 {
-                    var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                    string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                    string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                    string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                    vehicleTypeRequestDto.CompanyId = Convert.ToInt32(companyid);
-                    vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                    vehicleTypeRequestDto.CompanyId = _globalClass.CompanyId;
+                    vehicleTypeRequestDto.CreatedBy = _globalClass.UserId;
+                    vehicleTypeRequestDto.UpdatedBy = _globalClass.UserId;
 
                     var result = await _vehicleTypeServices.AddVehicleType(vehicleTypeRequestDto);
                     return Json(result);
@@ -74,23 +68,15 @@ namespace RFQ.UI.Controllers
             try
             {
                 int vechicleTypeId = vehicleTypeRequestDto.VehicleTypeId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                vehicleTypeRequestDto.CompanyId = Convert.ToInt32(companyid);
-                vehicleTypeRequestDto.CreatedBy = Convert.ToInt32(userid);
-                vehicleTypeRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                vehicleTypeRequestDto.CompanyId = _globalClass.CompanyId;
+                vehicleTypeRequestDto.CreatedBy = _globalClass.UserId;
+                vehicleTypeRequestDto.UpdatedBy = _globalClass.UserId;
 
                 var result = await _vehicleTypeServices.UpdateVehicleType(vechicleTypeId, vehicleTypeRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -134,13 +120,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _vehicleTypeServices.DeleteVehicleType(vehicleTypeId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -154,7 +136,6 @@ namespace RFQ.UI.Controllers
             try
             {
                 var result = await _vehicleServices.GetAllVehicle(pagingParam);
-
                 if (Request.IsAjaxRequest())
                 {
                     return Json(new
@@ -182,15 +163,10 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (vehicleRequestDto != null)
                 {
-                    vehicleRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    vehicleRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                    vehicleRequestDto.CreatedBy = _globalClass.UserId;
+                    vehicleRequestDto.UpdatedBy = _globalClass.UserId;
                     var result = await _vehicleServices.AddVehicle(vehicleRequestDto);
                     if (!String.IsNullOrEmpty(result))
                     {
@@ -211,12 +187,8 @@ namespace RFQ.UI.Controllers
             try
             {
                 int vehicleId = vehicleRequestDto.VehicleId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                vehicleRequestDto.CreatedBy = Convert.ToInt32(userid);
-                vehicleRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                vehicleRequestDto.CreatedBy = _globalClass.UserId;
+                vehicleRequestDto.UpdatedBy = _globalClass.UserId;
 
                 var result = await _vehicleServices.EditVehicle(vehicleId, vehicleRequestDto);
                 if (!String.IsNullOrEmpty(result))
@@ -237,13 +209,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _vehicleServices.DeleteVehicle(vehicleId);
                 if (!String.IsNullOrEmpty(result))
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -256,22 +224,13 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
                 var vehicleCategoryList = await _vehicleServices.GetAllVehicleCategory();
                 if (vehicleCategoryList != null && vehicleCategoryList.Count() > 0)
-                {
                     return Json(vehicleCategoryList);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(vehicleCategoryList);
-                }
                 else
-                {
                     return View(vehicleCategoryList);
-                }
             }
             catch (Exception ex)
             {
@@ -284,8 +243,6 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 var vehicleCategoryList = await _vehicleServices.GetVehicleKycDetails(vehicleKycRequestDto);
                 if (vehicleCategoryList == null)
                 {
@@ -304,22 +261,13 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
                 var vehicleCategoryList = await _vehicleServices.GetAllMasterVehicleType(companyId);
                 if (vehicleCategoryList != null && vehicleCategoryList.Count() > 0)
-                {
                     return Json(vehicleCategoryList);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(vehicleCategoryList);
-                }
                 else
-                {
                     return View(vehicleCategoryList);
-                }
             }
             catch (Exception ex)
             {
@@ -332,22 +280,13 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
                 var OwnerOrVendorList = await _vehicleServices.GetAllOwnerOrVendor(companyId);
                 if (OwnerOrVendorList != null && OwnerOrVendorList.Count() > 0)
-                {
                     return Json(OwnerOrVendorList);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(OwnerOrVendorList);
-                }
                 else
-                {
                     return View(OwnerOrVendorList);
-                }
             }
             catch (Exception ex)
             {
@@ -362,17 +301,11 @@ namespace RFQ.UI.Controllers
             {
                 var vehicleTypeList = await _vehicleTypeServices.GetAllVehicleTypes();
                 if (vehicleTypeList != null && vehicleTypeList.Count() > 0)
-                {
                     return Json(vehicleTypeList);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(vehicleTypeList);
-                }
                 else
-                {
                     return View(vehicleTypeList);
-                }
             }
             catch (Exception ex)
             {
@@ -387,17 +320,11 @@ namespace RFQ.UI.Controllers
             {
                 var vehicleNumberList = await _vehicleServices.GetVehicleNumber();
                 if (vehicleNumberList != null && vehicleNumberList.Count() > 0)
-                {
                     return Json(vehicleNumberList);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(vehicleNumberList);
-                }
                 else
-                {
                     return View(vehicleNumberList);
-                }
             }
             catch (Exception ex)
             {

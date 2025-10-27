@@ -12,13 +12,11 @@ namespace RFQ.UI.Controllers
 
         private readonly IProfileServices _profileServices;
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
 
         public ProfileController(IProfileServices profileServices, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _profileServices = profileServices;
             _globalClass = globalClass;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> Index()
         {
@@ -69,13 +67,9 @@ namespace RFQ.UI.Controllers
                 var profilelist = await _profileServices.GetProfileAll();
 
                 if (Request.IsAjaxRequest())
-                {
                     return Json(profilelist);
-                }
                 else
-                {
                     return Json(profilelist);
-                }
             }
             catch (Exception ex)
             {
@@ -88,17 +82,11 @@ namespace RFQ.UI.Controllers
             {
                 var alllist = await _profileServices.GetAllApplicableList();
                 if (alllist != null && alllist.Count() > 0)
-                {
                     return Json(alllist);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(alllist);
-                }
                 else
-                {
                     return View(alllist);
-                }
             }
             catch (Exception ex)
             {
@@ -111,17 +99,11 @@ namespace RFQ.UI.Controllers
             {
                 var alllist = await _profileServices.GetAllMenuGroup();
                 if (alllist != null && alllist.Count() > 0)
-                {
                     return Json(alllist);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(alllist);
-                }
                 else
-                {
                     return View(alllist);
-                }
             }
             catch (Exception ex)
             {
@@ -134,17 +116,11 @@ namespace RFQ.UI.Controllers
             {
                 var alllist = await _profileServices.GetLinkItemList();
                 if (alllist != null && alllist.Count() > 0)
-                {
                     return Json(alllist);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(alllist);
-                }
                 else
-                {
                     return View(alllist);
-                }
             }
             catch (Exception ex)
             {
@@ -157,17 +133,11 @@ namespace RFQ.UI.Controllers
             {
                 var alllist = await _profileServices.GetProfileRightsByProfileId(id);
                 if (alllist != null && alllist.Count() > 0)
-                {
                     return Json(alllist);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(alllist);
-                }
                 else
-                {
                     return View(alllist);
-                }
             }
             catch (Exception ex)
             {
@@ -180,17 +150,11 @@ namespace RFQ.UI.Controllers
             {
                 var alllist = await _profileServices.AddOrUpdateProfileRights(requestDto);
                 if (alllist != null && alllist.Count() > 0)
-                {
                     return Json(alllist);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(alllist);
-                }
                 else
-                {
                     return View(alllist);
-                }
             }
             catch (Exception ex)
             {

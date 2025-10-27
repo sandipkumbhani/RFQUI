@@ -33,15 +33,10 @@ namespace RFQ.UI.Controllers
             try
             {
                 var stateList = await _companyStateService.GetAllStateList();
-                if (stateList != null && stateList.Count() > 0)
-                {
-                    return Json(stateList);
-                }
-                if (Request.IsAjaxRequest())
-                {
-                    return Json(stateList);
-                }
-                return Json(new {});
+                if (stateList != null && stateList.Any())
+                    return Json(stateList); // returns 200 with JSON automatically
+
+                return NotFound("No states found.");
             }
             catch (Exception ex)
             {

@@ -31,15 +31,10 @@ namespace RFQ.UI.Controllers
             try
             {
                 var statelist = await _companyStateService.GetAllStateList();
-
                 if (Request.IsAjaxRequest())
-                {
                     return Json(statelist);
-                }
                 else
-                {
                     return Json(statelist);
-                }
             }
             catch (Exception ex)
             {

@@ -12,12 +12,10 @@ namespace RFQ.UI.Controllers
     {
         private readonly IProductService _productService;
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
         public ProductController(IProductService productService, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _productService = productService;
             _globalClass = globalClass;
-            _menuServices = menuServices;
         }
         public async Task<ActionResult> Index()
         {
@@ -32,13 +30,9 @@ namespace RFQ.UI.Controllers
             {
                 if (productRequestDto != null)
                 {
-                    var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                    string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                    string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                    string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                    productRequestDto.CompanyId = Convert.ToInt32(companyId);
-                    productRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    productRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                    productRequestDto.CompanyId = _globalClass.CompanyId;
+                    productRequestDto.CreatedBy = _globalClass.UserId;
+                    productRequestDto.UpdatedBy = _globalClass.UserId;
                     productRequestDto.CreatedOn = DateTime.Now;
                     productRequestDto.UpdatedOn = DateTime.Now;
 
@@ -59,25 +53,17 @@ namespace RFQ.UI.Controllers
             try
             {
                 int productId = productRequestDto.ItemId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                productRequestDto.CompanyId = Convert.ToInt32(companyId);
-                productRequestDto.CreatedBy = Convert.ToInt32(userid);
-                productRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                productRequestDto.CompanyId = _globalClass.CompanyId;
+                productRequestDto.CreatedBy = _globalClass.UserId;
+                productRequestDto.UpdatedBy = _globalClass.UserId;
                 productRequestDto.CreatedOn = DateTime.Now;
                 productRequestDto.UpdatedOn = DateTime.Now;
 
                 var result = await _productService.EditProduct(productId, productRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "Success" });
-                }
                 else
-                {
                     return Json(new { result = "Failed" });
-                }
             }
             catch (Exception ex)
             {
@@ -92,13 +78,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _productService.DeleteProduct(productId);
                 if (result != null)
-                {
                     return Json(new { result = "Success" });
-                }
                 else
-                {
                     return Json(new { result = "Failed" });
-                }
             }
             catch (Exception ex)
             {
@@ -133,7 +115,7 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
+        
         public async Task<IActionResult> GetDrpProductList([FromQuery] int companyId)
         {
             try

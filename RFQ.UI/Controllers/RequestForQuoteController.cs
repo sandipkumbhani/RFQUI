@@ -22,7 +22,6 @@ namespace RFQ.UI.Controllers
         private readonly IWhatsAppService _whatsAppService;
         private readonly IEmailService _emailService;
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
         
 
         public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices) : base(menuServices, globalClass)
@@ -33,8 +32,6 @@ namespace RFQ.UI.Controllers
             _whatsAppService = whatsAppService;
             _emailService = emailService;
             _globalClass = globalClass;
-            _menuServices = menuServices;
-           
         }
         public async Task<ActionResult> VendorRequest()
         {
@@ -86,15 +83,12 @@ namespace RFQ.UI.Controllers
             {
                 List<RfqRecipientResponseDto> RfqRecipientsList = new();
                 List<RfqLinkRequestDto> RfqSendlinkList = new();
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
+                
                 if (requestForQouteRequestDto != null)
                 {
-                    requestForQouteRequestDto.RfqRequestDto.CompanyId = Convert.ToInt32(companyid);
-                    requestForQouteRequestDto.RfqRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    requestForQouteRequestDto.RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                    requestForQouteRequestDto.RfqRequestDto.CompanyId = _globalClass.CompanyId;
+                    requestForQouteRequestDto.RfqRequestDto.CreatedBy = _globalClass.UserId;
+                    requestForQouteRequestDto.RfqRequestDto.UpdatedBy = _globalClass.UserId;
 
                     var result = await _requestForQuoteService.AddRfq(requestForQouteRequestDto);
                     if (result != null && result.RfqRecipients.Count > 0)
@@ -121,7 +115,7 @@ namespace RFQ.UI.Controllers
                                     {
                                         RfqId = vendor.RfqId,
                                         VendorId = vendor.VendorId,
-                                        CreatedBy = Convert.ToInt32(userid),
+                                        CreatedBy = _globalClass.UserId,
                                         SharedLink = formLink,
                                         CreatedOn = DateTime.UtcNow
                                     });
@@ -187,13 +181,9 @@ namespace RFQ.UI.Controllers
                 requestForQuoteRequestDto.RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 var result = await _requestForQuoteService.UpdateRfq(rfqId, requestForQuoteRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -208,13 +198,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _requestForQuoteService.DeleteRfq(rfqId);
                 if (result)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -229,13 +215,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _requestForQuoteService.GetRfqByRfqNo(rfqNo);
                 if (result != null)
-                {
                     return Json(result);
-                }
                 else
-                {
                     return Json(null);
-                }
             }
             catch (Exception ex)
             {
@@ -258,7 +240,6 @@ namespace RFQ.UI.Controllers
                 return Ok(ex);
             }
         }
-
         public async Task<IActionResult> GetPreviousQuotesList([FromBody] RfqVendorDetailsParam rfqVendorDetailsParam)
         {
             try
@@ -273,7 +254,6 @@ namespace RFQ.UI.Controllers
                 return Ok(ex);
             }
         }
-
         private async Task<bool> SendEmail(RfqRecipientResponseDto vendor, string formLink)
         {
             if (string.IsNullOrEmpty(vendor.EmailId) || string.IsNullOrWhiteSpace(vendor.EmailId)) return false;
@@ -293,7 +273,6 @@ namespace RFQ.UI.Controllers
                 Subject = "Quote Request - FleetLynk",
                 Body = body
             };
-
             return await _emailService.SendEmailAsync(emailRequest);
         }
     }

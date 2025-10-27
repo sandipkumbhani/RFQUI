@@ -15,14 +15,12 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IMasterUserActivityLogServices _masterUserActivityLogServices;
         private readonly ILogger<MasterUserActivityLogController> _logger;
-        private readonly IMenuServices _menuServices; 
 
         public MasterUserActivityLogController(GlobalClass globalClass, IMasterUserActivityLogServices masterUserActivityLogServices, ILogger<MasterUserActivityLogController> logger, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _masterUserActivityLogServices = masterUserActivityLogServices;
             _logger = logger;
-            _menuServices = menuServices;
         }
 
         public async Task<IActionResult> MasterUserActivityLog()

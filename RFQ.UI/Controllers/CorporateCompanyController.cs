@@ -14,13 +14,11 @@ namespace RFQ.UI.Controllers
     {
         private readonly GlobalClass _globalClass;
         private readonly ICorporateCompanyService _corporateCompanyService;
-        private readonly IMenuServices _menuServices;
 
-        public CorporateCompanyController(ICorporateCompanyService corporateCompanyService, GlobalClass globalClass, IMenuServices menuServices): base(menuServices, globalClass)
+        public CorporateCompanyController(ICorporateCompanyService corporateCompanyService, GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _corporateCompanyService = corporateCompanyService;
             _globalClass = globalClass;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> CorporateCompany()
         {
@@ -33,14 +31,11 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 corporateCompanyRequestDto.LogoImage = "null";
                 if (corporateCompanyRequestDto != null)
                 {
-                    corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                    corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(_globalClass.UserId);
+                    corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(_globalClass.UserId);
 
                     var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyRequestDto);
                     return Json(new { result });
@@ -48,7 +43,6 @@ namespace RFQ.UI.Controllers
                 else
                 {
                     return Json(new { result = "fail" });
-
                 }
             }
             catch (Exception ex)
@@ -63,22 +57,15 @@ namespace RFQ.UI.Controllers
             try
             {
                 int companyId = corporateCompanyRequestDto.CompanyId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 corporateCompanyRequestDto.LogoImage = "null";
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value; 
-                corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(userid);
-                corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                corporateCompanyRequestDto.CreatedBy = _globalClass.UserId;
+                corporateCompanyRequestDto.UpdatedBy = _globalClass.UserId;
 
                 var result = await _corporateCompanyService.EditCorporateCompany(companyId, corporateCompanyRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -123,13 +110,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _corporateCompanyService.DeleteCorporateCompany(companyId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -143,22 +126,13 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
                 var franchiseList = await _corporateCompanyService.GetAllFranchise();
                 if (franchiseList != null && franchiseList.Count() > 0)
-                {
                     return Json(franchiseList);
-                }
                 if (Request.IsAjaxRequest())
-                {
                     return Json(franchiseList);
-                }
                 else
-                {
                     return View(franchiseList);
-                }
             }
             catch (Exception ex)
             {

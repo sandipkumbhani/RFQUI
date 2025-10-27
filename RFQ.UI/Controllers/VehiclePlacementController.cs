@@ -14,13 +14,11 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IVehiclePlacementService _vehiclePlacementService;
         private readonly ILogger<VehiclePlacementController> _logger;
-        private readonly IMenuServices _menuServices;
         public VehiclePlacementController(IVehiclePlacementService vehiclePlacementService, GlobalClass globalClass, ILogger<VehiclePlacementController> logger, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _vehiclePlacementService = vehiclePlacementService;
             _logger = logger;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> VehiclePlacement()
         {
@@ -33,6 +31,7 @@ namespace RFQ.UI.Controllers
             await SetMenuAsync();
             return View("_CreateVehicle");
         }
+        
         public async Task<IActionResult> CreateDriver()
         {
             await SetMenuAsync();
@@ -58,16 +57,11 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
                 if (vehiclePlacementRequestDto != null)
                 {
-
-                    vehiclePlacementRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    vehiclePlacementRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                    vehiclePlacementRequestDto.CompanyId = Convert.ToInt32(companyId);
+                    vehiclePlacementRequestDto.CreatedBy = _globalClass.UserId;
+                    vehiclePlacementRequestDto.UpdatedBy = _globalClass.UserId;
+                    vehiclePlacementRequestDto.CompanyId = _globalClass.CompanyId;
                     var result = await _vehiclePlacementService.AddVehiclePlacement(vehiclePlacementRequestDto);
                     return Json(new { result });
                 }
@@ -83,7 +77,6 @@ namespace RFQ.UI.Controllers
             }
         }
 
-
         [HttpGet("VehiclePlacement/AutoFetchPlacement/{id}")]
         public async Task<IActionResult> AutoFetchPlacement(int id)
         {
@@ -91,13 +84,9 @@ namespace RFQ.UI.Controllers
             {
                 var routeList = await _vehiclePlacementService.AutoFetchPlacement(id);
                 if (Request.IsAjaxRequest())
-                {
                     return Json(routeList);
-                }
                 else
-                {
                     return View(routeList);
-                }
             }
             catch (Exception ex)
             {
@@ -141,22 +130,14 @@ namespace RFQ.UI.Controllers
             try
             {
                 int placementId = vehiclePlacementRequestDto.PlacementId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                vehiclePlacementRequestDto.CreatedBy = Convert.ToInt32(userid);
-                vehiclePlacementRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                vehiclePlacementRequestDto.CompanyId = Convert.ToInt32(companyId);
+                vehiclePlacementRequestDto.CreatedBy = +_globalClass.UserId;
+                vehiclePlacementRequestDto.UpdatedBy = _globalClass.UserId;
+                vehiclePlacementRequestDto.CompanyId = _globalClass.CompanyId;
                 var result = await _vehiclePlacementService.UpdateVehiclePlacement(placementId, vehiclePlacementRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -171,13 +152,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _vehiclePlacementService.DeleteVehiclePlacement(placementId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -185,6 +162,7 @@ namespace RFQ.UI.Controllers
             }
 
         }
+        
         [HttpGet]
         public async Task<IActionResult> GetAllVehiclePlacementNo([FromQuery] int companyId)
         {

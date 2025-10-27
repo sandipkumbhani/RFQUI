@@ -29,7 +29,6 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-
                 if (locationRequestDto != null)
                 {
                     locationRequestDto.CompanyId = _globalClass.CompanyId;
@@ -56,15 +55,10 @@ namespace RFQ.UI.Controllers
             try
             {
                 var locationlist = await _locationService.GetAllLocationList(companyId);
-
                 if (Request.IsAjaxRequest())
-                {
                     return Json(locationlist);
-                }
                 else
-                {
                     return Json(locationlist);
-                }
             }
             catch (Exception ex)
             {
@@ -113,13 +107,9 @@ namespace RFQ.UI.Controllers
 
                 var result = await _locationService.EditLocation(locationId, locationRequestDto);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {
@@ -134,13 +124,9 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _locationService.DeleteLocation(LocationId);
                 if (result != null)
-                {
                     return Json(new { result = "success" });
-                }
                 else
-                {
                     return Json(new { result = "failure" });
-                }
             }
             catch (Exception ex)
             {

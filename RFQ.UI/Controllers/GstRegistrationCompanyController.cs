@@ -9,11 +9,9 @@ namespace RFQ.UI.Controllers
     public class GstRegistrationCompanyController : BaseController
     {
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
         public GstRegistrationCompanyController(GlobalClass globalClass, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> GstRegistrationCompany()
         {

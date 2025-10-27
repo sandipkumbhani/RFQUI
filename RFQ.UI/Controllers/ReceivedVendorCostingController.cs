@@ -3,31 +3,21 @@ using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Mail;
-using System.Net;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
-using System.Text;
-using RFQ.UI.Application.Provider;
 
 namespace RFQ.UI.Controllers
 {
     public class ReceivedVendorCostingController : BaseController
     {
-       
+
         private readonly IReceivedVendorCostingService _receivedVendorCostingService;
         private readonly IEmailService _emailService;
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
 
-        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService, IEmailService emailService,IMenuServices menuServices) : base(menuServices, globalClass)
+        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService, IEmailService emailService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _receivedVendorCostingService = receivedVendorCostingService;
             _emailService = emailService;
             _globalClass = globalClass;
-            _menuServices = menuServices;
         }
         public async Task<IActionResult> Index()
         {
@@ -41,16 +31,9 @@ namespace RFQ.UI.Controllers
             try
             {
                 ReceivedVendorCosting request = new();
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-                string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-
-                request.CompanyId = Convert.ToInt32(companyId);
+                request.CompanyId = _globalClass.CompanyId;
 
                 var result = await _receivedVendorCostingService.GetAllReceivedVendorCosting(request);
-
                 if (result == null || !result.Any())
                 {
                     return Json(new NewCommonResponseDto
@@ -78,7 +61,6 @@ namespace RFQ.UI.Controllers
                 });
             }
         }
-
 
         [HttpPost]
         public async Task<bool> SendEmail([FromBody] VendorCostingListResponseDto vendor)
