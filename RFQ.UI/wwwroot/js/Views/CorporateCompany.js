@@ -5,12 +5,7 @@ var companyID;
 $(document).ready(function () {
     profileId = getCookieValue('profileid');
     companyID = getCookieValue('companyid');
-    GetFranchiseAndCorporateName(function () {
-        if (profileId == EnumProfile.Franchise) {
-            $('#ddlFranchisename').val(Number(companyID)).trigger('change');
-            $('#ddlFranchisename').prop('disabled', true);
-        }
-    });
+    GetFranchiseAndCorporateName();
     GetAllCityList("ddlCity");
     CheckValidation();
     FetchCorporateCompany();
@@ -546,6 +541,7 @@ function ViewCorporateCompany(companyId) {
 }
 function GetFranchiseAndCorporateName() {
     var GetUrl = '/Home/GetAllCompanyAndFranchise';
+    debugger;
     $.ajax({
         url: GetUrl,
         type: "GET",
@@ -554,9 +550,12 @@ function GetFranchiseAndCorporateName() {
             var data = null
             var profileid = getCookieValue("profileid");
             var userid = getCookieValue("userid");
-            if (!IsNullOrEmpty(profileid)) {
+
+            if (!IsNullOrEmpty(profileid) && profileId != EnumProfile.Franchise)
                 data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
-            }
+            else
+                data = response.filter(x => x.companyTypeId == 2);
+
             const CompanyAndFranchiseDrp = document.getElementById("ddlFranchisename");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = 0;
@@ -573,6 +572,12 @@ function GetFranchiseAndCorporateName() {
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
+        },
+        complete: function () {
+            if (profileId == EnumProfile.Franchise) {
+                $('#ddlFranchisename').val(Number(companyID)).trigger('change');
+                $('#ddlFranchisename').prop('disabled', true);
+            }
         }
     });
 }
