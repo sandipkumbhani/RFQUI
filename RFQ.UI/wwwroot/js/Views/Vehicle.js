@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase(), 'EditVehicle', 'DeleteVehicle', vehicleId);
     });
 
     $("#btnSaveVehicle, #btnSaveNewVehicle").on('click', function () {
@@ -181,6 +181,7 @@ function SaveVehicle(action) {
     }
 }
 function EditVehicle(vehicleId) {
+    debugger;
     if ($("#btnUpdateVehicle").hasClass('d-none')) {
         $("#btnUpdateVehicle").removeClass('d-none');
         $('#vehicleForm').find('input, select, textarea, button, a').prop('disabled', false);
@@ -346,7 +347,7 @@ function FetchVehicleList() {
         $(this).val(null).trigger('change');
     });
     $("#ddlOwnerName").prop('disabled', false);
-    FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase(), 'EditVehicle', 'DeleteVehicle', 'vehicleId');
 }
 
 $('#vehicleTableSearch').off('keyup').on('keyup', function () {
