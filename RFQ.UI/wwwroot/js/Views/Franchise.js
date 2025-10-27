@@ -275,13 +275,35 @@ function OnSubmitValidation() {
         toastr.warning("Please enter a valid Franchise Pincode", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtPanNumber").val()) || !ValidatePanNumber($("#txtPanNumber").val())) {
-        toastr.warning("Please enter a valid PAN Number", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#txtPanNumber").val()) || !ValidatePanNumber($("#txtPanNumber").val())) {
+    //    toastr.warning("Please enter a valid PAN Number", "Validation Error");
+    //    return false;
+    //}
     if (IsNullOrEmpty($("#txtWhatsAppNumber").val()) || !isMobile($("#txtWhatsAppNumber").val())) {
         toastr.warning("Please enter a valid Whatsapp Number", "Validation Error");
         return false;
+    }
+    var panNumber = $("#txtPanNumber").val().toUpperCase().trim();
+    var gstNumber = $("#txtGstNumber").val().toUpperCase().trim();
+
+    if (IsNullOrEmpty(panNumber) || !ValidatePanNumber(panNumber)) {
+        toastr.warning("Please enter a valid PAN Number", "Validation Error");
+        return false;
+    }
+
+
+    if (!IsNullOrEmpty(gstNumber)) {
+        if (!ValidateGstNumber(gstNumber)) {
+            toastr.warning("Please enter a valid GST Number", "Validation Error");
+            return false;
+        }
+
+        var panInGst = gstNumber.substring(2, 12); // GSTIN[2..11]
+
+        if (panInGst !== panNumber) {
+            toastr.warning("PAN in GST Number does not match the entered PAN Number", "Validation Error");
+            return false;
+        }
     }
     return true;
 }
