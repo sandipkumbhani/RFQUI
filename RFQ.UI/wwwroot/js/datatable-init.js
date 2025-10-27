@@ -1353,7 +1353,6 @@ $(document).ready(function () {
 
 
 });
-});
 
 $(document).ready(function () {
     const table = $('#tripDetailsTable').DataTable({
