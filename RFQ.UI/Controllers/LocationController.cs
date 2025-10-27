@@ -4,7 +4,6 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -12,32 +11,30 @@ namespace RFQ.UI.Controllers
     {
         private readonly ILocationService _locationService;
         private readonly GlobalClass _globalClass;
-        private readonly IMenuServices _menuServices;
+
         public LocationController(GlobalClass globalClass, ILocationService locationService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _locationService = locationService;
-            _menuServices = menuServices;
         }
+
         public async Task<IActionResult> Location()
         {
             await SetMenuAsync();
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> LocationSave([FromBody] LocationRequestDto locationRequestDto)
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
+
                 if (locationRequestDto != null)
                 {
-                    locationRequestDto.CompanyId = Convert.ToInt32(companyid);
-                    locationRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    locationRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                    locationRequestDto.CompanyId = _globalClass.CompanyId;
+                    locationRequestDto.CreatedBy = _globalClass.UserId;
+                    locationRequestDto.UpdatedBy = _globalClass.UserId;
 
                     var result = await _locationService.AddLocation(locationRequestDto);
                     return Json(result);
@@ -52,6 +49,7 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllLocationList([FromQuery] int companyId)
         {
@@ -73,12 +71,12 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> ViewLocationList([FromBody] PagingParam pagingParam)
         {
             try
             {
-
                 var locationViewModel = new LocationResponseDto();
                 var result = await _locationService.GetAllLocation(pagingParam);
                 if (Request.IsAjaxRequest())
@@ -102,20 +100,16 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
         [HttpPut]
         public async Task<IActionResult> EditLocationList([FromBody] LocationRequestDto locationRequestDto)
         {
             try
             {
                 int locationId = locationRequestDto.LocationId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value; 
-
-                locationRequestDto.CreatedBy = Convert.ToInt32(userid);
-                locationRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                locationRequestDto.CompanyId = Convert.ToInt32(companyid);
+                locationRequestDto.CreatedBy = _globalClass.UserId;
+                locationRequestDto.UpdatedBy = _globalClass.UserId;
+                locationRequestDto.CompanyId = _globalClass.CompanyId;
 
                 var result = await _locationService.EditLocation(locationId, locationRequestDto);
                 if (result != null)
@@ -132,6 +126,7 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
+
         [HttpDelete("Location/Deletelocationlist/{LocationId}")]
         public async Task<IActionResult> Deletelocationlist(int LocationId)
         {

@@ -17,13 +17,13 @@ namespace RFQ.UI.Application.Provider
         {
             return _usersAdaptor.AddUsers(userRequestDto);
         }
-        public Task<string> DeleteUsers(int UserId)
+        public Task<string> DeleteUsers(int userId)
         {
-            return _usersAdaptor.DeleteUsers(UserId);
+            return _usersAdaptor.DeleteUsers(userId);
         }
-        public Task<string> EditUsers(int UserId, UserRequestDto userRequestDto)
+        public Task<string> EditUsers(int userId, UserRequestDto userRequestDto)
         {
-            return _usersAdaptor.EditUsers(UserId, userRequestDto);
+            return _usersAdaptor.EditUsers(userId, userRequestDto);
         }
 
         public Task<PageList<UserResponseDto>> GetAllUser(PagingParam pagingParam)
@@ -47,9 +47,9 @@ namespace RFQ.UI.Application.Provider
             return await _usersAdaptor.UpdateUsersPassword(userRequestDto);
         }
 
-        public async Task<UserResponseDto> GetByLoginIdAsync(string LoginId)
+        public async Task<UserResponseDto> GetByLoginIdAsync(string loginId)
         {
-            return await _usersAdaptor.GetByLoginIdAsync(LoginId);
+            return await _usersAdaptor.GetByLoginIdAsync(loginId);
         }
     }
 }

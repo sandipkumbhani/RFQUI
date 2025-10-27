@@ -7,7 +7,6 @@ using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 using RFQ.UI.Models;
 using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -16,7 +15,7 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IUsersService _usersService;
         private readonly IMenuServices _menuServices;
-        public HomeController(IMenuServices menuServices, GlobalClass globalClass, IUsersService usersService) 
+        public HomeController(IMenuServices menuServices, GlobalClass globalClass, IUsersService usersService)
         {
             _globalClass = globalClass;
             _usersService = usersService;
@@ -32,13 +31,11 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value; 
                 if (userRequestDto != null)
                 {
-                    userRequestDto.CreatedBy = Convert.ToInt32(userid);
-                    userRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                    userRequestDto.ProfileId = Convert.ToInt32(userRequestDto.ProfileId); 
+                    userRequestDto.CreatedBy = _globalClass.UserId;
+                    userRequestDto.UpdatedBy = _globalClass.UserId;
+                    userRequestDto.ProfileId = Convert.ToInt32(userRequestDto.ProfileId);
 
                     var result = await _usersService.AddUsers(userRequestDto);
                     var response = JsonConvert.DeserializeObject<NewCommonResponseDto>(result);
@@ -61,12 +58,10 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 var UserViewModel = new UserResponseDto();
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                pagingParam.UserId = Convert.ToInt32(userid);
+                pagingParam.UserId = _globalClass.UserId;
                 var result = await _usersService.GetAllUser(pagingParam);
-                
+
                 if (Request.IsAjaxRequest())
                 {
                     return Json(new
@@ -76,7 +71,7 @@ namespace RFQ.UI.Controllers
                         recordsFiltered = result.TotalRecordCount,
                         data = result.Result,
                         displayColumn = result.DisplayColumns,
-                        UserId = result.Equals(userid)
+                        UserId = result.Equals(_globalClass.UserId)
                     });
                 }
                 else
@@ -96,12 +91,8 @@ namespace RFQ.UI.Controllers
             try
             {
                 int userId = userRequestDto.UserId;
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                //string companyid = jwt.Claims.First(c => c.Type == "companyid").Value;
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-                userRequestDto.CreatedBy = Convert.ToInt32(userid);
-                userRequestDto.UpdatedBy = Convert.ToInt32(userid);
+                userRequestDto.CreatedBy = _globalClass.UserId;
+                userRequestDto.UpdatedBy = _globalClass.UserId;
 
                 var result = await _usersService.EditUsers(userId, userRequestDto);
                 if (result != null)
@@ -115,12 +106,12 @@ namespace RFQ.UI.Controllers
             }
         }
 
-        [HttpDelete("Home/DeleteUserList/{UserId}")]
-        public async Task<IActionResult> DeleteUserList(int UserId)
+        [HttpDelete("Home/DeleteUserList/{userId}")]
+        public async Task<IActionResult> DeleteUserList(int userId)
         {
             try
             {
-                var result = await _usersService.DeleteUsers(UserId);
+                var result = await _usersService.DeleteUsers(userId);
                 if (result != null)
                     return Json(new { result = "success" });
                 else
@@ -137,10 +128,6 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
-
                 var alllist = await _usersService.GetAllCompanyAndFranchise();
                 if (alllist != null && alllist.Count() > 0)
                     return Json(alllist);
@@ -161,9 +148,6 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
                 var alllist = await _usersService.GetAllLocation();
                 if (alllist != null && alllist.Count() > 0)
                     return Json(alllist);
@@ -202,10 +186,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-                string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
-                int profileID = Convert.ToInt32(profileid);
-                var menulist = await _menuServices.GetMenu(profileID);
+                var menulist = await _menuServices.GetMenu(_globalClass.ProfileId);
                 if (menulist != null && menulist.Count() > 0)
                 {
                     ViewBag.menulist = menulist;

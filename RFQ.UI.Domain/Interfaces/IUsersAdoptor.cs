@@ -9,8 +9,8 @@ namespace RFQ.UI.Domain.Interfaces
         Task<UserResponseDto> GetUserById(int userId);
         Task<PageList<UserResponseDto>?> GetAllUser(PagingParam pagingParam);
         Task<string> AddUsers(UserRequestDto userRequestDto);
-        Task<string> EditUsers(int UserId, UserRequestDto userRequestDto);
-        Task<string> DeleteUsers(int UserId);
+        Task<string> EditUsers(int userId, UserRequestDto userRequestDto);
+        Task<string> DeleteUsers(int userId);
         Task<IEnumerable<CompanyAndFranchiseListDto>> GetAllCompanyAndFranchise();
         Task<IEnumerable<LocationListDto>> GetAllLocation();
         Task<bool> UpdateUsersPassword(UserRequestDto userRequestDto);

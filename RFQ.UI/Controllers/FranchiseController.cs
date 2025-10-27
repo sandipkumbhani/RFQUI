@@ -72,42 +72,7 @@ namespace RFQ.UI.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> FranchiseSave([FromBody] FranchiseRequestDto franchiseRequestDto)
-        //{
-        //    try
-        //    {
-        //        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
-
-        //        string profileId = jwt.Claims.First(c => c.Type == "profileid").Value;
-        //        string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
-        //        string userid = jwt.Claims.First(c => c.Type == "userid").Value;
-
-        //        if (franchiseRequestDto != null)
-        //        {
-        //            franchiseRequestDto.CompanyTypeId = 2;
-        //            franchiseRequestDto.ParentCompanyId = Convert.ToInt32(companyId);
-        //            franchiseRequestDto.CreatedBy = Convert.ToInt32(userid);
-        //            franchiseRequestDto.UpdatedBy = Convert.ToInt32(userid);
-        //            franchiseRequestDto.CreatedOn = DateTime.Now;
-        //            franchiseRequestDto.UpdatedOn = DateTime.Now;
-
-        //            var result = await _fanchiseService.AddFranchise(franchiseRequestDto);
-        //            return Json(new { result });
-        //        }
-        //        else
-        //        {
-        //            return Json(new { result = "Failed" });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
-        //    }
-        //}
-
-
+ 
         [HttpPost]
         public async Task<IActionResult> FranchiseSave([FromBody] FranchiseRequestDto franchiseRequestDto)
         {

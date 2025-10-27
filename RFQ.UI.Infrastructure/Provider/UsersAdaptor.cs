@@ -108,14 +108,14 @@ namespace RFQ.UI.Infrastructure.Provider
             }
 
         }
-        public async Task<string> EditUsers(int UserId, UserRequestDto userRequestDto)
+        public async Task<string> EditUsers(int userId, UserRequestDto userRequestDto)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var baseurl = _fleetLynkApiUrl + _config["Users:UpdateUser"] + UserId;
+                var baseurl = _fleetLynkApiUrl + _config["Users:UpdateUser"] + userId;
                 var user = JsonConvert.SerializeObject(userRequestDto);
                 var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PutAsync(baseurl, requestContent);
