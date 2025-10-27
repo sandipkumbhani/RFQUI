@@ -45,7 +45,7 @@ $(document).ready(function () {
     $("#btnCancel").on("click", function () {
         FetchCustomerList();
     });
-    $("#btnAddCustomer").on("click", function () {
+    $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
     });

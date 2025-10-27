@@ -156,7 +156,7 @@ $(document).ready(function () {
 let vehicleTypeNameList = [];
 let applicableRouteList = [];
 
-$('#addVendor').on('click', function () {
+$('#btnAdd').on('click', function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
 });
