@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -36,6 +37,7 @@ namespace RFQ.UI.Controllers
                     userRequestDto.CreatedBy = _globalClass.UserId;
                     userRequestDto.UpdatedBy = _globalClass.UserId;
                     userRequestDto.ProfileId = Convert.ToInt32(userRequestDto.ProfileId);
+                    userRequestDto.StatusId = (int)EStatus.IsActive;
 
                     var result = await _usersService.AddUsers(userRequestDto);
                     var response = JsonConvert.DeserializeObject<NewCommonResponseDto>(result);
