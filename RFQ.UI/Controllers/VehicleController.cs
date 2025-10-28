@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -50,7 +51,6 @@ namespace RFQ.UI.Controllers
                     vehicleTypeRequestDto.CompanyId = _globalClass.CompanyId;
                     vehicleTypeRequestDto.CreatedBy = _globalClass.UserId;
                     vehicleTypeRequestDto.UpdatedBy = _globalClass.UserId;
-
                     var result = await _vehicleTypeServices.AddVehicleType(vehicleTypeRequestDto);
                     return Json(result);
                 }
@@ -167,6 +167,7 @@ namespace RFQ.UI.Controllers
                 {
                     vehicleRequestDto.CreatedBy = _globalClass.UserId;
                     vehicleRequestDto.UpdatedBy = _globalClass.UserId;
+                    vehicleRequestDto.StatusId = (int)EStatus.IsActive;
                     var result = await _vehicleServices.AddVehicle(vehicleRequestDto);
                     if (!String.IsNullOrEmpty(result))
                     {
