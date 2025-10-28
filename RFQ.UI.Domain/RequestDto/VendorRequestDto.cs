@@ -57,6 +57,7 @@
         public string? GSTAddress { get; set; }
 
         public int LinkId { get; set; }
+        public int StatusId { get; set; }
         public int CreatedBy { get; set; }
 
         //public DateTime CreatedOn { get; set; }

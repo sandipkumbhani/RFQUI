@@ -69,7 +69,7 @@ namespace RFQ.UI.Controllers
                     vendorRequestDto.CreatedBy = _globalClass.UserId;
                     vendorRequestDto.UpdatedBy = _globalClass.UserId;
                     vendorRequestDto.PartyTypeId = (int)EnumInternalMaster.VENDOR;
-
+                    vendorRequestDto.StatusId = (int)EStatus.IsActive;
                     var response = await _vendorService.AddVendor(vendorRequestDto);
                     return Ok(response);
                 }
