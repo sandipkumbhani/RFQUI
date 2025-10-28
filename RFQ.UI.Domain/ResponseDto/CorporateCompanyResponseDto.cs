@@ -20,9 +20,9 @@
         public int LinkId { get; set; }
         public int StatusId { get; set; }
         public int CreatedBy { get; set; }
-
         public DateTime CreatedOn { get; set; }
         public int UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
+        public string? IsActive { get; set; }
     }
 }
