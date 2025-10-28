@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -140,6 +141,7 @@ namespace RFQ.UI.Controllers
             {
                 driverRequestDto.CreatedBy = _globalClass.UserId;
                 driverRequestDto.UpdatedBy = _globalClass.UserId;
+                driverRequestDto.StatusId = (int)EStatus.IsActive;
                 var result = _driverServices.AddDriver(driverRequestDto);
                 return Json(new { result });
             }
