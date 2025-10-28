@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -33,7 +34,7 @@ namespace RFQ.UI.Controllers
                     customerRequestDto.CompanyId = _globalClass.CompanyId;
                     customerRequestDto.CreatedBy = _globalClass.UserId;
                     customerRequestDto.UpdatedBy = _globalClass.UserId;
-
+                    customerRequestDto.StatusId = (int)EStatus.IsActive;
                     var result = await _customerServices.AddCustomer(customerRequestDto);
                     return Json(result);
                 }
