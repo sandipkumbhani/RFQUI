@@ -54,12 +54,12 @@ $(document).ready(function () {
         FetchCustomerList();
     });
     InitializeFields();
-    getAutoCustomerCode();
     GetAllCityList("ddlCity");
     UpdateCustomer();
     GstEKycClick();
     PanEKycClick();
     FetchCustomerList();
+    getAutoCustomerCode();
 });
 
 function FetchCustomerList() {
