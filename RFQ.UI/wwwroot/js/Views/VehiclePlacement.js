@@ -9,6 +9,7 @@ var profileId;
 var locationId;
 var FetchVehiclePlacementUrl = '/VehiclePlacement/GetAllVehiclePlacement';
 var VehicIndentList;
+
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
@@ -95,6 +96,7 @@ $("#txtAdvancePayable").on('change', function () {
     var payable = hireAmt - advancePay;
     $("#txtBalancePayable").val(payable);
 });
+
 $("#txtTotalHairAmt").on('change', function () {
     var hireAmt = Number($("#txtTotalHairAmt").val());
     var advancePay = Number($("#txtAdvancePayable").val());
@@ -121,7 +123,6 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchVehiclePlacement();
 });
-
 function FetchVehiclePlacement() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
@@ -135,7 +136,6 @@ function FetchVehiclePlacement() {
     FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehiclePlacement', 'DeleteVehiclePlacement', 'placementId');
 }
 function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
-
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
     $.ajax({
         url: getVehicleTypeUrl,
@@ -219,7 +219,6 @@ function GetAllTrackingType() {
             let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.TRACKING_TYPE);
             const select = document.getElementById("ddlTrakingType");
             select.innerHTML = "";
-
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a Tracking Type";
@@ -299,7 +298,6 @@ function GetAllVehicleNumber() {
     });
 }
 function FetchPlacementNo() {
-
     $.ajax({
         url: "/VehiclePlacement/GetPlacementNo",
         type: "GET",
@@ -314,7 +312,6 @@ function FetchPlacementNo() {
 }
 function GetAllOwnerOrVendor() {
     var getAllOwnerOrVendorUrl = "/Vehicle/GetAllOwnerOrVendor";
-
     $.ajax({
         url: getAllOwnerOrVendorUrl,
         type: "GET",
@@ -328,7 +325,6 @@ function GetAllOwnerOrVendor() {
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             ownerdropdown.appendChild(placeholderOption);
-
 
             response.forEach(item => {
                 const option = document.createElement("option");
@@ -344,7 +340,6 @@ function GetAllOwnerOrVendor() {
 }
 function GetAllBrokerVendor() {
     var getAllBrokerVendorUrl = "/Vendor/GetAllVendorList";
-
     $.ajax({
         url: getAllBrokerVendorUrl,
         type: "GET",
@@ -359,7 +354,6 @@ function GetAllBrokerVendor() {
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             brokerdropdown.appendChild(placeholderOption);
-
 
             data.forEach(item => {
                 const option = document.createElement("option");
@@ -376,18 +370,14 @@ function GetAllBrokerVendor() {
 function AutoFetch() {
     var indentNo = $("#ddlIndentNo").val();
     var getUrl = '/VehiclePlacement/AutoFetchPlacement/' + indentNo;
-
     $.ajax({
         url: getUrl,
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-
             // Check if response is a non-empty array
             if (Array.isArray(response) && response.length > 0) {
                 let data = response[0]; // Use the first object in the array
-
-                // Format indentDate
                 let indentDate = data.indentDate;
                 if (indentDate) {
                     if (indentDate instanceof Date) {
@@ -400,7 +390,6 @@ function AutoFetch() {
                     $('#txtIndentDate').val('');
                 }
                 $("#txtRFQNo").val(data.rfqNo);
-
                 $("#ddlCustomerName").val(data.partyId).trigger('change');
                 $("#ddlVehicleType").val(data.vehicleTypeId).trigger('change');
                 $('#from-search-box').val(data.fromLocation);
@@ -480,7 +469,6 @@ function SaveVehicle(action) {
     var npNo = $("#npNoInput").val();
     var insuranceNo = $("#insuranceCoInput").val();
     var verifiedOn = $("#verifiedOnInput").val();
-
     var rtoRegistration = $("#rtoRegistrationInput").val();
     var registrationDate = $("#registrationDateInput").val();
     var permanentAddress = $("#permanentAddressInput").val();
@@ -671,7 +659,6 @@ function GetAllVehicleCategory() {
 }
 function PopUpOwnerOrVendor() {
     var getAllOwnerOrVendorUrl = "/Vehicle/GetAllOwnerOrVendor";
-
     $.ajax({
         url: getAllOwnerOrVendorUrl,
         type: "GET",
@@ -684,7 +671,6 @@ function PopUpOwnerOrVendor() {
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             ownerdropdown.appendChild(placeholderOption);
-
 
             response.forEach(item => {
                 const option = document.createElement("option");
@@ -1009,9 +995,7 @@ function ButtonUpdateClick() {
         }
 
         var driverResult = GetDropdownValue("ddlDriverName");
-
         var formData = {
-
             PlacementId: $("#vehiclePlacementId").val(),
             LocationId: $("#ddlLocation").val(),
             PlacementNo: $("#txtPlacementNo").val(),
@@ -1030,9 +1014,6 @@ function ButtonUpdateClick() {
         };
 
         var linkd = GetQueryParam("LinkId");
-
-
-        // First AJAX call
         $.ajax({
             type: "PUT",
             url: "/VehiclePlacement/UpdateVehiclePlacement",
@@ -1091,7 +1072,6 @@ function DeleteVehiclePlacement(placementId) {
     }).then((result) => {
         if (result.isConfirmed) {
             var deleteVehicleIndentUrl = `/VehiclePlacement/DeleteVehiclePlacement/${placementId}`;
-
             $.ajax({
                 url: deleteVehicleIndentUrl,
                 type: "DELETE",
@@ -1145,7 +1125,6 @@ function UpdateVehiclePlacement(placementId) {
     $("#txtTotalHairAmt").val(formData.totalHireAmount);
     $("#txtAdvancePayable").val(formData.advancePayable);
 } 
-
 function ViewVehiclePlacement(placementId) {
     UpdateVehiclePlacement(placementId);
     $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);

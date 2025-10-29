@@ -1,13 +1,9 @@
-﻿
-var vendorlist;
+﻿var vendorlist;
 $(document).ready(function () {
-
-
     const criteriaList = [
         "Cost & Pricing", "Vehicle Conditions", "Vendor Communication",
         "SLA / Delivery Efficiency", "Tracking Enabled Vehicles", "Statutory Compliance"
     ];
-
     criteriaList.forEach(function (criteria) {
         const ratingName = "rating_" + criteria.replace(/\s|\/|&/g, '');
 
@@ -33,7 +29,6 @@ $(document).ready(function () {
         $('#tableDiv').append($tr);
     });
     fetchVendorList();
-
     $('#ddlVendor').on('change', function () {
         const selectedValue = $(this).val();
         const selectedText = $(this).find("option:selected").text();
@@ -87,7 +82,6 @@ function fetchVendorList() {
                 opt.textContent = option.partyName;
                 select.appendChild(opt);
             });
-
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {

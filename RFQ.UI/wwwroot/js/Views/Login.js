@@ -1,6 +1,4 @@
 ﻿$(document).ready(function () {
-
-    // Regex patterns
     var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     var passwordPattern = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
 
@@ -20,7 +18,6 @@
         }
     });
 
-    // Password validation on blur
     $("#Password").on("blur", function () {
         var password = $(this).val().trim();
         if (!passwordPattern.test(password)) {
@@ -28,14 +25,13 @@
         }
     });
 
-    // Submit event
     $("#loginForm").off('submit').on('submit', function (event) {
         event.preventDefault();
         loginUser();
     });
+
     setupRememberMe();
 });
-
 function setCookie(name, value, days) {
     let expires = "";
     if (days) {
@@ -45,7 +41,6 @@ function setCookie(name, value, days) {
     }
     document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
 }
-
 function getCookie(name) {
     const nameEQ = name + "=";
     const ca = document.cookie.split(";");
@@ -56,11 +51,9 @@ function getCookie(name) {
     }
     return null;
 }
-
 function eraseCookie(name) {
     document.cookie = name + "=; Max-Age=-99999999; path=/";
 }
-
 function setupRememberMe() {
     const form = $("#loginForm");
     const usernameField = $("#txtLoginName");
@@ -73,7 +66,6 @@ function setupRememberMe() {
         passWordFiled.val(getCookie("passWord") || "");
         rememberCheckbox.prop("checked", true);
     }
-
      //Handle form submit
     form.off("submit", function () {
         if (rememberCheckbox.is(":checked")) {
@@ -87,32 +79,25 @@ function setupRememberMe() {
         }
     });
 }
-
 function loginUser() {
     $("#loginButton").prop("disabled", true).text("Logging in...");
-
     var loginid = $("#txtLoginName").val().trim();
     var password = $("#Password").val().trim();
 
-    // Login name validation
     if (IsNullOrEmpty(loginid) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginid)) {
         toastr.warning("Invalid Login Name", "Warning");
         $("#loginButton").prop("disabled", false).text("Log In");
         return;
     }
 
-    // Password validation
     var passwordPattern = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
     if (!passwordPattern.test(password)) {
         toastr.error("Password must be at least 6 characters and contain at least one digit and one uppercase letter.", "error");
         $("#loginButton").prop("disabled", false).text("Log In");
         return;
     }
-
-    // Prepare data
+    
     var formData = { LoginId: loginid, Password: password };
-
-    // AJAX call
     $.ajax({
         type: "POST",
         url: "/Login/GetToken",

@@ -43,6 +43,7 @@ $(document).ready(function () {
     VehicleEKycClick();
     UpdateVehicle();
 });
+
 $("#ddlVehicleCategory").on('change', function () {
     if ($(this).val() == null) {
         return;
@@ -56,12 +57,10 @@ $("#ddlVehicleCategory").on('change', function () {
     }
 })
 function SaveVehicle(action) {
-
     var isValid = OnSubmitValidation();
     if (!isValid) {
         return;
     }
-
     var vehicleNo = $("#vehicleNo").val();
     var vehicleCategory = $("#ddlVehicleCategory").val();
     var vehicleType = $("#ddlVehicleType").val();
@@ -80,7 +79,6 @@ function SaveVehicle(action) {
     var npNo = $("#npNoInput").val();
     var insuranceNo = $("#insuranceCoInput").val();
     var verifiedOn = $("#verifiedOnInput").val();
-
     var rtoRegistration = $("#rtoRegistrationInput").val();
     var registrationDate = $("#registrationDateInput").val();
     var permanentAddress = $("#permanentAddressInput").val();
@@ -181,14 +179,12 @@ function SaveVehicle(action) {
     }
 }
 function EditVehicle(vehicleId) {
-    debugger;
     if ($("#btnUpdateVehicle").hasClass('d-none')) {
         $("#btnUpdateVehicle").removeClass('d-none');
         $('#vehicleForm').find('input, select, textarea, button, a').prop('disabled', false);
     }
     var data = viewModelDto.filter(x => x.vehicleId === vehicleId);
     var formData = data[0];
-
     $('#tableDiv').css('display', 'none');
     $("#addVehicleDiv").css('display', 'block');
     $("#btnSaveVehicle").hide();
@@ -364,13 +360,11 @@ function VehicleEKycClick() {
     $("#btnVehicleKyc").on("click", function () {
         var getUrl = '/Vehicle/GetVehicleKycDetails';
         var vehicleNo = $("#vehicleNo").val();
-
         if (!IsValidVehicleNumber(vehicleNo)) {
             toastr.warning("Please enter a valid Vehicle No", "Validation Error");
             ClearFields();
             return false;
         }
-
         var Body = {
             VehicleNo: vehicleNo,
         }
@@ -451,7 +445,6 @@ function GetAllVehicleCategory() {
 }
 function GetAllOwnerOrVendor() {
     var getAllOwnerOrVendorUrl = "/Vehicle/GetAllOwnerOrVendor";
-
     $.ajax({
         url: getAllOwnerOrVendorUrl,
         type: "GET",
@@ -481,17 +474,14 @@ function GetAllOwnerOrVendor() {
     });
 }
 function CheckValidation() {
-
     $("#vehicleNo").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a valid VehicleNo", "Validation Error");
             return;
         }
     });
-
 }
 function OnSubmitValidation() {
-
     if (IsNullOrEmpty($("#vehicleNo").val()) || !IsValidVehicleNumber($("#vehicleNo").val())) {
         toastr.warning("Please enter a valid VehicleNo", "Validation Error");
         return false;
@@ -537,7 +527,6 @@ function ClearFields() {
     $("#policyNoInput").val("");
     $("#policyExpiryInput").val("");
 }
-
 function ViewVehicle(vehicleId) {
     EditVehicle(vehicleId);
     $('#vehicleForm').find('input, select, textarea, button, a').prop('disabled', true);

@@ -18,6 +18,7 @@ function Initialization() {
             return;
         }
     });
+
     $("#txtNewPassword").on("blur", function () {
         const Password = $(this).val().trim();
         if (!passwordPattern.test(Password)) {
@@ -78,7 +79,6 @@ function CheckValidation() {
     }
     return true;
 }
-
 function OnSubmit() {
     var userid = getCookieValue('userid');
     if (!CheckValidation()) {

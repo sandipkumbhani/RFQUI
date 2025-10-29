@@ -5,6 +5,7 @@ var fetchedVendorDataList = [];
 var orderColumn = '';
 var orderDir = '';
 var fetchRfqUrl = '/RequestForQuote/GetAllRfq';
+
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
@@ -15,16 +16,13 @@ $(document).ready(function () {
         let currentOrder = $(this).data('order') || 'asc';
         orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
         $(this).data('order', orderDir);
-
         $('th.sortable').not(this).data('order', 'asc');
-
         FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), 'EditRfq', 'DeleteRfq', 'rfqID');
     });
     $("#btnCancel").on("click", function () {
         FetchRfqList();
     });
     $("#btnSaveType, #btnSaveAndNew").on('click', function () {
-
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
             showLoader();
@@ -51,7 +49,6 @@ $(document).ready(function () {
             return;
         }
         const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
-
         if (selectedIndent) {
             $("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
             $("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
@@ -226,8 +223,6 @@ function OnSubmitCheckValidation() {
     //    toastr.warning("Please enter a Special Instructions", "Validation Error");
     //    return false;
     //}
-
-
     return true;
 }
 function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
@@ -274,9 +269,8 @@ function GetRfqType() {
             let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.RFQ_TYPE);
             const select = document.getElementById("ddlRfqType");
             select.innerHTML = "";
-
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a RFQ Type";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -304,9 +298,8 @@ function GetRfqPriority() {
             let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.RFQ_PRIORITY);
             const select = document.getElementById("ddlRfqPriority");
             select.innerHTML = "";
-
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a RFQ Priority";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -337,7 +330,6 @@ function FetchRfqNo() {
         }
     });
 }
-
 function GetAllVendorList() {
     $("#ddlRFQVendorList").empty();
     var getUrl = '/RequestForQuote/GetAllVendorListForRfq'
@@ -441,11 +433,9 @@ $('#rfqVendorTable').on('click', '#editVendor', function () {
             toastr.warning("Please fill all required fields!", "Validation Error");
             return;
         }
-
         fetchedVendorDataList[rowIndex].mobNo = updatedMobileNo;
         fetchedVendorDataList[rowIndex].whatsAppNo = updatedWhatsappNo;
         fetchedVendorDataList[rowIndex].email = updatedEmailId;
-
         RenderFetchTable();
     });
 
@@ -454,7 +444,6 @@ $('#rfqVendorTable').on('click', '#editVendor', function () {
     });
 
 });
-
 function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
     const rfqFormData = {
@@ -517,7 +506,6 @@ function SaveAndSaveNew(action) {
                 } else {
                     toastr.error("Failed to Submit Request For Quote.", "Error");
                 }
-
             },
             complete: function () {
                 hideLoader();
@@ -529,7 +517,6 @@ function SaveAndSaveNew(action) {
             }
         });
     }
-
     else if (action === "saveNew") {
         $.ajax({
             url: saveUrl,
@@ -726,7 +713,6 @@ function DeleteRfq(rfqID) {
             var linkId = parseInt(GetQueryParam("LinkId"));
             FetchMasterAttachment(linkId, rfqID, function (list) {
                 result = list;
-
                 $.ajax({
                     url: deleteRfqUrl,
                     type: "DELETE",
@@ -770,6 +756,7 @@ function FetchRfqList() {
     ResetAttachmentRepeater();
     FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), 'EditRfq', 'DeleteRfq','rfqID');
 }
+
 $('#rfqTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchRfqList();
@@ -779,7 +766,6 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchRfqList();
 });
-
 function SaveRfqVendorDetails() {
     var saveUrl = '/RfqRecipient/AddRfqRecipient';
     $("#btnSaveRfqVendorDetails").on('click', function () {
@@ -829,11 +815,7 @@ function sendQuoteLinksForVendors(vendorList) {
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function (response) {
-
-            // Example: Display or send links via WhatsApp
             response.links.forEach(linkInfo => {
-
-                // Send via WhatsApp browser link (optional)
                 if (linkInfo.WhatsAppNo) {
                     const message = encodeURIComponent("Please fill your RFQ form: " + linkInfo.Link);
                     const waUrl = `https://wa.me/${linkInfo.WhatsAppNo}?text=${message}`;
@@ -854,7 +836,6 @@ function GetPreviousQuotesList() {
         ToDestination: toStateName,
         VehicleTypeId: parseInt($('#ddlVehicleType').val()),
     };
-
     $.ajax({
         url: '/RequestForQuote/GetPreviousQuotesList',
         type: 'POST',

@@ -6,12 +6,10 @@ $(document).ready(function () {
     OnSubmit();
     ResendOtp();
 });
-
 function initilization() {
     $('.verification-number input').on('input', function () {
         var $inputs = $('.verification-number input');
         var index = $inputs.index(this);
-
         if ($(this).val().length === 1) {
             // Move to next input if not the last one
             if (index < $inputs.length - 1) {
@@ -60,7 +58,6 @@ function OnSubmit() {
 function ResendOtp() {
     $('#btnResendOtp').on('click',function (e) {
         e.preventDefault();
-
         const txtLoginName = GetQueryParam("loginId");
         $.ajax({
             type: "POST",
@@ -82,8 +79,7 @@ function ResendOtp() {
     });
 }
 function startCountdown() {
-    // display initial time
-    document.querySelector('.verification-time span').innerText = "00:30";
+    document.querySelector('.verification-time span').innerText = "00:60";
 
     timerInterval = setInterval(() => {
         if (countdownSeconds > 0) {
@@ -95,7 +91,6 @@ function startCountdown() {
             document.querySelector('.verification-time span').innerText = formattedTime;
         } else {
             clearInterval(timerInterval);
-            // Optional: do something when time runs out
         }
     }, 1000);
 }

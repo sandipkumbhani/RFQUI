@@ -1,12 +1,12 @@
-﻿var quoteratevendore
+﻿var quoteratevendore;
+
 $(document).on("click", "#btnViewForm", function () {
     $("#AddQuoteRoleVendorDiv").css('display', 'none')
     $("#backButton").css('display', 'Block')
 });
+
 $(document).ready(function () {
     $("#btnSaveForm").on('click', function () {
-
-
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
             Save(action);
@@ -15,7 +15,6 @@ $(document).ready(function () {
     UrlParamBind()
     //Initialization();
 });
-
 function OnSubmitCheckValidation() {
     if (IsNullOrEmpty($("#txtAvailableVehicle").val())) {
         toastr.warning("Please enter a Vehicle Count", "Validation Error");
@@ -284,42 +283,8 @@ function UrlParamBind() {
     $("#vendorId").val(VendorId);
     $("#RfqId").val(RfqId);
     getRfqQuoteRateVendorDetails(RfqId, VendorId);
-    //const rfqNo = urlParams.get("RfqNo");
-    //const rfqDate = urlParams.get("RfqDate");
-    //const expiryDate = urlParams.get("ExpiryDate");
-    //const PartyName = urlParams.get("PartyName");
-    //const vehicleReqOn = urlParams.get("VehicleReqOn");
-    //const fromLocation = urlParams.get("FromLocation");
-    //const toLocation = urlParams.get("ToLocation");
-    //const vehicleTypeId = urlParams.get("VehicleTypeId");
-    //const VehicleTypeName = urlParams.get("VehicleTypeName");
-    //const vehicleCount = urlParams.get("VehicleCount");
-    //const ItemName = urlParams.get("ItemName");
-    //const PackingTypeName = urlParams.get("PackingTypeName");
-    //const specialInstruction = urlParams.get("SpecialInstruction");
-    //const VendorId = urlParams.get("VendorId");
-    //const RFQId = urlParams.get("RfqId");
-    //const PanNo = urlParams.get("PANNo");
-
-    //$("#RfqId").val(RFQId);
-    //$("#vendorId").val(VendorId);
-    //$("#txtRFQNo").val(rfqNo);
-    //$("#txtExpireOn").val(formatDate(expiryDate));
-    //$("#txtVednorName").val(PartyName);
-    //$("#txtPANNo").val(PanNo);
-    //$("#ddlOrigin").val(fromLocation);
-    //$("#ddlDestination").val(toLocation);
-    //$("#ddlVehicleType").val(VehicleTypeName);
-    //$("#txtNoOfVehicles").val(vehicleCount);
-    //$("#ddlItemName").val(ItemName);
-    //$("#ddlPackingType").val(PackingTypeName);
-    //$("#txtInstruction").val(specialInstruction);
-    //$("#txtRFQDate").val(formatDate(rfqDate).substring(0, 11));
-    //$("#txtVehicleReqOn").val(formatDate(vehicleReqOn).substring(0, 11));
 }
-
 function getRfqQuoteRateVendorDetails(RfqId, VendorId) {
-    // Request Body
     var Body = {
         RfqId: RfqId,
         VendorId: VendorId

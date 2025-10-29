@@ -5,6 +5,7 @@ let isPanEKycClicked = false;
 var orderColumn = '';
 var orderDir = '';
 var fetchCustomerUrl = '/Customer/ViewCustomer';
+
 $(document).ready(function () {
 
     $(document).on('click', 'th.sortable', function () {
@@ -22,6 +23,7 @@ $(document).ready(function () {
         const panKyc = this.value;
         document.getElementById("numPan").value = panKyc;
     });
+
     document.getElementById("txtGstNumber").addEventListener("input", function () {
         const gstKyc = this.value;
         document.getElementById("numGstNumber").value = gstKyc;
@@ -42,17 +44,21 @@ $(document).ready(function () {
         }
 
     });
+
     $("#btnCancel").on("click", function () {
         FetchCustomerList();
     });
+
     $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
     });
+
     $('#tableDivLink').on('click', function (e) {
         e.preventDefault(); // prevent default anchor behavior
         FetchCustomerList();
     });
+
     InitializeFields();
     GetAllCityList("ddlCity");
     UpdateCustomer();
@@ -71,11 +77,9 @@ function FetchCustomerList() {
     $("#btnUpdate").hide();
     $("#SavenewButton").show();
     ResetAttachmentRepeater();
-
     FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), 'EditCustomer', 'DeleteCustomer','partyid');
 }
 
-// Bind events
 $('#customerTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchCustomerList();
@@ -86,7 +90,6 @@ $('#pageLength').off('change').on('change', function () {
     FetchCustomerList();
 });
 function SaveCustomer(action) {
-
     var isvalid = ValidationCheck();
     if (!isvalid) {
         return;
@@ -224,7 +227,6 @@ function SaveCustomer(action) {
 function EditCustomer(partyId) {
     if ($("#btnUpdate").hasClass('d-none')) {
         $("#btnUpdate").removeClass('d-none');
-     
     }
     var data = viewModelDto.filter(x => x.partyId === partyId);
     var formData = data[0];
@@ -278,7 +280,6 @@ function UpdateCustomer() {
         if (!isvalid) {
             return;
         }
-
         var formData = {
             PartyId: $("#hdnPartyId").val(),
             LegalName: $("#txtLegalName").val(),
@@ -307,13 +308,11 @@ function UpdateCustomer() {
             Code: $("#txtCustomerCode").val(),
             GSTAddress: $("#txtGstAddress").val(),
             LinkId: linkId
-
         };
 
         let repeaterItems = document.querySelectorAll("[data-repeater-item]");
         let updateAttachmentDetails = [];
         var linkd = GetQueryParam("LinkId");
-
         repeaterItems.forEach((item, index) => {
             let attId = item.querySelector("#hdnAttachmentId").value;
             let attachmentId = attId == '' ? 0 : attId;
@@ -363,7 +362,6 @@ function UpdateCustomer() {
                 if (response.result == "success") {
                     partyId = $("#hdnPartyId").val();
                     Saveattachment(partyId);
-
                 } else {
                     $("#dataDiv").html("Failed to update profile.");
                 }
@@ -391,7 +389,6 @@ function DeleteCustomer(partyId, linkId) {
     }).then((result) => {
         if (result.isConfirmed) {
             var deleteCustomerUrl = '/Customer/DeleteCustomer/' + partyId;
-
             FetchMasterAttachment(linkId, partyId, function (attachments) {
                 $.ajax({
                     url: deleteCustomerUrl,
@@ -418,12 +415,6 @@ function DeleteCustomer(partyId, linkId) {
 function GstEKycClick() {
     $("#gstEKycButton").on("click", function () {
         var gstNumber = $("#txtGstNumber").val();
-
-        //if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/.test(gstNumber.toUpperCase())) {
-        //    toastr.warning("Please enter a valid GST No", "Validation Error");
-        //    return;
-        //}
-        // Request Body
         var Body = {
             GSTNo: gstNumber,
         }
@@ -463,13 +454,6 @@ function PanEKycClick() {
     $("#panEKycButton").on("click", function () {
         var getPanKycUrl = '/Customer/GetPanKycDetails';
         var panNumber = $("#txtPanNumber").val();
-
-        //if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panNumber.toUpperCase())) {
-        //    toastr.warning("Please enter a valid PAN No", "Validation Error");
-        //    ClearPanFields();
-        //    return;
-        //}
-        // Request Body
         var Body = {
             PANNo: panNumber,
         }
@@ -535,12 +519,6 @@ function InitializeFields() {
             return;
         }
     });
-    //$("#numGstNumber").on("blur", function () {
-    //    if (!ValidatePanNumber($(this).val())) {
-    //        toastr.warning("Please enter a valid GST No", "Validation Error");
-    //        return;
-    //    }
-    //});
 
     $("#txtCustomerName").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
@@ -623,15 +601,12 @@ function ValidationCheck() {
         return false;
     }
 
-
     if (!IsNullOrEmpty(gstNumber)) {
         if (!ValidateGstNumber(gstNumber)) {
             toastr.warning("Please enter a valid GST Number", "Validation Error");
             return false;
         }
-
         var panInGst = gstNumber.substring(2, 12); // GSTIN[2..11]
-
         if (panInGst !== panNumber) {
             toastr.warning("PAN in GST Number does not match the entered PAN Number", "Validation Error");
             return false;
@@ -647,7 +622,6 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid Customer code", "Validation Error");
         return false;
     }
-
 
     if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Please enter a valid Address", "Validation Error");

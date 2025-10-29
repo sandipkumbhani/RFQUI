@@ -1,14 +1,13 @@
 ﻿var user = [];
+
 $(document).ready(function () {
     Initialization();
 });
-
 function Initialization() {
     $("#txtLoginName").on("blur", function () {
         var loginName = $(this).val().trim();
-        if (IsNullOrEmpty(loginName) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginName)) {
+        if (IsNullOrEmpty(loginName) || !/^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9]$/.test(loginName)){
             toastr.warning("Invalid Login Name", "Warning");
-
         }
     });
 
@@ -16,10 +15,8 @@ function Initialization() {
         getUserByLoginId();
     });
 };
-
 function getUserByLoginId() {
     var loginName = $("#txtLoginName").val().trim();
-
     $.ajax({
         url: '/Login/GetByLoginIdAsync',
         type: 'GET',
@@ -27,20 +24,18 @@ function getUserByLoginId() {
         success: function (response) {
             if (response.statusCode === 200) {
                 user = response.data;
-                UpdateUserPassword(); 
+                UpdateUserPassword();
             } else {
                 toastr.error(response.message);
             }
         },
         error: function (xhr) {
-            toastr.error("User not Exists!","Error");
+            toastr.error("User not Exists!", "Error");
         }
     });
 }
-
 function generatePassword(length = 10) {
     if (length < 6) length = 6; // enforce minimum length
-
     const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const lower = "abcdefghijklmnopqrstuvwxyz";
     const digits = "0123456789";
@@ -58,7 +53,6 @@ function generatePassword(length = 10) {
 
     // Shuffle the password characters
     password = password.split('').sort(() => Math.random() - 0.5).join('');
-
     return password;
 }
 function UpdateUserPassword() {
@@ -67,7 +61,6 @@ function UpdateUserPassword() {
         Password: newPassword,
         LoginId: user.loginId,
     }
-
     var UpdatePassWordUrl = '/User/UpdateUserPassword';
     $.ajax({
         type: "post",
@@ -77,7 +70,7 @@ function UpdateUserPassword() {
         dataType: "json",
         success: function (result) {
             if (result) {
-                user.password = newPassword; 
+                user.password = newPassword;
                 sendNewPassword();
                 toastr.success("Successfully Update User Password", "success");
             }
@@ -92,7 +85,6 @@ function UpdateUserPassword() {
         }
     });
 }
-
 function sendNewPassword() {
     $.ajax({
         url: '/Login/SendNewPassword',

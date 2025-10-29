@@ -1,4 +1,7 @@
-﻿$(document).ready(function () {
+﻿let vendorList = [];
+var fetchedVendorDataList;
+
+$(document).ready(function () {
     CheckValidation();
     $("#btnSaveForm, #btnSaveAndNew").on('click', function () {
         var action = $(this).data('action'); // "save" or "saveNew"
@@ -14,8 +17,6 @@
     FetchVendorData();
     FetchRfqNo();
 });
-let vendorList = [];
-var fetchedVendorDataList;
 function CheckValidation() {
     $("#ddlCustomerName").on("blur", function () {
         if (!isValidateSelect($(this).val())) {
@@ -298,7 +299,6 @@ function GetAllPakingType() {
     });
 }
 function Save() {
-
     var isvalid = OnSubmitValidation();
     if (!isvalid) {
         return;
@@ -371,7 +371,6 @@ function clearForm() {
     $("#fetchVendorWhatsappNo").val('');
     $("#fetchVendorEmailId").val('');
     $('#ddlFetchVendorName').val(null).trigger('change');
-
 }
 $('#addBtn').on('click', function () {
     const getSelectVendorID = $("#ddlFetchVendorName").val();
@@ -478,7 +477,6 @@ function collectRfqFormData() {
     };
 }
 function SaveAndSaveNew(action) {
-
     if (action === "save") {
         const data = collectRfqFormData();
         $.ajax({

@@ -27,11 +27,8 @@ $(document).ready(function () {
         let currentOrder = $(this).data('order') || 'asc';
         orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
         $(this).data('order', orderDir); // update for next click
-
         $('th.sortable').not(this).data('order', 'asc');
-
         FetchDataForTable('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase(), 'EditUser', 'DeleteUser', 'userId');
-
     });
     Initialization();
     GetAllLocation("ddlLocation", companyid, function () {
@@ -55,7 +52,6 @@ $("#btnAdd").on("click", function (e) {
     $("#btnSaveAndNewForm").show();
     $("#txtPassword").prop("disabled", false);
     $('#ddlCompanyAndFranchise').val(Number(companyid)).trigger('change');
-
 
     if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
         $('#ddlCompanyAndFranchise').prop('disabled', true);
@@ -150,7 +146,6 @@ function Initialization() {
             }
         });
     });
-
 }
 function FetchUser() {
     $('#userListSection').show();
@@ -253,8 +248,6 @@ function SaveUser(action) {
                     toastr.error("Failed to Save User Details", "Error");
                 }
             });
-
-
         } catch (error) {
             toastr.error("Failed to Save User Details", "Error");
         }
@@ -461,7 +454,6 @@ function ValidationCheck() {
     return true;
 }
 
-// Bind events
 $('#tableuserSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchUser('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
@@ -471,7 +463,6 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchUser('tableuser', '/Home/ViewUserList', orderColumn, orderDir.toUpperCase());
 });
-
 function ViewUser(userId) {
     EditUser(userId);
     $('#userbodyform').find('input, select, textarea, button, a').prop('disabled', true);

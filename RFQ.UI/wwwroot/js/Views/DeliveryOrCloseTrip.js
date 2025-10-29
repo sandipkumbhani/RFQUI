@@ -1,15 +1,13 @@
 ﻿var companyId;
+
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
-
     GetAllVehicleNumber();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("ddlVehicleType", companyId);
     GetAllConsignorList();
     GetAllConsigneeList(); 
-
 });
-
 function GetAllConsignorList() {
     var getUrl = '/Vendor/GetAllVendorList'
     $.ajax({
@@ -36,7 +34,6 @@ function GetAllConsignorList() {
             toastr.error("Failed to Fetch Consignor Name!", "Error");
             $("#ddlLocation").val()
         }
-
     });
 };
 function GetAllConsigneeList() {

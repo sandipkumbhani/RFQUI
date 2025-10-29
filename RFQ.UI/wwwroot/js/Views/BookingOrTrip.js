@@ -21,7 +21,7 @@ $(document).ready(function () {
     GetAllLocation("ddlLocation", companyId);
     GetAllStateList("ddlBillState");
     GetAllConsignorList();
-    GetAllConsigneeList(); 
+    GetAllConsigneeList();
     GetTrakingType();
     GetAllPlacementNo();
     FetchLRNo();
@@ -31,6 +31,7 @@ $(document).ready(function () {
     $('#tableDivLink').on('click', function (e) {
         FetchBookingOrTrip();
     });
+
     $("#btnCancel").on("click", function () {
         $('#formDiv')
             .find('input, select, textarea, button, a')
@@ -49,7 +50,6 @@ $(document).ready(function () {
         FetchDataForTable('BookingTable', fetchBookingUrl, orderColumn, orderDir.toUpperCase(), 'UpdateBooking', 'DeleteBooking', 'bookingId');
     });
 
-
     $("#btnSaveForm, #btnSaveAndNewForm").on('click', function () {
         $(this).prop('disabled', true);
         var action = $(this).data('action');
@@ -57,9 +57,8 @@ $(document).ready(function () {
             SaveBookingOrTrip(action);
         }
     });
-    
+
     //$('#ddlPlacementNo').on('change', function () {
-    //    debugger;
     //    const selectedValue = $(this).val();
     //    if (!selectedValue) {
     //        return;
@@ -137,7 +136,7 @@ function OnSubmitCheckValidation() {
     //    $("#txtVehicleReqDate").val('');
     //    return false;
     //}
-    
+
     if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Please enter a Origin/From", "Validation Error");
         return false;
@@ -154,13 +153,12 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please Select a Customer Name", "Validation Error");
         return false;
     }
-
     if (!isValidateSelect($("#ddlVehicleType").val())) {
         toastr.warning("Please Select a Vehicle Type", "Validation Error");
         return false;
     }
     if (!isValidateSelect($("#ddlDriverName").val())) {
-        toastr.warning("Please Select a Driver Name","Validation Error");
+        toastr.warning("Please Select a Driver Name", "Validation Error");
         return false;
     }
     if (IsNullOrEmpty($("#txtMobileNo").val())) {
@@ -171,9 +169,6 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please select a Tracking Type", "Validation Error");
         return false;
     }
-
-
-
     return true;
 }
 function GetAllConsignorList() {
@@ -202,7 +197,6 @@ function GetAllConsignorList() {
             toastr.error("Failed to Fetch Consignor Name!", "Error");
             $("#ddlLocation").val()
         }
-
     });
 };
 function GetAllConsigneeList() {
@@ -256,7 +250,7 @@ function GetAllDriver() {
             toastr.error("Failed to Fetch Data!", "Error");
         }
     });
-} 
+}
 function GetAllVehicleNumber() {
     $.ajax({
         url: '/Vehicle/GetVehicleNumber',
@@ -390,7 +384,6 @@ function GetDropdownValue(inputId) {
     return result;
 }
 function SaveBookingOrTrip(action) {
-    debugger;
     var saveUrl = '/BookingOrTrip/AddBookingOrTrip';
     var consignorResult = GetDropdownValue("ddlConsignorInput");
     var consigneeResult = GetDropdownValue("ddlConsigneeInput");
@@ -416,11 +409,11 @@ function SaveBookingOrTrip(action) {
         DriverName: $('#ddlDriverName option:selected').text(),
         DriverMobNo: $('#txtMobileNo').val(),
         TrackingTypeId: $('#ddlTrackingType').val(),
-        InvoiceNo: $('#invoiceNo').val(), 
+        InvoiceNo: $('#invoiceNo').val(),
         InvoiceDate: $('#invoiceDate').val() ? $('#invoiceDate').val() : null,
         InvoiceValue: $('#txtInvoiceValue').val(),
         //EWayBillNo: $('#txtEwayBillNo').val(), //
-        EWayBillDate: $('#ewayBillDate').val() ? $('#ewayBillDate').val() : null, 
+        EWayBillDate: $('#ewayBillDate').val() ? $('#ewayBillDate').val() : null,
         EWayBillExpiryDate: $('#expiryDate').val() ? $('#expiryDate').val() : null,
         ConsignerId: consignorResult.id,
         ConsignerName: consignorResult.name,
@@ -551,7 +544,6 @@ function SaveBookingOrTrip(action) {
 
 }
 function UpdateBooking(bookingId) {
-    debugger;
     if ($("#btnUpdate").hasClass('d-none')) {
         $("#btnUpdate").removeClass('d-none');
     }
@@ -635,18 +627,14 @@ function UpdateBooking(bookingId) {
     $("#txtActualWt").val(formData.actualWeight);
     $("#txtChargedWt").val(formData.chargedWeight);
     $("#txtTotalFreight").val(formData.totalFreight);
-
-} 
+}
 function ButtonUpdateClick() {
-    debugger;
     $("#btnUpdate").on('click', function (e) {
-        debugger;
         e.preventDefault();
         var isValid = OnSubmitCheckValidation();
         if (!isValid) {
             return;
         }
-
         var consignorResult = GetDropdownValue("ddlConsignorInput");
         var consigneeResult = GetDropdownValue("ddlConsigneeInput");
 
@@ -687,9 +675,7 @@ function ButtonUpdateClick() {
             ConsigneeId: consigneeResult.id,
             ConsigneeName: consigneeResult.name,
             TransitDays: $("#txtTransitDays").val(),
-
             EDD: $("#eddDate").val(),
-
             ItemId: $("#ddlItemName").val(),
             PackingTypeId: $("#ddlPackingType").val(),
             TotalPacket: $("#txtTotalPkgs").val(),
@@ -699,8 +685,6 @@ function ButtonUpdateClick() {
             LinkId: GetQueryParam("LinkId")
         };
         var linkd = GetQueryParam("LinkId");
-
-
         // First AJAX call
         $.ajax({
             type: "PUT",
@@ -731,21 +715,14 @@ function ButtonUpdateClick() {
                     $("#btnUpdate").hide();
                     $("#btnSaveAndNewForm").show();
                     $("#btnSaveForm").show();
-
                 } else {
                     toastr.error("Failed to Update Booking Or Trip Details!", "Error");
                 }
-
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Update Booking Or Trip Details!", "Error");
             }
         });
-
-
-
-
-
     });
 };
 function ViewBooking(bookingId) {
@@ -765,7 +742,6 @@ function DeleteBooking(bookingId) {
     }).then((result) => {
         if (result.isConfirmed) {
             var deleteVehicleIndentUrl = `/BookingOrTrip/DeleteBookingOrTrip/${bookingId}`;
-
             $.ajax({
                 url: deleteVehicleIndentUrl,
                 type: "DELETE",

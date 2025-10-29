@@ -10,7 +10,7 @@ var orderDir = '';
 var fetchDriverUrl = '/Driver/ViewDriver';
 var companyId;
 var profileid = '';
-//var locationid;
+
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileid = getCookieValue('profileid');
@@ -33,8 +33,8 @@ $(document).ready(function () {
     GetAllCityList("ddlCity");
     GetDriverType();
     DlEKycclick();
-    
     FetchDriverList();
+
     $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
@@ -202,12 +202,9 @@ function DropzoneInitialize() {
                 });
             }
         }
-
-
     });
 }
 function SaveDriver(uploadedFileName, callback) {
-    debugger;
     var driverType = $("#ddlDriverType").val();
     var licenseNo = $("#numLicenseNo").val();
     var driverName = $("#txtDriverName").val();
@@ -276,7 +273,6 @@ function SaveDriver(uploadedFileName, callback) {
     }
 
     $.ajax({
-        
         url: saveUrl,
         type: "POST",
         contentType: "application/json",
@@ -302,9 +298,7 @@ function SaveDriver(uploadedFileName, callback) {
         completeOnSuccess: function () {
             FetchDriverList();
         }
-        
     });
-
 }
 function FetchDriverList() {
     $("#tableDiv").css('display', 'block');
@@ -321,6 +315,7 @@ $('#driverTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchDriverList();
 });
+
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchDriverList();
@@ -375,7 +370,6 @@ function EditDriver(driverId) {
         }
     });
 }
-
 function UpdateDriver(fileName) {
 
     var logoFileName = fileName || $("#txtUploadedPhoto").val() ? $("#txtUploadedPhoto").val() : null;
@@ -565,7 +559,6 @@ function GetDriverType() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-
             response.forEach(category => {
                 driverTypeMap[category.internalMasterId] = category.internalMasterName;
             });
@@ -576,7 +569,6 @@ function GetDriverType() {
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             dropdown.appendChild(placeholderOption);
-
             response.forEach(category => {
                 const option = document.createElement("option");
                 option.value = category.internalMasterId;
@@ -602,10 +594,8 @@ function DeleteDriver(driverId, fileName, linkId) {
         if (result.isConfirmed) {
             var deleteDriverUrl = '/Driver/DeleteDriver/' + driverId;
             var deleteUploadUrl = '/Driver/DeleteUpload';
-
             FetchMasterAttachment(linkId, driverId, function (list) {
                 var result = list;
-
                 $.ajax({
                     url: deleteDriverUrl,
                     type: "DELETE",
@@ -642,7 +632,6 @@ function DeleteDriver(driverId, fileName, linkId) {
         }
     });
 }
-
 function ValidateLicenseNo(number) {
     return /^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(number);
 }
@@ -699,9 +688,6 @@ function InitializeFields() {
     //});
 }
 function ValidationCheck() {
-
-    
-
     if (IsNullOrEmpty($("#ddlDriverType").val())) {
         toastr.warning("Please select a valid Driver Type", "Validation Error");
         return false;
@@ -751,15 +737,12 @@ function ValidationCheck() {
     //}
     return true;
 }
-
 function ViewDriver(driverId) {
     EditDriver(driverId);
     $('#driverForm').find('input, select, textarea, button, a').prop('disabled', true);
     $("#btnUpdateDriver").addClass('d-none');
 }
-
 function FetchDriverCode() {
-
     $.ajax({
         url: "/Driver/GetDriverCode",
         type: "GET",

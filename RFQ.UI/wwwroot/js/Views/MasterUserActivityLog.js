@@ -2,10 +2,8 @@
 var orderDir = '';
 var FetchActivityLogUrl = '/MasterUserActivityLog/GetAllMasterUserActivityLogList';
 
-
 $(document).ready(function () {
     FetchActivityLog();
-
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
@@ -17,12 +15,10 @@ $(document).ready(function () {
         FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), null, null, null);
     });
 });
-
 function FetchActivityLog() {
     FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), null, null, null);
 }
 
-// Bind events
 $('#ActivityLogTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchDataForTable('ActivityLogTable', FetchActivityLogUrl, orderColumn, orderDir.toUpperCase(), null, null, null);
