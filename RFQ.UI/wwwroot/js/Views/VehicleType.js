@@ -1,5 +1,6 @@
 ﻿var orderColumn = '';
 var orderDir = '';
+
 $(document).ready(function () {
 
     $("#txtVehicleType").on("blur", function () {
@@ -65,14 +66,12 @@ function OnSubmitValidation() {
     }
     return true;
 }
-
 function FetchVehicleTypes() {
     $('#tableDiv').show();
     $("#addVehicleTypeDiv").addClass("d-none");
     $('#btnAdd').removeClass('d-none');
     FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), 'EditVehicleType', 'DeleteVehicleType', 'vehicleTypeId');
 }
-
 
 $('#vehicleTypesTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
@@ -158,7 +157,6 @@ function EditVehicleType(vehicleTypeId) {
     $("#btnCancel").removeClass("d-none");
     $("#txtVehicleType").val(data[0].vehicleTypeName);
     $("#txtminKmsPerDay").val(data[0].minimumKms);
-
 }
 function UpdateVechileType() {
     $("#updateButton").on("click", function (e) {
@@ -205,7 +203,6 @@ function DeleteVehicleType(vehicleTypeId) {
     }).then((result) => {
         if (result.isConfirmed) {
             var deleteVehicleTypesUrl = '/Vehicle/DeleteVehicleType/' + vehicleTypeId;
-
             $.ajax({
                 url: deleteVehicleTypesUrl,
                 type: "DELETE",
@@ -230,5 +227,3 @@ function ViewVehicleType(vehicleTypeId) {
     $('#VehicleTypeForm').find('input, select, textarea, button, a').prop('disabled', true);
     $("#updateButton").addClass('d-none');
 }
-
-

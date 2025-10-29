@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -36,6 +37,7 @@ namespace RFQ.UI.Controllers
                     vehicleIndentRequestDto.CreatedBy = _globalClass.UserId;
                     vehicleIndentRequestDto.UpdatedBy = _globalClass.UserId;
                     vehicleIndentRequestDto.CompanyId = _globalClass.CompanyId;
+                    vehicleIndentRequestDto.StatusId = (int)EStatus.IsActive;
                     var result = await _vehicleIndentService.AddVehicleIndent(vehicleIndentRequestDto);
                     return Json(result);
                 }

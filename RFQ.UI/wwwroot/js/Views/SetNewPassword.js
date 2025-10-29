@@ -1,17 +1,14 @@
 ﻿$(document).ready(function () {
     OnSubmit();
 });
-
 function OnSubmit() {
     $('#BtnCreateNew').on('click', function (e) {
         const newPassword = $('#newPassword').val();
         const confirmPassword = $('#confirmPassword').val();
-
         if (newPassword !== confirmPassword) {
             toastr.warning("Passwords do not match.", "warning");
             return;
         }
-
         const currentUrl = window.location.href;
         const url = new URL(currentUrl);
         const params = new URLSearchParams(url.search);
@@ -21,7 +18,6 @@ function OnSubmit() {
             Password: newPassword,
             LoginId: loginId,
         }
-
         var UpdatePassWordUrl = '/User/UpdateUserPassword';
         $.ajax({
             type: "post",

@@ -563,7 +563,6 @@ function ViewCorporateCompany(companyId) {
 }
 function GetFranchiseAndCorporateName() {
     var GetUrl = '/Home/GetAllCompanyAndFranchise';
-    debugger;
     $.ajax({
         url: GetUrl,
         type: "GET",

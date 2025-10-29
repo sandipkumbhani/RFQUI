@@ -19,7 +19,6 @@ $("#ddlRfqStatus").on('change', function () {
             $("#billingDiv").addClass('d-none');
             $("#remarksDiv").removeClass('col-lg-9');
             $("#remarksDiv").addClass('col-lg-6');
-
         } else {
             $(".ddlRfqReason").addClass('d-none');
             $("#remarksDiv").removeClass('col-lg-6');
@@ -50,16 +49,12 @@ $(document).ready(function () {
         let currentOrder = $(this).data('order') || 'asc';
         orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
         $(this).data('order', orderDir);
-
         $('th.sortable').not(this).data('order', 'asc');
-
         FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase(), 'EditRfqFinalizatioin', 'DeleteRfqFinalizatioin', 'rfqFinalIdId');
     });
     $("#btnSave, #btnSaveAndNew").on('click', function () {
-
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
-
             SaveAndSaveNew(action);
         }
     });
@@ -170,7 +165,6 @@ function GetRfqStatus() {
             let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.RFQ_STATUS);
             const select = document.getElementById("ddlRfqStatus");
             select.innerHTML = "";
-
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a RFQ Status";
@@ -243,7 +237,6 @@ function GetRfqFailureReason() {
             let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.FAILURE_REASONS);
             const select = document.getElementById("ddlRfqReason");
             select.innerHTML = "";
-
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a Failure Reason";
@@ -265,7 +258,6 @@ function GetRfqFailureReason() {
 }
 function SaveAndSaveNew(action) {
     var saveUrl = '/RFQFinalization/AddRfqFinal';
-
     const rfqFinalformData = {
         RfqId: $("#txtRfqId").val(),
         RfqStatusId: $('#ddlRfqStatus').val(),
@@ -275,7 +267,6 @@ function SaveAndSaveNew(action) {
         DetentionPerDay: $('#txtPerDay').val() || 0,
         DetentionFreeDays: $('#txtFreeDays').val() || 0,
         MarginAmount: 12314,
-
         LinkId: GetQueryParam("LinkId")
     };
     let selectedVendorList = GetSelectedVendor();
@@ -293,15 +284,12 @@ function SaveAndSaveNew(action) {
         }
     }
     else {
-
         var formData = {
             RfqFinalDto: rfqFinalformData,
             RfqFinalRateDtos: rfqFinalRateFormData,
         }
     }
-
     if (action === "save") {
-
         $.ajax({
             url: saveUrl,
             type: 'POST',
@@ -597,7 +585,6 @@ $(document).on("input", "#awardedVendorTable tbody #txtassignedVehicle", functio
     let availVehicle = parseInt(row.find('input[type="checkbox"]').data("availvehicle")) || 0;
     let vehicleCount = parseInt(row.find('input[type="checkbox"]').data("vehiclecount")) || 0;
     let enteredValue = parseInt($(this).val()) || 0;
-
     if (enteredValue > availVehicle || enteredValue > vehicleCount) {
         toastr.warning(`Assigned vehicles cannot exceed available vehicles and  total vehicles.`);
         $(this).val('');
@@ -612,7 +599,6 @@ $(document).on("change", "#awardedVendorTable tbody input[type='checkbox']", fun
 });
 function ValidateTotalForVendor(vehicleCount) {
     let totalAssigned = 0;
-
     $("#awardedVendorTable tbody tr").each(function () {
         let checkbox = $(this).find('input[type="checkbox"]');
         if (checkbox.is(":checked")) {
@@ -625,7 +611,6 @@ function ValidateTotalForVendor(vehicleCount) {
             totalAssigned += val;
         }
     });
-
     if (totalAssigned > vehicleCount) {
         toastr.warning(`Total assigned vehicles cannot exceed total vehicles (${vehicleCount}).`);
         $("#awardedVendorTable tbody tr").find('input[type="text"]').val('');

@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    // Email validation on blur
+
     $("#txtLoginName").on("blur", function () {
         var txtLoginName = $(this).val();
         if (IsNullOrEmpty(txtLoginName)) {
@@ -8,10 +8,8 @@
         }
     });
 
-    // Handle form submit
     $('#continueButton').on('click', function (e) {
         e.preventDefault();
-        
         const txtLoginName = $('#txtLoginName').val().trim();
         if (IsNullOrEmpty(txtLoginName)) {
             toastr.warning("Please enter a Login User Name", "Validation Error");

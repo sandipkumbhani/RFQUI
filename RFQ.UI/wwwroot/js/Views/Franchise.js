@@ -4,16 +4,14 @@ var myDropzone;
 var orderColumn = '';
 var orderDir = '';
 var fetchFranchiseUrl = '/Franchise/GetAllFranchise';
-$(document).ready(function () {
 
+$(document).ready(function () {
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
         orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
         $(this).data('order', orderDir); // update for next click
-
         $('th.sortable').not(this).data('order', 'asc');
-
         FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), 'EditFranchise', 'DeleteFranchise', 'companyId');
     });
     GetAllCityList("ddlCity");
@@ -33,7 +31,7 @@ $(document).ready(function () {
         $("#formDiv").css('display', 'block');
     });
     $('#tableDivLink').on('click', function (e) {
-        e.preventDefault(); // prevent default anchor behavior
+        e.preventDefault(); 
         FetchFranchise();
     });
 });
@@ -291,15 +289,12 @@ function OnSubmitValidation() {
         return false;
     }
 
-
     if (!IsNullOrEmpty(gstNumber)) {
         if (!ValidateGstNumber(gstNumber)) {
             toastr.warning("Please enter a valid GST Number", "Validation Error");
             return false;
         }
-
         var panInGst = gstNumber.substring(2, 12); // GSTIN[2..11]
-
         if (panInGst !== panNumber) {
             toastr.warning("PAN in GST Number does not match the entered PAN Number", "Validation Error");
             return false;
@@ -345,7 +340,6 @@ function SaveFranchise(fileName, callback) {
         success: function (response) {
             if (response && response.success === true) {
                 let companyId = response.data.companyId;
-
                 Saveattachment(companyId);
                 toastr.success("Franchise Details Submitted Successfully!");
                 addMasterUserActivityLog(0, LogType.Create, "Franchise Details Submitted Successfully!", 0);
@@ -356,27 +350,18 @@ function SaveFranchise(fileName, callback) {
             } else {
                 // Backend returned success: false (e.g., duplicate)
                 toastr.warning(response.message || "Franchise could not be saved.");
-
                 if (typeof callback === "function") {
                     callback(null);
                 }
             }
         },
         error: function (xhr, status, error) {
-            console.error("AJAX Error:", {
-                status: status,
-                error: error,
-                responseText: xhr.responseText
-            });
-
             toastr.error("Failed to Submit Franchise Details!", "Error");
-
             if (typeof callback === "function") {
                 callback(null);
             }
         }
     });
-
     return companyId;
 };
 function FetchFranchise() {
@@ -391,7 +376,6 @@ function FetchFranchise() {
     ResetAttachmentRepeater();
     FetchDataForTable('franchiseTable', fetchFranchiseUrl, orderColumn, orderDir.toUpperCase(), 'EditFranchise', 'DeleteFranchise', 'companyId');
 }
-
 
 $('#franchiseTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
@@ -473,7 +457,6 @@ function UpdateFranchise(fileName) {
         GSTNo: $("#txtGstNumber").val(),
         LogoImage: logoFileName,
         LinkId: linkId
-
     }
     let repeaterItems = document.querySelectorAll("[data-repeater-item]");
     let updateAttachmentDetails = [];
@@ -566,7 +549,6 @@ function DeleteFranchise(companyId, fileName, linkId) {
         if (result.isConfirmed) {
             var deleteFranchiseUrl = '/Franchise/DeleteFranchise/' + companyId;
             var deleteUploadUrl = '/Franchise/DeleteUpload';
-
             FetchMasterAttachment(linkId, companyId, function (list) {
                 var result = list;
 
@@ -607,7 +589,6 @@ function DeleteFranchise(companyId, fileName, linkId) {
         }
     });
 }
-
 function ViewFranchise(companyId) {
     EditFranchise(companyId);
     $('#franchiseForm').find('input, select, textarea, button, a').prop('disabled', true);

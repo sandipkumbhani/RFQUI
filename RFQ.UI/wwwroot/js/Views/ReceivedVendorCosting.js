@@ -43,14 +43,11 @@ function openModal(row) {
 function BindTable(data) {
     const tbody = $("#rcostingReceivedTable tbody");
     tbody.empty();
-
     if (!data || data.length === 0) {
         tbody.append('<tr><td colspan="16" class="text-center">No records found</td></tr>');
         return;
     }
-
     data.forEach((row, index) => {
-        
         const safeRow = $('<div>').text(JSON.stringify(row)).html(); // Prevent XSS
         const rowHtml = `
       <tr data-index="${index}" data-row='${safeRow}'>
@@ -79,19 +76,13 @@ function BindTable(data) {
         <td>${row.packingName}</td>
         <td>${row.itemName}</td>
         <td>${row.panNo}</td>
-
-
-
         <td>${row.email}</td>
-
-
         <td><a href="#" class="view-quote">View Quote</a></td>
         <td style="text-align:center;">
           <input type="checkbox" class="select-row" data-index="${index}" ${row.askForReBid ? 'checked' : ''}>
         </td>
       </tr>`;
         tbody.append(rowHtml);
-        
     });
 
     // Event: view-quote
@@ -101,10 +92,8 @@ function BindTable(data) {
         openModal(rowData);
     });
 
-    // Event: Send button click
     $(document).off('click', '.button-main .card-link').on('click', '.button-main .card-link', function (e) {
         e.preventDefault();
-
         const selectedData = $('#rcostingReceivedTable tbody tr').map((_, tr) => {
             const checkbox = $(tr).find('.select-row');
             if (checkbox.is(':checked')) {
@@ -120,7 +109,6 @@ function BindTable(data) {
 
         let successCount = 0;
         let failureCount = 0;
-
         selectedData.forEach((rowData, i) => {
             $.ajax({
                 url: '/ReceivedVendorCosting/SendEmail',
@@ -143,8 +131,4 @@ function BindTable(data) {
             });
         });
     });
-
-
-
-
 }

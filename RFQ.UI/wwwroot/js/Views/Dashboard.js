@@ -2,8 +2,6 @@
 
 });
 
-
-
 // Fuel Consumption Chart
 const fuelCtx = document.getElementById('fuelChart').getContext('2d');
 new Chart(fuelCtx, {

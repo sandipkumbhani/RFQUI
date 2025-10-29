@@ -285,13 +285,11 @@ function CreateDataTableIfNotExists(displayColumns) {
                 }
             }
         });
-
         // Move export buttons
         table.buttons().container().appendTo('#exportButtons');
     }
 }
 function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
-
     var rowsHtml = "";
     if (gridTableName == "vehicleTypesTable") {
         response.data.forEach(item => {
@@ -516,7 +514,6 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
 
             rowsHtml += `</td></tr>`;
         });
-
     }
     if (gridTableName == "tableuser") {
         response.data.forEach(item => {
@@ -538,10 +535,8 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteUser(${item.userId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
-
             rowsHtml += `</td></tr>`;
         });
-
     }
     if (gridTableName == "tablelocation") {
         response.data.forEach(item => {
@@ -567,10 +562,8 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteLocation(${item.locationId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
-
             rowsHtml += `</td></tr>`;
         });
-
     }
     if (gridTableName == "rfqTable") {
         response.data.forEach(item => {
@@ -613,10 +606,8 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteRfq(${item.rfqId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
-
             rowsHtml += `</td></tr>`;
         });
-
     }
     if (gridTableName == "rfqFinalizationTable") {
         response.data.forEach(item => {
@@ -640,10 +631,8 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteRfqFinalization(${item.rfqFinalId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
-
             rowsHtml += `</td></tr>`;
         });
-
     }
     if (gridTableName == "IndentTable") {
         response.data.forEach(item => {
@@ -684,10 +673,8 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteVehicleIndent(${item.indentId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
-
             rowsHtml += `</td></tr>`;
         });
-
     }
     if (gridTableName == "PlacementTable") {
         response.data.forEach(item => {
@@ -716,13 +703,10 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteVehiclePlacement(${item.placementId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
-
             rowsHtml += `</td></tr>`;
         });
-
     }
     if (gridTableName === "ActivityLogTable") {
-        debugger;
         response.data.forEach(item => {
             rowsHtml += `
             <tr>
@@ -759,7 +743,6 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             <td>${item.driverName}</td>
             <td>${item.driverMobNo}</td>
             <td>${item.internalMasterName}</td>
-            
             <td class="text-center" style="cursor:pointer;">`;
 
             if (IsEdit) {
@@ -771,13 +754,10 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
             if (IsCancel) {
                 rowsHtml += `<a class="icon-btn" onclick="DeleteBooking(${item.bookingId})"><i class="ri-delete-bin-3-line"></i></a>`;
             }
-
             rowsHtml += `</td></tr>`;
         });
-
     }
     return rowsHtml;
-
 }
 function generatePagination(totalRecords, pageSize, currentPage, gridTableName, url, IsEdit, IsView, IsCancel) {
     const paginationContainer = $('#customPagination');
@@ -1042,11 +1022,9 @@ function formatDate(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);
     if (isNaN(date)) return "";
-
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months start at 0
     const year = date.getFullYear();
-
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');

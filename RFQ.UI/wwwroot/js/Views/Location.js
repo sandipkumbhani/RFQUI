@@ -5,7 +5,6 @@ $(document).ready(function () {
     $('#locationListSectionLink').on('click', function (e) {
         FetchLocationList();
     });
-
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
@@ -21,6 +20,7 @@ $(document).ready(function () {
     UpdateLocation();
     FetchLocationList();
 });
+
 $("#btnAdd").on("click", function (e) {
     e.preventDefault();
     $("#locationListSection").hide();
@@ -140,7 +140,6 @@ function SaveLocation(action) {
         Email: email,
         Code: locationCode
     };
-
     if (action === "save") {
         $.ajax({
             url: '/Location/LocationSave/',
@@ -201,7 +200,6 @@ function SaveLocation(action) {
 function UpdateLocation() {
     $("#btnUpdate").on('click', function (e) {
         e.preventDefault();
-
         var isvalid = ValidationCheck();
         if (!isvalid) {
             return;
@@ -239,7 +237,6 @@ function UpdateLocation() {
                     $("#btnUpdate").hide();
                     $("#btnSaveAndNewForm").show();
                     $("#btnSaveForm").show();
-
                 } else {
                     toastr.error("Failed to Update Location Details!", "Error");
                 }
@@ -257,7 +254,6 @@ function EditLocation(locationId) {
     }
     var data = viewModelDto.filter(x => x.locationId == locationId);
     var formdata = data[0];
-
     $('#locationListSection').css('display', 'none');
     $("#locationFormSection").css('display', 'Block');
     $("#backButton").css('display', 'none');
@@ -293,7 +289,6 @@ function DeleteLocation(locationId) {
     }).then((result) => {
         if (result.isConfirmed) {
             var deletelocationlist = '/Location/Deletelocationlist/' + locationId;
-
             $.ajax({
                 url: deletelocationlist,
                 type: "DELETE",
@@ -311,7 +306,6 @@ function DeleteLocation(locationId) {
         }
     });
 }
-
 function ValidationCheck() {
     if (IsNullOrEmpty($("#txtLocationName").val())) {
         toastr.warning("Please enter a valid Location Name", "Validation Error");
@@ -341,8 +335,6 @@ function ValidationCheck() {
     return true;
 }
 
-
-// Bind events
 $('#tablelocationSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
     FetchLocationList('tablelocation', '/Location/ViewLocationList', orderColumn, orderDir.toUpperCase());
@@ -352,7 +344,6 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchLocationList('tablelocation', '/Location/ViewLocationList', orderColumn, orderDir.toUpperCase());
 })
-
 function ViewLocation(locationId) {
     EditLocation(locationId);
     $('#LocationForm').find('input, select, textarea, button, a').prop('disabled', true);

@@ -4,6 +4,7 @@ var orderColumn = '';
 var orderDir = '';
 var fetchUrl = '/CompanyConfiguration/GetAllCompanyConfiguration'
 var companyId;
+
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     $(document).on('click', 'th.sortable', function () {
@@ -27,11 +28,9 @@ async function loadAllData() {
     try {
         const companies = await GetAllCompany();
         const providers = await GetAllProviders();
-
         const config = await FetchCompanyConfiguration();
-
-        // Continue with logic after all are done
     } catch (error) {
+        console.log(error);
     }
 }
 

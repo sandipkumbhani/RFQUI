@@ -78,7 +78,6 @@ function GetAllProfileName() {
                 opt.textContent = option.profileName;
                 selectProfileName.appendChild(opt);
             });
-
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
@@ -106,7 +105,6 @@ function GetAllMenuName() {
                 opt.textContent = option.linkGroupName;
                 selectProfileRightsName.appendChild(opt);
             });
-
             $('.selectpicker').selectpicker('refresh');
         },
         error: function (xhr, status, error) {
@@ -133,7 +131,6 @@ function GetLinkItemList(linkGroupId, profileId) {
             });
             if (data.length > 0) {
                 linkItemData = data;
-
             } else {
                 var linkGroupId = parseInt($("#txtMenu").val());
                 var profileId = parseInt($("#txtName").val());
@@ -240,8 +237,6 @@ function GetLinkItemList(linkGroupId, profileId) {
 
                 $("#menuItemList").append(html);
             });
-
-
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to submit LinkMenu Item ", "Error");
@@ -399,7 +394,6 @@ function AddOrUpdateProfileRights(AllProfileRightsData) {
         }
     });
 }
-
 function CheckAll() {
     $("#selectAll").on("change", function () {
         var isChecked = $(this).prop("checked");

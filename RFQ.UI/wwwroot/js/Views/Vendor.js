@@ -1,14 +1,17 @@
 ﻿var orderColumn = '';
 var orderDir = '';
 var companyId;
+
 document.getElementById("txtPanNumber").addEventListener("input", function () {
     const panKyc = this.value;
     document.getElementById("numPanNumber").value = panKyc;
 });
+
 document.getElementById("txtGstNumber").addEventListener("input", function () {
     const gstKyc = this.value;
     document.getElementById("numGstNumber").value = gstKyc;
 });
+
 const urlParams = new URLSearchParams(window.location.search);
 const linkId = urlParams.get('LinkId');
 
@@ -23,18 +26,17 @@ $(document).ready(function () {
     CheckValidation();
     VehicleTypeDetailsTable();
     ApplicableRouteDetailsTable();
+
     $(document).on("click", "#btnViewButton", function () {
         FetchVendor();
         $("#formDiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     });
-
     $('#tableDivLink').on('click', function (e) {
         e.preventDefault(); // prevent default anchor behavior
         $('#formDiv').hide(); // hide the add/edit form
         $('#tableDiv').show(); // show the list
     });
-
     $("#btnSaveVendor, #btnsaveandnew").on('click', function () {
         var action = $(this).data('action');
         SaveVendor(action);
@@ -164,7 +166,6 @@ $('#ddlvendorFromCityTable').on('change', function () {
     const stateId = $('option:selected', this).data('stateid');
     $('#ddlvendorFromStateTable').val(stateId).change();
 });
-
 function CheckValidation() {
     $("#txtPanNumber").on("blur", function () {
         if (!IsNullOrEmpty($(this).val()) && !ValidatePanNumber($(this).val())) {
@@ -250,7 +251,6 @@ function OnSubmitValidation() {
         toastr.warning("Please enter a valid PAN Nubmer", "Validation Error");
         return false;
     }
-
     if (IsNullOrEmpty($("#txtVendorName").val())) {
         toastr.warning("Please enter a valid Vendor Name", "Validation Error");
         return false;
@@ -294,8 +294,6 @@ function OnSubmitValidation() {
         toastr.warning("Please enter a valid PAN Number", "Validation Error");
         return false;
     }
-
-    
     if (!IsNullOrEmpty(gstNumber)) {
         if (!ValidateGstNumber(gstNumber)) {
             toastr.warning("Please enter a valid GST Number", "Validation Error");
@@ -303,17 +301,13 @@ function OnSubmitValidation() {
         }
 
         var panInGst = gstNumber.substring(2, 12); // GSTIN[2..11]
-
         if (panInGst !== panNumber) {
             toastr.warning("PAN in GST Number does not match the entered PAN Number", "Validation Error");
             return false;
         }
     }
-
-    
     return true;
 }
-
 function GetAllInternalMaster() {
     var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
     $.ajax({
@@ -329,11 +323,9 @@ function GetAllInternalMaster() {
     });
 }
 function BindDropDown(data) {
-
     let internalData = data.filter(x => x.internalMasterTypeId == 3);
     const select = document.getElementById("ddlVendorCategory");
     select.innerHTML = "";
-
     let placeholderOption = document.createElement("option");
     placeholderOption.value = "";
     placeholderOption.textContent = "Select a Category";
@@ -357,7 +349,6 @@ function BindDropDownFromCity() {
         success: function (response) {
             const select = document.getElementById("ddlvendorFromCityTable");
             select.innerHTML = "";
-
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a City";
@@ -378,7 +369,6 @@ function BindDropDownFromCity() {
         }
     });
 }
-
 function SaveVendor(action) {
     if (OnSubmitValidation()) {
         var legalName = $("#txtLegalName").val();
@@ -643,7 +633,6 @@ function EditVendor(partyId) {
     })
 }
 function UpdateVendor() {
-
     var formData = {
         PartyId: $("#hdnPartyId").val(),
         PartyName: $("#txtVendorName").val(),
@@ -787,8 +776,6 @@ function DeleteVendor(partyId, linkId) {
         }
     });
 }
-
-
 function ClearGstFields() {
     $("#txtLegalName").val('');
     $("#txtTypeBusiness").val('');
@@ -805,7 +792,6 @@ function ClearPanFields() {
         $("#txtPanStatus").val(''),
         $("#txtPanVerifiedOn ").val('')
 }
-
 function VehicleTypeDetailsTable() {
     $('#btnAddVendorVehicleType').on('click', function () {
         const getSelectVehicleTypeID = $("#ddlvendorVehicleTypeTable").val();
@@ -856,7 +842,6 @@ function VehicleTypeDetailsTable() {
 }
 function RenderVehicleTypeDetailsTable() {
     const tbody = $('#vendorVehicleTypeTable tbody');
-
     tbody.empty();
     $.each(vehicleTypeNameList, function (index, item) {
         const row = `
@@ -874,7 +859,6 @@ function RenderVehicleTypeDetailsTable() {
 function ClearVehicleTypeForm() {
     $('#ddlvendorVehicleTypeTable').val(null).trigger('change');
 }
-
 function ApplicableRouteDetailsTable() {
     $('#btnAddVendorApplicableRoute').on('click', function () {
         const getSelectFromCityID = $("#ddlvendorFromCityTable").val();
@@ -943,7 +927,6 @@ function ApplicableRouteDetailsTable() {
 }
 function RenderApplicableRouteDetailsTable() {
     const tbody = $('#applicableRouteDetails tbody');
-
     tbody.empty();
     $.each(applicableRouteList, function (index, item) {
         const row = `
@@ -965,7 +948,6 @@ function ClearApplicableRouteForm() {
     $('#ddlvendorFromStateTable').val(null).trigger('change');
     $('#ddlvendorToStateTable').val(null).trigger('change');
 }
-
 function FetchVendorVehicleTypeList(partyId) {
     var fetchVehicleTypeUrl = '/MasterPartyVehicleType/GetMasterPartyVehicleTypeByPartyId/' + partyId;
     var result = null;
@@ -1000,7 +982,6 @@ function FetchVendorApplicableRouteList(partyId) {
     });
     return result;
 }
-
 function ViewVendor(partyId) {
     EditVendor(partyId);
     $('#formDiv').find('input, select, textarea, button , a').prop('disabled', true);
