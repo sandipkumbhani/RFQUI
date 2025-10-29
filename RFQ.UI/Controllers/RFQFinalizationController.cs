@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -32,15 +33,16 @@ namespace RFQ.UI.Controllers
             return View("Views/RFQ/RFQFinalization.cshtml");
         }
         [HttpPost]
-        public async Task<IActionResult> AddRfqFinal([FromBody] RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
+        public async Task<IActionResult> AddRfqFinal([FromBody] RfqFinalizationSaveRequestDto requestDto)
         {
             try
             {
-                if (rfqFinalizationSaveRequestDto != null)
+                if (requestDto != null)
                 {
-                    rfqFinalizationSaveRequestDto.RfqFinalDto.CreatedBy = _globalClass.UserId;
-                    rfqFinalizationSaveRequestDto.RfqFinalDto.UpdatedBy = _globalClass.UserId;
-                    var result = await _rfqFinalService.AddRfqFinal(rfqFinalizationSaveRequestDto);
+                    requestDto.RfqFinalDto.CreatedBy = _globalClass.UserId;
+                    requestDto.RfqFinalDto.UpdatedBy = _globalClass.UserId;
+                    requestDto.RfqFinalDto.StatusId = (int)EStatus.IsActive;
+                    var result = await _rfqFinalService.AddRfqFinal(requestDto);
                     return Json(result);
                 }
                 else

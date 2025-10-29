@@ -362,6 +362,7 @@ $('#pageLength').off('change').on('change', function () {
     FetchRfqFinalizationList();
 });
 function EditRfqFinalizatioin(rfqFinalIdId) {
+    debugger;
     if ($("#btnUpdateRfqFinalization").hasClass('d-none')) {
         $("#btnUpdateRfqFinalization").removeClass('d-none');
         $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', false);
