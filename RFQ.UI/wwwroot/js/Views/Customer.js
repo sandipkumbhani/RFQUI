@@ -65,13 +65,13 @@ $(document).ready(function () {
     GstEKycClick();
     PanEKycClick();
     FetchCustomerList();
-    getAutoCustomerCode();
 });
 
 function FetchCustomerList() {
     $("#tableDiv").show();
     $("#formDiv").hide();
     $('#customerForm')[0].reset();
+    getAutoCustomerCode();
     $('#ddlCity').val(null).trigger('change');
     $("#btnSaveCustomer").show();
     $("#btnUpdate").hide();
@@ -644,7 +644,6 @@ function ValidationCheck() {
     }
     return true;
 }
-
 function getAutoCustomerCode() {
     $.ajax({
         url: '/Customer/GetAutoCustomerCode', // Replace with your controller name
@@ -658,7 +657,6 @@ function getAutoCustomerCode() {
         }
     });
 }
-
 function ViewCustomer(partyId) {
     EditCustomer(partyId);
     $('#customerForm').find('input, select, textarea, button, a').prop('disabled', true);
