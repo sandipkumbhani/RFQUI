@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.Text;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Infrastructure.Provider;
+using RFQ.UI.Domain.Enum;
 
 namespace RFQ.UI.Controllers
 {
@@ -89,11 +90,11 @@ namespace RFQ.UI.Controllers
                     requestForQouteRequestDto.RfqRequestDto.CompanyId = _globalClass.CompanyId;
                     requestForQouteRequestDto.RfqRequestDto.CreatedBy = _globalClass.UserId;
                     requestForQouteRequestDto.RfqRequestDto.UpdatedBy = _globalClass.UserId;
+                    requestForQouteRequestDto.RfqRequestDto.StatusId = (int)EStatus.IsActive;
 
                     var result = await _requestForQuoteService.AddRfq(requestForQouteRequestDto);
                     if (result != null && result.RfqRecipients.Count > 0)
                     {
-
                         RfqRecipientsList = result.RfqRecipients;
                         foreach (var vendor in RfqRecipientsList)
                         {
