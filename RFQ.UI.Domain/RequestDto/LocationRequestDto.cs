@@ -25,7 +25,7 @@
         public string Email { get; set; }
         public string? Code { get; set; }
         public int LinkId { get; set; }
-        //public int StatusId { get; set; } = 30;
+        public int StatusId { get; set; } 
         public int CreatedBy { get; set; }
         public int UpdatedBy { get; set; }
 

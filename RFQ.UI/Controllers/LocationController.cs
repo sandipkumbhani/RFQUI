@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -34,7 +35,7 @@ namespace RFQ.UI.Controllers
                     locationRequestDto.CompanyId = _globalClass.CompanyId;
                     locationRequestDto.CreatedBy = _globalClass.UserId;
                     locationRequestDto.UpdatedBy = _globalClass.UserId;
-
+                    locationRequestDto.StatusId = (int)EStatus.IsActive;
                     var result = await _locationService.AddLocation(locationRequestDto);
                     return Json(result);
                 }
@@ -104,7 +105,6 @@ namespace RFQ.UI.Controllers
                 locationRequestDto.CreatedBy = _globalClass.UserId;
                 locationRequestDto.UpdatedBy = _globalClass.UserId;
                 locationRequestDto.CompanyId = _globalClass.CompanyId;
-
                 var result = await _locationService.EditLocation(locationId, locationRequestDto);
                 if (result != null)
                     return Json(new { result = "success" });
