@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -35,6 +36,7 @@ namespace RFQ.UI.Controllers
                     productRequestDto.UpdatedBy = _globalClass.UserId;
                     productRequestDto.CreatedOn = DateTime.Now;
                     productRequestDto.UpdatedOn = DateTime.Now;
+                    productRequestDto.StatusId = (int)EStatus.IsActive;
 
                     var result = await _productService.AddProduct(productRequestDto);
                     return Json(result);
