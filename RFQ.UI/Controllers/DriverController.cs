@@ -135,19 +135,28 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult DriverSave([FromBody] DriverRequestDto driverRequestDto)
+        public async Task<IActionResult> DriverSave([FromBody] DriverRequestDto driverRequestDto)
         {
-            if (driverRequestDto != null)
+            try
             {
+                if (driverRequestDto == null)
+                {
+                    return Json(new { success = false, message = "Invalid Driver data." });
+                }
                 driverRequestDto.CreatedBy = _globalClass.UserId;
                 driverRequestDto.UpdatedBy = _globalClass.UserId;
                 driverRequestDto.StatusId = (int)EStatus.IsActive;
-                var result = _driverServices.AddDriver(driverRequestDto);
-                return Json(new { result });
+
+                var result = await _driverServices.AddDriver(driverRequestDto);
+                if (result == null)
+                {
+                    return Json(new { success = false, message = "License Number already exists." });
+                }
+                return Json(new { success = true, data = result });
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { result = "fail" });
+                return StatusCode(500, "An internal error occurred while saving the Driver.");
             }
         }
 
