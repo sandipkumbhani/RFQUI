@@ -278,27 +278,23 @@ function SaveDriver(uploadedFileName, callback) {
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
-            if (response) {
-                //$("#btnSave").prop('disabled', false);
-                //$("#btnsaveandnew").prop('disabled', false);
+            if (response && response.success) {
                 toastr.success("Driver Details Saved Successfully!", "Success");
                 addMasterUserActivityLog(0, LogType.Create, "Driver Details Saved Successfully!", 0);
-                if (typeof this.completeOnSuccess === "function") {
-                    this.completeOnSuccess();
-                }
-            } else {
-                toastr.error("Failed to Submit Driver Details.", "Error");
+                FetchDriverList();
             }
-            
-
+            else if (response && response.message === "License Number already exists.") {
+                toastr.warning(response.message, "Warning");
+            }
+            else {
+                toastr.error(response.message || "Failed to Submit Driver Details.", "Error");
+            }
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Submit Driver Details.", "Error");
-        },
-        completeOnSuccess: function () {
-            FetchDriverList();
+            toastr.error("An internal error occurred while saving the Driver.", "Error");
         }
     });
+
 }
 function FetchDriverList() {
     $("#tableDiv").css('display', 'block');
