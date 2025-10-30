@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
@@ -92,6 +93,7 @@ namespace RFQ.UI.Controllers
             {
                 if (companyConfigrationRequestDto != null)
                 {
+                    companyConfigrationRequestDto.StatusId = (int)EStatus.IsActive;
                     var result = await _companyConfigurationServices.AddCompanyConfiguration(companyConfigrationRequestDto);
                     return Json(new { result = "Success" });
                 }
