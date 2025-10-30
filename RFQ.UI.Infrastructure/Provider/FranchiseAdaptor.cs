@@ -65,37 +65,22 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     httpClient.DefaultRequestHeaders.Authorization =
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
                     string url = _fleetLynkApiUrl + _config["Franchise:AddFranchise"];
-
                     var jsonContent = JsonConvert.SerializeObject(franchiseRequestDto);
                     var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
                     var response = await httpClient.PostAsync(url, content);
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        Console.WriteLine($"API call failed with status: {response.StatusCode}");
-                        return null;
-                    }
-
                     var responseData = await response.Content.ReadAsStringAsync();
-
                     var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                     if (responseModel?.StatusCode == 200 && responseModel.Data != null)
-                    {
                         return JsonConvert.DeserializeObject<FranchiseRequestDto>(responseModel.Data.ToString());
-                    }
-
-                    Console.WriteLine($"Unexpected response: {responseData}");
+                    else
+                        return null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Exception in AddFranchise: {ex.Message}");
+                throw;
             }
-
-            return null;
         }
 
         public async Task<string> DeleteFranchise(int companyId)

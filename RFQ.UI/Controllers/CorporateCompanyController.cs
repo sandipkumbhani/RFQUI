@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -31,23 +32,24 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                corporateCompanyRequestDto.LogoImage = "null";
-                if (corporateCompanyRequestDto != null)
-                {
-                    corporateCompanyRequestDto.CreatedBy = Convert.ToInt32(_globalClass.UserId);
-                    corporateCompanyRequestDto.UpdatedBy = Convert.ToInt32(_globalClass.UserId);
+                if (corporateCompanyRequestDto == null)
+                    return Json(new NewCommonResponseDto { StatusCode = 500, Message = "Somthing Went Wrong" });
 
-                    var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyRequestDto);
-                    return Json(new { result });
-                }
-                else
+                corporateCompanyRequestDto.LogoImage = "null";
+                corporateCompanyRequestDto.CreatedBy = _globalClass.UserId;
+                corporateCompanyRequestDto.UpdatedBy = _globalClass.UserId;
+                corporateCompanyRequestDto.StatusId = (int)EStatus.IsActive;
+
+                var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyRequestDto);
+                if (result == null)
                 {
-                    return Json(new { result = "fail" });
+                    return Json(new NewCommonResponseDto { StatusCode = 409, Message = "Corporate Company Already Exist"});
                 }
+                return Json(new NewCommonResponseDto { StatusCode = 200, Data = result });
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                return Json(new NewCommonResponseDto { StatusCode = 500, Message = ex.Message });
             }
         }
 

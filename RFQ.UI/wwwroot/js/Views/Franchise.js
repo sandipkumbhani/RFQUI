@@ -73,6 +73,7 @@ function Initialize() {
                     }
                 }
             });
+
             $("#btnSavenewFranchise").on('click', function (event) {
                 isNewFranchise = true;
                 isUpdateFranchise = false;
@@ -100,6 +101,7 @@ function Initialize() {
             if (dropzone.children.length > 2) {
                 dropzone.removeChild(dropzone.children[1]);
             }
+
             $("#btnUpdateFranchise").on('click', function (event) {
                 isNewFranchise = false;
                 isUpdateFranchise = true;
@@ -338,18 +340,16 @@ function SaveFranchise(fileName, callback) {
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function (response) {
-            if (response && response.success === true) {
+            if (response.statusCode==200) {
                 let companyId = response.data.companyId;
                 Saveattachment(companyId);
                 toastr.success("Franchise Details Submitted Successfully!");
                 addMasterUserActivityLog(0, LogType.Create, "Franchise Details Submitted Successfully!", 0);
-
                 if (typeof callback === "function") {
                     callback(companyId);
                 }
             } else {
-                // Backend returned success: false (e.g., duplicate)
-                toastr.warning(response.message || "Franchise could not be saved.");
+                toastr.warning(response.message);
                 if (typeof callback === "function") {
                     callback(null);
                 }

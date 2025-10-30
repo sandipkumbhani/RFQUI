@@ -4,6 +4,7 @@ using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -81,27 +82,26 @@ namespace RFQ.UI.Controllers
             try
             {
                 if (franchiseRequestDto == null)
-                {
-                    return Json(new { success = false, message = "Invalid franchise data." });
-                }
+                    return Json(new NewCommonResponseDto { StatusCode = 500, Message = "Somthing Went Wrong" });
+
                 franchiseRequestDto.CompanyTypeId = (int)EnumInternalMaster.FRANCHISE;
                 franchiseRequestDto.ParentCompanyId = _globalClass.CompanyId;
                 franchiseRequestDto.CreatedBy = _globalClass.UserId;
                 franchiseRequestDto.UpdatedBy = _globalClass.UserId;
                 franchiseRequestDto.CreatedOn = DateTime.Now;
                 franchiseRequestDto.UpdatedOn = DateTime.Now;
+                franchiseRequestDto.StatusId = (int)EStatus.IsActive;
 
                 var result = await _fanchiseService.AddFranchise(franchiseRequestDto);
                 if (result == null)
                 {
-                    return Json(new { success = false, message = "Franchise already exists with the same name." });
+                    return Json(new NewCommonResponseDto { StatusCode = 409, Message = "Franchise Already Exist" });
                 }
-                return Json(new { success = true, data = result });
+                return Json(new NewCommonResponseDto { StatusCode = 200, Data = result });
             }
             catch (Exception ex)
             {
-
-                return StatusCode(500, "An internal error occurred while saving the franchise.");
+                return Json(new NewCommonResponseDto { StatusCode = 500, Message = ex.Message });
             }
         }
 

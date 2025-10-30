@@ -364,7 +364,7 @@ function DeleteCorporateCompany(companyId, linkId) {
     }).then((result) => {
         if (result.isConfirmed) {
             var deleteCorporateCompanyUrl = '/CorporateCompany/DeleteCorporateCompany/' + companyId;
-
+            debugger;
             // First fetch master attachment before deleting the company
             FetchMasterAttachment(linkId, companyId, function (attachments) {
                 // Proceed to delete the company
@@ -408,7 +408,6 @@ function SaveCorporateCompany(action) {
     var panNumber = $("#txtPanNumber").val();
     var email = $("#txtEmail").val();
     var gSTNumber = $("#txtGstNumber").val();
-
     var linkid = GetQueryParam("LinkId");
     var companyId;
 
@@ -428,33 +427,7 @@ function SaveCorporateCompany(action) {
         GSTNo: gSTNumber,
         ParentCompanyId: franchiseName
     };
-    //if (action == "save") {
-    //    $.ajax({
-    //        url: saveUrl,
-    //        type: "POST",
-    //        contentType: "application/json",
-    //        data: JSON.stringify(formData),
-    //        success: function (response) {
-    //            let companyId = response.result.companyId;
-    //            if (companyId != null) {
-    //                Saveattachment(companyId);
-    //                toastr.success("Corporate Company Details Submitted Successfully");
-    //                if (typeof this.completeOnSuccess === "function") {
-    //                    this.completeOnSuccess();
-    //                }
-    //            }
-    //            else {
-    //                toastr.error("Failed to Submit Corporate Company Details!", "Error");
-    //            }
-    //        },
-    //        error: function (xhr, status, error) {
-    //            toastr.error("Failed to Submit Corporate Company Details!", "Error");
-    //        },
-    //        completeOnSuccess: function () {
-    //            FetchCorporateCompany();
-    //        }
-    //    });
-    //}
+
     if (action == "save") {
         $.ajax({
             url: saveUrl,
@@ -462,57 +435,61 @@ function SaveCorporateCompany(action) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                let companyId = response.result.companyId;
-                if (companyId != null) {
-                    Saveattachment(companyId);
-                    toastr.success("Corporate Company Details Submitted Successfully");
-
-                    addMasterUserActivityLog(0, LogType.Create, "Corporate Company Details Submitted Successfully", 0);
-
-                    if (typeof this.completeOnSuccess === "function") {
-                        this.completeOnSuccess();
+                if (response.statusCode == 200) {
+                    let companyId = response.data.companyId;
+                    if (companyId != null) {
+                        Saveattachment(companyId);
+                        toastr.success("Corporate Company Details Submitted Successfully");
+                        addMasterUserActivityLog(0, LogType.Create, "Corporate Company Details Submitted Successfully", 0);
+                        if (typeof this.completeOnSuccess === "function") {
+                            this.completeOnSuccess();
+                        }
+                    }
+                    else {
+                        toastr.error("Failed to Submit Corporate Company Details!", "Error");
                     }
                 }
                 else {
-                    toastr.error("Failed to Submit Corporate Company Details!", "Error");
+                    toastr.warning(response.message);
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Submit Corporate Company Details!", "Error");
+                toastr.error("Failed to Submit Corporate Company Details!");
             },
             completeOnSuccess: function () {
                 FetchCorporateCompany();
             }
         });
     }
-
-    else if (action == "saveNew") {
+    if (action == "saveNew") {
         $.ajax({
             url: saveUrl,
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                let companyId = response.result.companyId;
-                Saveattachment(companyId);
-                toastr.success("Corporate Company Details Submitted Successfully");
-
-                addMasterUserActivityLog(0, LogType.Create, "Corporate Company Details Submitted Successfully", 0);
-
-                $('#CompanyTypeForm')[0].reset();
-                $('#ddlFranchisename').val(null).trigger('change');
-                $('#ddlCity').val(null).trigger('change');
-                setTimeout(() => {
-                    ResetAttachmentRepeater();
-                }, 1000);
+                if (response.statusCode == 200) {
+                    let companyId = response.data.companyId;
+                    Saveattachment(companyId);
+                    toastr.success("Corporate Company Details Submitted Successfully");
+                    addMasterUserActivityLog(0, LogType.Create, "Corporate Company Details Submitted Successfully", 0);
+                    $('#CompanyTypeForm')[0].reset();
+                    $('#ddlFranchisename').val(null).trigger('change');
+                    $('#ddlCity').val(null).trigger('change');
+                    setTimeout(() => {
+                        ResetAttachmentRepeater();
+                    }, 1000);
+                }
+                else {
+                    toastr.error(response.message);
+                }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Submit Corporate Company Details!", "Error");
+                toastr.error("Failed to Submit Corporate Company Details!");
             }
         });
     }
     return companyId;
-
 }
 function EditCorporateCompany(companyId) {
     if ($("#btnupdate").hasClass('d-none')) {
@@ -522,7 +499,7 @@ function EditCorporateCompany(companyId) {
     if (data.length === 0) {
         return;
     }
-
+    debugger;
     var formData = data[0];
 
     FetchMasterAttachment(formData.linkId, companyId, function (list) {

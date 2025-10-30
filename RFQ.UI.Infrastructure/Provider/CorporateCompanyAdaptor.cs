@@ -45,25 +45,15 @@ namespace RFQ.UI.Infrastructure.Provider
                 var response = await _httpClient.PostAsync(baseurl, requestContent);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                    {
-                        return JsonConvert.DeserializeObject<CorporateCompanyRequestDto>(responseModel.Data.ToString());
-                        // return _mapper.Map<CorporateCompanyRequestDto?>(responseModel.Data);
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return JsonConvert.DeserializeObject<CorporateCompanyRequestDto>(responseModel.Data.ToString());
+                else
+                    return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw ex;
             }
-            return null;
         }
 
         public async Task<PageList<CorporateCompanyResponseDto>> GetCorporateCompanyAll(PagingParam pagingParam)
