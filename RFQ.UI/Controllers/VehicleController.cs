@@ -51,6 +51,7 @@ namespace RFQ.UI.Controllers
                     vehicleTypeRequestDto.CompanyId = _globalClass.CompanyId;
                     vehicleTypeRequestDto.CreatedBy = _globalClass.UserId;
                     vehicleTypeRequestDto.UpdatedBy = _globalClass.UserId;
+                    vehicleTypeRequestDto.StatusId = (int)EStatus.IsActive;
                     var result = await _vehicleTypeServices.AddVehicleType(vehicleTypeRequestDto);
                     return Json(result);
                 }
