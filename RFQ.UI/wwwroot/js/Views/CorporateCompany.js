@@ -14,28 +14,21 @@ $(document).ready(function () {
         $("#formDiv").css('display', 'none')
         $("#backButton").css('display', 'Block');
     });
-
-
     $('#tableDivLink').on('click', function (e) {
         FetchCorporateCompany();
     });
-
-
     $("#btnCancel").on("click", function () {
         FetchCorporateCompany();
+        $('#ddlFranchisename').val(Number(0)).trigger('change');
     });
-
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
         orderDir = currentOrder === 'asc' ? 'desc' : 'asc';
         $(this).data('order', orderDir); // update for next click
-
         $('th.sortable').not(this).data('order', 'asc');
-
         FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), 'EditCorporateCompany', 'DeleteCorporateCompany', 'companyId');
     });
-
     document.querySelectorAll("#txtGstNumber, #txtPanNumber").forEach(function (element) {
         element.addEventListener("input", function () {
             this.value = this.value.toUpperCase();
@@ -46,14 +39,7 @@ $(document).ready(function () {
         if (OnSubmitCheckValidation()) {
             SaveCorporateCompany(action);
         }
-
     });
-    $('#backButton').click(function () {
-        window.location.reload(true);
-
-    });
-
-
     ButtonUpdateClick();
 });
 
@@ -364,7 +350,6 @@ function DeleteCorporateCompany(companyId, linkId) {
     }).then((result) => {
         if (result.isConfirmed) {
             var deleteCorporateCompanyUrl = '/CorporateCompany/DeleteCorporateCompany/' + companyId;
-            debugger;
             // First fetch master attachment before deleting the company
             FetchMasterAttachment(linkId, companyId, function (attachments) {
                 // Proceed to delete the company
@@ -499,9 +484,7 @@ function EditCorporateCompany(companyId) {
     if (data.length === 0) {
         return;
     }
-    debugger;
     var formData = data[0];
-
     FetchMasterAttachment(formData.linkId, companyId, function (list) {
         var attachmantData = list;
         $('#tableDiv').css('display', 'none');
@@ -548,19 +531,19 @@ function GetFranchiseAndCorporateName() {
             var data = null
             var profileid = getCookieValue("profileid");
             var userid = getCookieValue("userid");
-
-            if (!IsNullOrEmpty(profileid) && profileId != EnumProfile.Franchise)
-                data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
-            else
-                data = response.filter(x => x.companyTypeId == 2);
+            //if (!IsNullOrEmpty(profileid) && profileId != EnumProfile.Franchise)
+            //    data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
+            //else
+            data = response.filter(x => x.companyTypeId == 2);
 
             const CompanyAndFranchiseDrp = document.getElementById("ddlFranchisename");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = 0;
-            placeholderOption.textContent = "Franchise/Corporate Name";
+            placeholderOption.textContent = "Franchise Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             CompanyAndFranchiseDrp.appendChild(placeholderOption);
+
             data.forEach(option => {
                 let opt = document.createElement("option");
                 opt.value = option.companyId;
@@ -571,11 +554,5 @@ function GetFranchiseAndCorporateName() {
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
         },
-        complete: function () {
-            if (profileId == EnumProfile.Franchise) {
-                $('#ddlFranchisename').val(Number(companyID)).trigger('change');
-                $('#ddlFranchisename').prop('disabled', true);
-            }
-        }
     });
 }

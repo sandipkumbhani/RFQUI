@@ -44,22 +44,13 @@ $(document).ready(function () {
 
 $("#btnAdd").on("click", function (e) {
     e.preventDefault();
-    $('#userbodyform').find('input, select, textarea, button, a').prop('disabled', false);
     $("#userListSection").hide();
     $("#btnUpdate").hide();
     $("#userFormSection").show();
     $("#btnSaveForm").show();
     $("#btnSaveAndNewForm").show();
     $("#txtPassword").prop("disabled", false);
-    $('#ddlCompanyAndFranchise').val(Number(companyid)).trigger('change');
-
-    if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
-        $('#ddlCompanyAndFranchise').prop('disabled', true);
-    }
-    else {
-        $('#ddlCompanyAndFranchise').val(0).trigger('change');
-        $('#ddlCompanyAndFranchise').prop('disabled', false);
-    }
+    
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -151,8 +142,8 @@ function FetchUser() {
     $('#userListSection').show();
     $('#userFormSection').hide();
     $('#userbodyform')[0].reset();
-    $('#ddlCompanyAndFranchise').val(null).trigger('change');
-    $('#ddlLocation').val(null).trigger('change');
+    $('#ddlCompanyAndFranchise').val(0).trigger('change');
+    $('#ddlLocation').val(0).trigger('change');
     FetchDataForTable('tableuser', '/Home/ViewUserList', null, null, 'EditUser', 'DeleteUser', 'userId');
 }
 function SaveUser(action) {
@@ -238,8 +229,8 @@ function SaveUser(action) {
                         toastr.success("User Details Submitted Successfully!");
                         addMasterUserActivityLog(0, LogType.Create, "User Details Submitted Successfully!", 0);
                         $('#userbodyform')[0].reset();
-                        $('#ddlCompanyAndFranchise').val(null).trigger('change');
-                        $('#ddlLocation').val(null).trigger('change');
+                        $('#ddlCompanyAndFranchise').val(0).trigger('change');
+                        $('#ddlLocation').val(0).trigger('change');
                     } else {
                         toastr.error("User already exists", "Error");
                     }
@@ -359,8 +350,8 @@ function UpdateUser() {
                     toastr.success("User Details Updated Successfully!");
                     addMasterUserActivityLog(0, LogType.Update, "User Details Updated Successfully!", 0);
                     $('#userbodyform')[0].reset();
-                    $('#ddlCompanyAndFranchise').val(null).trigger('change');
-                    $('#ddlLocation').val(null).trigger('change');
+                    $('#ddlCompanyAndFranchise').val(0).trigger('change');
+                    $('#ddlLocation').val(0).trigger('change');
                     $("#btnUpdate").hide();
                     $("#txtPassword").prop("disabled", false);
                     $("#btnSaveAndNewForm").show();
@@ -388,12 +379,18 @@ function GetFranchiseAndCorporateName() {
             var profileid = getCookieValue("profileid");
             var userid = getCookieValue("userid");
             if (!IsNullOrEmpty(profileid)) {
-                if (profileid == EnumProfile.Admin)
+                if (profileid == EnumProfile.Admin) {
                     data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
-                if (profileid == EnumProfile.Franchise || profileid == EnumProfile.Corporate || profileid == EnumProfile.Vendor)
+                }
+                if (profileid == EnumProfile.Franchise) {
+                    data = response.filter(x => x.companyTypeId == 2)
+                }
+                if (profileid == EnumProfile.Corporate || profileid == EnumProfile.Vendor) {
                     data = response.filter(x => x.companyTypeId == 3 && x.createdBy == userid);
+                }
             }
             const CompanyAndFranchiseDrp = document.getElementById("ddlCompanyAndFranchise");
+            CompanyAndFranchiseDrp.innerHTML = "";
             let placeholderOption = document.createElement("option");
             placeholderOption.value = 0;
             placeholderOption.textContent = "Franchise/Corporate Name";
