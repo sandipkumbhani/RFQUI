@@ -119,6 +119,7 @@ function SaveCustomer(action) {
     var email = $("#txtEmail").val();
     var gstaddress = $("#txtGstAddress").val();
     var gstNumber = $("#numGstNumber").val();
+    var partyCategoryId = 0;
     var partyId = 0;
 
     var saveUrl = '/Customer/CustomerSave';
@@ -147,6 +148,7 @@ function SaveCustomer(action) {
         GSTNo: gstNumber,
         PANLinkedWithAdhar: adharLinked,
         GSTAddress: gstaddress,
+        PartyCategoryId: partyCategoryId,
         LinkId: linkId
 
     }

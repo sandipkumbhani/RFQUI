@@ -409,7 +409,7 @@ function SaveVendor(action) {
             ToStateId: item.ToStateId,
         }));
         var formData = {
-            PartyName: vendorName,
+            PartyName: vendorName.trim(),
             PartyCategoryId: vendorCategory,
             AddressLine: vendorAddress,
             CityId: vendorCity,
