@@ -105,7 +105,6 @@ namespace RFQ.UI.Controllers
             }
         }
 
-
         [HttpPost]
         public async Task<IActionResult> GetAllFranchise([FromBody] PagingParam pagingParam)
         {
@@ -146,7 +145,7 @@ namespace RFQ.UI.Controllers
                 franchiseRequestDto.CreatedOn = DateTime.Now;
                 franchiseRequestDto.UpdatedOn = DateTime.Now;
 
-                var result = await _fanchiseService.EditFranchise(_globalClass.CompanyId, franchiseRequestDto);
+                var result = await _fanchiseService.EditFranchise(franchiseRequestDto.CompanyId, franchiseRequestDto);
                 if (result != null)
                     return Json(new { result = "Success" });
                 else

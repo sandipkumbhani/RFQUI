@@ -30,30 +30,20 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Driver:AddDriver"];
-                var driver = JsonConvert.SerializeObject(driverRequestDto);
-                var requestContent = new StringContent(driver, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.AddDriver;
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, driverRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return JsonConvert.DeserializeObject<DriverRequestDto>(responseModel.Data.ToString());
-                    }
                     else
-                    {
                         return null;
-                    }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
             return null;
         }
@@ -88,14 +78,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Driver:UpdateDriver"] + DriverId;
-                var driver = JsonConvert.SerializeObject(driverRequestDto);
-                var requestContent = new StringContent(driver, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();  
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateDriver + DriverId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, driverRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -104,12 +88,12 @@ namespace RFQ.UI.Infrastructure.Provider
                     else
                         return responseModel.ErrorMessage;
                 }
+                return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return "Failed to update Driver";
         }
 
         public async Task<PageList<DriverResponseDto>?> GetAllDriver(PagingParam pagingParam)
@@ -118,7 +102,6 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var baseUrl = _appSettings.BaseUrl + _appSettings.DriverGetAllDrivers;
                 var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
-
                 return _commonApiAdaptor.GenerateResponse<DriverResponseDto>(responseModel);
             }
             catch (Exception ex)
@@ -181,11 +164,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Driver:GetDriverType"]);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetDriverType;
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var driverList = JsonConvert.DeserializeObject<List<InternalMasterResponseDto>>(Convert.ToString(responseModel.Data!));
@@ -204,12 +184,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = (_fleetLynkApiUrl + _config["Driver:GetAllDriverList"]);
-                var response = await _httpClient.GetAsync(baseurl);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetAllDriverList;
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var ProfileList = JsonConvert.DeserializeObject<List<DriverResponseDto>>(Convert.ToString(responseModel.Data!));
@@ -227,20 +203,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Driver:GenerateDriverCode"];
-                var response = await _httpClient.GetAsync(baseurl);
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return null;
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                    return null;
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GenerateDriverCode;
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel?.Data != null)
                 {
                     var driverCode = responseModel.Data.ToString();
@@ -248,11 +212,10 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return null;
         }
     }
 }

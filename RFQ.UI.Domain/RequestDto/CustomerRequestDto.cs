@@ -12,7 +12,7 @@
 
         public string Code { get; set; }
 
-        public int? PartyCategoryId { get; set; }
+        public int? PartyCategoryId { get; set; } = 0;
 
         public string? AddressLine { get; set; }
 

@@ -25,6 +25,19 @@ namespace RFQ.UI.Domain.Model
         public string? GetAllRfqFinalization { get; set; }
         public string? GetAllVehiclePlacement { get; set; }
         public string? GetAllBookingOrTrip { get; set; }
+        public string? AddCompanyConfiguration { get; set; }
+        public string? UpdateCompanyConfiguration { get; set; }
+        public string? DeleteCompanyConfiguration { get; set; }
+        public string? AddCompany { get; set; }
+        public string? GetAllCompanyAndFranchise { get; set; }
+        public string? UpdateCompany { get; set; }
+        public string? AddFranchise { get; set; }
+        public string? UpdateFranchise { get; set; }
+        public string? AddDriver { get; set; }
+        public string? UpdateDriver { get; set; }
+        public string? GetDriverType { get; set; }
+        public string? GetAllDriverList { get; set; }
+        public string? GenerateDriverCode { get; set; }
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
         {
@@ -66,7 +79,20 @@ namespace RFQ.UI.Domain.Model
                 GetAllRfqFinalization = rfqFinalizationSection["GetAllRfqFinal"],
                 GetAllVehiclePlacement = vehiclePlacementSection["GetAllVehiclePlacement"],
                 GetAllRfq = requestForQuoteSection["GetAllRfq"],
-                GetAllBookingOrTrip = bookingOrTripSection["GetAllBookingOrTrip"]
+                GetAllBookingOrTrip = bookingOrTripSection["GetAllBookingOrTrip"],
+                AddCompanyConfiguration = companyConfiguration["AddCompanyConfiguration"],
+                UpdateCompanyConfiguration = companyConfiguration["UpdateCompanyConfiguration"],
+                DeleteCompanyConfiguration = companyConfiguration["DeleteCompanyConfiguration"],
+                AddCompany = companySection["AddCompany"],
+                GetAllCompanyAndFranchise = companySection["GetAllCompanyAndFranchise"],
+                UpdateCompany = companySection["UpdateCompany"],
+                AddFranchise = franchiseSection["AddFranchise"],
+                UpdateFranchise = franchiseSection["UpdateFranchise"],
+                AddDriver = driverSection["AddDriver"],
+                UpdateDriver = driverSection["UpdateDriver"],
+                GetDriverType = driverSection["GetDriverType"],
+                GetAllDriverList = driverSection["GetAllDriverList"],
+                GenerateDriverCode = driverSection["GenerateDriverCode"],
             };
         }
     }

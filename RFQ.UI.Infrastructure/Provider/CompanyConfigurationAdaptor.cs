@@ -112,26 +112,15 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:AddCompanyConfiguration"];
-                var User = JsonConvert.SerializeObject(companyConfigrationRequestDto);
-                var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.AddCompanyConfiguration;
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, companyConfigrationRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "Company Configuration Saved";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage ?? string.Empty;
-                    }
                 }
                 return string.Empty;
             }
@@ -143,14 +132,8 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<string> EditCompanyConfiguration(CompanyConfigrationRequestDto companyConfigrationRequestDto)
         {
-            var _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-            var baseurl = _fleetLynkApiUrl + _config["CompanyConfiguration:UpdateCompanyConfiguration"] + "/" + companyConfigrationRequestDto.CompanyConfigId;
-            var user = JsonConvert.SerializeObject(companyConfigrationRequestDto);
-            var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(baseurl, requestContent);
-            var responseData = await response.Content.ReadAsStringAsync();
-            var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+            var baseUrl = _appSettings.BaseUrl + _appSettings.UpdateCompanyConfiguration + "/" + companyConfigrationRequestDto.CompanyConfigId;
+            var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, companyConfigrationRequestDto, _globalClass.Token);
             if (responseModel != null)
             {
                 var result = responseModel.StatusCode;
@@ -166,7 +149,6 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-
                 var _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 

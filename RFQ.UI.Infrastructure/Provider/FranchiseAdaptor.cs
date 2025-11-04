@@ -26,68 +26,27 @@ namespace RFQ.UI.Infrastructure.Provider
             _appSettings = appSettings;
             _commonApiAdaptor = commonApiAdaptor;
         }
-        //public async Task<FranchiseRequestDto> AddFranchise(FranchiseRequestDto franchiseRequestDto)
-        //{
-        //    try
-        //    {
-        //        _httpClient = new HttpClient();
-        //        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-        //        var baseurl = _fleetLynkApiUrl + _config["Franchise:AddFranchise"];
-        //        var franchise = JsonConvert.SerializeObject(franchiseRequestDto);
-        //        var requestContent = new StringContent(franchise, Encoding.UTF8, "application/json");
-        //        var response = await _httpClient.PostAsync(baseurl, requestContent);
-        //        var responseData = await response.Content.ReadAsStringAsync();
-        //        var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-        //        if (responseModel != null)
-        //        {
-        //            var result = responseModel.StatusCode;
-        //            if (result == 200)
-        //            {
-        //                return JsonConvert.DeserializeObject<FranchiseRequestDto>(responseModel.Data.ToString());
-        //            }
-        //            else
-        //            {
-        //                return null;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //    }
-        //    return null;
-        //}
+
         public async Task<FranchiseRequestDto> AddFranchise(FranchiseRequestDto franchiseRequestDto)
         {
             try
             {
-                using (var httpClient = new HttpClient())
-                {
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                    string url = _fleetLynkApiUrl + _config["Franchise:AddFranchise"];
-                    var jsonContent = JsonConvert.SerializeObject(franchiseRequestDto);
-                    var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                    var response = await httpClient.PostAsync(url, content);
-                    var responseData = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                    if (responseModel?.StatusCode == 200 && responseModel.Data != null)
-                        return JsonConvert.DeserializeObject<FranchiseRequestDto>(responseModel.Data.ToString());
-                    else
-                        return null;
-                }
+                var baseUrl = _appSettings.BaseUrl + _appSettings.AddFranchise;
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, franchiseRequestDto, _globalClass.Token);
+                if (responseModel?.StatusCode == 200 && responseModel.Data != null)
+                    return JsonConvert.DeserializeObject<FranchiseRequestDto>(responseModel.Data.ToString());
+                else
+                    return null;
             }
             catch (Exception)
             {
                 throw;
             }
         }
-
         public async Task<string> DeleteFranchise(int companyId)
         {
             try
             {
-
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
@@ -110,19 +69,12 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
         public async Task<string> EditFranchise(int companyId, FranchiseRequestDto franchiseRequestDto)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}{_config["Franchise:UpdateFranchise"]}{companyId}";
-                var franchise = JsonConvert.SerializeObject(franchiseRequestDto);
-                var requestContent = new StringContent(franchise, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseurl = $"{_appSettings.BaseUrl + _appSettings.UpdateFranchise + companyId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseurl, franchiseRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -138,15 +90,12 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
         public async Task<PageList<FranchiseResponseDto>> GetAllFranchise(PagingParam pagingParam)
         {
-
             try
             {
                 var baseUrl = _appSettings.BaseUrl + _appSettings.FranchiseGetAllFranchise;
                 var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
-
                 return _commonApiAdaptor.GenerateResponse<FranchiseResponseDto>(responseModel);
             }
 

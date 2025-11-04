@@ -29,19 +29,13 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _appSettings.BaseUrl + "/MasterParty/AddMasterParty";
-                var customer = JsonConvert.SerializeObject(customerRequestDto);
-                var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + "/MasterParty/AddMasterParty";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, customerRequestDto, _globalClass.Token);
                 if (responseModel == null)
                 {
                     return new NewCommonResponseDto
                     {
-                        StatusCode = (int)response.StatusCode,
+                        StatusCode = responseModel.StatusCode,
                         Message = "No response received from API",
                         Data = null
                     };
@@ -67,13 +61,6 @@ namespace RFQ.UI.Infrastructure.Provider
                         Data = null
                     };
                 }
-
-                return new NewCommonResponseDto
-                {
-                    StatusCode = (int)response.StatusCode,
-                    Message = "Unexpected response from API",
-                    Data = null
-                };
             }
             catch (Exception ex)
             {
@@ -112,14 +99,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _appSettings.BaseUrl + "/MasterParty/UpdateMasterParty/" + PartyId;
-                var customer = JsonConvert.SerializeObject(customerRequestDto);
-                var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl}/MasterParty/UpdateMasterParty/{PartyId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, customerRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -141,8 +122,7 @@ namespace RFQ.UI.Infrastructure.Provider
             try
             {
                 var baseUrl = _appSettings.BaseUrl + _appSettings.CustomerGetAllCustomer;
-                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl,pagingParam, _globalClass.Token);
-
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
                 return _commonApiAdaptor.GenerateResponse<CustomerResponseDto>(responseModel);
             }
             catch (Exception)
@@ -211,22 +191,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = _appSettings.BaseUrl + "/CompanyCity/GetAllCity";
-                var response = await _httpClient.GetAsync(url);
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return null;
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                {
-                    return null;
-                }
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + "/CompanyCity/GetAllCity";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var CityList = JsonConvert.DeserializeObject<List<ComMstCityDto>>(Convert.ToString(responseModel.Data!));
@@ -244,21 +210,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = $"{_appSettings.BaseUrl}/MasterParty/GetDrpCustomerList?companyId={companyId}";
-                var response = await _httpClient.GetAsync(url);
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return null;
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                    return null;
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl}/MasterParty/GetDrpCustomerList?companyId={companyId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var customerList = JsonConvert.DeserializeObject<List<CustomerRequestDto>>(Convert.ToString(responseModel.Data!));
@@ -276,23 +229,12 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                using var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var url = _appSettings.BaseUrl + _appSettings.CustomerGetAutoCustomerCode;
-                var response = await _httpClient.GetAsync(url);
-
-                response.EnsureSuccessStatusCode(); // throws if status != 200-299
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseContent);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.CustomerGetAutoCustomerCode;
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null && responseModel.Data != null)
                 {
                     return responseModel.Data.ToString();
                 }
-
                 return null;
             }
             catch (Exception ex)
@@ -300,6 +242,5 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw new ApplicationException("Error fetching auto customer code.", ex);
             }
         }
-
     }
 }
