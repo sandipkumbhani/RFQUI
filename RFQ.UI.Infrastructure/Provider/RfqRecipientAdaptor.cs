@@ -13,41 +13,34 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;
-        public RfqRecipientAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+
+        public RfqRecipientAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<string> AddRfqRecipient(List<RfqRecipientRequestDto> rfqRecipientRequestDtos)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RfqRecipient:AddRfqRecipient"];
-                var rfqRecipient = JsonConvert.SerializeObject(rfqRecipientRequestDtos);
-                var requestContent = new StringContent(rfqRecipient, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AddRfqRecipient}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, rfqRecipientRequestDtos, _globalClass.Token);
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                    {
-                        var message = responseModel.Data.ToString();
-                        return message;
-                    }
+                    var message = responseModel.Data.ToString();
+                    return message;
                 }
+                return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return null;
         }
     }
 }

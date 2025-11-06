@@ -17,35 +17,31 @@ namespace RFQ.UI.Infrastructure.Provider
 {
     public class RfqLinkAdaptor : IRfqLinkAdaptor
     {
-        private readonly GlobalClass _globalClass; private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;
+        private readonly GlobalClass _globalClass;
+        private readonly IConfiguration _config;
         private readonly ILogger<RfqLinkAdaptor> _logger;
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public RfqLinkAdaptor(IConfiguration configuration, ILogger<RfqLinkAdaptor> logger, HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public RfqLinkAdaptor(IConfiguration configuration, ILogger<RfqLinkAdaptor> logger, HttpClient httpClient, IHttpContextAccessor httpContextAccessor, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _config = configuration;
             _logger = logger;
             _globalClass = new GlobalClass();
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
             _httpClient = httpClient;
             _httpContextAccessor = httpContextAccessor;
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<bool> AddRfqLinkData(List<RfqLinkRequestDto> rfqLinkRequestDto)
         {
             try
             {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AddRfqLink}";
                 string AuthToken = _httpContextAccessor.HttpContext?.Request.Cookies["AuthToken"];
                 _globalClass.Token = AuthToken;
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = _fleetLynkApiUrl + _config["RequestForQuote:AddRfqLink"];
-                var rfq = JsonConvert.SerializeObject(rfqLinkRequestDto);
-                var requestContent = new StringContent(rfq, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseUrl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, rfqLinkRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -56,12 +52,10 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in AddRfq: " + ex.Message);
+                throw;
             }
-
-            return false;
         }
     }
 }

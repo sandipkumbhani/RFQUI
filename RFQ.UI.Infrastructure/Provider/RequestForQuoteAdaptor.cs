@@ -30,57 +30,26 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = $"{_fleetLynkApiUrl}{_config["RequestForQuote:GetAllVehicleIndentList"]}?companyId={companyId}";
-                var response = await _httpClient.GetAsync(baseUrl);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return Enumerable.Empty<VehicleIndent>();
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                    return Enumerable.Empty<VehicleIndent>();
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllVehicleIndentList}?companyId={companyId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel?.Data != null)
                 {
                     var indents = JsonConvert.DeserializeObject<IEnumerable<VehicleIndent>>(responseModel.Data.ToString());
                     return indents ?? Enumerable.Empty<VehicleIndent>();
                 }
-
                 return Enumerable.Empty<VehicleIndent>();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Exception in GetAllVehicleIndentList: {ex}");
-                return Enumerable.Empty<VehicleIndent>();
+                throw;
             }
         }
-
         public async Task<string> GetRfqNo()
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GenerateRfqAutoNo"];
-                var response = await _httpClient.GetAsync(baseurl);
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return null;
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                    return null;
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GenerateRfqAutoNo;
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel?.Data != null)
                 {
                     var rfqNo = responseModel.Data.ToString();
@@ -90,183 +59,126 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return null;
         }
-
         public async Task<RequestForQuoteResponseDto> AddRfq(RequestForQuoteRequestDto requestForQouteRequestDto)
         {
             try
             {
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = _fleetLynkApiUrl + _config["RequestForQuote:AddRfq"];
-                var rfq = JsonConvert.SerializeObject(requestForQouteRequestDto);
-                var requestContent = new StringContent(rfq, Encoding.UTF8, "application/json");
-                var response = await httpClient.PostAsync(baseUrl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.AddRfq;
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, requestForQouteRequestDto, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     var rfqData = JsonConvert.DeserializeObject<RequestForQuoteResponseDto>(responseModel.Data.ToString());
                     return rfqData;
                 }
+                return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in AddRfq: " + ex.Message);
+                throw;
             }
-
-            return null;
         }
-
         public async Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetRfqByRfqNo"] + rfqNo;
-                var response = await _httpClient.GetAsync(baseurl);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetRfqByRfqNo + rfqNo}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (responseModel.Data != null && result == 200)
-                    {
                         return JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
-                    }
                     else
-                    {
                         return null;
-                    }
                 }
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return null;
         }
-
         public async Task<RfqResponseDto> GetRfqById(int rfqId)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetRfqById"] + rfqId;
-                var response = await _httpClient.GetAsync(baseurl);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetRfqById + rfqId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (responseModel.Data != null && result == 200)
-                    {
                         return JsonConvert.DeserializeObject<RfqResponseDto>(responseModel.Data.ToString());
-                    }
                     else
-                    {
                         return null;
-                    }
                 }
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return null;
         }
-
         public async Task<IEnumerable<RfqVendorListResponseDto>> GetAllVendorListForRfq(RfqVendorDetailsParam rfqVendorDetailsParam)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetAllVendorListForRfq"];
-                var rfqVendorList = JsonConvert.SerializeObject(rfqVendorDetailsParam);
-                var requestContent = new StringContent(rfqVendorList, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllVendorListForRfq}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, rfqVendorDetailsParam, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     var rfqVendorListData = JsonConvert.DeserializeObject<IEnumerable<RfqVendorListResponseDto>>(responseModel.Data.ToString());
                     return rfqVendorListData;
                 }
+                return Enumerable.Empty<RfqVendorListResponseDto>();
             }
-
             catch (Exception ex)
             {
-                Console.WriteLine("Error in GetAllVendorListForRfq: " + ex.Message);
+                throw;
             }
-            return Enumerable.Empty<RfqVendorListResponseDto>();
         }
-
         public async Task<IEnumerable<RfqPreviousQuotesList>> GetPreviousQuotesList(RfqVendorDetailsParam rfqVendorDetailsParam)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetPreviousQuotesList"];
-                var rfqVendorList = JsonConvert.SerializeObject(rfqVendorDetailsParam);
-                var requestContent = new StringContent(rfqVendorList, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetPreviousQuotesList}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, rfqVendorDetailsParam, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     var QuotesList = JsonConvert.DeserializeObject<IEnumerable<RfqPreviousQuotesList>>(responseModel.Data.ToString());
                     return QuotesList;
                 }
+                return Enumerable.Empty<RfqPreviousQuotesList>();
             }
-
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in GetPreviousQuotesList: " + ex.Message);
+                throw;
             }
-            return Enumerable.Empty<RfqPreviousQuotesList>();
         }
-
         public async Task<RfqQuoteRateVendorDetails> GetRfqQuoteRateVendorDetailsqById(int rfqId)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:GetRfqQuoteRateVendorDetails"] + rfqId;
-                var response = await _httpClient.GetAsync(baseurl);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetRfqQuoteRateVendorDetails + rfqId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (responseModel.Data != null && result == 200)
-                    {
                         return JsonConvert.DeserializeObject<RfqQuoteRateVendorDetails>(responseModel.Data.ToString());
-                    }
                     else
-                    {
                         return null;
-                    }
                 }
+                return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return null;
         }
-
         public async Task<PageList<RfqListResponseDto>> GetAllRfq(PagingParam pagingParam)
         {
             try
@@ -280,19 +192,12 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
         public async Task<string> UpdateRfq(int rfqId, RequestForQuoteRequestDto requestForQuoteRequestDto)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RequestForQuote:UpdateRfq"] + rfqId;
-                var customer = JsonConvert.SerializeObject(requestForQuoteRequestDto);
-                var requestContent = new StringContent(customer, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateRfq + rfqId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, requestForQuoteRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -301,14 +206,13 @@ namespace RFQ.UI.Infrastructure.Provider
                     else
                         return responseModel.ErrorMessage;
                 }
+                return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in UpdateRfq: " + ex.Message);
+                throw;
             }
-            return null;
         }
-
         public async Task<bool> DeleteRfq(int rfqId)
         {
             try

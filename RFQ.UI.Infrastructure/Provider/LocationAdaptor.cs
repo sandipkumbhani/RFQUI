@@ -31,26 +31,15 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = _fleetLynkApiUrl + _config["Location:AddLocation"];
-                var User = JsonConvert.SerializeObject(locationRequestDto);
-                var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.AddLocation;
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, locationRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return responseModel.Data.ToString();
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
                 return string.Empty;
             }
@@ -89,14 +78,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Location:Updatelocation"] + LocationId;
-                var user = JsonConvert.SerializeObject(locationRequestDto);
-                var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.Updatelocation + LocationId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, locationRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -110,18 +93,14 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception)
             {
                 throw;
-            } 
+            }
         }
         public async Task<IEnumerable<LocationResponseDto>> GetAllLocationList(int companyId)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseUrl = $"{_fleetLynkApiUrl}{_config["Location:GetAllLocationList"]}?companyId={companyId}";
-                var response = await _httpClient.GetAsync(baseUrl);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl}{_config["Location:GetAllLocationList"]}?companyId={companyId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var ProfileList = JsonConvert.DeserializeObject<List<LocationResponseDto>>(Convert.ToString(responseModel.Data!));
@@ -140,9 +119,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var baseUrl = _appSettings.BaseUrl + _appSettings.GetAllLocation;
                 var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
-
                 return _commonApiAdaptor.GenerateResponse<LocationResponseDto>(responseModel);
-
             }
             catch (Exception)
             {

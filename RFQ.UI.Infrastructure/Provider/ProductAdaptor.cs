@@ -14,7 +14,6 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;
         private readonly AppSettingsGlobal _appSettings;
         private readonly CommonApiAdaptor _commonApiAdaptor;
         public ProductAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
@@ -22,7 +21,6 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
             _appSettings = appSettings;
             _commonApiAdaptor = commonApiAdaptor;
         }
@@ -30,14 +28,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Product:AddProduct"];
-                var product = JsonConvert.SerializeObject(productRequestDto);
-                var requestContent = new StringContent(product, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.AddProduct;
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, productRequestDto, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     return JsonConvert.DeserializeObject<NewCommonResponseDto>(responseModel.Data.ToString());
@@ -49,7 +41,6 @@ namespace RFQ.UI.Infrastructure.Provider
                 return new NewCommonResponseDto() { Data = null, Message = ex.InnerException.ToString(), ErrorMessage = ex.StackTrace };
             }
         }
-
         public async Task<string> DeleteProduct(int productId)
         {
             try
@@ -57,7 +48,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var baseurl = $"{_fleetLynkApiUrl}{_config["Product:DeleteProduct"]}{productId}";
+                var baseurl = $"{_appSettings.BaseUrl}{_config["Product:DeleteProduct"]}{productId}";
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
@@ -81,14 +72,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}{_config["Product:EditProduct"]}{productId}";
-                var product = JsonConvert.SerializeObject(productRequestDto);
-                var requestContent = new StringContent(product, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.EditProduct + productId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, productRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -117,32 +102,22 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
-        public async Task<IEnumerable<ProductResponseDto>> GetDrpProductList(int companyId)
+        public async Task<IEnumerable<ProductResponseDto>?> GetDrpProductList(int companyId)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                // Corrected the URL construction and query parameter
-                var baseUrl = $"{_fleetLynkApiUrl}{_config["Product:GetDrpProductList"]}?companyId={companyId}";
-                var response = await _httpClient.GetAsync(baseUrl); // Fixed invalid syntax
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetDrpProductList}?companyId={companyId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var list = JsonConvert.DeserializeObject<List<ProductResponseDto>>(Convert.ToString(responseModel.Data!));
                     return list;
                 }
-
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
     }

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using static System.Collections.Specialized.BitVector32;
 
 namespace RFQ.UI.Domain.Model
 {
@@ -38,6 +39,69 @@ namespace RFQ.UI.Domain.Model
         public string? GetDriverType { get; set; }
         public string? GetAllDriverList { get; set; }
         public string? GenerateDriverCode { get; set; }
+        public string? GetTripDetailsByBillExpiryDate { get; set; }
+        public string? AddLocation { get; set; }
+        public string? Updatelocation { get; set; }
+        public string? GetMasterPartyRoute { get; set; }
+        public string? GetMasterPartyVehicleType { get; set; }
+        public string? AddMasterUserActivityLog { get; set; }
+        public string? GetAllMasterUserActivityLogList { get; set; }
+        public string? GetMenu { get; set; }
+        public string? AddProduct { get; set; }
+        public string? EditProduct { get; set; }
+        public string? GetDrpProductList { get; set; }
+        public string? AddProfile { get; set; }
+        public string? GetProfileAll { get; set; }
+        public string? GetAllInternalMaster { get; set; }
+        public string? GetAllLinkGroup { get; set; }
+        public string? GetLinkItemList { get; set; }
+        public string? GetProfileRightsByProfileId { get; set; }
+        public string? AddOrUpdateProfileRights { get; set; }
+        public string? AddRfqRate { get; set; }
+        public string? GetAllReceivedVendorCosting { get; set; }
+        public string? GetAllVehicleIndentList { get; set; }
+        public string? GenerateRfqAutoNo { get; set; }
+        public string? AddRfq { get; set; }
+        public string? GetRfqByRfqNo { get; set; }
+        public string? GetRfqById { get; set; }
+        public string? GetAllVendorListForRfq { get; set; }
+        public string? GetPreviousQuotesList { get; set; }
+        public string? GetRfqQuoteRateVendorDetails { get; set; }
+        public string? UpdateRfq { get; set; }
+        public string? AddRfqFinal { get; set; }
+        public string? AwardedVendor { get; set; }
+        public string? GetRfqFinalRateList { get; set; }
+        public string? UpdateRfqFinal { get; set; }
+        public string? GetRfqDrpList { get; set; }
+        public string? AddRfqLink { get; set; }
+        public string? AddRfqRecipient { get; set; }
+        public string? AddUser { get; set; }
+        public string? UpdateUser { get; set; }
+        public string? GetUserById { get; set; }
+        public string? GetAllMasterLocation { get; set; }
+        public string? UpdateUserPassword { get; set; }
+        public string? GetByLoginIdAsync { get; set; }
+        public string? GetAllVehicleCategory { get; set; }
+        public string? GetAllOwnerOrVendor { get; set; }
+        public string? AddVehicle { get; set; }
+        public string? GetAllVehicle { get; set; }
+        public string? UpdateVehicle { get; set; }
+        public string? GetVehicleNumber { get; set; }
+        public string? AddVehicleIndent { get; set; }
+        public string? GenerateVehicleIndent { get; set; }
+        public string? UpdateVehicleIndent { get; set; }
+        public string? AddVehiclePlacement { get; set; }
+        public string? GeneratePlacementNo { get; set; }
+        public string? AutoFetchPlacement { get; set; }
+        public string? UpdateVehiclePlacement { get; set; }
+        public string? DeleteVehiclePlacement { get; set; }
+        public string? GetAllVehiclePlacementNo { get; set; }
+        public string? AddVehicleType { get; set; }
+        public string? UpdateVehicleType { get; set; }
+        public string? GetAllVehicleTypeList { get; set; }
+        public string? UpdateMasterParty { get; set; }
+        public string? GetAllVendorList { get; set; }
+        
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
         {
@@ -50,13 +114,25 @@ namespace RFQ.UI.Domain.Model
             var vendorSection = config.GetSection("Vendor");
             var locationSection = config.GetSection("Location");
             var driverSection = config.GetSection("Driver");
-            var usersConfiguration = config.GetSection("Users");
-            var ProductSection = config.GetSection("Product");
+            var usersSection = config.GetSection("Users");
+            var productSection = config.GetSection("Product");
             var vehicleIndentSection = config.GetSection("VehicleIndent");
             var rfqFinalizationSection = config.GetSection("RfqFinal");
             var vehiclePlacementSection = config.GetSection("VehiclePlacement");
             var requestForQuoteSection = config.GetSection("RequestForQuote");
             var bookingOrTripSection = config.GetSection("BookingOrTrip");
+            var eWayBillSection = config.GetSection("EWayBill");
+            var masterPartyRouteSection = config.GetSection("MasterPartyRoute");
+            var masterPartyVehicleTypeSection = config.GetSection("MasterPartyVehicleType");
+            var masterUserActivityLogSection = config.GetSection("MasterUserActivityLog");
+            var menuSection = config.GetSection("Menu");
+            var profileSection = config.GetSection("Profile");
+            var profileRightSection = config.GetSection("ProfileRight");
+            var rfqRateSection = config.GetSection("RFQRate");
+            var receivedVendorCostingSection = config.GetSection("ReceivedVendorCosting");
+            var rfqRecipientSection = config.GetSection("RfqRecipient");
+            var vehicleSection = config.GetSection("Vehicle");
+            
             return new AppSettingsGlobal
             {
                 BaseUrl = section["BaseUrl"],
@@ -71,10 +147,11 @@ namespace RFQ.UI.Domain.Model
                 GetAllVehicleType = vehicleTypeSection["GetAllVehicleType"],
                 GetAllCompanyConfiguration = companyConfiguration["GetAllCompanyConfiguration"],
                 GetAllVendor = vendorSection["GetAllVendor"],
+                GetAllVendorList = vendorSection["GetAllVendorList"],
                 GetAllLocation = locationSection["GetAllLocation"],
                 DriverGetAllDrivers = driverSection["GetAllDriver"],
-                GetUserAll = usersConfiguration["GetUserAll"],
-                GetAllProduct = ProductSection["GetAllProduct"],
+                GetUserAll = usersSection["GetUserAll"],
+                GetAllProduct = productSection["GetAllProduct"],
                 GetAllVehicleIndent = vehicleIndentSection["GetAllVehicleIndent"],
                 GetAllRfqFinalization = rfqFinalizationSection["GetAllRfqFinal"],
                 GetAllVehiclePlacement = vehiclePlacementSection["GetAllVehiclePlacement"],
@@ -93,6 +170,67 @@ namespace RFQ.UI.Domain.Model
                 GetDriverType = driverSection["GetDriverType"],
                 GetAllDriverList = driverSection["GetAllDriverList"],
                 GenerateDriverCode = driverSection["GenerateDriverCode"],
+                GetTripDetailsByBillExpiryDate = eWayBillSection["GetTripDetailsByBillExpiryDate"],
+                AddLocation = locationSection["AddLocation"],
+                Updatelocation = locationSection["Updatelocation"],
+                GetMasterPartyRoute = masterPartyRouteSection["GetMasterPartyRoute"],
+                GetMasterPartyVehicleType = masterPartyVehicleTypeSection["GetMasterPartyVehicleType"],
+                AddMasterUserActivityLog = masterUserActivityLogSection["AddMasterUserActivityLog"],
+                GetAllMasterUserActivityLogList = masterUserActivityLogSection["GetAllMasterUserActivityLogList"],
+                GetMenu = menuSection["GetMenu"],
+                AddProduct = productSection["AddProduct"],
+                EditProduct = productSection["EditProduct"],
+                GetDrpProductList = productSection["GetDrpProductList"],
+                AddProfile = profileSection["AddProfile"], 
+                GetProfileAll = profileSection["GetProfileAll"],
+                GetAllInternalMaster = profileSection["GetAllInternalMaster"],
+                GetAllLinkGroup = profileRightSection["GetAllLinkGroup"],
+                GetLinkItemList = profileRightSection["GetLinkItemList"],
+                GetProfileRightsByProfileId = profileRightSection["GetProfileRightsByProfileId"],
+                AddOrUpdateProfileRights = profileRightSection["AddOrUpdateProfileRights"],
+                AddRfqRate = rfqRateSection["AddRfqRate"],
+                GetAllReceivedVendorCosting = receivedVendorCostingSection["GetAllReceivedVendorCosting"],
+                GetAllVehicleIndentList = requestForQuoteSection["GetAllVehicleIndentList"],
+                GenerateRfqAutoNo = requestForQuoteSection["GenerateRfqAutoNo"],
+                AddRfq = requestForQuoteSection["AddRfq"],
+                GetRfqByRfqNo = requestForQuoteSection["GetRfqByRfqNo"],
+                GetRfqById = requestForQuoteSection["GetRfqById"],
+                GetAllVendorListForRfq = requestForQuoteSection["GetAllVendorListForRfq"],
+                GetPreviousQuotesList = requestForQuoteSection["GetPreviousQuotesList"],
+                GetRfqQuoteRateVendorDetails = requestForQuoteSection["GetRfqQuoteRateVendorDetails"],
+                UpdateRfq = requestForQuoteSection["UpdateRfq"],
+                AddRfqFinal = rfqFinalizationSection["AddRfqFinal"],
+                AwardedVendor = rfqFinalizationSection["AwardedVendor"],
+                GetRfqFinalRateList = rfqFinalizationSection["GetRfqFinalRateList"],
+                UpdateRfqFinal = rfqFinalizationSection["UpdateRfqFinal"],
+                GetRfqDrpList = rfqFinalizationSection["GetRfqDrpList"],
+                AddRfqLink = requestForQuoteSection["AddRfqLink"],
+                AddRfqRecipient = rfqRecipientSection["AddRfqRecipient"],
+                AddUser = usersSection["AddUser"],
+                UpdateUser = usersSection["UpdateUser"],
+                GetUserById = usersSection["GetUserById"],
+                GetAllMasterLocation = usersSection["GetAllMasterLocation"],
+                UpdateUserPassword = usersSection["UpdateUserPassword"],
+                GetByLoginIdAsync = usersSection["GetByLoginIdAsync"],
+                GetAllVehicleCategory = vehicleSection["GetAllVehicleCategory"],
+                GetAllOwnerOrVendor = vehicleSection["GetAllOwnerOrVendor"],
+                AddVehicle = vehicleSection["AddVehicle"],
+                GetAllVehicle = vehicleSection["GetAllVehicle"],
+                UpdateVehicle = vehicleSection["UpdateVehicle"],
+                GetVehicleNumber = vehicleSection["GetVehicleNumber"],
+                AddVehicleIndent = vehicleIndentSection["AddVehicleIndent"],
+                GenerateVehicleIndent = vehicleIndentSection["GenerateVehicleIndent"],
+                UpdateVehicleIndent = vehicleIndentSection["UpdateVehicleIndent"],
+                AddVehiclePlacement = vehiclePlacementSection["AddVehiclePlacement"],
+                GeneratePlacementNo = vehiclePlacementSection["GeneratePlacementNo"],
+                AutoFetchPlacement = vehiclePlacementSection["AutoFetchPlacement"],
+                UpdateVehiclePlacement = vehiclePlacementSection["UpdateVehiclePlacement"],
+                DeleteVehiclePlacement = vehiclePlacementSection["DeleteVehiclePlacement"],
+                GetAllVehiclePlacementNo = vehiclePlacementSection["GetAllVehiclePlacementNo"],
+                AddVehicleType = vehicleTypeSection["AddVehicleType"],
+                UpdateVehicleType = vehicleTypeSection["UpdateVehicleType"],
+                GetAllVehicleTypeList = vehicleTypeSection["GetAllVehicleTypeList"],
+                UpdateMasterParty = customerSection["UpdateMasterParty"],
             };
         }
     }

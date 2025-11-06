@@ -14,57 +14,46 @@ namespace RFQ.UI.Infrastructure.Provider
         private object _fleetLynkApiUrl;
         private readonly IConfiguration _config;
         private readonly GlobalClass _globalClass;
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
 
-        public MasterAttachmentAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        public MasterAttachmentAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<string> AddMasterAttachment(List<MasterAttachmentRequestDto> masterAttachmentRequestDto)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/AddMasterAttachment";
-                var company = JsonConvert.SerializeObject(masterAttachmentRequestDto);
-                var requestContent = new StringContent(company, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl}/MasterAttachment/AddMasterAttachment";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, masterAttachmentRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
-
                         return "Corporate Company Saved";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
             return string.Empty;
         }
-
         public async Task<IEnumerable<MasterAttachmentRequestDto>> GetAllMasterAttachment()
         {
             {
                 try
                 {
-                    var _httpClient = new HttpClient();
-                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                    var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/MasterAttachment/GetAllMasterAttachment");
-                    var responseData = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                    var baseUrl = $"{_appSettings.BaseUrl}/MasterAttachment/GetAllMasterAttachment";
+                    var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                     if (responseModel != null)
                     {
                         var masterattachmentlist = JsonConvert.DeserializeObject<List<MasterAttachmentRequestDto>>(Convert.ToString(responseModel.Data!));
@@ -78,16 +67,12 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
             }
         }
-
         public async Task<IEnumerable<MasterAttachmentTypeResponseDto>> GetAllMasterAttachmentType()
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync($"{_fleetLynkApiUrl}/MasterAttachmentType/GetAllMasterAttachmentType");
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_fleetLynkApiUrl}/MasterAttachmentType/GetAllMasterAttachmentType";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var masterattachmentlist = JsonConvert.DeserializeObject<List<MasterAttachmentTypeResponseDto>>(Convert.ToString(responseModel.Data!));
@@ -100,9 +85,6 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
-
-
         public async Task<IEnumerable<MasterAttachmentResponseDto>> DeleteMasterAttachment(int attachmentId)
         {
             try
@@ -134,7 +116,6 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
         public async Task<string> DeleteMasterAttachmentTable(int attachmentId)
         {
             try
@@ -169,26 +150,15 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = $"{_fleetLynkApiUrl}/MasterAttachment/UpdateMasterAttachment";
-                var vehicle = JsonConvert.SerializeObject(masterAttachmentRequestDto);
-                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl}/MasterAttachment/UpdateMasterAttachment";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, masterAttachmentRequestDto,_globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "Corporate Company Updated";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
                 return "Failed to update Corporate Company";
             }

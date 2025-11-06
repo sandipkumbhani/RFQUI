@@ -10,6 +10,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<NewCommonResponseDto> AddProduct(ProductRequestDto productRequestDto);
         Task<string> EditProduct(int productId, ProductRequestDto productRequestDto);
         Task<string> DeleteProduct(int productId);
-        Task<IEnumerable<ProductResponseDto>> GetDrpProductList(int companyId);
+        Task<IEnumerable<ProductResponseDto>?> GetDrpProductList(int companyId);
     }
 }

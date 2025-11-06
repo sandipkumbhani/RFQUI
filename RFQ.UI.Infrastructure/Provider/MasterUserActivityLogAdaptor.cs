@@ -19,61 +19,43 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;
-        public MasterUserActivityLogAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public MasterUserActivityLogAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
-        public async Task<MasterUserActivityLogRequestDto?> AddMasterUserActivityLog(MasterUserActivityLogRequestDto masterUserActivityLogRequestDto)
+        public async Task<MasterUserActivityLogRequestDto?> AddMasterUserActivityLog(MasterUserActivityLogRequestDto requestDto)
         {
             try
             {
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = $"{_fleetLynkApiUrl}/MasterUserActivityLog/AddMasterUserActivityLog";
-                var jsonPayload = JsonConvert.SerializeObject(masterUserActivityLogRequestDto);
-                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PostAsync(baseUrl, content);
-                var responseData = await response.Content.ReadAsStringAsync();
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AddMasterUserActivityLog}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, requestDto, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200 && responseModel.Data != null)
                 {
-
                     var dataToken = responseModel.Data as JToken ?? JToken.FromObject(responseModel.Data);
                     var userActivityLog = dataToken.ToObject<MasterUserActivityLogRequestDto>();
                     return userActivityLog;
                 }
+                return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in AddMasterUserActivityLog: " + ex.Message);
+                throw;
             }
-
-            return null;
         }
-
         public async Task<PageList<MasterUserActivityLogResponseDto>> GetAllMasterUserActivityLogList(PagingParam pagingParam)
         {
             try
             {
                 using (var httpClient = new HttpClient())
                 {
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                    var requestDto = JsonConvert.SerializeObject(pagingParam);
-                    var requestContent = new StringContent(requestDto, Encoding.UTF8, "application/json");
-                    var baseUrl = _fleetLynkApiUrl + _config["MasterUserActivityLog:GetAllMasterUserActivityLogList"];
-                    var response = await httpClient.PostAsync(baseUrl, requestContent);
-                    var responseData = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommanResponseDto>(responseData);
+                    var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllMasterUserActivityLogList}";
+                    var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
                     if (responseModel?.Data?.result != null)
                     {
                         var activityLog = JsonConvert.DeserializeObject<List<MasterUserActivityLogResponseDto>>(

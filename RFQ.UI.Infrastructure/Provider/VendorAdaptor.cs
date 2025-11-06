@@ -15,7 +15,6 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;
         private readonly AppSettingsGlobal _appSettings;
         private readonly CommonApiAdaptor _commonApiAdaptor;
         public VendorAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
@@ -23,7 +22,6 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
             _appSettings = appSettings;
             _commonApiAdaptor = commonApiAdaptor;
         }
@@ -32,24 +30,13 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = _fleetLynkApiUrl + _config["Vendor:AddMasterParty"];
-                var vendor = JsonConvert.SerializeObject(vendorRequestDto);
-                var requestContent = new StringContent(vendor, Encoding.UTF8, "application/json");
-
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-
+                var baseUrl = $"{_appSettings.BaseUrl + _config["Vendor:AddMasterParty"]}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, vendorRequestDto, _globalClass.Token);
                 if (responseModel == null)
                 {
                     return new NewCommonResponseDto
                     {
-                        StatusCode = (int)response.StatusCode,
+                        StatusCode = (int)responseModel.StatusCode,
                         Message = "No response received from API",
                         Data = null
                     };
@@ -78,7 +65,7 @@ namespace RFQ.UI.Infrastructure.Provider
 
                 return new NewCommonResponseDto
                 {
-                    StatusCode = (int)response.StatusCode,
+                    StatusCode = (int)responseModel.StatusCode,
                     Message = "Unexpected response from API",
                     Data = null
                 };
@@ -94,14 +81,13 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-
         public async Task<string> DeleteVendor(int PartyId)
         {
             try
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Vendor:DeleteMasterParty"] + PartyId;
+                var baseurl = $"{_appSettings.BaseUrl + _config["Vendor:DeleteMasterParty"] + PartyId}";
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
@@ -113,26 +99,20 @@ namespace RFQ.UI.Infrastructure.Provider
                     else
                         return responseModel.ErrorMessage;
                 }
+                return "Failed to Delete Vendor";
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return "Failed to Delete Vendor";
         }
 
         public async Task<string> EditVendor(int PartyId, VendorRequestDto vendorRequestDto)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["Customer:UpdateMasterParty"] + PartyId;
-                var vendor = JsonConvert.SerializeObject(vendorRequestDto);
-                var requestContent = new StringContent(vendor, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateMasterParty + PartyId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, vendorRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -141,34 +121,20 @@ namespace RFQ.UI.Infrastructure.Provider
                     else
                         return responseModel.ErrorMessage;
                 }
+                return "Failed to update Vendor";
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return "Failed to update Vendor";
         }
 
         public async Task<IEnumerable<InternalMasterResponseDto>> GetAllInternalMaster()
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = _fleetLynkApiUrl + _config["Vendor:GetAllInternalMaster"];
-                var response = await _httpClient.GetAsync(url);
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return null;
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                {
-                    return null;
-                }
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl+_appSettings.GetAllInternalMaster}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var internalMasterList = JsonConvert.DeserializeObject<List<InternalMasterResponseDto>>(Convert.ToString(responseModel.Data!));
@@ -188,7 +154,6 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var baseUrl = _appSettings.BaseUrl + _appSettings.GetAllVendor;
                 var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
-
                 return _commonApiAdaptor.GenerateResponse<VendorResponseDto>(responseModel);
             }
             catch (Exception)
@@ -201,38 +166,19 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var url = $"{_fleetLynkApiUrl}{_config["Vendor:GetAllVendorList"]}?companyId={companyId}";
-                var response = await httpClient.GetAsync(url);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return null;
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                    return null;
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllVendorList}?companyId={companyId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel?.Data != null)
                 {
                     var vendorList = JsonConvert.DeserializeObject<List<VendorListResponseDto>>(responseModel.Data.ToString());
                     return vendorList;
                 }
-
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
                 throw;
             }
         }
-
     }
 }

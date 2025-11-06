@@ -14,7 +14,6 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;
         private readonly AppSettingsGlobal _appSettings;
         private readonly CommonApiAdaptor _commonApiAdaptor;
 
@@ -23,7 +22,6 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
             _appSettings = appSettingsGlobal;
             _commonApiAdaptor = commonApiAdaptor;
         }
@@ -33,23 +31,17 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["VehicleType:AddVehicleType"];
-                var Vehicle = JsonConvert.SerializeObject(vehicleTypeRequestDto);
-                var requestContent = new StringContent(Vehicle, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AddVehicleType}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, vehicleTypeRequestDto, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     return JsonConvert.DeserializeObject<NewCommonResponseDto>(responseModel.Data.ToString());
                 }
                 return new NewCommonResponseDto();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new NewCommonResponseDto() { Data = null, Message = ex.InnerException.ToString(), ErrorMessage = ex.StackTrace };
+                throw;
             }
         }
 
@@ -71,15 +63,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = _fleetLynkApiUrl + _config["VehicleType:UpdateVehicleType"] + vehicleTypeId;
-                var vehicle = JsonConvert.SerializeObject(vehicleTypeRequestDto);
-                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateVehicleType + vehicleTypeId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, vehicleTypeRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -103,7 +88,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var baseurl = _fleetLynkApiUrl + _config["VehicleType:DeleteVehicleType"] + vehicleTypeId;
+                var baseurl = $"{_appSettings.BaseUrl + _config["VehicleType:DeleteVehicleType"] + vehicleTypeId}";
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
@@ -127,11 +112,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["VehicleType:GetAllVehicleTypeList"]);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllVehicleTypeList}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var vehicleTypelist = JsonConvert.DeserializeObject<List<VehicleTypeResponseDto>>(Convert.ToString(responseModel.Data!));
@@ -139,7 +121,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

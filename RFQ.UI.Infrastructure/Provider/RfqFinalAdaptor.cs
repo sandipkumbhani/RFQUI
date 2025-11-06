@@ -31,122 +31,88 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = _fleetLynkApiUrl + _config["RfqFinal:AddRfqFinal"];
-                var rfqFinal = JsonConvert.SerializeObject(rfqFinalizationSaveRequestDto);
-                var requestContent = new StringContent(rfqFinal, Encoding.UTF8, "application/json");
-                var response = await httpClient.PostAsync(baseUrl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = _appSettings.BaseUrl + _appSettings.AddRfqFinal;
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, rfqFinalizationSaveRequestDto, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     var result = (bool)responseModel.Data;
                     return result;
                 }
+                return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in AddRfqFinal: " + ex.Message);
+                throw;
             }
-
-            return false;
         }
-
         public async Task<IEnumerable<VendorFinalizationResposeDto>> AwardedVendor(int id)
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = _fleetLynkApiUrl + _config["RfqFinal:AwardedVendor"] + id;
-                var response = await _httpClient.GetAsync(url);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AwardedVendor + id}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var routeList = JsonConvert.DeserializeObject<IEnumerable<VendorFinalizationResposeDto>>(Convert.ToString(responseModel.Data!));
                     return routeList;
                 }
                 return null;
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception("An error occurred while fetching  routes for the party.", ex);
+                throw;
             }
         }
-
         public async Task<PageList<RfqFinalizationResponseDto>> GetAllRfqFinalization(PagingParam pagingParam)
         {
             try
             {
                 var baseUrl = _appSettings.BaseUrl + _appSettings.GetAllRfqFinalization;
                 var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, pagingParam, _globalClass.Token);
-
-                return _commonApiAdaptor.GenerateResponse<RfqFinalizationResponseDto>(responseModel);
+                if (responseModel != null)
+                    return _commonApiAdaptor.GenerateResponse<RfqFinalizationResponseDto>(responseModel);
+                else
+                    return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in GetAllRfq: " + ex.Message);
+                throw;
             }
-            return null;
         }
-
         public async Task<IEnumerable<RfqFinalRateReponseDto>> GetRfqFinalRateList(int rfqFinalId)
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = $"{_fleetLynkApiUrl}{_config["RfqFinal:GetRfqFinalRateList"]}?rfqFinalId={rfqFinalId}";
-                var response = await _httpClient.GetAsync(url);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetRfqFinalRateList}?rfqFinalId={rfqFinalId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var resultList = JsonConvert.DeserializeObject<IEnumerable<RfqFinalRateReponseDto>>(Convert.ToString(responseModel.Data!));
                     return resultList;
                 }
                 return null;
-
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while fetching  Rfq Final Rate.", ex);
+                throw;
             }
         }
-
         public async Task<bool> UpdateRfqFinal(int rfqFinalId, RfqFinalizationSaveRequestDto rfqFinalizationSaveRequestDto)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["RfqFinal:UpdateRfqFinal"] + rfqFinalId;
-                var rfqFinal = JsonConvert.SerializeObject(rfqFinalizationSaveRequestDto);
-                var requestContent = new StringContent(rfqFinal, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return true;
-                    else
-                        return false;
-                }
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateRfqFinal + rfqFinalId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, rfqFinalizationSaveRequestDto, _globalClass.Token);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return true;
+                else
+                    return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in UpdateRfq: " + ex.Message);
+                throw;
             }
-            return false;
         }
-
         public async Task<bool> DeleteRfqFinal(int rfqFinalId)
         {
             try
@@ -169,17 +135,12 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             return false;
         }
-
         public async Task<IEnumerable<RfqDrpListResponseDto>> GetRfqDrpList(int companyId)
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl =  $"{_fleetLynkApiUrl}{_config["RfqFinal:GetRfqDrpList"]}?companyId={companyId}";
-                var response = await _httpClient.GetAsync(baseurl);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetRfqDrpList}?companyId={companyId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     var resultList = JsonConvert.DeserializeObject<IEnumerable<RfqDrpListResponseDto>>(Convert.ToString(responseModel.Data!));
@@ -187,11 +148,10 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in Get Rfq DrpList: " + ex.Message);
+                throw;
             }
-            return null;
         }
     }
 }

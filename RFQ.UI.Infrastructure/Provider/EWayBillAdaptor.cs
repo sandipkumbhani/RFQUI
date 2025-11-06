@@ -17,31 +17,26 @@ namespace RFQ.UI.Infrastructure.Provider
         private readonly IConfiguration _config;
         private string _fleetLynkApiUrl;
         private readonly ILogger<EWayBillAdaptor> _logger;
-        public EWayBillAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, ILogger<EWayBillAdaptor> logger)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public EWayBillAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, ILogger<EWayBillAdaptor> logger, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
             _logger = logger;
             _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"];
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
+
         }
         public async Task<IEnumerable<TripDetailsResponse>> GetTripDetailsByBillExpiryDate(TripDetailsRequestDto tripDetailsRequestDto)
         {
             try
             {
 
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = _fleetLynkApiUrl + _config["EWayBill:GetTripDetailsByBillExpiryDate"];
-                var requestJson = JsonConvert.SerializeObject(tripDetailsRequestDto);
-                var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PostAsync(baseUrl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetTripDetailsByBillExpiryDate;
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, tripDetailsRequestDto, _globalClass.Token);
                 if (responseModel?.StatusCode == 200 && responseModel.Data != null)
                 {
                     return JsonConvert.DeserializeObject<IEnumerable<TripDetailsResponse>>(responseModel.Data.ToString());
@@ -51,7 +46,7 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching Trip Details by Bill Expiry Date");
-                return Enumerable.Empty<TripDetailsResponse>();
+                throw;
             }
         }
     }

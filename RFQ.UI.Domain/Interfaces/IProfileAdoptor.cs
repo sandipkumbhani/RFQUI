@@ -1,19 +1,21 @@
 ﻿using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using System.Threading.Tasks;
 
 namespace RFQ.UI.Domain.Interfaces
 {
     public interface IProfileAdoptor
     {
         Task<string> AddProfile(ProfileRequestDto profileRequestDto);
-        Task<IEnumerable<ProfileResponseDto>> GetProfileAll();
-        Task<IEnumerable<InternalMasterResponseDto>> GetAllApplicableList();
+        Task<IEnumerable<ProfileResponseDto>?> GetProfileAll();
+        Task<IEnumerable<InternalMasterResponseDto>?> GetAllApplicableList();
 
 
         //Task<string> AddProfileRights(ProfileRightsRequestDto profileRightsRequestDto);
         //Task<IEnumerable<ProfileRightsResponseDto>> GetProfileRightsAll();
-        Task<IEnumerable<LinkGroupResponseDto>> GetAllMenuGroup();
-        Task<IEnumerable<LinkItemResponseDto>> GetLinkItemList();
+        Task<IEnumerable<LinkGroupResponseDto>?> GetAllMenuGroup();
+        Task<IEnumerable<LinkItemResponseDto>?> GetLinkItemList();
+        //Task<IEnumerable<ProfileRightsResponseDto>?> GetProfileRightsByProfileId(int profileId);
         Task<string> AddOrUpdateProfileRights(List<ProfileRightsResponseDto> requestDto);
     }
 }

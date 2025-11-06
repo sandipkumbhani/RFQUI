@@ -19,7 +19,6 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;
         private readonly AppSettingsGlobal _appSettings;
         private readonly CommonApiAdaptor _commonApiAdaptor;
         public VehiclePlacementAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
@@ -27,64 +26,37 @@ namespace RFQ.UI.Infrastructure.Provider
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
             _appSettings = appSettings;
             _commonApiAdaptor = commonApiAdaptor;
         }
 
-        
+
         public async Task<VehiclePlacementRequestDto?> AddVehiclePlacement(VehiclePlacementRequestDto vehiclePlacementRequestDto)
         {
             try
             {
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = $"{_fleetLynkApiUrl}/VehiclePlacement/AddVehiclePlacement";
-                var jsonPayload = JsonConvert.SerializeObject(vehiclePlacementRequestDto);
-                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PostAsync(baseUrl, content);
-                var responseData = await response.Content.ReadAsStringAsync();
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AddVehiclePlacement}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, vehiclePlacementRequestDto, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200 && responseModel.Data != null)
                 {
-
                     var dataToken = responseModel.Data as JToken ?? JToken.FromObject(responseModel.Data);
                     var vehiclePlacementData = dataToken.ToObject<VehiclePlacementRequestDto>();
                     return vehiclePlacementData;
                 }
+                return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error in AddRfq: " + ex.Message);
+                throw;
             }
-
-            return null;
-
         }
 
         public async Task<string> GetPlacementNo()
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["VehiclePlacement:GeneratePlacementNo"];
-                var response = await _httpClient.GetAsync(baseurl);
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return null;
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                    return null;
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GeneratePlacementNo}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel?.Data != null)
                 {
                     var placementNo = responseModel.Data.ToString();
@@ -92,34 +64,28 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return null;
         }
 
         public async Task<IEnumerable<AutoFetchIndentResponseDto>> AutoFetchPlacement(int id)
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = _fleetLynkApiUrl + _config["VehiclePlacement:AutoFetchPlacement"] + id;
-                var response = await _httpClient.GetAsync(url);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AutoFetchPlacement + id}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var routeList = JsonConvert.DeserializeObject<IEnumerable<AutoFetchIndentResponseDto>>(Convert.ToString(responseModel.Data!));
                     return routeList;
                 }
                 return null;
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception("An error in AutoFetchPlacement.", ex);
+                throw;
             }
         }
 
@@ -142,27 +108,15 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = $"{_fleetLynkApiUrl}/VehiclePlacement/UpdateVehiclePlacement/{placementId}";
-                var vehicle = JsonConvert.SerializeObject(vehiclePlacementRequestDto);
-                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateVehiclePlacement + placementId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, vehiclePlacementRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "VehiclePlacement Updated";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
                 return "Failed to update VehiclePlacement";
             }
@@ -179,7 +133,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
 
-                var baseurl = $"{_fleetLynkApiUrl}/VehiclePlacement/DeleteVehiclePlacement/{placementId}";
+                var baseurl = $"{_appSettings.BaseUrl + _appSettings.DeleteVehiclePlacement}{placementId}";
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
@@ -187,13 +141,9 @@ namespace RFQ.UI.Infrastructure.Provider
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "VehicleIndent Deleted";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
                 return "Failed to Delete VehicleIndent";
             }
@@ -207,36 +157,18 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = $"{_fleetLynkApiUrl}{_config["VehiclePlacement:GetAllVehiclePlacementNo"]}?companyId={companyId}";
-                var response = await _httpClient.GetAsync(baseUrl);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return Enumerable.Empty<VehiclePlacementResponseDto>();
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                    return Enumerable.Empty<VehiclePlacementResponseDto>();
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllVehiclePlacementNo}?companyId={companyId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel?.Data != null)
                 {
                     var indents = JsonConvert.DeserializeObject<IEnumerable<VehiclePlacementResponseDto>>(responseModel.Data.ToString());
                     return indents ?? Enumerable.Empty<VehiclePlacementResponseDto>();
                 }
-
                 return Enumerable.Empty<VehiclePlacementResponseDto>();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Exception in GetAllVehiclePlacementNo: {ex}");
-                return Enumerable.Empty<VehiclePlacementResponseDto>();
+                throw;
             }
         }
     }

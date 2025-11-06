@@ -1,8 +1,4 @@
-﻿
-using System.Text;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using RFQ.UI.Domain.Helper;
+﻿using Microsoft.Extensions.Configuration;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -15,39 +11,29 @@ namespace RFQ.UI.Infrastructure.Provider
         private HttpClient _httpClient;
         private readonly GlobalClass _globalClass;
         private readonly IConfiguration _config;
-        private string _fleetLynkApiUrl;
-        public QuoteRateVendorAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration)
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
+        public QuoteRateVendorAdaptor(HttpClient httpClient, GlobalClass globalClass, IConfiguration configuration, AppSettingsGlobal appSettings, CommonApiAdaptor commonApiAdaptor)
         {
             _httpClient = httpClient;
             _globalClass = globalClass;
             _config = configuration;
-            _fleetLynkApiUrl = _config["ApiSettings:BaseUrl"] ?? throw new ArgumentNullException(nameof(_config), "BaseUrl configuration is missing");
-
+            _appSettings = appSettings;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<string> AddQuoteRateVendor(QuoteRateVendorRequestDto rfqRateRequestDto)
         {
             try
             {
-                _httpClient = new HttpClient();
-                //_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = _fleetLynkApiUrl + _config["RFQRate:AddRfqRate"];
-                var User = JsonConvert.SerializeObject(rfqRateRequestDto);
-                var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AddRfqRate}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, rfqRateRequestDto);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "QuoteRateVendor Saved";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
                 return string.Empty;
             }

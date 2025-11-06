@@ -30,44 +30,18 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-
-                var baseurl = _fleetLynkApiUrl + _config["Users:AddUser"];
-                var User = JsonConvert.SerializeObject(userRequestDto);
-                var requestContent = new StringContent(User, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AddUser}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, userRequestDto, _globalClass.Token);
+                if (responseModel != null)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error: {response.StatusCode}, Details: {errorContent}");
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        responseModel.Message = "User Saved";
+                    else
+                        responseModel.Message = responseModel.ErrorMessage;
 
-                    var errorResponse = new NewCommonResponseDto
-                    {
-                        StatusCode = (int)response.StatusCode,
-                        Data = null,
-                        Message = errorContent.ToString(),
-                        ErrorMessage = errorContent
-                    };
-                    string json = JsonConvert.SerializeObject(errorResponse);
+                    string json = JsonConvert.SerializeObject(responseModel);
                     return json;
-                }
-                else
-                {
-                    var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                    if (responseModel != null)
-                    {
-                        var result = responseModel.StatusCode;
-                        if (result == 200)
-                            responseModel.Message = "User Saved";
-                        else
-                            responseModel.Message = responseModel.ErrorMessage;
-
-                        string json = JsonConvert.SerializeObject(responseModel);
-                        return json;
-                    }
                 }
                 return string.Empty;
             }
@@ -112,26 +86,15 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = _fleetLynkApiUrl + _config["Users:UpdateUser"] + userId;
-                var user = JsonConvert.SerializeObject(userRequestDto);
-                var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateUser + userId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, userRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "User Updated...";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
                 return "Failed to Update User ";
             }
@@ -152,23 +115,14 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 throw;
             }
-            
+
         }
         public async Task<UserResponseDto> GetUserById(int userId)
         {
             try
             {
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = _fleetLynkApiUrl + _config["Users:GetUserById"] + userId;
-
-                var response = await httpClient.GetAsync(baseUrl);
-                response.EnsureSuccessStatusCode();
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                //var user = JsonConvert.DeserializeObject<UserResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetUserById + userId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null && responseModel.Data != null)
                 {
                     var json = JsonConvert.SerializeObject(responseModel.Data);
@@ -190,7 +144,6 @@ namespace RFQ.UI.Infrastructure.Provider
                         StatusId = user.StatusId,
                         Password = user.Password
                     };
-
                     return userResponse;
                 }
                 return null;
@@ -204,11 +157,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                var _httpclient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetAllCompanyAndFranchise"]);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllCompanyAndFranchise}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var alllist = JsonConvert.DeserializeObject<List<CompanyAndFranchiseListDto>>(Convert.ToString(responseModel.Data!));
@@ -225,11 +175,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                var _httpclient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var response = await _httpClient.GetAsync(_fleetLynkApiUrl + _config["Users:GetAllMasterLocation"]);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllMasterLocation}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var alllist = JsonConvert.DeserializeObject<List<LocationListDto>>(Convert.ToString(responseModel.Data!));
@@ -237,7 +184,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -246,15 +193,8 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = _fleetLynkApiUrl + _config["Users:UpdateUserPassword"];
-                var user = JsonConvert.SerializeObject(userRequestDto);
-                var requestContent = new StringContent(user, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateUserPassword}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, userRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
@@ -274,16 +214,11 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetByLoginIdAsync + LoginId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 using var httpClient = new HttpClient();
 
-                var baseUrl = _fleetLynkApiUrl + _config["Users:GetByLoginIdAsync"] + LoginId;
-
-                var response = await httpClient.GetAsync(baseUrl);
-                //response.EnsureSuccessStatusCode();
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                //var user = JsonConvert.DeserializeObject<UserResponseDto>(responseData);
-                if (responseModel.StatusCode == 200 && responseModel != null && responseModel.Data != null)
+                if (responseModel != null && responseModel.StatusCode == 200 && responseModel.Data != null)
                 {
                     var json = JsonConvert.SerializeObject(responseModel.Data);
                     var user = JsonConvert.DeserializeObject<UserResponseDto>(json);
@@ -303,7 +238,6 @@ namespace RFQ.UI.Infrastructure.Provider
                         EmailId = user.EmailId,
                         StatusId = user.StatusId,
                     };
-
                     return userResponse;
                 }
                 return null;
@@ -313,6 +247,5 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw new ApplicationException("Failed to fetch user by ID", ex);
             }
         }
-
     }
 }

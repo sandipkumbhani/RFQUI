@@ -27,49 +27,30 @@ namespace RFQ.UI.Infrastructure.Provider
             _appSettings = appSettings;
             _commonApiAdaptor = commonApiAdaptor;
         }
+
         public async Task<bool> AddVehicleIndent(VehicleIndentRequestDto vehicleIndentRequestDto)
         {
             try
             {
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseUrl = _fleetLynkApiUrl + _config["VehicleIndent:AddVehicleIndent"];
-                var vehicleIndent = JsonConvert.SerializeObject(vehicleIndentRequestDto);
-                var requestContent = new StringContent(vehicleIndent, Encoding.UTF8, "application/json");
-                var response = await httpClient.PostAsync(baseUrl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AddVehicleIndent}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, vehicleIndentRequestDto, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     return true;
                 }
+                return false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in AddVehicleIndent: {ex.Message}");
+                throw;
             }
-            return false;
         }
-
         public async Task<string> GetIndentNo()
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["VehicleIndent:GenerateVehicleIndent"];
-                var response = await _httpClient.GetAsync(baseurl);
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return null;
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                    return null;
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GenerateVehicleIndent}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel?.Data != null)
                 {
                     var indentNo = responseModel.Data.ToString();
@@ -79,11 +60,9 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw;
             }
-            return null;
         }
-
         public async Task<PageList<VehicleIndentResponseDto>> GetAllVehicleIndent(PagingParam pagingParam)
         {
             try
@@ -97,32 +76,19 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
         public async Task<string> UpdateVehicleIndent(int indentId, VehicleIndentRequestDto vehicleIndentRequestDto)
         {
             try
             {
-
-                _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseurl = $"{_fleetLynkApiUrl}/VehicleIndent/UpdateVehicleIndent/{indentId}";
-                var vehicle = JsonConvert.SerializeObject(vehicleIndentRequestDto);
-                var requestContent = new StringContent(vehicle, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync(baseurl, requestContent);
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateVehicleIndent + indentId}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, vehicleIndentRequestDto, _globalClass.Token);
                 if (responseModel != null)
                 {
                     var result = responseModel.StatusCode;
                     if (result == 200)
-                    {
                         return "VehicleIndent Updated";
-                    }
                     else
-                    {
                         return responseModel.ErrorMessage;
-                    }
                 }
                 return "Failed to update VehicleIndent";
             }
@@ -131,7 +97,6 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
         public async Task<string> DeleteVehicleIndent(int indentId)
         {
             try
