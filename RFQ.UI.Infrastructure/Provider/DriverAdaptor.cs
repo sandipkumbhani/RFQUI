@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
@@ -113,45 +114,24 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                var _httpClient = new HttpClient();
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
+                var baseUrl = $"{_config["ApiSettings:DrivingLicenseAPI"]}DrivingLicenseNo={licenseKycDetailsRequestDto.DrivingLicenseNo}&DateOfBirth={licenseKycDetailsRequestDto.DateOfBirth}";
 
-                var url = $"{_config["ApiSettings:DrivingLicenseAPI"]}DrivingLicenseNo={licenseKycDetailsRequestDto.DrivingLicenseNo}&DateOfBirth={licenseKycDetailsRequestDto.DateOfBirth}";
-                var response = await _httpClient.GetAsync(url);
-
-                if (!response.IsSuccessStatusCode)
+                var responseModel = await _commonApiAdaptor.GetAsync<LicenseKycDetailsResponseDto>(baseUrl);
+                if (responseModel != null)
                 {
-                    Console.WriteLine($"HTTP Request failed with status code: {response.StatusCode}");
-                    return null;
+                    if (responseModel.MessageDescription != null)
+                    {
+                        throw new Exception(responseModel.MessageDescription);
+                    }
+                    // Adjust DateTime fields to correct the 1-day discrepancy  
+                    if (responseModel.DrivingLicenseModel != null)
+                    {
+                        responseModel.DrivingLicenseModel.ValidityIssueDate = responseModel.DrivingLicenseModel.ValidityIssueDate.AddDays(1);
+                        responseModel.DrivingLicenseModel.ValidityExpiryDate = responseModel.DrivingLicenseModel.ValidityExpiryDate.AddDays(1);
+                    }
+                    return responseModel;
                 }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                {
-                    Console.WriteLine("Response data is null or empty");
-                    return null;
-                }
-
-                var settings = new JsonSerializerSettings
-                {
-                    DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind
-                };
-
-                var dlKycDetails = JsonConvert.DeserializeObject<LicenseKycDetailsResponseDto>(responseData, settings);
-                if (dlKycDetails == null)
-                {
-                    Console.WriteLine("Deserialization resulted in null");
-                    return null;
-                }
-
-                // Adjust DateTime fields to correct the 1-day discrepancy  
-                if (dlKycDetails.DrivingLicenseModel != null)
-                {
-                    dlKycDetails.DrivingLicenseModel.ValidityIssueDate = dlKycDetails.DrivingLicenseModel.ValidityIssueDate.AddDays(1);
-                    dlKycDetails.DrivingLicenseModel.ValidityExpiryDate = dlKycDetails.DrivingLicenseModel.ValidityExpiryDate.AddDays(1);
-                }
-
-                return dlKycDetails;
+                return null;
             }
             catch (Exception ex)
             {

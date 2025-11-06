@@ -78,7 +78,7 @@ function DropzoneInitialize() {
         init: function () {
             const dz = this;
 
-            $("#licenseEKycButton").on('click',function () {
+            $("#licenseEKycButton").on('click', function () {
                 isDLEKycClicked = true;
             });
 
@@ -102,7 +102,7 @@ function DropzoneInitialize() {
                 else {
                     SaveDriver("", function (driverId) {
                         if (driverId > 0) {
-                            FetchDriverList(); 
+                            FetchDriverList();
                         }
                     });
                 }
@@ -267,7 +267,7 @@ function SaveDriver(uploadedFileName, callback) {
                 }
             },
             error: function (req, status, error) {
-                toastr.error("Failed to Create Driver Login", "Error");
+                toastr.error(xhr.responseText);
             }
         });
     }
@@ -278,20 +278,17 @@ function SaveDriver(uploadedFileName, callback) {
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
-            if (response && response.success) {
+            if (!IsNullOrEmpty(response)) {
                 toastr.success("Driver Details Saved Successfully!", "Success");
                 addMasterUserActivityLog(0, LogType.Create, "Driver Details Saved Successfully!", 0);
                 FetchDriverList();
-            }
-            else if (response && response.message === "License Number already exists.") {
-                toastr.warning(response.message, "Warning");
             }
             else {
                 toastr.error(response.message || "Failed to Submit Driver Details.", "Error");
             }
         },
         error: function (xhr, status, error) {
-            toastr.error("An internal error occurred while saving the Driver.", "Error");
+            toastr.error(xhr.responseText);
         }
     });
 
@@ -375,7 +372,7 @@ function UpdateDriver(fileName) {
         LicenseNo: $("#numLicenseNo").val(),
         DriverName: $("#txtDriverName").val(),
         LicenseIssueDate: $("#txtDLIssueDate").val() ? $("#txtDLIssueDate").val() : null,
-        DLIssuingRto : $("#txtDLIssuingRTO").val(),
+        DLIssuingRto: $("#txtDLIssuingRTO").val(),
         DateOfBirth: $("#txtDateOfBirth").val(),
         DriverCode: $("#txtDriverCode").val(),
         LicenseExpDate: $("#txtDLExpiryDate").val() ? $("#txtDLExpiryDate").val() : null,
@@ -423,11 +420,11 @@ function UpdateDriver(fileName) {
                 FetchDriverList();
             }
             else {
-                toastr.error("Failed to Update Driver Details!","Error");
+                toastr.error("Failed to Update Driver Details!", "Error");
             }
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Update Driver Details!", "Error");
+            toastr.error(xhr.responseText);
         }
     });
     if (fileName) {
@@ -506,7 +503,6 @@ function DlEKycclick() {
                 var drivingLicenseModel = response.drivingLicenseModel;
                 var base64String = Data.drivingLicenseModel.photo;
 
-
                 $("#txtDriverName").val(drivingLicenseModel.fullName);
                 $("#txtDLIssueDate").val(FormatDateForInput(drivingLicenseModel.validityIssueDate));
                 $("#txtDLExpiryDate").val(FormatDateForInput(drivingLicenseModel.validityExpiryDate));
@@ -514,8 +510,6 @@ function DlEKycclick() {
                 $("#from-search-box").val(drivingLicenseModel.presentAddress);
                 $("#numPincode").val(drivingLicenseModel.pincode);
                 $("#txtVerifiedOn").val(new Date().toISOString().split('T')[0]),
-
-                document.getElementById("txtUploadedPhoto").value = base64String;
                 $("#txtUploadedPhoto").val(drivingLicenseModel.photo);
 
                 function base64ToFile(base64String, filename) {
@@ -536,14 +530,20 @@ function DlEKycclick() {
 
                 if (myDropzone) {
                     myDropzone.removeAllFiles(true);
-
                     myDropzone.addFile(file);
-
                     myDropzone.processQueue();
-                } 
+                }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Submit Driver", "Validation Error");
+                toastr.error(xhr.responseText);
+                $("#txtDriverName").val('');
+                $("#txtDLIssueDate").val('');
+                $("#txtDLExpiryDate").val('');
+                $("#txtDLIssuingRTO").val('');
+                $("#from-search-box").val('');
+                $("#numPincode").val('');
+                $("#txtVerifiedOn").val('');
+                $("#txtUploadedPhoto").val('');
             }
         });
     });
@@ -700,7 +700,7 @@ function ValidationCheck() {
     }
 
     if (IsNullOrEmpty($("#txtDriverName").val())) {
-        toastr.warning("Please enter a valid Driver Name","Validation Error");
+        toastr.warning("Please enter a valid Driver Name", "Validation Error");
         return false;
     }
     if (IsNullOrEmpty($("#txtDLIssueDate").val())) {

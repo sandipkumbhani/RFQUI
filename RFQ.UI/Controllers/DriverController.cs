@@ -106,11 +106,11 @@ namespace RFQ.UI.Controllers
             try
             {
                 var details = await _driverServices.GetDlKycDetails(licenseKycDetailsRequestDto);
-                return Ok(details);
+                return Json(details);
             }
             catch (Exception ex)
             {
-                return Ok(ex);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -148,15 +148,14 @@ namespace RFQ.UI.Controllers
                 driverRequestDto.StatusId = (int)EStatus.IsActive;
 
                 var result = await _driverServices.AddDriver(driverRequestDto);
-                if (result == null)
-                {
-                    return Json(new { success = false, message = "License Number already exists." });
-                }
-                return Json(new { success = true, data = result });
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An internal error occurred while saving the Driver.");
+                if (ex.Message.Contains("409"))
+                    return StatusCode(409, "Driver Is Already Exsist");
+                else
+                    return StatusCode(500, $"Request failed: {ex.Message}");
             }
         }
 
