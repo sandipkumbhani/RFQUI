@@ -693,21 +693,23 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
         data: { companyId: companyIdParam },
         dataType: "json",
         success: function (response) {
-            var data = response
-            const selectVehicleType = document.getElementById(dropdownId);
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Vehicle Type";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            selectVehicleType.appendChild(placeholderOption);
+            if (response != null) {
+                var data = response
+                const selectVehicleType = document.getElementById(dropdownId);
+                let placeholderOption = document.createElement("option");
+                placeholderOption.value = "";
+                placeholderOption.textContent = "Select a Vehicle Type";
+                placeholderOption.disabled = true;
+                placeholderOption.selected = true;
+                selectVehicleType.appendChild(placeholderOption);
 
-            data.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.vehicleTypeId;
-                option.textContent = item.vehicleTypeName;
-                selectVehicleType.appendChild(option);
-            });
+                data.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.vehicleTypeId;
+                    option.textContent = item.vehicleTypeName;
+                    selectVehicleType.appendChild(option);
+                });
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Vehicle Type!", "Error");
@@ -1124,7 +1126,7 @@ function UpdateVehiclePlacement(placementId) {
     $("#ddlBrokerName").val(formData.brokerVendorId).trigger('change');
     $("#txtTotalHairAmt").val(formData.totalHireAmount);
     $("#txtAdvancePayable").val(formData.advancePayable);
-} 
+}
 function ViewVehiclePlacement(placementId) {
     UpdateVehiclePlacement(placementId);
     $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);

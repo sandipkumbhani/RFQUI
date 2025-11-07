@@ -266,10 +266,8 @@ namespace RFQ.UI.Controllers
                 var vehicleCategoryList = await _vehicleServices.GetAllMasterVehicleType(companyId);
                 if (vehicleCategoryList != null && vehicleCategoryList.Count() > 0)
                     return Json(vehicleCategoryList);
-                if (Request.IsAjaxRequest())
-                    return Json(vehicleCategoryList);
                 else
-                    return View(vehicleCategoryList);
+                    return Json(vehicleCategoryList);
             }
             catch (Exception ex)
             {

@@ -90,5 +90,19 @@ namespace RFQ.UI.Infrastructure.Provider
             }
             return returnResponse;
         }
+
+        public async Task<T?> DeleteAsync<T>(string url, string? token = null)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, url);
+
+            if (!string.IsNullOrEmpty(token))
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(content);
+        }
     }
 }

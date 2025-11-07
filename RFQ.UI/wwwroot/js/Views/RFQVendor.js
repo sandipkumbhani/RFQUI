@@ -224,20 +224,23 @@ function GetAllVehicleType() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            const vehicleTypedropdown = document.getElementById("ddlVehicleType");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a VehicleType";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            vehicleTypedropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.vehicleTypeId;
-                option.textContent = item.vehicleTypeName;
-                vehicleTypedropdown.appendChild(option);
-            });
-            $('.selectpicker').selectpicker('refresh');
+            debugger;
+            if (response != null) {
+                const vehicleTypedropdown = document.getElementById("ddlVehicleType");
+                let placeholderOption = document.createElement("option");
+                placeholderOption.value = "";
+                placeholderOption.textContent = "Select a VehicleType";
+                placeholderOption.disabled = true;
+                placeholderOption.selected = true;
+                vehicleTypedropdown.appendChild(placeholderOption);
+                response.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.vehicleTypeId;
+                    option.textContent = item.vehicleTypeName;
+                    vehicleTypedropdown.appendChild(option);
+                });
+                $('.selectpicker').selectpicker('refresh');
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Vehicle Type!", "Error");
