@@ -275,15 +275,21 @@ function EditUser(userId) {
     if (formdata.locationId != 0) {
         $('#ddlLocation').val(formdata.locationId).trigger('change');
     }
-    //if (profileid != EnumInternalMaster.ADMIN) {
-    //    $('#ddlCompanyAndFranchise').prop('disabled', true);
-    //}
-    if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
-        $('#ddlCompanyAndFranchise').prop('disabled', true);
+
+    if (Number(profileid) != EnumProfile.Franchise) {
+        if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
+            $('#ddlCompanyAndFranchise').prop('disabled', true);
+        }
+        else {
+            $('#ddlCompanyAndFranchise').val(0).trigger('change');
+            $('#ddlCompanyAndFranchise').prop('disabled', false);
+        }
     }
     else {
-        $('#ddlCompanyAndFranchise').val(0).trigger('change');
-        $('#ddlCompanyAndFranchise').prop('disabled', false);
+        if (IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
+            $('#ddlCompanyAndFranchise').val(0).trigger('change');
+            $('#ddlCompanyAndFranchise').prop('disabled', false);
+        }
     }
 
     if (profileid == EnumProfile.Branch) {
