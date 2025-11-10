@@ -383,7 +383,7 @@ function GetFranchiseAndCorporateName() {
                     data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
                 }
                 if (profileid == EnumProfile.Franchise) {
-                    data = response.filter(x => x.companyTypeId == 2)
+                    data = response.filter(x => x.companyTypeId == 3)
                 }
                 if (profileid == EnumProfile.Corporate || profileid == EnumProfile.Vendor) {
                     data = response.filter(x => x.companyTypeId == 3 && x.createdBy == userid);
