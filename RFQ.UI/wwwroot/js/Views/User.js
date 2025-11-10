@@ -16,6 +16,8 @@ $(document).ready(function () {
         $("#btnActivitylog").removeClass('d-none');
     }
     $("#btnCancel").on("click", function () {
+        $("#txtPassword").prop("disabled", false);
+        $('#ddlCompanyAndFranchise').prop('disabled', false);
         FetchUser();
     });
     $('#userListSectionLink').on('click', function (e) {
