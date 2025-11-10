@@ -29,7 +29,6 @@
         event.preventDefault();
         loginUser();
     });
-
     setupRememberMe();
 });
 function setCookie(name, value, days) {
@@ -55,7 +54,6 @@ function eraseCookie(name) {
     document.cookie = name + "=; Max-Age=-99999999; path=/";
 }
 function setupRememberMe() {
-    const form = $("#loginForm");
     const usernameField = $("#txtLoginName");
     const passWordFiled = $("#Password");
     const rememberCheckbox = $("#chkRememberMe");
@@ -66,8 +64,8 @@ function setupRememberMe() {
         passWordFiled.val(getCookie("passWord") || "");
         rememberCheckbox.prop("checked", true);
     }
-     //Handle form submit
-    form.off("submit", function () {
+    $("#loginForm").on("submit", function (e) {
+        e.preventDefault();
         if (rememberCheckbox.is(":checked")) {
             setCookie("username", usernameField.val(), 7);   // store for 7 days
             setCookie("passWord", passWordFiled.val(), 7);
@@ -96,7 +94,7 @@ function loginUser() {
         $("#loginButton").prop("disabled", false).text("Log In");
         return;
     }
-    
+
     var formData = { LoginId: loginid, Password: password };
     $.ajax({
         type: "POST",
