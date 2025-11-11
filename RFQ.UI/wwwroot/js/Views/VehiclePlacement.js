@@ -32,7 +32,7 @@ $(document).ready(function () {
 
     GetAllDriver();
     GetAllTrackingType();
-    //GetAllVehicleIndent();
+    Defaultdrpdownset();
     GetAllVehicleNumber();
     FetchPlacementNo();
     GetAllOwnerOrVendor();
@@ -148,7 +148,7 @@ function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
             $("#ddlIndentNo").empty();
             const Indentdropdown = document.getElementById("ddlIndentNo");
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Indent No";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -375,7 +375,6 @@ function AutoFetch() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            // Check if response is a non-empty array
             if (Array.isArray(response) && response.length > 0) {
                 let data = response[0]; // Use the first object in the array
                 let indentDate = data.indentDate;
@@ -799,6 +798,7 @@ function DriverPopUp() {
             if (form) {
                 form.reset(); // reset all form inputs
             }
+
         }
     });
 
@@ -1131,4 +1131,16 @@ function ViewVehiclePlacement(placementId) {
     UpdateVehiclePlacement(placementId);
     $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
     $("#updateButton").addClass('d-none');
+}
+
+function Defaultdrpdownset() {
+    const $Indentdropdown = $("#ddlIndentNo");
+    $Indentdropdown.empty();
+    const placeholderOption = $('<option>', {
+        value: 0,
+        text: "Select a Indent No",
+        disabled: true,
+        selected: true
+    });
+    $Indentdropdown.append(placeholderOption);
 }
