@@ -26,7 +26,7 @@ $(document).ready(function () {
         const selectedValue = $(this).val();
         const selectedVehicle = VehicleList.find(x => x.vehicleId == selectedValue);
         if (selectedVehicle) {
-            $("#ddlOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');
+            $("#drpOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');
         }
     });
 
@@ -40,7 +40,7 @@ $(document).ready(function () {
     FetchVehiclePlacement();
     ButtonUpdateClick();
     GetAllCustomer("ddlCustomerName", companyId);
-    GetAllVehicleType("ddlVehicleType", companyId);
+    GetAllVehicleType("drpVehicleType", companyId);
     //GetAllLocation("ddlIndentBranch", companyId);
     GetAllLocation("ddlLocation", companyId, function () {
         if (profileId == EnumProfile.Branch) {
@@ -318,7 +318,7 @@ function GetAllOwnerOrVendor() {
         dataType: "json",
         data: { companyId: companyId },
         success: function (response) {
-            const ownerdropdown = document.getElementById("ddlOwnerName");
+            const ownerdropdown = document.getElementById("drpOwnerName");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a Owner Name";
@@ -390,7 +390,7 @@ function AutoFetch() {
                 }
                 $("#txtRFQNo").val(data.rfqNo);
                 $("#ddlCustomerName").val(data.partyId).trigger('change');
-                $("#ddlVehicleType").val(data.vehicleTypeId).trigger('change');
+                $("#drpVehicleType").val(data.vehicleTypeId).trigger('change');
                 $('#from-search-box').val(data.fromLocation);
                 $('#to-search-box').val(data.toLocation);
                 $('#txtNoOfVehicles').val(data.requiredVehicles);
@@ -433,21 +433,45 @@ function AutoFetch() {
 }
 function VehiclePopUp() {
     $("#vehiclePopupModal .modal-body").load('/VehiclePlacement/CreateVehicle', function () {
-        $("#btnVehicleKyc").off("click").on("click", function () {
-            VehicleEKycClick();
-        });
-        $("#btnSaveVehicle").on('click', function () {
-            var action = $(this).data('action');
-            if (VehicleValidationCheck()) {
-                SaveVehicle(action);
-            }
-        })
-        PopUpOwnerOrVendor();
-        GetAllVehicleCategory();
-        GetAllVehicleType("popUpVehicleType", companyId);
         $("#vehiclePopupModal").modal("show");
+
+        // Load scripts only for popup context
+        $.when(
+            $.getScript('/js/Views/Vehicle.js'),
+            $.getScript('/js/common.js')
+        ).done(function () {
+            console.log("Popup scripts loaded successfully.");
+        }).fail(function (jqxhr, settings, exception) {
+            console.error("Failed to load popup scripts:", exception);
+        });
+        $('#vehiclePopupModal').on('hide.bs.modal', function (event) {
+            var closepop = false;
+            if ($(event.target).hasClass('modal')) {
+                // Modal itself is clicked (backdrop close)
+                closepop = true;
+            } else if (event.keyCode === 27) {
+                // ESC pressed
+                closepop = true;
+            } else if ($(event.relatedTarget).hasClass('close')) {
+                // Close button
+                closepop = true;
+            } else {
+                closepop = true;
+            }
+            if (closepop) {
+                debugger;
+                const form = $(this).find('driverForm')[0];
+                if (form) {
+                    form.reset(); // reset all form inputs
+                }
+                $('script[src="/js/Views/Vehicle.js"]').remove();
+                $('#tableDiv').css("display", "none");
+            }
+        });
     });
+
 }
+
 function SaveVehicle(action) {
     var vehicleNo = $("#vehicleNo").val();
     var vehicleCategory = $("#ddlVehicleCategory").val();
@@ -540,151 +564,7 @@ function SaveVehicle(action) {
         });
     }
 }
-function VehicleValidationCheck() {
 
-    if (IsNullOrEmpty($("#vehicleNo").val()) || !IsValidVehicleNumber($("#vehicleNo").val())) {
-        toastr.warning("Please enter a valid VehicleNo", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#popUpVehicleType").val())) {
-        toastr.warning("Please select a valid VehicleType", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#popUpOwnerName").val())) {
-        toastr.warning("Please select a valid OwnerName", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#ddlVehicleCategory").val())) {
-        toastr.warning("Please select a valid VehicleCategory", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#vehicleCapacity").val())) {
-        toastr.warning("Please enter a valid VehicleCapacity", "Validation Error");
-        return false;
-    }
-    //if (IsNullOrEmpty($("#ddlTrackingProvider").val())) {
-    //    toastr.warning("Please select a valid TrackingProvider", "Validation Error");
-    //    return false;
-    //}
-
-    return true;
-}
-function VehicleEKycClick() {
-
-    var getUrl = '/Vehicle/GetVehicleKycDetails';
-    var vehicleNo = $("#vehicleNo").val();
-
-    if (!IsValidVehicleNumber(vehicleNo)) {
-        toastr.warning("Please enter a valid Vehicle No", "Validation Error");
-        ClearFields();
-        return false;
-    }
-
-    var Body = {
-        VehicleNo: vehicleNo,
-    }
-    $.ajax({
-        url: getUrl,
-        type: "Post",
-        contentType: "application/json charset=utf-8",
-        data: JSON.stringify(Body),
-        success: function (response) {
-            var rcModel = response.vehicleRCModel;
-            if (rcModel != null) {
-                $("#vehicleNo").val(rcModel.vehicleNo);
-                $("#vehicleStatusInput").val(rcModel.vehicleRCStatus);
-                $("#blacklistStatusInput").val(rcModel.nonUseStatus);
-                $("#regdOwnerInput").val(rcModel.ownerName);
-                $("#engineNoInput").val(rcModel.vehicleEngineNumber);
-                $("#chasisNoInput").val(rcModel.vehicleChassisNumber);
-                $("#makeModelInput").val(rcModel.vehicleMakerModel);
-                rcModel.pucExpiryDate ? $("#pucExpiryInput").val(new Date(rcModel.pucExpiryDate).toISOString().split('T')[0]) : "";
-                $("#financerInput").val(rcModel.financier);
-                $("#ownerSerialNoInput").val(rcModel.ownerSerialNo);
-                $("#npNoInput").val(rcModel.nationalPermitNumber);
-                $("#insuranceCoInput").val(rcModel.insuranceCompany);
-                rcModel.issueDate ? $("#verifiedOnInput").val(new Date(rcModel.issueDate).toISOString().split('T')[0]) : "";
-                $("#rtoRegistrationInput").val(rcModel.registeredAt);
-                rcModel.issueDate ? $("#registrationDateInput").val(new Date(rcModel.issueDate).toISOString().split('T')[0]) : "";
-                $("#permanentAddressInput").val(rcModel.permanentAddress);
-                $("#grossWeightInput").val(rcModel.vehicleGrossWeight);
-                $("#unladenWeightInput").val(rcModel.vehicleUnladenWeight);
-                rcModel.expiryDate ? $("#fitnessExpiryInput").val(new Date(rcModel.expiryDate).toISOString().split('T')[0]) : "";
-                rcModel.taxEndDate ? $("#taxExpiryInput").val((([d, m, y]) => new Date(y, m - 1, d, 12))(rcModel.taxEndDate.split("-")).toISOString().split('T')[0]) : "";
-                $("#permitNoInput").val(rcModel.permitNumber);
-                rcModel.permitExpiryDate ? $("#permitExpiryInput").val(new Date(rcModel.permitExpiryDate).toISOString().split('T')[0]) : "";
-                rcModel.nationalPermitExpiryDate ? $("#npExpiryInput").val(new Date(rcModel.nationalPermitExpiryDate).toISOString().split('T')[0]) : "";
-                $("#vehicleCapacityInput").val(rcModel.vehicleCubicCapacity);
-                $("#policyNoInput").val(rcModel.pucNumber);
-                rcModel.insuranceExpiryDate ? $("#policyExpiryInput").val(new Date(rcModel.insuranceExpiryDate).toISOString().split('T')[0]) : "";
-            }
-            else {
-                toastr.warning("Vehicle kyc Details Not Available!", "Warning");
-                ClearFields();
-            }
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Vehicle kyc Details!", "Error");
-            ClearFields();
-        }
-    });
-}
-function GetAllVehicleCategory() {
-    var GetUrl = '/Vehicle/GetAllVehicleCategory';
-    $.ajax({
-        url: GetUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            const dropdown = document.getElementById("ddlVehicleCategory");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a VehicleCategory";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            dropdown.appendChild(placeholderOption);
-
-            response.forEach(category => {
-                const option = document.createElement("option");
-                option.value = category.internalMasterId;
-                option.textContent = category.internalMasterName;
-                dropdown.appendChild(option);
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Vehicle Category!", "Error");
-        }
-    });
-}
-function PopUpOwnerOrVendor() {
-    var getAllOwnerOrVendorUrl = "/Vehicle/GetAllOwnerOrVendor";
-    $.ajax({
-        url: getAllOwnerOrVendorUrl,
-        type: "GET",
-        dataType: "json",
-        success: function (response) {
-            const ownerdropdown = document.getElementById("popUpOwnerName");
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select a Owner Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            ownerdropdown.appendChild(placeholderOption);
-
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.partyId;
-                option.textContent = item.partyName;
-                ownerdropdown.appendChild(option);
-            });
-
-            $('.selectpicker').selectpicker('refresh');
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to fetch Owner/Vendor Data!", "Error");
-        }
-    });
-}
 function GetAllVehicleType(dropdownId, companyIdParam) {
     $.ajax({
         url: '/Vehicle/GetAllMasterVehicleType',
@@ -745,36 +625,16 @@ function ClearFields() {
 function DriverPopUp() {
     var url = '/VehiclePlacement/CreateDriver';
     $("#driverPopupModal .modal-body").load(url, function () {
-        // Dynamically load JS dependencies for the popup
-        $.getScript('/js/Views/Driver.js')
-            .done(function () {
-                console.log("Driver form script loaded successfully.");
-            })
-            .fail(function () {
-                console.log("Failed to load driver form script!");
-            });
-        $.getScript('/js/AttachmentDetails.js')
-            .done(function () {
-                console.log("AttachmentDetails script loaded successfully.");
-            })
-            .fail(function () {
-                console.log("Failed to load AttachmentDetails script!");
-            });
-
-        $('#driverSave').on('click', function (e) {
-            e.preventDefault();
-            if (!isDLEKycClicked) {
-                toastr.warning("Please Complete DL E-KYC Before Saving!");
-                return false;
-            }
-            if (!ValidationCheck()) {
-                return false;
-            }
-            if (uploadedFileName) {
-                SaveDriverDetails(uploadedFileName);
-            } else {
-                toastr.warning("Please Upload a Driver Photo", "Validation Error");
-            }
+        $.when(
+            $.getScript('/js/AttachmentDetails.js'),
+            $.getScript('/js/Views/Driver.js'),
+        ).done(function () {
+            setTimeout(() => {
+                $("#formDiv").css('display', 'block');
+            }, 100);
+            console.log("Popup scripts loaded successfully.");
+        }).fail(function (jqxhr, settings, exception) {
+            console.error("Failed to load one or more popup scripts:", exception);
         });
         $("#driverPopupModal").modal("show");
     });
@@ -798,98 +658,7 @@ function DriverPopUp() {
             if (form) {
                 form.reset(); // reset all form inputs
             }
-
-        }
-    });
-
-    $('#driverPopupModal').on('shown.bs.modal', function () {
-        GetDriverType();
-        GetAllCityList("ddlCity");
-    });
-}
-function SaveDriverDetails(uploadedFileName) {
-    var driverType = $("#ddlDriverType").val();
-    var licenseNo = $("#numLicenseNo").val();
-    var driverName = $("#txtDriverName").val();
-    var dlIssueDate = $("#txtDLIssueDate").val();
-    var dlIssueRto = $("#txtDLIssuingRTO").val();
-    var dateOfBirth = $("#txtDateOfBirth").val();
-    var driverCode = $("#txtDriverCode").val();
-    var dlExpiryDate = $("#txtDLExpiryDate").val();
-    var whatsappNumber = $("#numWhatsapp").val();
-    var address = $("#txtAddress").val();
-    var city = $("#ddlCity").val();
-    var mobileNumber = $("#numMobile").val();
-    var pincode = $("#numPincode").val();
-    // var verifiedOn = $("#txtVerifiedOn").val();
-    var uploadPhoto = uploadedFileName;
-    var driverId = 0;
-
-    var saveUrl = '/Driver/DriverSave';
-    var formData = {
-        DriverTypeId: driverType,
-        LicenseNo: licenseNo,
-        DriverName: driverName,
-        LicenseIssueDate: dlIssueDate,
-        LicenseIssueCityId: 1,
-        DateOfBirth: dateOfBirth,
-        DriverCode: driverCode,
-        LicenseExpDate: dlExpiryDate,
-        WhatsAppNo: whatsappNumber,
-        AddressLine: address,
-        CityId: city,
-        MobNo: mobileNumber,
-        PinCode: pincode,
-        LinkId: linkId,
-        DriverImagePath: uploadPhoto
-    };
-
-    $.ajax({
-        url: saveUrl,
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(formData),
-        success: function (response) {
-            var driverId = response.result.result.driverId;
-            Saveattachment(driverId);
-            toastr.success("Driver Details Submitted Successfully!");
-            $("#driverPopupModal").modal("hide");
-            GetAllDriver();
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Submit Driver Details", "Error");
-        }
-    });
-}
-function GetDriverType() {
-    var GetUrl = '/Driver/GetDriverType';
-    $.ajax({
-        url: GetUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-
-            response.forEach(category => {
-                driverTypeMap[category.internalMasterId] = category.internalMasterName;
-            });
-            const dropdown = document.getElementById("ddlDriverType");
-            dropdown.innerHTML = "";
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select Driver Type";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            dropdown.appendChild(placeholderOption);
-
-            response.forEach(category => {
-                const option = document.createElement("option");
-                option.value = category.internalMasterId;
-                option.textContent = category.internalMasterName;
-                dropdown.appendChild(option);
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Data!", "Error");
+            $('#tableDiv').css("display", "none");
         }
     });
 }
@@ -924,7 +693,7 @@ function SaveVehiclePlacement(action) {
         DriverId: driverResult.id,
         DriverName: driverResult.name,
         MobileNo: $('#txtMobileNo').val(),
-        OwnerVendorId: $('#ddlOwnerName').val() ? $('#ddlOwnerName').val() : 0,
+        OwnerVendorId: $('#drpOwnerName').val() ? $('#drpOwnerName').val() : 0,
         BrokerVendorId: $('#ddlBrokerName').val() ? $('#ddlBrokerName').val() : 0,
         TotalHireAmount: $("#txtTotalHairAmt").val() ? $("#txtTotalHairAmt").val() : 0,
         AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
@@ -1008,7 +777,7 @@ function ButtonUpdateClick() {
             DriverId: driverResult.id,
             DriverName: driverResult.name,
             MobileNo: $("#txtMobileNo").val(),
-            OwnerVendorId: $('#ddlOwnerName').val() ? $('#ddlOwnerName').val() : 0,
+            OwnerVendorId: $('#drpOwnerName').val() ? $('#drpOwnerName').val() : 0,
             BrokerVendorId: $('#ddlBrokerName').val() ? $('#ddlBrokerName').val() : 0,
             TotalHireAmount: $("#txtTotalHairAmt").val() ? $("#txtTotalHairAmt").val() : 0,
             AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
@@ -1033,7 +802,7 @@ function ButtonUpdateClick() {
                     $('#ddlIndentNo').val(null).trigger('change');
                     $('#ddlVehicleNo').val(null).trigger('change');
                     $('#ddlDriverName').val(null).trigger('change');
-                    $('#ddlOwnerName').val(null).trigger('change');
+                    $('#drpOwnerName').val(null).trigger('change');
                     $('#ddlBrokerName').val(null).trigger('change');
                     $("#btnUpdate").hide();
                     $("#btnSaveAndNewForm").show();
@@ -1122,7 +891,7 @@ function UpdateVehiclePlacement(placementId) {
     $("#ddlTrakingType").val(formData.trackingTypeId).trigger('change');
     $("#ddlDriverName").val(formData.driverId).trigger('change');
     $("#txtMobileNo").val(formData.mobileNo);
-    $("#ddlOwnerName").val(formData.ownerVendorId).trigger('change');
+    $("#drpOwnerName").val(formData.ownerVendorId).trigger('change');
     $("#ddlBrokerName").val(formData.brokerVendorId).trigger('change');
     $("#txtTotalHairAmt").val(formData.totalHireAmount);
     $("#txtAdvancePayable").val(formData.advancePayable);

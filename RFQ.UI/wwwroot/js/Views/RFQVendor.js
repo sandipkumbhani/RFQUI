@@ -224,7 +224,6 @@ function GetAllVehicleType() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            debugger;
             if (response != null) {
                 const vehicleTypedropdown = document.getElementById("ddlVehicleType");
                 let placeholderOption = document.createElement("option");

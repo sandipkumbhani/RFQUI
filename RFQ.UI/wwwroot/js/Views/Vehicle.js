@@ -1,12 +1,10 @@
 ﻿var companyId;
-const linkId = GetQueryParam("LinkId");
 var orderColumn = '';
 var orderDir = '';
 var fetchVehicleUrl = '/Vehicle/ViewVehicle';
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
-
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
@@ -57,6 +55,7 @@ $("#ddlVehicleCategory").on('change', function () {
     }
 })
 function SaveVehicle(action) {
+    debugger;
     var isValid = OnSubmitValidation();
     if (!isValid) {
         return;
@@ -124,7 +123,7 @@ function SaveVehicle(action) {
         NPExpiryDate: npExpDate ? new Date(npExpDate).toISOString() : null,
         PolicyNo: policyNo,
         PolicyExpiryDate: policyExpDate ? new Date(policyExpDate).toISOString() : null,
-        LinkId: linkId
+        LinkId: GetQueryParam("LinkId")
     };
     if (action === "save") {
         $.ajax({
@@ -272,7 +271,7 @@ function UpdateVehicle() {
             NPExpiryDate: $("#npExpiryInput").val() ? new Date($("#npExpiryInput").val()).toISOString() : null,
             PolicyNo: $("#policyNoInput").val(),
             PolicyExpiryDate: $("#policyExpiryInput").val() ? new Date($("#policyExpiryInput").val()).toISOString() : null,
-            LinkId: linkId
+            LinkId: GetQueryParam("LinkId")
         };
         var editVehicle = '/Vehicle/UpdateVehicle';
         $.ajax({
@@ -423,19 +422,21 @@ function GetAllVehicleCategory() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            const dropdown = document.getElementById("ddlVehicleCategory");
+            /*const dropdown = document.getElementById("ddlVehicleCategory");*/
+            const dropdowns = document.querySelectorAll("#ddlVehicleCategory");
+            const vehicleCategoryDropdown = dropdowns[dropdowns.length - 1];
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a VehicleCategory";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            dropdown.appendChild(placeholderOption);
+            vehicleCategoryDropdown.appendChild(placeholderOption);
 
             response.forEach(category => {
                 const option = document.createElement("option");
                 option.value = category.internalMasterId;
                 option.textContent = category.internalMasterName;
-                dropdown.appendChild(option);
+                vehicleCategoryDropdown.appendChild(option);
             });
         },
         error: function (xhr, status, error) {
@@ -451,15 +452,16 @@ function GetAllOwnerOrVendor() {
         dataType: "json",
         data: { companyId: companyId },
         success: function (response) {
-            const ownerdropdown = document.getElementById("ddlOwnerName");
+           /* const ownerdropdown = document.getElementById("ddlOwnerName");*/
+            const dropdowns = document.querySelectorAll("#ddlOwnerName");
+            const ownerdropdown = dropdowns[dropdowns.length - 1];
+            ownerdropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
             placeholderOption.textContent = "Select a OwnerName";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             ownerdropdown.appendChild(placeholderOption);
-
-
             response.forEach(item => {
                 const option = document.createElement("option");
                 option.value = item.partyId;

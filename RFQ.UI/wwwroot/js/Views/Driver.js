@@ -1,15 +1,24 @@
-﻿let myDropzone;
-let uploadedFileName;
-let driverTypeMap = {};
-let list;
-let isDLEKycClicked = false;
-const urlParams = new URLSearchParams(window.location.search);
-const linkId = urlParams.get('LinkId');
-var orderColumn = '';
-var orderDir = '';
-var fetchDriverUrl = '/Driver/ViewDriver';
-var companyId;
-var profileid = '';
+﻿if (typeof myDropzone === 'undefined') var myDropzone = null;
+if (typeof uploadedFileName === 'undefined') var uploadedFileName = '';
+if (typeof driverTypeMap === 'undefined') var driverTypeMap = {};
+if (typeof list === 'undefined') var list = [];
+if (typeof isDLEKycClicked === 'undefined') var isDLEKycClicked = false;
+if (typeof orderColumn === 'undefined') var orderColumn = '';
+if (typeof orderDir === 'undefined') var orderDir = '';
+if (typeof fetchDriverUrl === 'undefined') var fetchDriverUrl = '/Driver/ViewDriver';
+if (typeof companyId === 'undefined') var companyId = null;
+if (typeof profileid === 'undefined') var profileid = '';
+
+//let myDropzone;
+//let uploadedFileName;
+//let driverTypeMap = {};
+//let list;
+//let isDLEKycClicked = false;
+//var orderColumn = '';
+//var orderDir = '';
+//var fetchDriverUrl = '/Driver/ViewDriver';
+//var companyId;
+//var profileid = '';
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
@@ -34,7 +43,7 @@ $(document).ready(function () {
     GetDriverType();
     DlEKycclick();
     FetchDriverList();
-
+    FetchDriverCode();
     $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
@@ -238,7 +247,7 @@ function SaveDriver(uploadedFileName, callback) {
         CityId: city,
         MobNo: mobileNumber,
         PinCode: pincode,
-        LinkId: linkId,
+        LinkId: GetQueryParam("LinkId"),
         DLIssuingRto: dlIssueRto,
         VarifiedOn: verifiedOn,
         DriverImagePath: uploadPhoto
@@ -383,13 +392,12 @@ function UpdateDriver(fileName) {
         PinCode: $("#numPincode").val(),
         VarifiedOn: $("txtVerifiedOn").val() ? $("txtVerifiedOn").val() : null,
 
-        LinkId: linkId,
+        LinkId: GetQueryParam("LinkId"),
         DriverImagePath: logoFileName
         //DriverImagePath: logoFileName ? logoFileName : null
     }
     let repeaterItems = document.querySelectorAll("[data-repeater-item]");
     let updateAttachmentDetails = [];
-    var linkd = GetQueryParam("LinkId");
     repeaterItems.forEach((item, index) => {
         let attId = item.querySelector("#hdnAttachmentId").value;
         let attachmentId = attId == '' ? 0 : attId;
@@ -402,7 +410,7 @@ function UpdateDriver(fileName) {
             AttachmentName: fileName,
             AttachmentTypeId: attachmentType,
             AttachmentPath: filePath,
-            ReferenceLinkId: parseInt(linkd),
+            ReferenceLinkId: parseInt(GetQueryParam("LinkId")),
             TransactionId: $("#hdDriverId").val()
         });
     });
@@ -507,10 +515,10 @@ function DlEKycclick() {
                 $("#txtDLIssueDate").val(FormatDateForInput(drivingLicenseModel.validityIssueDate));
                 $("#txtDLExpiryDate").val(FormatDateForInput(drivingLicenseModel.validityExpiryDate));
                 $("#txtDLIssuingRTO").val(drivingLicenseModel.rtoAuthority),
-                $("#from-search-box").val(drivingLicenseModel.presentAddress);
+                    $("#from-search-box").val(drivingLicenseModel.presentAddress);
                 $("#numPincode").val(drivingLicenseModel.pincode);
                 $("#txtVerifiedOn").val(new Date().toISOString().split('T')[0]),
-                $("#txtUploadedPhoto").val(drivingLicenseModel.photo);
+                    $("#txtUploadedPhoto").val(drivingLicenseModel.photo);
 
                 function base64ToFile(base64String, filename) {
                     const arr = base64String.split(",");
@@ -578,6 +586,9 @@ function GetDriverType() {
     });
 }
 function DeleteDriver(driverId, fileName, linkId) {
+    if (IsNullOrEmpty(linkId)) {
+        linkId = GetQueryParam("LinkId");
+    }
     Swal.fire({
         title: 'Are you sure?',
         text: "This action cannot be undone!",

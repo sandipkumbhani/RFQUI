@@ -3,7 +3,7 @@
     Layout = null;
 }
 
-<form id="driverForm">
+<form id="driverForm" method="post">
     <input type="hidden" id="hdDriverId" />
     <div class="franchise-details">
         <h2 class="page-form-title">Driver Details</h2>
@@ -37,25 +37,25 @@
                 <div class="col-lg-6">
                     <div class="item-input">
                         <label class="form-label">Driver Name <span>*</span></label>
-                        <input type="text" class="form-control" placeholder="Driver Name AutoFetched" id="txtDriverName" disabled />
+                        <input type="text" class="form-control" placeholder="Driver Name AutoFetched" id="txtDriverName" />
                     </div>
                     <div class="item-input">
                         <label class="form-label">DL Issue Date <span>*</span></label>
-                        <input type="datetime-local" class="form-control" id="txtDLIssueDate" disabled />
+                        <input type="datetime-local" class="form-control" id="txtDLIssueDate" />
                     </div>
                     <div class="item-input">
                         <label class="form-label">DL Issuing RTO</label>
-                        <input type="text" class="form-control" placeholder="DL Issuing RTO" id="txtDLIssuingRTO" disabled />
+                        <input type="text" class="form-control" placeholder="DL Issuing RTO" id="txtDLIssuingRTO" />
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="item-input">
                         <label class="form-label">Driver Code <span>*</span></label>
-                        <input type="text" class="form-control" id="txtDriverCode" maxlength="10" placeholder="Driver Code" onkeypress="return AllowAlphaNumericOnly(event)" />
+                        <input type="text" class="form-control" id="txtDriverCode" maxlength="10" placeholder="Driver Code" onkeypress="return AllowAlphaNumericOnly(event)" disabled />
                     </div>
                     <div class="item-input">
                         <label class="form-label">DL Expiry Date <span>*</span></label>
-                        <input type="datetime-local" class="form-control" id="txtDLExpiryDate" disabled />
+                        <input type="datetime-local" class="form-control" id="txtDLExpiryDate" />
                     </div>
                     <div class="item-input">
                         <label class="form-label">WhatsApp Number <span>*</span></label>
@@ -78,11 +78,14 @@
                 </div>
             </div>
             <div class="col-lg-12">
-                <div class="item-input">
-                    <label class="form-label">Address <span>*</span></label>
-                    <input type="text" class="form-control" placeholder="Address" id="txtAddress" disabled />
+                <div class="item-input position-relative">
+                    <label class="form-label"><span>*</span>Address</label>
+                    <input id="from-search-box" type="text" class="form-control" placeholder="Address" autocomplete="off" />
+                    <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-lg-6">
                     <div class="item-input">
@@ -90,7 +93,7 @@
                         <select id="ddlCity" class="select2-custom form-control" style="width: 100%;"></select>
                     </div>
                     <div class="item-input">
-                        <label class="form-label">Mobile Number <span>*</span></label>
+                        <label class="form-label">Mobile Number </label>
                         <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numMobile" onkeypress="return isNumber(event)" maxlength="10" />
                     </div>
                     <div class="item-input">
@@ -111,7 +114,7 @@
                 <div class="col-lg-6">
                     <div class="item-input">
                         <label class="form-label">Pincode <span>*</span></label>
-                        <input type="text" class="form-control" placeholder="Pincode" id="numPincode" disabled onkeypress="return isNumber(event)" />
+                        <input type="text" class="form-control" placeholder="Pincode" id="numPincode" onkeypress="return isNumber(event)" />
                     </div>
                     <div class="item-input">
                         <label class="form-label">Verified On</label>
@@ -139,11 +142,6 @@
     @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 
     <div class="button-main">
-        <a href="#" class="card-link" id="driverSave" type="button">
-            <i class="ri-save-line"></i>
-            <span>
-                Save
-            </span>
-        </a>
+        <a href="#" class="card-link" id="btnSaveDriver"><i class="ri-save-line"></i><span>Save</span></a>
     </div>
 </form>

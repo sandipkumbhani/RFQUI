@@ -28,7 +28,7 @@ namespace RFQ.UI.Controllers
 
         public async Task<IActionResult> CreateVehicle()
         {
-            await SetMenuAsync();
+            //await SetMenuAsync();
             return View("_CreateVehicle");
         }
         
