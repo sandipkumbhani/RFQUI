@@ -16,6 +16,8 @@ $(document).ready(function () {
         $("#btnActivitylog").removeClass('d-none');
     }
     $("#btnCancel").on("click", function () {
+        $("#txtPassword").prop("disabled", false);
+        $('#ddlCompanyAndFranchise').prop('disabled', false);
         FetchUser();
     });
     $('#userListSectionLink').on('click', function (e) {
@@ -273,15 +275,21 @@ function EditUser(userId) {
     if (formdata.locationId != 0) {
         $('#ddlLocation').val(formdata.locationId).trigger('change');
     }
-    //if (profileid != EnumInternalMaster.ADMIN) {
-    //    $('#ddlCompanyAndFranchise').prop('disabled', true);
-    //}
-    if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
-        $('#ddlCompanyAndFranchise').prop('disabled', true);
+
+    if (Number(profileid) != EnumProfile.Franchise) {
+        if (!IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
+            $('#ddlCompanyAndFranchise').prop('disabled', true);
+        }
+        else {
+            $('#ddlCompanyAndFranchise').val(0).trigger('change');
+            $('#ddlCompanyAndFranchise').prop('disabled', false);
+        }
     }
     else {
-        $('#ddlCompanyAndFranchise').val(0).trigger('change');
-        $('#ddlCompanyAndFranchise').prop('disabled', false);
+        if (IsNullOrEmpty($('#ddlCompanyAndFranchise').val())) {
+            $('#ddlCompanyAndFranchise').val(0).trigger('change');
+            $('#ddlCompanyAndFranchise').prop('disabled', false);
+        }
     }
 
     if (profileid == EnumProfile.Branch) {
@@ -383,7 +391,7 @@ function GetFranchiseAndCorporateName() {
                     data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
                 }
                 if (profileid == EnumProfile.Franchise) {
-                    data = response.filter(x => x.companyTypeId == 2)
+                    data = response.filter(x => x.companyTypeId == 3)
                 }
                 if (profileid == EnumProfile.Corporate || profileid == EnumProfile.Vendor) {
                     data = response.filter(x => x.companyTypeId == 3 && x.createdBy == userid);

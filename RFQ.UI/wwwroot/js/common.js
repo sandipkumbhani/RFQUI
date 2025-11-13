@@ -1,5 +1,5 @@
-﻿$(document).ready(function (){
-    if (IsAdd != 'True') {
+﻿$(document).ready(function () {
+    if (typeof(IsAdd) != 'undefined'  && IsAdd != 'True') {
         $('#btnAdd').hide();
     }
 });
@@ -969,7 +969,10 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
         success: function (response) {
             if (response != null) {
                 var data = response
-                const selectVehicleType = document.getElementById(dropdownId);
+                //const selectVehicleType = document.getElementById(dropdownId);
+                const dropdowns = document.querySelectorAll(`#${dropdownId}`);
+                const selectVehicleType = dropdowns[dropdowns.length - 1]; 
+                //this twoline for select last dropdown and bind Data of the page
                 let placeholderOption = document.createElement("option");
                 placeholderOption.value = "";
                 placeholderOption.textContent = "Select a Vehicle Type";

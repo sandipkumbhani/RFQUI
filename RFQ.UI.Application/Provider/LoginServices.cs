@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Infrastructure.Provider;
 using RFQ.UI.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Application.Provider
 {
@@ -11,11 +14,16 @@ namespace RFQ.UI.Application.Provider
     {
         private readonly LoginAdaptor _loginAdaptor;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMemoryCache _cache;
+        private readonly GlobalClass _globalClass;
+        private const string CachePrefix = "LinkItems_Profile_";
 
-        public LoginServices(LoginAdaptor loginAdaptor, IHttpContextAccessor httpContextAccessor)
+        public LoginServices(LoginAdaptor loginAdaptor, IHttpContextAccessor httpContextAccessor, IMemoryCache cache, GlobalClass globalClass)
         {
             _loginAdaptor = loginAdaptor;
             _httpContextAccessor = httpContextAccessor;
+            _globalClass = globalClass;
+            _cache = cache;
         }
 
         public Task<NewCommonResponseDto> Login(LoginDto loginDto)
@@ -29,13 +37,24 @@ namespace RFQ.UI.Application.Provider
             if (httpContext == null)
                 return;
 
+            // cache Clear
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
+            int profileId = Convert.ToInt32(jwt.Claims.First(c => c.Type == "profileid").Value);
+            var cacheKey = $"{CachePrefix}{profileId}";
+            _cache.Remove(cacheKey);
+
             httpContext.SignOutAsync();
-            httpContext.Session?.Clear();
+            httpContext.Session?.Clear(); //Session Clear
+
+            // Cookies Clear
             if (httpContext.Request.Cookies != null)
             {
                 foreach (var key in httpContext.Request.Cookies.Keys)
                 {
-                    httpContext.Response.Cookies.Delete(key);
+                    if (key != "rememberMe" && key != "username" && key != "passWord")
+                    {
+                        httpContext.Response.Cookies.Delete(key);
+                    }
                 }
             }
 
