@@ -14,198 +14,316 @@
 }
 
 
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box add">
-            <h1 class="page-title">Delivery / Close Trip</h1>
+<div id="tableDiv">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Delivery / Close Trip</h1>
+                <div class="add-btn">
+                    <a href="#" id="btnAdd">
+                        <i class="ri-add-line"></i> <span>Add</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card com-profile-info">
+                <!-- Top Header -->
+                <div class="table-top-header">
+                    <h4>List of Delivery / Close Trip</h4>
+                    <div class="d-flex gap-2">
+                        <div class="table-search-box">
+                            <input type="text" id="DeliveryTableSearch" class="form-control form-control-sm" placeholder="Search...">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div id="exportButtons" class="btn-group" role="group"></div>
+                    </div>
+                </div>
+
+
+                <div class="table-responsive">
+                    <table id="GridListTable" class="table dt-responsive nowrap w-100">
+                        <thead class="text-center"></thead>
+                        <tbody class="text-center" id="tableBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Bottom Area -->
+                <div class="datatable-footer-bottom">
+                    <div class="totle-left">
+                        <span id="totalList">Total List: 3</span>
+                    </div>
+                    <div id="customPagination" class="dataTables_paginate paging_simple_numbers"></div>
+                    <input type="hidden" id="currentPage" value="1">
+                    <div class="show-page">
+                        <span>Show per page:</span>
+                        <select id="pageLength" class="form-select">
+                            <option value="5">5 </option>
+                            <option value="10" selected>10 </option>
+                            <option value="25">25</option>
+                            <option value="-1">All</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 
-<div id="addReqBranchDiv" class="card com-profile-info">
-    <div class="top-details">
-        <form class="row all-custom-class" id="deliveryForm" method="post">
-            <input type="hidden" id="txtdeliveryId" />
-            <div class="row all-custom-class">
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>Delivery Branch</label>
-                        <select class="select2-custom form-control" id="ddlDelivery" style="width: 100%;">
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>Document No</label>
-                        <input type="text" class="form-control " placeholder="" id="txtDocumentNo" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>Delivery Date</label>
-                        <input type="date" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtDeliveryDate" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>LR Number</label>
-                        <select class="select2-custom form-control" id="ddlLR" style="width: 100%;">
-                        </select>
-                    </div>
-                </div>
 
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">LR No</label>
-                        <input type="date" class="form-control" id="txtLRNo" />
-                    </div>
-                </div>
 
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">LR Date</label>
-                        <input type="date" class="form-control" aria-label="LR Date" placeholder="Date Selection" id="txtLrDate" />
-                    </div>
-                </div>
 
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Booking Branch</label>
-                        <input type="text" class="form-control" id="txtBookingBranch" />
-                    </div>
-                </div>
+<div id="formDiv" style="display:none;">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box add">
+                <h1 class="page-title">Delivery / Close Trip</h1>
 
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">From Location</label>
-                        <input type="text" class="form-control" id="txtFromLocation" />
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">To Location</label>
-                        <input type="text" class="form-control" id="txtToLocation" />
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Customer</label>
-                        <select class="select2-custom form-control" id="ddlCustomerName" style="width: 100%;"></select>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Consignor</label>
-                        <select class="select2-custom form-control" id="ddlConsignorInput" style="width: 100%;"></select>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Consignee</label>
-                        <select class="select2-custom form-control" id="ddlConsigneeInput" style="width: 100%;"></select>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Vehicle No</label>
-                        <select class="select2-custom form-control" id="ddlVehicleNo" style="width: 100%;"></select>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Vehicle Type</label>
-                        <select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%;">
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Pkgs</label>
-                        <input type="text" class="form-control" id="txtPkgs" />
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Actual Wt</label>
-                        <input type="text" class="form-control" id="txtActualWt" />
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Trip No</label>
-                        <input type="text" class="form-control" id="txtTripNo" />
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Trip Date</label>
-                        <input type="date" class="form-control" aria-label="Trip Date" placeholder="Date Selection" id="txttripDate" />
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">EDD</label>
-                        <input type="text" class="form-control" id="txtEDD" />
-                    </div>
+                <div class="add-breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#" id="tableDivLink">Delivery / Close Trip</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"> Add Delivery / Close Trip</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>Arrival Date/Time</label>
-                        <input type="datetime-local" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtArrivalDate" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label"><span>*</span>Upload Date/Time</label>
-                        <input type="datetime-local" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtUploadDate" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Delivered Pkgs</label>
-                        <input type="text" class="form-control" id="txtPkgs" />
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item-input">
-                        <label class="form-label">Delivered Wt</label>
-                        <input type="text" class="form-control" id="txtWt" />
-                    </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-12">
+
+
+
+            <div id="addReqBranchDiv" class="card com-profile-info">
+                <div class="top-details">
+                    <form class="row all-custom-class" id="deliveryForm" method="post">
+                        <input type="hidden" id="txtdeliveryId" />
+                        <div class="row all-custom-class">
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label"><span>*</span>Delivery Branch</label>
+                                    <select class="select2-custom form-control" id="ddlLocation" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label"><span>*</span>Document No</label>
+                                    <input type="text" class="form-control " placeholder="" id="txtDocumentNo" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label"><span>*</span>Delivery Date</label>
+                                    <input type="date" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtDeliveryDate" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label"><span>*</span>LR Number</label>
+                                    <select class="select2-custom form-control" id="ddlLR" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">LR No</label>
+                                    <input type="text" class="form-control" id="txtLRNo" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">LR Date</label>
+                                    <input type="text" class="form-control" id="txtLrDate" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Booking Branch</label>
+                                    <select class="select2-custom form-control" id="ddlBookingBranch" style="width: 100%;" disabled></select>
+                                    @* <input type="text" class="form-control" id="txtBookingBranch" disabled /> *@
+                                </div>
+                            </div>
+
+                            @* <div class="col-lg-3"> *@
+                            @*     <div class="item-input"> *@
+                            @*         <label class="form-label">From Location</label> *@
+                            @*         <input type="text" class="form-control" id="txtFromLocation" disabled /> *@
+                            @*     </div> *@
+                            @* </div> *@
+
+                            <div class="col-lg-3">
+                                <div class="item-input position-relative">
+                                    <label class="form-label"><span>*</span>From Location</label>
+                                    <input id="from-search-box" type="text" class="form-control" autocomplete="off" disabled/>
+                                    <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                                    <input type="hidden" id="fromLat">
+                                    <input type="hidden" id="fromLng">
+                                    @* <input type="hidden" id="fromState"> *@
+                                    @* <input type="hidden" id="fromCity"> *@
+                                </div>
+                            </div>
+
+                            @* <div class="col-lg-3"> *@
+                            @*     <div class="item-input"> *@
+                            @*         <label class="form-label">To Location</label> *@
+                            @*         <input type="text" class="form-control" id="txtToLocation" disabled /> *@
+                            @*     </div> *@
+                            @* </div> *@
+
+                            <div class="col-lg-3">
+                                <div class="item-input position-relative">
+                                    <label class="form-label"><span>*</span>To Location</label>
+                                    <input id="to-search-box" type="text" class="form-control" autocomplete="off" disabled />
+                                    <ul id="to-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                                    <input type="hidden" id="toLat">
+                                    <input type="hidden" id="toLng">
+                                    @* <input type="hidden" id="toState"> *@
+                                    @* <input type="hidden" id="toCity"> *@
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Customer</label>
+                                    <select class="select2-custom form-control" id="ddlCustomerName" style="width: 100%;" disabled></select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Consignor</label>
+                                    <input type="text" class="form-control" id="txtConsignorInput" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Consignee</label>
+                                    <input type="text" class="form-control" id="txtConsigneeInput" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Vehicle No</label>
+                                    @* <select class="select2-custom form-control" id="ddlVehicleNo" style="width: 100%;" disabled></select> *@
+                                    <input type="text" class="form-control" id="txtVehicleNo" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Vehicle Type</label>
+                                    <select class="select2-custom form-control" data-control="select2" id="ddlVehicleType" style="width: 100%; " disabled>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Pkgs</label>
+                                    <input type="text" class="form-control" id="txtPkg" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Actual Wt</label>
+                                    <input type="text" class="form-control" id="txtActualWt" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Trip No</label>
+                                    <input type="text" class="form-control" id="txtTripNo" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Trip Date</label>
+                                    <input type="text" class="form-control" id="txttripDate" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">EDD</label>
+                                    <input type="text" class="form-control" id="txtEDD" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label"><span>*</span>Arrival Date/Time</label>
+                                    <input type="datetime-local" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtArrivalDate" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label"><span>*</span>Upload Date/Time</label>
+                                    <input type="datetime-local" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtUploadDate" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Delivered Pkgs</label>
+                                    <input type="text" class="form-control" id="txtPkgs" />
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="item-input">
+                                    <label class="form-label">Delivered Wt</label>
+                                    <input type="text" class="form-control" id="txtWt" />
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+
+                        @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
+
+                        <div class="button-main">
+                            <a href="#" class="card-link" id="btnSave" type="button" data-action="save">
+                                <i class="ri-save-line"></i>
+                                <span>
+                                    Save
+                                </span>
+                            </a>
+                            <a href="#" class="card-link" id="btnSaveAndNew" data-action="saveNew">
+                                <i class="ri-save-line"></i>
+                                <span>
+                                    Save & New
+                                </span>
+                            </a>
+                            <a href="#" class="card-link" id="btnUpdate" style="display:none;">
+                                <i class="ri-save-line"></i>
+                                <span>
+                                    Update
+                                </span>
+                            </a>
+                            <a href="#" class="card-link" id="btnCancel">
+                                <i class="ri-close-line"></i>
+                                <span>
+                                    Cancel
+                                </span>
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <hr />
-
-            @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
-
-            <div class="button-main">
-                <a href="#" class="card-link" id="btnSave" type="button" data-action="save">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Save
-                    </span>
-                </a>
-                <a href="#" class="card-link" id="btnsaveandnew" data-action="saveNew">
-                    <i class="ri-save-line"></i>
-                    <span>
-                        Save & New
-                    </span>
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-    

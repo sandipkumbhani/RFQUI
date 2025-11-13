@@ -43,6 +43,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IMasterUserActivityLogServices, MasterUserActivityLogServices>();
             services.AddScoped<IBookingOrTripService, BookingOrTripService>();
             services.AddScoped<IEWayBillService, EWayBillService>();
+            services.AddScoped<IDeliveryOrCloseTripService, DeliveryOrCloseTripService>();
             return services;
         }
     }

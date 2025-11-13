@@ -967,7 +967,6 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
         data: { companyId: companyIdParam },
         dataType: "json",
         success: function (response) {
-            debugger;
             if (response != null) {
                 var data = response
                 const selectVehicleType = document.getElementById(dropdownId);

@@ -101,6 +101,8 @@ namespace RFQ.UI.Domain.Model
         public string? GetAllVehicleTypeList { get; set; }
         public string? UpdateMasterParty { get; set; }
         public string? GetAllVendorList { get; set; }
+        public string? GetAllDelivery { get; set; }
+
         
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
@@ -132,6 +134,7 @@ namespace RFQ.UI.Domain.Model
             var receivedVendorCostingSection = config.GetSection("ReceivedVendorCosting");
             var rfqRecipientSection = config.GetSection("RfqRecipient");
             var vehicleSection = config.GetSection("Vehicle");
+            var deliverySection = config.GetSection("Delivery");
             
             return new AppSettingsGlobal
             {
@@ -231,6 +234,7 @@ namespace RFQ.UI.Domain.Model
                 UpdateVehicleType = vehicleTypeSection["UpdateVehicleType"],
                 GetAllVehicleTypeList = vehicleTypeSection["GetAllVehicleTypeList"],
                 UpdateMasterParty = customerSection["UpdateMasterParty"],
+                GetAllDelivery = deliverySection["GetAllDelivery"]
             };
         }
     }

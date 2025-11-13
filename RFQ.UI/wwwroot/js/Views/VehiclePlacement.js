@@ -34,7 +34,6 @@ $(document).ready(function () {
     GetAllTrackingType();
     //GetAllVehicleIndent();
     GetAllVehicleNumber();
-    FetchPlacementNo();
     GetAllOwnerOrVendor();
     GetAllBrokerVendor();
     FetchVehiclePlacement();
@@ -88,6 +87,7 @@ $(document).ready(function () {
 $('#btnAdd').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
+    FetchPlacementNo();
 });
 
 $("#txtAdvancePayable").on('change', function () {

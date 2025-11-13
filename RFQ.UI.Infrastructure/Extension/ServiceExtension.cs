@@ -42,6 +42,7 @@ namespace RFQ.UI.Infrastructure.Extension
             services.AddScoped<IMasterUserActivityLogAdaptor, MasterUserActivityLogAdaptor>();
             services.AddScoped<IBookingOrTripAdaptor, BookingOrTripAdaptor>();
             services.AddScoped<IEWayBillAdaptor, EWayBillAdaptor>();
+            services.AddScoped<IDeliveryOrCloseTripAdaptor, DeliveryOrCloseTripAdaptor>();
             return services;
         }
     }

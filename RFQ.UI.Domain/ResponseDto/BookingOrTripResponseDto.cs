@@ -12,7 +12,7 @@ namespace RFQ.UI.Domain.ResponseDto
         public string BookingNo { get; set; }
         public int CompanyId { get; set; }
         public int LocationId { get; set; }
-        public string LocationName { get; set; }
+        public string? LocationName { get; set; }
         public DateTime BookingDate { get; set; }
         public int PlacementId { get; set; }
         public int EWayBillStateId { get; set; }
