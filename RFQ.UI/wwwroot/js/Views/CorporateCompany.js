@@ -41,11 +41,19 @@ $(document).ready(function () {
         }
     });
     ButtonUpdateClick();
+   
 });
 
 $('#btnAdd').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
+    if (!IsNullOrEmpty(profileId) && profileId == EnumProfile.Franchise) {
+        $("#ddlFranchisename").val(companyID).trigger('change');
+        $("#ddlFranchisename").prop("disabled", true);
+    }
+    else {
+        $("#ddlFranchisename").prop("disabled", false);
+    }
 });
 function FetchCorporateCompany() {
     $("#tableDiv").show();
@@ -510,7 +518,13 @@ function EditCorporateCompany(companyId) {
         $("#txtPanNumber").val(formData.panNo);
         $("#txtGstNumber").val(formData.gstNo);
         $("#ddlFranchisename").val(formData.parentCompanyId).trigger('change');
-
+        if (!IsNullOrEmpty(profileId) && profileId == EnumProfile.Franchise) {
+            $("#ddlFranchisename").val(companyID).trigger('change');
+            $("#ddlFranchisename").prop("disabled", true);
+        }
+        else {
+            $("#ddlFranchisename").prop("disabled", false);
+        }
         if (attachmantData.length > 0) {
             EditMasterAttachment(attachmantData);
         }

@@ -5,6 +5,7 @@ using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using System.Net;
 using System.Text;
 
 namespace RFQ.UI.Infrastructure.Provider
@@ -132,17 +133,25 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<string> EditCompanyConfiguration(CompanyConfigrationRequestDto companyConfigrationRequestDto)
         {
-            var baseUrl = _appSettings.BaseUrl + _appSettings.UpdateCompanyConfiguration + "/" + companyConfigrationRequestDto.CompanyConfigId;
-            var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, companyConfigrationRequestDto, _globalClass.Token);
-            if (responseModel != null)
+            try
             {
-                var result = responseModel.StatusCode;
-                if (result == 200)
-                    return "CompanyConfiguration Updated...";
-                else
-                    return responseModel.ErrorMessage ?? string.Empty;
+                var baseUrl = _appSettings.BaseUrl + _appSettings.UpdateCompanyConfiguration + "/" + companyConfigrationRequestDto.CompanyConfigId;
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, companyConfigrationRequestDto, _globalClass.Token);
+                if (responseModel != null)
+                {
+                    var result = responseModel.StatusCode;
+                    if (result == 200)
+                        return "CompanyConfiguration Updated...";
+                    else
+                        return responseModel.ErrorMessage ?? string.Empty;
+                }
+                return "Failed to Update CompanyConfiguration ";
             }
-            return "Failed to Update CompanyConfiguration ";
+            catch (Exception)
+            {
+                throw;
+            }
+            
         }
 
         public async Task<string> DeleteCompanyConfiguration(int companyConfigId)

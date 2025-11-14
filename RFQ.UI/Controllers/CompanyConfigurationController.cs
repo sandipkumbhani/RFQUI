@@ -104,7 +104,10 @@ namespace RFQ.UI.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                if (ex.Message.Contains("409"))
+                    return StatusCode(StatusCodes.Status409Conflict, "Duplicate Record");
+                else
+                    return Json(ex);
             }
         }
 
@@ -121,7 +124,10 @@ namespace RFQ.UI.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                if (ex.Message.Contains("409"))
+                    return StatusCode(StatusCodes.Status409Conflict, "Duplicate Record");
+                else
+                    return Json(ex);
             }
         }
 

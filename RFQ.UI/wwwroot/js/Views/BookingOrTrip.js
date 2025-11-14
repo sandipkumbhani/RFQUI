@@ -8,6 +8,7 @@ var locationId;
 var orderColumn = '';
 var orderDir = '';
 var fetchBookingUrl = '/BookingOrTrip/GetAllBookingOrTrip';
+let additionalInvoiceList = [];
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
@@ -27,15 +28,13 @@ $(document).ready(function () {
     FetchLRNo();
     FetchBookingOrTrip();
     ButtonUpdateClick();
+    btnDeleteInvoiceClick();
 
     $('#tableDivLink').on('click', function (e) {
         FetchBookingOrTrip();
     });
 
     $("#btnCancel").on("click", function () {
-        $('#formDiv')
-            .find('input, select, textarea, button, a')
-            .prop('disabled', false);
         FetchBookingOrTrip();
     });
 
@@ -58,33 +57,9 @@ $(document).ready(function () {
         }
     });
 
-    //$('#ddlPlacementNo').on('change', function () {
-    //    const selectedValue = $(this).val();
-    //    if (!selectedValue) {
-    //        return;
-    //    }
-    //    const selectedPlacement = driverDrpList.find(x => x.placementId == selectedValue);
-
-    //    if (selectedPlacement) {
-    //        $("#ddlCustomerName").val(selectedPlacement.partyId).trigger('change');
-    //        $("#ddlVehicleType").val(selectedPlacement.vehicleTypeId).trigger('change');
-    //        //$('#from-search-box').val(selectedPlacement.fromLocation);
-    //        //$('#to-search-box').val(selectedPlacement.toLocation);
-    //        //$('#txtNoofVehicles').val(selectedPlacement.requiredVehicles);
-    //        //$('#txtVehicleReqDate').val(selectedPlacement.vehicleReqOn.split('T')[0]);
-    //        //$('#fromState').val(selectedPlacement.fromLocationState);
-    //        //$('#fromCity').val(selectedPlacement.fromLocationCity);
-    //        //$('#fromLat').val(selectedPlacement.fromLatitude);
-    //        //$('#fromLng').val(selectedPlacement.fromLongitude);
-    //        //$('#toState').val(selectedPlacement.toLocationState);
-    //        //$('#toCity').val(selectedPlacement.toLocationCity);
-    //        //$('#toLat').val(selectedPlacement.toLatitude);
-    //        //$('#toLng').val(selectedPlacement.toLongitude);
-    //        //$("#ddlItemName").val(selectedPlacement.itemId == 0 ? null : selectedPlacement.itemId).trigger('change');
-    //        //$("#ddlPackingType").val(selectedPlacement.packingTypeId == 0 ? null : selectedPlacement.packingTypeId).trigger('change');
-    //        //$("#hdnIndentExpiryDate").val(selectedPlacement.expiryDate);
-    //    }
-    //});
+    $("#additionalInvoiceDetails").on('click', '#tfBtnAddInvoice', function () {
+        btnAddInvoiceClick();
+    });
 });
 
 $('#btnAdd').click(function () {
@@ -388,7 +363,6 @@ function SaveBookingOrTrip(action) {
     var consignorResult = GetDropdownValue("ddlConsignorInput");
     var consigneeResult = GetDropdownValue("ddlConsigneeInput");
     const formData = {
-
         BookingNo: $('#ddlLrNo').val(),
         LocationId: $('#ddlLocation').val(),
         BookingDate: $('#lrDate').val(),
@@ -427,58 +401,10 @@ function SaveBookingOrTrip(action) {
         ActualWeight: $('#txtActualWt').val(),
         ChargedWeight: $('#txtChargedWt').val(),
         TotalFreight: $('#txtTotalFreight').val(),
-        LinkId: GetQueryParam("LinkId")
-
-        //BookingNo: $('#ddlLrNo').val() || null,
-        //LocationId: parseInt($('#ddlLocation').val()) || 0,
-        //BookingDate: $('#lrDate').val() ? new Date($('#lrDate').val()) : null,
-        //PlacementId: parseInt($('#ddlPlacementNo').val()) || 0,
-        //EWayBillStateId: $('#ddlBillState').val() ? parseInt($('#ddlBillState').val()) : null,
-        //BusinessVerticalId: $('#ddlBusinessVertical').val() ? parseInt($('#ddlBusinessVertical').val()) : null,
-        //EWayBillNo: $('#txtBillNo').val() || null,
-
-        //FromLocation: $('#from-search-box').val() || null,
-        //FromLatitude: $('#fromLat').val() || null,
-        //FromLongitude: $('#fromLng').val() || null,
-        //ToLocation: $('#to-search-box').val() || null,
-        //ToLatitude: $('#toLat').val() || null,
-        //ToLongitude: $('#toLng').val() || null,
-
-        //PartyId: $('#ddlCustomerName').val() ? parseInt($('#ddlCustomerName').val()) : 0,
-        //VehicleNo: $('#ddlVehicleNo option:selected').text() || null,
-        //VehicleTypeId: $('#ddlVehicleType').val() ? parseInt($('#ddlVehicleType').val()) : 0,
-
-        //DriverId: $('#ddlDriverName').val() ? parseInt($('#ddlDriverName').val()) : 0,
-        //DriverName: $('#ddlDriverName option:selected').text() || null,
-        //DriverMobNo: $('#txtMobileNo').val() || null,
-
-        //TrackingTypeId: $('#ddlTrackingType').val() ? parseInt($('#ddlTrackingType').val()) : 0,
-
-        //InvoiceNo: $('#invoiceNo').val() || null,
-        //InvoiceDate: $('#invoiceDate').val() ? new Date($('#invoiceDate').val()) : null,
-        //InvoiceValue: $('#txtInvoiceValue').val() ? parseFloat($('#txtInvoiceValue').val()) : null,
-
-        //EWayBillDate: $('#ewayBillDate').val() ? new Date($('#ewayBillDate').val()) : null,
-        //EWayBillExpiryDate: $('#expiryDate').val() ? new Date($('#expiryDate').val()) : null,
-
-        //ConsignerId: consignorResult?.id || null,
-        //ConsignerName: consignorResult?.name || null,
-        //ConsigneeId: consigneeResult?.id || null,
-        //ConsigneeName: consigneeResult?.name || null,
-
-        //TransitDays: $('#txtTransitDays').val() ? parseInt($('#txtTransitDays').val()) : null,
-        //EDD: $('#eddDate').val() ? new Date($('#eddDate').val()) : null,
-
-        //ItemId: $('#ddlItemName').val() ? parseInt($('#ddlItemName').val()) : null,
-        //PackingTypeId: $('#ddlPackingType').val() ? parseInt($('#ddlPackingType').val()) : null,
-        //TotalPacket: $('#txtTotalPkgs').val() ? parseInt($('#txtTotalPkgs').val()) : null,
-        //ActualWeight: $('#txtActualWt').val() ? parseFloat($('#txtActualWt').val()) : null,
-        //ChargedWeight: $('#txtChargedWt').val() ? parseFloat($('#txtChargedWt').val()) : null,
-        //TotalFreight: $('#txtTotalFreight').val() ? parseFloat($('#txtTotalFreight').val()) : null,
-
-        //LinkId: GetQueryParam("LinkId") ? parseInt(GetQueryParam("LinkId")) : 0
+        LinkId: GetQueryParam("LinkId"),
+        BookingInvoiceDetailList: additionalInvoiceList
     };
-
+    console.log(formData);
     if (action === "save") {
 
         $.ajax({
@@ -764,4 +690,71 @@ function DeleteBooking(bookingId) {
             });
         }
     });
+}
+
+function btnAddInvoiceClick() {
+    const tfInvoiceNo = $("#tfInvoiceNo").val();
+    const tfInvoiceDate = $("#tfInvoiceDate").val();
+    const tfInvoiceValue = $("#tfInvoiceValue").val();
+    const tfEwayBillNo = $("#tfEwayBillNo").val();
+    const tfEwayBillDate = $("#tfEwayBillDate").val();
+    const tfEwayBillValidUpto = $("#tfEwayBillValidUpto").val();
+
+    if (!IsNullOrEmpty(tfInvoiceNo)) {
+        const isExist = additionalInvoiceList.some(x => x.InvoiceNo.trim() == tfInvoiceNo.trim());
+        if (isExist) {
+            toastr.warning("This route already exists in list!", "Warning");
+            return;
+        }
+        additionalInvoiceList.push({
+            InvoiceNo: tfInvoiceNo,
+            InvoiceDate: tfInvoiceDate,
+            InvoiceValue: tfInvoiceValue,
+            EwayBillNo: tfEwayBillNo,
+            EwayBillDate: tfEwayBillDate,
+            EwayBillValidUpto: tfEwayBillValidUpto
+        });
+        RenderInvoiceDetailsTable();
+        ClearInvoiceDetails();
+    }
+    else {
+        toastr.warning("Please enter Invoice No!");
+        return;
+    }
+}
+function RenderInvoiceDetailsTable() {
+    const tbody = $('#additionalInvoiceDetails tbody');
+    tbody.empty();
+    $.each(additionalInvoiceList, function (index, item) {
+        const row = `
+      <tr data-index="${index}">
+        <td class="text-center">${index + 1}</td>
+        <td class="text-center">${item.InvoiceNo}</td>
+        <td class="text-center">${item.InvoiceDate}</td>
+        <td class="text-center">${item.InvoiceValue}</td>
+        <td class="text-center">${item.EwayBillNo}</td>
+        <td class="text-center">${item.EwayBillDate}</td>
+        <td class="text-center">${item.EwayBillValidUpto}</td>
+        <td class="text-center" style="cursor:pointer;">
+          <a class="icon-btn deleteInvoiceDetails"  style="color:#F24B5A;"><i class="ri-delete-bin-3-line"></i></a>
+        </td>
+      </tr>
+    `;
+        tbody.append(row);
+    });
+}
+function btnDeleteInvoiceClick() {
+    $('#additionalInvoiceDetails').on('click', '.deleteInvoiceDetails', function () {
+        const rowIndex = $(this).closest('tr').data('index');
+        const deleteItem = additionalInvoiceList.splice(rowIndex, 1);
+        RenderInvoiceDetailsTable();
+    });
+}
+function ClearInvoiceDetails() {
+    $("#tfInvoiceNo").val(null).trigger('change');
+    $("#tfInvoiceDate").val(null).trigger('change');
+    $("#tfInvoiceValue").val(null).trigger('change');
+    $("#tfEwayBillNo").val(null).trigger('change');
+    $("#tfEwayBillDate").val(null).trigger('change');
+    $("#tfEwayBillValidUpto").val(null).trigger('change');
 }
