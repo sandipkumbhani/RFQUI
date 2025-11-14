@@ -522,12 +522,12 @@ function InitializeFields() {
         }
     });
 
-    $("#txtCustomerName").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a valid CustomerName", "Validation Error");
-            return;
-        }
-    });
+    //$("#txtCustomerName").on("blur", function () {
+    //    if (IsNullOrEmpty($(this).val())) {
+    //        toastr.warning("Please enter a valid CustomerName", "Validation Error");
+    //        return;
+    //    }
+    //});
 
     $("#txtCustomerCode").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {

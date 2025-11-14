@@ -1,5 +1,4 @@
-﻿
-var productListDto;
+﻿var productListDto;
 var orderColumn = '';
 var orderDir = '';
 var fetchProductUrl = '/Product/GetAllProducts';
@@ -28,7 +27,7 @@ $(document).ready(function () {
         SaveProduct(action);
     });
 
-    CheckValidation();
+    //CheckValidation();
     FetchProduct();
     UpdateProduct();
 });
@@ -39,14 +38,14 @@ $("#btnAdd").on("click", function (e) {
     $("#formSection").show();
     $('#productForm').find('input, select, textarea, button, a').prop('disabled', false);
 });
-function CheckValidation() {
-    $("#txtItemName").on('blur', function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter Item Name", "Validation Error");
-            return;
-        }
-    })
-}
+//function CheckValidation() {
+//    $("#txtItemName").on('blur', function () {
+//        if (IsNullOrEmpty($(this).val())) {
+//            toastr.warning("Please enter Item Name", "Validation Error");
+//            return;
+//        }
+//    })
+//}
 function CheckNullValidation() {
     var itemName = $('#txtItemName').val();
     if (IsNullOrEmpty(itemName)) {

@@ -33,13 +33,13 @@ function Initialization() {
         $("#AddLocationDiv").css('display', 'none');
         $("#backButton").css('display', 'Block');
     });
-    $("#txtLocationName").on("blur", function () {
-        var locationName = $(this).val();
-        if (IsNullOrEmpty(locationName)) {
-            toastr.warning("Please enter a valid LocationName", "Validation Error");
-            return;
-        }
-    });
+    //$("#txtLocationName").on("blur", function () {
+    //    var locationName = $(this).val();
+    //    if (IsNullOrEmpty(locationName)) {
+    //        toastr.warning("Please enter a valid LocationName", "Validation Error");
+    //        return;
+    //    }
+    //});
     $("#from-search-box").on("blur", function () {
         var Address = $(this).val();
         if (IsNullOrEmpty(Address)) {

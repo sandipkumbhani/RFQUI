@@ -187,12 +187,12 @@ function Initialize() {
     });
 }
 function CheckValidation() {
-    $("#txtFranchiseName").on("blur", function () {
-        if (!/^[A-Za-z0-9 ]+$/.test($(this).val())) {
-            toastr.warning("Please enter a valid Franchise  Name", "Validation Error");
-            return;
-        }
-    });
+    //$("#txtFranchiseName").on("blur", function () {
+    //    if (!/^[A-Za-z0-9 ]+$/.test($(this).val())) {
+    //        toastr.warning("Please enter a valid Franchise  Name", "Validation Error");
+    //        return;
+    //    }
+    //});
     $("#from-search-box").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please enter a valid Franchise  Address", "Validation Error");

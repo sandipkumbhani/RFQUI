@@ -56,7 +56,7 @@ $(document).ready(function () {
     FetchVehicleTypes();
 });
 function OnSubmitValidation() {
-    if (IsNullOrEmpty($("#txtVehicleType").val()) || !ValidateTextbox("#txtVehicleType")) {
+    if (IsNullOrEmpty($("#txtVehicleType").val())) {
         toastr.warning("Please enter a valid Vehicle Type!", "Validation Error");
         return false;
     }

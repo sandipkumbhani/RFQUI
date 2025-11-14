@@ -33,9 +33,6 @@ $(document).ready(function () {
     });
 
     $("#btnCancel").on("click", function () {
-        $('#formDiv')
-            .find('input, select, textarea, button, a')
-            .prop('disabled', false);
         FetchVehicleIndent();
     });
 

@@ -71,12 +71,12 @@ $('#pageLength').off('change').on('change', function () {
     FetchCorporateCompany();
 });
 function CheckValidation() {
-    $("#txtCompanyName").on("blur", function () {
-        if (!/^[A-Za-z0-9 ]+$/.test($(this).val())) {
-            toastr.warning("Please enter a valid Corporate Company", "Validation Error");
-            return;
-        }
-    });
+    //$("#txtCompanyName").on("blur", function () {
+    //    if (!/^[A-Za-z0-9 ]+$/.test($(this).val())) {
+    //        toastr.warning("Please enter a valid Corporate Company", "Validation Error");
+    //        return;
+    //    }
+    //});
     $("#txtWhatsAppNumber").on("blur", function () {
         if (!isMobile($(this).val())) {
             toastr.warning("Please enter a valid WhatsApp Number", "Validation Error");

@@ -181,12 +181,12 @@ function CheckValidation() {
         }
 
     });
-    $("#txtVendorName").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a valid Vendor Name", "Validation Error");
-            return;
-        }
-    });
+    //$("#txtVendorName").on("blur", function () {
+    //    if (IsNullOrEmpty($(this).val())) {
+    //        toastr.warning("Please enter a valid Vendor Name", "Validation Error");
+    //        return;
+    //    }
+    //});
     $("#ddlVendorCategory").on("keypress", function () {
         if (!isValidateSelect($(this).val())) {
             toastr.warning("Please enter a valid Vendor Category", "Validation Error");

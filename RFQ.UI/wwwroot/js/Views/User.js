@@ -59,13 +59,13 @@ function Initialization() {
         FetchUser();
         $("#adduserdiv").css('display', 'none');
     });
-    $("#txtName").on("blur", function () {
-        var Textname = $(this).val();
-        if (IsNullOrEmpty(Textname)) {
-            toastr.warning("Please enter a valid UserName", "Validation Error");
-            return;
-        }
-    });
+    //$("#txtName").on("blur", function () {
+    //    var Textname = $(this).val();
+    //    if (IsNullOrEmpty(Textname)) {
+    //        toastr.warning("Please enter a valid UserName", "Validation Error");
+    //        return;
+    //    }
+    //});
     $("#ddlCompanyAndFranchise").on("blur", function () {
         var corporatename = $(this).val();
         if (!isValidateSelect(corporatename)) {
