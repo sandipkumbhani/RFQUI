@@ -387,7 +387,6 @@ $('#pageLength').off('change').on('change', function () {
     FetchFranchise();
 });
 function EditFranchise(companyId) {
-    $('#franchiseForm').find('input, select, textarea, button, a').prop('disabled', false);
     if ($("#btnUpdateFranchise").hasClass('d-none')) {
         $("#btnUpdateFranchise").removeClass('d-none');
     }
@@ -589,9 +588,3 @@ function DeleteFranchise(companyId, fileName, linkId) {
         }
     });
 }
-function ViewFranchise(companyId) {
-    EditFranchise(companyId);
-    $('#franchiseForm').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnUpdateFranchise").addClass('d-none');
-}
-

@@ -182,12 +182,12 @@ function FetchDataForTable(gridTableName, url, orderColumn, orderDir, EditFuncti
                 response.data = filteredUsers;
             }
             viewModelDto = response.data;
-            let rowsHtml = '';
-            rowsHtml = GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel);
+            //let rowsHtml = '';
+            //rowsHtml = GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel);
             CreateOrFillDataInDataTable(response, EditFunctionName, DeleteFunctionName, IdPropertyName);
-            $('#' + gridTableName + ' tbody').html(rowsHtml);
+            //$('#' + gridTableName + ' tbody').html(rowsHtml);
             $('#totalList').text(`Total List: ${response.recordsTotal}`);
-            generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url, IsEdit, IsView, IsCancel);
+            generatePagination(response.recordsTotal, pageLength, pageNumber, gridTableName, url, EditFunctionName, DeleteFunctionName, IdPropertyName);
         },
         error: function () {
             $('#' + gridTableName + ' tbody').html('<tr><td colspan="20" class="text-center text-danger">Error loading data</td></tr>');
@@ -396,6 +396,7 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
         });
     }
     if (gridTableName == "franchiseTable") {
+        debugger
         response.data.forEach(item => {
             rowsHtml += `
         <tr>
@@ -768,7 +769,7 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
     }
     return rowsHtml;
 }
-function generatePagination(totalRecords, pageSize, currentPage, gridTableName, url, IsEdit, IsView, IsCancel) {
+function generatePagination(totalRecords, pageSize, currentPage, gridTableName, url, EditFunctionName = null, DeleteFunctionName = null, IdPropertyName = null) {
     const paginationContainer = $('#customPagination');
     paginationContainer.empty();
 
@@ -805,7 +806,7 @@ function generatePagination(totalRecords, pageSize, currentPage, gridTableName, 
         const selectedPage = Number($(this).data('page'));
         if (selectedPage > 0 && selectedPage <= totalPages && selectedPage !== currentPage) {
             $('#currentPage').val(selectedPage);
-            FetchDataForTable(gridTableName, url, orderColumnName, orderDirName, IsEdit, IsView, IsCancel);
+            FetchDataForTable(gridTableName, url, orderColumnName, orderDirName, EditFunctionName, DeleteFunctionName, IdPropertyName);
         }
         //$('html,body').animate({
         //    scrollTop: $("#customvehicleTypesPagination").offset().top
