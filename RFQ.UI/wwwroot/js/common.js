@@ -1,11 +1,20 @@
-﻿$(document).ready(function () {
-    if (typeof(IsAdd) != 'undefined'  && IsAdd != 'True') {
-        $('#btnAdd').hide();
-    }
+﻿var orderColumnName = '';
+var orderDirName = '';
+
+$(document).ready(function () {
+    initialization();
 });
 
-var orderColumnName = '';
-var orderDirName = '';
+function initialization() {
+    if (typeof (IsAdd) != 'undefined' && IsAdd != 'True') {
+        $('#btnAdd').hide();
+    }
+    $('.arrow-icon .toggle-arrow').on('click', function () {
+        //let icon = $(this).find('.arrow-icon');
+        //icon.toggleClass('rotated');
+       
+    });
+}
 function ValidateTextbox(inputId) {
     var value = $(inputId).val();
     //var pattern = /^[A-Za-z0-9]+$/; 
@@ -971,7 +980,7 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
                 var data = response
                 //const selectVehicleType = document.getElementById(dropdownId);
                 const dropdowns = document.querySelectorAll(`#${dropdownId}`);
-                const selectVehicleType = dropdowns[dropdowns.length - 1]; 
+                const selectVehicleType = dropdowns[dropdowns.length - 1];
                 //this twoline for select last dropdown and bind Data of the page
                 let placeholderOption = document.createElement("option");
                 placeholderOption.value = "";
@@ -1083,3 +1092,5 @@ function addMasterUserActivityLog(LogUid, LogTypeId, Description, UserId) {
         }
     });
 }
+
+

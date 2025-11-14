@@ -4,9 +4,11 @@ var orderColumn = '';
 var orderDir = '';
 var fetchUrl = '/CompanyConfiguration/GetAllCompanyConfiguration'
 var companyId;
+var profileId;
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
+    profileId = getCookieValue('profileid');
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
@@ -14,7 +16,7 @@ $(document).ready(function () {
         $(this).data('order', orderDir);
 
         $('th.sortable').not(this).data('order', 'asc');
-        FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase(), 'EditCompanyConfiguration', 'DeleteCompanyConfiguration','companyConfigId');
+        FetchDataForTable('tableCmpConfig', fetchUrl, orderColumn, orderDir.toUpperCase(), 'EditCompanyConfiguration', 'DeleteCompanyConfiguration', 'companyConfigId');
     });
     $('#ListSectionLink').on('click', function (e) {
         FetchCompanyConfiguration();
@@ -55,7 +57,11 @@ function GetAllCompany() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            response = response.filter(x => x.companyTypeId == EnumInternalMaster.CORPORATE);
+            if (profileId == EnumProfile.Franchise)
+                response = response.filter(x => x.companyTypeId == EnumInternalMaster.CORPORATE && x.parentCompanyId == companyId);
+            else
+                response = response.filter(x => x.companyTypeId == EnumInternalMaster.CORPORATE);
+
             const selectCustomer = document.getElementById("ddlCompany");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -213,7 +219,10 @@ function SaveCompanyConfiguration(action) {
                     }
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Failed to Save Company Configuration Details!", "Error");
+                    if (xhr.status == 409)
+                        toastr.warning("Company already exists.");
+                    else
+                        toastr.error("Failed to Save Company Configuration Details!", "Error");
                 },
                 completeOnSuccess: function () {
                     FetchCompanyConfiguration();
@@ -236,7 +245,10 @@ function SaveCompanyConfiguration(action) {
                     $('#ddlCompany').val(null).trigger('change');
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Failed to Save Company Configuration Details!", "Error");
+                    if (xhr.status == 409)
+                        toastr.warning("Company already exists.");
+                    else
+                        toastr.error("Failed to Save Company Configuration Details!", "Error");
                 }
             });
         }
@@ -314,14 +326,14 @@ function UpdateCompanyConfiguration(companyConfigId) {
         let formData = {
             CompanyConfigId: Number(companyConfigId),
             CompanyId: Number(company),
-            SMSProvider: smsProvider ,
-            SMSAuthKey: smsAuthKey ,
-            WhatsAppProvider: whatsappProvider ,
-            WhatsAppAuthKey: whatsappAuthKey ,
-            SMTPHost: smtpHost ,
-            SMTPPort: Number(smtpPort) ,
-            SMTPUsername: smtpUserName ,
-            SMTPPassword: smtpPassword 
+            SMSProvider: smsProvider,
+            SMSAuthKey: smsAuthKey,
+            WhatsAppProvider: whatsappProvider,
+            WhatsAppAuthKey: whatsappAuthKey,
+            SMTPHost: smtpHost,
+            SMTPPort: Number(smtpPort),
+            SMTPUsername: smtpUserName,
+            SMTPPassword: smtpPassword
         };
         $.ajax({
             url: updateUrl,
@@ -347,7 +359,10 @@ function UpdateCompanyConfiguration(companyConfigId) {
                     return
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Update Company Configuration Details!", "Error");
+                if (xhr.status == 409)
+                    toastr.warning("Company already exists.");
+                else
+                    toastr.error("Failed to Update Company Configuration Details!", "Error");
             }
         });
     }

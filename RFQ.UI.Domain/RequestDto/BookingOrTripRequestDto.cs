@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RFQ.UI.Domain.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,10 @@ namespace RFQ.UI.Domain.RequestDto
 {
     public class BookingOrTripRequestDto
     {
+        public BookingOrTripRequestDto()
+        {
+            BookingInvoiceDetailList = new();
+        }
         public int BookingId { get; set; }
         public string BookingNo { get; set; }
         public int? CompanyId { get; set; }
@@ -53,7 +58,6 @@ namespace RFQ.UI.Domain.RequestDto
         public DateTime CreatedOn { get; set; }
         public int UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
-
-
+        public List<BookingInvoiceDetail>? BookingInvoiceDetailList { get;set;}
     }
 }

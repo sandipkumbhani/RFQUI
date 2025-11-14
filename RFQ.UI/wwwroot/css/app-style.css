@@ -3500,3 +3500,6 @@ body.overlay-active {
         font-size: .9rem;
     }
 }
+.arrow-icon {
+    color: black !important;
+}
