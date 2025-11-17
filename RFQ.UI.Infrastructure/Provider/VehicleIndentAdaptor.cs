@@ -117,12 +117,12 @@ namespace RFQ.UI.Infrastructure.Provider
                     }
                     else
                     {
-                        return responseModel.ErrorMessage;
+                        return responseModel.Data.ToString();
                     }
                 }
                 return "Failed to Delete VehicleIndent";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

@@ -437,14 +437,15 @@ function DeleteVehicleIndent(indentId) {
                 contentType: "application/json",
                 dataType: "json",
                 success: function (response) {
-                    if (response && response.result === "success") {
+
+                    if (response && response.issucsses) {
                         toastr.success("Vehicle Indent has been deleted successfully.");
                         addMasterUserActivityLog(0, LogType.Delete, "Vehicle Indent has been deleted successfully.", 0);
                         $("#formDiv").addClass('d-none');
                         $('#currentPage').val(1);
                         FetchVehicleIndent();
                     } else {
-                        toastr.error("Failed to delete Vehicle Indent.", "Error");
+                        toastr.warning(response.data);
                     }
                 },
                 error: function () {

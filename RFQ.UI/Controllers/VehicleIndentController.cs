@@ -124,15 +124,39 @@ namespace RFQ.UI.Controllers
             {
                 var result = await _vehicleIndentService.DeleteVehicleIndent(indentId);
                 if (result != null)
-                    return Json(new { result = "success" });
+                    
+                    return Json(new { Data = result, Issucsses  = true});
                 else
-                    return Json(new { result = "failure" });
+                    return Json(new { Data = result, Issucsses = false });
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                throw new Exception(ex.Message);
             }
 
         }
+
+        //[HttpDelete("VehicleIndent/DeleteVehicleIndent/{indentId}")]
+        //public async Task<IActionResult> DeleteVehicleIndent(int indentId)
+        //{
+        //    try
+        //    {
+        //        var res = await _vehicleIndentService.DeleteVehicleIndent(indentId);
+
+        //        return Json(new { result = "success" });
+        //    }
+        //    catch (InvalidOperationException ex)
+        //    {
+        //        return Json(new { result = "failure", reason = "rfq_reference", message = ex.Message });
+        //    }
+        //    catch (KeyNotFoundException ex)
+        //    {
+        //        return Json(new { result = "failure", reason = "not_found", message = ex.Message });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { result = "error", message = "Unexpected error occurred." });
+        //    }
+        //}
     }
 }
