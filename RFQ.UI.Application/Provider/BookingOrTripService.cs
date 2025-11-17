@@ -24,6 +24,11 @@ namespace RFQ.UI.Application.Provider
             return await _bookingOrTripAdaptor.AddBookingOrTrip(bookingOrTripRequestDto);
         }
 
+        public async Task<IEnumerable<AutoFetchBookingResponseDto>> AutoFetchBooking(int id)
+        {
+            return await _bookingOrTripAdaptor.AutoFetchBooking(id);
+        }
+
         public async Task<string> DeleteBookingOrTrip(int bookingId)
         {
             return await _bookingOrTripAdaptor.DeleteBookingOrTrip(bookingId);

@@ -1,7 +1,7 @@
 ﻿const urlParams = new URLSearchParams(window.location.search);
 const linkId = urlParams.get('LinkId');
 var myDropzone;
-var driverDrpList;
+var bookingDrpList;
 var companyId;
 var profileId;
 var locationId;
@@ -13,6 +13,39 @@ $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
+    $('#ddlPlacementNo').on('change', function () {
+        if ($(this).val() != null) {
+            AutoFetch();
+        }
+        else {
+            return;
+        }
+    });
+    //$('#ddlPlacementNo').on('change', function () {
+    //    debugger;
+    //    const selectedValue = $(this).val();
+    //    if (!selectedValue) {
+    //        return;
+    //    }
+    //    const selectedIndent = bookingDrpList.find(x => x.placementId == selectedValue);
+    //    if (selectedIndent) {
+
+    //        //$('#txtLRNo').val(selectedIndent.bookingNo);
+    //        //$('#txtLrDate').val(selectedIndent.bookingDate.split('T')[0]);
+    //        //$("#ddlBookingBranch").val(selectedIndent.locationId).trigger('change');
+    //        $('#from-search-box').val(selectedIndent.fromLocation);
+    //        $('#to-search-box').val(selectedIndent.toLocation);
+    //        //$('#txtVehicleNo').val(selectedIndent.vehicleNo);
+    //        //$("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
+    //        //$("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
+    //        //$("#txtConsignorInput").val(selectedIndent.consignerName).trigger('change');
+    //        //$("#txtConsigneeInput").val(selectedIndent.consigneeName).trigger('change');
+    //        //$('#txtEDD').val(selectedIndent.edd.split('T')[0]);
+    //        //$('#txtPkg').val(selectedIndent.totalPacket);
+    //        //$('#txtActualWt').val(selectedIndent.actualWeight);
+
+    //    }
+    //});
     GetAllDriver();
     GetAllVehicleNumber();
     GetAllPakingType("ddlPackingType");
@@ -288,7 +321,7 @@ function GetAllPlacementNo() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            driverDrpList = response.result;
+            bookingDrpList = response.result;
             const selectLocation = document.getElementById("ddlPlacementNo");
             let placeholderOption = document.createElement("option");
             placeholderOption.value = "";
@@ -296,7 +329,7 @@ function GetAllPlacementNo() {
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             selectLocation.appendChild(placeholderOption);
-            driverDrpList.forEach(option => {
+            bookingDrpList.forEach(option => {
                 let opt = document.createElement("option");
                 opt.value = option.placementId;
                 opt.textContent = option.placementNo;
@@ -758,3 +791,64 @@ function ClearInvoiceDetails() {
     $("#tfEwayBillDate").val(null).trigger('change');
     $("#tfEwayBillValidUpto").val(null).trigger('change');
 }
+
+function AutoFetch() {
+    debugger;
+    var placementNo = $("#ddlPlacementNo").val();
+    var getUrl = '/BookingOrTrip/AutoFetchBooking/' + placementNo;
+
+    $.ajax({
+        url: getUrl,
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+
+            // Directly use first item (no IF condition)
+            //let data = response[0];
+            let data = response?.[0] || {};
+
+
+            $('#from-search-box').val(data.fromLocation);
+            $('#to-search-box').val(data.toLocation);
+            $("#ddlVehicleNo").val(data.vehicleId).trigger('change');
+            $("#ddlVehicleType").val(data.vehicleTypeId).trigger('change');
+            $("#ddlDriverName").val(data.driverId).trigger('change');
+            $('#txtMobileNo').val(data.mobileNo);
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Failed to fetch RFQ data!", "Error");
+        }
+    });
+}
+
+
+//function AutoFetch() {
+//    debugger;
+//    var placementNo = $("#ddlPlacementNo").val();
+//    var getUrl = '/BookingOrTrip/AutoFetchBooking/' + placementNo;
+//    $.ajax({
+//        url: getUrl,
+//        type: "GET",
+//        contentType: "application/json",
+//        success: function (response) {
+//            if (Array.isArray(response) && response.length > 0) {
+//                let data = response[0]; // Use the first object in the array
+                
+//                $('#from-search-box').val(data.fromLocation);
+//                $('#to-search-box').val(data.toLocation);
+//                //$("#ddlCustomerName").val(data.VehicleId).trigger('change');
+//                $("#ddlVehicleNo").val(data.vehicleId).trigger('change');
+//                $("#ddlVehicleType").val(data.vehicleTypeId).trigger('change');
+//                $("#ddlDriverName").val(data.driverId).trigger('change');
+//                $('#txtMobileNo').val(data.mobileNo);
+
+
+//            } else {
+//                toastr.warning("No data found for selected indent number.", "Warning");
+//            }
+//        },
+//        error: function (xhr, status, error) {
+//            toastr.error("Failed to fetch RFQ data!", "Error");
+//        }
+//    });
+//}

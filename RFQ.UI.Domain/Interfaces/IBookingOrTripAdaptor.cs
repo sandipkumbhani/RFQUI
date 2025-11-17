@@ -17,5 +17,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> UpdateBookingOrTrip(int bookingId, BookingOrTripRequestDto bookingOrTripRequestDto);
         Task<string> DeleteBookingOrTrip(int bookingId);
         Task<IEnumerable<BookingOrTripResponseDto>> GetAllLRNo(int companyId);
+        Task<IEnumerable<AutoFetchBookingResponseDto>> AutoFetchBooking(int id);
     }
 }

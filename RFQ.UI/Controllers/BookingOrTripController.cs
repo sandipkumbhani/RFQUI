@@ -167,6 +167,23 @@ namespace RFQ.UI.Controllers
             }
         }
 
+        [HttpGet("BookingOrTrip/AutoFetchBooking/{id}")]
+        public async Task<IActionResult> AutoFetchBooking(int id)
+        {
+            try
+            {
+                var routeList = await _bookingOrTripService.AutoFetchBooking(id);
+                if (Request.IsAjaxRequest())
+                    return Json(routeList);
+                else
+                    return View(routeList);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 
 
