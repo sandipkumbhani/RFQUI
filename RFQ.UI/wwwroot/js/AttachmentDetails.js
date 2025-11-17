@@ -252,14 +252,16 @@ function UpdateAttachmentData(TransactionId) {
         let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
         let filePath = item.querySelector("#hdnUplodedFileName").value;
 
-        updateAttachmentDetails.push({
-            AttachmentId: attachmentId,
-            AttachmentName: fileName,
-            AttachmentTypeId: attachmentType,
-            AttachmentPath: filePath,
-            ReferenceLinkId: parseInt(linkd),
-            TransactionId: TransactionId
-        });
+        if (!IsNullOrEmpty(filePath)) {
+            updateAttachmentDetails.push({
+                AttachmentId: attachmentId,
+                AttachmentName: fileName,
+                AttachmentTypeId: attachmentType,
+                AttachmentPath: filePath,
+                ReferenceLinkId: parseInt(linkd),
+                TransactionId: TransactionId
+            });
+        }
     });
     $.ajax({
         type: "PUT",
