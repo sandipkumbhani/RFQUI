@@ -77,7 +77,7 @@ function FetchCustomerList() {
     $("#btnUpdate").hide();
     $("#SavenewButton").show();
     ResetAttachmentRepeater();
-    FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), 'EditCustomer', 'DeleteCustomer','partyid');
+    FetchDataForTable('customerTable', fetchCustomerUrl, orderColumn, orderDir.toUpperCase(), 'EditCustomer', 'DeleteCustomer', 'partyid');
 }
 
 $('#customerTableSearch').off('keyup').on('keyup', function () {
@@ -312,26 +312,7 @@ function UpdateCustomer() {
             LinkId: linkId
         };
 
-        let repeaterItems = document.querySelectorAll("[data-repeater-item]");
-        let updateAttachmentDetails = [];
-        var linkd = GetQueryParam("LinkId");
-        repeaterItems.forEach((item, index) => {
-            let attId = item.querySelector("#hdnAttachmentId").value;
-            let attachmentId = attId == '' ? 0 : attId;
-            let fileName = item.querySelector("#txtFileName")?.value || "N/A";
-            let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-            let filePath = item.querySelector("#hdnUplodedFileName").value;
-
-            updateAttachmentDetails.push({
-                AttachmentId: attachmentId,
-                AttachmentName: fileName,
-                AttachmentTypeId: attachmentType,
-                AttachmentPath: filePath,
-                ReferenceLinkId: parseInt(linkd),
-                TransactionId: $("#hdnPartyId").val()
-            });
-        });
-
+        DeleteAttachmentAPI(formData.PartyId);
         var editCustomer = '/Customer/UpdateCustomer';
         $.ajax({
             type: "PUT",
@@ -344,6 +325,8 @@ function UpdateCustomer() {
                     toastr.success("Customer Details Updated Successfully!");
                     addMasterUserActivityLog(0, LogType.Update, "Customer Details Updated Successfully!", 0);
                     $("#addCustomerDiv").css('display', 'none');
+                    const transactionId = $("#hdnPartyId").val();
+                    UpdateAttachmentData(transactionId);
                     FetchCustomerList();
                 } else {
                     toastr.error("Failed to Update Customer Details", "Error");
@@ -351,31 +334,7 @@ function UpdateCustomer() {
             },
             error: function (xhr, status, error) {
                 $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
-            }
-        });
-
-        $.ajax({
-            type: "PUT",
-            url: '/MasterAttachment/UpdateMasterAttachment',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(updateAttachmentDetails),
-            dataType: "json",
-            success: function (response) {
-                if (response.result == "success") {
-                    partyId = $("#hdnPartyId").val();
-                    Saveattachment(partyId);
-                } else {
-                    $("#dataDiv").html("Failed to update profile.");
-                }
             },
-            error: function (xhr, status, error) {
-                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-            }
-        });
-
-        var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
-        $.each(deletedAttachments, function (index, value) {
-            DeleteAttachmentAPI(value);
         });
     });
 }

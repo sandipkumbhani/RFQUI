@@ -64,6 +64,7 @@ function FetchCorporateCompany() {
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
     $("#btnSaveCompanyType").show();
+    ResetAttachmentRepeater();
     FetchDataForTable('corporateTable', '/CorporateCompany/ViewCorporateCompany', orderColumn, orderDir.toUpperCase(), 'EditCorporateCompany', 'DeleteCorporateCompany', 'companyId');
 }
 
@@ -264,34 +265,11 @@ function ButtonUpdateClick() {
                 LinkId: GetQueryParam("LinkId")
             };
 
-            let repeaterItems = document.querySelectorAll("[data-repeater-item]");
-            let updateAttachmentDetails = [];
-            var linkd = GetQueryParam("LinkId");
-
-
-            repeaterItems.forEach((item, index) => {
-                let attId = item.querySelector("#hdnAttachmentId").value;
-                let attachmentId = attId == '' ? 0 : attId;
-                let fileName = item.querySelector("#txtFileName")?.value || "N/A";
-                let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-                let filePath = item.querySelector("#hdnUplodedFileName").value;
-
-                updateAttachmentDetails.push({
-                    // index: index + 1,
-                    AttachmentId: attachmentId,
-                    AttachmentName: fileName,
-                    AttachmentTypeId: attachmentType,
-                    AttachmentPath: filePath,
-                    ReferenceLinkId: parseInt(linkd),
-                    TransactionId: $("#txtCompanyId").val()
-                });
-
-            });
-
-            // First AJAX call
+            DeleteAttachmentAPI(formData.PartyId);
+            var editUrl = "/CorporateCompany/EditCorporateCompany";
             $.ajax({
                 type: "PUT",
-                url: "/CorporateCompany/EditCorporateCompany",
+                url: editUrl,
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(formData),
                 dataType: "json",
@@ -300,6 +278,8 @@ function ButtonUpdateClick() {
                         toastr.success("Corporate Company Details Updated Successfully!");
                         addMasterUserActivityLog(0, LogType.Update, "Corporate Company Details Updated Successfully", 0);
                         $("#formDiv").css('display', 'none');
+                        const transactionId = $("#txtCompanyId").val();
+                        UpdateAttachmentData(transactionId);
                         FetchCorporateCompany();
                         $('#CompanyTypeForm')[0].reset();
                         $('#ddlFranchisename').val(null).trigger('change');
@@ -311,37 +291,10 @@ function ButtonUpdateClick() {
                     } else {
                         toastr.error("Failed to Update Corporate Company Details!", "Error");
                     }
-
                 },
                 error: function (xhr, status, error) {
                     toastr.error("Failed to Update Corporate Company Details!", "Error");
                 }
-            });
-
-            // Second AJAX call
-            $.ajax({
-                type: "PUT",
-                url: "/MasterAttachment/UpdateMasterAttachment",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(updateAttachmentDetails),
-                dataType: "json",
-                success: function (response) {
-                    if (response.result == "success") {
-                        companyId = $("#txtCompanyId").val();
-                        Saveattachment(companyId);
-                    } else {
-                        $("#dataDiv").html("Failed to update profile.");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-                }
-            });
-
-            // Thired Ajax Call for DeletedAttachments From Table
-            var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
-            $.each(deletedAttachments, function (index, value) {
-                DeleteAttachmentAPI(value);
             });
         }
     });

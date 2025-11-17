@@ -457,25 +457,7 @@ function UpdateFranchise(fileName) {
         LogoImage: logoFileName,
         LinkId: linkId
     }
-    let repeaterItems = document.querySelectorAll("[data-repeater-item]");
-    let updateAttachmentDetails = [];
-    var linkd = GetQueryParam("LinkId");
-    repeaterItems.forEach((item, index) => {
-        let attId = item.querySelector("#hdnAttachmentId").value;
-        let attachmentId = attId == '' ? 0 : attId;
-        let fileName = item.querySelector("#txtFileName")?.value || "N/A";
-        let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-        let filePath = item.querySelector("#hdnUplodedFileName").value;
-        updateAttachmentDetails.push({
-            // index: index + 1,
-            AttachmentId: attachmentId,
-            AttachmentName: fileName,
-            AttachmentTypeId: attachmentType,
-            AttachmentPath: filePath,
-            ReferenceLinkId: parseInt(linkd),
-            TransactionId: $("#hdnCompanyId").val()
-        });
-    });
+    DeleteAttachmentAPI(formData.CompanyId);
     var editFranchiseUrl = '/Franchise/EditFranchise';
     $.ajax({
         type: "PUT",
@@ -487,6 +469,8 @@ function UpdateFranchise(fileName) {
             if (response.result == "Success") {
                 toastr.success("Franchise Details Updated Successfully!");
                 addMasterUserActivityLog(0, LogType.Update, "Franchise Details Updated Successfully!", 0);
+                const transactionId = $("#hdnCompanyId").val();
+                UpdateAttachmentData(transactionId);
                 FetchFranchise();
             }
             else {
@@ -511,29 +495,6 @@ function UpdateFranchise(fileName) {
             }
         });
     }
-    $.ajax({
-        type: "PUT",
-        url: "/MasterAttachment/UpdateMasterAttachment",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(updateAttachmentDetails),
-        dataType: "json",
-        success: function (response) {
-            if (response.result == "success") {
-                companyId = $("#hdnCompanyId").val();
-                Saveattachment(companyId);
-            } else {
-                $("#dataDiv").html("Failed to update profile.");
-            }
-        },
-        error: function (xhr, status, error) {
-            $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-        }
-    });
-
-    var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
-    $.each(deletedAttachments, function (index, value) {
-        DeleteAttachmentAPI(value);
-    });
 }
 function DeleteFranchise(companyId, fileName, linkId) {
     Swal.fire({

@@ -25,9 +25,6 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-              
-              
-              
                 if (masterAttachmentRequestDto != null)
                 {
                     var result = _masterAttachmentService.AddMasterAttachment(masterAttachmentRequestDto);

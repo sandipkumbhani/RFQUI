@@ -671,6 +671,7 @@ function UpdateVendor() {
             ToStateId: item.ToStateId,
         }))
     }
+    DeleteAttachmentAPI(formData.PartyId);
     let repeaterItems = document.querySelectorAll("[data-repeater-item]");
     let updateAttachmentDetails = [];
     var linkd = GetQueryParam("LinkId");
@@ -702,6 +703,8 @@ function UpdateVendor() {
                 $("#addVendorDiv").css('display', 'none')
                 toastr.success("Vendor Details Updated Successfully!");
                 addMasterUserActivityLog(0, LogType.Update, "Vendor Details Updated Successfully!", 0);
+                const transactionId = $("#hdnPartyId").val();
+                UpdateAttachmentData(transactionId);
                 FetchVendor();
                 $("#backButton").show();
             }
@@ -712,29 +715,6 @@ function UpdateVendor() {
         error: function (xhr, status, error) {
             toastr.error("Failed to Update Vendor Details!", "Error");
         }
-    });
-    $.ajax({
-        type: "PUT",
-        url: "/MasterAttachment/UpdateMasterAttachment",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(updateAttachmentDetails),
-        dataType: "json",
-        success: function (response) {
-            if (response.result == "success") {
-                partyId = $("#hdnPartyId").val();
-                Saveattachment(partyId);
-            } else {
-                $("#dataDiv").html("Failed to update profile.");
-            }
-        },
-        error: function (xhr, status, error) {
-            $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-        }
-    });
-
-    var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
-    $.each(deletedAttachments, function (index, value) {
-        DeleteAttachmentAPI(value);
     });
 }
 function DeleteVendor(partyId, linkId) {

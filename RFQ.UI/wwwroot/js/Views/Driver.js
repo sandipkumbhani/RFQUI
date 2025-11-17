@@ -396,24 +396,7 @@ function UpdateDriver(fileName) {
         DriverImagePath: logoFileName
         //DriverImagePath: logoFileName ? logoFileName : null
     }
-    let repeaterItems = document.querySelectorAll("[data-repeater-item]");
-    let updateAttachmentDetails = [];
-    repeaterItems.forEach((item, index) => {
-        let attId = item.querySelector("#hdnAttachmentId").value;
-        let attachmentId = attId == '' ? 0 : attId;
-        let fileName = item.querySelector("#txtFileName")?.value || "N/A";
-        let attachmentType = item.querySelector(".ddlAttachment")?.selectedOptions[0]?.value || "N/A";
-        let filePath = item.querySelector("#hdnUplodedFileName").value;
-        updateAttachmentDetails.push({
-            // index: index + 1,
-            AttachmentId: attachmentId,
-            AttachmentName: fileName,
-            AttachmentTypeId: attachmentType,
-            AttachmentPath: filePath,
-            ReferenceLinkId: parseInt(GetQueryParam("LinkId")),
-            TransactionId: $("#hdDriverId").val()
-        });
-    });
+    DeleteAttachmentAPI(formData.DriverId);
     var editDriverUrl = '/Driver/UpdateDriver';
     $.ajax({
         type: "PUT",
@@ -425,6 +408,8 @@ function UpdateDriver(fileName) {
             if (response.result === "success") {
                 toastr.success("Driver Details Updated Successfully!");
                 addMasterUserActivityLog(0, LogType.Update, "Driver Details Updated Successfully!", 0);
+                const transactionId = $("#hdDriverId").val();
+                UpdateAttachmentData(transactionId);
                 FetchDriverList();
             }
             else {
@@ -449,29 +434,6 @@ function UpdateDriver(fileName) {
             }
         });
     }
-    $.ajax({
-        type: "PUT",
-        url: "/MasterAttachment/UpdateMasterAttachment",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(updateAttachmentDetails),
-        dataType: "json",
-        success: function (response) {
-            if (response.result == "success") {
-                driverId = $("#hdDriverId").val();
-                Saveattachment(driverId);
-            } else {
-                $("#dataDiv").html("Failed to update profile.");
-            }
-        },
-        error: function (xhr, status, error) {
-            $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-        }
-    });
-
-    var deletedAttachments = JSON.parse(sessionStorage.getItem('deletedAttachments')) || [];
-    $.each(deletedAttachments, function (index, value) {
-        DeleteAttachmentAPI(value);
-    });
 }
 function FormatDateForInput(dateString) {
     const date = new Date(dateString);
