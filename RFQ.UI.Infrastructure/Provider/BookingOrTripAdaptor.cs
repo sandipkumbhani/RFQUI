@@ -214,5 +214,24 @@ namespace RFQ.UI.Infrastructure.Provider
                 return Enumerable.Empty<BookingOrTripResponseDto>();
             }
         }
+
+        public async Task<IEnumerable<AutoFetchBookingResponseDto>> AutoFetchBooking(int id)
+        {
+            try
+            {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AutoFetchBooking + id}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
+                if (responseModel != null)
+                {
+                    var routeList = JsonConvert.DeserializeObject<IEnumerable<AutoFetchBookingResponseDto>>(Convert.ToString(responseModel.Data!));
+                    return routeList;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
