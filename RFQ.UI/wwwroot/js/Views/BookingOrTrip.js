@@ -439,7 +439,6 @@ function SaveBookingOrTrip(action) {
     };
     console.log(formData);
     if (action === "save") {
-
         $.ajax({
             url: saveUrl,
             type: 'POST',

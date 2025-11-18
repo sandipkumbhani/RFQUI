@@ -259,8 +259,8 @@ function CheckValidation() {
     });
 }
 function OnSubmitValidation() {
-    if (IsNullOrEmpty($("#txtFranchiseName").val()) || !/^[A-Za-z0-9 ]+$/.test($("#txtFranchiseName").val())) {
-        toastr.warning("Please enter a valid Franchise Name", "Validation Error");
+    if (IsNullOrEmpty($("#txtFranchiseName").val())) {
+        toastr.warning("Franchise Name is required.", "Validation Error");
         return false;
     }
     if (IsNullOrEmpty($("#from-search-box").val())) {
