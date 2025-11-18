@@ -81,8 +81,8 @@ function Initialization() {
         }
     });
     $("#txtCode").on("blur", function () {
-        if (IsNullOrEmpty($(this).val()) || !isAlphaNumeric($(this).val())) {
-            toastr.warning("Please enter a valid Location Code", "Validation Error");
+        if (IsNullOrEmpty($(this).val())) {
+            toastr.warning("Location Code is required.", "Validation Error");
             return;
         }
     })
@@ -311,8 +311,8 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid Location Name", "Validation Error");
         return false;
     }
-    if (IsNullOrEmpty($("#txtCode").val()) || !isAlphaNumeric($("#txtCode").val())) {
-        toastr.warning("Please enter a valid Location Code", "Validation Error");
+    if (IsNullOrEmpty($("#txtCode").val())) {
+        toastr.warning("Location Code is required.", "Validation Error");
         return;
     }
     if (IsNullOrEmpty($("#from-search-box").val())) {

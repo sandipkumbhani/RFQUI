@@ -283,10 +283,7 @@ function CreateDataTableIfNotExists(displayColumns) {
             info: true,
             lengthChange: false,
             pageLength: 10,
-            columnDefs: [
-                // { orderable: false, targets: [] } // all sortable
-                { orderable: false, targets: 'no-sort' }
-            ],
+            order: [],
             language: {
                 paginate: {
                     previous: '<i class="ri-arrow-left-s-line"></i>',
@@ -396,7 +393,6 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
         });
     }
     if (gridTableName == "franchiseTable") {
-        debugger
         response.data.forEach(item => {
             rowsHtml += `
         <tr>
