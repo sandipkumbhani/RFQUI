@@ -3,13 +3,6 @@ var orderDir = '';
 
 $(document).ready(function () {
 
-    $("#txtVehicleType").on("blur", function () {
-        if (!ValidateTextbox("#txtVehicleType")) {
-            toastr.warning("Please Enter a valid Vehicle Type!", "Validation Error");
-            return;
-        }
-    });
-
     $("#txtminKmsPerDay").on("blur", function () {
         if (IsNullOrEmpty($(this).val())) {
             toastr.warning("Please Enter a valid Minimum Kms/Day!", "Validation Error");
