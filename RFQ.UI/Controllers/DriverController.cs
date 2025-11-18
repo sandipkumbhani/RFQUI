@@ -52,7 +52,7 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile file)
         {
