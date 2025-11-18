@@ -574,7 +574,7 @@ function ValidationCheck() {
         }
     }
 
-    if (IsNullOrEmpty($("#txtCustomerName").val()) || !isAlphabets($("#txtCustomerName").val())) {
+    if (IsNullOrEmpty($("#txtCustomerName").val())) {
         toastr.warning("Please enter a valid CustomerName", "Validation Error");
         return false;
     }

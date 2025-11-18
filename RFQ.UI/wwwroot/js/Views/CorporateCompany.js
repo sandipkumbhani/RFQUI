@@ -147,7 +147,7 @@ function CheckValidation() {
 }
 function OnSubmitCheckValidation() {
 
-    if (IsNullOrEmpty($("#txtCompanyName").val()) || !/^[A-Za-z0-9 ]+$/.test($("#txtCompanyName").val())) {
+    if (IsNullOrEmpty($("#txtCompanyName").val())) {
         toastr.warning("Please enter a valid Corporate Company", "Validation Error");
         return false;
     }
