@@ -678,16 +678,13 @@ function DeleteRfq(rfqID) {
                     dataType: "json",
                     data: JSON.stringify(rfqID),
                     success: function (response) {
-                       
-                        if (response && response.issucsses) {
+                        if (response) {
                             debugger;
                             toastr.success("Rfq Details Deleted Successfully!");
                             addMasterUserActivityLog(0, LogType.Delete, "Rfq Details Deleted Successfully!", 0);
                             $('#currentPage').val(1);
                             $("#formDiv").addClass('d-none');
                             FetchRfqList();
-
-
                         } else {
                             toastr.warning("Cannot delete RFQ: referenced in RFQFinalization.");
                         }                        

@@ -23,7 +23,7 @@ namespace RFQ.UI.Controllers
         private readonly IWhatsAppService _whatsAppService;
         private readonly IEmailService _emailService;
         private readonly GlobalClass _globalClass;
-        
+
 
         public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices) : base(menuServices, globalClass)
         {
@@ -84,7 +84,7 @@ namespace RFQ.UI.Controllers
             {
                 List<RfqRecipientResponseDto> RfqRecipientsList = new();
                 List<RfqLinkRequestDto> RfqSendlinkList = new();
-                
+
                 if (requestForQouteRequestDto != null)
                 {
                     requestForQouteRequestDto.RfqRequestDto.CompanyId = _globalClass.CompanyId;
@@ -197,12 +197,9 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                bool result = await _requestForQuoteService.DeleteRfq(rfqId);
-                if (result)
+                var result = await _requestForQuoteService.DeleteRfq(rfqId);
+                return Json(result);
 
-                    return Json(new { Data = result, Issucsses = true });
-                else
-                    return Json(new { Data = result, Issucsses = false });
             }
             catch (Exception ex)
             {
