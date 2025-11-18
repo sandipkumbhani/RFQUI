@@ -69,7 +69,6 @@ $(document).ready(function () {
             $("#hdnIndentExpiryDate").val(selectedIndent.expiryDate);
         }
     });
-    FetchRfqList();
     UpdateRfq();
     GetAllLocation("ddlLocation", companyId, function () {
         if (profileId == EnumProfile.Branch) {
@@ -80,6 +79,7 @@ $(document).ready(function () {
     GetRfqType();
     GetRfqPriority();
     FetchRfqNo();
+    FetchRfqList();
     RenderFetchTable();
     SaveRfqVendorDetails();
     GetAllCustomer("ddlCustomerName", companyId);
@@ -678,13 +678,19 @@ function DeleteRfq(rfqID) {
                     dataType: "json",
                     data: JSON.stringify(rfqID),
                     success: function (response) {
-                        if (result.length > 0) {
-                            DeleteMasterAttachment(result[0].attachmentId);
-                        }
-                        toastr.success("Rfq Details Deleted Successfully!");
-                        addMasterUserActivityLog(0, LogType.Delete, "Rfq Details Deleted Successfully!", 0);
-                        $('#currentPage').val(1);
-                        FetchRfqList();
+                       
+                        if (response && response.issucsses) {
+                            debugger;
+                            toastr.success("Rfq Details Deleted Successfully!");
+                            addMasterUserActivityLog(0, LogType.Delete, "Rfq Details Deleted Successfully!", 0);
+                            $('#currentPage').val(1);
+                            $("#formDiv").addClass('d-none');
+                            FetchRfqList();
+
+
+                        } else {
+                            toastr.warning("Cannot delete RFQ: referenced in RFQFinalization.");
+                        }                        
                     },
                     error: function (xhr, status, error) {
                         toastr.error("Failed to Delete Rfq Details!", "Error");

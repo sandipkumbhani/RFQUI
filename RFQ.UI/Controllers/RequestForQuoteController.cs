@@ -197,15 +197,16 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var result = await _requestForQuoteService.DeleteRfq(rfqId);
+                bool result = await _requestForQuoteService.DeleteRfq(rfqId);
                 if (result)
-                    return Json(new { result = "success" });
+
+                    return Json(new { Data = result, Issucsses = true });
                 else
-                    return Json(new { result = "failure" });
+                    return Json(new { Data = result, Issucsses = false });
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                throw new Exception(ex.Message);
             }
         }
 

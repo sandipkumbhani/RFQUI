@@ -117,7 +117,7 @@ namespace RFQ.UI.Infrastructure.Provider
                     }
                     else
                     {
-                        return responseModel.Data.ToString();
+                        return null;
                     }
                 }
                 return "Failed to Delete VehicleIndent";

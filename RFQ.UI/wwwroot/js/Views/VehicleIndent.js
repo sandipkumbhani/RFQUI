@@ -445,7 +445,7 @@ function DeleteVehicleIndent(indentId) {
                         $('#currentPage').val(1);
                         FetchVehicleIndent();
                     } else {
-                        toastr.warning(response.data);
+                        toastr.warning("Cannot delete VehicleIndent: referenced in RFQ");
                     }
                 },
                 error: function () {

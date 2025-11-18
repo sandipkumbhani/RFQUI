@@ -225,15 +225,17 @@ namespace RFQ.UI.Infrastructure.Provider
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    return (bool)responseModel.Data;
+                    return true;
                 }
-                return false;
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error in DeleteRfq: " + ex.Message);
+                throw;
             }
-            return false;
         }
     }
 }
