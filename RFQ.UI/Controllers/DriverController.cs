@@ -66,7 +66,7 @@ namespace RFQ.UI.Controllers
                     {
                         Directory.CreateDirectory(uploadsFolder);
                     }
-                    uniqueFileName = DateTime.Now.ToString("dd-MM-yyyy") + "_" + file.FileName;
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + DateTime.Now.ToString("MM/dd/yyyy") + "_" + file.FileName;
                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
