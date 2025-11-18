@@ -31,7 +31,7 @@ $(document).ready(function () {
         $("#formDiv").css('display', 'block');
     });
     $('#tableDivLink').on('click', function (e) {
-        e.preventDefault(); 
+        e.preventDefault();
         FetchFranchise();
     });
 });
@@ -85,22 +85,17 @@ function Initialize() {
                         SaveFranchise(null, function (companyId) {
                             if (companyId > 0) {
                                 $('#franchiseForm')[0].reset();
-                                myDropzone.removeAllFiles();
+                                myDropzone.removeAllFiles(true);
                                 $('#ddlCity').val(null).trigger('change');
                                 $("#btnSaveFranchise").show();
                                 $("#btnUpdateFranchise").hide();
                                 $("#btnSavenewFranchise").show();
-                                setTimeout(() => {
-                                    ResetAttachmentRepeater();
-                                }, 1000);
+                                ResetAttachmentRepeater();
                             }
                         });
                     }
                 }
             });
-            if (dropzone.children.length > 2) {
-                dropzone.removeChild(dropzone.children[1]);
-            }
 
             $("#btnUpdateFranchise").on('click', function (event) {
                 isNewFranchise = false;
@@ -123,6 +118,9 @@ function Initialize() {
                 }
             });
 
+            if (dropzone.children.length > 2) {
+                dropzone.removeChild(dropzone.children[1]);
+            }
         },
         success: function (file, response) {
             if (isUpdateFranchise) {
@@ -316,7 +314,7 @@ function SaveFranchise(fileName, callback) {
     var emailId = $("#txtEmailId").val();
     var panNumber = $("#txtPanNumber").val();
     var gstNumber = $("#txtGstNumber").val();
-    var franchiseLogo = fileName ? fileName:"";
+    var franchiseLogo = fileName ? fileName : "";
     var companyId = 0;
     var saveUrl = '/Franchise/FranchiseSave'
     var formData = {
@@ -340,7 +338,7 @@ function SaveFranchise(fileName, callback) {
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function (response) {
-            if (response.statusCode==200) {
+            if (response.statusCode == 200) {
                 let companyId = response.data.companyId;
                 Saveattachment(companyId);
                 toastr.success("Franchise Details Submitted Successfully!");
@@ -368,7 +366,7 @@ function FetchFranchise() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
     $('#franchiseForm')[0].reset();
-    myDropzone.removeAllFiles();
+    myDropzone.removeAllFiles(true);
     $('#ddlCity').val(null).trigger('change');
     $("#btnSaveFranchise").show();
     $("#btnUpdateFranchise").hide();

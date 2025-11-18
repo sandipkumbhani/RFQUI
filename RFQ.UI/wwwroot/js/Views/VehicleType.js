@@ -43,7 +43,7 @@ $(document).ready(function () {
 
         $('th.sortable').not(this).data('order', 'asc');
 
-        FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+        FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), 'EditVehicleType', 'DeleteVehicleType', 'vehicleTypeId');
     });
     UpdateVechileType();
     FetchVehicleTypes();
@@ -68,12 +68,12 @@ function FetchVehicleTypes() {
 
 $('#vehicleTypesTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), 'EditVehicleType', 'DeleteVehicleType', 'vehicleTypeId');
 })
 
 $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
-    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), IsEdit, IsView, IsCancel);
+    FetchDataForTable('vehicleTypesTable', '/Vehicle/ViewVehicleType', orderColumn, orderDir.toUpperCase(), 'EditVehicleType', 'DeleteVehicleType', 'vehicleTypeId');
 });
 function SaveVehicleType(action) {
     if (OnSubmitValidation()) {
