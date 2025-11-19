@@ -802,16 +802,14 @@ function AutoFetch() {
         contentType: "application/json",
         success: function (response) {
 
-            // Directly use first item (no IF condition)
-            //let data = response[0];
             let data = response?.[0] || {};
-
 
             $('#from-search-box').val(data.fromLocation);
             $('#to-search-box').val(data.toLocation);
             $("#ddlVehicleNo").val(data.vehicleId).trigger('change');
             $("#ddlVehicleType").val(data.vehicleTypeId).trigger('change');
             $("#ddlDriverName").val(data.driverId).trigger('change');
+            $("#ddlCustomerName").val(data.partyId).trigger('change');
             $('#txtMobileNo').val(data.mobileNo);
         },
         error: function (xhr, status, error) {
