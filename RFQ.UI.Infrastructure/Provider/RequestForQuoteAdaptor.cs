@@ -192,23 +192,18 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<string> UpdateRfq(int rfqId, RequestForQuoteRequestDto requestForQuoteRequestDto)
+        public async Task<string?> UpdateRfq(int rfqId, RequestForQuoteRequestDto requestForQuoteRequestDto)
         {
             try
             {
                 var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateRfq + rfqId}";
                 var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, requestForQuoteRequestDto, _globalClass.Token);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return "Rfq Updated";
-                    else
-                        return responseModel.ErrorMessage;
-                }
-                return null;
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return Convert.ToString(responseModel.Data);
+                else
+                    throw new Exception(responseModel.ErrorMessage);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

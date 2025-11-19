@@ -556,6 +556,8 @@ function EditRfq(rfqID) {
         var attachmentData = list;
         $('#tableDiv').css('display', 'none');
         $("#formDiv").css('display', 'Block');
+        $("#btnSaveType").hide();
+        $("#btnSaveAndNew").hide();
         $("#button-main").css('display', 'Block');
         $("#vendorDetails-tab").prop('disabled', false);
         $("#previousQuotes-tab").prop('disabled', false);
@@ -625,13 +627,20 @@ function UpdateRfq() {
             SpecialInstruction: $('#txtSpecialInstructions').val(),
             LinkId: parseInt(GetQueryParam("LinkId"))
         };
-        const recipientFormData = []
+        const recipientFormData = fetchedVendorDataList.map(vendor => ({
+            VendorId: vendor.partyId,
+            PanNo: vendor.panNo,
+            VendorRating: "5",
+            MobNo: vendor.mobNo,
+            WhatsAppNo: vendor.whatsAppNo,
+            EmailId: vendor.email
+        }));
         var formData = {
             RfqRequestDto: rfqFormData,
             RfqRecipients: recipientFormData
         }
 
-        DeleteAttachmentAPI(formData.rfqFormData.RfqId);
+        DeleteAttachmentAPI(formData.RfqRequestDto.RfqId);
         var updateRfq = '/RequestForQuote/UpdateRfq';
         $.ajax({
             type: "PUT",
@@ -640,14 +649,12 @@ function UpdateRfq() {
             data: JSON.stringify(formData),
             dataType: "json",
             success: function (result) {
-                if (result.result === "success") {
-                    toastr.success("Rfq Details Updated Successfully!");
+                if (!IsNullOrEmpty(result)) {
+                    toastr.success(result);
                     addMasterUserActivityLog(0, LogType.Update, "Rfq Details Updated Successfully!", 0);
                     const transactionId = $("#txtRfqDetailsId").val();
                     UpdateAttachmentData(transactionId);
                     FetchRfqList();
-                } else {
-                    toastr.error("Failed to Update Rfq Details", "Error");
                 }
             },
             error: function (xhr, status, error) {
@@ -687,7 +694,7 @@ function DeleteRfq(rfqID) {
                             FetchRfqList();
                         } else {
                             toastr.warning("Cannot delete RFQ: referenced in RFQFinalization.");
-                        }                        
+                        }
                     },
                     error: function (xhr, status, error) {
                         toastr.error("Failed to Delete Rfq Details!", "Error");
@@ -716,7 +723,7 @@ function FetchRfqList() {
     //});
     FetchRfqNo();
     ResetAttachmentRepeater();
-    FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), 'EditRfq', 'DeleteRfq','rfqID');
+    FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), 'EditRfq', 'DeleteRfq', 'rfqID');
 }
 
 $('#rfqTableSearch').off('keyup').on('keyup', function () {

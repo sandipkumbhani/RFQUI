@@ -182,13 +182,13 @@ namespace RFQ.UI.Controllers
                 requestForQuoteRequestDto.RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 var result = await _requestForQuoteService.UpdateRfq(rfqId, requestForQuoteRequestDto);
                 if (result != null)
-                    return Json(new { result = "success" });
+                    return Json(result);
                 else
-                    return Json(new { result = "failure" });
+                    throw new Exception("RFQ Not Updated");
             }
             catch (Exception ex)
             {
-                return Json(new { result = "Error", message = ex.Message });
+                return Json(ex);
             }
         }
 
