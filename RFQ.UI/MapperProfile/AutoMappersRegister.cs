@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RFQ.UI.Domain.RequestDto;
+using RFQ.UI.Domain.ResponseDto;
 
 namespace RFQ.UI.MapperProfile
 {
@@ -9,6 +10,8 @@ namespace RFQ.UI.MapperProfile
         {
             CreateMap<object, CorporateCompanyRequestDto>();
             CreateMap<object, DriverRequestDto>();
+            CreateMap<RfqRecipientResponseDto, RfqRecipientRequestDto>();
+            CreateMap<RfqRecipientRequestDto, RfqRecipientResponseDto>();
         }
     }
 }

@@ -1041,10 +1041,10 @@ function formatDate(dateString) {
     return `${day} /${month}/${year} ${hours}:${minutes}:${seconds} `;
 }
 function showLoader() {
-    document.getElementById("loader").style.display = "block";
+    $("#loader").removeClass('d-none');
 }
 function hideLoader() {
-    document.getElementById("loader").style.display = "none";
+    $("#loader").addClass('d-none');
 }
 function exportToCSV(filename, rows) {
     let csvContent = rows.map(row =>

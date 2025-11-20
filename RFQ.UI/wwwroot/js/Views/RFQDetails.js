@@ -33,6 +33,8 @@ $(document).ready(function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
         $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
+        const rfqDetailsTab = document.getElementById("rfqDetails-tab");
+        rfqDetailsTab.click();
     });
     $('#tableDivLink').on('click', function (e) {
         e.preventDefault();
@@ -541,7 +543,10 @@ function SaveAndSaveNew(action) {
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Submit Request For Quote.", "Error");
-            }
+            },
+            complete: function () {
+                hideLoader();
+            },
         });
     }
 }
@@ -587,10 +592,13 @@ function EditRfq(rfqID) {
             EditMasterAttachment(attachmentData);
         }
     });
+    const rfqDetailsTab = document.getElementById("rfqDetails-tab");
+    rfqDetailsTab.click();
 }
 function UpdateRfq() {
     $("#btnUpdateRfq").on('click', function (e) {
         e.preventDefault();
+        showLoader();
         var isvalid = OnSubmitCheckValidation();
         if (!isvalid) {
             return;
@@ -659,7 +667,10 @@ function UpdateRfq() {
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Update Rfq Details", "Error");
-            }
+            },
+            complete: function () {
+                hideLoader();
+            },
         });
     });
 }

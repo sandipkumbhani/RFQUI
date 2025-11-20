@@ -15,5 +15,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _rfqRecipientAdaptor.AddRfqRecipient(rfqRecipientRequestDtos);
         }
+        public async Task<bool> UpdateRfqRecipient(int rfqId,List<RfqRecipientRequestDto> rfqRecipientRequestDtos)
+        {
+            return await _rfqRecipientAdaptor.UpdateRfqRecipient(rfqId,rfqRecipientRequestDtos);
+        }
     }
 }

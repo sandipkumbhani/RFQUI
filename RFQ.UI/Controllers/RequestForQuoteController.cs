@@ -12,6 +12,8 @@ using System.Text;
 using RFQ.UI.Application.Provider;
 using RFQ.UI.Infrastructure.Provider;
 using RFQ.UI.Domain.Enum;
+using System.Numerics;
+using AutoMapper;
 
 namespace RFQ.UI.Controllers
 {
@@ -23,9 +25,11 @@ namespace RFQ.UI.Controllers
         private readonly IWhatsAppService _whatsAppService;
         private readonly IEmailService _emailService;
         private readonly GlobalClass _globalClass;
+        private readonly IRfqRecipientService _rfqRecipientService;
+        private readonly IMapper _mapper;
 
 
-        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices) : base(menuServices, globalClass)
+        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices, IRfqRecipientService rfqRecipientService, IMapper mapper) : base(menuServices, globalClass)
         {
             _requestForQuoteService = requestForQuoteService;
             _logger = logger;
@@ -33,6 +37,8 @@ namespace RFQ.UI.Controllers
             _whatsAppService = whatsAppService;
             _emailService = emailService;
             _globalClass = globalClass;
+            _rfqRecipientService = rfqRecipientService;
+            _mapper = mapper;
         }
         public async Task<ActionResult> VendorRequest()
         {
@@ -168,6 +174,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
+                List<RfqLinkRequestDto> RfqSendlinkList = new();
                 if (requestForQuoteRequestDto.RfqRequestDto.RfqId <= 0)
                 {
                     return Json(new { result = "error", message = "Invalid RfqId." });
@@ -181,10 +188,43 @@ namespace RFQ.UI.Controllers
                 requestForQuoteRequestDto.RfqRequestDto.CreatedBy = Convert.ToInt32(userid);
                 requestForQuoteRequestDto.RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
                 var result = await _requestForQuoteService.UpdateRfq(rfqId, requestForQuoteRequestDto);
+
                 if (result != null)
+                {
+                    bool updatecheck = await _rfqRecipientService.UpdateRfqRecipient(rfqId, requestForQuoteRequestDto.RfqRecipients);
+                    if (updatecheck)
+                    {
+
+                        foreach (var item in requestForQuoteRequestDto.RfqRecipients)
+                        {
+                            var body = new
+                            {
+                                VendorId = item.VendorId,
+                                RfqId = rfqId
+                            };
+                            string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", body, Request.Scheme) ?? string.Empty;
+                            var vendor = _mapper.Map<RfqRecipientResponseDto>(item);
+                            bool check = await SendEmail(vendor, formLink);
+                            if (check)
+                            {
+                                RfqSendlinkList.Add(new RfqLinkRequestDto
+                                {
+                                    RfqId = vendor.RfqId,
+                                    VendorId = vendor.VendorId,
+                                    CreatedBy = _globalClass.UserId,
+                                    SharedLink = formLink,
+                                    CreatedOn = DateTime.UtcNow
+                                });
+                                bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
+                            }
+                        }
+                    }
                     return Json(result);
+                }
                 else
+                {
                     throw new Exception("RFQ Not Updated");
+                }
             }
             catch (Exception ex)
             {

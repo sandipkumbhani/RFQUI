@@ -57,7 +57,7 @@ namespace RFQ.UI.Infrastructure.Provider
             return null;
         }
 
-        public async Task<IEnumerable<Domain.ResponseDto.CompanyMasterPackingTypeResponseDto>> GetAllMasterPackingType()
+        public async Task<IEnumerable<CompanyMasterPackingTypeResponseDto>> GetAllMasterPackingType()
         {
             try
             {

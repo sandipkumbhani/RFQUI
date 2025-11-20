@@ -103,6 +103,7 @@ namespace RFQ.UI.Domain.Model
         public string? GetAllVendorList { get; set; }
         public string? GetAllDelivery { get; set; }
         public string? AutoFetchBooking { get; set; }
+        public string? UpdateRfqRecipient { get; set; }
 
 
 
@@ -237,7 +238,8 @@ namespace RFQ.UI.Domain.Model
                 GetAllVehicleTypeList = vehicleTypeSection["GetAllVehicleTypeList"],
                 UpdateMasterParty = customerSection["UpdateMasterParty"],
                 GetAllDelivery = deliverySection["GetAllDelivery"],
-                AutoFetchBooking = bookingOrTripSection["AutoFetchBooking"]
+                AutoFetchBooking = bookingOrTripSection["AutoFetchBooking"],
+                UpdateRfqRecipient = rfqRecipientSection["UpdateRfqRecipient"]
             };
         }
     }

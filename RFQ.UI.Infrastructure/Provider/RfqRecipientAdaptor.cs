@@ -42,5 +42,18 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+        public async Task<bool> UpdateRfqRecipient(int rfqid,List<RfqRecipientRequestDto> rfqRecipientRequestDtos)
+        {
+            try
+            {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateRfqRecipient + rfqid}";
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, rfqRecipientRequestDtos, _globalClass.Token);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }
