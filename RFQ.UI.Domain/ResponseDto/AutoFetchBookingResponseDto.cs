@@ -17,6 +17,7 @@ namespace RFQ.UI.Domain.ResponseDto
         public string IndentNo { get; set; }
         public string FromLocation { get; set; }
         public string ToLocation { get; set; }
+        public int PartyId { get; set; }
         public int VehicleTypeId { get; set; }
     }
 }
