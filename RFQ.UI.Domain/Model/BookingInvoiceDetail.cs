@@ -8,6 +8,8 @@ namespace RFQ.UI.Domain.Model
 {
     public class BookingInvoiceDetail
     {
+        public int BookingInvoiceId { get; set; }
+        public int? BookingId { get; set; }
         public string? InvoiceNo { get; set; }
 
         public DateTime? InvoiceDate { get; set; }

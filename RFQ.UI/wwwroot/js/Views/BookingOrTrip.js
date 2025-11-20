@@ -739,6 +739,7 @@ function btnAddInvoiceClick() {
             return;
         }
         additionalInvoiceList.push({
+            BookingId: 0,
             InvoiceNo: tfInvoiceNo,
             InvoiceDate: tfInvoiceDate,
             InvoiceValue: tfInvoiceValue,
