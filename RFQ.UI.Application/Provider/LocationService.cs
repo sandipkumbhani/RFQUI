@@ -13,7 +13,7 @@ namespace RFQ.UI.Application.Provider
         {
             _locationAdaptor = locationAdaptor;
         }
-        public async Task<string> AddLocation(LocationRequestDto locationRequestDto)
+        public async Task<bool> AddLocation(LocationRequestDto locationRequestDto)
         {
             return await _locationAdaptor.AddLocation(locationRequestDto);
         }
@@ -21,7 +21,7 @@ namespace RFQ.UI.Application.Provider
         {
             return _locationAdaptor.DeleteLocation(LocationId);
         }
-        public Task<string> EditLocation(int LocationId, LocationRequestDto locationRequestDto)
+        public Task<bool> EditLocation(int LocationId, LocationRequestDto locationRequestDto)
         {
             return _locationAdaptor.EditLocation(LocationId, locationRequestDto);
         }

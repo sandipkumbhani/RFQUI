@@ -7,8 +7,8 @@ namespace RFQ.UI.Domain.Interfaces
     public interface ILocationAdaptor
     {
         Task<PageList<LocationResponseDto>?> GetAllLocation(PagingParam pagingParam);
-        Task<string> AddLocation(LocationRequestDto locationRequestDto);
-        Task<string> EditLocation(int LocationId, LocationRequestDto locationRequestDto);
+        Task<bool> AddLocation(LocationRequestDto locationRequestDto);
+        Task<bool> EditLocation(int LocationId, LocationRequestDto locationRequestDto);
         Task<string> DeleteLocation(int LocationId);
         Task<IEnumerable<LocationResponseDto>> GetAllLocationList(int companyId);
     }

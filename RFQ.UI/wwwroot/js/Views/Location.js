@@ -148,10 +148,7 @@ function SaveLocation(action) {
             dataType: "json",
             data: JSON.stringify(formdata),
             success: function (response) {
-                if (response == "Location Already Exists") {
-                    toastr.warning("This location already exists for the selected company.", "Warning");
-                }
-                else if (response == "Location Saved") {
+                if (response) {
                     toastr.success("Location Details Submitted Successfully!");
                     addMasterUserActivityLog(0, LogType.Create, "Location Details Submitted Successfully!", 0);
                     if (typeof this.completeOnSuccess === "function") {
@@ -162,8 +159,13 @@ function SaveLocation(action) {
                     toastr.error("Failed to Submit Location Details", "Error");
                 }
             },
-            error: function (req, status, error) {
-                toastr.error("Failed to Submit Location Details", "Error");
+            error: function (xhr, status, error) {
+                if (xhr.status == 409) {
+                    toastr.warning(xhr.responseText, "Already exists");
+                }
+                else {
+                    toastr.error("Failed to Submit Location Details!");
+                }
             },
             completeOnSuccess: function () {
                 FetchLocationList();
@@ -178,10 +180,7 @@ function SaveLocation(action) {
             dataType: "json",
             data: JSON.stringify(formdata),
             success: function (response) {
-                if (response == "Location Already Exists") {
-                    toastr.warning("This location already exists for the selected company.", "Warning");
-                }
-                else if (response == "Location Saved") {
+                if (response) {
                     toastr.success("Location Details Submitted Successfully!");
                     addMasterUserActivityLog(0, LogType.Create, "Location Details Submitted Successfully!", 0);
                     $('#LocationForm')[0].reset();
@@ -192,7 +191,10 @@ function SaveLocation(action) {
                 }
             },
             error: function (req, status, error) {
-                toastr.error("Failed to Submit Location Details", "Error");
+                if (xhr.status == 409)
+                    toastr.warning(xhr.responseText, "Already exists");
+                else
+                    toastr.error("Failed to Submit Location Details!");
             }
         });
     }
@@ -226,7 +228,7 @@ function UpdateLocation() {
             data: JSON.stringify(locationmodel),
             dataType: "json",
             success: function (result) {
-                if (result.result == "success") {
+                if (result) {
                     FetchLocationList();
                     toastr.success("Location Details Updated Successfully!");
                     addMasterUserActivityLog(0, LogType.Update, "Location Details Updated Successfully!", 0);
@@ -242,7 +244,12 @@ function UpdateLocation() {
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Update Location Details!", "Error");
+                if (xhr.status == 409) {
+                    toastr.warning(xhr.responseText, "Already exists");
+                }
+                else {
+                    toastr.error("Failed to Update Location Details!");
+                }
             }
         });
     });
