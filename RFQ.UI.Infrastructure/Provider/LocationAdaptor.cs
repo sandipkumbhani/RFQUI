@@ -27,21 +27,16 @@ namespace RFQ.UI.Infrastructure.Provider
             _commonApiAdaptor = commonApiAdaptor;
 
         }
-        public async Task<string> AddLocation(LocationRequestDto locationRequestDto)
+        public async Task<bool> AddLocation(LocationRequestDto locationRequestDto)
         {
             try
             {
                 var baseUrl = _appSettings.BaseUrl + _appSettings.AddLocation;
                 var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, locationRequestDto, _globalClass.Token);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return responseModel.Data.ToString();
-                    else
-                        return responseModel.ErrorMessage;
-                }
-                return string.Empty;
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return true;
+                else
+                    return false;
             }
             catch (Exception)
             {
@@ -74,21 +69,16 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<string> EditLocation(int LocationId, LocationRequestDto locationRequestDto)
+        public async Task<bool> EditLocation(int LocationId, LocationRequestDto locationRequestDto)
         {
             try
             {
                 var baseUrl = $"{_appSettings.BaseUrl + _appSettings.Updatelocation + LocationId}";
                 var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, locationRequestDto, _globalClass.Token);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return "location Updated...";
-                    else
-                        return responseModel.ErrorMessage;
-                }
-                return "Failed to Update location ";
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return true;
+                else
+                    return false;
             }
             catch (Exception)
             {

@@ -81,21 +81,16 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyRequestDto)
+        public async Task<bool> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyRequestDto)
         {
             try
             {
                 var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateCompany + companyId}";
                 var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, corporateCompanyRequestDto, _globalClass.Token);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return "Corporate Company Updated";
-                    else
-                        return responseModel.ErrorMessage;
-                }
-                return "Failed to update Corporate Company";
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return true;
+                else
+                    return false;
             }
             catch (Exception)
             {

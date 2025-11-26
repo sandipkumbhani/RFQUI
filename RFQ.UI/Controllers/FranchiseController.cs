@@ -82,7 +82,7 @@ namespace RFQ.UI.Controllers
             try
             {
                 if (franchiseRequestDto == null)
-                    return Json(new NewCommonResponseDto { StatusCode = 500, Message = "Somthing Went Wrong" });
+                    throw new Exception("Invalid RequestDto");
 
                 franchiseRequestDto.CompanyTypeId = (int)EnumInternalMaster.FRANCHISE;
                 franchiseRequestDto.ParentCompanyId = _globalClass.CompanyId;
@@ -91,17 +91,15 @@ namespace RFQ.UI.Controllers
                 franchiseRequestDto.CreatedOn = DateTime.Now;
                 franchiseRequestDto.UpdatedOn = DateTime.Now;
                 franchiseRequestDto.StatusId = (int)EStatus.IsActive;
-
                 var result = await _fanchiseService.AddFranchise(franchiseRequestDto);
-                if (result == null)
-                {
-                    return Json(new NewCommonResponseDto { StatusCode = 409, Message = "Franchise Already Exist" });
-                }
-                return Json(new NewCommonResponseDto { StatusCode = 200, Data = result });
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(new NewCommonResponseDto { StatusCode = 500, Message = ex.Message });
+                if (ex.Message.Contains("409"))
+                    return Conflict("Franchise already exists");
+                else
+                    return StatusCode(500, "Internal Server Error");
             }
         }
 
@@ -138,6 +136,9 @@ namespace RFQ.UI.Controllers
         {
             try
             {
+                if (franchiseRequestDto == null)
+                    throw new Exception("Invalid RequestDto");
+
                 franchiseRequestDto.CompanyTypeId = (int)EnumInternalMaster.FRANCHISE;
                 franchiseRequestDto.ParentCompanyId = _globalClass.CompanyId;
                 franchiseRequestDto.CreatedBy = _globalClass.UserId;
@@ -146,14 +147,14 @@ namespace RFQ.UI.Controllers
                 franchiseRequestDto.UpdatedOn = DateTime.Now;
 
                 var result = await _fanchiseService.EditFranchise(franchiseRequestDto.CompanyId, franchiseRequestDto);
-                if (result != null)
-                    return Json(new { result = "Success" });
-                else
-                    return Json(new { result = "Failed" });
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                if (ex.Message.Contains("409"))
+                    return Conflict("Franchise already exists");
+                else
+                    return StatusCode(500, "Internal Server Error");
             }
         }
 

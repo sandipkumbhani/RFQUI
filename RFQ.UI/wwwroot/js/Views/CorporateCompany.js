@@ -41,7 +41,7 @@ $(document).ready(function () {
         }
     });
     ButtonUpdateClick();
-   
+
 });
 
 $('#btnAdd').click(function () {
@@ -250,7 +250,7 @@ function ButtonUpdateClick() {
 
             var formData = {
                 CompanyId: $("#txtCompanyId").val(),
-                CompanyName: $("#txtCompanyName").val(),
+                CompanyName: $("#txtCompanyName").val().trim(),
                 MobNo: $("#txtMobileNumber").val(),
                 ContactNo: $("#txtContactNumber").val(),
                 AddressLine: $("#from-search-box").val(),
@@ -274,7 +274,7 @@ function ButtonUpdateClick() {
                 data: JSON.stringify(formData),
                 dataType: "json",
                 success: function (result) {
-                    if (result.result == "success") {
+                    if (!IsNullOrEmpty(result)) {
                         toastr.success("Corporate Company Details Updated Successfully!");
                         addMasterUserActivityLog(0, LogType.Update, "Corporate Company Details Updated Successfully", 0);
                         $("#formDiv").css('display', 'none');
@@ -287,13 +287,13 @@ function ButtonUpdateClick() {
                         $("#btnupdate").hide();
                         $("#btnsaveandnew").show();
                         $("#btnSaveCompanyType").show();
-
-                    } else {
-                        toastr.error("Failed to Update Corporate Company Details!", "Error");
-                    }
+                    } 
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Failed to Update Corporate Company Details!", "Error");
+                    if (xhr.status == 409)
+                        toastr.warning(xhr.responseText, "Already exists");
+                    else
+                        toastr.error(xhr.responseText);
                 }
             });
         }
@@ -360,7 +360,7 @@ function SaveCorporateCompany(action) {
     var saveUrl = '/CorporateCompany/CorporateCompanySave';
     var formData = {
         LinkId: linkid,
-        CompanyName: companyName,
+        CompanyName: companyName.trim(),
         MobNo: mobileNumber,
         ContactNo: contactNumber,
         AddressLine: address,
@@ -381,8 +381,8 @@ function SaveCorporateCompany(action) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response.statusCode == 200) {
-                    let companyId = response.data.companyId;
+                if (!IsNullOrEmpty(response)) {
+                    let companyId = response.companyId;
                     if (companyId != null) {
                         Saveattachment(companyId);
                         toastr.success("Corporate Company Details Submitted Successfully");
@@ -391,16 +391,13 @@ function SaveCorporateCompany(action) {
                             this.completeOnSuccess();
                         }
                     }
-                    else {
-                        toastr.error("Failed to Submit Corporate Company Details!", "Error");
-                    }
-                }
-                else {
-                    toastr.warning(response.message);
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Submit Corporate Company Details!");
+                if (xhr.status == 409)
+                    toastr.warning(xhr.responseText, "Already exists");
+                else
+                    toastr.error(xhr.responseText);
             },
             completeOnSuccess: function () {
                 FetchCorporateCompany();
@@ -414,8 +411,8 @@ function SaveCorporateCompany(action) {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response.statusCode == 200) {
-                    let companyId = response.data.companyId;
+                if (!IsNullOrEmpty(response)) {
+                    let companyId = response.companyId;
                     Saveattachment(companyId);
                     toastr.success("Corporate Company Details Submitted Successfully");
                     addMasterUserActivityLog(0, LogType.Create, "Corporate Company Details Submitted Successfully", 0);
@@ -426,12 +423,12 @@ function SaveCorporateCompany(action) {
                         ResetAttachmentRepeater();
                     }, 1000);
                 }
-                else {
-                    toastr.error(response.message);
-                }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Submit Corporate Company Details!");
+                if (xhr.status == 409)
+                    toastr.warning(xhr.responseText, "Already exists");
+                else
+                    toastr.error(xhr.responseText);
             }
         });
     }
@@ -483,11 +480,11 @@ function EditCorporateCompany(companyId) {
         }
     });
 }
-function ViewCorporateCompany(companyId) {
-    EditCorporateCompany(companyId);
-    $('#CompanyTypeForm').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnupdate").addClass('d-none');
-}
+//function ViewCorporateCompany(companyId) {
+//    EditCorporateCompany(companyId);
+//    $('#CompanyTypeForm').find('input, select, textarea, button, a').prop('disabled', true);
+//    $("#btnupdate").addClass('d-none');
+//}
 function GetFranchiseAndCorporateName() {
     var GetUrl = '/Home/GetAllCompanyAndFranchise';
     $.ajax({

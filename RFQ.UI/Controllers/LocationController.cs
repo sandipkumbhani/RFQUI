@@ -41,12 +41,15 @@ namespace RFQ.UI.Controllers
                 }
                 else
                 {
-                    return Json("fail");
+                    return Json(false);
                 }
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                if (ex.Message.Contains("409"))
+                    return Conflict("Location name or code already exists");
+                else
+                    throw;
             }
         }
 
@@ -106,14 +109,14 @@ namespace RFQ.UI.Controllers
                 locationRequestDto.UpdatedBy = _globalClass.UserId;
                 locationRequestDto.CompanyId = _globalClass.CompanyId;
                 var result = await _locationService.EditLocation(locationId, locationRequestDto);
-                if (result != null)
-                    return Json(new { result = "success" });
-                else
-                    return Json(new { result = "failure" });
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                if (ex.Message.Contains("409"))
+                    return Conflict("Location name or code already exists");
+                else
+                    throw;
             }
         }
 

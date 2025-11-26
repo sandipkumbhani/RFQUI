@@ -47,12 +47,9 @@ namespace RFQ.UI.Infrastructure.Provider
             catch (Exception ex)
             {
                 _logger.LogInformation("API Error : " + ex.Message);
-                _logger.LogInformation("API Error Inner Exception: " + ex.InnerException);
-                _logger.LogInformation("========================================================================================================");
-                _logger.LogInformation("\n\n");
+                _logger.LogInformation("API Error Inner Exception: " + ex.InnerException + "\n\n");
                 throw new Exception(ex.Message);
             }
-            return null;
         }
 
         public class ResponseToken
