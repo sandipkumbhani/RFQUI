@@ -10,7 +10,7 @@ namespace RFQ.UI.Application.Interface
 
         Task<PageList<CorporateCompanyResponseDto>> GetCorporateCompanyAll(PagingParam pagingParam);
 
-        Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyRequestDto);
+        Task<bool> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyRequestDto);
 
         Task<string> DeleteCorporateCompany(int companyId);
 

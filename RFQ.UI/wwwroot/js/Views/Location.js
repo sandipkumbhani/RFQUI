@@ -190,7 +190,7 @@ function SaveLocation(action) {
                     toastr.error("Failed to Submit Location Details", "Error");
                 }
             },
-            error: function (req, status, error) {
+            error: function (xhr, status, error) {
                 if (xhr.status == 409)
                     toastr.warning(xhr.responseText, "Already exists");
                 else

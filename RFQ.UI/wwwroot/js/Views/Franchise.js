@@ -318,7 +318,7 @@ function SaveFranchise(fileName, callback) {
     var companyId = 0;
     var saveUrl = '/Franchise/FranchiseSave'
     var formData = {
-        CompanyName: franchiseName,
+        CompanyName: franchiseName.trim(),
         AddressLine: franchiseAddress,
         CityId: franchiseCity,
         PinCode: franchisePincode,
@@ -338,23 +338,22 @@ function SaveFranchise(fileName, callback) {
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function (response) {
-            if (response.statusCode == 200) {
-                let companyId = response.data.companyId;
+            if (!IsNullOrEmpty(response)) {
+                let companyId = response.companyId;
                 Saveattachment(companyId);
                 toastr.success("Franchise Details Submitted Successfully!");
                 addMasterUserActivityLog(0, LogType.Create, "Franchise Details Submitted Successfully!", 0);
                 if (typeof callback === "function") {
                     callback(companyId);
                 }
-            } else {
-                toastr.warning(response.message);
-                if (typeof callback === "function") {
-                    callback(null);
-                }
-            }
+            } 
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Submit Franchise Details!", "Error");
+            if (xhr.status == 409)
+                toastr.warning(xhr.responseText, "Already exists");
+            else
+                toastr.error(xhr.responseText);
+
             if (typeof callback === "function") {
                 callback(null);
             }
@@ -464,19 +463,19 @@ function UpdateFranchise(fileName) {
         data: JSON.stringify(formData),
         dataType: "json",
         success: function (response) {
-            if (response.result == "Success") {
+            if (!IsNullOrEmpty(response)) {
                 toastr.success("Franchise Details Updated Successfully!");
                 addMasterUserActivityLog(0, LogType.Update, "Franchise Details Updated Successfully!", 0);
                 const transactionId = $("#hdnCompanyId").val();
                 UpdateAttachmentData(transactionId);
                 FetchFranchise();
             }
-            else {
-                toastr.error("Failed to Update Franchise Details!", "Error");
-            }
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Update Franchise Details!", "Error");
+            if (xhr.status == 409)
+                toastr.warning(xhr.responseText, "Already exists");
+            else
+                toastr.error(xhr.responseText);
         }
     });
     if (fileName) {

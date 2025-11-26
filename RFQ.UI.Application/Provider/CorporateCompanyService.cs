@@ -26,7 +26,7 @@ namespace RFQ.UI.Application.Provider
             return _corporateCompanyAdaptor.DeleteCorporateCompany(companyId);
         }
 
-        public Task<string> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyRequestDto)
+        public Task<bool> EditCorporateCompany(int companyId, CorporateCompanyRequestDto corporateCompanyRequestDto)
         {
             return _corporateCompanyAdaptor.EditCorporateCompany(companyId, corporateCompanyRequestDto);
         }

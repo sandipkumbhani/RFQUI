@@ -33,7 +33,7 @@ namespace RFQ.UI.Controllers
             try
             {
                 if (corporateCompanyRequestDto == null)
-                    return Json(new NewCommonResponseDto { StatusCode = 500, Message = "Somthing Went Wrong" });
+                    throw new Exception("Invalid RequestDto");
 
                 corporateCompanyRequestDto.LogoImage = "null";
                 corporateCompanyRequestDto.CreatedBy = _globalClass.UserId;
@@ -41,15 +41,14 @@ namespace RFQ.UI.Controllers
                 corporateCompanyRequestDto.StatusId = (int)EStatus.IsActive;
 
                 var result = await _corporateCompanyService.AddCorporateCompany(corporateCompanyRequestDto);
-                if (result == null)
-                {
-                    return Json(new NewCommonResponseDto { StatusCode = 409, Message = "Corporate Company Already Exist"});
-                }
-                return Json(new NewCommonResponseDto { StatusCode = 200, Data = result });
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(new NewCommonResponseDto { StatusCode = 500, Message = ex.Message });
+                if (ex.Message.Contains("409"))
+                    return Conflict("CorporateCompany already exists");
+                else
+                    return StatusCode(500, "Internal Server Error");
             }
         }
 
@@ -64,14 +63,14 @@ namespace RFQ.UI.Controllers
                 corporateCompanyRequestDto.UpdatedBy = _globalClass.UserId;
 
                 var result = await _corporateCompanyService.EditCorporateCompany(companyId, corporateCompanyRequestDto);
-                if (result != null)
-                    return Json(new { result = "success" });
-                else
-                    return Json(new { result = "failure" });
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                if (ex.Message.Contains("409"))
+                    return Conflict("CorporateCompany already exists");
+                else
+                    return StatusCode(500, "Internal Server Error");
             }
         }
 

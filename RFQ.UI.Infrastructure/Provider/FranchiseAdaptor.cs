@@ -38,7 +38,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 else
                     return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
