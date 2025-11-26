@@ -33,7 +33,9 @@ namespace RFQ.UI.Infrastructure.Provider
 
         public async Task<T?> PostAsync<T>(string url, object data, string? token = null)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, url)
+            try
+            {
+                 var request = new HttpRequestMessage(HttpMethod.Post, url)
             {
                 Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
             };
@@ -43,6 +45,12 @@ namespace RFQ.UI.Infrastructure.Provider
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(content);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+           
         }
 
         public async Task<T?> PutAsync<T>(string url, object data, string? token = null)

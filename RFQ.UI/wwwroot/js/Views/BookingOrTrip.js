@@ -395,48 +395,65 @@ function SaveBookingOrTrip(action) {
     var saveUrl = '/BookingOrTrip/AddBookingOrTrip';
     var consignorResult = GetDropdownValue("ddlConsignorInput");
     var consigneeResult = GetDropdownValue("ddlConsigneeInput");
+
+    const today = formatDate(new Date());
     const formData = {
-        BookingNo: $('#ddlLrNo').val(),
-        LocationId: $('#ddlLocation').val(),
-        BookingDate: $('#lrDate').val(),
-        PlacementId: $('#ddlPlacementNo').val(),
-        EWayBillStateId: $('#ddlBillState').val(),
-        BusinessVerticalId: $('#ddlBusinessVertical').val(),
-        EWayBillNo: $('#txtBillNo').val(),
-        FromLocation: $('#from-search-box').val(),
-        FromLatitude: $('#fromLat').val(),
-        FromLongitude: $('#fromLng').val(),
-        ToLocation: $('#to-search-box').val(),
-        ToLatitude: $('#toLat').val(),
-        ToLongitude: $('#toLng').val(),
-        PartyId: $('#ddlCustomerName').val(),
-        VehicleNo: $('#ddlVehicleNo option:selected').text(),
-        VehicleTypeId: $('#ddlVehicleType').val(),
-        DriverId: $('#ddlDriverName').val(),
-        DriverName: $('#ddlDriverName option:selected').text(),
-        DriverMobNo: $('#txtMobileNo').val(),
-        TrackingTypeId: $('#ddlTrackingType').val(),
-        InvoiceNo: $('#invoiceNo').val(),
-        InvoiceDate: $('#invoiceDate').val() ? $('#invoiceDate').val() : null,
-        InvoiceValue: $('#txtInvoiceValue').val(),
-        //EWayBillNo: $('#txtEwayBillNo').val(), //
-        EWayBillDate: $('#ewayBillDate').val() ? $('#ewayBillDate').val() : null,
-        EWayBillExpiryDate: $('#expiryDate').val() ? $('#expiryDate').val() : null,
-        ConsignerId: consignorResult.id,
-        ConsignerName: consignorResult.name,
-        ConsigneeId: consigneeResult.id,
-        ConsigneeName: consigneeResult.name,
-        TransitDays: $('#txtTransitDays').val(),
-        EDD: $('#eddDate').val() ? $('#eddDate').val() : null,
-        ItemId: $('#ddlItemName').val(),
-        PackingTypeId: $('#ddlPackingType').val(),
-        TotalPacket: $('#txtTotalPkgs').val(),
-        ActualWeight: $('#txtActualWt').val(),
-        ChargedWeight: $('#txtChargedWt').val(),
-        TotalFreight: $('#txtTotalFreight').val(),
-        LinkId: GetQueryParam("LinkId"),
-        BookingInvoiceDetailList: additionalInvoiceList
+        BookingId: 0,
+        BookingNo: $('#ddlLrNo').val() ?? "",
+
+        CompanyId: Number($('#ddlCompany').val() ?? 0),
+        LocationId: Number($('#ddlLocation').val() ?? 0),
+
+        BookingDate: $('#lrDate').val() || today,
+
+        PlacementId: Number($('#ddlPlacementNo').val() ?? 0),
+        EWayBillStateId: Number($('#ddlBillState').val() ?? 0),
+        BusinessVerticalId: Number($('#ddlBusinessVertical').val() ?? 0),
+
+        FromLocation: $('#from-search-box').val() ?? "",
+        FromLongitude: $('#fromLng').val() ?? "",
+        FromLatitude: $('#fromLat').val() ?? "",
+        ToLocation: $("#to-search-box").val() ?? "",
+        ToLatitude: $('#toLat').val() ?? "",
+        ToLongitude: $('#toLng').val() ?? "",
+
+        PartyId: Number($('#ddlCustomerName').val() ?? 0),
+        VehicleTypeId: Number($('#ddlVehicleType').val() ?? 0),
+
+        VehicleNo: $('#ddlVehicleNo').val() ?? "",
+
+        DriverId: Number($('#ddlDriverName').val() ?? 0),
+        DriverName: $('#ddlDriverName option:selected').text() ?? "",
+        DriverMobNo: $('#txtMobileNo').val() ?? "",
+        TrackingTypeId: Number($('#ddlTrackingType').val() ?? 0),
+
+        InvoiceNo: $('#invoiceNo').val() || null,
+        InvoiceDate: $('#invoiceDate').val() || today,
+        InvoiceValue: Number($('#txtInvoiceValue').val() ?? 0),
+
+        EWayBillNo: $('#txtBillNo').val() || null,
+        EWayBillDate: $('#ewayBillDate').val() || today,
+        EWayBillExpiryDate: $('#expiryDate').val() || today,
+
+        ConsignerId: consignorResult?.id ?? 0,
+        ConsignerName: consignorResult?.name ?? "",
+        ConsigneeId: consigneeResult?.id ?? 0,
+        ConsigneeName: consigneeResult?.name ?? "",
+
+        TransitDays: Number($('#txtTransitDays').val() ?? 0),
+        EDD: $('#eddDate').val() || today,
+
+        ItemId: Number($('#ddlItemName').val() ?? 0),
+        PackingTypeId: Number($('#ddlPackingType').val() ?? 0),
+        TotalPacket: Number($('#txtTotalPkgs').val() ?? 0),
+        ActualWeight: Number($('#txtActualWt').val() ?? 0),
+        ChargedWeight: Number($('#txtChargedWt').val() ?? 0),
+        TotalFreight: Number($('#txtTotalFreight').val() ?? 0),
+
+        LinkId: Number(GetQueryParam("LinkId") ?? 0),
+        BookingInvoiceDetailList: additionalInvoiceList ?? []
     };
+
     console.log(formData);
     if (action === "save") {
         $.ajax({
@@ -793,7 +810,6 @@ function ClearInvoiceDetails() {
 }
 
 function AutoFetch() {
-    debugger;
     var placementNo = $("#ddlPlacementNo").val();
     var getUrl = '/BookingOrTrip/AutoFetchBooking/' + placementNo;
 
@@ -831,7 +847,7 @@ function AutoFetch() {
 //        success: function (response) {
 //            if (Array.isArray(response) && response.length > 0) {
 //                let data = response[0]; // Use the first object in the array
-                
+
 //                $('#from-search-box').val(data.fromLocation);
 //                $('#to-search-box').val(data.toLocation);
 //                //$("#ddlCustomerName").val(data.VehicleId).trigger('change');

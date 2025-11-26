@@ -40,7 +40,6 @@ namespace RFQ.UI.Controllers
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> VehicleTypeSave([FromBody] VehicleTypeRequestDto vehicleTypeRequestDto)
         {
@@ -74,14 +73,11 @@ namespace RFQ.UI.Controllers
                 vehicleTypeRequestDto.UpdatedBy = _globalClass.UserId;
 
                 var result = await _vehicleTypeServices.UpdateVehicleType(vechicleTypeId, vehicleTypeRequestDto);
-                if (result != null)
-                    return Json(new { result = "success" });
-                else
-                    return Json(new { result = "failure" });
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                throw;
             }
         }
 

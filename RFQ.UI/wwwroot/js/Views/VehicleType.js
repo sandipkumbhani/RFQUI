@@ -170,15 +170,21 @@ function UpdateVechileType() {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    toastr.success("Vehicle Type Details Updated Successfully!");
-                    addMasterUserActivityLog(0, LogType.Update, "VehicleType Details Updated Successfully!", 0);
-                    $("#addVehicleTypeDiv").addClass("d-none");
-                    $('#btnAdd').removeClass('d-none');
-                    FetchVehicleTypes();
+                    if (response) {
+                        toastr.success("Vehicle Type Details Updated Successfully!");
+                        addMasterUserActivityLog(0, LogType.Update, "VehicleType Details Updated Successfully!", 0);
+                        $("#addVehicleTypeDiv").addClass("d-none");
+                        $('#btnAdd').removeClass('d-none');
+                        FetchVehicleTypes();
+                    }
                 },
                 error: function (xhr, status, error) {
-
-                    toastr.error("Failed to Update Vehicle Type Details!", "Error");
+                    if (xhr.responseText && xhr.responseText.includes("409")) {
+                        toastr.warning("Vehicle Type", "Already Exsist.");
+                    }
+                    else {
+                        toastr.error("Failed to Update Vehicle Type Details!");
+                    }
                 }
             });
         }

@@ -23,7 +23,6 @@ $(document).ready(function () {
     $('#userListSectionLink').on('click', function (e) {
         FetchUser();
     });
-
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
@@ -52,7 +51,7 @@ $("#btnAdd").on("click", function (e) {
     $("#btnSaveForm").show();
     $("#btnSaveAndNewForm").show();
     $("#txtPassword").prop("disabled", false);
-    
+
 });
 function Initialization() {
     $("#btnViewForm").on('click', function () {
@@ -387,30 +386,41 @@ function GetFranchiseAndCorporateName() {
             var profileid = getCookieValue("profileid");
             var userid = getCookieValue("userid");
             if (!IsNullOrEmpty(profileid)) {
+                debugger;
                 if (profileid == EnumProfile.Admin) {
                     data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
                 }
                 if (profileid == EnumProfile.Franchise) {
-                    data = response.filter(x => x.companyTypeId == 3)
+                    data = response.filter(x => x.companyTypeId == 3 && x.createdBy == userid)
                 }
                 if (profileid == EnumProfile.Corporate || profileid == EnumProfile.Vendor) {
-                    data = response.filter(x => x.companyTypeId == 3 && x.createdBy == userid);
+                    data = response.filter(x => x.companyTypeId == 3 && x.companyId == companyid);
                 }
             }
-            const CompanyAndFranchiseDrp = document.getElementById("ddlCompanyAndFranchise");
-            CompanyAndFranchiseDrp.innerHTML = "";
+            const companyAndFranchiseDdl = document.getElementById("ddlCompanyAndFranchise");;
+            companyAndFranchiseDdl.innerHTML = "";
             let placeholderOption = document.createElement("option");
             placeholderOption.value = 0;
             placeholderOption.textContent = "Franchise/Corporate Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            CompanyAndFranchiseDrp.appendChild(placeholderOption);
+            companyAndFranchiseDdl.appendChild(placeholderOption);
+            var selectedFranchiseValue = 0;
+
             data.forEach(option => {
                 let opt = document.createElement("option");
                 opt.value = option.companyId;
                 opt.textContent = option.companyName;
-                CompanyAndFranchiseDrp.appendChild(opt);
+                companyAndFranchiseDdl.appendChild(opt);
+                if (profileid == EnumProfile.Corporate && option.companyId == companyid) {
+                    selectedFranchiseValue = option.companyId;
+                }
             });
+
+            $("#ddlCompanyAndFranchise").val(Number(selectedFranchiseValue)).trigger('change');
+            if (Number(selectedFranchiseValue) > 0) {
+                $('#ddlCompanyAndFranchise').prop('disabled', true);
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -431,11 +441,6 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid PASSWORD", "Validation Error");
         return false;
     }
-
-    //if (IsNullOrEmpty($("#txtEmailid").val()) || !isValidateEmail($("#txtEmailid").val())) {
-    //    toastr.warning("Please enter a valid email", "Validation Error");
-    //    return false;
-    //}
 
     if (IsNullOrEmpty($("#ddlCompanyAndFranchise").val()) || !isValidateSelect($("#ddlCompanyAndFranchise").val())) {
         toastr.warning("Please select a Corporate Name", "Validation Error");

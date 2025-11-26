@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
@@ -46,7 +47,7 @@ namespace RFQ.UI.Controllers
         public async Task<IActionResult> AddBookingOrTrip([FromBody] BookingOrTripRequestDto bookingOrTripRequestDto)
         {
             try
-             {
+            {
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string companyId = jwt.Claims.First(c => c.Type == "companyid").Value;
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
@@ -57,13 +58,13 @@ namespace RFQ.UI.Controllers
                     bookingOrTripRequestDto.CreatedBy = Convert.ToInt32(userid);
                     bookingOrTripRequestDto.UpdatedBy = Convert.ToInt32(userid);
                     bookingOrTripRequestDto.CompanyId = Convert.ToInt32(companyId);
+                    bookingOrTripRequestDto.StatusId = (int)EStatus.IsActive;
                     var result = await _bookingOrTripService.AddBookingOrTrip(bookingOrTripRequestDto);
                     return Json(new { result });
                 }
                 else
                 {
                     return Json(new { result = "fail" });
-
                 }
             }
             catch (Exception ex)
@@ -107,7 +108,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                int bookingId = bookingOrTripRequestDto.BookingId;
+                int bookingId = bookingOrTripRequestDto.BookingId ?? 0;
                 var jwt = new JwtSecurityTokenHandler().ReadJwtToken(_globalClass.Token);
                 string profileid = jwt.Claims.First(c => c.Type == "profileid").Value;
                 string userid = jwt.Claims.First(c => c.Type == "userid").Value;

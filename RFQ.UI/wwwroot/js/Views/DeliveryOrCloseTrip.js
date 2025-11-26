@@ -13,7 +13,6 @@ $(document).ready(function () {
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
     $('#ddlLR').on('change', function () {
-        debugger;
         const selectedValue = $(this).val();
         if (!selectedValue) {
             return;

@@ -75,7 +75,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 }
                 return "Failed to update VehicleType";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

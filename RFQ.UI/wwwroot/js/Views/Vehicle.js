@@ -55,7 +55,6 @@ $("#ddlVehicleCategory").on('change', function () {
     }
 })
 function SaveVehicle(action) {
-    debugger;
     var isValid = OnSubmitValidation();
     if (!isValid) {
         return;

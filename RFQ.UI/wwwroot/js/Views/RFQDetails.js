@@ -697,7 +697,6 @@ function DeleteRfq(rfqID) {
                     data: JSON.stringify(rfqID),
                     success: function (response) {
                         if (response) {
-                            debugger;
                             toastr.success("Rfq Details Deleted Successfully!");
                             addMasterUserActivityLog(0, LogType.Delete, "Rfq Details Deleted Successfully!", 0);
                             $('#currentPage').val(1);

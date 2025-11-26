@@ -11,15 +11,10 @@ namespace RFQ.UI.Domain.Model
         public int BookingInvoiceId { get; set; }
         public int? BookingId { get; set; }
         public string? InvoiceNo { get; set; }
-
-        public DateTime? InvoiceDate { get; set; }
-
-        public decimal? InvoiceValue { get; set; }
-
+        public DateTime? InvoiceDate { get; set; } 
+        public int? InvoiceValue { get; set; }
         public string? EwayBillNo { get; set; }
-
-        public DateTime? EwayBillDate { get; set; }
-
-        public DateTime? EwayBillValidUpto { get; set; }
+        public DateTime? EwayBillDate { get; set; } 
+        public DateTime? EwayBillValidUpto { get; set; } 
     }
 }

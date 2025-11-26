@@ -459,7 +459,6 @@ function VehiclePopUp() {
                 closepop = true;
             }
             if (closepop) {
-                debugger;
                 const form = $(this).find('driverForm')[0];
                 if (form) {
                     form.reset(); // reset all form inputs

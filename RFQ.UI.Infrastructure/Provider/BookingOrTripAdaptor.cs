@@ -68,33 +68,20 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-
-                var baseUrl = $"{_fleetLynkApiUrl}/BookingOrTrip/AddBookingOrTrip";
-                var jsonPayload = JsonConvert.SerializeObject(bookingOrTripRequestDto);
-                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PostAsync(baseUrl, content);
-                var responseData = await response.Content.ReadAsStringAsync();
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.AddBookingOrTrip}";
+                var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, bookingOrTripRequestDto, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200 && responseModel.Data != null)
                 {
-
                     var dataToken = responseModel.Data as JToken ?? JToken.FromObject(responseModel.Data);
                     var bookingOrTripData = dataToken.ToObject<BookingOrTripRequestDto>();
                     return bookingOrTripData;
                 }
+                return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error in AddBookingOrTrip: " + ex.Message);
+                throw;
             }
-
-            return null;
         }
 
         public async Task<PageList<BookingOrTripResponseDto>> GetAllBookingOrTrip(PagingParam pagingParam)
