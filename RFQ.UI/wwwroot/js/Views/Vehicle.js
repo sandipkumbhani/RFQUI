@@ -178,7 +178,6 @@ function SaveVehicle(action) {
 function EditVehicle(vehicleId) {
     if ($("#btnUpdateVehicle").hasClass('d-none')) {
         $("#btnUpdateVehicle").removeClass('d-none');
-        $('#vehicleForm').find('input, select, textarea, button, a').prop('disabled', false);
     }
     var data = viewModelDto.filter(x => x.vehicleId === vehicleId);
     var formData = data[0];
