@@ -15,7 +15,7 @@ namespace RFQ.UI.Domain.ResponseDto
         public int OwnerVendorId { get; set; }
         public string PartyName { get; set; }
         public int VehicleCategoryId { get; set; }
-        public string InternalMasterName { get; set; }
+        public string VehicleCategory { get; set; }
         public int VehicleCapacity { get; set; }
         public int TrackingProviderId { get; set; }
         public string VehicleStatus { get; set; }

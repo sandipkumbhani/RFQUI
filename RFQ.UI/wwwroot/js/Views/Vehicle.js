@@ -31,7 +31,6 @@ $(document).ready(function () {
 
     $("#btnCancel").on('click', function () {
         FetchVehicleList();
-        $('#vehicleForm').find('input, select, textarea, button, a').prop('disabled', false);
     });
     FetchVehicleList();
     GetAllOwnerOrVendor();
