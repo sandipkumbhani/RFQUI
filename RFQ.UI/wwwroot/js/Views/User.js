@@ -111,7 +111,7 @@ function Initialization() {
         var password = $(this).val();
         if (!passwordPattern.test(password)) {
             $("#txtPassword").val('');
-            toastr.warning("Please enter a valid PASSWORD", "Validation Error");
+            toastr.warning("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.", "Validation Error");
             return;
         }
     });
@@ -438,7 +438,7 @@ function ValidationCheck() {
     }
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
     if (IsNullOrEmpty($("#txtPassword").val() || !passwordPattern.test(password))) {
-        toastr.warning("Please enter a valid PASSWORD", "Validation Error");
+        toastr.warning("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.", "Validation Error");
         return false;
     }
 
