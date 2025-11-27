@@ -378,6 +378,7 @@ function SaveVendor(action) {
         var adharVerified = $("#txtAadharVerified").val();
         var gstVerifiedOn = $("#txtGstVerifiedOn").val();
         var adharLinked = $("#txtAadharLinked").val();
+        var panCardName =$("#txtPanName").val();
         var panStatus = $("#txtPanStatus").val();
         var panVerifiedOn = $("#txtPanVerifiedOn").val();
         var vendorName = $("#txtVendorName").val();
@@ -427,6 +428,7 @@ function SaveVendor(action) {
             AadharVerified: adharVerified,
             GSTStatus: gstStatus,
             GSTVarifiedOn: gstVerifiedOn ? new Date(gstVerifiedOn).toISOString() : null,
+            PANCardName: panCardName,
             PANStatus: panStatus,
             PANLinkedWithAdhar: adharLinked,
             PANVerifiedOn: panVerifiedOn ? new Date(panVerifiedOn).toISOString() : null,
@@ -449,12 +451,10 @@ function SaveVendor(action) {
                 data: JSON.stringify(userCreate),
                 dataType: "json",
                 success: function (response) {
-                    if (response.result == "success") {
+                    if (response.result == "success") 
                         toastr.success("Vendor Login Create Successfully!");
-                    }
-                    else {
+                    else 
                         toastr.error("User with this WhatsApp number already exists.", "Error");
-                    }
                 },
                 error: function (req, status, error) {
                     toastr.error("Failed to Create Vendor Login", "Error");
@@ -480,9 +480,9 @@ function SaveVendor(action) {
                             }
                         }
                         else if (response.statusCode === 409)
-                            toastr.warning(response.message, "Duplicate Entry");
+                            toastr.warning(response.message, "Already Exists");
                         else
-                            toastr.error(response.message || "Unexpected error occurred.", "Error");
+                            toastr.error(response.message || "Unexpected error occurred.");
                     }
                     else {
                         toastr.error("Unable to submit vendor details.", "Error");
@@ -515,19 +515,16 @@ function SaveVendor(action) {
                             $('#vendorForm')[0].reset();
                             $('#ddlCity').val(0).trigger("change");
                             $('#ddlVendorCategory').val(0).trigger("change");
-
                             setTimeout(() => {
                                 ResetAttachmentRepeater();
                             }, 1000);
                         }
-                        else if (response.statusCode === 409) {
-                            toastr.warning(response.message, "Duplicate Entry");
-                        }
-                        else {
-                            toastr.error(response.message || "Unexpected error occurred.", "Error");
-                        }
+                        else if (response.statusCode === 409) 
+                            toastr.warning(response.message, "Already Exists");
+                        else 
+                            toastr.error(response.message || "Unexpected error occurred.");
                     } else {
-                        toastr.error("Unable to submit vendor details.", "Error");
+                        toastr.error("Unable to submit vendor details.");
                     }
                 },
                 error: function (xhr, status, error) {
@@ -612,7 +609,7 @@ function EditVendor(partyId) {
         $("#txtAadharLinked").val(formData.panLinkedWithAdhar);
         $("#txtPanStatus").val(formData.panStatus);
         var panVerifiedDate = new Date(formData.panVerifiedOn).toISOString().split('T')[0];
-        $("#txtPanName").val(formData.legalName);
+        $("#txtPanName").val(formData.panCardName);
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
         $("#txtVendorName").val(formData.partyName);
@@ -653,6 +650,7 @@ function UpdateVendor() {
         AadharVerified: $("#txtAadharVerified").val(),
         GSTStatus: $("#txtGstStatus").val(),
         GSTVarifiedOn: $("#txtGstVerifiedOn").val() ? new Date($("#txtGstVerifiedOn").val()).toISOString() : null,
+        PANCardName: $("#txtPanName").val(),
         PANStatus: $("#txtPanStatus").val(),
         PANLinkedWithAdhar: $("#txtAadharLinked").val(),
         PANVerifiedOn: $("#txtPanVerifiedOn").val() ? new Date($("#txtPanVerifiedOn").val()).toISOString() : null,

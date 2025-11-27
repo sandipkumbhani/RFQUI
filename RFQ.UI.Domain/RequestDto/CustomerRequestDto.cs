@@ -46,6 +46,8 @@
 
         public DateTime? GSTVarifiedOn { get; set; }
 
+        public string? PANCardName { get; set; }
+
         public string? PANStatus { get; set; }
 
         public string? PANLinkedWithAdhar { get; set; }

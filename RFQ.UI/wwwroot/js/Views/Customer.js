@@ -102,6 +102,7 @@ function SaveCustomer(action) {
     var adharVerified = $("#txtAadharVerified").val();
     var gstVerifiedOn = $("#txtGstVerifiedOn").val() ? $("#txtGstVerifiedOn").val() : null;
     var adharLinked = $("#txtAadharLinked").val();
+    var panCardName = $("#txtPanName").val();
     var panStatus = $("#txtPanStatus").val();
     var panVerifiedOn = $("#txtPanVerifiedOn").val() ? $("#txtPanVerifiedOn").val() : null;
     var panKyc = $("#txtPanNumber").val();
@@ -130,6 +131,7 @@ function SaveCustomer(action) {
         GstStatus: gstStatus,
         TradeName: tradeName,
         AadharVerified: adharVerified,
+        PANCardName: panCardName,
         PanStatus: panStatus,
         GSTVarifiedOn: gstVerifiedOn,
         PANVerifiedOn: panVerifiedOn,
@@ -253,7 +255,7 @@ function EditCustomer(partyId) {
         $("#txtAadharLinked").val(formData.panLinkedWithAdhar);
         $("#txtPanStatus").val(formData.panStatus);
         var panVerifiedDate = new Date(formData.panVerifiedOn).toLocaleDateString('en-CA');
-        $("#txtPanName").val(formData.legalName);
+        $("#txtPanName").val(formData.panCardName);
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
         $("#txtCustomerName").val(formData.partyName);
@@ -289,6 +291,7 @@ function UpdateCustomer() {
             GstStatus: $("#txtGstStatus").val(),
             TradeName: $("#txtTradeName").val(),
             AadharVerified: $("#txtAadharVerified").val(),
+            PANCardName: $("#txtPanName").val(),
             PanStatus: $("#txtPanStatus").val(),
             GSTVarifiedOn: $("#txtGstVerifiedOn").val() ? $("#txtGstVerifiedOn").val() : null,
             //var gstVerifiedOn = $("#txtGstVerifiedOn").val() ? $("#txtGstVerifiedOn").val() : null;
@@ -607,7 +610,7 @@ function ValidationCheck() {
 }
 function getAutoCustomerCode() {
     $.ajax({
-        url: '/Customer/GetAutoCustomerCode', // Replace with your controller name
+        url: '/Customer/GetAutoCustomerCode', 
         type: 'GET',
         dataType: 'json',
         success: function (response) {
@@ -618,8 +621,8 @@ function getAutoCustomerCode() {
         }
     });
 }
-function ViewCustomer(partyId) {
-    EditCustomer(partyId);
-    $('#customerForm').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnUpdate").addClass('d-none');
-}
+//function ViewCustomer(partyId) {
+//    EditCustomer(partyId);
+//    $('#customerForm').find('input, select, textarea, button, a').prop('disabled', true);
+//    $("#btnUpdate").addClass('d-none');
+//}
