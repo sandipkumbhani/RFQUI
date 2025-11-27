@@ -612,9 +612,9 @@ function EditVendor(partyId) {
         $("#txtAadharLinked").val(formData.panLinkedWithAdhar);
         $("#txtPanStatus").val(formData.panStatus);
         var panVerifiedDate = new Date(formData.panVerifiedOn).toISOString().split('T')[0];
+        $("#txtPanName").val(formData.legalName);
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
-        $("#panEKycButton").click();
         $("#txtVendorName").val(formData.partyName);
         $("#ddlVendorCategory").val(formData.partyCategoryId).trigger('change');
         $("#from-search-box").val(formData.addressLine);

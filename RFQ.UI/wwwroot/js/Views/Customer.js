@@ -253,9 +253,9 @@ function EditCustomer(partyId) {
         $("#txtAadharLinked").val(formData.panLinkedWithAdhar);
         $("#txtPanStatus").val(formData.panStatus);
         var panVerifiedDate = new Date(formData.panVerifiedOn).toLocaleDateString('en-CA');
+        $("#txtPanName").val(formData.legalName);
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
-        $("#panEKycButton").click();
         $("#txtCustomerName").val(formData.partyName);
         //$("#txtCustomerCode").val(formData.customerCode);
         $("#from-search-box").val(formData.addressLine);
