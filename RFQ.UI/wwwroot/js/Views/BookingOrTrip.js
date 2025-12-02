@@ -127,24 +127,29 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please Select a Booking Branch", "Validation Error");
         return false;
     }
-    //if (IsNullOrEmpty($("#txtIndentNo").val())) {
-    //    toastr.warning("Please enter a Indent No", "Validation Error");
-    //    return false;
-    //}
+    if (!isValidateSelect($("#ddlLrNo").val())) {
+        toastr.warning("Please Select a LR No", "Validation Error");
+    }
     if (IsNullOrEmpty($("#lrDate").val())) {
         toastr.warning("Please enter a LR Date", "Validation Error");
         return false;
     }
-    //if (IsNullOrEmpty($("#txtVehicleReqDate").val())) {
-    //    toastr.warning("Please enter a Vehicle Req On", "Validation Error");
-    //    return false;
-    //}
-    //if ($("#txtVehicleReqDate").val() <= $('#txtIndentDate').val()) {
-    //    toastr.warning("Vehicle Req On date must be greater than Indent Date.", "Warning");
-    //    $("#txtVehicleReqDate").val('');
-    //    return false;
-    //}
-
+    if (!isValidateSelect($("#ddlPlacementNo").val())) {
+        toastr.warning("Please Select a Indent/Placement No", "Validation Error");
+        return false;
+    }
+    if (!isValidateSelect($("#ddlBillState").val())) {
+        toastr.warning("Please Select a E-Way Bill State", "Validation Error");
+        return false;
+    }
+    if (!isValidateSelect($("#ddlBusinessVertical").val())) {
+        toastr.warning("Please Select a Business Vertical", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtBillNo").val())) {
+        toastr.warning("Please enter a E-Way Bill No", "Validation Error");
+        return false;
+    }
     if (IsNullOrEmpty($("#from-search-box").val())) {
         toastr.warning("Please enter a Origin/From", "Validation Error");
         return false;
@@ -153,12 +158,12 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Destination/To", "Validation Error");
         return false;
     }
-    if (!isValidateSelect($("#ddlVehicleNo").val())) {
-        toastr.warning("Please Select a Vehicle No", "Validation Error");
-        return false;
-    }
     if (!isValidateSelect($("#ddlCustomerName").val())) {
         toastr.warning("Please Select a Customer Name", "Validation Error");
+        return false;
+    }
+    if (!isValidateSelect($("#ddlVehicleNo").val())) {
+        toastr.warning("Please Select a Vehicle No", "Validation Error");
         return false;
     }
     if (!isValidateSelect($("#ddlVehicleType").val())) {
@@ -175,6 +180,62 @@ function OnSubmitCheckValidation() {
     }
     if (!isValidateSelect($("#ddlTrackingType").val())) {
         toastr.warning("Please select a Tracking Type", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#invoiceNo").val())) {
+        toastr.warning("Please enter a Invoice No", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#invoiceDate").val())) {
+        toastr.warning("Please enter a Invoice Date", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtInvoiceValue").val())) {
+        toastr.warning("Please enter a Invoice Value", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtEwayBillNo").val())) {
+        toastr.warning("Please enter a E-Way Bill No", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#ewayBillDate").val())) {
+        toastr.warning("Please enter a E-Way Bill Date", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#expiryDate").val())) {
+        toastr.warning("Please enter a Expiry Date", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtTransitDays").val())) {
+        toastr.warning("Please enter a Transit Days", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#eddDate").val())) {
+        toastr.warning("Please enter a EDD", "Validation Error");
+        return false;
+    }
+    if (!isValidateSelect($("#ddlItemName").val())) {
+        toastr.warning("Please enter a Item Name", "Validation Error");
+        return false;
+    }
+    if (!isValidateSelect($("#ddlPackingType").val())) {
+        toastr.warning("Please enter a Packing Type", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtTotalPkgs").val())) {
+        toastr.warning("Please enter a Total Pkgs", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtActualWt").val())) {
+        toastr.warning("Please enter a Actual Wt", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtChargedWt").val())) {
+        toastr.warning("Please enter a Charged Wt", "Validation Error");
+        return false;
+    }
+    if (IsNullOrEmpty($("#txtTotalFreight").val())) {
+        toastr.warning("Please enter a Total Freight", "Validation Error");
         return false;
     }
     return true;
@@ -400,56 +461,43 @@ function SaveBookingOrTrip(action) {
     const formData = {
         BookingId: 0,
         BookingNo: $('#ddlLrNo').val() ?? "",
-
         CompanyId: Number($('#ddlCompany').val() ?? 0),
         LocationId: Number($('#ddlLocation').val() ?? 0),
-
         BookingDate: $('#lrDate').val() || today,
-
         PlacementId: Number($('#ddlPlacementNo').val() ?? 0),
         EWayBillStateId: Number($('#ddlBillState').val() ?? 0),
         BusinessVerticalId: Number($('#ddlBusinessVertical').val() ?? 0),
-
         FromLocation: $('#from-search-box').val() ?? "",
         FromLongitude: $('#fromLng').val() ?? "",
         FromLatitude: $('#fromLat').val() ?? "",
         ToLocation: $("#to-search-box").val() ?? "",
         ToLatitude: $('#toLat').val() ?? "",
         ToLongitude: $('#toLng').val() ?? "",
-
         PartyId: Number($('#ddlCustomerName').val() ?? 0),
         VehicleTypeId: Number($('#ddlVehicleType').val() ?? 0),
-
         VehicleNo: $('#ddlVehicleNo').val() ?? "",
-
         DriverId: Number($('#ddlDriverName').val() ?? 0),
         DriverName: $('#ddlDriverName option:selected').text() ?? "",
         DriverMobNo: $('#txtMobileNo').val() ?? "",
         TrackingTypeId: Number($('#ddlTrackingType').val() ?? 0),
-
         InvoiceNo: $('#invoiceNo').val() || null,
         InvoiceDate: $('#invoiceDate').val() || today,
         InvoiceValue: Number($('#txtInvoiceValue').val() ?? 0),
-
         EWayBillNo: $('#txtBillNo').val() || null,
         EWayBillDate: $('#ewayBillDate').val() || today,
         EWayBillExpiryDate: $('#expiryDate').val() || today,
-
         ConsignerId: consignorResult?.id ?? 0,
         ConsignerName: consignorResult?.name ?? "",
         ConsigneeId: consigneeResult?.id ?? 0,
         ConsigneeName: consigneeResult?.name ?? "",
-
         TransitDays: Number($('#txtTransitDays').val() ?? 0),
         EDD: $('#eddDate').val() || today,
-
         ItemId: Number($('#ddlItemName').val() ?? 0),
         PackingTypeId: Number($('#ddlPackingType').val() ?? 0),
         TotalPacket: Number($('#txtTotalPkgs').val() ?? 0),
         ActualWeight: Number($('#txtActualWt').val() ?? 0),
         ChargedWeight: Number($('#txtChargedWt').val() ?? 0),
         TotalFreight: Number($('#txtTotalFreight').val() ?? 0),
-
         LinkId: Number(GetQueryParam("LinkId") ?? 0),
         BookingInvoiceDetailList: additionalInvoiceList ?? []
     };
@@ -818,9 +866,7 @@ function AutoFetch() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-
             let data = response?.[0] || {};
-
             $('#from-search-box').val(data.fromLocation);
             $('#to-search-box').val(data.toLocation);
             $("#ddlVehicleNo").val(data.vehicleId).trigger('change');
@@ -834,35 +880,3 @@ function AutoFetch() {
         }
     });
 }
-
-
-//function AutoFetch() {
-//    debugger;
-//    var placementNo = $("#ddlPlacementNo").val();
-//    var getUrl = '/BookingOrTrip/AutoFetchBooking/' + placementNo;
-//    $.ajax({
-//        url: getUrl,
-//        type: "GET",
-//        contentType: "application/json",
-//        success: function (response) {
-//            if (Array.isArray(response) && response.length > 0) {
-//                let data = response[0]; // Use the first object in the array
-
-//                $('#from-search-box').val(data.fromLocation);
-//                $('#to-search-box').val(data.toLocation);
-//                //$("#ddlCustomerName").val(data.VehicleId).trigger('change');
-//                $("#ddlVehicleNo").val(data.vehicleId).trigger('change');
-//                $("#ddlVehicleType").val(data.vehicleTypeId).trigger('change');
-//                $("#ddlDriverName").val(data.driverId).trigger('change');
-//                $('#txtMobileNo').val(data.mobileNo);
-
-
-//            } else {
-//                toastr.warning("No data found for selected indent number.", "Warning");
-//            }
-//        },
-//        error: function (xhr, status, error) {
-//            toastr.error("Failed to fetch RFQ data!", "Error");
-//        }
-//    });
-//}
