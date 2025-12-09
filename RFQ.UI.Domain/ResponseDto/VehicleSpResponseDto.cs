@@ -9,6 +9,7 @@ namespace RFQ.UI.Domain.ResponseDto
     public class VehicleSpResponseDto
     {
         public int VehicleId { get; set; }
+        public int? CompanyId { get; set; }
         public string VehicleNo { get; set; }
         public int VehicleTypeId { get; set; }
         public string VehicleTypeName { get; set; }

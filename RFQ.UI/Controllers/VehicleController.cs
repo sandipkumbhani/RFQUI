@@ -164,6 +164,7 @@ namespace RFQ.UI.Controllers
                 {
                     vehicleRequestDto.CreatedBy = _globalClass.UserId;
                     vehicleRequestDto.UpdatedBy = _globalClass.UserId;
+                    vehicleRequestDto.CompanyId = _globalClass.CompanyId;
                     vehicleRequestDto.StatusId = (int)EStatus.IsActive;
                     var result = await _vehicleServices.AddVehicle(vehicleRequestDto);
                     if (!String.IsNullOrEmpty(result))
@@ -187,6 +188,7 @@ namespace RFQ.UI.Controllers
                 int vehicleId = vehicleRequestDto.VehicleId;
                 vehicleRequestDto.CreatedBy = _globalClass.UserId;
                 vehicleRequestDto.UpdatedBy = _globalClass.UserId;
+                vehicleRequestDto.CompanyId = _globalClass.CompanyId;
 
                 var result = await _vehicleServices.EditVehicle(vehicleId, vehicleRequestDto);
                 if (!String.IsNullOrEmpty(result))
