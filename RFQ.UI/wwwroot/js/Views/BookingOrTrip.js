@@ -9,10 +9,12 @@ var orderColumn = '';
 var orderDir = '';
 var fetchBookingUrl = '/BookingOrTrip/GetAllBookingOrTrip';
 let additionalInvoiceList = [];
+
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
+    additionalInvoiceList = [];
     $('#ddlPlacementNo').on('change', function () {
         if ($(this).val() != null) {
             AutoFetch();
@@ -21,31 +23,6 @@ $(document).ready(function () {
             return;
         }
     });
-    //$('#ddlPlacementNo').on('change', function () {
-    //    debugger;
-    //    const selectedValue = $(this).val();
-    //    if (!selectedValue) {
-    //        return;
-    //    }
-    //    const selectedIndent = bookingDrpList.find(x => x.placementId == selectedValue);
-    //    if (selectedIndent) {
-
-    //        //$('#txtLRNo').val(selectedIndent.bookingNo);
-    //        //$('#txtLrDate').val(selectedIndent.bookingDate.split('T')[0]);
-    //        //$("#ddlBookingBranch").val(selectedIndent.locationId).trigger('change');
-    //        $('#from-search-box').val(selectedIndent.fromLocation);
-    //        $('#to-search-box').val(selectedIndent.toLocation);
-    //        //$('#txtVehicleNo').val(selectedIndent.vehicleNo);
-    //        //$("#ddlVehicleType").val(selectedIndent.vehicleTypeId).trigger('change');
-    //        //$("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
-    //        //$("#txtConsignorInput").val(selectedIndent.consignerName).trigger('change');
-    //        //$("#txtConsigneeInput").val(selectedIndent.consigneeName).trigger('change');
-    //        //$('#txtEDD').val(selectedIndent.edd.split('T')[0]);
-    //        //$('#txtPkg').val(selectedIndent.totalPacket);
-    //        //$('#txtActualWt').val(selectedIndent.actualWeight);
-
-    //    }
-    //});
     GetAllDriver();
     GetAllVehicleNumber();
     GetAllPakingType("ddlPackingType");
@@ -102,9 +79,8 @@ $('#btnAdd').click(function () {
 function FetchBookingOrTrip() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
-    $('#bookingForm')[0].reset();
+    resetBookingForm();
     FetchLRNo();
-    $('.select2-custom').val(null).trigger('change');
     $("#btnSaveForm").show();
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
@@ -623,7 +599,7 @@ function UpdateBooking(bookingId) {
         }
     }
     else if (formData.consignerId == 0) {
-        $("#ddlConsignorInput").val(null).trigger("change");
+        $("#ddlConsignorInput").val(0).trigger("change");
     }
     else {
         $("#ddlConsignorInput").val(formData.consignerId).trigger("change");
@@ -637,7 +613,7 @@ function UpdateBooking(bookingId) {
         }
     }
     else if (formData.consignerId == 0) {
-        $("#ddlConsigneeInput").val(null).trigger("change");
+        $("#ddlConsigneeInput").val(0).trigger("change");
     }
     else {
         $("#ddlConsigneeInput").val(formData.consigneeId).trigger("change");
@@ -722,19 +698,19 @@ function ButtonUpdateClick() {
                     $("#formDiv").css('display', 'none');
                     FetchBookingOrTrip();
                     $('#bookingForm')[0].reset();
-                    $('#ddlLocation').val(null).trigger('change');
-                    $('#ddlPlacementNo').val(null).trigger('change');
-                    $('#ddlBillState').val(null).trigger('change');
-                    $('#ddlBusinessVertical').val(null).trigger('change');
-                    $('#ddlCustomerName').val(null).trigger('change');
-                    $('#ddlVehicleNo').val(null).trigger('change');
-                    $('#ddlVehicleType').val(null).trigger('change');
-                    $('#ddlDriverName').val(null).trigger('change');
-                    $('#ddlTrackingType').val(null).trigger('change');
-                    $('#ddlConsignorInput').val(null).trigger('change');
-                    $('#ddlConsigneeInput').val(null).trigger('change');
-                    $('#ddlItemName').val(null).trigger('change');
-                    $('#ddlPackingType').val(null).trigger('change');
+                    $('#ddlLocation').val(0).trigger('change');
+                    $('#ddlPlacementNo').val(0).trigger('change');
+                    $('#ddlBillState').val(0).trigger('change');
+                    $('#ddlBusinessVertical').val(0).trigger('change');
+                    $('#ddlCustomerName').val(0).trigger('change');
+                    $('#ddlVehicleNo').val(0).trigger('change');
+                    $('#ddlVehicleType').val(0).trigger('change');
+                    $('#ddlDriverName').val(0).trigger('change');
+                    $('#ddlTrackingType').val(0).trigger('change');
+                    $('#ddlConsignorInput').val(0).trigger('change');
+                    $('#ddlConsigneeInput').val(0).trigger('change');
+                    $('#ddlItemName').val(0).trigger('change');
+                    $('#ddlPackingType').val(0).trigger('change');
                     $("#btnUpdate").hide();
                     $("#btnSaveAndNewForm").show();
                     $("#btnSaveForm").show();
@@ -748,11 +724,12 @@ function ButtonUpdateClick() {
         });
     });
 };
-function ViewBooking(bookingId) {
-    UpdateBooking(bookingId);
-    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnUpdate").addClass('d-none');
-}
+
+//function ViewBooking(bookingId) {
+//    UpdateBooking(bookingId);
+//    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
+//    $("#btnUpdate").addClass('d-none');
+//}
 function DeleteBooking(bookingId) {
     Swal.fire({
         title: 'Are you sure?',
@@ -788,7 +765,6 @@ function DeleteBooking(bookingId) {
         }
     });
 }
-
 function btnAddInvoiceClick() {
     const tfInvoiceNo = $("#tfInvoiceNo").val();
     const tfInvoiceDate = $("#tfInvoiceDate").val();
@@ -856,7 +832,6 @@ function ClearInvoiceDetails() {
     $("#tfEwayBillDate").val(null).trigger('change');
     $("#tfEwayBillValidUpto").val(null).trigger('change');
 }
-
 function AutoFetch() {
     var placementNo = $("#ddlPlacementNo").val();
     var getUrl = '/BookingOrTrip/AutoFetchBooking/' + placementNo;
@@ -879,4 +854,23 @@ function AutoFetch() {
             toastr.error("Failed to fetch RFQ data!", "Error");
         }
     });
+}
+
+function resetBookingForm() {
+    // Reset all text, number, date, hidden, and textarea inputs
+    $('#bookingForm').find('input[type="text"], input[type="number"], input[type="date"], input[type="hidden"], textarea').val('');
+    $('#bookingForm').find('select').each(function () {
+        if ($(this).find('option[value="0"]').length > 0) {
+            $(this).val('0').trigger('change');
+        }
+        else {
+            $(this).prop('selectedIndex', 0).trigger('change');
+        }
+    });
+    $('#ddlBusinessVertical').val(0).trigger('change');
+    $('#additionalInvoiceDetails tbody').empty();
+    $('#btnUpdate').hide();
+    $('#btnSaveForm, #btnSaveAndNewForm').show();
+    $('#from-location-suggestions, #to-location-suggestions').hide().empty();
+    console.log("Form reset successfully!");
 }

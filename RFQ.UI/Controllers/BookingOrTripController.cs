@@ -16,13 +16,15 @@ namespace RFQ.UI.Controllers
         private readonly IBookingOrTripService _bookingOrTripService;
         private readonly ILogger<BookingOrTripController> _logger;
         private readonly IMenuServices _menuServices;
-        public BookingOrTripController(IBookingOrTripService bookingOrTripService, GlobalClass globalClass, ILogger<BookingOrTripController> logger, IMenuServices menuServices) : base(menuServices, globalClass)
+        private readonly IBokingInvoiceService _bookingInvoiceService;
+        public BookingOrTripController(IBookingOrTripService bookingOrTripService, GlobalClass globalClass, ILogger<BookingOrTripController> logger, IMenuServices menuServices, IBokingInvoiceService bokingInvoiceService) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _bookingOrTripService = bookingOrTripService;
             _logger = logger;
             _menuServices = menuServices;
-        }
+            _bookingInvoiceService = bokingInvoiceService;
+        } 
         public async Task<IActionResult> BookingOrTrip()
         {
             await SetMenuAsync();
@@ -185,7 +187,22 @@ namespace RFQ.UI.Controllers
             }
         }
 
+
+        public async Task<ActionResult> GetBookingInvoiceListByBookingId(int id)
+        {
+            try
+            {
+                _logger.LogInformation(" GetBookingInvoiceListByBookingId Details....");
+                //var result = await _bookingInvoiceService.GetBookingInvoiceListByBookingId(id);
+                //return Ok(result);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                throw;
+            }
+        }
+
     }
-
-
 }

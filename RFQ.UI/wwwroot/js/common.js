@@ -949,7 +949,7 @@ function GetAllCustomer(dropdownId, companyIdParam) {
             var data = response
             const selectCustomer = document.getElementById(dropdownId);
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Customer Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;

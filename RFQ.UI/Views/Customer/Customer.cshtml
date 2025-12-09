@@ -33,179 +33,204 @@
             <div class="card com-franchise-info">
                 <form class="form" id="customerForm" method="post">
                     <input type="hidden" id="hdnPartyId" />
+
                     <div class="franchise-details">
-                        <h2 class="page-form-title">GST e-KYC Details</h2>
-                        <div class="row all-custom-class">
-                            <div class="col-xl-4 col-lg-6 col-md-6">
-                                <div class="item-input">
-                                    <label class="form-label">GST No </label>
-                                    <div class="kyc-input">
-                                        <input type="text" class="form-control" placeholder="Enter GST No" id="txtGstNumber" oninput="this.value = this.value.toUpperCase()" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
-                                        <button type="button" class="kyc-btn" id="gstEKycButton">e-KYC</button>
+                        <h2 class="page-form-title d-flex align-items-center gap-2">
+                            <a class="arrow-icon toggle-arrow"
+                               data-bs-toggle="collapse"
+                               href="#gstKycDetailsCollapse">
+                                <i class="bi bi-dash-square"></i>
+                                <span>GST e-KYC Details</span>
+                            </a>
+                        </h2>
+                        <div class="collapse" id="gstKycDetailsCollapse">
+                            <div class="row all-custom-class">
+                                <div class="col-xl-4 col-lg-6 col-md-6">
+                                    <div class="item-input">
+                                        <label class="form-label">GST No </label>
+                                        <div class="kyc-input">
+                                            <input type="text" class="form-control" placeholder="Enter GST No" id="txtGstNumber" oninput="this.value = this.value.toUpperCase()" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                            <button type="button" class="kyc-btn" id="gstEKycButton">e-KYC</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-xl-8 col-lg-6 col-md-6">
-                                <div class="item-input">
-                                    <label class="form-label">Legal Name </label>
-                                    <input type="text" class="form-control" id="txtLegalName" placeholder="Enter Legal Name" disabled />
+                                <div class="col-xl-8 col-lg-6 col-md-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Legal Name </label>
+                                        <input type="text" class="form-control" id="txtLegalName" placeholder="Enter Legal Name" disabled />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="item-input">
-                                    <label class="form-label">Type of Business </label>
-                                    <input type="text" class="form-control" id="txtTypeBusiness" placeholder="Enter Type of Business" disabled />
+                                <div class="col-lg-4">
+                                    <div class="item-input">
+                                        <label class="form-label">Type of Business </label>
+                                        <input type="text" class="form-control" id="txtTypeBusiness" placeholder="Enter Type of Business" disabled />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="item-input">
-                                    <label class="form-label">Trade Name </label>
-                                    <input type="text" class="form-control" id="txtTradeName" placeholder="Enter Trade Name" disabled />
+                                <div class="col-lg-8">
+                                    <div class="item-input">
+                                        <label class="form-label">Trade Name </label>
+                                        <input type="text" class="form-control" id="txtTradeName" placeholder="Enter Trade Name" disabled />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="item-input">
-                                    <label class="form-label">Aadhar Verified </label>
-                                    <input type="text" class="form-control" id="txtAadharVerified" placeholder="Aadhar Verified" disabled />
+                                <div class="col-lg-4">
+                                    <div class="item-input">
+                                        <label class="form-label">Aadhar Verified </label>
+                                        <input type="text" class="form-control" id="txtAadharVerified" placeholder="Aadhar Verified" disabled />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="item-input">
-                                    <label class="form-label">Verified GST No </label>
-                                    <input type="text" class="form-control" id="txtVerifiedGstNo" placeholder="Verified GST No" disabled />
+                                <div class="col-lg-4">
+                                    <div class="item-input">
+                                        <label class="form-label">Verified GST No </label>
+                                        <input type="text" class="form-control" id="txtVerifiedGstNo" placeholder="Verified GST No" disabled />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="item-input">
-                                    <label class="form-label">GST Verified On </label>
-                                    <input type="date" class="form-control" id="txtGstVerifiedOn" placeholder="GST Verified On" disabled />
+                                <div class="col-lg-4">
+                                    <div class="item-input">
+                                        <label class="form-label">GST Verified On </label>
+                                        <input type="date" class="form-control" id="txtGstVerifiedOn" placeholder="GST Verified On" disabled />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="item-input">
-                                    <label class="form-label">GST Status </label>
-                                    <input type="text" class="form-control" id="txtGstStatus" placeholder="GST Status" disabled />
+                                <div class="col-lg-4">
+                                    <div class="item-input">
+                                        <label class="form-label">GST Status </label>
+                                        <input type="text" class="form-control" id="txtGstStatus" placeholder="GST Status" disabled />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="item-input">
-                                    <label class="form-label">GST Address </label>
-                                    <input type="text" class="form-control" id="txtGstAddress" placeholder="GST Address" disabled />
+                                <div class="col-lg-8">
+                                    <div class="item-input">
+                                        <label class="form-label">GST Address </label>
+                                        <input type="text" class="form-control" id="txtGstAddress" placeholder="GST Address" disabled />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="franchise-details">
-                        <h2 class="page-form-title">PAN e-KYC Details</h2>
-                        <div class="row all-custom-class">
-                            <div class="col-xl-4 col-lg-6 col-md-6">
-                                <div class="item-input">
-                                    <label class="form-label">PAN No</label>
-                                    <div class="kyc-input">
-                                        <input type="text" class="form-control" placeholder="Enter PAN No" id="txtPanNumber" oninput="this.value = this.value.toUpperCase()" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
-                                        <button type="button" class="kyc-btn" id="panEKycButton">e-KYC</button>
+                        <h2 class="page-form-title d-flex align-items-center gap-2">
+                            <a class="arrow-icon toggle-arrow"
+                               data-bs-toggle="collapse"
+                               href="#panKycDetailsCollapse">
+                                <i class="bi bi-dash-square"></i><span> PAN e-KYC Details </span>
+                            </a>
+                        </h2>
+                        <div class="collapse" id="panKycDetailsCollapse">
+                            <div class="row all-custom-class">
+                                <div class="col-xl-4 col-lg-6 col-md-6">
+                                    <div class="item-input">
+                                        <label class="form-label">PAN No</label>
+                                        <div class="kyc-input">
+                                            <input type="text" class="form-control" placeholder="Enter PAN No" id="txtPanNumber" oninput="this.value = this.value.toUpperCase()" maxlength="10" onkeypress="return AllowAlphaNumericOnly(event)" />
+                                            <button type="button" class="kyc-btn" id="panEKycButton">e-KYC</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-8 col-lg-6 col-md-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Name as per PAN </label>
+                                        <input type="text" class="form-control" placeholder="Name as per PAN" id="txtPanName" disabled />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="item-input">
+                                        <label class="form-label">Aadhar Linked </label>
+                                        <input type="text" class="form-control" placeholder="Aadhar Linked" id="txtAadharLinked" disabled />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="item-input">
+                                        <label class="form-label">PAN Status </label>
+                                        <input type="text" class="form-control" placeholder="PAN Status" id="txtPanStatus" disabled />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="item-input">
+                                        <label class="form-label">PAN Verified On </label>
+                                        <input type="date" class="form-control" placeholder="PAN Verified On" id="txtPanVerifiedOn" disabled />
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-8 col-lg-6 col-md-6">
-                                <div class="item-input">
-                                    <label class="form-label">Name as per PAN </label>
-                                    <input type="text" class="form-control" placeholder="Name as per PAN" id="txtPanName" disabled />
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="item-input">
-                                    <label class="form-label">Aadhar Linked </label>
-                                    <input type="text" class="form-control" placeholder="Aadhar Linked" id="txtAadharLinked" disabled />
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="item-input">
-                                    <label class="form-label">PAN Status </label>
-                                    <input type="text" class="form-control" placeholder="PAN Status" id="txtPanStatus" disabled />
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="item-input">
-                                    <label class="form-label">PAN Verified On </label>
-                                    <input type="date" class="form-control" placeholder="PAN Verified On" id="txtPanVerifiedOn" disabled />
-                                </div>
-                            </div>
                         </div>
-                        <div class="mb-3"></div>
-                        <div class="row  all-custom-class">
-                            <div class="col-lg-6">
-                                <div class="item-input">
-                                    <label class="form-label">Customer Name <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="Customer Name" id="txtCustomerName" maxlength="150" />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="item-input">
-                                    <label class="form-label">Customer Code <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="Customer Code" id="txtCustomerCode" maxlength="150" disabled />
-                                </div>
-                            </div>
 
-                        </div>
-                        <div class="col-lg-12  all-custom-class">
-                            <div class="item-input">
-                                <label class="form-label">Address <span>*</span></label>
-                                <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
-                                <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 95%; display: none;"></ul>
-                                <input type="hidden" id="fromLat">
-                                <input type="hidden" id="fromLng">
-                                <input type="hidden" id="fromState">
-                                <input type="hidden" id="fromCity">
-                            </div>
-                        </div>
-                        <div class="row  all-custom-class">
-                            <div class="col-lg-6">
-                                <div class="item-input">
-                                    <label class="form-label">City <span>*</span></label>
-                                    <select class="select2-custom form-control" style="width: 100%;" id="ddlCity">
-                                    </select>
+                    </div>
+
+                    <div class="franchise-details">
+                        <div class="row all-custom-class">
+                            <div class="row  all-custom-class">
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Customer Name <span>*</span></label>
+                                        <input type="text" class="form-control" placeholder="Customer Name" id="txtCustomerName" maxlength="150" />
+                                    </div>
                                 </div>
-                                <div class="item-input">
-                                    <label class="form-label">Contact Person </label>
-                                    <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
-                                </div>
-                                <div class="item-input">
-                                    <label class="form-label">Mobile Number </label>
-                                    <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numMobile" onkeypress="return isNumber(event)" maxlength="10" />
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Customer Code <span>*</span></label>
+                                        <input type="text" class="form-control" placeholder="Customer Code" id="txtCustomerCode" maxlength="150" disabled />
+                                    </div>
                                 </div>
 
+                            </div>
+                            <div class="col-lg-12  all-custom-class">
                                 <div class="item-input">
-                                    <label class="form-label">PAN Number <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="PAN Number" id="numPan" />
-                                </div>
-                                <div class="item-input">
-                                    <label class="form-label">GST Number </label>
-                                    <input type="text" class="form-control" placeholder="GST Number" id="numGstNumber" />
+                                    <label class="form-label">Address <span>*</span></label>
+                                    <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
+                                    <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 95%; display: none;"></ul>
+                                    <input type="hidden" id="fromLat">
+                                    <input type="hidden" id="fromLng">
+                                    <input type="hidden" id="fromState">
+                                    <input type="hidden" id="fromCity">
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="item-input">
-                                    <label class="form-label">Pincode <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="Pincode" id="numPincode" maxlength="6" onkeypress="return isNumber(event)" />
-                                </div>
-                                <div class="item-input">
-                                    <label class="form-label">Contact Number </label>
-                                    <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numContact" maxlength="10" onkeypress="return isNumber(event)" />
-                                </div>
-                                <div class="item-input">
-                                    <label class="form-label">WhatsApp Number <span>*</span></label>
-                                    <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numWhatsApp" onkeypress="return isNumber(event)" maxlength="10" />
-                                </div>
+                            <div class="row  all-custom-class">
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">City <span>*</span></label>
+                                        <select class="select2-custom form-control" style="width: 100%;" id="ddlCity">
+                                        </select>
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">Contact Person </label>
+                                        <input type="text" class="form-control" placeholder="Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">Mobile Number </label>
+                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numMobile" onkeypress="return isNumber(event)" maxlength="10" />
+                                    </div>
 
-                                <div class="item-input">
-                                    <label class="form-label">Email ID</label>
-                                    <input type="email" class="form-control" placeholder="Email ID" id="txtEmail" maxlength="100" />
+                                    <div class="item-input">
+                                        <label class="form-label">PAN Number <span>*</span></label>
+                                        <input type="text" class="form-control" placeholder="PAN Number" id="numPan" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">GST Number </label>
+                                        <input type="text" class="form-control" placeholder="GST Number" id="numGstNumber" />
+                                    </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="item-input">
+                                        <label class="form-label">Pincode <span>*</span></label>
+                                        <input type="text" class="form-control" placeholder="Pincode" id="numPincode" maxlength="6" onkeypress="return isNumber(event)" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">Contact Number </label>
+                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numContact" maxlength="10" onkeypress="return isNumber(event)" />
+                                    </div>
+                                    <div class="item-input">
+                                        <label class="form-label">WhatsApp Number <span>*</span></label>
+                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numWhatsApp" onkeypress="return isNumber(event)" maxlength="10" />
+                                    </div>
 
+                                    <div class="item-input">
+                                        <label class="form-label">Email ID</label>
+                                        <input type="email" class="form-control" placeholder="Email ID" id="txtEmail" maxlength="100" />
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
                     <div class="button-main">
                         <a href="#" class="card-link" id="btnSaveCustomer" data-action="save">

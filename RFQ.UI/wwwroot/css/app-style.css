@@ -1640,12 +1640,19 @@ table.dataTable thead th.sorting_desc::after {
 }
 
 .franchise-details {
-    padding: 1.5625rem 1.875rem;
+    /*  padding: 1.5625rem 1.875rem;*/
+    padding-top: 1.5625rem;
+    padding-right: 1.875rem;
+    padding-bottom: 0.4375rem;
+    padding-left: 1.875rem;
     border-bottom: 1px solid var(--ft-topbar-search-border);
 }
 
 .franchise-owner-details {
-    padding: 1.5625rem 1.875rem;
+    padding-top: 1.5625rem;
+    padding-right: 1.875rem;
+    padding-bottom: 0.4375rem;
+    padding-left: 1.875rem;
     border-bottom: 1px solid var(--ft-topbar-search-border);
 }
 

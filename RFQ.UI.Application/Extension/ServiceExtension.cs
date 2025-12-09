@@ -44,6 +44,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IBookingOrTripService, BookingOrTripService>();
             services.AddScoped<IEWayBillService, EWayBillService>();
             services.AddScoped<IDeliveryOrCloseTripService, DeliveryOrCloseTripService>();
+            services.AddScoped<IBokingInvoiceService, BokingInvoiceService>();
             return services;
         }
     }

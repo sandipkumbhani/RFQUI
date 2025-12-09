@@ -43,6 +43,7 @@ namespace RFQ.UI.Infrastructure.Extension
             services.AddScoped<IBookingOrTripAdaptor, BookingOrTripAdaptor>();
             services.AddScoped<IEWayBillAdaptor, EWayBillAdaptor>();
             services.AddScoped<IDeliveryOrCloseTripAdaptor, DeliveryOrCloseTripAdaptor>();
+            services.AddScoped<IBokingInvoiceAdaptor, BokingInvoiceAdaptor>();
             return services;
         }
     }
