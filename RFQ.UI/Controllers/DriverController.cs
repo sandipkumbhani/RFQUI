@@ -53,9 +53,6 @@ namespace RFQ.UI.Controllers
             }
         }
         
-
-
-
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile file)
         {
@@ -148,6 +145,7 @@ namespace RFQ.UI.Controllers
                 }
                 driverRequestDto.CreatedBy = _globalClass.UserId;
                 driverRequestDto.UpdatedBy = _globalClass.UserId;
+                driverRequestDto.CompanyId = _globalClass.CompanyId;
                 driverRequestDto.StatusId = (int)EStatus.IsActive;
 
                 var result = await _driverServices.AddDriver(driverRequestDto);
