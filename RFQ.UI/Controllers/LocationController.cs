@@ -47,7 +47,7 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 if (ex.Message.Contains("409"))
-                    return Conflict("Location name or code already exists");
+                    return Conflict("Location name already exists");
                 else
                     throw;
             }
@@ -114,7 +114,7 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 if (ex.Message.Contains("409"))
-                    return Conflict("Location name or code already exists");
+                    return Conflict("Location name already exists");
                 else
                     throw;
             }

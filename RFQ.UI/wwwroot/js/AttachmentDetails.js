@@ -240,7 +240,6 @@ function ResetAttachmentRepeater() {
     firstRow.find('a.filelink').removeAttr('href');
     firstRow.find('a.filelink').text('View File');
 }
-
 function UpdateAttachmentData(TransactionId) {
     const repeaterItems = document.querySelectorAll("[data-repeater-item]");
     const updateAttachmentDetails = [];

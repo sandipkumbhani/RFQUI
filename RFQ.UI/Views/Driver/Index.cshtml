@@ -18,12 +18,12 @@
         <div class="col-12">
             <div class="page-title-box add">
                 <h1 class="page-title">Driver</h1>
-                
-                    <div class="add-btn">
+
+                <div class="add-btn">
                     <a href="#" id="btnAdd">
-                            <i class="ri-add-line"></i> <span>Add</span>
-                        </a>
-                    </div>
+                        <i class="ri-add-line"></i> <span>Add</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -110,17 +110,10 @@
             <div class="card com-franchise-info">
                 <form id="driverForm" method="post">
                     <input type="hidden" id="hdDriverId" />
+
                     <div class="franchise-details">
                         <h2 class="page-form-title">Driver Details</h2>
                         <div class="all-custom-class">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">Driver Type <span>*</span></label>
-                                        <select id="ddlDriverType" class="select2-custom form-control" style="width: 100%;"></select>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="item-input">
@@ -138,59 +131,84 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="franchise-details">
+                        <h2 class="page-form-title">
+                            <a class="arrow-icon toggle-arrow"
+                               data-bs-toggle="collapse"
+                               href="#driverKycDetailsCollapse">
+                                <i class="bi bi-dash-square"></i><span> Driver e-KYC Details </span>
+                            </a>
+                        </h2>
+                        <div class="collapse show" id="driverKycDetailsCollapse">
+                            <div class="all-custom-class">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="item-input">
+                                            <label class="form-label">Driver Name <span>*</span></label>
+                                            <input type="text" class="form-control" placeholder="Driver Name AutoFetched" id="txtDriverName" />
+                                        </div>
+                                        <div class="item-input">
+                                            <label class="form-label">DL Issue Date <span>*</span></label>
+                                            <input type="date" class="form-control" id="txtDLIssueDate" />
+                                        </div>
+                                        <div class="item-input position-relative">
+                                            <label class="form-label"><span>*</span>Address</label>
+                                            <input id="from-search-box" type="text" class="form-control" placeholder="Address" autocomplete="off" />
+                                            <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="item-input">
+                                            <label class="form-label">Driver Code <span>*</span></label>
+                                            <input type="text" class="form-control" id="txtDriverCode" maxlength="10" placeholder="Driver Code" onkeypress="return AllowAlphaNumericOnly(event)" disabled />
+                                        </div>
+                                        <div class="item-input">
+                                            <label class="form-label">DL Expiry Date <span>*</span></label>
+                                            <input type="date" class="form-control" id="txtDLExpiryDate" />
+                                        </div>
+                                        <div class="item-input">
+                                            <label class="form-label">DL Issuing RTO</label>
+                                            <input type="text" class="form-control" placeholder="DL Issuing RTO" id="txtDLIssuingRTO" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="file-upload-item">
+                                            <label class="form-label">Upload Photo <span>*</span></label>
+                                            <div class="dropzone" id="dropzone">
+                                                <div class="dz-message needsclick">
+                                                    <i class="ri-upload-cloud-2-fill"></i>
+                                                    <h5>Drag & Drop your files here</h5>
+                                                    <strong>OR</strong>
+                                                    <span>Browse files</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="text" hidden id="txtUploadedPhoto" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="franchise-details">
+                        <div class="all-custom-class">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="item-input">
-                                        <label class="form-label">Driver Name <span>*</span></label>
-                                        <input type="text" class="form-control" placeholder="Driver Name AutoFetched" id="txtDriverName" />
-                                    </div>
-                                    <div class="item-input">
-                                        <label class="form-label">DL Issue Date <span>*</span></label>
-                                        <input type="date" class="form-control" id="txtDLIssueDate" />
-                                    </div>
-                                    <div class="item-input">
-                                        <label class="form-label">DL Issuing RTO</label>
-                                        <input type="text" class="form-control" placeholder="DL Issuing RTO" id="txtDLIssuingRTO" />
+                                        <label class="form-label">Driver Type <span>*</span></label>
+                                        <select id="ddlDriverType" class="select2-custom form-control" style="width: 100%;"></select>
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
-                                    <div class="item-input">
-                                        <label class="form-label">Driver Code <span>*</span></label>
-                                        <input type="text" class="form-control" id="txtDriverCode" maxlength="10" placeholder="Driver Code" onkeypress="return AllowAlphaNumericOnly(event)" disabled />
-                                    </div>
-                                    <div class="item-input">
-                                        <label class="form-label">DL Expiry Date <span>*</span></label>
-                                        <input type="date" class="form-control" id="txtDLExpiryDate" />
-                                    </div>
+                                <div class="col-lg-6">
                                     <div class="item-input">
                                         <label class="form-label">WhatsApp Number <span>*</span></label>
                                         <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numWhatsapp" onkeypress="return isNumber(event)" maxlength="10" />
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
-                                    <div class="file-upload-item">
-                                        <label class="form-label">Upload Photo <span>*</span></label>
-                                        <div class="dropzone" id="dropzone">
-                                            <div class="dz-message needsclick">
-                                                <i class="ri-upload-cloud-2-fill"></i>
-                                                <h5>Drag & Drop your files here</h5>
-                                                <strong>OR</strong>
-                                                <span>Browse files</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="text" hidden id="txtUploadedPhoto" />
-                                </div>
                             </div>
-                            <div class="col-lg-12">
-                                <div class="item-input position-relative">
-                                    <label class="form-label"><span>*</span>Address</label>
-                                    <input id="from-search-box" type="text" class="form-control" placeholder="Address" autocomplete="off" />
-                                    <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
-
-                                </div>
-                            </div>
-
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="item-input">
@@ -242,8 +260,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 
                     <div class="button-main">

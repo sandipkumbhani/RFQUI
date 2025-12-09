@@ -322,11 +322,6 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchDriverList();
 });
-function FormatDateToLocal(dateString) {
-    const date = new Date(dateString);
-    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    return localDate.toISOString().split('T')[0];
-}
 function EditDriver(driverId) {
     if ($("#btnUpdateDriver").hasClass('d-none')) {
         $("#btnUpdateDriver").removeClass('d-none');
@@ -345,17 +340,17 @@ function EditDriver(driverId) {
         if (dropzone.children[1]) {
             dropzone.removeChild(dropzone.children[1]);
         }
-
+        console.log(formData);
         $("#hdDriverId").val(formData.driverId);
         $("#ddlDriverType").val(formData.driverTypeId).trigger('change');
         $("#numLicenseNo").val(formData.licenseNo).prop("disabled", true);
         $("#txtDateOfBirth").val(FormatDateToLocal(formData.dateOfBirth)).prop("disabled", true);
         $("#txtDriverCode").val(formData.driverCode);
-        $("#txtDLIssueDate").val(formData.licenseIssueDate);
+        $("#txtDLIssueDate").val(FormatDateToLocal(formData.licenseIssueDate));
         $("#txtDLIssuingRTO").val(formData.dlIssuingRto);
 
         //var dlIssueRto = $("#txtDLIssuingRTO").val();
-        $("#txtDLExpiryDate").val(formData.licenseExpDate);
+        $("#txtDLExpiryDate").val(FormatDateToLocal(formData.licenseExpDate));
         $("#numWhatsapp").val(formData.whatsAppNo);
         $("#from-search-box").val(formData.addressLine);
         $("#numMobile").val(formData.mobNo);
@@ -435,10 +430,6 @@ function UpdateDriver(fileName) {
         });
     }
 }
-function FormatDateForInput(dateString) {
-    const date = new Date(dateString);
-    return date.toISOString().slice(0, 16);
-}
 function DlEKycclick() {
     $("#licenseEKycButton").on("click", function (event) {
         event.preventDefault();
@@ -474,8 +465,8 @@ function DlEKycclick() {
                 var base64String = Data.drivingLicenseModel.photo;
 
                 $("#txtDriverName").val(drivingLicenseModel.fullName);
-                $("#txtDLIssueDate").val(FormatDateForInput(drivingLicenseModel.validityIssueDate));
-                $("#txtDLExpiryDate").val(FormatDateForInput(drivingLicenseModel.validityExpiryDate));
+                $("#txtDLIssueDate").val(new Date(drivingLicenseModel.validityIssueDate).toISOString().split('T')[0]);
+                $("#txtDLExpiryDate").val(new Date(drivingLicenseModel.validityExpiryDate).toISOString().split('T')[0]);
                 $("#txtDLIssuingRTO").val(drivingLicenseModel.rtoAuthority),
                     $("#from-search-box").val(drivingLicenseModel.presentAddress);
                 $("#numPincode").val(drivingLicenseModel.pincode);

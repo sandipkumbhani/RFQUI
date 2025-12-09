@@ -235,81 +235,86 @@
                                         <input type="text" class="form-control" placeholder="PAN Status" id="txtPanStatus" disabled />
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">Vendor Name <span>*</span></label>
-                                        <input type="text" class="form-control" placeholder="Vendor Name" id="txtVendorName" maxlength="150" />
-                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="franchise-owner-details">
+                        <div class="row all-custom-class">
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Vendor Name <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Vendor Name" id="txtVendorName" maxlength="150" />
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">Vendor Category <span>*</span></label>
-                                        <select class="select2-custom form-control" aria-label="Select a Vendor Category" id="ddlVendorCategory" style="width: 100%;">
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Vendor Category <span>*</span></label>
+                                    <select class="select2-custom form-control" aria-label="Select a Vendor Category" id="ddlVendorCategory" style="width: 100%;">
+                                    </select>
                                 </div>
-                                <div class="col-lg-12">
-                                    <div class="item-input">
-                                        <label class="form-label">Address <span>*</span></label>
-                                        <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
-                                        <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 95%; display: none;"></ul>
-                                        <input type="hidden" id="fromLat">
-                                        <input type="hidden" id="fromLng">
-                                        <input type="hidden" id="fromState">
-                                        <input type="hidden" id="fromCity">
-                                    </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="item-input">
+                                    <label class="form-label">Address <span>*</span></label>
+                                    <input id="from-search-box" type="text" class="form-control" placeholder="Search location" autocomplete="off" maxlength="200" />
+                                    <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 95%; display: none;"></ul>
+                                    <input type="hidden" id="fromLat">
+                                    <input type="hidden" id="fromLng">
+                                    <input type="hidden" id="fromState">
+                                    <input type="hidden" id="fromCity">
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">City <span>*</span></label>
-                                        <select class="select2-custom form-control" id="ddlCity" name="vendor" aria-label="Select a City" data-live-search="true" style="width: 100%;">
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">City <span>*</span></label>
+                                    <select class="select2-custom form-control" id="ddlCity" name="vendor" aria-label="Select a City" data-live-search="true" style="width: 100%;">
+                                    </select>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">Pincode <span>*</span></label>
-                                        <input type="text" class="form-control" placeholder="Pincode" id="txtPinCode" onkeypress="return isNumber(event)" maxlength="6" />
-                                    </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Pincode <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="Pincode" id="txtPinCode" onkeypress="return isNumber(event)" maxlength="6" />
                                 </div>
+                            </div>
 
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">Contact Person</label>
-                                        <input type="text" class="form-control" placeholder="Enter Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
-                                    </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Contact Person</label>
+                                    <input type="text" class="form-control" placeholder="Enter Contact Person" id="txtContactPerson" maxlength="50" onkeypress="return isAlphabets(event)" />
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" class="form-control" placeholder=" Enter Email ID" id="txtEmailId" maxlength="50" />
-                                    </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" placeholder=" Enter Email ID" id="txtEmailId" maxlength="50" />
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">Mobile Number</label>
-                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtMobileNumber" maxlength="10" onkeypress="return isNumber(event)" />
-                                    </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Mobile Number</label>
+                                    <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtMobileNumber" maxlength="10" onkeypress="return isNumber(event)" />
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">WhatsApp Number <span>*</span></label>
-                                        <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtWhatsappNumber" onkeypress="return isNumber(event)" maxlength="10" />
-                                    </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">WhatsApp Number <span>*</span></label>
+                                    <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="txtWhatsappNumber" onkeypress="return isNumber(event)" maxlength="10" />
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">Pan Number <span>*</span></label>
-                                        <input type="text" class="form-control" placeholder="xxxxxxxxxx" id="numPanNumber" maxlength="10" />
-                                    </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">Pan Number <span>*</span></label>
+                                    <input type="text" class="form-control" placeholder="xxxxxxxxxx" id="numPanNumber" maxlength="10" />
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">GST Number</label>
-                                        <input type="text" class="form-control" placeholder="xxxxx-xxxxx-xxxxx" id="numGstNumber" maxlength="15" />
-                                    </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="item-input">
+                                    <label class="form-label">GST Number</label>
+                                    <input type="text" class="form-control" placeholder="xxxxx-xxxxx-xxxxx" id="numGstNumber" maxlength="15" />
                                 </div>
-                                <div class="col-lg-6">
+                            </div>
+                            @* <div class="col-lg-6">
                                     <div class="item-input">
                                         <ul class="profile-check-box">
                                             <li>
@@ -338,8 +343,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
-                            </div>
+                                </div> *@
                         </div>
                     </div>
 
@@ -424,6 +428,7 @@
                             </div>
                         </div>
                     </div>
+
                     @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 
                     <div class="button-main">
