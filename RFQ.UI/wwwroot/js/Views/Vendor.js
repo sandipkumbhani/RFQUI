@@ -964,8 +964,8 @@ function FetchVendorApplicableRouteList(partyId) {
     });
     return result;
 }
-function ViewVendor(partyId) {
-    EditVendor(partyId);
-    $('#formDiv').find('input, select, textarea, button , a').prop('disabled', true);
-    $("#btnupdate").addClass('d-none');
-}
+//function ViewVendor(partyId) {
+//    EditVendor(partyId);
+//    $('#formDiv').find('input, select, textarea, button , a').prop('disabled', true);
+//    $("#btnupdate").addClass('d-none');
+//}
