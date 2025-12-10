@@ -378,7 +378,7 @@ function SaveVendor(action) {
         var adharVerified = $("#txtAadharVerified").val();
         var gstVerifiedOn = $("#txtGstVerifiedOn").val();
         var adharLinked = $("#txtAadharLinked").val();
-        var panCardName =$("#txtPanName").val();
+        var panCardName = $("#txtPanName").val();
         var panStatus = $("#txtPanStatus").val();
         var panVerifiedOn = $("#txtPanVerifiedOn").val();
         var vendorName = $("#txtVendorName").val();
@@ -451,9 +451,9 @@ function SaveVendor(action) {
                 data: JSON.stringify(userCreate),
                 dataType: "json",
                 success: function (response) {
-                    if (response.result == "success") 
+                    if (response.result == "success")
                         toastr.success("Vendor Login Create Successfully!");
-                    else 
+                    else
                         toastr.error("User with this WhatsApp number already exists.", "Error");
                 },
                 error: function (req, status, error) {
@@ -519,9 +519,9 @@ function SaveVendor(action) {
                                 ResetAttachmentRepeater();
                             }, 1000);
                         }
-                        else if (response.statusCode === 409) 
+                        else if (response.statusCode === 409)
                             toastr.warning(response.message, "Already Exists");
-                        else 
+                        else
                             toastr.error(response.message || "Unexpected error occurred.");
                     } else {
                         toastr.error("Unable to submit vendor details.");
@@ -603,6 +603,7 @@ function EditVendor(partyId) {
         $("#txtTypeBusiness").val(formData.typeOfBusiness);
         $("#txtGstStatus").val(formData.gstStatus);
         $("#txtTradeName").val(formData.tradeName);
+        
         $("#txtAadharVerified").val(formData.aadharVerified);
         var gstVerifiedDate = new Date(formData.gstVarifiedOn).toISOString().split('T')[0];
         $("#txtGstVerifiedOn").val(gstVerifiedDate);
@@ -624,6 +625,9 @@ function EditVendor(partyId) {
         $("#numGstNumber").val(formData.gstNo);
         $("#numPanNumber").val(formData.panNo);
         $("#txtGstAddress").val(formData.gstAddress);
+        if (!IsNullOrEmpty(formData.tradeName)) {
+            $("#txtVerifiedGstNo").val(formData.gstNo);
+        }
         if (attachmentData.length > 0) {
             EditMasterAttachment(attachmentData);
         }
