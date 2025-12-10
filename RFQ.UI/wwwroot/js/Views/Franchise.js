@@ -4,6 +4,8 @@ var myDropzone;
 var orderColumn = '';
 var orderDir = '';
 var fetchFranchiseUrl = '/Franchise/GetAllFranchise';
+var deleteUploadUrl = "/Franchise/DeleteUpload";
+var uploadUrl = "/Franchise/Upload";
 
 $(document).ready(function () {
     $(document).on('click', 'th.sortable', function () {
@@ -39,8 +41,6 @@ $(document).ready(function () {
 Initialize();
 function Initialize() {
     Dropzone.autoDiscover = false;
-    var uploadUrl = "/Franchise/Upload";
-    var deleteUploadUrl = "/Franchise/DeleteUpload";
     if (Dropzone.instances.length > 0) {
         Dropzone.instances.forEach(dz => dz.destroy());
     }
@@ -153,20 +153,7 @@ function Initialize() {
         },
         removedfile: function (file) {
             var fileName = $("#hdnUploadedFile").val();
-            if (fileName) {
-                $.ajax({
-                    url: deleteUploadUrl,
-                    type: "POST",
-                    data: { fileName: fileName },
-                    success: function (response) {
-                        $("#dropzone").val("");
-                        $("#hdnUploadedFile").val("");
-                    },
-                    error: function (error) {
-                        toastr.error("Error removing file.", "Error");
-                    }
-                });
-            }
+            RemoveUplodedlogo(fileName);
             var _ref;
             return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
         },
@@ -346,7 +333,7 @@ function SaveFranchise(fileName, callback) {
                 if (typeof callback === "function") {
                     callback(companyId);
                 }
-            } 
+            }
         },
         error: function (xhr, status, error) {
             if (xhr.status == 409)
@@ -365,7 +352,9 @@ function FetchFranchise() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
     $('#franchiseForm')[0].reset();
-    myDropzone.removeAllFiles(true);
+    if (myDropzone.files.length > 0) {
+        myDropzone.removeAllFiles(true);
+    }
     $('#ddlCity').val(null).trigger('change');
     $("#btnSaveFranchise").show();
     $("#btnUpdateFranchise").hide();
@@ -409,30 +398,37 @@ function EditFranchise(companyId) {
         $("#txtEmailId").val(formData.email);
         $("#txtPanNumber").val(formData.panNo);
         $("#txtGstNumber").val(formData.gstNo);
-        var parentCompanyId = formData.parentCompanyId;
-        var logoImage = formData.logoImage;
-        if (logoImage) {
-            $("#hdnUploadedFile").val(logoImage);
-            const mockFile = { name: logoImage, size: 1234 };
-            const imageUrl = `../../franchiselogo/${logoImage}`;
-            if (myDropzone) {
-                myDropzone.removeAllFiles(true);
-                myDropzone.emit("addedfile", mockFile);
-                myDropzone.emit("thumbnail", mockFile, imageUrl);
-                myDropzone.emit("complete", mockFile);
-                myDropzone.files.push(mockFile);
-                setTimeout(() => {
-                    const thumbnailImg = document.querySelector(".dz-image img[data-dz-thumbnail]");
-                    if (thumbnailImg) {
-                        thumbnailImg.style.width = "120px";
-                        thumbnailImg.style.height = "120px";
-                        thumbnailImg.style.objectFit = "cover";
+        try {
+            var parentCompanyId = formData.parentCompanyId;
+            var logoImage = formData.logoImage;
+            if (logoImage) {
+                $("#hdnUploadedFile").val(logoImage);
+                const mockFile = { name: logoImage, size: 1234 };
+                const imageUrl = `../../franchiselogo/${logoImage}`;
+                if (myDropzone) {
+                    if (myDropzone.files.length > 0) {
+                        myDropzone.removeAllFiles(true);
                     }
-                }, 100);
+                    myDropzone.emit("addedfile", mockFile);
+                    myDropzone.emit("thumbnail", mockFile, imageUrl);
+                    myDropzone.emit("complete", mockFile);
+                    myDropzone.files.push(mockFile);
+                    setTimeout(() => {
+                        const thumbnailImg = document.querySelector(".dz-image img[data-dz-thumbnail]");
+                        if (thumbnailImg) {
+                            thumbnailImg.style.width = "120px";
+                            thumbnailImg.style.height = "120px";
+                            thumbnailImg.style.objectFit = "cover";
+                        }
+                    }, 100);
+                }
             }
-        }
-        if (attachmentData.length > 0) {
-            EditMasterAttachment(attachmentData);
+            if (attachmentData.length > 0) {
+                EditMasterAttachment(attachmentData);
+            }
+
+        } catch (e) {
+            alert(e.message);
         }
     })
 };
@@ -487,11 +483,15 @@ function UpdateFranchise(fileName) {
             dataType: "json",
             data: { fileName: deletefileName },
             success: function (response) {
+                console.log(response);
             },
             error: function (xhr, status, error) {
+                console.log("xhr:", xhr, "status:", status, "error:", error);
             }
         });
     }
+    // this Code is Rfresh the Dropzone after update Frnchise logo
+    Refreshfranchiselogo(fileName)
 }
 function DeleteFranchise(companyId, fileName, linkId) {
     Swal.fire({
@@ -545,4 +545,35 @@ function DeleteFranchise(companyId, fileName, linkId) {
             });
         }
     });
+}
+
+function Refreshfranchiselogo(newFileName) {
+    if (!IsNullOrEmpty(newFileName)) {
+        const newImageUrl = `../../franchiselogo/${newFileName}?t=${new Date().getTime()}`; // cache-buster
+        myDropzone.removeAllFiles(true);
+        const mockFile = { name: newFileName, size: 1234 };
+        myDropzone.emit("addedfile", mockFile);
+        myDropzone.emit("thumbnail", mockFile, newImageUrl);
+        myDropzone.emit("complete", mockFile);
+        myDropzone.files.push(mockFile);
+        $("#hdnUploadedFile").val(newFileName);
+    }
+}
+
+function RemoveUplodedlogo(fileName) {
+    if (!IsNullOrEmpty(fileName)) {
+        $.ajax({
+            url: deleteUploadUrl,
+            type: "POST",
+            data: { fileName: fileName },
+            success: function (response) {
+                console.log(response, "Uploded Logo Removed SucessFully");
+                $("#dropzone").val("");
+                $("#hdnUploadedFile").val("");
+            },
+            error: function (error) {
+                toastr.error("Error removing file.", "Error");
+            }
+        });
+    }
 }
