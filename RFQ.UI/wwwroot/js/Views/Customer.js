@@ -323,20 +323,21 @@ function UpdateCustomer() {
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(formData),
             dataType: "json",
-            success: function (result) {
-                if (result.result === "success") {
+            success: function (res) {
+                if (!IsNullOrEmpty(res)) {
                     toastr.success("Customer Details Updated Successfully!");
                     addMasterUserActivityLog(0, LogType.Update, "Customer Details Updated Successfully!", 0);
                     $("#addCustomerDiv").css('display', 'none');
                     const transactionId = $("#hdnPartyId").val();
                     UpdateAttachmentData(transactionId);
                     FetchCustomerList();
-                } else {
-                    toastr.error("Failed to Update Customer Details", "Error");
-                }
+                } 
             },
             error: function (xhr, status, error) {
-                $("#dataDiv").html("Error: " + status + " " + error + " " + xhr.status + " " + xhr.statusText + " " + xhr.responseText);
+                if (xhr.status == 409)
+                    toastr.warning(xhr.responseText, "Already exists");
+                else
+                    toastr.error(xhr.responseText);
             },
         });
     });

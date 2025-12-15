@@ -80,21 +80,21 @@ namespace RFQ.UI.Controllers
             {
                 if (customerRequestDto.PartyId <= 0)
                 {
-                    return Json(new { result = "error", message = "Invalid PartyId." });
+                    throw new Exception("Invalid PartyId.");
                 }
                 int partyId = customerRequestDto.PartyId;
                 customerRequestDto.CompanyId = _globalClass.CompanyId;
                 customerRequestDto.CreatedBy = _globalClass.UserId;
                 customerRequestDto.UpdatedBy = _globalClass.UserId;
                 var result = await _customerServices.EditCustomer(partyId, customerRequestDto);
-                if (result != null)
-                    return Json(new { result = "success" });
-                else
-                    return Json(new { result = "failure" });
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                if (ex.Message.Contains("409"))
+                    return Conflict("Customer already exists");
+                else
+                    return StatusCode(500, ex.Message);
             }
         }
 

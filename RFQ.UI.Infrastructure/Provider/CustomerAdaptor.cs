@@ -61,12 +61,12 @@ namespace RFQ.UI.Infrastructure.Provider
                         Data = null
                     };
                 }
+                return null;
             }
             catch (Exception ex)
             {
                 return null;
             }
-            return null;
         }
 
         public async Task<string> DeleteCustomer(int PartyId)
@@ -100,21 +100,19 @@ namespace RFQ.UI.Infrastructure.Provider
             try
             {
                 var baseUrl = $"{_appSettings.BaseUrl}/MasterParty/UpdateMasterParty/{PartyId}";
-                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, customerRequestDto, _globalClass.Token);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return "Customer Updated";
-                    else
-                        return responseModel.ErrorMessage;
-                }
+                var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, customerRequestDto, _globalClass.Token );
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return "Customer Updated";
+                else
+                    throw new Exception("Failed to update Customer");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                if (ex.Message.Contains("409"))
+                    throw new Exception("Customer already exists 409");
+                else
+                    throw new Exception("Failed to update Customer");
             }
-            return "Failed to update Customer";
         }
 
         public async Task<PageList<CustomerResponseDto>> GetAllCustomer(PagingParam pagingParam)
