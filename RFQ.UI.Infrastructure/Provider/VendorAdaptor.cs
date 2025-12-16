@@ -32,17 +32,8 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var baseUrl = $"{_appSettings.BaseUrl + _config["Vendor:AddMasterParty"]}";
                 var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, vendorRequestDto, _globalClass.Token);
-                if (responseModel == null)
-                {
-                    return new NewCommonResponseDto
-                    {
-                        StatusCode = (int)responseModel.StatusCode,
-                        Message = "No response received from API",
-                        Data = null
-                    };
-                }
 
-                if (responseModel.StatusCode == 200)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
                     var vendorData = JsonConvert.DeserializeObject<VendorRequestDto>(responseModel.Data.ToString());
                     return new NewCommonResponseDto
@@ -51,33 +42,14 @@ namespace RFQ.UI.Infrastructure.Provider
                         Message = responseModel.Message,
                         Data = vendorData
                     };
-                }
-
-                if (responseModel.StatusCode == 409)
+                } else
                 {
-                    return new NewCommonResponseDto
-                    {
-                        StatusCode = 409,
-                        Message = "Duplicate record found. Party details already exist.",
-                        Data = null
-                    };
+                    throw new Exception("Failed to add Vendor");
                 }
-
-                return new NewCommonResponseDto
-                {
-                    StatusCode = (int)responseModel.StatusCode,
-                    Message = "Unexpected response from API",
-                    Data = null
-                };
             }
             catch (Exception ex)
             {
-                return new NewCommonResponseDto
-                {
-                    StatusCode = 500,
-                    Message = $"Error while saving vendor: {ex.Message}",
-                    Data = null
-                };
+                throw;
             }
         }
 

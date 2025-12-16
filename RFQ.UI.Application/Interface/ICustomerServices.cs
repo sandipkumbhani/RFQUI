@@ -21,6 +21,6 @@ namespace RFQ.UI.Application.Interface
         Task<IEnumerable<ComMstCityDto>> GetAllCity();
 
         Task<IEnumerable<CustomerRequestDto>> GetDrpCustomerList(int companyId);
-        Task<string?> GetAutoCustomerCode();
+        Task<string?> GetAutoCustomerCode(int companyId);
     }
 }

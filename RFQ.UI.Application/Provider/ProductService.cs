@@ -13,7 +13,7 @@ namespace RFQ.UI.Application.Provider
         {
             _productAdaptor = productAdaptor;
         }
-        public Task<NewCommonResponseDto> AddProduct(ProductRequestDto productRequestDto)
+        public Task<bool> AddProduct(ProductRequestDto productRequestDto)
         {
             return _productAdaptor.AddProduct(productRequestDto);
         }
@@ -23,7 +23,7 @@ namespace RFQ.UI.Application.Provider
             return _productAdaptor.DeleteProduct(productId);
         }
 
-        public Task<string> EditProduct(int productId, ProductRequestDto productRequestDto)
+        public Task<bool> EditProduct(int productId, ProductRequestDto productRequestDto)
         {
             return _productAdaptor.EditProduct(productId, productRequestDto);
         }

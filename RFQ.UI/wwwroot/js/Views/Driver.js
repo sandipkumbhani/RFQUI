@@ -184,7 +184,6 @@ function DropzoneInitialize() {
         },
         success: function (file, response) {
             uploadedFileName = response.fileName;
-
             if (clickedButton === "btnSaveDriver") {
                 SaveDriver(uploadedFileName, function (driverId) {
                     if (driverId > 0) {
@@ -463,7 +462,10 @@ function DlEKycclick() {
                 var Data = response;
                 var drivingLicenseModel = response.drivingLicenseModel;
                 var base64String = Data.drivingLicenseModel.photo;
-
+                const dropzone = document.getElementById('dropzone');
+                if (!IsNullOrEmpty(dropzone) && dropzone.children[1]) {
+                    dropzone.removeChild(dropzone.children[1]);
+                }
                 $("#txtDriverName").val(drivingLicenseModel.fullName);
                 $("#txtDLIssueDate").val(new Date(drivingLicenseModel.validityIssueDate).toISOString().split('T')[0]);
                 $("#txtDLExpiryDate").val(new Date(drivingLicenseModel.validityExpiryDate).toISOString().split('T')[0]);
@@ -471,7 +473,8 @@ function DlEKycclick() {
                     $("#from-search-box").val(drivingLicenseModel.presentAddress);
                 $("#numPincode").val(drivingLicenseModel.pincode);
                 $("#txtVerifiedOn").val(new Date().toISOString().split('T')[0]),
-                    $("#txtUploadedPhoto").val(drivingLicenseModel.photo);
+               
+                $("#txtUploadedPhoto").val(drivingLicenseModel.photo);
 
                 function base64ToFile(base64String, filename) {
                     const arr = base64String.split(",");

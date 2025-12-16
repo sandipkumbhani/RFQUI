@@ -24,21 +24,20 @@ namespace RFQ.UI.Infrastructure.Provider
             _appSettings = appSettings;
             _commonApiAdaptor = commonApiAdaptor;
         }
-        public async Task<NewCommonResponseDto> AddProduct(ProductRequestDto productRequestDto)
+        public async Task<bool> AddProduct(ProductRequestDto productRequestDto)
         {
             try
             {
                 var baseUrl = _appSettings.BaseUrl + _appSettings.AddProduct;
                 var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, productRequestDto, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
-                {
-                    return JsonConvert.DeserializeObject<NewCommonResponseDto>(responseModel.Data.ToString());
-                }
-                return new NewCommonResponseDto();
+                    return true;
+                else
+                    return false;
             }
             catch (Exception ex)
             {
-                return new NewCommonResponseDto() { Data = null, Message = ex.InnerException.ToString(), ErrorMessage = ex.StackTrace };
+                throw;
             }
         }
         public async Task<string> DeleteProduct(int productId)
@@ -68,25 +67,19 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<string> EditProduct(int productId, ProductRequestDto productRequestDto)
+        public async Task<bool> EditProduct(int productId, ProductRequestDto productRequestDto)
         {
             try
             {
                 var baseUrl = $"{_appSettings.BaseUrl + _appSettings.EditProduct + productId}";
                 var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, productRequestDto, _globalClass.Token);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return "Product Updated";
-                    else
-                        return responseModel.ErrorMessage;
-                }
-                return "Failed to update Product";
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return true;
+                return false;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
         public async Task<PageList<ProductResponseDto>?> GetAllProducts(PagingParam pagingParam)

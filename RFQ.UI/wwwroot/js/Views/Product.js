@@ -64,7 +64,7 @@ function SaveProduct(action) {
             dataType: "json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response.statusCode == 200) {
+                if (!IsNullOrEmpty(response) && response) {
                     toastr.success("Item Save Successfully!");
                     addMasterUserActivityLog(0, LogType.Create, "Item Save Successfully!", 0);
                     if (typeof this.completeOnSuccess === "function") {
@@ -75,7 +75,10 @@ function SaveProduct(action) {
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Product Details!", "Error");
+                if (xhr.status == 409)
+                    toastr.warning(xhr.responseText, "Already exists");
+                else
+                    toastr.error("Failed to Add Item Details");
             },
             completeOnSuccess: function () {
                 FetchProduct();
@@ -89,16 +92,19 @@ function SaveProduct(action) {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response) {
+                if (!IsNullOrEmpty(response) && response) {
                     toastr.success("Item Save Successfully!", "Success");
                     addMasterUserActivityLog(0, LogType.Create, "Item Save Successfully!", 0);
                     $('#productForm')[0].reset();
                 } else {
-                    toastr.error("Failed to productForm.", "Error");
+                    toastr.error("Failed to Add Item Details.", "Error");
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to Product Details!", "Error");
+                if (xhr.status == 409)
+                    toastr.warning(xhr.responseText, "Already exists");
+                else
+                    toastr.error("Failed to Add Item Details");
             }
         });
     }
@@ -158,7 +164,7 @@ function UpdateProduct() {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                if (response.result == 'Success') {
+                if (!IsNullOrEmpty(response) && response) {
                     toastr.success("Product Updated Successfully!");
                     addMasterUserActivityLog(0, LogType.Update, "Product Updated Successfully!", 0);
                     FetchProduct();
@@ -168,7 +174,10 @@ function UpdateProduct() {
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error("Failed to submit Vehicle Type", "Error");
+                if (xhr.status == 409)
+                    toastr.warning(xhr.responseText, "Already exists");
+                else
+                    toastr.error("Failed to Add Item Details");
             }
         });
     });

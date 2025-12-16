@@ -223,11 +223,11 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<string?> GetAutoCustomerCode()
+        public async Task<string?> GetAutoCustomerCode(int UserId)
         {
             try
             {
-                var baseUrl = _appSettings.BaseUrl + _appSettings.CustomerGetAutoCustomerCode;
+                var baseUrl = _appSettings.BaseUrl + _appSettings.CustomerGetAutoCustomerCode + UserId;
                 var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null && responseModel.Data != null)
                 {

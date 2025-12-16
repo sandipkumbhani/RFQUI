@@ -182,9 +182,9 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var code = await _customerServices.GetAutoCustomerCode();
+                int UserId = _globalClass.UserId;
+                var code = await _customerServices.GetAutoCustomerCode(UserId);
                 return Json(code);
-
             }
             catch (Exception ex)
             {

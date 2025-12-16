@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
@@ -77,7 +78,13 @@ namespace RFQ.UI.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                var innerMessage = ex.InnerException?.Message ?? ex.Message;
+                if (innerMessage.Contains("UNIQUE") || innerMessage.Contains("duplicate") || innerMessage.Contains("409"))
+                {
+                    return Conflict($"Vendor already exists.");
+                }
+                else
+                    throw new Exception("Failed to Add Vendor Details");
             }
         }
 
@@ -123,15 +130,22 @@ namespace RFQ.UI.Controllers
                 vendorRequestDto.CreatedBy = _globalClass.UserId;
                 vendorRequestDto.UpdatedBy = _globalClass.UserId;
                 vendorRequestDto.PartyTypeId = 5;
-                var result = _vendorService.EditVendor(partyId, vendorRequestDto);
+                var result = await _vendorService.EditVendor(partyId, vendorRequestDto);
                 if (result != null)
-                    return Json(new { result = "Success" });
+                    return Json(true);
                 else
-                    return Json(new { result = "Failed" });
+                    return Json(false);
             }
+
             catch (Exception ex)
             {
-                return Json(new { result = "Error", message = ex.Message });
+                var innerMessage = ex.InnerException?.Message ?? ex.Message;
+                if (innerMessage.Contains("UNIQUE") || innerMessage.Contains("duplicate") || innerMessage.Contains("409"))
+                {
+                    return Conflict($"Vendor already exists.");
+                }
+                else
+                    throw new Exception("Failed to Update Vendor Details");
             }
         }
 

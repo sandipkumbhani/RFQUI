@@ -469,8 +469,7 @@ function SaveVendor(action) {
                 data: JSON.stringify(formData),
                 dataType: "json",
                 success: function (response) {
-                    if (response != null) {
-                        if (response.statusCode == 200) {
+                    if (!IsNullOrEmpty(response) && response.statusCode == 200) {
                             partyId = response.data.partyId
                             Saveattachment(partyId);
                             toastr.success("Vendor Details Submitted Successfully!");
@@ -478,19 +477,16 @@ function SaveVendor(action) {
                             if (typeof this.completeOnSuccess === "function") {
                                 this.completeOnSuccess();
                             }
-                        }
-                        else if (response.statusCode === 409)
-                            toastr.warning(response.message, "Already Exists");
-                        else
-                            toastr.error(response.message || "Unexpected error occurred.");
                     }
                     else {
-                        toastr.error("Unable to submit vendor details.", "Error");
+                        toastr.error("Failed to Add Vendor Details.", "Error");
                     }
-
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Unable to submit vendor details", "Error");
+                    if (xhr.status == 409)
+                        toastr.warning(xhr.responseText, "Already exists");
+                    else
+                        toastr.error("Failed to Add Vendor Details");
                 },
                 completeOnSuccess: function () {
                     FetchVendor();
@@ -505,8 +501,7 @@ function SaveVendor(action) {
                 dataType: "json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    if (response) {
-                        if (response.statusCode === 200) {
+                    if (!IsNullOrEmpty(response) && response.statusCode === 200) {
                             partyId = response.data.partyId;
                             Saveattachment(partyId);
                             toastr.success("Vendor details submitted successfully!");
@@ -518,17 +513,15 @@ function SaveVendor(action) {
                             setTimeout(() => {
                                 ResetAttachmentRepeater();
                             }, 1000);
-                        }
-                        else if (response.statusCode === 409)
-                            toastr.warning(response.message, "Already Exists");
-                        else
-                            toastr.error(response.message || "Unexpected error occurred.");
                     } else {
-                        toastr.error("Unable to submit vendor details.");
+                        toastr.error("Failed to Add Vendor Details.");
                     }
                 },
                 error: function (xhr, status, error) {
-                    toastr.error("Unable to submit vendor details.", "Error");
+                    if (xhr.status == 409)
+                        toastr.warning(xhr.responseText, "Already exists");
+                    else
+                        toastr.error("Failed to Add Vendor Details");
                 }
             });
         }
@@ -605,11 +598,11 @@ function EditVendor(partyId) {
         $("#txtTradeName").val(formData.tradeName);
         
         $("#txtAadharVerified").val(formData.aadharVerified);
-        var gstVerifiedDate = new Date(formData.gstVarifiedOn).toISOString().split('T')[0];
+        var gstVerifiedDate = new Date(formData.gstVarifiedOn).toLocaleDateString('en-CA');
         $("#txtGstVerifiedOn").val(gstVerifiedDate);
         $("#txtAadharLinked").val(formData.panLinkedWithAdhar);
         $("#txtPanStatus").val(formData.panStatus);
-        var panVerifiedDate = new Date(formData.panVerifiedOn).toISOString().split('T')[0];
+        var panVerifiedDate = new Date(formData.panVerifiedOn).toLocaleDateString('en-CA');
         $("#txtPanName").val(formData.panCardName);
         $("#txtPanVerifiedOn").val(panVerifiedDate);
         $("#txtPanNumber").val(formData.panNo);
@@ -634,6 +627,7 @@ function EditVendor(partyId) {
     })
 }
 function UpdateVendor() {
+    debugger;
     var formData = {
         PartyId: $("#hdnPartyId").val(),
         PartyName: $("#txtVendorName").val(),
@@ -653,11 +647,11 @@ function UpdateVendor() {
         TypeOfBusiness: $("#txtTypeBusiness").val(),
         AadharVerified: $("#txtAadharVerified").val(),
         GSTStatus: $("#txtGstStatus").val(),
-        GSTVarifiedOn: $("#txtGstVerifiedOn").val() ? new Date($("#txtGstVerifiedOn").val()).toISOString() : null,
+        GSTVarifiedOn: $("#txtGstVerifiedOn").val() ? new Date($("#txtGstVerifiedOn").val()).toLocaleDateString('en-CA') : null,
         PANCardName: $("#txtPanName").val(),
         PANStatus: $("#txtPanStatus").val(),
         PANLinkedWithAdhar: $("#txtAadharLinked").val(),
-        PANVerifiedOn: $("#txtPanVerifiedOn").val() ? new Date($("#txtPanVerifiedOn").val()).toISOString() : null,
+        PANVerifiedOn: $("#txtPanVerifiedOn").val() ? new Date($("#txtPanVerifiedOn").val()).toLocaleDateString('en-CA') : null,
         GSTAddress: $("#txtGstAddress").val(),
         LinkId: linkId,
         VendorVehicleTypes: vehicleTypeNameList.map(item => ({
@@ -701,7 +695,7 @@ function UpdateVendor() {
         data: JSON.stringify(formData),
         dataType: "json",
         success: function (result) {
-            if (result.result == "Success") {
+            if (result) {
                 $("#addVendorDiv").css('display', 'none')
                 toastr.success("Vendor Details Updated Successfully!");
                 addMasterUserActivityLog(0, LogType.Update, "Vendor Details Updated Successfully!", 0);
@@ -715,7 +709,10 @@ function UpdateVendor() {
             }
         },
         error: function (xhr, status, error) {
-            toastr.error("Failed to Update Vendor Details!", "Error");
+            if (xhr.status == 409)
+                toastr.warning(xhr.responseText, "Already exists");
+            else
+                toastr.error(xhr.responseText);
         }
     });
 }

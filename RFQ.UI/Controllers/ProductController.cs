@@ -29,7 +29,11 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                if (productRequestDto != null)
+                if (productRequestDto == null)
+                {
+                    throw new ArgumentNullException(nameof(productRequestDto), "Item data is null");
+                }
+                else
                 {
                     productRequestDto.CompanyId = _globalClass.CompanyId;
                     productRequestDto.CreatedBy = _globalClass.UserId;
@@ -41,11 +45,16 @@ namespace RFQ.UI.Controllers
                     var result = await _productService.AddProduct(productRequestDto);
                     return Json(result);
                 }
-                return null;
             }
             catch (Exception ex)
             {
-                return Json(new NewCommonResponseDto { Data = null, Message = ex.Message.ToString() });
+                var innerMessage = ex.InnerException?.Message ?? ex.Message;
+                if (innerMessage.Contains("UNIQUE") || innerMessage.Contains("duplicate") || innerMessage.Contains("409"))
+                {
+                    return Conflict($"Item already exists.");
+                }
+                else
+                    throw new Exception("Failed to Add Item Details");
             }
         }
 
@@ -62,14 +71,17 @@ namespace RFQ.UI.Controllers
                 productRequestDto.UpdatedOn = DateTime.Now;
 
                 var result = await _productService.EditProduct(productId, productRequestDto);
-                if (result != null)
-                    return Json(new { result = "Success" });
-                else
-                    return Json(new { result = "Failed" });
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                var innerMessage = ex.InnerException?.Message ?? ex.Message;
+                if (innerMessage.Contains("UNIQUE") || innerMessage.Contains("duplicate") || innerMessage.Contains("409"))
+                {
+                    return Conflict($"Item already exists.");
+                }
+                else
+                    throw new Exception("Failed to Update Item Details");
             }
         }
 
