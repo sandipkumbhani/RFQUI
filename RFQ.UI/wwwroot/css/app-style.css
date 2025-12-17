@@ -3522,3 +3522,9 @@ body.overlay-active {
     align-items: center;
     z-index: 9999;
 }
+
+.upload-icon {
+    display: flex;
+    align-items: center; /* vertical center */
+    justify-content: center; /* horizontal center */
+}

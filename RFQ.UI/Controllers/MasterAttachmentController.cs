@@ -4,6 +4,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Extension;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 
 namespace RFQ.UI.Controllers
 {
@@ -53,13 +54,9 @@ namespace RFQ.UI.Controllers
 
                     return Json(result);
                 }
-                if (Request.IsAjaxRequest())
-                {
-                    return Json(attachmentList);
-                }
                 else
                 {
-                    return View(attachmentList);
+                    return Json(attachmentList);
                 }
             }
             catch (Exception ex)
@@ -178,9 +175,15 @@ namespace RFQ.UI.Controllers
         {
             try
             {
+                int attachmentId = 0;
                 if (string.IsNullOrEmpty(fileName))
                 {
                     return Json(new { result = "Error", message = "File name is required." });
+                }
+                var attachmentList =  _masterAttachmentService.GetAllMasterAttachment();
+                if(attachmentList.Result.Count()>0)
+                {
+                    attachmentId = attachmentList.Result.Where(x => x.AttachmentPath == fileName).Select(x=>x.AttachmentId).FirstOrDefault();
                 }
 
                 string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "AttachmentFiles");
@@ -188,13 +191,16 @@ namespace RFQ.UI.Controllers
 
                 if (System.IO.File.Exists(filePath))
                 {
+
                     System.IO.File.Delete(filePath);
-                    return Json(new { result = "Success", message = "File deleted successfully." });
+                    _masterAttachmentService.DeleteMasterAttachmentTable(attachmentId);
+                    return Json(new { result = "Success", message = "File Deleted Successfully." });
                 }
                 else
                 {
-                    return Json(new { result = "Error", message = "File not found." });
+                    return Json(new { result = "Error", message = "File Already Deleted." });
                 }
+
             }
             catch (Exception ex)
             {

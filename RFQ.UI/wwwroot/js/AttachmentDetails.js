@@ -143,13 +143,14 @@ function Saveattachment(transactionId) {
         return;
     }
 }
-function FetchMasterAttachment(linkid, transactionid, callback) {
+
+async function  FetchMasterAttachment(linkid, transactionid, callback) {
     var fetchMasterAttachmentUrl = '/MasterAttachment/GetAllMasterAttachment';
     $.ajax({
         url: fetchMasterAttachmentUrl + "?linkid=" + linkid + "&transactionid=" + transactionid,
         type: "GET",
         dataType: "json",
-        success: function (response) {
+        success: await function (response) {
             list = response; 
             if (callback) {
                 callback(list); 
