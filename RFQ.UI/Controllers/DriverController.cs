@@ -281,7 +281,8 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                var result = await _driverServices.GetDriverCode();
+                int UserId = _globalClass.UserId;
+                var result = await _driverServices.GetDriverCode(UserId);
                 return Json(new { result });
             }
             catch (Exception ex)

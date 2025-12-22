@@ -29,9 +29,9 @@ namespace RFQ.UI.Application.Provider
             return _driverAdaptor.EditDriver(DriverId, driverRequestDto);
         }
 
-        public Task<string> GetDriverCode()
+        public Task<string> GetDriverCode(int UserId)
         {
-            return _driverAdaptor.GetDriverCode();
+            return _driverAdaptor.GetDriverCode(UserId);
         }
 
         public async Task<PageList<DriverResponseDto>> GetAllDriver(PagingParam pagingParam)

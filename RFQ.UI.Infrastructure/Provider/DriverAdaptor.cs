@@ -179,11 +179,11 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<string> GetDriverCode()
+        public async Task<string> GetDriverCode(int UserId)
         {
             try
             {
-                var baseUrl = _appSettings.BaseUrl + _appSettings.GenerateDriverCode;
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GenerateDriverCode + UserId;
                 var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel?.Data != null)
                 {
