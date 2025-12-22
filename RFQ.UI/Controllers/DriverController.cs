@@ -52,28 +52,85 @@ namespace RFQ.UI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        
-        [HttpPost]
+
+        //[HttpPost]
+        //public async Task<IActionResult> Upload(IFormFile file)
+        //{
+        //    try
+        //    {
+        //        string uniqueFileName = "";
+        //        if (file != null)
+        //        {
+
+        //            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "driverphoto");
+        //            if (!Directory.Exists(uploadsFolder))
+        //            {
+        //                Directory.CreateDirectory(uploadsFolder);
+        //            }
+        //            uniqueFileName = Guid.NewGuid().ToString() + "_" + DateTime.Now.ToString("MM/dd/yyyy") + "_" + file.FileName;
+        //            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+        //            using (var fileStream = new FileStream(filePath, FileMode.Create))
+        //            {
+        //                await file.CopyToAsync(fileStream);
+        //            }
+        //            using (var ms = new MemoryStream())
+        //            {
+        //                await file.CopyToAsync(ms);
+        //                byte[] fileBytes = ms.ToArray();
+
+        //                var base64String = $"data:{file.ContentType};base64,{Convert.ToBase64String(fileBytes)}";
+        //            }
+        //        }
+        //        return Json(new { fileName = uniqueFileName });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { result = "Error", message = ex.Message });
+        //    }
+        //}
+
         public async Task<IActionResult> Upload(IFormFile file)
         {
             try
             {
-                string uniqueFileName = "";
-                if (file != null)
+                if (file == null || file.Length == 0)
+                    return Json(new { result = "Error", message = "File is empty" });
+
+                // Folder path
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "driverphoto");
+                if (!Directory.Exists(uploadsFolder))
                 {
-                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "driverphoto");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + DateTime.Now.ToString("MM/dd/yyyy") + "_" + file.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
+                    Directory.CreateDirectory(uploadsFolder);
                 }
-                return Json(new { fileName = uniqueFileName });
+
+                // Safe filename (no / :)
+                string uniqueFileName =
+                    $"{Guid.NewGuid()}_{DateTime.Now:yyyyMMddHHmmss}_{Path.GetFileName(file.FileName)}";
+
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                byte[] fileBytes;
+
+                // Read file ONCE
+                using (var ms = new MemoryStream())
+                {
+                    await file.CopyToAsync(ms);
+                    fileBytes = ms.ToArray();
+                }
+
+                // Save to disk
+                await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
+
+                // Convert to Base64
+                string base64String =
+                    $"data:{file.ContentType};base64,{Convert.ToBase64String(fileBytes)}";
+
+                return Json(new
+                {
+                    result = "Success",
+                    fileName = uniqueFileName,
+                    base64 = base64String
+                });
             }
             catch (Exception ex)
             {
@@ -141,7 +198,7 @@ namespace RFQ.UI.Controllers
             {
                 if (driverRequestDto == null)
                 {
-                    return Json(new { success = false, message = "Invalid Driver data." });
+                    throw new ArgumentNullException(nameof(driverRequestDto), "Driver request data must not be null.");
                 }
                 driverRequestDto.CreatedBy = _globalClass.UserId;
                 driverRequestDto.UpdatedBy = _globalClass.UserId;
@@ -165,13 +222,14 @@ namespace RFQ.UI.Controllers
         {
             try
             {
-                if (driverRequestDto.DriverId <= 0)
+                if (driverRequestDto == null)
                 {
-                    return Json(new { result = "error", message = "Invalid DriverId." });
+                    throw new ArgumentNullException(nameof(driverRequestDto), "Driver request data must not be null.");
                 }
                 int driverId = driverRequestDto.DriverId;
                 driverRequestDto.CreatedBy = _globalClass.UserId;
                 driverRequestDto.UpdatedBy = _globalClass.UserId;
+                driverRequestDto.CompanyId = _globalClass.CompanyId;
                 var result = await _driverServices.EditDriver(driverId, driverRequestDto);
                 if (result != null)
                     return Json(new { result = "success" });

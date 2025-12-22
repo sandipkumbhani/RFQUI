@@ -12,7 +12,7 @@ function initialization() {
     $('.arrow-icon .toggle-arrow').on('click', function () {
         //let icon = $(this).find('.arrow-icon');
         //icon.toggleClass('rotated');
-       
+
     });
 }
 function ValidateTextbox(inputId) {
@@ -1090,9 +1090,83 @@ function addMasterUserActivityLog(LogUid, LogTypeId, Description, UserId) {
     });
 }
 function FormatDateToLocal(dateString) {
-    const date = new Date(dateString);
-    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    return localDate.toISOString().split('T')[0];
+    if (IsNullOrEmpty(dateString)) {
+        return null
+    } else {
+        const date = new Date(dateString);
+        const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+        return localDate.toISOString().split('T')[0];
+    }
+}
+function ValidateLicenseNo(number) {
+    return /^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(number);
 }
 
+function getVal(selector) {
+    const value = $(selector).val();
+    return value === "null" || value === null || value === undefined || (typeof value === "string" && value.trim() === "" ? null : value);
+}
 
+function maskData(value) {
+    if (!value) return "";
+    value = value.toString().trim();
+    // Aadhaar (12 digits → show last 4)
+    if (/^\d{12}$/.test(value)) {
+        return "**** **** " + value.slice(-4);
+    }
+    // Mobile (10 digits → show last 4)
+    if (/^\d{10}$/.test(value)) {
+        return "*".repeat(6) + value.slice(-4);
+    }
+    let result = "";
+    // Email
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        const [user, domain] = value.split("@");
+
+        for (let i = 0; i < user.length; i++) {
+            const ch = user[i];
+
+            if (i === 0) {
+                result += ch; // show first char
+            } else if (/[A-Z]/.test(ch)) result += "*";
+            else if (/[a-z]/.test(ch)) result += "*";
+            else if (/\d/.test(ch)) result += "*";
+            else result += ch;
+        }
+
+        return result + "@" + domain;
+    }
+
+    // Name / Address / Other text (first char of each word visible)
+    let isWordStart = true;
+
+    for (let ch of value) {
+        if (ch === " ") {
+            isWordStart = true;
+            result += ch;
+            continue;
+        }
+
+        if (isWordStart) {
+            result += ch;      // show first char
+            isWordStart = false;
+        } else if (/[A-Z]/.test(ch)) result += "*";
+        else if (/[a-z]/.test(ch)) result += "*";
+        else if (/\d/.test(ch)) result += "*";
+        else result += ch;
+    }
+    return result;
+}
+
+function base64ToFile(base64String, filename) {
+    const arr = base64String.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+}

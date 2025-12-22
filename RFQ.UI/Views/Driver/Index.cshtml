@@ -110,30 +110,6 @@
             <div class="card com-franchise-info">
                 <form id="driverForm" method="post">
                     <input type="hidden" id="hdDriverId" />
-
-                    <div class="franchise-details">
-                        <h2 class="page-form-title">Driver Details</h2>
-                        <div class="all-custom-class">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="item-input">
-                                        <label class="form-label">License No <span>*</span></label>
-                                        <input type="text" class="form-control" placeholder="License Number" id="numLicenseNo" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" oninput="this.value = this.value.toUpperCase()" />
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6">
-                                    <div class="item-input">
-                                        <label class="form-label">Date of Birth <span>*</span></label>
-                                        <div class="kyc-input">
-                                            <input type="date" class="form-control" id="txtDateOfBirth" />
-                                            <button type="button" class="kyc-btn" id="licenseEKycButton">e-KYC</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="franchise-details">
                         <h2 class="page-form-title">
                             <a class="arrow-icon toggle-arrow"
@@ -147,11 +123,28 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="item-input">
-                                            <label class="form-label">Driver Name <span>*</span></label>
+                                            <label class="form-label">License No </label>
+                                            <input type="text" class="form-control" placeholder="License Number" id="numLicenseNo" maxlength="15" onkeypress="return AllowAlphaNumericOnly(event)" oninput="this.value = this.value.toUpperCase()" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-6 col-md-6">
+                                        <div class="item-input">
+                                            <label class="form-label">Date of Birth</label>
+                                            <div class="kyc-input">
+                                                <input type="date" class="form-control" id="txtDateOfBirth" />
+                                                <button type="button" class="kyc-btn" id="licenseEKycButton">e-KYC</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="item-input">
+                                            <label class="form-label"><span>*</span>Driver Name</label>
                                             <input type="text" class="form-control" placeholder="Driver Name AutoFetched" id="txtDriverName" />
                                         </div>
                                         <div class="item-input">
-                                            <label class="form-label">DL Issue Date <span>*</span></label>
+                                            <label class="form-label">DL Issue Date </label>
                                             <input type="date" class="form-control" id="txtDLIssueDate" />
                                         </div>
                                         <div class="item-input position-relative">
@@ -162,11 +155,11 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="item-input">
-                                            <label class="form-label">Driver Code <span>*</span></label>
+                                            <label class="form-label">Driver Code </label>
                                             <input type="text" class="form-control" id="txtDriverCode" maxlength="10" placeholder="Driver Code" onkeypress="return AllowAlphaNumericOnly(event)" disabled />
                                         </div>
                                         <div class="item-input">
-                                            <label class="form-label">DL Expiry Date <span>*</span></label>
+                                            <label class="form-label">DL Expiry Date </label>
                                             <input type="date" class="form-control" id="txtDLExpiryDate" />
                                         </div>
                                         <div class="item-input">
@@ -204,7 +197,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="item-input">
-                                        <label class="form-label">WhatsApp Number <span>*</span></label>
+                                        <label class="form-label">WhatsApp Number</label>
                                         <input type="tel" class="form-control phone-input" placeholder="+1 (555) 000-0000" id="numWhatsapp" onkeypress="return isNumber(event)" maxlength="10" />
                                     </div>
                                 </div>
@@ -236,7 +229,7 @@
 
                                 <div class="col-lg-6">
                                     <div class="item-input">
-                                        <label class="form-label">Pincode <span>*</span></label>
+                                        <label class="form-label">Pincode</label>
                                         <input type="text" class="form-control" placeholder="Pincode" id="numPincode" onkeypress="return isNumber(event)" />
                                     </div>
                                     <div class="item-input">
@@ -263,10 +256,10 @@
                     @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 
                     <div class="button-main">
-                        <a href="#" class="card-link" id="btnSaveDriver"><i class="ri-save-line"></i><span>Save</span></a>
-                        <a href="#" class="card-link" id="btnSaveNewDriver"><i class="ri-save-line"></i><span>Save & New</span></a>
-                        <a href="#" class="card-link" id="btnUpdateDriver" style="display:none;margin-left:0px;"><i class="ri-save-line"></i><span>Update</span></a>
-                        <a href="#" class="card-link" id="btnCancel"><i class="ri-close-line"></i><span>Cancel</span></a>
+                        <a href="#" class="card-link" type="button" data-action="save" id="btnSaveDriver"><i class="ri-save-line"></i><span>Save</span></a>
+                        <a href="#" class="card-link" type="button" data-action="saveNew" id="btnSaveNewDriver"><i class="ri-save-line"></i><span>Save & New</span></a>
+                        <a href="#" class="card-link" type="button" data-action="update" id="btnUpdateDriver" style="display:none;margin-left:0px;"><i class="ri-save-line"></i><span>Update</span></a>
+                        <a href="#" class="card-link" type="button"  id="btnCancel"><i class="ri-close-line"></i><span>Cancel</span></a>
                     </div>
                 </form>
             </div>

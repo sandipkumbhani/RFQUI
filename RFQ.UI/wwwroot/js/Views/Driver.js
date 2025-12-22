@@ -9,17 +9,6 @@ if (typeof fetchDriverUrl === 'undefined') var fetchDriverUrl = '/Driver/ViewDri
 if (typeof companyId === 'undefined') var companyId = null;
 if (typeof profileid === 'undefined') var profileid = '';
 
-//let myDropzone;
-//let uploadedFileName;
-//let driverTypeMap = {};
-//let list;
-//let isDLEKycClicked = false;
-//var orderColumn = '';
-//var orderDir = '';
-//var fetchDriverUrl = '/Driver/ViewDriver';
-//var companyId;
-//var profileid = '';
-
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileid = getCookieValue('profileid');
@@ -86,170 +75,83 @@ function DropzoneInitialize() {
         acceptedFiles: "image/*",
         init: function () {
             const dz = this;
-
             $("#licenseEKycButton").on('click', function () {
                 isDLEKycClicked = true;
             });
 
-            $("#btnSaveDriver").on('click', function (event) {
-                event.preventDefault();
-
-                if (!ValidationCheck()) {
-                    return false;
+            dz.on("addedfile", function (file) {
+                console.log("dz File added:", file.name);
+                // Allow only 1 file
+                if (dz.files.length > 1) {
+                    dz.removeFile(dz.files[0]);
                 }
-
-                if (dz.files.length > 0 && dz.getQueuedFiles().length > 0) {
-                    dz.processQueue(); // Upload first, then SaveDriver will be triggered in Dropzone success handler
-                }
-                else if (dz.files.length > 0 && dz.getQueuedFiles().length === 0) {
-                    SaveDriver(uploadedFileName || "", function (driverId) {
-                        if (driverId > 0) {
-                            FetchDriverList(); // <-- Replaced here
-                        }
-                    });
-                }
-                else {
-                    SaveDriver("", function (driverId) {
-                        if (driverId > 0) {
-                            FetchDriverList();
-                        }
-                    });
-                }
+                $(".dz-message").hide();
+                $(".dz-error-message").hide();
+                // this is call to call upload Api after adding file to dropzone
+                setTimeout(() => {
+                    dz.processQueue();
+                }, 100);
             });
 
-
-            $("#btnUpdateDriver").on('click', function (event) {
-                event.preventDefault();
-
-                if (!ValidationCheck()) {
-                    return false;
-                }
-
-                // Case 1: Files exist and are queued for upload
-                if (dz.files.length > 0 && dz.getQueuedFiles().length > 0) {
-                    dz.processQueue(); // Will call UpdateDriver in Dropzone 'success' handler
-                }
-                // Case 2: Files exist but already uploaded
-                else if (dz.files.length > 0 && dz.getQueuedFiles().length === 0) {
-                    UpdateDriver(uploadedFileName || "");
-                }
-                // Case 3: No new file uploaded, use existing photo if any
-                else {
-                    var existingPhoto = $("#txtUploadedPhoto").val();
-
-                    UpdateDriver(existingPhoto || "");
-                }
-            });
-
-
-            $("#btnSaveNewDriver").on('click', function (event) {
-                event.preventDefault();
-
-                if (!ValidationCheck()) {
-                    return false;
-                }
-
-                if (dz.files.length > 0) {
-                    if (dz.getQueuedFiles().length > 0) {
-                        dz.processQueue(); // Waits for Dropzone to upload
-                    } else {
-                        SaveDriver(uploadedFileName || "", function (driverId) {
-                            if (driverId > 0) {
-                                $("#btnSaveDriver").show();
-                                $("#btnUpdateDriver").hide();
-                                $("#btnSaveNewDriver").show();
-                                ResetForm();
-                                setTimeout(() => {
-                                    ResetAttachmentRepeater();
-                                }, 1000);
-                            }
-                        });
-                    }
-                } else {
-                    // No files to upload, proceed to save without a photo
-                    SaveDriver("", function (driverId) {
-                        if (driverId > 0) {
-                            $("#btnSaveDriver").show();
-                            $("#btnUpdateDriver").hide();
-                            $("#btnSaveNewDriver").show();
-                            ResetForm();
-                            setTimeout(() => {
-                                ResetAttachmentRepeater();
-                            }, 1000);
-                        }
-                    });
-                }
+            // Use Dropzone default remove button
+            dz.on("removedfile", function (file) {
+                console.log("File cancelled:", file.name);
+                uploadedFileName = null;
+                localStorage.setItem("uploadedFileName", uploadedFileName);
+                $(".dz-message").show();
             });
 
         },
         success: function (file, response) {
-            uploadedFileName = response.fileName;
-            if (clickedButton === "btnSaveDriver") {
-                SaveDriver(uploadedFileName, function (driverId) {
-                    if (driverId > 0) {
-                        // Redirect replaced with FetchDriverList function
-                        FetchDriverList();
-                    }
-                });
-            } else if (clickedButton === "btnUpdateDriver") {
-                UpdateDriver(uploadedFileName);
-            } else if (clickedButton === "btnSaveNewDriver") {
-                SaveDriver(uploadedFileName, function (driverId) {
-                    if (driverId > 0) {
-                        $("#btnSaveDriver").show();
-                        $("#btnUpdateDriver").hide();
-                        $("#btnSaveNewDriver").show();
-                        ResetForm();
-                        setTimeout(() => {
-                            ResetAttachmentRepeater();
-                        }, 1000);
-
-                        // Optionally call FetchDriverList here too if needed
-                        FetchDriverList();
-                    }
-                });
-            }
+            uploadedFileName = response.base64;
+            localStorage.setItem("uploadedFileName", uploadedFileName);
+        },
+        error: function (file, response) {
+            localStorage.setItem("uploadedFileName", null);
         }
     });
 }
 function SaveDriver(uploadedFileName, callback) {
-    var driverType = $("#ddlDriverType").val();
-    var licenseNo = $("#numLicenseNo").val();
-    var driverName = $("#txtDriverName").val();
-    var dlIssueDate = $("#txtDLIssueDate").val() ? $("#txtDLIssueDate").val() : null;
-    var dlIssueRto = $("#txtDLIssuingRTO").val();
-    var dateOfBirth = $("#txtDateOfBirth").val();
-    var driverCode = $("#txtDriverCode").val();
-    var dlExpiryDate = $("#txtDLExpiryDate").val() ? $("#txtDLExpiryDate").val() : null;
-    var whatsappNumber = $("#numWhatsapp").val();
-    var address = $("#from-search-box").val();
-    var city = $("#ddlCity").val();
-    var mobileNumber = $("#numMobile").val();
-    var pincode = $("#numPincode").val();
-    var verifiedOn = $("#txtVerifiedOn").val() ? $("#txtVerifiedOn").val() : null;
-    var uploadPhoto = uploadedFileName ? uploadedFileName : null;
+    var driverType = parseInt($("#ddlDriverType").val());
+    var licenseNo = getVal("#numLicenseNo");
+    var driverName = $("#txtDriverName").val().trim();
+    var dlIssueDate = getVal("#txtDLIssueDate");
+    var dlIssueRto = getVal("#txtDLIssuingRTO");
+    var dateOfBirth = getVal("#txtDateOfBirth");
+    var driverCode = getVal("#txtDriverCode");
+    var dlExpiryDate = getVal("#txtDLExpiryDate");
+    var whatsappNumber = getVal("#numWhatsapp");
+    var address = getVal("#from-search-box");
+    var city = parseInt($("#ddlCity").val());
+    var mobileNumber = getVal("#numMobile");
+    var pincode = getVal("#numPincode");
+    var verifiedOn = getVal("#txtVerifiedOn");
+    var uploadPhoto = !IsNullOrEmpty(uploadedFileName) ? uploadedFileName : null;
     var createUser = $("#createlogin").is(":checked");
-    var driverId = 0;
+    var LinkId = GetQueryParam("LinkId");
+    var companyId = GetQueryParam("companyid") || 0;
 
     var saveUrl = '/Driver/DriverSave';
     var formData = {
+        DriverId: 0,
+        CompanyId: companyId,
         DriverTypeId: driverType,
-        LicenseNo: licenseNo,
         DriverName: driverName,
-        LicenseIssueDate: dlIssueDate,
-        LicenseIssueCityId: 1,
-        DateOfBirth: dateOfBirth,
         DriverCode: driverCode,
+        LicenseNo: licenseNo,
+        DateOfBirth: dateOfBirth,
+        LicenseIssueDate: dlIssueDate,
+        LicenseIssueCityId: 0,
         LicenseExpDate: dlExpiryDate,
+        MobNo: mobileNumber,
         WhatsAppNo: whatsappNumber,
         AddressLine: address,
         CityId: city,
-        MobNo: mobileNumber,
         PinCode: pincode,
-        LinkId: GetQueryParam("LinkId"),
+        DriverImagePath: !IsNullOrEmpty(uploadPhoto) ? uploadPhoto : null,
         DLIssuingRto: dlIssueRto,
         VarifiedOn: verifiedOn,
-        DriverImagePath: uploadPhoto
+        LinkId: LinkId,
     };
 
     if (createUser) {
@@ -299,7 +201,6 @@ function SaveDriver(uploadedFileName, callback) {
             toastr.error(xhr.responseText);
         }
     });
-
 }
 function FetchDriverList() {
     $("#tableDiv").css('display', 'block');
@@ -334,16 +235,10 @@ function EditDriver(driverId) {
         $("#btnSaveDriver").hide();
         $("#btnUpdateDriver").show();
         $("#btnSaveNewDriver").hide();
-
-        const dropzone = document.getElementById('dropzone');
-        if (dropzone.children[1]) {
-            dropzone.removeChild(dropzone.children[1]);
-        }
-        console.log(formData);
         $("#hdDriverId").val(formData.driverId);
         $("#ddlDriverType").val(formData.driverTypeId).trigger('change');
-        $("#numLicenseNo").val(formData.licenseNo).prop("disabled", true);
-        $("#txtDateOfBirth").val(FormatDateToLocal(formData.dateOfBirth)).prop("disabled", true);
+        $("#numLicenseNo").val(formData.licenseNo);
+        $("#txtDateOfBirth").val(FormatDateToLocal(formData.dateOfBirth));
         $("#txtDriverCode").val(formData.driverCode);
         $("#txtDLIssueDate").val(FormatDateToLocal(formData.licenseIssueDate));
         $("#txtDLIssuingRTO").val(formData.dlIssuingRto);
@@ -351,44 +246,56 @@ function EditDriver(driverId) {
         //var dlIssueRto = $("#txtDLIssuingRTO").val();
         $("#txtDLExpiryDate").val(FormatDateToLocal(formData.licenseExpDate));
         $("#numWhatsapp").val(formData.whatsAppNo);
-        $("#from-search-box").val(formData.addressLine);
+        $("#from-search-box").val(maskData(formData.addressLine));
         $("#numMobile").val(formData.mobNo);
         $("#numPincode").val(formData.pinCode);
-        $("#txtDriverName").val(formData.driverName);
+        $("#txtDriverName").val(maskData(formData.driverName));
         $("#ddlCity").val(formData.cityId).trigger('change');
         var uploadPhoto = formData.driverImagePath;
         $("#txtUploadedPhoto").val(uploadPhoto);
         $("#txtVerifiedOn").val(formData.varifiedOn);
-        $("#dropzone").append('<div class="dz-preview dz-image-preview"><div class="dz-image"><img data-dz-thumbnail style="width: 120px; height: 120px; object-fit: cover;" src="../../driverphoto/' + uploadPhoto + '"></div></div>');
-        $(".dz-message").hide();
+
+        if (!IsNullOrEmpty(uploadPhoto)) {
+            if (myDropzone) {
+                const fileName = `driver_photo_${Date.now()}.jpg`;
+                const file = base64ToFile(uploadPhoto, fileName);
+
+                // Clear old files (optional)
+                myDropzone.removeAllFiles(true);
+
+                // Add file to Dropzone
+                myDropzone.addFile(file);
+
+                // Start upload
+                myDropzone.processQueue();
+                $(".dz-message").hide();
+            }
+        }
+
         if (attachmentData.length > 0) {
             EditMasterAttachment(attachmentData);
         }
     });
 }
 function UpdateDriver(fileName) {
-
-    var logoFileName = fileName || $("#txtUploadedPhoto").val() ? $("#txtUploadedPhoto").val() : null;
     var formData = {
-        DriverId: $("#hdDriverId").val(),
+        DriverId: $("#hdDriverId").val() || 0,
         DriverTypeId: $("#ddlDriverType").val(),
-        LicenseNo: $("#numLicenseNo").val(),
-        DriverName: $("#txtDriverName").val(),
-        LicenseIssueDate: $("#txtDLIssueDate").val() ? $("#txtDLIssueDate").val() : null,
-        DLIssuingRto: $("#txtDLIssuingRTO").val(),
-        DateOfBirth: $("#txtDateOfBirth").val(),
-        DriverCode: $("#txtDriverCode").val(),
-        LicenseExpDate: $("#txtDLExpiryDate").val() ? $("#txtDLExpiryDate").val() : null,
-        WhatsAppNo: $("#numWhatsapp").val(),
-        AddressLine: $("#from-search-box").val(),
+        LicenseNo: getVal("#numLicenseNo"),
+        DriverName: $("#txtDriverName").val().trim(),
+        LicenseIssueDate: getVal("#txtDLIssueDate"),
+        DLIssuingRto: getVal("#txtDLIssuingRTO"),
+        DateOfBirth: getVal("#txtDateOfBirth"),
+        DriverCode: getVal("#txtDriverCode"),
+        LicenseExpDate: getVal("#txtDLExpiryDate"),
+        WhatsAppNo: getVal("#numWhatsapp"),
+        AddressLine: !IsNullOrEmpty($("#from-search-box").val()) ? $("#from-search-box").val() : "",
         CityId: $("#ddlCity").val(),
-        MobNo: $("#numMobile").val(),
-        PinCode: $("#numPincode").val(),
-        VarifiedOn: $("txtVerifiedOn").val() ? $("txtVerifiedOn").val() : null,
-
-        LinkId: GetQueryParam("LinkId"),
-        DriverImagePath: logoFileName
-        //DriverImagePath: logoFileName ? logoFileName : null
+        MobNo: getVal("#numMobile"),
+        PinCode: getVal("#numPincode"),
+        VarifiedOn: getVal("#txtVerifiedOn"),
+        LinkId: GetQueryParam("LinkId") || 0,
+        DriverImagePath: !IsNullOrEmpty(fileName) ? fileName : null
     }
     DeleteAttachmentAPI(formData.DriverId);
     var editDriverUrl = '/Driver/UpdateDriver';
@@ -461,7 +368,6 @@ function DlEKycclick() {
             success: function (response) {
                 var Data = response;
                 var drivingLicenseModel = response.drivingLicenseModel;
-                var base64String = Data.drivingLicenseModel.photo;
                 const dropzone = document.getElementById('dropzone');
                 if (!IsNullOrEmpty(dropzone) && dropzone.children[1]) {
                     dropzone.removeChild(dropzone.children[1]);
@@ -473,26 +379,13 @@ function DlEKycclick() {
                     $("#from-search-box").val(drivingLicenseModel.presentAddress);
                 $("#numPincode").val(drivingLicenseModel.pincode);
                 $("#txtVerifiedOn").val(new Date().toISOString().split('T')[0]),
-               
-                $("#txtUploadedPhoto").val(drivingLicenseModel.photo);
+                    $("#txtUploadedPhoto").val(drivingLicenseModel.photo);
 
-                function base64ToFile(base64String, filename) {
-                    const arr = base64String.split(",");
-                    const mime = arr[0].match(/:(.*?);/)[1];
-                    const bstr = atob(arr[1]);
-                    let n = bstr.length;
-                    const u8arr = new Uint8Array(n);
-
-                    while (n--) {
-                        u8arr[n] = bstr.charCodeAt(n);
-                    }
-                    return new File([u8arr], filename, { type: mime });
-                }
-
+                var base64String = Data.drivingLicenseModel.photo;
                 const uniqueFileNameGenrate = `driver_photo_${Date.now()}.jpg`;
                 const file = base64ToFile("data:image/jpeg;base64," + base64String, uniqueFileNameGenrate);
-
                 if (myDropzone) {
+                    // Clear old & add new
                     myDropzone.removeAllFiles(true);
                     myDropzone.addFile(file);
                     myDropzone.processQueue();
@@ -595,9 +488,6 @@ function DeleteDriver(driverId, fileName, linkId) {
         }
     });
 }
-function ValidateLicenseNo(number) {
-    return /^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(number);
-}
 function InitializeFields() {
 
     $("#ddlDriverType").on("blur", function () {
@@ -608,18 +498,20 @@ function InitializeFields() {
     });
 
     $("#numLicenseNo").on("blur", function () {
-        if (!ValidateLicenseNo($(this).val())) {
-            toastr.warning("Please enter a valid License No", "Validation Error");
-            return;
+        if (!IsNullOrEmpty($(this).val())) {
+            if (!ValidateLicenseNo($(this).val())) {
+                toastr.warning("Please enter a valid License No", "Validation Error");
+                return;
+            }
         }
     });
 
-    $("#txtDateOfBirth").on("blur", function () {
-        if (IsNullOrEmpty($(this).val())) {
-            toastr.warning("Please enter a valid DateOfBirth", "Validation Error");
-            return;
-        }
-    });
+    //$("#txtDateOfBirth").on("blur", function () {
+    //    if (IsNullOrEmpty($(this).val())) {
+    //        toastr.warning("Please enter a valid DateOfBirth", "Validation Error");
+    //        return;
+    //    }
+    //});
 
     $("#ddlCity").on("blur", function () {
         const selectedIndex = $(this).prop("selectedIndex");
@@ -629,19 +521,19 @@ function InitializeFields() {
         }
     });
 
-    $("#txtDriverCode").on("blur", function () {
-        if (!isAlphaNumeric($(this).val())) {
-            toastr.warning("Please enter a valid Driver Code", "Validation Error");
-            return;
-        }
-    });
+    //$("#txtDriverCode").on("blur", function () {
+    //    if (!isAlphaNumeric($(this).val())) {
+    //        toastr.warning("Please enter a valid Driver Code", "Validation Error");
+    //        return;
+    //    }
+    //});
 
-    $("#numWhatsapp").on("blur", function () {
-        if (!isMobile($(this).val())) {
-            toastr.warning("Please enter a valid WhatsApp No", "Validation Error");
-            return;
-        }
-    });
+    //$("#numWhatsapp").on("blur", function () {
+    //    if (!isMobile($(this).val())) {
+    //        toastr.warning("Please enter a valid WhatsApp No", "Validation Error");
+    //        return;
+    //    }
+    //});
 
     //$("#numMobile").on("blur", function () {
     //    if (!isMobile($(this).val())) {
@@ -649,6 +541,51 @@ function InitializeFields() {
     //        return;
     //    }
     //});
+
+    $("#btnSaveDriver").on('click', function (event) {
+        event.preventDefault();
+        if (!ValidationCheck()) {
+            return false;
+        }
+        const uploadedFileName = localStorage.getItem("uploadedFileName");
+        SaveDriver(uploadedFileName, function (driverId) {
+            if (driverId > 0) {
+                FetchDriverList();
+            }
+        });
+    });
+
+    $("#btnSaveNewDriver").on('click', function (event) {
+        event.preventDefault();
+        if (!ValidationCheck()) {
+            return false;
+        }
+        debugger;
+        const uploadedFileName = localStorage.getItem("uploadedFileName");
+        console.log(uploadedFileName);
+        SaveDriver(uploadedFileName, function (driverId) {
+            if (driverId > 0) {
+                $("#btnSaveDriver").show();
+                $("#btnUpdateDriver").hide();
+                $("#btnSaveNewDriver").show();
+                ResetForm();
+                setTimeout(() => {
+                    ResetAttachmentRepeater();
+                }, 1000);
+            }
+        });
+    });
+
+    $("#btnUpdateDriver").on('click', function (event) {
+        event.preventDefault();
+        if (!ValidationCheck()) {
+            return false;
+        }
+        const uploadedFileName = localStorage.getItem("uploadedFileName");
+        UpdateDriver(uploadedFileName);
+    });
+
+
 }
 function ValidationCheck() {
     if (IsNullOrEmpty($("#ddlDriverType").val())) {
@@ -656,26 +593,8 @@ function ValidationCheck() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#numLicenseNo").val()) || !ValidateLicenseNo($("#numLicenseNo").val())) {
-        toastr.warning("Please enter a valid License No", "Validation Error");
-        return false;
-    }
-
-    if (IsNullOrEmpty($("#txtDateOfBirth").val())) {
-        toastr.warning("Please enter a valid DateOfBirth", "Validation Error");
-        return false;
-    }
-
     if (IsNullOrEmpty($("#txtDriverName").val())) {
         toastr.warning("Please enter a valid Driver Name", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtDLIssueDate").val())) {
-        toastr.warning("Please enter a DL Issue Date", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtDLExpiryDate").val())) {
-        toastr.warning("Please enter a valid DL Expiry Date ", "Validation Error");
         return false;
     }
 
@@ -684,26 +603,46 @@ function ValidationCheck() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#txtDriverCode").val()) || !isAlphaNumeric($("#txtDriverCode").val())) {
-        toastr.warning("Please enter a valid Driver Code", "Validation Error");
+    if (IsNullOrEmpty($("#from-search-box").val())) {
+        toastr.warning("Please enter an address", "Validation Error");
         return false;
     }
 
-    if (IsNullOrEmpty($("#numWhatsapp").val()) || !isMobile($("#numWhatsapp").val())) {
-        toastr.warning("Please enter a valid WhatsApp No", "Validation Error");
-        return false;
-    }
+    //if (IsNullOrEmpty($("#numLicenseNo").val()) || !ValidateLicenseNo($("#numLicenseNo").val())) {
+    //    toastr.warning("Please enter a valid License No", "Validation Error");
+    //    return false;
+    //}
+
+    //if (IsNullOrEmpty($("#txtDateOfBirth").val())) {
+    //    toastr.warning("Please enter a valid DateOfBirth", "Validation Error");
+    //    return false;
+    //}
+
+    //if (IsNullOrEmpty($("#txtDLIssueDate").val())) {
+    //    toastr.warning("Please enter a DL Issue Date", "Validation Error");
+    //    return false;
+    //}
+
+    //if (IsNullOrEmpty($("#txtDLExpiryDate").val())) {
+    //    toastr.warning("Please enter a valid DL Expiry Date ", "Validation Error");
+    //    return false;
+    //}
+
+    //if (IsNullOrEmpty($("#txtDriverCode").val()) || !isAlphaNumeric($("#txtDriverCode").val())) {
+    //    toastr.warning("Please enter a valid Driver Code", "Validation Error");
+    //    return false;
+    //}
+
+    //if (IsNullOrEmpty($("#numWhatsapp").val()) || !isMobile($("#numWhatsapp").val())) {
+    //    toastr.warning("Please enter a valid WhatsApp No", "Validation Error");
+    //    return false;
+    //}
 
     //if (IsNullOrEmpty($("#numMobile").val()) || !isMobile($("#numMobile").val())) {
     //    toastr.warning("Please enter a valid Mobile No", "Validation Error");
     //    return false;
     //}
     return true;
-}
-function ViewDriver(driverId) {
-    EditDriver(driverId);
-    $('#driverForm').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnUpdateDriver").addClass('d-none');
 }
 function FetchDriverCode() {
     $.ajax({
@@ -718,4 +657,3 @@ function FetchDriverCode() {
         }
     });
 }
-
