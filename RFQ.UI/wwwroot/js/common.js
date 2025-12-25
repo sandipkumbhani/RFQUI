@@ -205,7 +205,7 @@ function CreateOrFillDataInDataTable(response, EditFunctionName = null, DeleteFu
             var data = keysToLowerCase(row);
             var tableDataHtml = `<tr>`;
             displayColumns.forEach(col => {
-                var cols = col.split("as");
+                var cols = col.split(" as ");
                 if (cols.length > 1) {
                     tableDataHtml += `<td>${data[cols[0].trim(' ').toLowerCase()] ?? ''}</td>`;
                 }
@@ -1101,12 +1101,10 @@ function FormatDateToLocal(dateString) {
 function ValidateLicenseNo(number) {
     return /^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{7}$/.test(number);
 }
-
 function getVal(selector) {
     const value = $(selector).val();
     return value === "null" || value === null || value === undefined || (typeof value === "string" && value.trim() === "" ? null : value);
 }
-
 function maskData(value) {
     if (!value) return "";
     value = value.toString().trim();
@@ -1157,7 +1155,6 @@ function maskData(value) {
     }
     return result;
 }
-
 function base64ToFile(base64String, filename) {
     const arr = base64String.split(",");
     const mime = arr[0].match(/:(.*?);/)[1];

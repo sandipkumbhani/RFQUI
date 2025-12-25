@@ -246,10 +246,10 @@ function EditDriver(driverId) {
         //var dlIssueRto = $("#txtDLIssuingRTO").val();
         $("#txtDLExpiryDate").val(FormatDateToLocal(formData.licenseExpDate));
         $("#numWhatsapp").val(formData.whatsAppNo);
-        $("#from-search-box").val(maskData(formData.addressLine));
+        $("#from-search-box").val(formData.addressLine);
         $("#numMobile").val(formData.mobNo);
         $("#numPincode").val(formData.pinCode);
-        $("#txtDriverName").val(maskData(formData.driverName));
+        $("#txtDriverName").val(formData.driverName);
         $("#ddlCity").val(formData.cityId).trigger('change');
         var uploadPhoto = formData.driverImagePath;
         $("#txtUploadedPhoto").val(uploadPhoto);

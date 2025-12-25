@@ -64,7 +64,8 @@ namespace RFQ.UI.Infrastructure.Provider
                         int pageNumber = responseModel.Data.pageNumber;
                         int pageSize = responseModel.Data.pageSize;
                         int totalRecordCount = responseModel.Data.totalRecordCount;
-                        return new PageList<MasterUserActivityLogResponseDto>(activityLog, totalRecordCount, pageNumber, pageSize);
+                        var displayColumns = responseModel.Data.displayColumns;
+                        return new PageList<MasterUserActivityLogResponseDto>(activityLog, totalRecordCount, pageNumber, pageSize, displayColumns);
                     }
                     return null;
                 }
