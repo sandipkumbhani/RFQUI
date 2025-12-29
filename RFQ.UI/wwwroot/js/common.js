@@ -304,7 +304,7 @@ function GetGridHtml(response, gridTableName, IsEdit, IsView, IsCancel) {
                         <td>${item.companyName}</td>
                         <td>${item.vehicleTypeName}</td>
                         <td>${item.minimumKms}</td>
-                        <td class="text-center s" style="cursor:pointer;">`
+                        <td class="text-center" style="cursor:pointer;">`
 
             if (IsEdit) {
                 rowsHtml += `<a class="icon-btn" onclick="EditVehicleType(${item.vehicleTypeId})"><i class="ri-edit-2-line"></i></a>`
@@ -1105,56 +1105,56 @@ function getVal(selector) {
     const value = $(selector).val();
     return value === "null" || value === null || value === undefined || (typeof value === "string" && value.trim() === "" ? null : value);
 }
-function maskData(value) {
-    if (!value) return "";
-    value = value.toString().trim();
-    // Aadhaar (12 digits → show last 4)
-    if (/^\d{12}$/.test(value)) {
-        return "**** **** " + value.slice(-4);
-    }
-    // Mobile (10 digits → show last 4)
-    if (/^\d{10}$/.test(value)) {
-        return "*".repeat(6) + value.slice(-4);
-    }
-    let result = "";
-    // Email
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        const [user, domain] = value.split("@");
+//function maskData(value) {
+//    if (!value) return "";
+//    value = value.toString().trim();
+//    // Aadhaar (12 digits → show last 4)
+//    if (/^\d{12}$/.test(value)) {
+//        return "**** **** " + value.slice(-4);
+//    }
+//    // Mobile (10 digits → show last 4)
+//    if (/^\d{10}$/.test(value)) {
+//        return "*".repeat(6) + value.slice(-4);
+//    }
+//    let result = "";
+//    // Email
+//    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+//        const [user, domain] = value.split("@");
 
-        for (let i = 0; i < user.length; i++) {
-            const ch = user[i];
+//        for (let i = 0; i < user.length; i++) {
+//            const ch = user[i];
 
-            if (i === 0) {
-                result += ch; // show first char
-            } else if (/[A-Z]/.test(ch)) result += "*";
-            else if (/[a-z]/.test(ch)) result += "*";
-            else if (/\d/.test(ch)) result += "*";
-            else result += ch;
-        }
+//            if (i === 0) {
+//                result += ch; // show first char
+//            } else if (/[A-Z]/.test(ch)) result += "*";
+//            else if (/[a-z]/.test(ch)) result += "*";
+//            else if (/\d/.test(ch)) result += "*";
+//            else result += ch;
+//        }
 
-        return result + "@" + domain;
-    }
+//        return result + "@" + domain;
+//    }
 
-    // Name / Address / Other text (first char of each word visible)
-    let isWordStart = true;
+//    // Name / Address / Other text (first char of each word visible)
+//    let isWordStart = true;
 
-    for (let ch of value) {
-        if (ch === " ") {
-            isWordStart = true;
-            result += ch;
-            continue;
-        }
+//    for (let ch of value) {
+//        if (ch === " ") {
+//            isWordStart = true;
+//            result += ch;
+//            continue;
+//        }
 
-        if (isWordStart) {
-            result += ch;      // show first char
-            isWordStart = false;
-        } else if (/[A-Z]/.test(ch)) result += "*";
-        else if (/[a-z]/.test(ch)) result += "*";
-        else if (/\d/.test(ch)) result += "*";
-        else result += ch;
-    }
-    return result;
-}
+//        if (isWordStart) {
+//            result += ch;      // show first char
+//            isWordStart = false;
+//        } else if (/[A-Z]/.test(ch)) result += "*";
+//        else if (/[a-z]/.test(ch)) result += "*";
+//        else if (/\d/.test(ch)) result += "*";
+//        else result += ch;
+//    }
+//    return result;
+//}
 function base64ToFile(base64String, filename) {
     const arr = base64String.split(",");
     const mime = arr[0].match(/:(.*?);/)[1];
