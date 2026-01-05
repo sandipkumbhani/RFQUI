@@ -33,20 +33,16 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var baseUrl = _appSettings.BaseUrl + _appSettings.AddDriver;
                 var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(baseUrl, driverRequestDto, _globalClass.Token);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return JsonConvert.DeserializeObject<DriverRequestDto>(responseModel.Data.ToString());
-                    else
-                        return null;
+                    return JsonConvert.DeserializeObject<DriverRequestDto>(responseModel.Data.ToString());
                 }
+                return null;
             }
             catch (Exception)
             {
                 throw;
             }
-            return null;
         }
 
         public async Task<string> DeleteDriver(int DriverId)
@@ -81,13 +77,9 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 var baseUrl = $"{_appSettings.BaseUrl + _appSettings.UpdateDriver + DriverId}";
                 var responseModel = await _commonApiAdaptor.PutAsync<NewCommonResponseDto>(baseUrl, driverRequestDto, _globalClass.Token);
-                if (responseModel != null)
+                if (responseModel != null && responseModel.StatusCode == 200)
                 {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                        return "Driver Updated";
-                    else
-                        return responseModel.ErrorMessage;
+                    return "Driver Updated";
                 }
                 return null;
             }

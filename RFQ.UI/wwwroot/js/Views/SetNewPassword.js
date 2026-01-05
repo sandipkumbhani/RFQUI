@@ -13,7 +13,7 @@ function OnSubmit() {
         const url = new URL(currentUrl);
         const params = new URLSearchParams(url.search);
         const loginId = params.get("loginId");
-
+        debugger;
         var UserViewModel = {
             Password: newPassword,
             LoginId: loginId,

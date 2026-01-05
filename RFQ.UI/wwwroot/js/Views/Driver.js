@@ -189,16 +189,20 @@ function SaveDriver(uploadedFileName, callback) {
         data: JSON.stringify(formData),
         success: function (response) {
             if (!IsNullOrEmpty(response)) {
+                Saveattachment(response.driverId);
                 toastr.success("Driver Details Saved Successfully!", "Success");
                 addMasterUserActivityLog(0, LogType.Create, "Driver Details Saved Successfully!", 0);
                 FetchDriverList();
             }
             else {
-                toastr.error(response.message || "Failed to Submit Driver Details.", "Error");
+                toastr.error(response.message || "Failed to Save Driver Details.", "Error");
             }
         },
         error: function (xhr, status, error) {
-            toastr.error(xhr.responseText);
+            if (xhr.status == 409)
+                toastr.warning(xhr.responseText, "Already exists");
+            else
+                toastr.error(xhr.responseText || "Failed to Save Driver Details.", "Error");
         }
     });
 }
@@ -306,7 +310,7 @@ function UpdateDriver(fileName) {
         data: JSON.stringify(formData),
         dataType: "json",
         success: function (response) {
-            if (response.result === "success") {
+            if (!IsNullOrEmpty(response)) {
                 toastr.success("Driver Details Updated Successfully!");
                 addMasterUserActivityLog(0, LogType.Update, "Driver Details Updated Successfully!", 0);
                 const transactionId = $("#hdDriverId").val();
@@ -318,7 +322,10 @@ function UpdateDriver(fileName) {
             }
         },
         error: function (xhr, status, error) {
-            toastr.error(xhr.responseText);
+            if (xhr.status == 409)
+                toastr.warning(xhr.responseText, "Already exists");
+            else
+                toastr.error(xhr.responseText || "Failed to Update Driver Details.", "Error");
         }
     });
     if (fileName) {
@@ -560,7 +567,6 @@ function InitializeFields() {
         if (!ValidationCheck()) {
             return false;
         }
-        debugger;
         const uploadedFileName = localStorage.getItem("uploadedFileName");
         console.log(uploadedFileName);
         SaveDriver(uploadedFileName, function (driverId) {

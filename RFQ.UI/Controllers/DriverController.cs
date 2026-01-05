@@ -211,7 +211,7 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 if (ex.Message.Contains("409"))
-                    return StatusCode(409, "Driver Is Already Exsist");
+                    return StatusCode(409, "Driver Is Already Exist");
                 else
                     return StatusCode(500, $"Request failed: {ex.Message}");
             }
@@ -232,13 +232,16 @@ namespace RFQ.UI.Controllers
                 driverRequestDto.CompanyId = _globalClass.CompanyId;
                 var result = await _driverServices.EditDriver(driverId, driverRequestDto);
                 if (result != null)
-                    return Json(new { result = "success" });
+                    return Json(true);
                 else
-                    return Json(new { result = "failure" });
+                    return Json(false);
             }
             catch (Exception ex)
             {
-                return Json(new { result = "error", message = ex.Message });
+                if (ex.Message.Contains("409"))
+                    return StatusCode(409, "Driver Is Already Exsist");
+                else
+                    return StatusCode(500, $"Driver Update Failed");
             }
         }
 
