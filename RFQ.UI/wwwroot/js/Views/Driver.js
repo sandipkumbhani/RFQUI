@@ -36,6 +36,7 @@ $(document).ready(function () {
     $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
+        localStorage.setItem("uploadedFileName",null);
         FetchDriverCode();
     });
     $("#btnCancel").on("click", function () {
