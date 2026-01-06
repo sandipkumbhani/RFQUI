@@ -253,7 +253,7 @@ function CreateDataTableIfNotExists(displayColumns) {
             $('#GridListTable thead').html(tableHeaderHtml);
         }
         const table = $('#GridListTable').DataTable({
-            responsive: true,
+            responsive: false,
             dom: 'Bfrtip',
             buttons: [
                 {

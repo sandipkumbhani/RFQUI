@@ -36,7 +36,7 @@ $(document).ready(function () {
     $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
-        localStorage.setItem("uploadedFileName",null);
+        localStorage.setItem("uploadedFileName", null);
         FetchDriverCode();
     });
     $("#btnCancel").on("click", function () {
@@ -112,6 +112,7 @@ function DropzoneInitialize() {
         }
     });
 }
+
 function SaveDriver(uploadedFileName, callback) {
     var driverType = parseInt($("#ddlDriverType").val());
     var licenseNo = getVal("#numLicenseNo");
@@ -188,9 +189,9 @@ function SaveDriver(uploadedFileName, callback) {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(formData),
-        success: function (response) {
+        success: async function (response) {
             if (!IsNullOrEmpty(response)) {
-                Saveattachment(response.driverId);
+                await Saveattachment(response.driverId);
                 toastr.success("Driver Details Saved Successfully!", "Success");
                 addMasterUserActivityLog(0, LogType.Create, "Driver Details Saved Successfully!", 0);
                 FetchDriverList();

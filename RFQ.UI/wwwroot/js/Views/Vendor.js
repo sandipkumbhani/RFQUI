@@ -627,7 +627,6 @@ function EditVendor(partyId) {
     })
 }
 function UpdateVendor() {
-    debugger;
     var formData = {
         PartyId: $("#hdnPartyId").val(),
         PartyName: $("#txtVendorName").val(),

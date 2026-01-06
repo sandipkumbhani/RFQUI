@@ -386,7 +386,6 @@ function GetFranchiseAndCorporateName() {
             var profileid = getCookieValue("profileid");
             var userid = getCookieValue("userid");
             if (!IsNullOrEmpty(profileid)) {
-                debugger;
                 if (profileid == EnumProfile.Admin) {
                     data = response.filter(x => x.companyTypeId == 2 && x.createdBy == userid);
                 }
