@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
@@ -134,6 +135,24 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 return Json(new { result = "error", message = ex.Message });
+            }
+        }
+
+
+        public async Task<IActionResult> GetLocationById(int id)
+        {
+            try
+            {
+                var result = await _locationService.GetLocationById(id);
+                if (result != null)
+                    return Json(result);
+                else
+                    return Json(null);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

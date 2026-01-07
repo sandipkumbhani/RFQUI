@@ -33,5 +33,9 @@ namespace RFQ.UI.Application.Provider
         {
             return _locationAdaptor.GetAllLocationList(companyId);
         }
+        public Task<LocationResponseDto> GetLocationById(int locationId)
+        {
+            return _locationAdaptor.GetLocationById(locationId);
+        }
     }
 }

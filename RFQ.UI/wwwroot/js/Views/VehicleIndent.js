@@ -52,6 +52,12 @@ $(document).ready(function () {
             SaveVehicleIndent(action);
         }
     });
+
+    $("#ddlLocation").on("change", async function () {
+        var locationId = $(this).val();
+        var locationData = await GetLocationById(locationId)
+        console.log(locationData.code);
+    });
 });
 
 $('#btnAdd').click(function () {
@@ -536,3 +542,6 @@ function ViewVehicleIndent(indentId) {
     $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
     $("#btnupdate").addClass('d-none');
 }
+
+
+

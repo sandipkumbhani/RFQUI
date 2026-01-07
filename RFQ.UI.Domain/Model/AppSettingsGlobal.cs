@@ -105,6 +105,7 @@ namespace RFQ.UI.Domain.Model
         public string? AutoFetchBooking { get; set; }
         public string? UpdateRfqRecipient { get; set; }
         public string? AddBookingOrTrip { get; set; }
+        public string? GetLocationById { get; set; }
 
 
 
@@ -241,7 +242,8 @@ namespace RFQ.UI.Domain.Model
                 GetAllDelivery = deliverySection["GetAllDelivery"],
                 AutoFetchBooking = bookingOrTripSection["AutoFetchBooking"],
                 UpdateRfqRecipient = rfqRecipientSection["UpdateRfqRecipient"],
-                AddBookingOrTrip = bookingOrTripSection["AddBookingOrTrip"]
+                AddBookingOrTrip = bookingOrTripSection["AddBookingOrTrip"],
+                GetLocationById = locationSection["GetLocationById"]
             };
         }
     }

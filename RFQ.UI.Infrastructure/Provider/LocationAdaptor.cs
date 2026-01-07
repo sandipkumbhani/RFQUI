@@ -116,5 +116,25 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<LocationResponseDto> GetLocationById(int locationId)
+        {
+            try
+            {
+                var baseUrl = $"{_appSettings.BaseUrl +'/'+_appSettings.GetLocationById + locationId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
+                if (responseModel != null)
+                {
+                    var result = JsonConvert.DeserializeObject<LocationResponseDto>(Convert.ToString(responseModel.Data!));
+                    return result;
+                }
+                else
+                    return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -93,17 +93,6 @@ function GetQueryParam(name) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
-
-// set all Input Box and select option is blue Border
-window.addEventListener('DOMContentLoaded', function () {
-    const inputs = document.querySelectorAll('input,select');
-
-    // Loop through each input and set the border color to blue
-    //inputs.forEach(function (input) {
-    //    input.style.borderColor = '#666cff66';
-    //    input.style.setProperty('--placeholder-opacity', '0.0');
-    //});
-});
 function populateDropdown(selectElement) {
     $(selectElement).empty();
 
@@ -1105,56 +1094,6 @@ function getVal(selector) {
     const value = $(selector).val();
     return value === "null" || value === null || value === undefined || (typeof value === "string" && value.trim() === "" ? null : value);
 }
-//function maskData(value) {
-//    if (!value) return "";
-//    value = value.toString().trim();
-//    // Aadhaar (12 digits → show last 4)
-//    if (/^\d{12}$/.test(value)) {
-//        return "**** **** " + value.slice(-4);
-//    }
-//    // Mobile (10 digits → show last 4)
-//    if (/^\d{10}$/.test(value)) {
-//        return "*".repeat(6) + value.slice(-4);
-//    }
-//    let result = "";
-//    // Email
-//    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-//        const [user, domain] = value.split("@");
-
-//        for (let i = 0; i < user.length; i++) {
-//            const ch = user[i];
-
-//            if (i === 0) {
-//                result += ch; // show first char
-//            } else if (/[A-Z]/.test(ch)) result += "*";
-//            else if (/[a-z]/.test(ch)) result += "*";
-//            else if (/\d/.test(ch)) result += "*";
-//            else result += ch;
-//        }
-
-//        return result + "@" + domain;
-//    }
-
-//    // Name / Address / Other text (first char of each word visible)
-//    let isWordStart = true;
-
-//    for (let ch of value) {
-//        if (ch === " ") {
-//            isWordStart = true;
-//            result += ch;
-//            continue;
-//        }
-
-//        if (isWordStart) {
-//            result += ch;      // show first char
-//            isWordStart = false;
-//        } else if (/[A-Z]/.test(ch)) result += "*";
-//        else if (/[a-z]/.test(ch)) result += "*";
-//        else if (/\d/.test(ch)) result += "*";
-//        else result += ch;
-//    }
-//    return result;
-//}
 function base64ToFile(base64String, filename) {
     const arr = base64String.split(",");
     const mime = arr[0].match(/:(.*?);/)[1];
@@ -1166,4 +1105,26 @@ function base64ToFile(base64String, filename) {
         u8arr[n] = bstr.charCodeAt(n);
     }
     return new File([u8arr], filename, { type: mime });
+}
+
+async function GetLocationById(id) {
+    const result =  $.ajax({
+        url: '/Location/GetLocationById',
+        type: 'GET',
+        data: { id: id },
+        dataType: 'json',
+        success: function (response) {
+            if (!IsNullOrEmpty(response)) {
+                return response;
+                console.log("Location Data:", response);
+            } else {
+                return null;
+                console.warning("Failed to fetch GetLocationById");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log("Failed to fetch GetLocationById");
+        }
+    });
+    return result;
 }

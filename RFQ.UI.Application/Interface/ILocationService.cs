@@ -11,5 +11,6 @@ namespace RFQ.UI.Application.Interface
         Task<bool> EditLocation(int LocationId, LocationRequestDto locationRequestDto);
         Task<string> DeleteLocation(int LocationId);
         Task<IEnumerable<LocationResponseDto>> GetAllLocationList(int companyId);
+        Task<LocationResponseDto> GetLocationById(int locationId);
     }
 }
