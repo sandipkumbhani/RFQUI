@@ -54,5 +54,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehiclePlacementAdaptor.UpdateVehiclePlacement(placementId, vehiclePlacementRequestDto);
         }
+        public async Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId)
+        {
+            return await _vehiclePlacementAdaptor.CheckVehicleAndIndentUnique(vehicleId, indentId);
+        }
     }
 }

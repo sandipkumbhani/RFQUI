@@ -107,6 +107,7 @@ namespace RFQ.UI.Domain.Model
         public string? AddBookingOrTrip { get; set; }
         public string? GetLocationById { get; set; }
         public string? IndentReferenceCheckInRfqAsync { get; set; }
+        public string? CheckVehicleAndIndentUnique { get; set; }
 
 
 
@@ -245,7 +246,8 @@ namespace RFQ.UI.Domain.Model
                 UpdateRfqRecipient = rfqRecipientSection["UpdateRfqRecipient"],
                 AddBookingOrTrip = bookingOrTripSection["AddBookingOrTrip"],
                 GetLocationById = locationSection["GetLocationById"],
-                IndentReferenceCheckInRfqAsync = vehicleIndentSection["IndentReferenceCheckInRfqAsync"]
+                IndentReferenceCheckInRfqAsync = vehicleIndentSection["IndentReferenceCheckInRfqAsync"],
+                CheckVehicleAndIndentUnique = vehiclePlacementSection["CheckVehicleAndIndentUnique"]
             };
         }
     }

@@ -176,6 +176,20 @@ namespace RFQ.UI.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckVehicleAndIndentUnique(int vehicleId, int indentId)
+        {
+            try
+            {
+                bool isExists = await _vehiclePlacementService.CheckVehicleAndIndentUnique(vehicleId, indentId);
+                return Ok(isExists);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }
 

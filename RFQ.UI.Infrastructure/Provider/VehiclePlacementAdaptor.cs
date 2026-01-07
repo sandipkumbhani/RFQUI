@@ -152,7 +152,6 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-
         public async Task<IEnumerable<VehiclePlacementResponseDto>> GetAllVehiclePlacementNo(int companyId)
         {
             try
@@ -165,6 +164,24 @@ namespace RFQ.UI.Infrastructure.Provider
                     return indents ?? Enumerable.Empty<VehiclePlacementResponseDto>();
                 }
                 return Enumerable.Empty<VehiclePlacementResponseDto>();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId)
+        {
+            try
+            {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.CheckVehicleAndIndentUnique + vehicleId + "/" + indentId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                {
+                    return (bool)responseModel.Data;
+                }
+                return false;
             }
             catch (Exception)
             {

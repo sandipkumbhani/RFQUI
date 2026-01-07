@@ -538,6 +538,7 @@ function SaveVehicle(action) {
         PolicyExpiryDate: policyExpDate ? new Date(policyExpDate).toISOString() : null,
         LinkId: GetQueryParam("LinkId"),
     };
+    
     if (action === "save") {
         $.ajax({
             url: saveUrl,
@@ -678,11 +679,10 @@ function GetDropdownValue(inputId) {
     }
     return result;
 }
-function SaveVehiclePlacement(action) {
+async function SaveVehiclePlacement(action) {
     var saveUrl = '/VehiclePlacement/AddVehiclePlacement';
     var driverResult = GetDropdownValue("ddlDriverName");
     const formData = {
-
         LocationId: $('#ddlLocation').val(),
         PlacementNo: $('#txtPlacementNo').val(),
         PlacementDate: $('#txtPlacementDate').val(),
@@ -698,6 +698,11 @@ function SaveVehiclePlacement(action) {
         AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
         LinkId: GetQueryParam("LinkId")
     };
+    var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId);
+    if (check) {
+        toastr.warning("Indent are already used this Vehicle");
+        return
+    }
     console.log(formData);
     if (action === "save") {
 
@@ -900,7 +905,6 @@ function ViewVehiclePlacement(placementId) {
     $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
     $("#updateButton").addClass('d-none');
 }
-
 function Defaultdrpdownset() {
     const $Indentdropdown = $("#ddlIndentNo");
     $Indentdropdown.empty();
@@ -911,4 +915,22 @@ function Defaultdrpdownset() {
         selected: true
     });
     $Indentdropdown.append(placeholderOption);
+}
+
+function CheckVehicleAndIndentUnique(vehicleId, indentId) {
+    return $.ajax({
+        url: '/VehiclePlacement/CheckVehicleAndIndentUnique',
+        type: 'GET',
+        data: {
+            vehicleId: vehicleId,
+            indentId: indentId
+        },
+        dataType: 'json',
+        success: function (response) {
+            console.log("Unique check response:", response); // true / false
+        },
+        error: function (xhr, status, error) {
+            console.error("Error in CheckVehicleAndIndentUnique:", error);
+        }
+    });
 }
