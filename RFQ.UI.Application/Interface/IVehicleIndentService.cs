@@ -10,7 +10,7 @@ namespace RFQ.UI.Application.Interface
         Task<string> GetIndentNo();
         Task<PageList<VehicleIndentResponseDto>> GetAllVehicleIndent(PagingParam pagingParam);
         Task<string> UpdateVehicleIndent(int indentId, VehicleIndentRequestDto vehicleIndentRequestDto);
-        Task<string> DeleteVehicleIndent(int indentId);
-
+        Task<bool> DeleteVehicleIndent(int indentId);
+        Task<bool> IndentReferenceCheckInRfqAsync(int indentId);
     }
 }

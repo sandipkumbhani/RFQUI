@@ -123,11 +123,7 @@ namespace RFQ.UI.Controllers
             try
             {
                 var result = await _vehicleIndentService.DeleteVehicleIndent(indentId);
-                if (result != null)
-                    
-                    return Json(new { Data = result, Issucsses  = true});
-                else
-                    return Json(new { Data = result, Issucsses = false });
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -136,27 +132,20 @@ namespace RFQ.UI.Controllers
 
         }
 
-        //[HttpDelete("VehicleIndent/DeleteVehicleIndent/{indentId}")]
-        //public async Task<IActionResult> DeleteVehicleIndent(int indentId)
-        //{
-        //    try
-        //    {
-        //        var res = await _vehicleIndentService.DeleteVehicleIndent(indentId);
+        [HttpGet("VehicleIndent/IndentReferenceCheckInRfqAsync/{indentId}")]
+        public async Task<IActionResult> IndentReferenceCheckInRfqAsync(int indentId)
+        {
+            try
+            {
+                var result = await _vehicleIndentService.IndentReferenceCheckInRfqAsync(indentId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
 
-        //        return Json(new { result = "success" });
-        //    }
-        //    catch (InvalidOperationException ex)
-        //    {
-        //        return Json(new { result = "failure", reason = "rfq_reference", message = ex.Message });
-        //    }
-        //    catch (KeyNotFoundException ex)
-        //    {
-        //        return Json(new { result = "failure", reason = "not_found", message = ex.Message });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { result = "error", message = "Unexpected error occurred." });
-        //    }
-        //}
+        }
+
     }
 }

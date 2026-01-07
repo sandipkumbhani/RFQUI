@@ -19,7 +19,7 @@ namespace RFQ.UI.Application.Provider
             return await _vehicleIndentAdaptor.AddVehicleIndent(vehicleIndentRequestDto);
         }
 
-        public async Task<string> DeleteVehicleIndent(int indentId)
+        public async Task<bool> DeleteVehicleIndent(int indentId)
         {
             return await _vehicleIndentAdaptor.DeleteVehicleIndent(indentId);
         }
@@ -37,6 +37,10 @@ namespace RFQ.UI.Application.Provider
         public Task<string> UpdateVehicleIndent(int indentId, VehicleIndentRequestDto vehicleIndentRequestDto)
         {
             return _vehicleIndentAdaptor.UpdateVehicleIndent(indentId, vehicleIndentRequestDto);
+        }
+        public async Task<bool> IndentReferenceCheckInRfqAsync(int indentId)
+        {
+            return await _vehicleIndentAdaptor.IndentReferenceCheckInRfqAsync(indentId);
         }
     }
 }

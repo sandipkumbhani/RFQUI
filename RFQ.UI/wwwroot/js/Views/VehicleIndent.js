@@ -75,7 +75,7 @@ function FetchVehicleIndent() {
     $("#btnsaveandnew").show();
     GetAllConsignorList();
     GetAllConsigneeList();
-    FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehicleIndent', 'DeleteVehicleIndent','indentId');
+    FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehicleIndent', 'DeleteVehicleIndent', 'indentId');
 }
 
 $('#IndentTableSearch').off('keyup').on('keyup', function () {
@@ -350,6 +350,7 @@ function GetDropdownValue(inputId) {
 function ButtonUpdateClick() {
     $("#btnupdate").on('click', function (e) {
         e.preventDefault();
+
         var isValid = OnSubmitCheckValidation();
         if (!isValid) {
             return;
@@ -389,7 +390,7 @@ function ButtonUpdateClick() {
             LinkId: GetQueryParam("LinkId")
         };
         var linkd = GetQueryParam("LinkId");
-        
+
         $.ajax({
             type: "PUT",
             url: "/VehicleIndent/UpdateVehicleIndent",
@@ -425,7 +426,13 @@ function ButtonUpdateClick() {
         });
     });
 };
-function DeleteVehicleIndent(indentId) {
+
+async function DeleteVehicleIndent(indentId) {
+    const referenceCheck = await IndentReferenceCheckInRfq(indentId)
+    if (referenceCheck) {
+        toastr.warning("Cannot edit Vehicle Indent: referenced in RFQ");
+        return;
+    }
     Swal.fire({
         title: 'Are you sure?',
         text: "This action cannot be undone!",
@@ -443,15 +450,14 @@ function DeleteVehicleIndent(indentId) {
                 contentType: "application/json",
                 dataType: "json",
                 success: function (response) {
-
-                    if (response && response.issucsses) {
+                    if (response) {
                         toastr.success("Vehicle Indent has been deleted successfully.");
                         addMasterUserActivityLog(0, LogType.Delete, "Vehicle Indent has been deleted successfully.", 0);
                         $("#formDiv").addClass('d-none');
                         $('#currentPage').val(1);
                         FetchVehicleIndent();
                     } else {
-                        toastr.warning("Cannot delete VehicleIndent: referenced in RFQ");
+                        toastr.error("Failed to delete Vehicle Indent.", "Error");
                     }
                 },
                 error: function () {
@@ -470,7 +476,13 @@ function formatDateForInput(dateString) {
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
 }
-function UpdateVehicleIndent(indentId) {
+
+async function UpdateVehicleIndent(indentId) {
+    const referenceCheck = await IndentReferenceCheckInRfq(indentId)
+    if (referenceCheck) {
+        toastr.warning("Cannot edit Vehicle Indent: referenced in RFQ");
+        return;
+    }
     if ($("#btnupdate").hasClass('d-none')) {
         $("#btnupdate").removeClass('d-none');
     }
@@ -536,12 +548,12 @@ function UpdateVehicleIndent(indentId) {
     $("#ddlItemName").val(formData.itemId == 0 ? null : formData.itemId).trigger('change');
     $("#ddlPackingType").val(formData.packingTypeId == 0 ? null : formData.packingTypeId).trigger('change');
     $("#txtRemarks").val(formData.remarks);
-} 
-function ViewVehicleIndent(indentId) {
-    UpdateVehicleIndent(indentId);
-    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnupdate").addClass('d-none');
 }
-
-
+function IndentReferenceCheckInRfq(indentId) {
+    return $.ajax({
+        url: '/VehicleIndent/IndentReferenceCheckInRfqAsync/' + indentId,
+        type: 'GET',
+        dataType: 'json'
+    });
+}
 

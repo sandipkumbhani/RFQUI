@@ -97,7 +97,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<string> DeleteVehicleIndent(int indentId)
+        public async Task<bool> DeleteVehicleIndent(int indentId)
         {
             try
             {
@@ -108,19 +108,27 @@ namespace RFQ.UI.Infrastructure.Provider
                 var response = await _httpClient.DeleteAsync(baseurl);
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel != null)
-                {
-                    var result = responseModel.StatusCode;
-                    if (result == 200)
-                    {
-                        return "VehicleIndent Deleted";
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                return "Failed to Delete VehicleIndent";
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return (bool)responseModel.Data;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> IndentReferenceCheckInRfqAsync(int indentId)
+        {
+            try
+            {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.IndentReferenceCheckInRfqAsync + indentId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return (bool)responseModel.Data;
+                else
+                    return false;
             }
             catch (Exception ex)
             {
