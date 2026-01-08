@@ -12,8 +12,15 @@ $(document).ready(function () {
             Save(action);
         }
     });
+    $("#txtAvailableVehicle").on("blur", function () {
+        const value = $(this).val();
+        const numberOfVehicle = $("#txtNoOfVehicles").val();
+        if (value > numberOfVehicle) {
+            toastr.warning("Available Vehicle Count Not greater than Required Vehicles", "Validation");
+            $("#txtAvailableVehicle").val(null);
+        }
+    });
     UrlParamBind()
-    //Initialization();
 });
 function OnSubmitCheckValidation() {
     if (IsNullOrEmpty($("#txtAvailableVehicle").val())) {
@@ -35,127 +42,130 @@ function OnSubmitCheckValidation() {
     return true;
 
 }
-function Initialization() {
-    $("#txtRFQDate").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Rfq Date", "Validation Error");
-            return;
-        }
-    });
-    $("#txtExpireOn").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Rfq ExpireOn", "Validation Error");
-            return;
-        }
-    });
-    $("#txtVehicleReqOn").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Vehicle Req On", "Validation Error");
-            return;
-        }
-    });
 
-    //$("#ddlRFQPriority").on("blur", function () {
-    //    if (!isValidateSelect($(this).val())) {
-    //        toastr.warning("Please select a Rfq Priority", "Validation Error");
-    //        return;
-    //    }
-    //});
-    //$("#txtVednorName").on("blur", function () {
-    //    if (!isValidateSelect($(this).val())) {
-    //        toastr.warning("Please select a Vednor Name", "Validation Error");
-    //        return;
-    //    }
-    //});
-    $("#txtOriginFrom").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Origin From", "Validation Error");
-            return;
-        }
-    });
-    $("#txtDestination").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select aDestination", "Validation Error");
-            return;
-        }
-    });
-    $("#txtRFQOn").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Rfq ON", "Validation Error");
-            return;
-        }
-    });
-    $("#ddlVehicleType").on("blur", function () {
-        if (!isValidateSelect($(this).val())) {
-            toastr.warning("Please select a Vehicle Type", "Validation Error");
-            return;
-        }
-    });
+//function Initialization() {
+//    $("#txtRFQDate").on("blur", function () {
+//        if (!isValidateSelect($(this).val())) {
+//            toastr.warning("Please select a Rfq Date", "Validation Error");
+//            return;
+//        }
+//    });
+//    $("#txtExpireOn").on("blur", function () {
+//        if (!isValidateSelect($(this).val())) {
+//            toastr.warning("Please select a Rfq ExpireOn", "Validation Error");
+//            return;
+//        }
+//    });
+//    $("#txtVehicleReqOn").on("blur", function () {
+//        if (!isValidateSelect($(this).val())) {
+//            toastr.warning("Please select a Vehicle Req On", "Validation Error");
+//            return;
+//        }
+//    });
+   
 
-    $("#txtNoOfVehicles").on("blur", function () {
-        if (!isNumeric($(this).val())) {
-            toastr.warning("Please Enter a No of Vehicels", "Validation Error");
-            return;
-        }
-    });
 
-    $("#txtTotalQTY").on("blur", function () {
-        if (!isNumeric($(this).val())) {
-            toastr.warning("Please Enter a Total Qty in Tons", "Validation Error");
-            return;
-        }
-    });
+//    //$("#ddlRFQPriority").on("blur", function () {
+//    //    if (!isValidateSelect($(this).val())) {
+//    //        toastr.warning("Please select a Rfq Priority", "Validation Error");
+//    //        return;
+//    //    }
+//    //});
+//    //$("#txtVednorName").on("blur", function () {
+//    //    if (!isValidateSelect($(this).val())) {
+//    //        toastr.warning("Please select a Vednor Name", "Validation Error");
+//    //        return;
+//    //    }
+//    //});
+//    $("#txtOriginFrom").on("blur", function () {
+//        if (!isValidateSelect($(this).val())) {
+//            toastr.warning("Please select a Origin From", "Validation Error");
+//            return;
+//        }
+//    });
+//    $("#txtDestination").on("blur", function () {
+//        if (!isValidateSelect($(this).val())) {
+//            toastr.warning("Please select aDestination", "Validation Error");
+//            return;
+//        }
+//    });
+//    $("#txtRFQOn").on("blur", function () {
+//        if (!isValidateSelect($(this).val())) {
+//            toastr.warning("Please select a Rfq ON", "Validation Error");
+//            return;
+//        }
+//    });
+//    $("#ddlVehicleType").on("blur", function () {
+//        if (!isValidateSelect($(this).val())) {
+//            toastr.warning("Please select a Vehicle Type", "Validation Error");
+//            return;
+//        }
+//    });
 
-    //$("#ddlItemName").on("blur", function () {
-    //    if (!isValidateSelect($(this).val())) {
-    //        toastr.warning("Please select a Item Name", "Validation Error");
-    //        return;
-    //    }
-    //});
+//    $("#txtNoOfVehicles").on("blur", function () {
+//        if (!isNumeric($(this).val())) {
+//            toastr.warning("Please Enter a No of Vehicels", "Validation Error");
+//            return;
+//        }
+//    });
 
-    //$("#ddlPackingType").on("blur", function () {
-    //    if (!isValidateSelect($(this).val())) {
-    //        toastr.warning("Please select a Paking Type", "Validation Error");
-    //        return;
-    //    }
-    //});
-    $("#txtHireCost").on("blur", function () {
-        var hirecost = $(this).val();
-        if (IsNullOrEmpty(hirecost)) {
-            toastr.warning("Please enter a valid Hire Cost", "Warning");
-            return;
-        }
-    });
-    $("#txtDetentionDay").on("blur", function () {
-        var detentionDay = $(this).val();
-        if (IsNullOrEmpty(detentionDay)) {
-            $("#txtInstruction").val('');
-            toastr.warning("Please enter a Valid Detention Per Day", "Warning");
-            return;
-        }
-    });
+//    $("#txtTotalQTY").on("blur", function () {
+//        if (!isNumeric($(this).val())) {
+//            toastr.warning("Please Enter a Total Qty in Tons", "Validation Error");
+//            return;
+//        }
+//    });
 
-    $("#txtDetentionDays").on("blur", function () {
-        var detentionDays = $(this).val();
-        if (IsNullOrEmpty(detentionDays)) {
-            toastr.warning("Please enter a valid Detention Free Days ", "Warning");
-            return;
-        }
-    });
-    $("#txtInstruction").on("blur", function () {
-        var instruction = $(this).val();
-        if (IsNullOrEmpty(instruction)) {
-            $("#txtInstruction").val('');
-            toastr.warning("Please enter a Special Intruction", "Warning");
-            return;
-        }
-    });
-    //on form submit
-    //$("#btnSaveForm").click(function (event) {
-    //    event.preventDefault();
-    //    Save();
-    //});
-}
+//    //$("#ddlItemName").on("blur", function () {
+//    //    if (!isValidateSelect($(this).val())) {
+//    //        toastr.warning("Please select a Item Name", "Validation Error");
+//    //        return;
+//    //    }
+//    //});
+
+//    //$("#ddlPackingType").on("blur", function () {
+//    //    if (!isValidateSelect($(this).val())) {
+//    //        toastr.warning("Please select a Paking Type", "Validation Error");
+//    //        return;
+//    //    }
+//    //});
+//    $("#txtHireCost").on("blur", function () {
+//        var hirecost = $(this).val();
+//        if (IsNullOrEmpty(hirecost)) {
+//            toastr.warning("Please enter a valid Hire Cost", "Warning");
+//            return;
+//        }
+//    });
+//    $("#txtDetentionDay").on("blur", function () {
+//        var detentionDay = $(this).val();
+//        if (IsNullOrEmpty(detentionDay)) {
+//            $("#txtInstruction").val('');
+//            toastr.warning("Please enter a Valid Detention Per Day", "Warning");
+//            return;
+//        }
+//    });
+
+//    $("#txtDetentionDays").on("blur", function () {
+//        var detentionDays = $(this).val();
+//        if (IsNullOrEmpty(detentionDays)) {
+//            toastr.warning("Please enter a valid Detention Free Days ", "Warning");
+//            return;
+//        }
+//    });
+//    $("#txtInstruction").on("blur", function () {
+//        var instruction = $(this).val();
+//        if (IsNullOrEmpty(instruction)) {
+//            $("#txtInstruction").val('');
+//            toastr.warning("Please enter a Special Intruction", "Warning");
+//            return;
+//        }
+//    });
+//    //on form submit
+//    //$("#btnSaveForm").click(function (event) {
+//    //    event.preventDefault();
+//    //    Save();
+//    //});
+//}
 function ValidationCheck() {
 
     if (IsNullOrEmpty($("#txtRFQDate").val())) {
@@ -170,14 +180,7 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid Vehicle Req On", "Validation Error");
         return false;
     }
-    //if (IsNullOrEmpty($("#txtVednorName").val())) {
-    //    toastr.warning("Please Select a Vendor Name", "Validation Error");
-    //    return false;
-    //}
-    //if (IsNullOrEmpty($("#txtPANNo").val()) || !ValidatePanNumber($("#txtPANNo").val())) {
-    //    toastr.warning("Please enter a valid PAN No", "Validation Error");
-    //    return false;
-    //}
+   
     if (!isValidateSelect($("#ddlRFQPriority").val())) {
         toastr.warning("Please select a Rfq Priority", "Validation Error");
         return false;
@@ -190,14 +193,6 @@ function ValidationCheck() {
         toastr.warning("Please enter a valid Destination", "Validation Error");
         return false;
     }
-    //if (!isValidateSelect($("#ddlItemName").val())) {
-    //    toastr.warning("Please select a Item Name", "Validation Error");
-    //    return false;
-    //}
-    //if (!isValidateSelect($("#ddlPackingType").val())) {
-    //    toastr.warning("Please select a Paking Type", "Validation Error");
-    //    return false;
-    //}
     if (!isValidateSelect($("#txtRFQOn").val())) {
         toastr.warning("Please select a Rfq On", "Validation Error");
         return false;

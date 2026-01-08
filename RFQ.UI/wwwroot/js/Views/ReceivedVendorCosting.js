@@ -48,6 +48,7 @@ function BindTable(data) {
         return;
     }
     data.forEach((row, index) => {
+        console.log(row);
         const safeRow = $('<div>').text(JSON.stringify(row)).html(); // Prevent XSS
         const rowHtml = `
       <tr data-index="${index}" data-row='${safeRow}'>
@@ -92,7 +93,9 @@ function BindTable(data) {
         openModal(rowData);
     });
 
-    $(document).off('click', '.button-main .card-link').on('click', '.button-main .card-link', function (e) {
+    // Send Email
+    $("#SendMail").on('click', async function (e) {
+        console.log("Send Mail Clicked");
         e.preventDefault();
         const selectedData = $('#rcostingReceivedTable tbody tr').map((_, tr) => {
             const checkbox = $(tr).find('.select-row');
@@ -101,34 +104,35 @@ function BindTable(data) {
                 return JSON.parse(rowData);
             }
         }).get().filter(Boolean);
-
+        console.log(selectedData);
         if (!selectedData.length) {
             toastr.warning('Please select at least one row.');
             return;
         }
 
-        let successCount = 0;
-        let failureCount = 0;
-        selectedData.forEach((rowData, i) => {
-            $.ajax({
-                url: '/ReceivedVendorCosting/SendEmail',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(rowData),
-                success: () => {
-                    successCount++;
-                    if (successCount + failureCount === selectedData.length) {
-                        toastr.success(`${successCount} email(s) sent successfully.`);
-                    }
-                },
-                error: function (xhr) {
-                    failureCount++;
-                    console.error("AJAX error:", xhr);
-                    if (successCount + failureCount === selectedData.length) {
-                        toastr.error(`${failureCount} email(s) failed to send.`);
-                    }
-                }
-            });
-        });
+        for (const rowData of selectedData) {
+            var check = await SendEmail(rowData);
+            if (!IsNullOrEmpty(check) && check) {
+                toastr.success(`${rowData.vendorName} email(s) sent successfully.`);
+            } else {
+                toastr.error(`${rowData.vendorName} email(s) failed to send.`);
+            }
+        }
     });
 }
+
+function SendEmail(rowData) {
+    return $.ajax({
+        url: '/ReceivedVendorCosting/SendEmail',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(rowData),
+        success: (res) => {
+            console.log("Email sent successfully:", res);
+        },
+        error: function (xhr) {
+            console.log("Email Not failed to send:", res);
+        }
+    });
+}
+
