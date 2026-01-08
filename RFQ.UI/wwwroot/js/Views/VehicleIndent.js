@@ -57,6 +57,8 @@ $(document).ready(function () {
         var locationId = $(this).val();
         var locationData = await GetLocationById(locationId)
         console.log(locationData.code);
+        var code = await GetAutoGenerateCode(locationData.code, PrefixCode.VI);
+        console.log(code);
     });
 });
 
@@ -310,6 +312,7 @@ function SaveVehicleIndent(action) {
     }
 
 }
+
 function FetchIndentNo() {
     $.ajax({
         url: "/VehicleIndent/GetIndentNo",
@@ -556,4 +559,7 @@ function IndentReferenceCheckInRfq(indentId) {
         dataType: 'json'
     });
 }
+
+
+
 

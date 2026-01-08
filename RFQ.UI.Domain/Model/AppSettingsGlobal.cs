@@ -108,6 +108,7 @@ namespace RFQ.UI.Domain.Model
         public string? GetLocationById { get; set; }
         public string? IndentReferenceCheckInRfqAsync { get; set; }
         public string? CheckVehicleAndIndentUnique { get; set; }
+        public string? GetAutoGenerateCode { get; set; }
 
 
 
@@ -141,6 +142,7 @@ namespace RFQ.UI.Domain.Model
             var rfqRecipientSection = config.GetSection("RfqRecipient");
             var vehicleSection = config.GetSection("Vehicle");
             var deliverySection = config.GetSection("Delivery");
+            var commonSection = config.GetSection("Common");
             
             
             return new AppSettingsGlobal
@@ -247,7 +249,8 @@ namespace RFQ.UI.Domain.Model
                 AddBookingOrTrip = bookingOrTripSection["AddBookingOrTrip"],
                 GetLocationById = locationSection["GetLocationById"],
                 IndentReferenceCheckInRfqAsync = vehicleIndentSection["IndentReferenceCheckInRfqAsync"],
-                CheckVehicleAndIndentUnique = vehiclePlacementSection["CheckVehicleAndIndentUnique"]
+                CheckVehicleAndIndentUnique = vehiclePlacementSection["CheckVehicleAndIndentUnique"],
+                GetAutoGenerateCode = commonSection["GetAutoGenerateCode"]
             };
         }
     }

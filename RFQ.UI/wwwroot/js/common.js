@@ -1107,8 +1107,8 @@ function base64ToFile(base64String, filename) {
     return new File([u8arr], filename, { type: mime });
 }
 
-async function GetLocationById(id) {
-    const result =  $.ajax({
+function GetLocationById(id) {
+    return $.ajax({
         url: '/Location/GetLocationById',
         type: 'GET',
         data: { id: id },
@@ -1126,5 +1126,26 @@ async function GetLocationById(id) {
             console.log("Failed to fetch GetLocationById");
         }
     });
-    return result;
+}
+
+function GetAutoGenerateCode(code, prefix) {
+    var requestDto = {
+        UserId: 0,
+        Code: code,
+        prefix: prefix
+    };
+    return $.ajax({
+        url: '/Common/GetAutoGenerateCode',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify(requestDto),
+        success: function (response) {
+            console.log("Auto Generate Code Success:", response);
+            return response;
+        },
+        error: function (xhr, status, error) {
+            console.error("Auto Generate Code Error:", error);
+        }
+    });
 }

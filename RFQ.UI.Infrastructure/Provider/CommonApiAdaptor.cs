@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RFQ.UI.Domain.Helper;
+using RFQ.UI.Domain.Model;
+using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,11 +15,15 @@ namespace RFQ.UI.Infrastructure.Provider
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _config;
+        private readonly AppSettingsGlobal _appSettings;
+        private readonly GlobalClass _globalClass;
 
-        public CommonApiAdaptor(HttpClient httpClient, IConfiguration config)
+        public CommonApiAdaptor(HttpClient httpClient, IConfiguration config, AppSettingsGlobal appSettings, GlobalClass globalClass)
         {
             _httpClient = httpClient;
             _config = config;
+            _appSettings = appSettings;
+            _globalClass = globalClass;
         }
 
         public async Task<T?> GetAsync<T>(string url, string? token = null)
@@ -35,22 +41,22 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                 var request = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
-            };
-            if (!string.IsNullOrEmpty(token))
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(content);
+                var request = new HttpRequestMessage(HttpMethod.Post, url)
+                {
+                    Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
+                };
+                if (!string.IsNullOrEmpty(token))
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var response = await _httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(content);
             }
             catch (Exception ex)
             {
                 throw;
             }
-           
+
         }
 
         public async Task<T?> PutAsync<T>(string url, object data, string? token = null)
@@ -111,6 +117,23 @@ namespace RFQ.UI.Infrastructure.Provider
 
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(content);
+        }
+
+        public async Task<string?> GetAutoGenerateCode(AutoGenerateCodeRequestDto requestDto)
+        {
+            try
+            {
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetAutoGenerateCode;
+                var responseModel = await PostAsync<NewCommonResponseDto>(baseUrl, requestDto, _globalClass.Token);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return responseModel.Data.ToString() ?? null;
+                else
+                    return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

@@ -47,3 +47,11 @@ const LogType = Object.freeze({
     Update: 38,
     Delete: 39
 });
+
+const PrefixCode = Object.freeze({
+    VI: "VI",
+    RFQ: "RFQ",
+    VP: "VP",
+    BKG: "BKG",
+    DLY: "DLY"
+});
