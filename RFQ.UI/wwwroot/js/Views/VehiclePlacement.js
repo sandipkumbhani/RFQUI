@@ -9,19 +9,20 @@ var profileId;
 var locationId;
 var FetchVehiclePlacementUrl = '/VehiclePlacement/GetAllVehiclePlacement';
 var VehicIndentList;
+let IsEditClick = false;
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
+
     $('#ddlIndentNo').on('change', function () {
-        if ($(this).val() != null) {
+        if ($(this).val() != null)
             AutoFetch();
-        }
-        else {
+        else
             return;
-        }
     });
+
     $('#ddlVehicleNo').on('change', function () {
         const selectedValue = $(this).val();
         const selectedVehicle = VehicleList.find(x => x.vehicleId == selectedValue);
@@ -40,17 +41,24 @@ $(document).ready(function () {
     ButtonUpdateClick();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("drpVehicleType", companyId);
-    //GetAllLocation("ddlIndentBranch", companyId);
+    GetAllLocation("ddlIndentBranch", companyId); //Both Dropdown Id are Different 
     GetAllLocation("ddlLocation", companyId, function () {
         if (profileId == EnumProfile.Branch) {
             $('#ddlLocation').val(Number(locationId)).trigger('change');
             $('#ddlLocation').prop('disabled', true);
         }
     });
-    $("#ddlLocation").on('change', function () {
-        let selectLocationId = $(this).val();
-        GetAllVehicleIndent(selectLocationId);
-    })
+    $("#ddlLocation").on("change", async function () {
+        var locationId = $(this).val();
+        await GetAllVehicleIndent(locationId);
+        var locationData = await GetLocationById(locationId)
+        console.log(locationData.code);
+        var code = await GetAutoGenerateCode(locationData.code, PrefixCode.VP);
+        console.log(code);
+        if (!IsEditClick) {
+            $("#txtPlacementNo").val(code);
+        }
+    });
 
     $('#tableDivLink').on('click', function (e) {
         FetchVehiclePlacement();
@@ -78,16 +86,12 @@ $(document).ready(function () {
             SaveVehiclePlacement(action);
         }
     });
-    $("#ddlLocation").on('change', function () {
-        let selectLocationId = $(this).val();
-        GetAllVehicleIndent(selectLocationId);
-    })
 });
 
 $('#btnAdd').click(function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
-    FetchPlacementNo();
+    // FetchPlacementNo();
 });
 
 $("#txtAdvancePayable").on('change', function () {
@@ -124,6 +128,7 @@ $('#pageLength').off('change').on('change', function () {
     FetchVehiclePlacement();
 });
 function FetchVehiclePlacement() {
+    IsEditClick = false;
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
     $('#vehiclePlacementForm')[0].reset();
@@ -377,6 +382,7 @@ function AutoFetch() {
         success: function (response) {
             if (Array.isArray(response) && response.length > 0) {
                 let data = response[0]; // Use the first object in the array
+                console.log(data, "**** INdent Data ****");
                 let indentDate = data.indentDate;
                 if (indentDate) {
                     if (indentDate instanceof Date) {
@@ -392,10 +398,10 @@ function AutoFetch() {
                 $("#ddlCustomerName").val(data.partyId).trigger('change');
                 $("#drpVehicleType").val(data.vehicleTypeId).trigger('change');
                 $('#from-search-box').val(data.fromLocation);
-                $('#to-search-box').val(data.toLocation);
-                $('#txtNoOfVehicles').val(data.requiredVehicles);
-                $('#ddlIndentBranch').val(data.locationId).trigger('change');
-                $('#txtPendingVehicles').val(data.pendingVehicles);
+                $("#to-search-box").val(data.toLocation);
+                $("#txtNoOfVehicles").val(data.requiredVehicles);
+                $("#ddlIndentBranch").val(data.locationId).trigger('change');
+                $("#txtPendingVehicles").val(data.pendingVehicles);
 
                 // Format vehicleReqOn
                 let vehicleReqOn = data.vehicleReqOn;
@@ -470,7 +476,6 @@ function VehiclePopUp() {
     });
 
 }
-
 function SaveVehicle(action) {
     var vehicleNo = $("#vehicleNo").val();
     var vehicleCategory = $("#ddlVehicleCategory").val();
@@ -538,7 +543,7 @@ function SaveVehicle(action) {
         PolicyExpiryDate: policyExpDate ? new Date(policyExpDate).toISOString() : null,
         LinkId: GetQueryParam("LinkId"),
     };
-    
+
     if (action === "save") {
         $.ajax({
             url: saveUrl,
@@ -564,7 +569,6 @@ function SaveVehicle(action) {
         });
     }
 }
-
 function GetAllVehicleType(dropdownId, companyIdParam) {
     $.ajax({
         url: '/Vehicle/GetAllMasterVehicleType',
@@ -679,6 +683,7 @@ function GetDropdownValue(inputId) {
     }
     return result;
 }
+
 async function SaveVehiclePlacement(action) {
     var saveUrl = '/VehiclePlacement/AddVehiclePlacement';
     var driverResult = GetDropdownValue("ddlDriverName");
@@ -899,6 +904,7 @@ function UpdateVehiclePlacement(placementId) {
     $("#ddlBrokerName").val(formData.brokerVendorId).trigger('change');
     $("#txtTotalHairAmt").val(formData.totalHireAmount);
     $("#txtAdvancePayable").val(formData.advancePayable);
+    IsEditClick = true;
 }
 function ViewVehiclePlacement(placementId) {
     UpdateVehiclePlacement(placementId);
@@ -916,7 +922,6 @@ function Defaultdrpdownset() {
     });
     $Indentdropdown.append(placeholderOption);
 }
-
 function CheckVehicleAndIndentUnique(vehicleId, indentId) {
     return $.ajax({
         url: '/VehiclePlacement/CheckVehicleAndIndentUnique',

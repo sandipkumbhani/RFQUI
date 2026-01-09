@@ -7,6 +7,7 @@ var fetchVehicleIndentUrl = '/VehicleIndent/GetAllVehicleIndent';
 var companyId;
 var profileId;
 var locationId;
+let IsEditClick = false;
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
@@ -18,7 +19,7 @@ $(document).ready(function () {
             $('#ddlLocation').prop('disabled', true);
         }
     });
-    FetchIndentNo();
+    //FetchIndentNo();
     GetAllVehicleType("ddlVehicleType", companyId);
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllItemName("ddlItemName", companyId);
@@ -59,6 +60,9 @@ $(document).ready(function () {
         console.log(locationData.code);
         var code = await GetAutoGenerateCode(locationData.code, PrefixCode.VI);
         console.log(code);
+        if (!IsEditClick) {
+            $("#txtIndentNo").val(code);
+        }
     });
 });
 
@@ -67,10 +71,11 @@ $('#btnAdd').click(function () {
     $('#tableDiv').addClass("d-none");
 });
 function FetchVehicleIndent() {
+    IsEditClick = false;
     $("#tableDiv").removeClass('d-none');
     $("#formDiv").addClass('d-none');
     $('#vehicleIndentForm')[0].reset();
-    FetchIndentNo();
+    //FetchIndentNo();
     $('.select2-custom').val(null).trigger('change');
     $("#btnSave").show();
     $("#btnupdate").hide();
@@ -290,7 +295,7 @@ function SaveVehicleIndent(action) {
                     $("#btnsaveandnew").prop('disabled', false);
                     $('#vehicleIndentForm')[0].reset();
                     $('.select2-custom').val(null).trigger('change');
-                    FetchIndentNo();
+                    //FetchIndentNo();
 
                     if (profileId == EnumProfile.Branch) {
                         $('#ddlLocation').val(Number(locationId)).trigger('change');
@@ -551,6 +556,7 @@ async function UpdateVehicleIndent(indentId) {
     $("#ddlItemName").val(formData.itemId == 0 ? null : formData.itemId).trigger('change');
     $("#ddlPackingType").val(formData.packingTypeId == 0 ? null : formData.packingTypeId).trigger('change');
     $("#txtRemarks").val(formData.remarks);
+    IsEditClick = true;
 }
 function IndentReferenceCheckInRfq(indentId) {
     return $.ajax({

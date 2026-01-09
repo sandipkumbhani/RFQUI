@@ -4,6 +4,7 @@ var rfqId;
 var fetchedVendorDataList = [];
 var orderColumn = '';
 var orderDir = '';
+let IsEditClick = false;
 var fetchRfqUrl = '/RequestForQuote/GetAllRfq';
 
 $(document).ready(function () {
@@ -41,10 +42,7 @@ $(document).ready(function () {
         $("#tableDiv").show();
         $("#formDiv").hide();
     });
-    $("#ddlLocation").on('change', function () {
-        let selectLocationId = $(this).val();
-        GetAllVehicleIndent(selectLocationId);
-    })
+
     $('#ddlIndent').on('change', function () {
         const selectedValue = $(this).val();
         if (!selectedValue) {
@@ -69,8 +67,23 @@ $(document).ready(function () {
             $("#ddlItemName").val(selectedIndent.itemId == 0 ? null : selectedIndent.itemId).trigger('change');
             $("#ddlPackingType").val(selectedIndent.packingTypeId == 0 ? null : selectedIndent.packingTypeId).trigger('change');
             $("#hdnIndentExpiryDate").val(selectedIndent.expiryDate);
+            console.log(selectedIndent.expiryDate);
         }
     });
+    $("#ddlLocation").on('change', async function () {
+        var locationId = $(this).val();
+        if (!IsNullOrEmpty(locationId)) {
+            await GetAllVehicleIndent(locationId);
+            var locationData = await GetLocationById(locationId)
+            console.log(locationData.code);
+            var code = await GetAutoGenerateCode(locationData.code, PrefixCode.RFQ);
+            console.log(code);
+            if (!IsEditClick) {
+                $("#txtRfqNo").val(code);
+            }
+        }
+    });
+
     UpdateRfq();
     GetAllLocation("ddlLocation", companyId, function () {
         if (profileId == EnumProfile.Branch) {
@@ -80,7 +93,7 @@ $(document).ready(function () {
     });
     GetRfqType();
     GetRfqPriority();
-    FetchRfqNo();
+    //FetchRfqNo();
     FetchRfqList();
     RenderFetchTable();
     SaveRfqVendorDetails();
@@ -88,6 +101,7 @@ $(document).ready(function () {
     GetAllVehicleType("ddlVehicleType", companyId);
     GetAllItemName("ddlItemName", companyId);
     GetAllPakingType("ddlPackingType");
+    SetDefaultIndentDropdown();
 });
 function CheckValidation() {
     $("#ddlLocation").on("keypress", function () {
@@ -104,7 +118,7 @@ function CheckValidation() {
         }
     });
     $("#txtRfqExpiredOn").on("change", function () {
-        if ($(this).val() > $("#hdnIndentExpiryDate").val()) {
+        if (formatDate($(this).val()) < formatDate($("#hdnIndentExpiryDate").val())) {
             toastr.warning("Enter valid Indent Expired On !", "Warning");
             $(this).val('');
         }
@@ -168,7 +182,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a RFQ Expired On", "Validation Error");
         return false;
     }
-    if ($("#txtRfqExpiredOn").val() > $("#hdnIndentExpiryDate").val()) {
+    if (formatDate($("#txtRfqExpiredOn").val()) < formatDate($("#hdnIndentExpiryDate").val())) {
         toastr.warning("The RFQ Expiry Date must not be later than the Indent Expiry Date.", "Warning");
         $("#txtRfqExpiredOn").val('');
         return false;
@@ -227,14 +241,15 @@ function OnSubmitCheckValidation() {
     //}
     return true;
 }
-function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
+
+async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
     $.ajax({
         url: getVehicleTypeUrl,
         type: "GET",
         data: { companyId: companyId },
         contentType: "application/json",
-        success: function (response) {
+        success: await function (response) {
             response = response.result;
             VehicIndentList = response.filter(x => x.locationId == selectLocationId);
             $("#ddlIndent").empty();
@@ -533,7 +548,7 @@ function SaveAndSaveNew(action) {
                     addMasterUserActivityLog(0, LogType.Create, "Request For Quote Saved Sucessfully", 0);
                     $('#RfqDetailsForm')[0].reset();
                     $('.select2-custom').val(null).trigger('change');
-                    FetchRfqNo();
+                    //FetchRfqNo();
                     setTimeout(() => {
                         ResetAttachmentRepeater();
                     }, 1000);
@@ -551,6 +566,7 @@ function SaveAndSaveNew(action) {
     }
 }
 function EditRfq(rfqID) {
+    IsEditClick = true;
     if ($("#btnUpdateRfq").hasClass('d-none')) {
         $("#btnUpdateRfq").removeClass('d-none');
         $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
@@ -715,6 +731,7 @@ function DeleteRfq(rfqID) {
     });
 }
 function FetchRfqList() {
+    IsEditClick = false;
     $("#tableDiv").show();
     $("#formDiv").hide();
     $('#RfqDetailsForm')[0].reset();
@@ -731,7 +748,7 @@ function FetchRfqList() {
     //        $('#ddlLocation').prop('disabled', true);
     //    }
     //});
-    FetchRfqNo();
+    //FetchRfqNo();
     ResetAttachmentRepeater();
     FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), 'EditRfq', 'DeleteRfq', 'rfqID');
 }
@@ -848,4 +865,15 @@ function ViewRfq(rfqId) {
     EditRfq(rfqId);
     $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', true);
     $("#btnUpdateRfq").addClass('d-none');
+}
+
+function SetDefaultIndentDropdown() {
+    $("#ddlIndent").empty();
+    const Indentdropdown = document.getElementById("ddlIndent");
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = 0;
+    placeholderOption.textContent = "Select a Indent No";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    Indentdropdown.appendChild(placeholderOption);
 }
