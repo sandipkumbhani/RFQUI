@@ -186,7 +186,6 @@ namespace RFQ.UI.Controllers
                     {
                         ToEmail = item.Email,
                         Subject = $"New Order Assigned",
-
                         Body = $@"
                         <html>
                             <body style='font-family: Arial, sans-serif;'>

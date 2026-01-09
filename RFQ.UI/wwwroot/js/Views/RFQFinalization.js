@@ -81,11 +81,11 @@ $(document).ready(function () {
         $("#ddlRfqStatus").val(null).trigger('change');
         GetRfqDetailsByRfqNo();
     })
-    $("#txtBillingRate").on('change', function () {
-        if ($(this).val() != null) {
-            FetchAwardedVendorDetails(function () {
-                FetchRfqAwardedVendorList();
-            });
+    $("#txtBillingRate").on('keyup', async function () {
+        const value = $(this).val();
+        if (!IsNullOrEmpty(value)) {
+            await FetchAwardedVendorDetails();
+            //await FetchFinalrateListForVendor();
         }
         return;
     });
@@ -184,7 +184,7 @@ function GetRfqStatus() {
         }
     });
 }
-function GetRfqDetailsByRfqNo(callback) {
+function GetRfqDetailsByRfqNo() {
     var rfqNumber = $("#ddlRfqNo").find('option:selected').text();
     var getUrl = '/RequestForQuote/GetRfqByRfqNo/' + rfqNumber;
     $.ajax({
@@ -218,9 +218,6 @@ function GetRfqDetailsByRfqNo(callback) {
             $("#ddlVehicleType").val(response.vehicleTypeId).trigger('change');
             $("#txtNoofVehicles").val(response.vehicleCount)
             $("#txtSpecial").val(response.specialInstruction)
-            if (callback && typeof callback === 'function') {
-                callback();
-            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Rfq Data!", "Error");
@@ -256,7 +253,7 @@ function GetRfqFailureReason() {
         }
     });
 }
-function SaveAndSaveNew(action) {
+async function SaveAndSaveNew(action) {
     var saveUrl = '/RFQFinalization/AddRfqFinal';
     const rfqFinalformData = {
         RfqId: $("#txtRfqId").val(),
@@ -266,7 +263,7 @@ function SaveAndSaveNew(action) {
         BillingRate: $('#txtBillingRate').val() || 0,
         DetentionPerDay: $('#txtPerDay').val() || 0,
         DetentionFreeDays: $('#txtFreeDays').val() || 0,
-        MarginAmount: 12314,
+        MarginAmount: 0,
         LinkId: GetQueryParam("LinkId")
     };
     let selectedVendorList = GetSelectedVendor();
@@ -277,66 +274,68 @@ function SaveAndSaveNew(action) {
         AvailVehicleCount: vendor.AvailVehicleCount || 0,
         AssignedVehicles: vendor.AssignedVehicles || 0
     }));
-    if ($("#ddlRfqStatus").find('option:selected').text() === "NOT AWARDED") {
-        var formData = {
-            RfqFinalDto: rfqFinalformData,
-            RfqFinalRateDtos: []
-        }
-    }
-    else {
-        var formData = {
-            RfqFinalDto: rfqFinalformData,
-            RfqFinalRateDtos: rfqFinalRateFormData,
-        }
-    }
-    if (action === "save") {
-        $.ajax({
-            url: saveUrl,
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function (response) {
-                if (response) {
-                    toastr.success("RFQ Finalization Submitted Successfully!", "Success");
-                    addMasterUserActivityLog(0, LogType.Create, "RFQ Finalization Submitted Successfully!", 0);
-                    var selectedCheckBoxData = GetSelectedVendors()
-                    SendAssignOrder(selectedCheckBoxData);
-                    if (typeof this.completeOnSuccess === "function") {
-                        this.completeOnSuccess();
-                    }
-                } else {
-                    toastr.error("Failed to Submit RFQ Finalization.", "Error");
-                }
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Submit RFQ Finalization.", "Error");
-            },
-            completeOnSuccess: function () {
-                FetchRfqFinalizationList();
+    const check = await checkAssignedVehicles(rfqFinalRateFormData);
+    if (check) {
+        if ($("#ddlRfqStatus").find('option:selected').text() === "NOT AWARDED") {
+            var formData = {
+                RfqFinalDto: rfqFinalformData,
+                RfqFinalRateDtos: []
             }
-        });
-    }
-
-    else if (action === "saveNew") {
-        $.ajax({
-            url: saveUrl,
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function (response) {
-                if (response) {
-                    toastr.success("Vehicle Indent Saved Successfully!", "Success");
-                    addMasterUserActivityLog(0, LogType.Create, "RFQ Finalization Submitted Successfully!", 0);
-                    $('#RFQForm')[0].reset();
-                    $('.select2-custom').val(null).trigger('change');
-                } else {
+        }
+        else {
+            var formData = {
+                RfqFinalDto: rfqFinalformData,
+                RfqFinalRateDtos: rfqFinalRateFormData,
+            }
+        }
+        if (action === "save") {
+            $.ajax({
+                url: saveUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    if (response) {
+                        toastr.success("RFQ Finalization Submitted Successfully!", "Success");
+                        addMasterUserActivityLog(0, LogType.Create, "RFQ Finalization Submitted Successfully!", 0);
+                        var selectedCheckBoxData = GetSelectedVendors()
+                        SendAssignOrder(selectedCheckBoxData);
+                        if (typeof this.completeOnSuccess === "function") {
+                            this.completeOnSuccess();
+                        }
+                    } else {
+                        toastr.error("Failed to Submit RFQ Finalization.", "Error");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Failed to Submit RFQ Finalization.", "Error");
+                },
+                completeOnSuccess: function () {
+                    FetchRfqFinalizationList();
+                }
+            });
+        }
+        else if (action === "saveNew") {
+            $.ajax({
+                url: saveUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    if (response) {
+                        toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                        addMasterUserActivityLog(0, LogType.Create, "RFQ Finalization Submitted Successfully!", 0);
+                        $('#RFQForm')[0].reset();
+                        $('.select2-custom').val(null).trigger('change');
+                    } else {
+                        toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
+                    }
+                },
+                error: function (xhr, status, error) {
                     toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
                 }
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
-            }
-        });
+            });
+        }
     }
 }
 function FetchRfqFinalizationList() {
@@ -361,7 +360,8 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchRfqFinalizationList();
 });
-function EditRfqFinalizatioin(rfqFinalIdId) {
+
+async function EditRfqFinalizatioin(rfqFinalIdId) {
     if ($("#btnUpdateRfqFinalization").hasClass('d-none')) {
         $("#btnUpdateRfqFinalization").removeClass('d-none');
         $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', false);
@@ -378,23 +378,19 @@ function EditRfqFinalizatioin(rfqFinalIdId) {
     $("#txtRfqId").val(formData.rfqId);
     $("#hdnRFQFinalizationId").val(formData.rfqFinalIdId);
     $("#txtRemarks").val(formData.remarks);
-    GetRfqDetailsByRfqNo(function () {
-        $("#ddlRfqStatus").val(formData.rfqStatusId).trigger('change');
-        if (formData.reasonId) {
-            $("#ddlRfqReason").val(formData.reasonId).trigger('change');
-        }
-        else {
-            $("#txtBillingRate").val(formData.billingRate);
-            $("#txtPerDay").val(formData.detentionPerDay);
-            $("#txtFreeDays").val(formData.detentionFreeDays);
-            FetchAwardedVendorDetails(function () {
-                FetchRfqAwardedVendorList();
-            })
-        }
-    });
-}
+    await GetRfqDetailsByRfqNo();
+    $("#ddlRfqStatus").val(formData.rfqStatusId).trigger('change');
+    $("#txtBillingRate").val(formData.billingRate);
+    $("#txtPerDay").val(formData.detentionPerDay);
+    $("#txtFreeDays").val(formData.detentionFreeDays);
+    await FetchAwardedVendorDetails();
+    //await FetchFinalrateListForVendor();
+    if (!IsNullOrEmpty(formData.reasonId)) {
+        $("#ddlRfqReason").val(formData.reasonId).trigger('change');
+    }
+};
 function UpdateRfqFinalization() {
-    $("#btnUpdateRfqFinalization").on('click', function () {
+    $("#btnUpdateRfqFinalization").on('click', async function () {
         if (!OnSubmitCheckValidation()) {
             return;
         }
@@ -407,7 +403,7 @@ function UpdateRfqFinalization() {
             BillingRate: $('#txtBillingRate').val() || 0,
             DetentionPerDay: $('#txtPerDay').val() || 0,
             DetentionFreeDays: $('#txtFreeDays').val() || 0,
-            MarginAmount: 12314,
+            MarginAmount: 0,
             LinkId: GetQueryParam("LinkId")
         };
         let selecteUpdatedVendorList = GetSelectedVendor();
@@ -420,40 +416,45 @@ function UpdateRfqFinalization() {
             AvailVehicleCount: vendor.AvailVehicleCount,
             AssignedVehicles: vendor.AssignedVehicles
         }));
-        if ($("#ddlRfqStatus").find('option:selected').text() === "NOT AWARDED") {
-            var formData = {
-                RfqFinalDto: rfqFinalUpadateFormData,
-                RfqFinalRateDtos: []
+
+        var check = await checkAssignedVehicles(rfqFinalRateUpdateFormData);
+        if (check) {
+            if ($("#ddlRfqStatus").find('option:selected').text() === "NOT AWARDED") {
+                var formData = {
+                    RfqFinalDto: rfqFinalUpadateFormData,
+                    RfqFinalRateDtos: []
+                }
             }
-        }
-        else {
-            var formData = {
-                RfqFinalDto: rfqFinalUpadateFormData,
-                RfqFinalRateDtos: rfqFinalRateUpdateFormData
+            else {
+                var formData = {
+                    RfqFinalDto: rfqFinalUpadateFormData,
+                    RfqFinalRateDtos: rfqFinalRateUpdateFormData
+                }
             }
-        }
-        var updateRfqFinalization = '/RFQFinalization/UpdateRfqFinal';
-        $.ajax({
-            type: "PUT",
-            url: updateRfqFinalization,
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(formData),
-            dataType: "json",
-            success: function (result) {
-                if (result) {
-                    toastr.success("Rfq Finalization Updated Successfully!", "Success");
-                    addMasterUserActivityLog(0, LogType.Update, "Rfq Finalization Updated Successfully!", 0);
-                    var selectedCheckBoxData = GetSelectedVendors()
-                    SendAssignOrder(selectedCheckBoxData);
-                    FetchRfqFinalizationList();
-                } else {
+            var updateRfqFinalization = '/RFQFinalization/UpdateRfqFinal';
+            $.ajax({
+                type: "PUT",
+                url: updateRfqFinalization,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(formData),
+                dataType: "json",
+                success: function (result) {
+                    if (result) {
+                        toastr.success("Rfq Finalization Updated Successfully!", "Success");
+                        addMasterUserActivityLog(0, LogType.Update, "Rfq Finalization Updated Successfully!", 0);
+                        var selectedCheckBoxData = GetSelectedVendors()
+
+                        SendAssignOrder(selectedCheckBoxData);
+                        FetchRfqFinalizationList();
+                    } else {
+                        toastr.error("Failed to Update Rfq Finalization Details!", "Error");
+                    }
+                },
+                error: function (xhr, status, error) {
                     toastr.error("Failed to Update Rfq Finalization Details!", "Error");
                 }
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Failed to Update Rfq Finalization Details!", "Error");
-            }
-        });
+            });
+        }
     })
 }
 function DeleteRfqFinalizatioin(rfqFinalIdId) {
@@ -490,7 +491,7 @@ function DeleteRfqFinalizatioin(rfqFinalIdId) {
         }
     });
 }
-function FetchRfqAwardedVendorList() {
+function FetchFinalrateListForVendor() {
     //var rfqId = $("#txtRfqId").val();
     var rfqFinalId = $("#hdnRFQFinalizationId").val();
     var url = '/RFQFinalization/GetRfqFinalRateList';
@@ -500,13 +501,12 @@ function FetchRfqAwardedVendorList() {
         data: { rfqFinalId: rfqFinalId },
         contentType: "application/json",
         success: function (response) {
-            $("#awardedVendorTable tbody tr").each(function () {
+            $("#awardedVendorTable tbody tr").each(function (index) {
                 var checkbox = $(this).find('input[type="checkbox"]');
                 var vendorId = checkbox.data('vendorid');
-
                 const vendorData = response.find(v => v.vendorId === vendorId);
                 if (vendorData) {
-                    $(this).find("#txtassignedVehicle").val(vendorData.assignedVehicles || "");
+                    $(this).find("#txtassignedVehicle_" + index).val(vendorData.assignedVehicles || "");
                     checkbox.attr("data-finalrateid", vendorData.rfqFinalRateId);
                     if (vendorData.isAssigned) {
                         $(this).find("input[type='checkbox']").prop("checked", true);
@@ -521,7 +521,7 @@ function FetchRfqAwardedVendorList() {
         }
     })
 }
-function FetchAwardedVendorDetails(callback) {
+function FetchAwardedVendorDetails() {
     var rfqId = $("#txtRfqId").val();
     var getAwardedVendorUrl = '/RFQFinalization/AwardedVendor/' + rfqId;
     $.ajax({
@@ -529,7 +529,7 @@ function FetchAwardedVendorDetails(callback) {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            awardedVendorDetails = response
+            awardedVendorTable = response
             const tbody = $("#awardedVendorTable tbody");
             tbody.empty();
             if (!response || response.length === 0) {
@@ -555,7 +555,7 @@ function FetchAwardedVendorDetails(callback) {
                         <td>${vendor.whatsAppNo}</td>
                         <td>${vendor.email}</td>
                         <td>${vendor.availVehicleCount}/${vendor.vehicleCount}</td>
-                        <td><input type="text" id="txtassignedVehicle" class="form-control" maxlength="10" onkeypress="return isNumber(event)"></td>
+                        <td><input type="text" id="txtassignedVehicle_${index}" class="form-control assigned-vehicle" maxlength="10" onkeypress="return isNumber(event)"></td>
                         <td>${vendor.totalHireCost}</td>
                         <td>${vendor.detentionPerDay}</td>
                         <td>${vendor.detentionFreeDays}</td>
@@ -570,9 +570,6 @@ function FetchAwardedVendorDetails(callback) {
                         </tr>`;
                 tbody.append(rowHtml);
             });
-            if (callback && typeof callback === 'function') {
-                callback();
-            };
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Awarded Vendor Details!", "Error");
@@ -580,11 +577,18 @@ function FetchAwardedVendorDetails(callback) {
     });
 }
 
-$(document).on("input", "#awardedVendorTable tbody #txtassignedVehicle", function () {
-    let row = $(this).closest("tr");
-    let availVehicle = parseInt(row.find('input[type="checkbox"]').data("availvehicle")) || 0;
-    let vehicleCount = parseInt(row.find('input[type="checkbox"]').data("vehiclecount")) || 0;
-    let enteredValue = parseInt($(this).val()) || 0;
+$(document).on("input", ".assigned-vehicle", function () {
+    // 🔹 current input
+    let $input = $(this);
+    // 🔹 allow only numbers
+    let value = $input.val().replace(/[^0-9]/g, '');
+    $input.val(value);
+    let assignedVehicle = parseInt(value) || 0;
+    // 🔹 get full row
+    let $row = $input.closest("tr");
+    let availVehicle = parseInt($row.find('input[type="checkbox"]').data("availvehicle")) || 0;
+    let vehicleCount = parseInt($row.find('input[type="checkbox"]').data("vehiclecount")) || 0;
+    let enteredValue = assignedVehicle;
     if (enteredValue > availVehicle || enteredValue > vehicleCount) {
         toastr.warning(`Assigned vehicles cannot exceed available vehicles and  total vehicles.`);
         $(this).val('');
@@ -599,10 +603,10 @@ $(document).on("change", "#awardedVendorTable tbody input[type='checkbox']", fun
 });
 function ValidateTotalForVendor(vehicleCount) {
     let totalAssigned = 0;
-    $("#awardedVendorTable tbody tr").each(function () {
+    $("#awardedVendorTable tbody tr").each(function (index) {
         let checkbox = $(this).find('input[type="checkbox"]');
         if (checkbox.is(":checked")) {
-            let val = parseInt($(this).find("#txtassignedVehicle").val());
+            let val = parseInt($(this).find("#txtassignedVehicle_" + index).val());
             if (val == null || isNaN(val)) {
                 toastr.warning("Please Enter Assigned vehicle number", "Warning");
                 checkbox.prop('checked', false);
@@ -620,12 +624,13 @@ function ValidateTotalForVendor(vehicleCount) {
 }
 function GetSelectedVendor() {
     selectedVendor = [];
-    $("#awardedVendorTable tbody tr").each(function () {
+    $("#awardedVendorTable tbody tr").each(function (index) {
         var checkbox = $(this).find('input[type="checkbox"]');
         var vendorId = checkbox.data('vendorid');
         var availVehicleCount = checkbox.data('availvehicle');
         var finalRateId = checkbox.data('finalrateid');
-        var assignedVehicle = $("#txtassignedVehicle").val();
+        var assignedVehicle = $("#txtassignedVehicle_" + index).val();
+
         if (checkbox.is(':checked')) {
             selectedVendor.push({
                 VendorId: vendorId,
@@ -659,8 +664,8 @@ function GetSelectedVendors() {
     const selectedData = [];
     $("#awardedVendorTable tbody input[type='checkbox']:checked").each(function () {
         const vendorId = $(this).data("vendorid"); // capture once
-
-        const result = $.grep(awardedVendorDetails, function (obj) {
+        console.log(awardedVendorTable);
+        const result = $.grep(awardedVendorTable, function (obj) {
             return obj.vendorId === vendorId; // compare correctly
         });
         if (result.length > 0) {
@@ -670,28 +675,54 @@ function GetSelectedVendors() {
     return selectedData;
 }
 function SendAssignOrder(selectedVendors) {
-    if (selectedVendors.length === 0) {
-        toastr.warning("No vendors selected for assignment.");
-        return;
-    } else {
-        $.ajax({
-            url: "/RFQFinalization/SendAssignOrder",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(selectedVendors),
-            success: function (response) {
-                toastr.success("Assign Order Sucsessfully");
-            },
-            error: function (xhr, status, error) {
-                toastr.error("Something went wrong while sending emails!");
-            }
-        });
+    if (parseInt($("#ddlRfqStatus").val()) === EnumInternalMaster.AWARDED) {
+        if (selectedVendors.length === 0) {
+            toastr.warning("No vendors selected for assignment.");
+            return;
+        } else {
+            $.ajax({
+                url: "/RFQFinalization/SendAssignOrder",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(selectedVendors),
+                success: function (response) {
+                    toastr.success("Assign Order Sucsessfully");
+                },
+                error: function (xhr, status, error) {
+                    toastr.error("Something went wrong while sending emails!");
+                }
+            });
+        }
     }
-
 }
-function ViewRfqFinalizatioin(rfqFinalIdId) {
-    EditRfqFinalizatioin(rfqFinalIdId);
-    $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnUpdateRfqFinalization").addClass('d-none');
+
+async function checkAssignedVehicles(AssignedVehicleListData) {
+    if (parseInt($("#ddlRfqStatus").val()) === EnumInternalMaster.AWARDED) {
+
+        const totalAssignedVehicles = AssignedVehicleListData.reduce((total, vendor) => {
+            return total + (parseInt(vendor.AssignedVehicles, 10) || 0);
+        }, 0);
+
+        if (
+            totalAssignedVehicles !== 0 &&
+            totalAssignedVehicles < awardedVendorTable[0].vehicleCount
+        ) {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'The required number of vehicles has not been met.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, proceed'
+            });
+
+            if (result.isConfirmed)
+                return true;
+            else
+                return false;
+        }
+    }
+    return true;
 }
 
