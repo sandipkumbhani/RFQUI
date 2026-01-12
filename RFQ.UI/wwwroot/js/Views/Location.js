@@ -104,7 +104,7 @@ function FetchLocationList() {
     $("#locationFormSection").hide();
     $("#locationListSection").show();
     $('#LocationForm')[0].reset();
-    $('#ddlCity').val(null).trigger('change');
+    $('#ddlCity').val(0).trigger('change');
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
     $("#btnSaveForm").show();
@@ -184,7 +184,7 @@ function SaveLocation(action) {
                     toastr.success("Location Details Submitted Successfully!");
                     addMasterUserActivityLog(0, LogType.Create, "Location Details Submitted Successfully!", 0);
                     $('#LocationForm')[0].reset();
-                    $('#ddlCity').val(null).trigger('change');
+                    $('#ddlCity').val(0).trigger('change');
                 }
                 else {
                     toastr.error("Failed to Submit Location Details", "Error");
@@ -235,7 +235,7 @@ function UpdateLocation() {
                     $("#locationFormSection").hide();
                     $("#locationListSection").show();
                     $('#LocationForm')[0].reset();
-                    $('#ddlCity').val(null).trigger('change');
+                    $('#ddlCity').val(0).trigger('change');
                     $("#btnUpdate").hide();
                     $("#btnSaveAndNewForm").show();
                     $("#btnSaveForm").show();

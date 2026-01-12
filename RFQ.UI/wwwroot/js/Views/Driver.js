@@ -54,8 +54,8 @@ function ResetForm() {
     $("#txtUploadedPhoto").val("");
     $("#numLicenseNo").prop("disabled", false);
     $("#txtDateOfBirth").prop("disabled", false);
-    $('#ddlCity').val(null).trigger('change');
-    $('#ddlDriverType').val(null).trigger('change');
+    $('#ddlCity').val(0).trigger('change');
+    $('#ddlDriverType').val(0).trigger('change');
     $(".dz-preview").remove();
     $(".dz-message").show();
 }
@@ -425,8 +425,9 @@ function GetDriverType() {
                 driverTypeMap[category.internalMasterId] = category.internalMasterName;
             });
             const dropdown = document.getElementById("ddlDriverType");
+            dropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select Driver Type";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;

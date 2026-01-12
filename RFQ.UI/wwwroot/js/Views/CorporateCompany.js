@@ -282,8 +282,8 @@ function ButtonUpdateClick() {
                         UpdateAttachmentData(transactionId);
                         FetchCorporateCompany();
                         $('#CompanyTypeForm')[0].reset();
-                        $('#ddlFranchisename').val(null).trigger('change');
-                        $('#ddlCity').val(null).trigger('change');
+                        $('#ddlFranchisename').val(0).trigger('change');
+                        $('#ddlCity').val(0).trigger('change');
                         $("#btnupdate").hide();
                         $("#btnsaveandnew").show();
                         $("#btnSaveCompanyType").show();
@@ -417,8 +417,8 @@ function SaveCorporateCompany(action) {
                     toastr.success("Corporate Company Details Submitted Successfully");
                     addMasterUserActivityLog(0, LogType.Create, "Corporate Company Details Submitted Successfully", 0);
                     $('#CompanyTypeForm')[0].reset();
-                    $('#ddlFranchisename').val(null).trigger('change');
-                    $('#ddlCity').val(null).trigger('change');
+                    $('#ddlFranchisename').val(0).trigger('change');
+                    $('#ddlCity').val(0).trigger('change');
                     setTimeout(() => {
                         ResetAttachmentRepeater();
                     }, 1000);

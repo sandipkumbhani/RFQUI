@@ -327,7 +327,7 @@ function BindDropDown(data) {
     const select = document.getElementById("ddlVendorCategory");
     select.innerHTML = "";
     let placeholderOption = document.createElement("option");
-    placeholderOption.value = "";
+    placeholderOption.value = 0;
     placeholderOption.textContent = "Select a Category";
     placeholderOption.disabled = true;
     placeholderOption.selected = true;
@@ -350,7 +350,7 @@ function BindDropDownFromCity() {
             const select = document.getElementById("ddlvendorFromCityTable");
             select.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a City";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -532,8 +532,8 @@ function FetchVendor() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
     $('#vendorForm')[0].reset();
-    $('#ddlCity').val(null).trigger('change');
-    $('#ddlVendorCategory').val(null).trigger('change');
+    $('#ddlCity').val(0).trigger('change');
+    $('#ddlVendorCategory').val(0).trigger('change');
     $('#vendorVehicleTypeTable tbody').empty();
     ClearVehicleTypeForm();
     $('#applicableRouteDetails tbody').empty();
@@ -835,7 +835,7 @@ function RenderVehicleTypeDetailsTable() {
     });
 }
 function ClearVehicleTypeForm() {
-    $('#ddlvendorVehicleTypeTable').val(null).trigger('change');
+    $('#ddlvendorVehicleTypeTable').val(0).trigger('change');
 }
 function ApplicableRouteDetailsTable() {
     $('#btnAddVendorApplicableRoute').on('click', function () {
@@ -922,9 +922,9 @@ function RenderApplicableRouteDetailsTable() {
     });
 }
 function ClearApplicableRouteForm() {
-    $('#ddlvendorFromCityTable').val(null).trigger('change');
-    $('#ddlvendorFromStateTable').val(null).trigger('change');
-    $('#ddlvendorToStateTable').val(null).trigger('change');
+    $('#ddlvendorFromCityTable').val(0).trigger('change');
+    $('#ddlvendorFromStateTable').val(0).trigger('change');
+    $('#ddlvendorToStateTable').val(0).trigger('change');
 }
 function FetchVendorVehicleTypeList(partyId) {
     var fetchVehicleTypeUrl = '/MasterPartyVehicleType/GetMasterPartyVehicleTypeByPartyId/' + partyId;
@@ -960,8 +960,3 @@ function FetchVendorApplicableRouteList(partyId) {
     });
     return result;
 }
-//function ViewVendor(partyId) {
-//    EditVendor(partyId);
-//    $('#formDiv').find('input, select, textarea, button , a').prop('disabled', true);
-//    $("#btnupdate").addClass('d-none');
-//}

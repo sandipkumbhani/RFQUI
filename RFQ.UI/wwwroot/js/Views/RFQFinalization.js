@@ -137,7 +137,7 @@ function GetRfqDrpList() {
             const select = document.getElementById("ddlRfqNo");
             select.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a RFQ No";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -166,7 +166,7 @@ function GetRfqStatus() {
             const select = document.getElementById("ddlRfqStatus");
             select.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a RFQ Status";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -235,7 +235,7 @@ function GetRfqFailureReason() {
             const select = document.getElementById("ddlRfqReason");
             select.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Failure Reason";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -326,7 +326,9 @@ async function SaveAndSaveNew(action) {
                         toastr.success("Vehicle Indent Saved Successfully!", "Success");
                         addMasterUserActivityLog(0, LogType.Create, "RFQ Finalization Submitted Successfully!", 0);
                         $('#RFQForm')[0].reset();
-                        $('.select2-custom').val(null).trigger('change');
+                        $(".select2-custom").each(function () {
+                            $(this).val(0).trigger('change');
+                        });
                     } else {
                         toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
                     }
@@ -345,7 +347,9 @@ function FetchRfqFinalizationList() {
     $("#btnSave").show();
     $("#btnSaveAndNew").show();
     $('#RFQForm')[0].reset();
-    $('.select2-custom').val(null).trigger('change');
+    $(".select2-custom").each(function () {
+        $(this).val(0).trigger('change');
+    });
     $("#ddlRfqNo").prop('disabled', false);
     ClearDisabledFields();
     FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase(), 'EditRfqFinalizatioin', 'DeleteRfqFinalizatioin', 'rfqFinalIdId');
@@ -657,8 +661,8 @@ function GetSelectedVendor() {
 function ClearDisabledFields() {
     $('input:disabled').val('');
     $('input[type="hidden"]').val('');
-    $("#ddlCustomerName").val(null).trigger('change');
-    $("#ddlVehicleType").val(null).trigger('change');
+    $("#ddlCustomerName").val(0).trigger('change');
+    $("#ddlVehicleType").val(0).trigger('change');
 }
 function GetSelectedVendors() {
     const selectedData = [];

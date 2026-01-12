@@ -818,7 +818,7 @@ function GetAllCityList(dropdownId) {
             }
             select.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a City";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -849,7 +849,7 @@ function GetAllStateList(dropdownId) {
             }
             dropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a State Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -878,9 +878,9 @@ function GetAllPakingType(dropdownId) {
                 toastr.error("Failed to Fetch Paking Type!", "Error");
                 return;
             }
-
+            packingTypedropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a PakingType";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -908,7 +908,7 @@ function GetAllLocation(dropdownId, companyIdParam, callback) {
             const selectLocation = document.getElementById(dropdownId);
             selectLocation.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select Location";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -967,9 +967,10 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
                 //const selectVehicleType = document.getElementById(dropdownId);
                 const dropdowns = document.querySelectorAll(`#${dropdownId}`);
                 const selectVehicleType = dropdowns[dropdowns.length - 1];
+                selectVehicleType.innerHTML = "";
                 //this twoline for select last dropdown and bind Data of the page
                 let placeholderOption = document.createElement("option");
-                placeholderOption.value = "";
+                placeholderOption.value = 0;
                 placeholderOption.textContent = "Select a Vehicle Type";
                 placeholderOption.disabled = true;
                 placeholderOption.selected = true;
@@ -997,8 +998,9 @@ function GetAllItemName(dropdownId, companyIdParam) {
         success: function (response) {
             var data = response
             const selectItemName = document.getElementById(dropdownId);
+            selectItemName.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select an Item Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;

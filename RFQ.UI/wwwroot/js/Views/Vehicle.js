@@ -46,7 +46,7 @@ $("#ddlVehicleCategory").on('change', function () {
         return;
     }
     if ($(this).find('option:selected').text() === "OWNED") {
-        $("#ddlOwnerName").val(null).trigger('change');
+        $("#ddlOwnerName").val(0).trigger('change');
         $("#ddlOwnerName").prop('disabled', true);
     }
     else {
@@ -165,7 +165,7 @@ function SaveVehicle(action) {
                     $("#vehicleForm")[0].reset();
                     $("#ddlOwnerName").prop('disabled', false);
                     $("select.select2-custom").each(function () {
-                        $(this).val(null).trigger('change');
+                        $(this).val(0).trigger('change');
                     });
                 }
             },
@@ -335,7 +335,7 @@ function FetchVehicleList() {
     $("#btnUpdateVehicle").addClass('d-none')
     $("#vehicleNo").prop("disabled", false);
     $("select.select2-custom").each(function () {
-        $(this).val(null).trigger('change');
+        $(this).val(0).trigger('change');
     });
     $("#ddlOwnerName").prop('disabled', false);
     FetchDataForTable('vehicleTable', fetchVehicleUrl, orderColumn, orderDir.toUpperCase(), 'EditVehicle', 'DeleteVehicle', 'vehicleId');
@@ -421,8 +421,9 @@ function GetAllVehicleCategory() {
             /*const dropdown = document.getElementById("ddlVehicleCategory");*/
             const dropdowns = document.querySelectorAll("#ddlVehicleCategory");
             const vehicleCategoryDropdown = dropdowns[dropdowns.length - 1];
+            vehicleCategoryDropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a VehicleCategory";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -453,7 +454,7 @@ function GetAllOwnerOrVendor() {
             const ownerdropdown = dropdowns[dropdowns.length - 1];
             ownerdropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a OwnerName";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -524,9 +525,4 @@ function ClearFields() {
     $("#vehicleCapacityInput").val("");
     $("#policyNoInput").val("");
     $("#policyExpiryInput").val("");
-}
-function ViewVehicle(vehicleId) {
-    EditVehicle(vehicleId);
-    $('#vehicleForm').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnUpdateVehicle").addClass('d-none');
 }

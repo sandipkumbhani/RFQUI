@@ -9,6 +9,7 @@ var profileId;
 var locationId;
 var FetchVehiclePlacementUrl = '/VehiclePlacement/GetAllVehiclePlacement';
 var VehicIndentList;
+var VehicleList;
 let IsEditClick = false;
 
 $(document).ready(function () {
@@ -25,10 +26,16 @@ $(document).ready(function () {
 
     $('#ddlVehicleNo').on('change', function () {
         const selectedValue = $(this).val();
-        const selectedVehicle = VehicleList.find(x => x.vehicleId == selectedValue);
-        if (selectedVehicle) {
-            $("#drpOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');
+        if (!IsNullOrEmpty(VehicleList)) {
+            const selectedVehicle = VehicleList.find(x => x.vehicleId == selectedValue);
+            if (selectedVehicle) {
+                $("#drpOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');
+            }
         }
+        else {
+            $("#drpOwnerName").val(0).trigger('change');
+        }
+
     });
 
     GetAllDriver();
@@ -37,8 +44,8 @@ $(document).ready(function () {
     GetAllVehicleNumber();
     GetAllOwnerOrVendor();
     GetAllBrokerVendor();
-    FetchVehiclePlacement();
     ButtonUpdateClick();
+    FetchVehiclePlacement();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("drpVehicleType", companyId);
     GetAllLocation("ddlIndentBranch", companyId); //Both Dropdown Id are Different 
@@ -48,17 +55,21 @@ $(document).ready(function () {
             $('#ddlLocation').prop('disabled', true);
         }
     });
+
     $("#ddlLocation").on("change", async function () {
         var locationId = $(this).val();
-        await GetAllVehicleIndent(locationId);
-        var locationData = await GetLocationById(locationId)
-        console.log(locationData.code);
-        var code = await GetAutoGenerateCode(locationData.code, PrefixCode.VP);
-        console.log(code);
+        if (!IsNullOrEmpty(locationId)) {
+            await GetAllVehicleIndent(locationId);
+            var locationData = await GetLocationById(locationId)
+            console.log(locationData.code);
+            var code = await GetAutoGenerateCode(locationData.code, PrefixCode.VP);
+            console.log(code);
+        }
         if (!IsEditClick) {
             $("#txtPlacementNo").val(code);
         }
     });
+
 
     $('#tableDivLink').on('click', function (e) {
         FetchVehiclePlacement();
@@ -88,9 +99,15 @@ $(document).ready(function () {
     });
 });
 
-$('#btnAdd').click(function () {
+$('#btnAdd').on('click', function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
+
+    if ($("#ddlLocation").is(":disabled"))
+        $("#ddlLocation").removeAttr("disabled");
+
+    if ($("#ddlIndentNo").is(":disabled"))
+        $("#ddlIndentNo").removeAttr("disabled");
     // FetchPlacementNo();
 });
 
@@ -131,18 +148,17 @@ function FetchVehiclePlacement() {
     IsEditClick = false;
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
-    $('#vehiclePlacementForm')[0].reset();
-    ////myDropzone.removeAllFiles();
-    ////$('#ddlCity').val(null).trigger('change');
+    vehiclePlacementFormReset();
     $("#btnSaveForm").show();
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
     //ResetAttachmentRepeater();
     FetchDataForTable('PlacementTable', FetchVehiclePlacementUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehiclePlacement', 'DeleteVehiclePlacement', 'placementId');
 }
-function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
+
+async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
-    $.ajax({
+    return await $.ajax({
         url: getVehicleTypeUrl,
         type: "GET",
         data: { companyId: companyId },
@@ -152,6 +168,7 @@ function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
             VehicIndentList = response.filter(x => x.locationId == selectLocationId);
             $("#ddlIndentNo").empty();
             const Indentdropdown = document.getElementById("ddlIndentNo");
+            Indentdropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
             placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Indent No";
@@ -225,7 +242,7 @@ function GetAllTrackingType() {
             const select = document.getElementById("ddlTrakingType");
             select.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Tracking Type";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -250,18 +267,19 @@ function GetAllDriver() {
         dataType: "json",
         success: function (response) {
             driverDrpList = response;
-            const selectLocation = document.getElementById("ddlDriverName");
+            const ddlDriverName = document.getElementById("ddlDriverName");
+            ddlDriverName.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select Driver";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            selectLocation.appendChild(placeholderOption);
+            ddlDriverName.appendChild(placeholderOption);
             driverDrpList.forEach(option => {
                 let opt = document.createElement("option");
                 opt.value = option.driverId;
                 opt.textContent = option.driverName;
-                selectLocation.appendChild(opt);
+                ddlDriverName.appendChild(opt);
             });
         },
         error: function (xhr, status, error) {
@@ -280,8 +298,9 @@ function GetAllVehicleNumber() {
             if (VehicleList != null) {
                 $('#ddlVehicleNo').empty();
                 const selectVehicleNumber = document.getElementById("ddlVehicleNo");
+                selectVehicleNumber.innerHTML = "";
                 let placeholderOption = document.createElement("option");
-                placeholderOption.value = "";
+                placeholderOption.value = 0;
                 placeholderOption.textContent = "Select Vehicle No";
                 placeholderOption.disabled = true;
                 placeholderOption.selected = true;
@@ -324,8 +343,9 @@ function GetAllOwnerOrVendor() {
         data: { companyId: companyId },
         success: function (response) {
             const ownerdropdown = document.getElementById("drpOwnerName");
+            ownerdropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Owner Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -353,8 +373,9 @@ function GetAllBrokerVendor() {
         success: function (response) {
             var data = response.filter(x => x.partyCategoryId == EnumInternalMaster.BROKER);
             const brokerdropdown = document.getElementById("ddlBrokerName");
+            brokerdropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Broker Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -465,7 +486,7 @@ function VehiclePopUp() {
                 closepop = true;
             }
             if (closepop) {
-                const form = $(this).find('driverForm')[0];
+                const form = $(this).find('vehicleForm')[0];
                 if (form) {
                     form.reset(); // reset all form inputs
                 }
@@ -579,8 +600,9 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
             if (response != null) {
                 var data = response
                 const selectVehicleType = document.getElementById(dropdownId);
+                selectVehicleType.innerHTML = "";
                 let placeholderOption = document.createElement("option");
-                placeholderOption.value = "";
+                placeholderOption.value = 0;
                 placeholderOption.textContent = "Select a Vehicle Type";
                 placeholderOption.disabled = true;
                 placeholderOption.selected = true;
@@ -744,7 +766,7 @@ async function SaveVehiclePlacement(action) {
                     $("#btnSaveForm").prop('disabled', false);
                     $("#btnSaveAndNewForm").prop('disabled', false);
                     $('#vehiclePlacementForm')[0].reset();
-                    $('.select2-custom').val(null).trigger('change');
+                    $('.select2-custom').val(0).trigger('change');
                     FetchVehiclePlacement();
 
                     if (profileId == EnumProfile.Branch) {
@@ -752,7 +774,7 @@ async function SaveVehiclePlacement(action) {
                         $('#ddlLocation').prop('disabled', true);
                     }
                     else {
-                        $('#ddlLocation').val(null).trigger('change');
+                        $('#ddlLocation').val(0).trigger('change');
                         $('#ddlLocation').prop('disabled', false);
                     }
 
@@ -806,13 +828,7 @@ function ButtonUpdateClick() {
                     addMasterUserActivityLog(0, LogType.Update, "Vehicle Placement Details Updated Successfully!", 0);
                     $("#formDiv").css('display', 'none');
                     FetchVehiclePlacement();
-                    $('#vehiclePlacementForm')[0].reset();
-                    $('#ddlLocation').val(null).trigger('change');
-                    $('#ddlIndentNo').val(null).trigger('change');
-                    $('#ddlVehicleNo').val(null).trigger('change');
-                    $('#ddlDriverName').val(null).trigger('change');
-                    $('#drpOwnerName').val(null).trigger('change');
-                    $('#ddlBrokerName').val(null).trigger('change');
+                    vehiclePlacementFormReset();
                     $("#btnUpdate").hide();
                     $("#btnSaveAndNewForm").show();
                     $("#btnSaveForm").show();
@@ -891,7 +907,10 @@ function UpdateVehiclePlacement(placementId) {
     $("#btnCancel").removeClass('d-none');
     $("#btnSaveAndNewForm").hide();
     $("#vehiclePlacementId").val(formData.placementId);
-    $("#ddlLocation").val(formData.locationId).trigger('change');
+    if (!IsNullOrEmpty(formData.locationId)) {
+        $("#ddlLocation").val(formData.locationId).trigger('change');
+        $("#ddlLocation").prop("disabled", true);
+    }
     $("#txtPlacementNo").val(formData.placementNo);
     $("#txtPlacementDate").val(formatDateForInput(formData.placementDate));
     ////$("#ddlIndentNo").val(formData.indentId).trigger('change');
@@ -908,7 +927,6 @@ function UpdateVehiclePlacement(placementId) {
 }
 function ViewVehiclePlacement(placementId) {
     UpdateVehiclePlacement(placementId);
-    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
     $("#updateButton").addClass('d-none');
 }
 function Defaultdrpdownset() {
@@ -938,4 +956,17 @@ function CheckVehicleAndIndentUnique(vehicleId, indentId) {
             console.error("Error in CheckVehicleAndIndentUnique:", error);
         }
     });
+}
+function vehiclePlacementFormReset() {
+    $('#vehiclePlacementForm')[0].reset();
+    $("#ddlCustomerName").val(0).trigger('change');
+    $("#drpVehicleType").val(0).trigger('change');
+    $("#ddlIndentBranch").val(0).trigger('change');
+    $("#ddlLocation").val(0).trigger('change');
+    $("#drpOwnerName").val(0).trigger('change');
+    $("#ddlTrakingType").val(0).trigger('change');
+    $("#ddlVehicleNo").val(0).trigger('change');
+    $("#ddlDriverName").val(0).trigger('change');
+    $("#ddlBrokerName").val(0).trigger('change');
+    $("#ddlIndentNo").val(0).trigger('change');
 }

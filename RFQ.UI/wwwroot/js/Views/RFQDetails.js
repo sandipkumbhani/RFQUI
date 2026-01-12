@@ -33,7 +33,10 @@ $(document).ready(function () {
     $("#btnAdd").on("click", function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
-        $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
+        //$('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
+        if ($("#ddlLocation").is(":disabled"))
+            $("#ddlLocation").removeAttr("disabled");
+
         const rfqDetailsTab = document.getElementById("rfqDetails-tab");
         rfqDetailsTab.click();
     });
@@ -64,8 +67,8 @@ $(document).ready(function () {
             $('#toCity').val(selectedIndent.toLocationCity);
             $('#toLat').val(selectedIndent.toLatitude);
             $('#toLng').val(selectedIndent.toLongitude);
-            $("#ddlItemName").val(selectedIndent.itemId == 0 ? null : selectedIndent.itemId).trigger('change');
-            $("#ddlPackingType").val(selectedIndent.packingTypeId == 0 ? null : selectedIndent.packingTypeId).trigger('change');
+            $("#ddlItemName").val(selectedIndent.itemId == 0 ? 0 : selectedIndent.itemId).trigger('change');
+            $("#ddlPackingType").val(selectedIndent.packingTypeId == 0 ? 0 : selectedIndent.packingTypeId).trigger('change');
             $("#hdnIndentExpiryDate").val(selectedIndent.expiryDate);
             console.log(selectedIndent.expiryDate);
         }
@@ -255,7 +258,7 @@ async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
             $("#ddlIndent").empty();
             const Indentdropdown = document.getElementById("ddlIndent");
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Indent No";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -547,7 +550,9 @@ function SaveAndSaveNew(action) {
                     toastr.success("Request For Quote Saved Sucessfully", "success");
                     addMasterUserActivityLog(0, LogType.Create, "Request For Quote Saved Sucessfully", 0);
                     $('#RfqDetailsForm')[0].reset();
-                    $('.select2-custom').val(null).trigger('change');
+                    $(".select2-custom").each(function () {
+                        $(this).val(0).trigger('change');
+                    });
                     //FetchRfqNo();
                     setTimeout(() => {
                         ResetAttachmentRepeater();
@@ -569,7 +574,6 @@ function EditRfq(rfqID) {
     IsEditClick = true;
     if ($("#btnUpdateRfq").hasClass('d-none')) {
         $("#btnUpdateRfq").removeClass('d-none');
-        $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', false);
     }
     var data = viewModelDto.filter(x => x.rfqId === rfqID);
     var formData = data[0];
@@ -583,7 +587,11 @@ function EditRfq(rfqID) {
         $("#vendorDetails-tab").prop('disabled', false);
         $("#previousQuotes-tab").prop('disabled', false);
         $("#txtRfqDetailsId").val(formData.rfqId);
-        $("#ddlLocation").val(formData.locationId).trigger('change');
+        if (!IsNullOrEmpty(formData.locationId)) {
+            $("#ddlLocation").val(formData.locationId).trigger('change');
+            $("#ddlLocation").prop('disabled', true);
+        }
+
         $("#txtRfqNo").val(formData.rfqNo);
         $("#txtRfqDate").val(formData.rfqDate.split('T')[0]);
         $("#txtRfqExpiredOn").val(formData.expiryDate);
@@ -739,7 +747,9 @@ function FetchRfqList() {
     $("#button-main").hide();
     $("#btnSaveAndNew").show();
     $("#ddlIndent").prop('disabled', false);
-    $('.select2-custom').val(null).trigger('change');
+    $(".select2-custom").each(function () {
+        $(this).val(0).trigger('change');
+    });
     $("#vendorDetails-tab").prop('disabled', false);
     $("#previousQuotes-tab").prop('disabled', false);
     //GetAllLocation("ddlLocation", companyId, function () {

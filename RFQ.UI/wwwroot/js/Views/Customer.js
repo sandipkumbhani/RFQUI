@@ -72,7 +72,7 @@ function FetchCustomerList() {
     $("#formDiv").hide();
     $('#customerForm')[0].reset();
     getAutoCustomerCode();
-    $('#ddlCity').val(null).trigger('change');
+    $('#ddlCity').val(0).trigger('change');
     $("#btnSaveCustomer").show();
     $("#btnUpdate").hide();
     $("#SavenewButton").show();
@@ -206,7 +206,7 @@ function SaveCustomer(action) {
                         toastr.success("Customer Details Submitted Successfully!");
                         addMasterUserActivityLog(0, LogType.Create, "Customer Details Submitted Successfully!", 0);
                         $('#customerForm')[0].reset();
-                        $('#ddlCity').val(null).trigger('change');
+                        $('#ddlCity').val(0).trigger('change');
                         setTimeout(() => {
                             ResetAttachmentRepeater();
                         }, 1000);
@@ -622,8 +622,3 @@ function getAutoCustomerCode() {
         }
     });
 }
-//function ViewCustomer(partyId) {
-//    EditCustomer(partyId);
-//    $('#customerForm').find('input, select, textarea, button, a').prop('disabled', true);
-//    $("#btnUpdate").addClass('d-none');
-//}

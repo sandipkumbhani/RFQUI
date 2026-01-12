@@ -69,6 +69,8 @@ $(document).ready(function () {
 $('#btnAdd').click(function () {
     $('#formDiv').removeClass("d-none");
     $('#tableDiv').addClass("d-none");
+    if ($("#ddlLocation").is(":disabled"))
+        $("#ddlLocation").removeAttr("disabled");
 });
 function FetchVehicleIndent() {
     IsEditClick = false;
@@ -76,7 +78,9 @@ function FetchVehicleIndent() {
     $("#formDiv").addClass('d-none');
     $('#vehicleIndentForm')[0].reset();
     //FetchIndentNo();
-    $('.select2-custom').val(null).trigger('change');
+    $(".select2-custom").each(function () {
+        $(this).val(0).trigger('change');
+    });
     $("#btnSave").show();
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
@@ -104,8 +108,9 @@ function GetAllConsignorList() {
         success: function (response) {
             $("#ddlConsignorInput").empty();
             const consignorListDropdown = document.getElementById("ddlConsignorInput");
+            consignorListDropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select or Add a Consignor Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -133,8 +138,9 @@ function GetAllConsigneeList() {
         success: function (response) {
             $("#ddlConsigneeInput").empty();
             const selectConsignee = document.getElementById("ddlConsigneeInput");
+            selectConsignee.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select or Add a Consignee Name";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -392,7 +398,7 @@ function ButtonUpdateClick() {
             ConsigneeId: consigneeResult.id,
             ConsigneeName: consigneeResult.name,
             DeliveryAddress: $("#txtDeliveryAddress").val(),
-            ItemId: $('#ddlItemName').val() ? $('#ddlItemName').val() : 0,
+            ItemId: $("#ddlItemName").val() ? $('#ddlItemName').val() : 0,
             PackingTypeId: $("#ddlPackingType").val() ? $("#ddlPackingType").val() : 0,
             Remarks: $("#txtRemarks").val(),
             LinkId: GetQueryParam("LinkId")
@@ -412,13 +418,13 @@ function ButtonUpdateClick() {
                     $("#formDiv").addClass('d-none');
                     FetchVehicleIndent();
                     $('#vehicleIndentForm')[0].reset();
-                    $('#ddlLocation').val(null).trigger('change');
-                    $('#ddlCustomerName').val(null).trigger('change');
-                    $('#ddlVehicleType').val(null).trigger('change');
-                    $('#ddlConsignorInput').val(null).trigger('change');
-                    $('#ddlConsigneeInput').val(null).trigger('change');
-                    $('#ddlItemName').val(null).trigger('change');
-                    $('#ddlPackingType').val(null).trigger('change');
+                    $('#ddlLocation').val(0).trigger('change');
+                    $('#ddlCustomerName').val(0).trigger('change');
+                    $('#ddlVehicleType').val(0).trigger('change');
+                    $('#ddlConsignorInput').val(0).trigger('change');
+                    $('#ddlConsigneeInput').val(0).trigger('change');
+                    $('#ddlItemName').val(0).trigger('change');
+                    $('#ddlPackingType').val(0).trigger('change');
                     $("#btnupdate").hide();
                     $("#btnsaveandnew").show();
                     $("#btnSave").show();
@@ -505,7 +511,10 @@ async function UpdateVehicleIndent(indentId) {
     $("#btnCancel").removeClass('d-none');
     $("#btnsaveandnew").hide();
     $("#txtIndentId").val(formData.indentId);
-    $("#ddlLocation").val(formData.locationId).trigger('change');
+    if (!IsNullOrEmpty(formData.locationId)) {
+        $("#ddlLocation").val(formData.locationId).trigger('change');
+        $("#ddlLocation").prop('disabled', true);
+    }
     $("#txtIndentNo").val(formData.indentNo);
     $("#txtIndentDate").val(formatDateForInput(formData.indentDate));
     $("#txtVehicleReqDate").val(formatDateForInput(formData.vehicleReqOn));
@@ -532,7 +541,7 @@ async function UpdateVehicleIndent(indentId) {
         }
     }
     else if (formData.consignerId == 0) {
-        $("#ddlConsignorInput").val(null).trigger("change");
+        $("#ddlConsignorInput").val(0).trigger("change");
     }
     else {
         $("#ddlConsignorInput").val(formData.consignerId).trigger("change");
@@ -546,15 +555,15 @@ async function UpdateVehicleIndent(indentId) {
         }
     }
     else if (formData.consignerId == 0) {
-        $("#ddlConsigneeInput").val(null).trigger("change");
+        $("#ddlConsigneeInput").val(0).trigger("change");
     }
     else {
         $("#ddlConsigneeInput").val(formData.consigneeId).trigger("change");
     }
     $("#txtPickupAddress").val(formData.pickUpAddress);
     $("#txtDeliveryAddress").val(formData.deliveryAddress);
-    $("#ddlItemName").val(formData.itemId == 0 ? null : formData.itemId).trigger('change');
-    $("#ddlPackingType").val(formData.packingTypeId == 0 ? null : formData.packingTypeId).trigger('change');
+    $("#ddlItemName").val(formData.itemId == 0 ? 0 : formData.itemId).trigger('change');
+    $("#ddlPackingType").val(formData.packingTypeId == 0 ? 0 : formData.packingTypeId).trigger('change');
     $("#txtRemarks").val(formData.remarks);
     IsEditClick = true;
 }
