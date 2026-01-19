@@ -5,7 +5,7 @@
     ViewData["Title"] = "QuoteRate-Vendor";
 }
 <style>
-    
+
     .success-card {
         border-left: 5px solid #28a745;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -85,7 +85,7 @@
                             <div class="item-input">
                                 <label class="form-label">Vendor Name</label>
                                 <input disabled class="form-control" placeholder="Vendor Name" id="txtVednorName" style="width: 100%;">
-                              
+
                             </div>
                         </div>
                         <div class="col-lg-3">
@@ -121,7 +121,7 @@
                                 <input disabled type="text" class="form-control" placeholder="No.of Vehicles" id="txtNoOfVehicles" />
                             </div>
                         </div>
-                     @*    <div class="col-lg-3">
+                        @*    <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label">Item Name</label>
                                 <input disabled class="form-control" id="ddlItemName" style="width: 100%;">
@@ -142,25 +142,25 @@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Available Vehicle Count</label>
-                                <input type="text" class="form-control" placeholder="Available Vehicle Count" id="txtAvailableVehicle" onkeypress="return isNumber(event)" />
+                                <input type="text" class="form-control" placeholder="Available Vehicle Count" id="txtAvailableVehicle" maxlength="5" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Total Hire Cost</label>
-                                <input type="text" class="form-control" placeholder="Total Hire Cost" id="txtHireCost" onkeypress="return isNumber(event)" />
+                                <input type="text" class="form-control" placeholder="Total Hire Cost" id="txtHireCost" maxlength="8" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3">t 
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Detention Per Day</label>
-                                <input type="text" class="form-control" placeholder="Detention Per Day" id="txtDetentionDay" onkeypress="return isNumber(event)" />
+                                <input type="text" class="form-control" placeholder="Detention Per Day" id="txtDetentionDay" maxlength="5" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Detention Free Days</label>
-                                <input type="text" class="form-control" placeholder="Detention Free Days" id="txtDetentionDays" onkeypress="return isNumber(event)" />
+                                <input type="text" class="form-control" placeholder="Detention Free Days" id="txtDetentionDays" maxlength="3" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
                     </div>

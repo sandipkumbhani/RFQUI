@@ -145,13 +145,13 @@
                             <div class="col-lg-3">
                                 <div class="item-input">
                                     <label class="form-label"><span>*</span>Indent Date</label>
-                                    <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtIndentDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <input type="date" value="@DateTime.Now.ToString("dd-MM-yyyy")" class="form-control" aria-label="Indent Date" placeholder="Date Selection" id="txtIndentDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="item-input">
                                     <label class="form-label "><span>*</span>Vehicle Req On</label>
-                                    <input type="date" onfocus="this.min=new Date(new Date(document.getElementById('txtIndentDate').value).setDate(new Date(document.getElementById('txtIndentDate').value).getDate() + 1)).toISOString().split('T')[0]" class="form-control" id="txtVehicleReqDate" />
+                                    <input type="date" onfocus="setMinVehicleReqOnDate()" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")" id="txtVehicleReqDate" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -195,14 +195,14 @@
                             <div class="col-lg-3">
                                 <div class="item-input">
                                     <label class="form-label"><span>*</span>No. of Vehicles Req</label>
-                                    <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" onkeypress="return isNumber(event)" />
+                                    <input type="text" class="form-control" id="txtNoofVehicles" placeholder="Numeric" maxlength="5" onkeypress="return isNumber(event)" />
                                 </div>
                             </div>
-                            <div class="col-lg-3"> 
+                            <div class="col-lg-3">
                                 <div class="item-input">
                                     <label class="form-label "><span>*</span>Indent Expired On</label>
                                     <input type="datetime-local"
-                                           onfocus="this.min=new Date(new Date(document.getElementById('txtVehicleReqDate').value).setDate(new Date(document.getElementById('txtVehicleReqDate').value).getDate() + 1)).toISOString().slice(0, 16)"
+                                           onfocus="setRfqExpiredMinDate()"
                                            class="form-control" id="txtRfqExpiredOn" />
                                 </div>
                             </div>

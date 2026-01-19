@@ -159,14 +159,14 @@ function GetAllConsigneeList() {
 }
 function CheckValidation() {
     $("#txtVehicleReqDate").on("change", function () {
-        if ($(this).val() <= $('#txtIndentDate').val()) {
+        if ($(this).val() < $('#txtIndentDate').val()) {
             toastr.warning("Vehicle Req On date must be greater than Indent Date.", "Warning");
             $(this).val('');
         }
     });
     $("#txtRfqExpiredOn").on("change", function () {
         var expireDate = $(this).val().split('T')[0];
-        if (expireDate <= $('#txtVehicleReqDate').val()) {
+        if (expireDate < $('#txtVehicleReqDate').val()) {
             toastr.warning("Indent Expired On date must be greater than Vehicle Req On Date.", "Warning");
             $(this).val('');
         }
@@ -189,7 +189,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Vehicle Req On", "Validation Error");
         return false;
     }
-    if ($("#txtVehicleReqDate").val() <= $('#txtIndentDate').val()) {
+    if ($("#txtVehicleReqDate").val() < $('#txtIndentDate').val()) {
         toastr.warning("Vehicle Req On date must be greater than Indent Date.", "Warning");
         $("#txtVehicleReqDate").val('');
         return false;
@@ -218,7 +218,7 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Indent Expired On", "Validation Error");
         return false;
     }
-    if ($("#txtRfqExpiredOn").val().split('T')[0] <= $('#txtVehicleReqDate').val()) {
+    if ($("#txtRfqExpiredOn").val().split('T')[0] < $('#txtVehicleReqDate').val()) {
         toastr.warning("Indent Expired On date must be greater than Vehicle Req On Date.", "Warning");
         $("#txtRfqExpiredOn").val('');
         return false;
@@ -323,7 +323,6 @@ function SaveVehicleIndent(action) {
     }
 
 }
-
 function FetchIndentNo() {
     $.ajax({
         url: "/VehicleIndent/GetIndentNo",
@@ -361,9 +360,17 @@ function GetDropdownValue(inputId) {
     }
     return result;
 }
+
 function ButtonUpdateClick() {
-    $("#btnupdate").on('click', function (e) {
+    $("#btnupdate").on('click', async function (e) {
         e.preventDefault();
+
+        const indentId = $("#txtIndentId").val();
+        const referenceCheck = await IndentReferenceCheckInRfq(indentId)
+        if (referenceCheck) {
+            toastr.warning("Cannot Update Vehicle Indent: referenced in RFQ");
+            return;
+        }
 
         var isValid = OnSubmitCheckValidation();
         if (!isValid) {
@@ -492,11 +499,6 @@ function formatDateForInput(dateString) {
 }
 
 async function UpdateVehicleIndent(indentId) {
-    const referenceCheck = await IndentReferenceCheckInRfq(indentId)
-    if (referenceCheck) {
-        toastr.warning("Cannot edit Vehicle Indent: referenced in RFQ");
-        return;
-    }
     if ($("#btnupdate").hasClass('d-none')) {
         $("#btnupdate").removeClass('d-none');
     }
@@ -574,6 +576,60 @@ function IndentReferenceCheckInRfq(indentId) {
         dataType: 'json'
     });
 }
+function setMinVehicleReqOnDate() {
+    var indentDate = document.getElementById('txtIndentDate').value;
+    var vehicleDate = document.getElementById('txtVehicleReqDate');
+
+    // if indent date is null or empty
+    if (IsNullOrEmpty(indentDate)) {
+        vehicleDate.min = new Date().toISOString().split('T')[0];
+        return;
+    }
+    var date = new Date(indentDate);
+    if (isNaN(date.getTime())) {
+        vehicleDate.min = new Date().toISOString().split('T')[0];
+        console.log("NotDate")
+        return;
+    }
+    vehicleDate.min = date.toISOString().split('T')[0];
+}
+function setMinVehicleReqOnDate() {
+    var indentDate = document.getElementById('txtIndentDate').value;
+    var vehicleDate = document.getElementById('txtVehicleReqDate');
+
+    // if indent date is null or empty
+    if (IsNullOrEmpty(indentDate)) {
+        vehicleDate.min = new Date().toISOString().split('T')[0];
+        return;
+    }
+    var date = new Date(indentDate);
+    if (isNaN(date.getTime())) {
+        vehicleDate.min = new Date().toISOString().split('T')[0];
+        console.log("Wrong VehicleReqOnDate date")
+        return;
+    }
+    vehicleDate.min = date.toISOString().split('T')[0];
+}
+function setRfqExpiredMinDate() {
+    var vehicleReqDate = document.getElementById('txtVehicleReqDate').value;
+    var rfqExpired = document.getElementById('txtRfqExpiredOn');
+
+    // If vehicle date not selected
+    if (IsNullOrEmpty(vehicleReqDate)) {
+        rfqExpired.min = new Date().toISOString().slice(0, 16);
+        return;
+    }
+    var date = new Date(vehicleReqDate);
+    // Invalid date safety
+    if (isNaN(date.getTime())) {
+        rfqExpired.min = new Date().toISOString().slice(0, 16);
+        console.log("Wrong Indent Expired On date")
+        return;
+    }
+    rfqExpired.min = date.toISOString().slice(0, 16);
+}
+
+
 
 
 
