@@ -588,23 +588,6 @@ function setMinVehicleReqOnDate() {
     var date = new Date(indentDate);
     if (isNaN(date.getTime())) {
         vehicleDate.min = new Date().toISOString().split('T')[0];
-        console.log("NotDate")
-        return;
-    }
-    vehicleDate.min = date.toISOString().split('T')[0];
-}
-function setMinVehicleReqOnDate() {
-    var indentDate = document.getElementById('txtIndentDate').value;
-    var vehicleDate = document.getElementById('txtVehicleReqDate');
-
-    // if indent date is null or empty
-    if (IsNullOrEmpty(indentDate)) {
-        vehicleDate.min = new Date().toISOString().split('T')[0];
-        return;
-    }
-    var date = new Date(indentDate);
-    if (isNaN(date.getTime())) {
-        vehicleDate.min = new Date().toISOString().split('T')[0];
         console.log("Wrong VehicleReqOnDate date")
         return;
     }

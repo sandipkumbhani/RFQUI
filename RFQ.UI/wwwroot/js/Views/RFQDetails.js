@@ -51,6 +51,7 @@ $(document).ready(function () {
         if (!selectedValue) {
             return;
         }
+
         const selectedIndent = VehicIndentList.find(x => x.indentId == selectedValue);
         if (selectedIndent) {
             $("#ddlCustomerName").val(selectedIndent.partyId).trigger('change');
@@ -69,22 +70,25 @@ $(document).ready(function () {
             $('#toLng').val(selectedIndent.toLongitude);
             $("#ddlItemName").val(selectedIndent.itemId == 0 ? 0 : selectedIndent.itemId).trigger('change');
             $("#ddlPackingType").val(selectedIndent.packingTypeId == 0 ? 0 : selectedIndent.packingTypeId).trigger('change');
-            $("#hdnIndentExpiryDate").val(selectedIndent.expiryDate);
-            console.log(selectedIndent.expiryDate);
+            //$("#hdnIndentExpiryDate").val(selectedIndent.expiryDate);
         }
     });
+
     $("#ddlLocation").on('change', async function () {
         var locationId = $(this).val();
         if (!IsNullOrEmpty(locationId)) {
             await GetAllVehicleIndent(locationId);
             var locationData = await GetLocationById(locationId)
-            console.log(locationData.code);
             var code = await GetAutoGenerateCode(locationData.code, PrefixCode.RFQ);
             console.log(code);
             if (!IsEditClick) {
                 $("#txtRfqNo").val(code);
             }
         }
+    });
+
+    $("#txtVehicleReqDate").on('change', function () {
+        setVehicleReqOnDate();
     });
 
     UpdateRfq();
@@ -113,17 +117,14 @@ function CheckValidation() {
             return;
         }
     });
-    $("#txtRfqExpiredOn").on('input', function () {
-        if (!isValidateSelect($("#ddlIndent").val())) {
-            toastr.warning("Please select an Indent No", "Validation Error");
-            $("#txtRfqExpiredOn").val('');
-            return;
-        }
-    });
-    $("#txtRfqExpiredOn").on("change", function () {
-        if (formatDate($(this).val()) < formatDate($("#hdnIndentExpiryDate").val())) {
-            toastr.warning("Enter valid Indent Expired On !", "Warning");
-            $(this).val('');
+
+    $("#txtRfqExpiredOn").on("change Blur", function () {
+        const indentVal = $("#ddlIndent").val();
+        if (!IsNullOrEmpty(indentVal) && Number(indentVal) != 0) {
+            if (formatDate($(this).val()) < formatDate($("#txtVehicleReqDate").val())) {
+                toastr.warning("Enter valid RFQ Expired On Date !", "Warning");
+                $(this).val('');
+            }
         }
     });
 }
@@ -145,104 +146,83 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     if (previousQuotes) {
         previousQuotes.addEventListener("click", function () {
-            if (!isValidateSelect($("#ddlIndent").val())) {
-                toastr.warning("Please Select a Indent No", "Validation Error");
-                rfqDetailsTab.click();
-                return;
-            } else {
+            if (OnSubmitCheckValidation()) {
                 GetPreviousQuotesList();
+            } else {
+                rfqDetailsTab.click();
+                return
             }
+            //if (!isValidateSelect($("#ddlIndent").val())) {
+            //    toastr.warning("Please Select a Indent No", "Validation Error");
+            //    rfqDetailsTab.click();
+            //    return;
+            //} else {
+            //    GetPreviousQuotesList();
+            //}
         });
     }
 });
 function OnSubmitCheckValidation() {
-    if (!isValidateSelect($("#ddlLocation").val())) {
-        toastr.warning("Please Select a Location", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtRfqNo").val())) {
-        toastr.warning("Please enter a RFQ No", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtRfqDate").val())) {
-        toastr.warning("Please enter a RFQ Date", "Validation Error");
-        return false;
-    }
+    try {
+        if (!isValidateSelect($("#ddlLocation").val())) {
+            toastr.warning("Please Select a Location", "Validation Error");
+            return false;
+        }
+        if (IsNullOrEmpty($("#txtRfqNo").val())) {
+            toastr.warning("Please enter a RFQ No", "Validation Error");
+            return false;
+        }
+        if (IsNullOrEmpty($("#txtRfqDate").val())) {
+            toastr.warning("Please enter a RFQ Date", "Validation Error");
+            return false;
+        }
 
-    if (!isValidateSelect($("#ddlIndent").val())) {
-        toastr.warning("Please Select a Indent No", "Validation Error");
-        return false;
+        //if (!isValidateSelect($("#ddlIndent").val())) {
+        //    toastr.warning("Please Select a Indent No", "Validation Error");
+        //    return false;
+        //}
+        if (!isValidateSelect($("#ddlCustomerName").val())) {
+            toastr.warning("Please Select a Customer Name", "Validation Error");
+            return false;
+        }
+        if (IsNullOrEmpty($("#txtVehicleReqDate").val())) {
+            toastr.warning("Please enter a Vehicle Req On", "Validation Error");
+            return false;
+        }
+        if (IsNullOrEmpty($("#txtRfqExpiredOn").val())) {
+            toastr.warning("Please enter a RFQ Expired On", "Validation Error");
+            return false;
+        }
+        if (IsNullOrEmpty($("#from-search-box").val())) {
+            toastr.warning("Please enter a Origin/From", "Validation Error");
+            return false;
+        }
+        if (IsNullOrEmpty($("#to-search-box").val())) {
+            toastr.warning("Please enter a Destination/To", "Validation Error");
+            return false;
+        }
+        if (!isValidateSelect($("#ddlVehicleType").val())) {
+            toastr.warning("Please Select a Vehicle Type", "Validation Error");
+            return false;
+        }
+        if (IsNullOrEmpty($("#txtNoofVehicles").val())) {
+            toastr.warning("Please enter a No. of Vehicles", "Validation Error");
+            return false;
+        }
+
+        if (FormatDateToLocal($("#txtRfqDate").val()) < FormatDateToLocal($("#txtVehicleReqDate").val())) {
+            toastr.warning("RFQ Date shall be greater than or equal to selected Vehicle Req On.");
+            return false;
+        }
+
+        if (FormatDateToLocal($("#txtRfqExpiredOn").val()) < FormatDateToLocal($("#txtRfqDate").val())) {
+            toastr.warning("RFQ Expired On Date shall be greater than or equal to selected RFQ Date.");
+            return false;
+        }
+        return true;
+    } catch (e) {
+        false
     }
-    if (!isValidateSelect($("#ddlCustomerName").val())) {
-        toastr.warning("Please Select a Customer Name", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtVehicleReqDate").val())) {
-        toastr.warning("Please enter a Vehicle Req On", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtRfqExpiredOn").val())) {
-        toastr.warning("Please enter a RFQ Expired On", "Validation Error");
-        return false;
-    }
-    if (formatDate($("#txtRfqExpiredOn").val()) < formatDate($("#hdnIndentExpiryDate").val())) {
-        toastr.warning("The RFQ Expiry Date must not be later than the Indent Expiry Date.", "Warning");
-        $("#txtRfqExpiredOn").val('');
-        return false;
-    }
-    if (IsNullOrEmpty($("#from-search-box").val())) {
-        toastr.warning("Please enter a Origin/From", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#to-search-box").val())) {
-        toastr.warning("Please enter a Destination/To", "Validation Error");
-        return false;
-    }
-    if (!isValidateSelect($("#ddlVehicleType").val())) {
-        toastr.warning("Please Select a Vehicle Type", "Validation Error");
-        return false;
-    }
-    if (IsNullOrEmpty($("#txtNoofVehicles").val())) {
-        toastr.warning("Please enter a No. of Vehicles", "Validation Error");
-        return false;
-    }
-    //if (IsNullOrEmpty($("#txtMaxCosting").val())) {
-    //    toastr.warning("Please enter a Max Costing", "Validation Error");
-    //    return false;
-    //}
-    //if (IsNullOrEmpty($("#txtPerDay").val())) {
-    //    toastr.warning("Please enter a Detention Per Day", "Validation Error");
-    //    return false;
-    //}
-    //if (IsNullOrEmpty($("#txtFreeDay").val())) {
-    //    toastr.warning("Please enter a Detention Free Days", "Validation Error");
-    //    return false;
-    //}
-    //if (IsNullOrEmpty($("#txtRfqSubject").val())) {
-    //    toastr.warning("Please enter a RFQ Subject", "Validation Error");
-    //    return false;
-    //}
-    //if (!isValidateSelect($("#ddlRfqPriority").val())) {
-    //    toastr.warning("Please Select a RFQ Priority", "Validation Error");
-    //    return false;
-    //}
-    //if (!isValidateSelect($("#ddlRfqType").val())) {
-    //    toastr.warning("Please Select a RFQ Type", "Validation Error");
-    //    return false;
-    //}
-    //if (!isValidateSelect($("#ddlItemName").val())) {
-    //    toastr.warning("Please Select a Item Name", "Validation Error");
-    //    return false;
-    //}
-    //if (!isValidateSelect($("#ddlPackingType").val())) {
-    //    toastr.warning("Please Select a Packing Type", "Validation Error");
-    //    return false;
-    //}
-    //if (IsNullOrEmpty($("#txtSpecialInstructions").val())) {
-    //    toastr.warning("Please enter a Special Instructions", "Validation Error");
-    //    return false;
-    //}
-    return true;
 }
 
 async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
@@ -471,7 +451,7 @@ function SaveAndSaveNew(action) {
         RfqNo: $('#txtRfqNo').val(),
         //CompanyId:0,
         LocationId: $('#ddlLocation').val(),
-        IndentId: $('#ddlIndent').val(),
+        IndentId: $('#ddlIndent').val() || 0,
         RfqDate: $('#txtRfqDate').val(),
         ExpiryDate: $('#txtRfqExpiredOn').val(),
         PartyId: $('#ddlCustomerName').val(),
@@ -631,7 +611,7 @@ function UpdateRfq() {
             RfqId: $("#txtRfqDetailsId").val(),
             RfqNo: $('#txtRfqNo').val(),
             LocationId: $('#ddlLocation').val(),
-            IndentId: $('#ddlIndent').val(),
+            IndentId: $('#ddlIndent').val() || 0,
             RfqDate: $('#txtRfqDate').val(),
             ExpiryDate: $('#txtRfqExpiredOn').val(),
             PartyId: $('#ddlCustomerName').val(),
@@ -886,4 +866,58 @@ function SetDefaultIndentDropdown() {
     placeholderOption.disabled = true;
     placeholderOption.selected = true;
     Indentdropdown.appendChild(placeholderOption);
+}
+
+function setRfqExpiredMinDate() {
+    const vehicleInput = document.getElementById('txtVehicleReqDate');
+    const rfqInput = document.getElementById('txtRfqExpiredOn');
+    const vehicleDateValue = vehicleInput.value;
+    // if empty → today datetime
+    if (IsNullOrEmpty(vehicleDateValue)) {
+        rfqInput.min = new Date().toISOString().slice(0, 16);
+        return;
+    }
+    const date = new Date(vehicleDateValue);
+    // invalid date safety
+    if (isNaN(date.getTime())) {
+        rfqInput.min = new Date().toISOString().slice(0, 16);
+        return;
+    }
+    rfqInput.min = date.toISOString().slice(0, 16);
+}
+
+function setVehicleReqOnDate() {
+
+    var vehicleDate = $("#txtVehicleReqDate").val();
+    // if indent date is null or empty
+    if (IsNullOrEmpty(vehicleDate)) {
+        vehicleDate.min = new Date().toISOString().split('T')[0];
+        return;
+    }
+    var date = new Date(vehicleDate);
+    if (isNaN(date.getTime())) {
+        vehicleDate.min = new Date().toISOString().split('T')[0];
+        return;
+    }
+    $("#txtVehicleReqDate")[0].min = date.toISOString().split('T')[0];
+}
+function setRfqDateMinDate() {
+    var txtRfqDate = $("#txtRfqDate").val();
+    var txtVehicleReqDate = $("#txtVehicleReqDate").val();
+    var indentval = $('#ddlIndent').val();
+    if (!IsNullOrEmpty(indentval) && indentval > 0) {
+        // if indent date is null or empty
+        if (IsNullOrEmpty(txtVehicleReqDate)) {
+            $("#txtRfqDate").min = new Date().toISOString().split('T')[0];
+            return;
+        }
+        var date = new Date(txtVehicleReqDate);
+        if (isNaN(date.getTime())) {
+            $("#txtRfqDate").min = new Date().toISOString().split('T')[0];
+            return;
+        }
+        $("#txtRfqDate")[0].min = date.toISOString().split('T')[0];
+    } else {
+        $("#txtRfqDate")[0].min = new Date().toISOString().split('T')[0];
+    }
 }
