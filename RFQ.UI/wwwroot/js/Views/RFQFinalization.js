@@ -445,7 +445,7 @@ function UpdateRfqFinalization() {
             AvailVehicleCount: vendor.AvailVehicleCount,
             AssignedVehicles: vendor.AssignedVehicles
         }));
-
+        debugger;
         var check = await checkAssignedVehicles(rfqFinalRateUpdateFormData);
         if (check) {
             if ($("#ddlRfqStatus").find('option:selected').text() === "NOT AWARDED") {
@@ -594,7 +594,7 @@ $(document).on("input", ".assigned-vehicle", function () {
     let $row = $input.closest("tr");
     let availVehicle = parseInt($row.find('input[type="checkbox"]').data("availvehicle")) || 0;
     if (assignedVehicle > availVehicle) {
-        toastr.warning("Assigned vehicles shall not be greater than the available vehicle count.","Warning");
+        toastr.warning("Assigned vehicles shall not be greater than the available vehicle count.", "Warning");
         $(this).val('');
     }
 });
@@ -614,6 +614,9 @@ function GetSelectedVendor() {
         var finalRateId = checkbox.data('finalrateid');
         var assignedVehicle = $("#txtassignedVehicle_" + index).val();
 
+        if (IsNullOrEmpty(assignedVehicle)) {
+            assignedVehicle = 0;
+        }
         if (checkbox.is(':checked')) {
             selectedVendor.push({
                 VendorId: vendorId,
@@ -698,7 +701,7 @@ async function checkAssignedVehicles(AssignedVehicleListData) {
         }, 0);
 
         if (parseInt(totalAssignedVehicles) > parseInt(TotalRequerdvehicleCount)) {
-            toastr.warning("Assigned Vehicles - Total shall not be greater than RFQ Required Vehicles count.","warning");
+            toastr.warning("Assigned Vehicles - Total shall not be greater than RFQ Required Vehicles count.", "warning");
             return;
         }
 
