@@ -4,15 +4,17 @@ var selectedVendor = [];
 var orderColumn = '';
 var orderDir = '';
 var awardedVendorDetails = [];
+var ddlRfqNoData = [];
 
 $("#ddlRfqStatus").on('change', function () {
     if ($(this).val() != null) {
-        if ($("#ddlRfqNo").val() == null) {
+        if (IsNullOrEmpty($("#ddlRfqNo").val())) {
             toastr.warning("Please Select Rfq No!", "Warning");
             ClearDisabledFields();
-            $("#ddlRfqStatus").val(null).trigger('change');
+            $("#ddlRfqStatus").val(0).trigger('change');
             return;
         };
+
         if ($(this).find('option:selected').text() === "NOT AWARDED") {
             $(".ddlRfqReason").removeClass('d-none');
             $("#awardedDiv").addClass('d-none');
@@ -62,9 +64,17 @@ $(document).ready(function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
         $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', false);
+        const usedRfqNos = viewModelDto.map(x => x.rfqNo.trim());
+        var drpData = ddlRfqNoData.filter(
+            x => !usedRfqNos.includes(x.rfqNo.trim())
+        );
+        console.log("drpData", drpData);
+        console.log("usedRfqNos", usedRfqNos);
+        ReBindddlRfqNoDrp(drpData)
     })
     $("#btnCancel").on('click', function () {
         FetchRfqFinalizationList();
+       
     });
     GetRfqDrpList();
     GetRfqStatus();
@@ -133,6 +143,7 @@ function GetRfqDrpList() {
         dataType: "json",
         data: { companyId: companyId },
         success: function (response) {
+            ddlRfqNoData = response;
             $("#ddlRfqNo").empty();
             const select = document.getElementById("ddlRfqNo");
             select.innerHTML = "";
@@ -143,7 +154,7 @@ function GetRfqDrpList() {
             placeholderOption.selected = true;
             select.appendChild(placeholderOption);
 
-            response.forEach(option => {
+            ddlRfqNoData.forEach(option => {
                 let opt = document.createElement("option");
                 opt.value = option.rfqId;
                 opt.textContent = option.rfqNo;
@@ -372,6 +383,7 @@ async function EditRfqFinalizatioin(rfqFinalIdId) {
     }
     var data = viewModelDto.filter(x => x.rfqFinalIdId == rfqFinalIdId);
     var formData = data[0];
+    ReBindddlRfqNoDrp(ddlRfqNoData);
     $('#tableDiv').css('display', 'none');
     $("#formDiv").css('display', 'Block');
     $("#btnUpdateRfqFinalization").show();
@@ -577,6 +589,7 @@ function FetchAwardedVendorDetails() {
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Awarded Vendor Details!", "Error");
+
         }
     });
 }
@@ -730,3 +743,20 @@ async function checkAssignedVehicles(AssignedVehicleListData) {
     return true;
 }
 
+function ReBindddlRfqNoDrp(ddlRfqNoData) {
+    $("#ddlRfqNo").empty();
+    const select = document.getElementById("ddlRfqNo");
+    select.innerHTML = "";
+    let placeholderOption = document.createElement("option");
+    placeholderOption.value = 0;
+    placeholderOption.textContent = "Select a RFQ No";
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select.appendChild(placeholderOption);
+    ddlRfqNoData.forEach(option => {
+        let opt = document.createElement("option");
+        opt.value = option.rfqId;
+        opt.textContent = option.rfqNo;
+        select.appendChild(opt);
+    });
+}
