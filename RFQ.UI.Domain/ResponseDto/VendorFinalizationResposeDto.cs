@@ -16,5 +16,7 @@
         public int? DetentionFreeDays { get; set; }
         public int? MarginAmount { get; set; }
         public string? VendorPosition { get; set; }
+        public bool IsAssigned { get; set; }
+        public int AssignedVehicles { get; set; }
     }
 }

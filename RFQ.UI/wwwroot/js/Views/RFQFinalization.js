@@ -5,6 +5,7 @@ var orderColumn = '';
 var orderDir = '';
 var awardedVendorDetails = [];
 var ddlRfqNoData = [];
+var viewModelDto = [];
 
 $("#ddlRfqStatus").on('change', function () {
     if ($(this).val() != null) {
@@ -39,13 +40,16 @@ $("#ddlRfqStatus").on('change', function () {
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
+
     $("#ddlRfqNo").prop('disabled', false);
+
     $('#tableDivLink').on('click', function (e) {
         e.preventDefault();
         $("#tableDiv").show();
         $("#formDiv").hide();
         FetchRfqFinalizationList();
     });
+
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
         let currentOrder = $(this).data('order') || 'asc';
@@ -54,35 +58,44 @@ $(document).ready(function () {
         $('th.sortable').not(this).data('order', 'asc');
         FetchDataForTable('rfqFinalizationTable', fetchUrl, orderColumn, orderDir.toUpperCase(), 'EditRfqFinalizatioin', 'DeleteRfqFinalizatioin', 'rfqFinalIdId');
     });
+
     $("#btnSave, #btnSaveAndNew").on('click', function () {
         var action = $(this).data('action');
         if (OnSubmitCheckValidation()) {
             SaveAndSaveNew(action);
         }
     });
+
     $("#btnAdd").on('click', function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
         $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', false);
-        const usedRfqNos = viewModelDto.map(x => x.rfqNo.trim());
-        var drpData = ddlRfqNoData.filter(
-            x => !usedRfqNos.includes(x.rfqNo.trim())
-        );
-        console.log("drpData", drpData);
-        console.log("usedRfqNos", usedRfqNos);
-        ReBindddlRfqNoDrp(drpData)
+        if (viewModelDto.length > 0) {
+            const usedRfqNos = viewModelDto.map(x => x.rfqNo.trim());
+            var drpData = ddlRfqNoData.filter(
+                x => !usedRfqNos.includes(x.rfqNo.trim())
+            );
+            console.log("drpData", drpData);
+            console.log("usedRfqNos", usedRfqNos);
+            ReBindddlRfqNoDrp(drpData)
+        }
     })
+
     $("#btnCancel").on('click', function () {
         FetchRfqFinalizationList();
-       
+
     });
+
     GetRfqDrpList();
     GetRfqStatus();
     GetRfqFailureReason();
     FetchRfqFinalizationList();
     UpdateRfqFinalization();
+
     GetAllCustomer("ddlCustomerName", companyId);
+
     GetAllVehicleType("ddlVehicleType", companyId);
+
     $("#ddlRfqNo").on('change', function () {
         if (!isValidateSelect($("#ddlRfqNo").val())) {
             ClearDisabledFields();
@@ -91,14 +104,14 @@ $(document).ready(function () {
         $("#ddlRfqStatus").val(0).trigger('change');
         GetRfqDetailsByRfqNo();
     })
-    $("#txtBillingRate").on('keyup', async function () {
-        const value = $(this).val();
-        if (!IsNullOrEmpty(value)) {
-            await FetchAwardedVendorDetails();
-            //await FetchFinalrateListForVendor();
-        }
-        return;
-    });
+
+    //$("#txtBillingRate").on('keyup', async function () {
+    //    const value = $(this).val();
+    //    if (!IsNullOrEmpty(value)) {
+    //        await FetchAwardedVendorDetails();
+    //    }
+    //    return;
+    //});
 });
 function OnSubmitCheckValidation() {
     if (!isValidateSelect($("#ddlRfqNo").val())) {
@@ -264,6 +277,7 @@ function GetRfqFailureReason() {
         }
     });
 }
+
 async function SaveAndSaveNew(action) {
     var saveUrl = '/RFQFinalization/AddRfqFinal';
     const rfqFinalformData = {
@@ -400,7 +414,6 @@ async function EditRfqFinalizatioin(rfqFinalIdId) {
     $("#txtPerDay").val(formData.detentionPerDay);
     $("#txtFreeDays").val(formData.detentionFreeDays);
     await FetchAwardedVendorDetails();
-    //await FetchFinalrateListForVendor();
     if (!IsNullOrEmpty(formData.reasonId)) {
         $("#ddlRfqReason").val(formData.reasonId).trigger('change');
     }
@@ -459,7 +472,6 @@ function UpdateRfqFinalization() {
                         toastr.success("Rfq Finalization Updated Successfully!", "Success");
                         addMasterUserActivityLog(0, LogType.Update, "Rfq Finalization Updated Successfully!", 0);
                         var selectedCheckBoxData = GetSelectedVendors()
-
                         SendAssignOrder(selectedCheckBoxData);
                         FetchRfqFinalizationList();
                     } else {
@@ -507,36 +519,6 @@ function DeleteRfqFinalizatioin(rfqFinalIdId) {
         }
     });
 }
-function FetchFinalrateListForVendor() {
-    //var rfqId = $("#txtRfqId").val();
-    var rfqFinalId = $("#hdnRFQFinalizationId").val();
-    var url = '/RFQFinalization/GetRfqFinalRateList';
-    $.ajax({
-        url: url,
-        type: "GET",
-        data: { rfqFinalId: rfqFinalId },
-        contentType: "application/json",
-        success: function (response) {
-            $("#awardedVendorTable tbody tr").each(function (index) {
-                var checkbox = $(this).find('input[type="checkbox"]');
-                var vendorId = checkbox.data('vendorid');
-                const vendorData = response.find(v => v.vendorId === vendorId);
-                if (vendorData) {
-                    $(this).find("#txtassignedVehicle_" + index).val(vendorData.assignedVehicles || "");
-                    checkbox.attr("data-finalrateid", vendorData.rfqFinalRateId);
-                    if (vendorData.isAssigned) {
-                        $(this).find("input[type='checkbox']").prop("checked", true);
-                    } else {
-                        $(this).find("input[type='checkbox']").prop("checked", false);
-                    }
-                }
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Awarded Vendor List!", "Error");
-        }
-    })
-}
 function FetchAwardedVendorDetails() {
     var rfqId = $("#txtRfqId").val();
     var getAwardedVendorUrl = '/RFQFinalization/AwardedVendor/' + rfqId;
@@ -561,6 +543,7 @@ function FetchAwardedVendorDetails() {
                 } else {
                     difference = billingRate - hireCost;
                 }
+                console.log(vendor);
                 const rowHtml = `
                         <tr data-index="${index}">
                         <td>${index + 1}</td>
@@ -571,7 +554,7 @@ function FetchAwardedVendorDetails() {
                         <td>${vendor.whatsAppNo}</td>
                         <td>${vendor.email}</td>
                         <td>${vendor.availVehicleCount}/${vendor.vehicleCount}</td>
-                        <td><input type="text" id="txtassignedVehicle_${index}" class="form-control assigned-vehicle" maxlength="10" onkeypress="return isNumber(event)"></td>
+                        <td><input type="text" id="txtassignedVehicle_${index}" value="${vendor.assignedVehicles}" class="form-control assigned-vehicle" maxlength="10" onkeypress="return isNumber(event)"></td>
                         <td>${vendor.totalHireCost}</td>
                         <td>${vendor.detentionPerDay}</td>
                         <td>${vendor.detentionFreeDays}</td>
@@ -579,9 +562,15 @@ function FetchAwardedVendorDetails() {
                         <td>${vendor.vendorPosition}</td>
                         <td style="text-align: center; vertical-align: middle;">
                             <label class="check-box-custom" style="display: inline-block;">
-                                <input class="form-check-input" type="checkbox" data-finalrateid="" data-vehiclecount="${vendor.vehicleCount}" data-availvehicle="${vendor.availVehicleCount}" data-vendorid="${vendor.vendorId}">
-                                    <span class="checkmark"></span>
-                            </label>    
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       data-finalrateid=""
+                                       data-vehiclecount="${vendor.vehicleCount}"
+                                       data-availvehicle="${vendor.availVehicleCount}"
+                                       data-vendorid="${vendor.vendorId}"
+                                       ${vendor.isAssigned ? 'checked' : ''}>
+                                <span class="checkmark"></span>
+                            </label>
                         </td>
                         </tr>`;
                 tbody.append(rowHtml);
@@ -604,41 +593,18 @@ $(document).on("input", ".assigned-vehicle", function () {
     // 🔹 get full row
     let $row = $input.closest("tr");
     let availVehicle = parseInt($row.find('input[type="checkbox"]').data("availvehicle")) || 0;
-    let vehicleCount = parseInt($row.find('input[type="checkbox"]').data("vehiclecount")) || 0;
-    let enteredValue = assignedVehicle;
-    if (enteredValue > availVehicle || enteredValue > vehicleCount) {
-        toastr.warning(`Assigned vehicles cannot exceed available vehicles and  total vehicles.`);
+    if (assignedVehicle > availVehicle) {
+        toastr.warning("Assigned vehicles shall not be greater than the available vehicle count.","Warning");
         $(this).val('');
     }
-    ValidateTotalForVendor(vehicleCount);
 });
 
-$(document).on("change", "#awardedVendorTable tbody input[type='checkbox']", function () {
-    let row = $(this).closest("tr");
-    let vehicleCount = parseInt($(this).data("vehiclecount")) || 0;
-    ValidateTotalForVendor(vehicleCount);
-});
-function ValidateTotalForVendor(vehicleCount) {
-    let totalAssigned = 0;
-    $("#awardedVendorTable tbody tr").each(function (index) {
-        let checkbox = $(this).find('input[type="checkbox"]');
-        if (checkbox.is(":checked")) {
-            let val = parseInt($(this).find("#txtassignedVehicle_" + index).val());
-            if (val == null || isNaN(val)) {
-                toastr.warning("Please Enter Assigned vehicle number", "Warning");
-                checkbox.prop('checked', false);
-                return;
-            }
-            totalAssigned += val;
-        }
-    });
-    if (totalAssigned > vehicleCount) {
-        toastr.warning(`Total assigned vehicles cannot exceed total vehicles (${vehicleCount}).`);
-        $("#awardedVendorTable tbody tr").find('input[type="text"]').val('');
-        return false;
-    }
-    return true;
-}
+//$(document).on("change", "#awardedVendorTable tbody input[type='checkbox']", function () {
+//    let row = $(this).closest("tr");
+//    let vehicleCount = parseInt($(this).data("vehiclecount")) || 0;
+//    ValidateTotalForVendor(vehicleCount);
+//});
+
 function GetSelectedVendor() {
     selectedVendor = [];
     $("#awardedVendorTable tbody tr").each(function (index) {
@@ -697,11 +663,22 @@ function SendAssignOrder(selectedVendors) {
             toastr.warning("No vendors selected for assignment.");
             return;
         } else {
+            var VehicleTypeText = $("#ddlVehicleType option:selected")[0].innerHTML;
+            var body = {
+                vendors: selectedVendors,
+                fromLocation: $("#from-search-box").val(),
+                toLocation: $("#to-search-box").val(),
+                vehicleType: VehicleTypeText,
+                vehicleReqOn: $("#txtVehicleReqDate").val()
+                    ? new Date($("#txtVehicleReqDate").val()).toISOString()
+                    : null
+            };
+            console.log(body);
             $.ajax({
                 url: "/RFQFinalization/SendAssignOrder",
                 type: "POST",
                 contentType: "application/json",
-                data: JSON.stringify(selectedVendors),
+                data: JSON.stringify(body),
                 success: function (response) {
                     toastr.success("Assign Order Sucsessfully");
                 },
@@ -715,14 +692,19 @@ function SendAssignOrder(selectedVendors) {
 
 async function checkAssignedVehicles(AssignedVehicleListData) {
     if (parseInt($("#ddlRfqStatus").val()) === EnumInternalMaster.AWARDED) {
-
+        const TotalRequerdvehicleCount = $("#txtNoofVehicles").val();
         const totalAssignedVehicles = AssignedVehicleListData.reduce((total, vendor) => {
             return total + (parseInt(vendor.AssignedVehicles, 10) || 0);
         }, 0);
 
+        if (parseInt(totalAssignedVehicles) > parseInt(TotalRequerdvehicleCount)) {
+            toastr.warning("Assigned Vehicles - Total shall not be greater than RFQ Required Vehicles count.","warning");
+            return;
+        }
+
         if (
             totalAssignedVehicles !== 0 &&
-            totalAssignedVehicles < awardedVendorTable[0].vehicleCount
+            totalAssignedVehicles < TotalRequerdvehicleCount
         ) {
             const result = await Swal.fire({
                 title: 'Are you sure?',
@@ -742,7 +724,6 @@ async function checkAssignedVehicles(AssignedVehicleListData) {
     }
     return true;
 }
-
 function ReBindddlRfqNoDrp(ddlRfqNoData) {
     $("#ddlRfqNo").empty();
     const select = document.getElementById("ddlRfqNo");

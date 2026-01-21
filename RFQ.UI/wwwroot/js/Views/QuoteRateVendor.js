@@ -15,10 +15,13 @@ $(document).ready(function () {
     $("#txtAvailableVehicle").on("blur", function () {
         const value = $(this).val();
         const numberOfVehicle = $("#txtNoOfVehicles").val();
-        if (value > numberOfVehicle) {
-            toastr.warning("Available Vehicle Count Not greater than Required Vehicles", "Validation");
-            $("#txtAvailableVehicle").val(null);
+        if (!IsNullOrEmpty(value)) {
+            if (parseInt(value) > parseInt(numberOfVehicle)) {
+                toastr.warning("Available Vehicle Count Not greater than Required Vehicles", "Validation");
+                $("#txtAvailableVehicle").val(null);
+            }
         }
+       
     });
     UrlParamBind()
 });

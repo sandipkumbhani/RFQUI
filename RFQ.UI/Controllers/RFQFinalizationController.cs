@@ -176,10 +176,11 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendAssignOrder([FromBody] List<VendorFinalizationResposeDto>? CheckBoxData)
+        public async Task<IActionResult> SendAssignOrder([FromBody] AssignOrderRequestDto requestDto)
         {
             try
             {
+                var CheckBoxData = requestDto.Vendors;
                 foreach (var item in CheckBoxData)
                 {
                     var emailRequest = new EmailRequest
@@ -187,21 +188,32 @@ namespace RFQ.UI.Controllers
                         ToEmail = item.Email,
                         Subject = $"New Order Assigned",
                         Body = $@"
-                        <html>
-                            <body style='font-family: Arial, sans-serif;'>
-                                <h2>Dear {item.VendorName},</h2>
-                                <p>
-                                    We are pleased to inform you that you have been 
-                                    <strong>assigned a new order</strong>.
-                                </p>
-                                <p>
-                                    <b>Order Details:</b><br/>
-                                    Order Date: {DateTime.Now:dd MMM yyyy}<br/>
-                                    Vehicle Count: {item.VehicleCount}
-                                </p>
-                                <p style='margin-top:20px;'>Best Regards,<br/>FleetLynk Team</p>
-                            </body>
-                        </html>",
+                                <html>
+                                    <body style='font-family: Arial, sans-serif;'>
+                                        <h2>Dear {item.VendorName},</h2>
+                                
+                                        <p>
+                                            We are pleased to inform you that you have been
+                                            <strong>assigned a new order</strong>.
+                                        </p>
+                                
+                                        <p>
+                                            <b>Order Details:</b><br/><br/>
+                                
+                                            Vehicle Req On: {requestDto.VehicleReqOn:dd MMM yyyy}<br/>
+                                            Vehicle Type: {requestDto.VehicleType}<br/>
+                                            Required Vehicle Count: {item.AssignedVehicles}<br/>
+                                            Origin/From: {requestDto.FromLocation}<br/>
+                                            Destination/To: {requestDto.ToLocation}<br/>
+                                            Total Hire Cost: ₹ {item.TotalHireCost}
+                                        </p>
+                                
+                                        <p style='margin-top:20px;'>
+                                            Best Regards,<br/>
+                                            FleetLynk Team
+                                        </p>
+                                    </body>
+                                </html>",
                         IsHtml = true
                     };
                     bool check = await _emailService.SendEmailAsync(emailRequest);
