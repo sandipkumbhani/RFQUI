@@ -953,7 +953,10 @@ $('#btnAddVendor').on('click', function () {
     const getMobileNo = $("#fetchVendorMobileNo").val();
     const getWhatsappNo = $("#fetchVendorWhatsappNo").val();
     const getEmail = $("#fetchVendorEmailId").val();
-
+    if (IsNullOrEmpty(getEmail)) {
+        toastr.warning("Please Fill Email For Sending Mail!", "Warning");
+        return;
+    }
     vendorList.push({
         partyId: parseInt(getSelectVendorID),
         partyName: getvendorName,
@@ -963,6 +966,8 @@ $('#btnAddVendor').on('click', function () {
         whatsAppNo: getWhatsappNo,
         email: getEmail
     });
+    
+    
     const isPresent = fetchedVendorDataList.some(
         x => x.partyId === parseInt(getSelectVendorID)
     );
