@@ -88,7 +88,7 @@ $(document).ready(function () {
             ClearDisabledFields();
             return;
         }
-        $("#ddlRfqStatus").val(null).trigger('change');
+        $("#ddlRfqStatus").val(0).trigger('change');
         GetRfqDetailsByRfqNo();
     })
     $("#txtBillingRate").on('keyup', async function () {
