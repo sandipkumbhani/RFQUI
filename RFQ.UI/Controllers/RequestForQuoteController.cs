@@ -126,10 +126,10 @@ namespace RFQ.UI.Controllers
                                         SharedLink = formLink,
                                         CreatedOn = DateTime.UtcNow
                                     });
-                                    bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
                                 }
                             }
                         }
+                        bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
                     }
                     return Json(result);
                 }

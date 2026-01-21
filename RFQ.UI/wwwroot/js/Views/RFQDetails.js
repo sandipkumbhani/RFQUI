@@ -7,6 +7,7 @@ var orderDir = '';
 let IsEditClick = false;
 var fetchRfqUrl = '/RequestForQuote/GetAllRfq';
 var vendorList = [];
+var VendorListDrpData = [];
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
@@ -21,6 +22,7 @@ $(document).ready(function () {
         $('th.sortable').not(this).data('order', 'asc');
         FetchDataForTable('rfqTable', fetchRfqUrl, orderColumn, orderDir.toUpperCase(), 'EditRfq', 'DeleteRfq', 'rfqID');
     });
+
     $("#btnCancel").on("click", function () {
         FetchRfqList();
     });
@@ -41,8 +43,10 @@ $(document).ready(function () {
         const rfqDetailsTab = document.getElementById("rfqDetails-tab");
         rfqDetailsTab.click();
     });
+
     $('#tableDivLink').on('click', function (e) {
         e.preventDefault();
+        FetchRfqList();
         $("#tableDiv").show();
         $("#formDiv").hide();
     });
@@ -71,6 +75,7 @@ $(document).ready(function () {
             $('#toLng').val(selectedIndent.toLongitude);
             $("#ddlItemName").val(selectedIndent.itemId == 0 ? 0 : selectedIndent.itemId).trigger('change');
             $("#ddlPackingType").val(selectedIndent.packingTypeId == 0 ? 0 : selectedIndent.packingTypeId).trigger('change');
+            $("#hdnIndentDate").val(selectedIndent.indentDate);
             //$("#hdnIndentExpiryDate").val(selectedIndent.expiryDate);
         }
     });
@@ -110,6 +115,8 @@ $(document).ready(function () {
     GetAllItemName("ddlItemName", companyId);
     GetAllPakingType("ddlPackingType");
     SetDefaultIndentDropdown();
+    OnChangeFetchVendorData();
+    ClearFetchForm();
 });
 function CheckValidation() {
     $("#ddlLocation").on("keypress", function () {
@@ -139,6 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
         vendorDetailsTab.addEventListener("click", function () {
             if (OnSubmitCheckValidation()) {
                 GetAllVendorList();
+                VendorListBindDropDown();
             } else {
                 rfqDetailsTab.click();
                 return
@@ -211,11 +219,10 @@ function OnSubmitCheckValidation() {
             return false;
         }
 
-        if (FormatDateToLocal($("#txtRfqDate").val()) < FormatDateToLocal($("#txtVehicleReqDate").val())) {
+        if (FormatDateToLocal($("#txtRfqDate").val()) < FormatDateToLocal($("#hdnIndentDate").val())) {
             toastr.warning("RFQ Date shall be greater than or equal to selected Vehicle Req On.");
             return false;
         }
-
         if (FormatDateToLocal($("#txtRfqExpiredOn").val()) < FormatDateToLocal($("#txtRfqDate").val())) {
             toastr.warning("RFQ Expired On Date shall be greater than or equal to selected RFQ Date.");
             return false;
@@ -336,10 +343,12 @@ function GetAllVendorList() {
     var getUrl = '/RequestForQuote/GetAllVendorListForRfq'
     let fromStateName = $("#fromState").val().toUpperCase();
     let toStateName = $("#toState").val().toUpperCase();
+    var RfqDetailsId = $("#txtRfqDetailsId").val();
     var formData = {
         OriginFrom: fromStateName,
         ToDestination: toStateName,
-        VehicleTypeId: $('#ddlVehicleType').val()
+        VehicleTypeId: $('#ddlVehicleType').val(),
+        RfqId: IsNullOrEmpty(RfqDetailsId) ? 0 : parseInt(RfqDetailsId)
     }
     $.ajax({
         url: getUrl,
@@ -347,8 +356,17 @@ function GetAllVendorList() {
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
-            fetchedVendorDataList = response;
-            BindAllVendorList(fetchedVendorDataList);
+            if (fetchedVendorDataList.length > 0) {
+                $.each(response, function (i, party) {
+                    if (!fetchedVendorDataList.some(x => x.partyId == parseInt(party.partyId))) {
+                        fetchedVendorDataList.push(party);
+                    }
+                });
+            } else {
+                fetchedVendorDataList = response;
+            }
+            RenderFetchTable();
+            //BindAllVendorList(fetchedVendorDataList);
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Vendor Name!", "Error");
@@ -389,7 +407,7 @@ function RenderFetchTable() {
         <td>${index + 1}</td>
         <td>${vendor.partyName}</td>
         <td>${vendor.panNo}</td>
-        <td>5</td>
+        <td>0</td>
         <td>${vendor.mobNo}</td>
         <td>${vendor.whatsAppNo}</td>
         <td>${vendor.email}</td>
@@ -431,10 +449,11 @@ $('#rfqVendorTable').on('click', '#editVendor', function () {
         const updatedWhatsappNo = $('#editWhatsappNo').val();
         const updatedEmailId = $('#editEmailId').val();
 
-        if (!updatedMobileNo || !updatedEmailId) {
-            toastr.warning("Please fill all required fields!", "Validation Error");
+        if (IsNullOrEmpty(updatedEmailId)) {
+            toastr.warning("Please fill all Email Id!", "Validation");
             return;
         }
+
         fetchedVendorDataList[rowIndex].mobNo = updatedMobileNo;
         fetchedVendorDataList[rowIndex].whatsAppNo = updatedWhatsappNo;
         fetchedVendorDataList[rowIndex].email = updatedEmailId;
@@ -545,6 +564,7 @@ function SaveAndSaveNew(action) {
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Submit Request For Quote.", "Error");
+                hideLoader();
             },
             complete: function () {
                 hideLoader();
@@ -673,6 +693,7 @@ function UpdateRfq() {
             },
             error: function (xhr, status, error) {
                 toastr.error("Failed to Update Rfq Details", "Error");
+                hideLoader();
             },
             complete: function () {
                 hideLoader();
@@ -853,11 +874,6 @@ function GetPreviousQuotesList() {
         }
     });
 }
-function ViewRfq(rfqId) {
-    EditRfq(rfqId);
-    $('#RfqDetailsForm').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnUpdateRfq").addClass('d-none');
-}
 
 function SetDefaultIndentDropdown() {
     $("#ddlIndent").empty();
@@ -925,6 +941,7 @@ function setRfqDateMinDate() {
 }
 
 $('#btnAddVendor').on('click', function () {
+    vendorList = [];
     const getSelectVendorID = $("#ddlRFQVendorList").val();
     if (IsNullOrEmpty(getSelectVendorID)) {
         toastr.warning("Please Select Vendor Name!", "Warning");
@@ -938,109 +955,138 @@ $('#btnAddVendor').on('click', function () {
     const getEmail = $("#fetchVendorEmailId").val();
 
     vendorList.push({
-        VendorId: parseInt(getSelectVendorID),
-        VendorName: getvendorName,
-        PanNo: getpanNo,
+        partyId: parseInt(getSelectVendorID),
+        partyName: getvendorName,
+        panNo: getpanNo,
         VendorRating: parseInt(getVendorRating) || 0,
-        MobileNo: getMobileNo,
-        WhatsappNo: getWhatsappNo,
-        EmailId: getEmail
+        mobNo: getMobileNo,
+        whatsAppNo: getWhatsappNo,
+        email: getEmail
     });
+    const isPresent = fetchedVendorDataList.some(
+        x => x.partyId === parseInt(getSelectVendorID)
+    );
+
+    if (isPresent)
+        toastr.warning("This Vendor Name!", "Already Exsist");
+    else
+        fetchedVendorDataList.push(vendorList[0]);
+
     RenderFetchTable();
     ClearFetchForm();
-    fetchedVendorDataList = $.grep(fetchedVendorDataList, function (item) {
-        return item.partyId != getSelectVendorID;
-    });
-    BindAllVendorList(fetchedVendorDataList);
 });
 
 $('#btnCancelVendor').on('click', function () {
     ClearFetchForm();
 });
 
-$('#rfqVendorTable').on('click', '.deleteVendor', function () {
-    const rowIndex = $(this).closest('tr').data('index');
-    const deletedVendor = vendorList.splice(rowIndex, 1);
-    RenderFetchTable();
-    deletedVendor.forEach(item => {
-        fetchedVendorDataList.push({
-            email: item.EmailId,
-            mobNo: item.MobileNo,
-            panNo: item.PanNo,
-            partyId: item.VendorId,
-            partyName: item.VendorName,
-            whatsAppNo: item.WhatsappNo
-        });
-    })
-    BindAllVendorList(fetchedVendorDataList);
-});
+//$('#rfqVendorTable').on('click', '.deleteVendor', function () {
+//    const rowIndex = $(this).closest('tr').data('index');
+//    const deletedVendor = vendorList.splice(rowIndex, 1);
+//    RenderFetchTable();
+//    deletedVendor.forEach(item => {
+//        fetchedVendorDataList.push({
+//            email: item.EmailId,
+//            mobNo: item.MobileNo,
+//            panNo: item.PanNo,
+//            partyId: item.VendorId,
+//            partyName: item.VendorName,
+//            whatsAppNo: item.WhatsappNo
+//        });
+//    })
+//    BindAllVendorList(fetchedVendorDataList);
+//});
 
-$('#rfqVendorTable').on('click', '.editVendor', function () {
-    const rowIndex = $(this).closest('tr').data('index');
-    const vendor = vendorList[rowIndex];
-    const mobileNoInputHtml = `<input type="text" id="editMobileNo" class="form-control" maxlength="10" value="${vendor.MobileNo}">`;
-    const whatsappNoInputHtml = `<input type="text" id="editWhatsappNo" class="form-control" maxlength="10" value="${vendor.WhatsappNo}">`;
-    const emailInputHtml = `<input type="email" id="editEmailId" class="form-control" maxlength="50" value="${vendor.EmailId}">`;
+//$('#rfqVendorTable').on('click', '.editVendor', function () {
+//    const rowIndex = $(this).closest('tr').data('index');
+//    const vendor = vendorList[rowIndex];
+//    const mobileNoInputHtml = `<input type="text" id="editMobileNo" class="form-control" maxlength="10" value="${vendor.MobileNo}">`;
+//    const whatsappNoInputHtml = `<input type="text" id="editWhatsappNo" class="form-control" maxlength="10" value="${vendor.WhatsappNo}">`;
+//    const emailInputHtml = `<input type="email" id="editEmailId" class="form-control" maxlength="50" value="${vendor.EmailId}">`;
 
-    $(this).closest('tr').find('td:nth-child(5)').html(mobileNoInputHtml);
-    $(this).closest('tr').find('td:nth-child(6)').html(whatsappNoInputHtml);
-    $(this).closest('tr').find('td:nth-child(7)').html(emailInputHtml);
+//    $(this).closest('tr').find('td:nth-child(5)').html(mobileNoInputHtml);
+//    $(this).closest('tr').find('td:nth-child(6)').html(whatsappNoInputHtml);
+//    $(this).closest('tr').find('td:nth-child(7)').html(emailInputHtml);
 
-    const actionButtonsHtml = `  
-                     <button type="button" class="saveEditVendor" style="color:blue;border:none;background:none;">Save</button> /  
-                     <button type="button" class="cancelEditVendor" style="color:blue;border:none;background:none;">Cancel</button>  
-                  `;
-    $(this).closest('tr').find('td:nth-child(8)').html(actionButtonsHtml);
+//    const actionButtonsHtml = `
+//                     <button type="button" class="saveEditVendor" style="color:blue;border:none;background:none;">Save</button> /
+//                     <button type="button" class="cancelEditVendor" style="color:blue;border:none;background:none;">Cancel</button>
+//                  `;
+//    $(this).closest('tr').find('td:nth-child(8)').html(actionButtonsHtml);
 
-    $('.saveEditVendor').on('click', function () {
-        const updatedMobileNo = $('#editMobileNo').val();
-        const updatedWhatsappNo = $('#editWhatsappNo').val();
-        const updatedEmailId = $('#editEmailId').val();
+//    $('.saveEditVendor').on('click', function () {
+//        const updatedMobileNo = $('#editMobileNo').val();
+//        const updatedWhatsappNo = $('#editWhatsappNo').val();
+//        const updatedEmailId = $('#editEmailId').val();
 
-        if (!updatedMobileNo || !updatedEmailId) {
-            toastr.warning("Please fill all required fields!", "Validation Error");
-            return;
-        }
+//        if (!updatedMobileNo || !updatedEmailId) {
+//            toastr.warning("Please fill all required fields!", "Validation Error");
+//            return;
+//        }
 
-        vendorList[rowIndex].MobileNo = updatedMobileNo;
-        vendorList[rowIndex].WhatsappNo = updatedWhatsappNo;
-        vendorList[rowIndex].EmailId = updatedEmailId;
+//        vendorList[rowIndex].MobileNo = updatedMobileNo;
+//        vendorList[rowIndex].WhatsappNo = updatedWhatsappNo;
+//        vendorList[rowIndex].EmailId = updatedEmailId;
 
-        RenderFetchTable();
-    });
+//        RenderFetchTable();
+//    });
 
-    $('.cancelEditVendor').on('click', function () {
-        RenderFetchTable();
-    });
-});
+//    $('.cancelEditVendor').on('click', function () {
+//        RenderFetchTable();
+//    });
+//});
 
 function VendorListBindDropDown(fetchedVendorDataList) {
-    $("#ddlRFQVendorList").empty();
-    const vendorListDropdown = document.getElementById("ddlRFQVendorList");
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = 0;
-    placeholderOption.textContent = "Select a Vendor Name";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    vendorListDropdown.appendChild(placeholderOption);
-    fetchedVendorDataList.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.partyId;
-        option.textContent = item.partyName;
-        vendorListDropdown.appendChild(option);
+    var getUrl = '/Vendor/GetAllVendorList'
+    $.ajax({
+        url: getUrl,
+        type: "GET",
+        data: { companyId: companyId },
+        contentType: "application/json",
+        success: function (response) {
+            if (!IsNullOrEmpty(response)) {
+                $("#ddlRFQVendorList").empty();
+                VendorListDrpData = response
+                const vendorListDropdown = document.getElementById("ddlRFQVendorList");
+                let placeholderOption = document.createElement("option");
+                placeholderOption.value = 0;
+                placeholderOption.textContent = "Select a Vendor Name";
+                placeholderOption.disabled = true;
+                placeholderOption.selected = true;
+                vendorListDropdown.appendChild(placeholderOption);
+                response.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.partyId;
+                    option.textContent = item.partyName;
+                    vendorListDropdown.appendChild(option);
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log("Failed to Fetch VendorList DropDown!");
+        }
     });
+
 }
-function FetchVendorData() {
+function OnChangeFetchVendorData() {
     $("#ddlRFQVendorList").on('change', function () {
         const selectedVendorId = $(this).val();
         if (IsNullOrEmpty(selectedVendorId)) {
             return;
         }
-        const selectedVendorData = fetchedVendorDataList.find(x => x.partyId == selectedVendorId);
+        const selectedVendorData = VendorListDrpData.find(x => x.partyId == selectedVendorId);
         $("#fetchVendorPanNo").val(selectedVendorData.panNo);
         $("#fetchVendorRating").val("0");
         $("#fetchVendorMobileNo").val(selectedVendorData.mobNo);
         $("#fetchVendorWhatsappNo").val(selectedVendorData.whatsAppNo);
         $("#fetchVendorEmailId").val(selectedVendorData.email);
     })
+}
+function ClearFetchForm() {
+    $("#fetchVendorPanNo").val('');
+    $("#fetchVendorRating").val('');
+    $("#fetchVendorMobileNo").val('');
+    $("#fetchVendorWhatsappNo").val('');
+    $("#fetchVendorEmailId").val('');
+    $('#ddlRFQVendorList').val(0).trigger('change');
 }
