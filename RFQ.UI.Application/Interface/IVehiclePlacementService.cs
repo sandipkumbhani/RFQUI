@@ -1,4 +1,5 @@
-﻿using RFQ.UI.Domain.Helper;
+﻿using Microsoft.AspNetCore.Mvc;
+using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using System;
@@ -20,5 +21,6 @@ namespace RFQ.UI.Application.Interface
         Task<IEnumerable<VehiclePlacementResponseDto>> GetAllVehiclePlacementNo(int companyId);
         Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId);
         Task<IEnumerable<AwardedIndentListResponseDto>> GetAwardedIndentList(int companyId);
+        Task<int> GetVehiclePlacementCountByIndentNo(int indentId);
     }
 }

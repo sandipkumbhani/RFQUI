@@ -190,12 +190,26 @@ namespace RFQ.UI.Controllers
                 throw;
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAwardedIndentList(int companyId)
         {
             try
             {
                 var result = await _vehiclePlacementService.GetAwardedIndentList(companyId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetVehiclePlacementCountByIndentNo(int indentId)
+        {
+            try
+            {
+                var result = await _vehiclePlacementService.GetVehiclePlacementCountByIndentNo(indentId);
                 return Ok(result);
             }
             catch (Exception ex)

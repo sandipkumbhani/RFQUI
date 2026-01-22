@@ -1,4 +1,5 @@
-﻿using RFQ.UI.Application.Interface;
+﻿using Microsoft.AspNetCore.Mvc;
+using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
@@ -61,6 +62,10 @@ namespace RFQ.UI.Application.Provider
         public async Task<IEnumerable<AwardedIndentListResponseDto>> GetAwardedIndentList(int companyId)
         {
             return await _vehiclePlacementAdaptor.GetAwardedIndentList(companyId);
+        }
+        public async Task<int> GetVehiclePlacementCountByIndentNo(int indentId)
+        {
+            return await _vehiclePlacementAdaptor.GetVehiclePlacementCountByIndentNo(indentId);
         }
     }
 }

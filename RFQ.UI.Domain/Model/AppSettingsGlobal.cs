@@ -110,6 +110,7 @@ namespace RFQ.UI.Domain.Model
         public string? CheckVehicleAndIndentUnique { get; set; }
         public string? GetAutoGenerateCode { get; set; }
         public string? GetAwardedIndentList { get; set; }
+        public string? GetVehiclePlacementCountByIndentNo { get; set; }
 
 
 
@@ -252,7 +253,8 @@ namespace RFQ.UI.Domain.Model
                 IndentReferenceCheckInRfqAsync = vehicleIndentSection["IndentReferenceCheckInRfqAsync"],
                 CheckVehicleAndIndentUnique = vehiclePlacementSection["CheckVehicleAndIndentUnique"],
                 GetAutoGenerateCode = commonSection["GetAutoGenerateCode"],
-                GetAwardedIndentList = vehiclePlacementSection["GetAwardedIndentList"]
+                GetAwardedIndentList = vehiclePlacementSection["GetAwardedIndentList"],
+                GetVehiclePlacementCountByIndentNo = vehiclePlacementSection["GetVehiclePlacementCountByIndentNo"]
             };
         }
     }

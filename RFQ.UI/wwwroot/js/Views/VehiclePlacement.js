@@ -17,11 +17,10 @@ $(document).ready(function () {
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
 
-    $('#ddlIndentNo').on('change', function () {
-        if ($(this).val() != null)
-            AutoFetch();
-        else
-            return;
+    $('#ddlIndentNo').on('change', async function () {
+        debugger;
+        await AutoFetch();
+        await GetVehiclePlacementCountByIndentNo()
     });
 
     $('#ddlVehicleNo').on('change', function () {
@@ -401,68 +400,52 @@ function GetAllBrokerVendor() {
 }
 function AutoFetch() {
     var indentNo = $("#ddlIndentNo").val();
-    var getUrl = '/VehiclePlacement/AutoFetchPlacement/' + indentNo;
-    $.ajax({
-        url: getUrl,
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            console.log(response);
-            if (Array.isArray(response) && response.length > 0) {
-                let data = response[0]; // Use the first object in the array
-                let indentDate = data.indentDate;
-                if (indentDate) {
-                    if (indentDate instanceof Date) {
-                        indentDate = indentDate.toISOString().split('T')[0];
-                    } else if (typeof indentDate === "string" && indentDate.includes("T")) {
-                        indentDate = indentDate.split('T')[0];
-                    }
-                    $('#txtIndentDate').val(indentDate);
-                } else {
-                    $('#txtIndentDate').val('');
-                }
-                $("#txtRFQNo").val(data.rfqNo);
-                $("#ddlCustomerName").val(data.partyId).trigger('change');
-                $("#drpVehicleType").val(data.vehicleTypeId).trigger('change');
-                $('#from-search-box').val(data.fromLocation);
-                $("#to-search-box").val(data.toLocation);
-                $("#txtNoOfVehicles").val(data.requiredVehicles);
-                $("#ddlIndentBranch").val(data.locationId).trigger('change');
-                $("#txtPendingVehicles").val(data.pendingVehicles);
+    if (indentNo != 0) {
+        var getUrl = '/VehiclePlacement/AutoFetchPlacement/' + indentNo;
+        $.ajax({
+            url: getUrl,
+            type: "GET",
+            contentType: "application/json",
+            success: function (response) {
+                console.log(response);
+                if (Array.isArray(response) && response.length > 0) {
+                    let data = response[0]; // Use the first object in the array
+                    $("#txtRFQNo").val(data.rfqNo);
+                    $("#ddlCustomerName").val(data.partyId).trigger('change');
+                    $("#drpVehicleType").val(data.vehicleTypeId).trigger('change');
+                    $('#from-search-box').val(data.fromLocation);
+                    $("#to-search-box").val(data.toLocation);
+                    $("#txtNoOfVehicles").val(data.requiredVehicles);
+                    $("#ddlIndentBranch").val(data.locationId).trigger('change');
+                    //$("#txtPendingVehicles").val(data.pendingVehicles);
 
-                // Format vehicleReqOn
-                let vehicleReqOn = data.vehicleReqOn;
-                if (vehicleReqOn) {
-                    if (vehicleReqOn instanceof Date) {
-                        vehicleReqOn = vehicleReqOn.toISOString().split('T')[0];
-                    } else if (typeof vehicleReqOn === "string" && vehicleReqOn.includes("T")) {
-                        vehicleReqOn = vehicleReqOn.split('T')[0];
+                    if (!IsNullOrEmpty(data.indentDate)) {
+                        $('#txtIndentDate').val(FormatDateToLocal(data.indentDate));
+                    } else {
+                        $('#txtIndentDate').val('');
                     }
-                    $('#txtVehicleReqOn').val(vehicleReqOn);
-                } else {
-                    $('#txtVehicleReqOn').val('');
-                }
 
-                let rfqDate = data.vehicleReqOn;
-                if (rfqDate) {
-                    if (rfqDate instanceof Date) {
-                        rfqDate = rfqDate.toISOString().split('T')[0];
-                    } else if (typeof rfqDate === "string" && rfqDate.includes("T")) {
-                        rfqDate = rfqDate.split('T')[0];
+                    if (!IsNullOrEmpty(data.vehicleReqOn)) {
+                        $('#txtVehicleReqOn').val(FormatDateToLocal(data.vehicleReqOn));
+                    } else {
+                        $('#txtVehicleReqOn').val('');
                     }
-                    $('#txtRFQDate').val(rfqDate);
-                } else {
-                    $('#txtRFQDate').val('');
-                }
 
-            } else {
-                toastr.warning("No data found for selected indent number.", "Warning");
+                    if (!IsNullOrEmpty(data.vehicleReqOn)) {
+                        $('#txtRFQDate').val(FormatDateToLocal(data.vehicleReqOn));
+                    } else {
+                        $('#txtRFQDate').val('');
+                    }
+
+                } else {
+                    toastr.Warning("No data found for selected indent number.", "Warning");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to fetch RFQ data!", "Error");
             }
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to fetch RFQ data!", "Error");
-        }
-    });
+        });
+    }
 }
 function VehiclePopUp() {
     $("#vehiclePopupModal .modal-body").load('/VehiclePlacement/CreateVehicle', function () {
@@ -975,4 +958,31 @@ function vehiclePlacementFormReset() {
     $("#ddlDriverName").val(0).trigger('change');
     $("#ddlBrokerName").val(0).trigger('change');
     $("#ddlIndentNo").val(0).trigger('change');
+}
+
+function GetVehiclePlacementCountByIndentNo() {
+    const indentId = $("#ddlIndentNo").val();
+    
+    if (indentId != 0) {
+        $.ajax({
+            url: '/VehiclePlacement/GetVehiclePlacementCountByIndentNo',
+            type: 'GET',
+            data: {
+                indentId: indentId
+            },
+            success: function (response) {
+                if (!IsNullOrEmpty(response) && response > 0) {
+                    const totalVehicles = Number($("#txtNoOfVehicles").val());
+                    const placedVehicles = Number(response);
+                    const panddingVehicles = totalVehicles - placedVehicles;
+                    $("#txtPendingVehicles").val(panddingVehicles);
+                }
+                else
+                    $("#txtPendingVehicles").val(0);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error: GetVehiclePlacementCountByIndentNo :", error);
+            }
+        });
+    }
 }

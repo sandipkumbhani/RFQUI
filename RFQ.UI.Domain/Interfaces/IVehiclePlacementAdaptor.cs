@@ -20,5 +20,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<IEnumerable<VehiclePlacementResponseDto>> GetAllVehiclePlacementNo(int companyId);
         Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId);
         Task<IEnumerable<AwardedIndentListResponseDto>> GetAwardedIndentList(int companyId);
+        Task<int> GetVehiclePlacementCountByIndentNo(int indentId);
     }
 }
