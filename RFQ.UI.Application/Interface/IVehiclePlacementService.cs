@@ -19,5 +19,6 @@ namespace RFQ.UI.Application.Interface
         Task<string> DeleteVehiclePlacement(int placementId);
         Task<IEnumerable<VehiclePlacementResponseDto>> GetAllVehiclePlacementNo(int companyId);
         Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId);
+        Task<IEnumerable<AwardedIndentListResponseDto>> GetAwardedIndentList(int companyId);
     }
 }

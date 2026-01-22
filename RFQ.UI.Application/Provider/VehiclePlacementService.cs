@@ -58,5 +58,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehiclePlacementAdaptor.CheckVehicleAndIndentUnique(vehicleId, indentId);
         }
+        public async Task<IEnumerable<AwardedIndentListResponseDto>> GetAwardedIndentList(int companyId)
+        {
+            return await _vehiclePlacementAdaptor.GetAwardedIndentList(companyId);
+        }
     }
 }

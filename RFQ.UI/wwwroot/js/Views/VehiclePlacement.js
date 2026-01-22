@@ -157,34 +157,40 @@ function FetchVehiclePlacement() {
 }
 
 async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
-    var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
+    var getVehicleTypeUrl = '/VehiclePlacement/GetAwardedIndentList'
     return await $.ajax({
         url: getVehicleTypeUrl,
         type: "GET",
         data: { companyId: companyId },
         contentType: "application/json",
         success: function (response) {
-            response = response.result;
-            VehicIndentList = response.filter(x => x.locationId == selectLocationId);
-            $("#ddlIndentNo").empty();
-            const Indentdropdown = document.getElementById("ddlIndentNo");
-            Indentdropdown.innerHTML = "";
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = 0;
-            placeholderOption.textContent = "Select a Indent No";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            Indentdropdown.appendChild(placeholderOption);
-            VehicIndentList.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.indentId;
-                option.textContent = item.indentNo;
-                Indentdropdown.appendChild(option);
-            });
-            if (selectedIndentId) {
-                $("#ddlIndentNo").val(Number(selectedIndentId)).trigger('change');
-                $("#ddlIndentNo").prop('disabled', true);
+            console.log(response);
+            if (!IsNullOrEmpty(response) && response.length > 0) {
+                VehicIndentList = response.filter(x => x.locationId == selectLocationId);
+                $("#ddlIndentNo").empty();
+                const Indentdropdown = document.getElementById("ddlIndentNo");
+                Indentdropdown.innerHTML = "";
+                let placeholderOption = document.createElement("option");
+                placeholderOption.value = 0;
+                placeholderOption.textContent = "Select a Indent No";
+                placeholderOption.disabled = true;
+                placeholderOption.selected = true;
+                Indentdropdown.appendChild(placeholderOption);
+                VehicIndentList.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.indentId;
+                    option.textContent = item.indentNo;
+                    Indentdropdown.appendChild(option);
+                });
+                if (selectedIndentId) {
+                    $("#ddlIndentNo").val(Number(selectedIndentId)).trigger('change');
+                    $("#ddlIndentNo").prop('disabled', true);
+                }
             }
+            else {
+                Defaultdrpdownset();
+            }
+
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Indent No!", "Error");
@@ -401,9 +407,9 @@ function AutoFetch() {
         type: "GET",
         contentType: "application/json",
         success: function (response) {
+            console.log(response);
             if (Array.isArray(response) && response.length > 0) {
                 let data = response[0]; // Use the first object in the array
-                console.log(data, "**** INdent Data ****");
                 let indentDate = data.indentDate;
                 if (indentDate) {
                     if (indentDate instanceof Date) {

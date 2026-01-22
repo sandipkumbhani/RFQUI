@@ -188,5 +188,26 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+        public async Task<IEnumerable<AwardedIndentListResponseDto>> GetAwardedIndentList(int companyId)
+        {
+            try
+            {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAwardedIndentList + companyId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                {
+                    var awardedIndentList = JsonConvert.DeserializeObject<IEnumerable<AwardedIndentListResponseDto>>(responseModel.Data.ToString());
+                    return awardedIndentList ?? Enumerable.Empty<AwardedIndentListResponseDto>();
+                }
+                else
+                {
+                    return Enumerable.Empty<AwardedIndentListResponseDto>();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
