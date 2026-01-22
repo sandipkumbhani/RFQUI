@@ -18,7 +18,6 @@ $(document).ready(function () {
     locationId = getCookieValue('locationid');
 
     $('#ddlIndentNo').on('change', async function () {
-        debugger;
         await AutoFetch();
         await GetVehiclePlacementCountByIndentNo()
     });
@@ -125,9 +124,12 @@ $("#txtTotalHairAmt").on('change', function () {
 });
 
 $("#ddlDriverName").on('change', function () {
-    if ($(this).val() != null) {
-        var filterData = driverDrpList.find(x => x.driverId == $(this).val());
-        $("#txtMobileNo").val(filterData.mobNo);
+    const value = $(this).val();
+    if (!IsNullOrEmpty(value)) {
+        var filterData = driverDrpList.find(x => x.driverId == value);
+        if (!IsNullOrEmpty(filterData) && filterData.length > 0) {
+            $("#txtMobileNo").val(filterData.mobNo);
+        }
     }
     else {
         return;
@@ -182,8 +184,11 @@ async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
                     Indentdropdown.appendChild(option);
                 });
                 if (selectedIndentId) {
-                    $("#ddlIndentNo").val(Number(selectedIndentId)).trigger('change');
-                    $("#ddlIndentNo").prop('disabled', true);
+                    const exists = VehicIndentList.some(x => x.indentId === selectedIndentId);
+                    if (exists)
+                        $("#ddlIndentNo").val(Number(selectedIndentId)).trigger('change');
+                    else
+                        $("#ddlIndentNo").val(0).trigger('change');
                 }
             }
             else {
@@ -271,21 +276,28 @@ function GetAllDriver() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            driverDrpList = response;
-            const ddlDriverName = document.getElementById("ddlDriverName");
-            ddlDriverName.innerHTML = "";
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = 0;
-            placeholderOption.textContent = "Select Driver";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            ddlDriverName.appendChild(placeholderOption);
-            driverDrpList.forEach(option => {
-                let opt = document.createElement("option");
-                opt.value = option.driverId;
-                opt.textContent = option.driverName;
-                ddlDriverName.appendChild(opt);
-            });
+            if (!IsNullOrEmpty(response) && response.length > 0) {
+                const userid = getCookieValue("userid");
+                response = response.filter(x => x.createdBy == userid);
+                driverDrpList = response;
+                const ddlDriverName = document.getElementById("ddlDriverName");
+                ddlDriverName.innerHTML = "";
+                let placeholderOption = document.createElement("option");
+                placeholderOption.value = 0;
+                placeholderOption.textContent = "Select Driver";
+                placeholderOption.disabled = true;
+                placeholderOption.selected = true;
+                ddlDriverName.appendChild(placeholderOption);
+                driverDrpList.forEach(option => {
+                    let opt = document.createElement("option");
+                    opt.value = option.driverId;
+                    opt.textContent = option.driverName;
+                    ddlDriverName.appendChild(opt);
+                });
+            } else {
+                console.log("Driver DropDown Not Loded");
+            }
+
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -298,9 +310,12 @@ function GetAllVehicleNumber() {
         type: "GET",
         dataType: "json",
         success: function (response) {
-            var data = response
-            VehicleList = response;
-            if (VehicleList != null) {
+            if (!IsNullOrEmpty(response) && response.length > 0) {
+                console.log(response, "vehicle number DropDown");
+                const userid = getCookieValue("userid");
+                response = response.filter(x => x.createdBy == userid);
+                var data = response
+                VehicleList = response;
                 $('#ddlVehicleNo').empty();
                 const selectVehicleNumber = document.getElementById("ddlVehicleNo");
                 selectVehicleNumber.innerHTML = "";
@@ -317,9 +332,11 @@ function GetAllVehicleNumber() {
                     selectVehicleNumber.appendChild(opt);
                 });
                 $('.selectpicker').selectpicker('refresh');
-            } else {
-                toastr.warning("No Vehicle Number Found!", "warning");
             }
+            else {
+                console.log("No Vehicle Number Found!", "warning");
+            }
+
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -438,7 +455,7 @@ function AutoFetch() {
                     }
 
                 } else {
-                    toastr.Warning("No data found for selected indent number.", "Warning");
+                    console.log("No data found for selected indent number.", "Warning");
                 }
             },
             error: function (xhr, status, error) {
@@ -778,7 +795,7 @@ async function SaveVehiclePlacement(action) {
     }
 }
 function ButtonUpdateClick() {
-    $("#btnUpdate").on('click', function (e) {
+    $("#btnUpdate").on('click', async function (e) {
         e.preventDefault();
         var isValid = OnSubmitCheckValidation();
         if (!isValid) {
@@ -803,7 +820,11 @@ function ButtonUpdateClick() {
             AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
             LinkId: GetQueryParam("LinkId")
         };
-
+        var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId);
+        if (check) {
+            toastr.warning("Indent are already used this Vehicle");
+            return
+        }
         var linkd = GetQueryParam("LinkId");
         $.ajax({
             type: "PUT",
@@ -880,7 +901,8 @@ function DeleteVehiclePlacement(placementId) {
         }
     });
 }
-function UpdateVehiclePlacement(placementId) {
+
+async function UpdateVehiclePlacement(placementId) {
     if ($("#updateButton").hasClass('d-none')) {
         $("#updateButton").removeClass('d-none');
     }
@@ -903,20 +925,30 @@ function UpdateVehiclePlacement(placementId) {
     $("#txtPlacementNo").val(formData.placementNo);
     $("#txtPlacementDate").val(formatDateForInput(formData.placementDate));
     ////$("#ddlIndentNo").val(formData.indentId).trigger('change');
-    GetAllVehicleIndent(formData.locationId, formData.indentId);
+    await GetAllVehicleIndent(formData.locationId, formData.indentId);
+    $("#ddlIndentNo").prop('disabled', true);
+
     $("#ddlVehicleNo").val(formData.vehicleId).trigger('change');
     $("#ddlTrakingType").val(formData.trackingTypeId).trigger('change');
-    $("#ddlDriverName").val(formData.driverId).trigger('change');
+
+    if (formData.driverId == 0 && !IsNullOrEmpty(formData.driverName)) {
+        if ($("#ddlDriverName").find("option[value='" + formData.driverName + "']").length === 0) {
+            var newOption = new Option(formData.driverName, formData.driverName, true, true);
+            $("#ddlDriverName").append(newOption).trigger("change");
+        } else {
+            $("#ddlDriverName").val(formData.driverName).trigger("change");
+        }
+    }
+    else {
+        $("#ddlDriverName").val(formData.driverId).trigger("change");
+    }
+
     $("#txtMobileNo").val(formData.mobileNo);
     $("#drpOwnerName").val(formData.ownerVendorId).trigger('change');
     $("#ddlBrokerName").val(formData.brokerVendorId).trigger('change');
     $("#txtTotalHairAmt").val(formData.totalHireAmount);
     $("#txtAdvancePayable").val(formData.advancePayable);
     IsEditClick = true;
-}
-function ViewVehiclePlacement(placementId) {
-    UpdateVehiclePlacement(placementId);
-    $("#updateButton").addClass('d-none');
 }
 function Defaultdrpdownset() {
     const $Indentdropdown = $("#ddlIndentNo");
@@ -960,9 +992,9 @@ function vehiclePlacementFormReset() {
     $("#ddlIndentNo").val(0).trigger('change');
 }
 
-function GetVehiclePlacementCountByIndentNo() {
+async function GetVehiclePlacementCountByIndentNo() {
     const indentId = $("#ddlIndentNo").val();
-    
+
     if (indentId != 0) {
         $.ajax({
             url: '/VehiclePlacement/GetVehiclePlacementCountByIndentNo',
@@ -970,7 +1002,7 @@ function GetVehiclePlacementCountByIndentNo() {
             data: {
                 indentId: indentId
             },
-            success: function (response) {
+            success: await function (response) {
                 if (!IsNullOrEmpty(response) && response > 0) {
                     const totalVehicles = Number($("#txtNoOfVehicles").val());
                     const placedVehicles = Number(response);
@@ -985,4 +1017,28 @@ function GetVehiclePlacementCountByIndentNo() {
             }
         });
     }
+}
+function GetDropdownValue(inputId) {
+    let result;
+    if ($("#" + inputId).val() == null) {
+        return result = {
+            id: 0,
+            name: ""
+        }
+    }
+    const selectedValue = $("#" + inputId).val();
+    const selectedText = $("#" + inputId).find("option:selected").text();
+
+    if (selectedValue === selectedText) {
+        result = {
+            id: 0,
+            name: selectedValue
+        };
+    } else {
+        result = {
+            id: selectedValue,
+            name: selectedText
+        };
+    }
+    return result;
 }
