@@ -11,11 +11,13 @@ var FetchVehiclePlacementUrl = '/VehiclePlacement/GetAllVehiclePlacement';
 var VehicIndentList;
 var VehicleList;
 let IsEditClick = false;
+var VendorCosting = [];
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
+    VendorCosting = [];
 
     $('#ddlIndentNo').on('change', async function () {
         await AutoFetch();
@@ -27,6 +29,7 @@ $(document).ready(function () {
         if (!IsNullOrEmpty(VehicleList)) {
             const selectedVehicle = VehicleList.find(x => x.vehicleId == selectedValue);
             if (selectedVehicle) {
+                console.log(VehicleList, "VehicleList");
                 $("#drpOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');
             }
         }
@@ -43,6 +46,7 @@ $(document).ready(function () {
     GetAllOwnerOrVendor();
     GetAllBrokerVendor();
     ButtonUpdateClick();
+    loadVendorCosting()
     FetchVehiclePlacement();
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllVehicleType("drpVehicleType", companyId);
@@ -95,6 +99,35 @@ $(document).ready(function () {
             SaveVehiclePlacement(action);
         }
     });
+
+    $("#drpOwnerName").on('change', async function () {
+        if (isValidateSelect($("#drpOwnerName").val())) {
+            const value = $(this).val();
+            if (isValidateSelect($("#drpOwnerName").val())) {
+                const costing = VendorCosting.filter(x => x.partyId == value).map(x => x.totalHireCost);
+                $("#txtTotalHairAmt").val(costing.length > 0 ? costing[0] : 0);
+            }
+        }
+    });
+
+    $("#ddlBrokerName").on('change', async function () {
+        const ownerCheck = isValidateSelect($("#drpOwnerName").val())
+        if (ownerCheck) {
+            const Owner = $("#drpOwnerName").val();
+            if (isValidateSelect(Owner)) {
+                const costing = VendorCosting.filter(x => x.partyId == Owner).map(x => x.totalHireCost);
+                $("#txtTotalHairAmt").val(costing.length > 0 ? costing[0] : 0);
+            }
+        }
+        else {
+            const Broker = $("#ddlBrokerName").val();
+            if (isValidateSelect(Broker)) {
+                const costing = VendorCosting.filter(x => x.partyId == Broker).map(x => x.totalHireCost);
+                $("#txtTotalHairAmt").val(costing.length > 0 ? costing[0] : 0);
+            }
+        }
+    });
+
 });
 
 $('#btnAdd').on('click', function () {
@@ -114,6 +147,16 @@ $("#txtAdvancePayable").on('change', function () {
     var advancePay = Number($("#txtAdvancePayable").val());
     var payable = hireAmt - advancePay;
     $("#txtBalancePayable").val(payable);
+});
+
+$("#txtAdvancePayable").on('blur', function () {
+    var hireAmt = Number($("#txtTotalHairAmt").val());
+    var advancePay = Number($("#txtAdvancePayable").val());
+    if (advancePay > hireAmt) {
+        toastr.warning("Advance Payable shall not be greater than Total Hire Amt");
+        $("#txtAdvancePayable").val('');
+        $("#txtBalancePayable").val('');
+    }
 });
 
 $("#txtTotalHairAmt").on('change', function () {
@@ -165,7 +208,6 @@ async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
         data: { companyId: companyId },
         contentType: "application/json",
         success: function (response) {
-            console.log(response);
             if (!IsNullOrEmpty(response) && response.length > 0) {
                 VehicIndentList = response.filter(x => x.locationId == selectLocationId);
                 $("#ddlIndentNo").empty();
@@ -227,6 +269,14 @@ function OnSubmitCheckValidation() {
         toastr.warning("Please enter a Mobile No", "Validation Error");
         return false;
     }
+    if (
+        !isValidateSelect($("#drpOwnerName").val()) &&
+        !isValidateSelect($("#ddlBrokerName").val())
+    ) {
+        toastr.warning("Please Select Owner / Broker For Placement", "Validation");
+        return false;
+    }
+
     //if (!isValidateSelect($("#ddlBrokerName").val())) {
     //    toastr.warning("Please Select a Broker Name", "Validation Error");
     //    return false;
@@ -1042,7 +1092,6 @@ function GetDropdownValue(inputId) {
     }
     return result;
 }
-
 function setVehiclePlacementDate() {
     const rfqDate = $("#txtRFQDate").val();
     const txtPlacementDate = $("#txtPlacementDate").val();
@@ -1059,3 +1108,61 @@ function setVehiclePlacementDate() {
     }
     $("#txtPlacementDate")[0].min = FormatDateToLocal(date);
 }
+function loadVendorCosting() {
+    $.ajax({
+        type: "POST",
+        url: "/ReceivedVendorCosting/GetAllReceivedVendorCosting",
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+            if (response.statusCode === 200) {
+                VendorCosting = response.data;
+                console.log(VendorCosting, "loadVendorCosting");
+            } else {
+                console.warn(response.message + "⚠️ ");
+            }
+        },
+        error: function (xhr, status, error) {
+            toastr.error("Somthing Went Wrong loadVendorCosting", "error");
+        }
+    });
+}
+
+function CheckAwardedVendor() {
+
+    let partyId = 0;
+
+    // Broker selected
+    if (isValidateSelect($("#ddlBrokerName").val())) {
+        partyId = $("#ddlBrokerName").val();
+    }
+
+    // Owner selected (priority)
+    if (isValidateSelect($("#drpOwnerName").val())) {
+        partyId = $("#drpOwnerName").val();
+    }
+
+    // Validation
+    if (partyId == 0) {
+        toastr.warning("Please select Broker or Owner");
+        return;
+    }
+
+    var requestDto = {
+        PartyId: parseInt(partyId)
+    };
+
+    return $.ajax({
+        url: '/vehicleplacement/CheckAwardedVendor',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(requestDto),
+        dataType: 'json',
+        success: function (response) {
+            console.log("CheckAwardedVendor success:", response);
+        },
+        error: function (xhr) {
+            console.error("CheckAwardedVendor error:", xhr.responseText);
+        }
+    });
+}
+

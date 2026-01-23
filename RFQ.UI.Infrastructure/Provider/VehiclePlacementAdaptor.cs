@@ -228,5 +228,23 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<bool> CheckAwardedVendor(CheckAwardedVendorRequestDto requestDto)
+        {
+            try
+            {
+                var baseUrl = _appSettings.BaseUrl + _appSettings.CheckAwardedVendor;
+                var responseModel = await _commonApiAdaptor.PostAsync<CommanResponseDto>(baseUrl, requestDto, _globalClass.Token);
+
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return Convert.ToBoolean(responseModel.Data);
+                else
+                    return false;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

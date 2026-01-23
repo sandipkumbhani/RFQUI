@@ -22,5 +22,6 @@ namespace RFQ.UI.Application.Interface
         Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId);
         Task<IEnumerable<AwardedIndentListResponseDto>> GetAwardedIndentList(int companyId);
         Task<int> GetVehiclePlacementCountByIndentNo(int indentId);
+        Task<bool> CheckAwardedVendor(CheckAwardedVendorRequestDto requestDto);
     }
 }

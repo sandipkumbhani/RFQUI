@@ -111,6 +111,7 @@ namespace RFQ.UI.Domain.Model
         public string? GetAutoGenerateCode { get; set; }
         public string? GetAwardedIndentList { get; set; }
         public string? GetVehiclePlacementCountByIndentNo { get; set; }
+        public string? CheckAwardedVendor { get; set; }
 
 
 
@@ -254,7 +255,8 @@ namespace RFQ.UI.Domain.Model
                 CheckVehicleAndIndentUnique = vehiclePlacementSection["CheckVehicleAndIndentUnique"],
                 GetAutoGenerateCode = commonSection["GetAutoGenerateCode"],
                 GetAwardedIndentList = vehiclePlacementSection["GetAwardedIndentList"],
-                GetVehiclePlacementCountByIndentNo = vehiclePlacementSection["GetVehiclePlacementCountByIndentNo"]
+                GetVehiclePlacementCountByIndentNo = vehiclePlacementSection["GetVehiclePlacementCountByIndentNo"],
+                CheckAwardedVendor = vehiclePlacementSection["CheckAwardedVendor"]
             };
         }
     }

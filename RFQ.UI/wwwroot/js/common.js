@@ -71,7 +71,7 @@ function isValidateEmail(email) {
     return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email);
 }
 function isValidateSelect(value, selectedIndex) {
-    return value !== "" && value !== null && value !== undefined && selectedIndex !== 0;
+    return value !== "" && value !== null && value !== undefined && value != 0 && selectedIndex !== 0;
 }
 function isMobile(number) {
     return /^[0-9]{10}$/.test(number);

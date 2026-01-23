@@ -204,12 +204,27 @@ namespace RFQ.UI.Controllers
                 throw;
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> GetVehiclePlacementCountByIndentNo(int indentId)
         {
             try
             {
                 var result = await _vehiclePlacementService.GetVehiclePlacementCountByIndentNo(indentId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CheckAwardedVendor([FromBody] CheckAwardedVendorRequestDto requestDto)
+        {
+            try
+            {
+                var result = await _vehiclePlacementService.CheckAwardedVendor(requestDto);
                 return Ok(result);
             }
             catch (Exception ex)

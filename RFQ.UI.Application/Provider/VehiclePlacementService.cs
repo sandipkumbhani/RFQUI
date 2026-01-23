@@ -67,5 +67,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehiclePlacementAdaptor.GetVehiclePlacementCountByIndentNo(indentId);
         }
+        public async Task<bool> CheckAwardedVendor(CheckAwardedVendorRequestDto requestDto)
+        {
+            return await _vehiclePlacementAdaptor.CheckAwardedVendor(requestDto);
+        }
     }
 }
