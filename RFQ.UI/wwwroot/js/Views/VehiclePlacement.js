@@ -1042,3 +1042,20 @@ function GetDropdownValue(inputId) {
     }
     return result;
 }
+
+function setVehiclePlacementDate() {
+    const rfqDate = $("#txtRFQDate").val();
+    const txtPlacementDate = $("#txtPlacementDate").val();
+
+    if (IsNullOrEmpty(rfqDate)) {
+        txtPlacementDate.min = new Date().toISOString().split('T')[0];
+        return;
+    }
+
+    var date = new Date(rfqDate);
+    if (isNaN(date.getTime())) {
+        txtPlacementDate.min = new Date().toISOString().split('T')[0];
+        return;
+    }
+    $("#txtPlacementDate")[0].min = FormatDateToLocal(date);
+}

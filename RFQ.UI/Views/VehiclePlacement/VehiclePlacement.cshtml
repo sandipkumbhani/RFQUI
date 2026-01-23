@@ -140,7 +140,7 @@
                             <div class="col-lg-3">
                                 <div class="item-input">
                                     <label class="form-label"><span>*</span>Placement Date</label>
-                                    <input type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="RFQ Date" min="@DateTime.Now.ToString("yyyy-MM-dd")" id="txtPlacementDate" />
+                                    <input type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="RFQ Date" min="@DateTime.Now.ToString("yyyy-MM-dd")" id="txtPlacementDate" onfocus="setVehiclePlacementDate()" />
                                 </div>
                             </div>
                         </div>
