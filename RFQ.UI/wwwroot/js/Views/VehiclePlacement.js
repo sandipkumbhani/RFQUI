@@ -1126,7 +1126,6 @@ function loadVendorCosting() {
         }
     });
 }
-
 function CheckAwardedVendor() {
 
     let partyId = 0;

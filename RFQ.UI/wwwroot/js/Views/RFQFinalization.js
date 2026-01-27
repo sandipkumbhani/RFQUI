@@ -445,7 +445,6 @@ function UpdateRfqFinalization() {
             AvailVehicleCount: vendor.AvailVehicleCount,
             AssignedVehicles: vendor.AssignedVehicles
         }));
-        debugger;
         var check = await checkAssignedVehicles(rfqFinalRateUpdateFormData);
         if (check) {
             if ($("#ddlRfqStatus").find('option:selected').text() === "NOT AWARDED") {
