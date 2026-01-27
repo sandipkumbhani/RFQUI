@@ -196,7 +196,17 @@ function CreateOrFillDataInDataTable(response, EditFunctionName = null, DeleteFu
             displayColumns.forEach(col => {
                 var cols = col.split(" as ");
                 if (cols.length > 1) {
-                    tableDataHtml += `<td>${data[cols[0].trim(' ').toLowerCase()] ?? ''}</td>`;
+                    const check = IsDateField(cols[0]);
+                    if (check) {
+                        const value = data[cols[0].trim(' ').toLowerCase()];
+                        if (!IsNullOrEmpty(value))
+                            tableDataHtml += `<td>${FormatDateToLocal(value)}</td>`;
+                        else
+                            tableDataHtml += `<td>${''}</td>`;
+                    }
+                    else {
+                        tableDataHtml += `<td>${data[cols[0].trim(' ').toLowerCase()] ?? ''}</td>`;
+                    }
                 }
             });
             tableDataHtml += '<td>';
@@ -1085,8 +1095,13 @@ function FormatDateToLocal(dateString) {
         return null
     } else {
         const date = new Date(dateString);
-        const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-        return localDate.toISOString().split('T')[0];
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+        //const date = new Date(dateString);
+        //const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+        //return localDate.toISOString().split('T')[0];
     }
 }
 function ValidateLicenseNo(number) {
@@ -1108,7 +1123,6 @@ function base64ToFile(base64String, filename) {
     }
     return new File([u8arr], filename, { type: mime });
 }
-
 function GetLocationById(id) {
     return $.ajax({
         url: '/Location/GetLocationById',
@@ -1129,7 +1143,6 @@ function GetLocationById(id) {
         }
     });
 }
-
 function GetAutoGenerateCode(code, prefix) {
     var requestDto = {
         UserId: 0,
@@ -1150,4 +1163,16 @@ function GetAutoGenerateCode(code, prefix) {
             console.error("Auto Generate Code Error:", error);
         }
     });
+}
+function IsDateField(columnName) {
+    if (!IsNullOrEmpty(columnName)) {
+        columnName = columnName.trim().toLowerCase();
+        console.log(columnName);
+        if (columnName.includes('date') || columnName.includes('expiredon') || columnName.includes('reqon')) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

@@ -54,15 +54,12 @@ function BindTable(data) {
       <tr data-index="${index}" data-row='${safeRow}'>
         <td>${index + 1}</td>
         <td>${row.indentNumber}</td>
-        <td>${row.indentDate ? new Date(row.indentDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+        <td>${FormatDateToLocal(row.indentDate)}</td>
         <td>${row.rfqNumber}</td>
-        <td>${row.rfqDate ? new Date(row.rfqDate).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+        <td>${FormatDateToLocal(row.rfqDate)}</td>
         <td>${row.customerName}</td>
-        <td>${row.rfqExpiredOn ? new Date(row.rfqExpiredOn).toLocaleString('en-GB', {
-            day: '2-digit', month: '2-digit', year: 'numeric',
-            hour: '2-digit', minute: '2-digit', hour12: true
-        }).replace(/\//g, '-').replace(',', '').toUpperCase() : ''}</td>
-        <td>${row.vehicleRequiredOn ? new Date(row.vehicleRequiredOn).toLocaleDateString('en-GB').replace(/\//g, '-') : ''}</td>
+        <td>${FormatDateToLocal(row.rfqExpiredOn)}</td>
+        <td>${FormatDateToLocal(row.vehicleRequiredOn)}</td>
         <td>${row.origin}</td>
         <td>${row.destination}</td>
         <td>${row.vehicleType}</td>
