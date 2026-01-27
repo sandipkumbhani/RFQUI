@@ -19,11 +19,6 @@ $(document).ready(function () {
     locationId = getCookieValue('locationid');
     VendorCosting = [];
 
-    $('#ddlIndentNo').on('change', async function () {
-        await AutoFetch();
-        await GetVehiclePlacementCountByIndentNo()
-    });
-
     $('#ddlVehicleNo').on('change', function () {
         const selectedValue = $(this).val();
         if (!IsNullOrEmpty(VehicleList)) {
@@ -71,7 +66,6 @@ $(document).ready(function () {
             $("#txtPlacementNo").val(code);
         }
     });
-
 
     $('#tableDivLink').on('click', function (e) {
         FetchVehiclePlacement();
@@ -128,6 +122,13 @@ $(document).ready(function () {
         }
     });
 
+});
+
+$('#ddlIndentNo').on('change', async function () {
+    await AutoFetch();
+    setTimeout(() => {
+        GetVehiclePlacementCountByIndentNo();
+    }, 100);
 });
 
 $('#btnAdd').on('click', function () {
@@ -465,7 +466,8 @@ function GetAllBrokerVendor() {
         }
     });
 }
-function AutoFetch() {
+
+async function AutoFetch() {
     var indentNo = $("#ddlIndentNo").val();
     if (indentNo != 0) {
         var getUrl = '/VehiclePlacement/AutoFetchPlacement/' + indentNo;
@@ -473,7 +475,7 @@ function AutoFetch() {
             url: getUrl,
             type: "GET",
             contentType: "application/json",
-            success: function (response) {
+            success: await function (response) {
                 console.log(response);
                 if (Array.isArray(response) && response.length > 0) {
                     let data = response[0]; // Use the first object in the array
@@ -1042,9 +1044,8 @@ function vehiclePlacementFormReset() {
     $("#ddlIndentNo").val(0).trigger('change');
 }
 
-async function GetVehiclePlacementCountByIndentNo() {
+function GetVehiclePlacementCountByIndentNo() {
     const indentId = $("#ddlIndentNo").val();
-
     if (indentId != 0) {
         $.ajax({
             url: '/VehiclePlacement/GetVehiclePlacementCountByIndentNo',
@@ -1052,7 +1053,7 @@ async function GetVehiclePlacementCountByIndentNo() {
             data: {
                 indentId: indentId
             },
-            success: await function (response) {
+            success: function (response) {
                 if (!IsNullOrEmpty(response) && response > 0) {
                     const totalVehicles = Number($("#txtNoOfVehicles").val());
                     const placedVehicles = Number(response);
