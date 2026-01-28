@@ -24,25 +24,11 @@ namespace RFQ.UI.Controllers
             _logger = logger;
             _menuServices = menuServices;
             _bookingInvoiceService = bokingInvoiceService;
-        } 
+        }
         public async Task<IActionResult> BookingOrTrip()
         {
             await SetMenuAsync();
             return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GenerateLRNo()
-        {
-            try
-            {
-                var result = await _bookingOrTripService.GenerateLRNo();
-                return Json(new { result });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
         }
 
         [HttpPost]

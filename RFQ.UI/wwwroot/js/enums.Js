@@ -78,5 +78,6 @@ const PrefixCode = Object.freeze({
     RFQ: "RFQ",
     VP: "VP",
     BKG: "BKG",
-    DLY: "DLY"
+    DLY: "DLY",
+    LR: "LR"
 });

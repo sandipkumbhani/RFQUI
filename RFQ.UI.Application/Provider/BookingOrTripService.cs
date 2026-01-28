@@ -34,11 +34,6 @@ namespace RFQ.UI.Application.Provider
             return await _bookingOrTripAdaptor.DeleteBookingOrTrip(bookingId);
         }
 
-        public Task<string> GenerateLRNo()
-        {
-            return _bookingOrTripAdaptor.GenerateLRNo();
-        }
-
         public async Task<PageList<BookingOrTripResponseDto>> GetAllBookingOrTrip(PagingParam pagingParam)
         {
             return await _bookingOrTripAdaptor.GetAllBookingOrTrip(pagingParam);

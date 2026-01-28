@@ -15,14 +15,7 @@ $(document).ready(function () {
     profileId = getCookieValue('profileid');
     locationId = getCookieValue('locationid');
     additionalInvoiceList = [];
-    $('#ddlPlacementNo').on('change', function () {
-        if ($(this).val() != null) {
-            AutoFetch();
-        }
-        else {
-            return;
-        }
-    });
+
     GetAllDriver();
     GetAllVehicleNumber();
     GetAllPakingType("ddlPackingType");
@@ -35,7 +28,6 @@ $(document).ready(function () {
     GetAllConsigneeList();
     GetTrakingType();
     GetAllPlacementNo();
-    FetchLRNo();
     FetchBookingOrTrip();
     ButtonUpdateClick();
     btnDeleteInvoiceClick();
@@ -80,7 +72,6 @@ function FetchBookingOrTrip() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
     resetBookingForm();
-    FetchLRNo();
     $("#btnSaveForm").show();
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
@@ -88,6 +79,13 @@ function FetchBookingOrTrip() {
     GetAllConsigneeList();
     FetchDataForTable('BookingTable', fetchBookingUrl, orderColumn, orderDir.toUpperCase(), 'UpdateBooking', 'DeleteBooking', 'bookingId');
 }
+
+$('#ddlPlacementNo').on('change', function () {
+    const value = $(this).val();
+    if (IsNullOrEmpty(value)) {
+        AutoFetch();
+    }
+});
 
 $('#BookingTableSearch').off('keyup').on('keyup', function () {
     $('#currentPage').val(1);
@@ -98,6 +96,20 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchBookingOrTrip();
 });
+
+$("#ddlLocation").on("change", async function () {
+    const locationId = $(this).val();
+    if (IsNullOrEmpty(locationId)) return;
+    const locationData = await GetLocationById(locationId);
+    if (!locationData || !locationData.code) {
+        console.log("Location code not found");
+        return;
+    }
+    const code = await GetAutoGenerateCode(locationData.code, PrefixCode.LR);
+    $("#ddlLrNo").val(code);
+});
+
+
 function OnSubmitCheckValidation() {
     if (!isValidateSelect($("#ddlLocation").val())) {
         toastr.warning("Please Select a Booking Branch", "Validation Error");
@@ -382,19 +394,19 @@ function GetAllPlacementNo() {
         }
     });
 }
-function FetchLRNo() {
 
-    $.ajax({
-        url: "/BookingOrTrip/GenerateLRNo",
-        type: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            $("#ddlLrNo").val(response.result);
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch LR No!", "Error");
-        }
-    });
+async function FetchLRNo() {
+    try {
+        const response = await $.ajax({
+            url: "/BookingOrTrip/GenerateLRNo",
+            type: "GET",
+            contentType: "application/json"
+        });
+        $("#ddlLrNo").val(response.result);
+
+    } catch (error) {
+        toastr.error("Failed to Fetch LR No!", "Error");
+    }
 }
 
 function GetDropdownValue(inputId) {
@@ -499,41 +511,40 @@ function SaveBookingOrTrip(action) {
             }
         });
     }
-    //else if (action === "saveNew") {
-    //    $.ajax({
-    //        url: saveUrl,
-    //        type: 'POST',
-    //        contentType: 'application/json',
-    //        data: JSON.stringify(formData),
-    //        success: function (response) {
-    //            if (response) {
-    //                toastr.success("Vehicle Indent Saved Successfully!", "Success");
-    //                addMasterUserActivityLog(0, LogType.Create, "Vehicle Indent Saved Successfully!", 0);
-    //                $("#btnSaveForm").prop('disabled', false);
-    //                $("#btnSaveAndNewForm").prop('disabled', false);
-    //                $('#vehicleIndentForm')[0].reset();
-    //                $('.select2-custom').val(null).trigger('change');
-    //                FetchIndentNo();
+    else if (action === "saveNew") {
+        $.ajax({
+            url: saveUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response) {
+                    toastr.success("Vehicle Indent Saved Successfully!", "Success");
+                    addMasterUserActivityLog(0, LogType.Create, "Vehicle Indent Saved Successfully!", 0);
+                    $("#btnSaveForm").prop('disabled', false);
+                    $("#btnSaveAndNewForm").prop('disabled', false);
+                    $('#vehicleIndentForm')[0].reset();
+                    $('.select2-custom').val(null).trigger('change');
+                    FetchIndentNo();
 
-    //                if (profileId == EnumProfile.Branch) {
-    //                    $('#ddlLocation').val(Number(locationId)).trigger('change');
-    //                    $('#ddlLocation').prop('disabled', true);
-    //                }
-    //                else {
-    //                    $('#ddlLocation').val(null).trigger('change');
-    //                    $('#ddlLocation').prop('disabled', false);
-    //                }
+                    if (profileId == EnumProfile.Branch) {
+                        $('#ddlLocation').val(Number(locationId)).trigger('change');
+                        $('#ddlLocation').prop('disabled', true);
+                    }
+                    else {
+                        $('#ddlLocation').val(null).trigger('change');
+                        $('#ddlLocation').prop('disabled', false);
+                    }
 
-    //            } else {
-    //                toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
-    //            }
-    //        },
-    //        error: function (xhr, status, error) {
-    //            toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
-    //        }
-    //    });
-    //}
-
+                } else {
+                    toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
+                }
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
+            }
+        });
+    }
 }
 function UpdateBooking(bookingId) {
     if ($("#btnUpdate").hasClass('d-none')) {
@@ -849,7 +860,7 @@ function resetBookingForm() {
     // Reset all text, number, date, hidden, and textarea inputs
     $('#bookingForm').find('input[type="text"], input[type="number"], input[type="date"], input[type="hidden"], textarea').val('');
     $('#bookingForm').find('select').each(function () {
-            $(this).val(0).trigger('change');
+        $(this).val(0).trigger('change');
     });
     $('#ddlBusinessVertical').val(0).trigger('change');
     $('#additionalInvoiceDetails tbody').empty();

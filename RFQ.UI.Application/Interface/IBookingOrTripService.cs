@@ -11,7 +11,6 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IBookingOrTripService
     {
-        Task<string> GenerateLRNo();
         Task<BookingOrTripRequestDto?> AddBookingOrTrip(BookingOrTripRequestDto bookingOrTripRequestDto);
         Task<PageList<BookingOrTripResponseDto>> GetAllBookingOrTrip(PagingParam pagingParam);
         Task<string> UpdateBookingOrTrip(int bookingId, BookingOrTripRequestDto bookingOrTripRequestDto);

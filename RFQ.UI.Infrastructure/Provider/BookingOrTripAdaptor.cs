@@ -32,38 +32,6 @@ namespace RFQ.UI.Infrastructure.Provider
             _commonApiAdaptor = commonApiAdaptor;
         }
 
-        public async Task<string> GenerateLRNo()
-        {
-            try
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var baseurl = _fleetLynkApiUrl + _config["BookingOrTrip:GenerateLRNo"];
-                var response = await _httpClient.GetAsync(baseurl);
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return null;
-                }
-
-                var responseData = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseData))
-                    return null;
-
-                var responseModel = JsonConvert.DeserializeObject<NewCommonResponseDto>(responseData);
-                if (responseModel?.Data != null)
-                {
-                    var lrNo = responseModel.Data.ToString();
-                    return lrNo;
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return null;
-        }
-
         public async Task<BookingOrTripRequestDto?> AddBookingOrTrip(BookingOrTripRequestDto bookingOrTripRequestDto)
         {
             try
