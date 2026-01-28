@@ -33,7 +33,7 @@ $(document).ready(function () {
             $('#txtEDD').val(selectedIndent.edd.split('T')[0]);
             $('#txtPkg').val(selectedIndent.totalPacket);
             $('#txtActualWt').val(selectedIndent.actualWeight);
-            
+
         }
     });
     GetCustomer("ddlCustomerName", companyId);
@@ -41,20 +41,11 @@ $(document).ready(function () {
     GetAllLocation("ddlLocation", companyId);
     GetLocation("ddlBookingBranch", companyId);
     GetAllConsignorList();
-    GetAllConsigneeList(); 
+    GetAllConsigneeList();
     GetAllLRNo();
     FetchDocumentNo();
     FetchDelivery();
     ButtonUpdateClick()
-
-    $('#tableDivLink').on('click', function (e) {
-        FetchDelivery();
-
-    });
-
-    $("#btnCancel").on("click", function () {
-        FetchDelivery();
-    });
 
     $(document).on('click', 'th.sortable', function () {
         orderColumn = $(this).data('column');
@@ -76,16 +67,24 @@ $(document).ready(function () {
     });
 });
 
-$('#btnAdd').click(function () {
+$('#btnAdd').on('click', function () {
     $('#formDiv').css("display", "block");
     $('#tableDiv').css("display", "none");
+});
+
+$('#tableDivLink').on('click', function (e) {
+    FetchDelivery();
+});
+
+$("#btnCancel").on("click", function () {
+    FetchDelivery();
 });
 function FetchDelivery() {
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
     $('#deliveryForm')[0].reset();
     FetchDocumentNo();
-    $('.select2-custom').val(null).trigger('change');
+    $('.select2-custom').val(0).trigger('change');
     $("#btnSave").show();
     $("#btnUpdate").hide();
     $("#btnSaveAndNew").show();
@@ -120,7 +119,6 @@ function OnSubmitCheckValidation() {
     return true;
 }
 function FetchDocumentNo() {
-
     $.ajax({
         url: "/DeliveryOrCloseTrip/GenerateDocumentNo",
         type: "GET",
@@ -142,9 +140,10 @@ function GetAllConsignorList() {
         contentType: "application/json",
         success: function (response) {
             const consignorListDropdown = document.getElementById("ddlConsignorInput");
+            consignorListDropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select or Add a Consignor Name";
+            placeholderOption.value = 0;
+            placeholderOption.textContent = "Select Consignor";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             consignorListDropdown.appendChild(placeholderOption);
@@ -169,9 +168,10 @@ function GetAllConsigneeList() {
         dataType: "json",
         success: function (response) {
             const selectConsignee = document.getElementById("ddlConsigneeInput");
+            selectConsignee.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select or Add a Consignee Name";
+            placeholderOption.value = 0;
+            placeholderOption.textContent = "Select Consignee";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             selectConsignee.appendChild(placeholderOption);
@@ -194,51 +194,25 @@ function GetAllLRNo() {
         dataType: "json",
         success: function (response) {
             DeliveryDrpList = response.result;
-            const selectLocation = document.getElementById("ddlLR");
+            const ddlLR = document.getElementById("ddlLR");
+            ddlLR.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select LR No";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            selectLocation.appendChild(placeholderOption);
+            ddlLR.appendChild(placeholderOption);
             DeliveryDrpList.forEach(option => {
                 let opt = document.createElement("option");
                 opt.value = option.bookingId;
                 opt.textContent = option.bookingNo;
-                selectLocation.appendChild(opt);
+                ddlLR.appendChild(opt);
             });
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
         }
     });
-}
-function formatDateForInput(dateString) {
-    if (!dateString) return '';
-
-    const date = new Date(dateString);
-    if (isNaN(date)) return '';
-
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day = ('0' + date.getDate()).slice(-2);
-
-    return `${year}-${month}-${day}`;
-}
-function formatDateTimeForInput(dateString) {
-    if (!dateString) return '';
-
-    const date = new Date(dateString);
-    if (isNaN(date)) return '';
-
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day = ('0' + date.getDate()).slice(-2);
-    const hours = ('0' + date.getHours()).slice(-2);
-    const minutes = ('0' + date.getMinutes()).slice(-2);
-
-    // Format for <input type="datetime-local">
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 function SaveBookingOrTrip(action) {
     var saveUrl = '/DeliveryOrCloseTrip/AddDelivery';
@@ -285,7 +259,7 @@ function SaveBookingOrTrip(action) {
             }
         });
     }
-    
+
 }
 function UpdateDelivery(deliveryId) {
     if ($("#btnUpdate").hasClass('d-none')) {
@@ -306,11 +280,10 @@ function UpdateDelivery(deliveryId) {
     $("#txtdeliveryId").val(formData.deliveryId);
     $("#ddlLocation").val(formData.locationId).trigger('change');
     $("#txtDocumentNo").val(formData.deliveryNo);
-    $("#txtDeliveryDate").val(formatDateForInput(formData.deliveryDate));
+    $("#txtDeliveryDate").val(FormatDateToLocal(formData.deliveryDate));
     $("#ddlLR").val(formData.bookingId).trigger('change');
-
-    $("#txtArrivalDate").val(formatDateTimeForInput(formData.arrivalDateTime));
-    $("#txtUploadDate").val(formatDateTimeForInput(formData.unloadDateTime));
+    $("#txtArrivalDate").val(FormatDateToLocal(formData.arrivalDateTime));
+    $("#txtUploadDate").val(FormatDateToLocal(formData.unloadDateTime));
     $("#txtPkgs").val(formData.deliveredPackets);
     $("#txtWt").val(formData.deliveredWeight);
 }
@@ -350,8 +323,8 @@ function ButtonUpdateClick() {
                     $("#formDiv").css('display', 'none');
                     FetchDelivery();
                     $('#deliveryForm')[0].reset();
-                    $('#ddlLocation').val(null).trigger('change');
-                    $('#ddlLR').val(null).trigger('change');
+                    $('#ddlLocation').val(0).trigger('change');
+                    $('#ddlLR').val(0).trigger('change');
                     $("#btnUpdate").hide();
                     $("#btnSaveAndNew").show();
                     $("#btnSave").show();
@@ -400,11 +373,6 @@ function DeleteDelivery(deliveryId) {
         }
     });
 }
-function ViewDelivery(deliveryId) {
-    UpdateDelivery(deliveryId);
-    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
-    $("#btnUpdate").addClass('d-none'); 
-}
 function GetVehicleType(dropdownId, companyIdParam) {
     $.ajax({
         url: '/Vehicle/GetAllMasterVehicleType',
@@ -415,9 +383,10 @@ function GetVehicleType(dropdownId, companyIdParam) {
             if (response != null) {
                 var data = response
                 const selectVehicleType = document.getElementById(dropdownId);
+                selectVehicleType.innerHTML = "";
                 let placeholderOption = document.createElement("option");
-                placeholderOption.value = "";
-                placeholderOption.textContent = "";
+                placeholderOption.value = 0;
+                placeholderOption.textContent = "Select Vehicle Type";
                 placeholderOption.disabled = true;
                 placeholderOption.selected = true;
                 selectVehicleType.appendChild(placeholderOption);
@@ -435,18 +404,19 @@ function GetVehicleType(dropdownId, companyIdParam) {
         }
     });
 }
-function GetCustomer(dropdownId, companyIdParam) {
+function GetCustomer(dropdownId, companyId) {
     $.ajax({
         url: '/Customer/GetDrpCustomerList',
         type: "GET",
-        data: { companyId: companyIdParam },
+        data: { companyId: companyId },
         dataType: "json",
         success: function (response) {
             var data = response
             const selectCustomer = document.getElementById(dropdownId);
+            selectCustomer.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "";
+            placeholderOption.value = 0;
+            placeholderOption.textContent = "Select Customer";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             selectCustomer.appendChild(placeholderOption);
@@ -473,8 +443,8 @@ function GetLocation(dropdownId, companyIdParam, callback) {
             const selectLocation = document.getElementById(dropdownId);
             selectLocation.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "";
+            placeholderOption.value = 0;
+            placeholderOption.textContent = "Select Booking Branch";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             selectLocation.appendChild(placeholderOption);

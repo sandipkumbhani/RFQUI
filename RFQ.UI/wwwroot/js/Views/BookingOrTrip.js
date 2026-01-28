@@ -225,9 +225,10 @@ function GetAllConsignorList() {
         contentType: "application/json",
         success: function (response) {
             const consignorListDropdown = document.getElementById("ddlConsignorInput");
+            consignorListDropdown.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select or Add a Consignor Name";
+            placeholderOption.value = 0;
+            placeholderOption.textContent = "Select Consignor";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             consignorListDropdown.appendChild(placeholderOption);
@@ -252,9 +253,10 @@ function GetAllConsigneeList() {
         dataType: "json",
         success: function (response) {
             const selectConsignee = document.getElementById("ddlConsigneeInput");
+            selectConsignee.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "Select or Add a Consignee Name";
+            placeholderOption.value = 0;
+            placeholderOption.textContent = "Select Consignee";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
             selectConsignee.appendChild(placeholderOption);
@@ -278,8 +280,9 @@ function GetAllDriver() {
         success: function (response) {
             var data = response
             const selectLocation = document.getElementById("ddlDriverName");
+            selectLocation.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select Driver";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -304,8 +307,9 @@ function GetAllVehicleNumber() {
         success: function (response) {
             var data = response
             const selectVehicleNumber = document.getElementById("ddlVehicleNo");
+            selectVehicleNumber.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select Vehicle No";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -332,9 +336,8 @@ function GetTrakingType() {
             let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.TRACKING_TYPE);
             const select = document.getElementById("ddlTrackingType");
             select.innerHTML = "";
-
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Tracking Type";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
@@ -359,18 +362,19 @@ function GetAllPlacementNo() {
         dataType: "json",
         success: function (response) {
             bookingDrpList = response.result;
-            const selectLocation = document.getElementById("ddlPlacementNo");
+            const ddlPlacementNo = document.getElementById("ddlPlacementNo");
+            ddlPlacementNo.innerHTML = "";
             let placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
+            placeholderOption.value = 0;
             placeholderOption.textContent = "Select placement No";
             placeholderOption.disabled = true;
             placeholderOption.selected = true;
-            selectLocation.appendChild(placeholderOption);
+            ddlPlacementNo.appendChild(placeholderOption);
             bookingDrpList.forEach(option => {
                 let opt = document.createElement("option");
                 opt.value = option.placementId;
                 opt.textContent = option.placementNo;
-                selectLocation.appendChild(opt);
+                ddlPlacementNo.appendChild(opt);
             });
         },
         error: function (xhr, status, error) {
@@ -392,18 +396,7 @@ function FetchLRNo() {
         }
     });
 }
-function formatDateForInput(dateString) {
-    if (!dateString) return '';
 
-    const date = new Date(dateString);
-    if (isNaN(date)) return '';
-
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day = ('0' + date.getDate()).slice(-2);
-
-    return `${year}-${month}-${day}`;
-}
 function GetDropdownValue(inputId) {
     let result;
     if ($("#" + inputId).val() == null) {
@@ -560,7 +553,7 @@ function UpdateBooking(bookingId) {
     $("#txtBookingId").val(formData.bookingId);
     $("#ddlLocation").val(formData.locationId).trigger('change');
     $("#ddlLrNo").val(formData.bookingNo);
-    $("#lrDate").val(formatDateForInput(formData.bookingDate));
+    $("#lrDate").val(FormatDateToLocal(formData.bookingDate));
     $("#ddlPlacementNo").val(formData.placementId).trigger('change');
     $("#ddlBillState").val(formData.eWayBillStateId).trigger('change');
     $("#ddlBusinessVertical").val(formData.businessVerticalId).trigger('change');
@@ -586,10 +579,10 @@ function UpdateBooking(bookingId) {
     $("#txtMobileNo").val(formData.driverMobNo);
     $("#ddlTrackingType").val(formData.internalMasterId).trigger('change');
     $("#invoiceNo").val(formData.invoiceNo);
-    $("#invoiceDate").val(formatDateForInput(formData.invoiceDate));
+    $("#invoiceDate").val(FormatDateToLocal(formData.invoiceDate));
     $("#txtInvoiceValue").val(formData.invoiceValue);
-    $("#ewayBillDate").val(formatDateForInput(formData.eWayBillDate));
-    $("#expiryDate").val(formatDateForInput(formData.eWayBillExpiryDate));
+    $("#ewayBillDate").val(FormatDateToLocal(formData.eWayBillDate));
+    $("#expiryDate").val(FormatDateToLocal(formData.eWayBillExpiryDate));
     if (formData.consignerId == 0 && formData.consignerName) {
         if ($("#ddlConsignorInput").find("option[value='" + formData.consignerName + "']").length === 0) {
             var newOption = new Option(formData.consignerName, formData.consignerName, true, true);
@@ -619,7 +612,7 @@ function UpdateBooking(bookingId) {
         $("#ddlConsigneeInput").val(formData.consigneeId).trigger("change");
     }
     $("#txtTransitDays").val(formData.transitDays);
-    $("#eddDate").val(formatDateForInput(formData.edd));
+    $("#eddDate").val(FormatDateToLocal(formData.edd));
     $("#ddlItemName").val(formData.itemId).trigger('change');
     $("#ddlPackingType").val(formData.packingTypeId).trigger('change');
     $("#txtTotalPkgs").val(formData.totalPacket);
@@ -725,11 +718,7 @@ function ButtonUpdateClick() {
     });
 };
 
-//function ViewBooking(bookingId) {
-//    UpdateBooking(bookingId);
-//    $('#formDiv').find('input, select, textarea, button, a').prop('disabled', true);
-//    $("#btnUpdate").addClass('d-none');
-//}
+
 function DeleteBooking(bookingId) {
     Swal.fire({
         title: 'Are you sure?',
@@ -825,12 +814,12 @@ function btnDeleteInvoiceClick() {
     });
 }
 function ClearInvoiceDetails() {
-    $("#tfInvoiceNo").val(null).trigger('change');
-    $("#tfInvoiceDate").val(null).trigger('change');
-    $("#tfInvoiceValue").val(null).trigger('change');
-    $("#tfEwayBillNo").val(null).trigger('change');
-    $("#tfEwayBillDate").val(null).trigger('change');
-    $("#tfEwayBillValidUpto").val(null).trigger('change');
+    $("#tfInvoiceNo").val(0).trigger('change');
+    $("#tfInvoiceDate").val(0).trigger('change');
+    $("#tfInvoiceValue").val(0).trigger('change');
+    $("#tfEwayBillNo").val(0).trigger('change');
+    $("#tfEwayBillDate").val(0).trigger('change');
+    $("#tfEwayBillValidUpto").val(0).trigger('change');
 }
 function AutoFetch() {
     var placementNo = $("#ddlPlacementNo").val();
@@ -860,12 +849,7 @@ function resetBookingForm() {
     // Reset all text, number, date, hidden, and textarea inputs
     $('#bookingForm').find('input[type="text"], input[type="number"], input[type="date"], input[type="hidden"], textarea').val('');
     $('#bookingForm').find('select').each(function () {
-        if ($(this).find('option[value="0"]').length > 0) {
-            $(this).val('0').trigger('change');
-        }
-        else {
-            $(this).prop('selectedIndex', 0).trigger('change');
-        }
+            $(this).val(0).trigger('change');
     });
     $('#ddlBusinessVertical').val(0).trigger('change');
     $('#additionalInvoiceDetails tbody').empty();
