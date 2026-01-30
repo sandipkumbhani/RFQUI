@@ -842,13 +842,15 @@ function AutoFetch() {
         contentType: "application/json",
         success: function (response) {
             let data = response?.[0] || {};
-            $('#from-search-box').val(data.fromLocation);
-            $('#to-search-box').val(data.toLocation);
-            $("#ddlVehicleNo").val(data.vehicleId).trigger('change');
-            $("#ddlVehicleType").val(data.vehicleTypeId).trigger('change');
-            $("#ddlDriverName").val(data.driverId).trigger('change');
-            $("#ddlCustomerName").val(data.partyId).trigger('change');
-            $('#txtMobileNo').val(data.mobileNo);
+            if (!IsNullOrEmpty(data) && data.lengh > 0) {
+                $('#from-search-box').val(data.fromLocation);
+                $('#to-search-box').val(data.toLocation);
+                $("#ddlVehicleNo").val(data.vehicleId).trigger('change');
+                $("#ddlVehicleType").val(data.vehicleTypeId).trigger('change');
+                $("#ddlDriverName").val(data.driverId).trigger('change');
+                $("#ddlCustomerName").val(data.partyId).trigger('change');
+                $('#txtMobileNo').val(data.mobileNo);
+            }
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to fetch RFQ data!", "Error");
@@ -857,12 +859,10 @@ function AutoFetch() {
 }
 
 function resetBookingForm() {
-    // Reset all text, number, date, hidden, and textarea inputs
-    $('#bookingForm').find('input[type="text"], input[type="number"], input[type="date"], input[type="hidden"], textarea').val('');
-    $('#bookingForm').find('select').each(function () {
+    $('#bookingForm')[0].reset();
+    $(".select2-custom").each(function () {
         $(this).val(0).trigger('change');
     });
-    $('#ddlBusinessVertical').val(0).trigger('change');
     $('#additionalInvoiceDetails tbody').empty();
     $('#btnUpdate').hide();
     $('#btnSaveForm, #btnSaveAndNewForm').show();
