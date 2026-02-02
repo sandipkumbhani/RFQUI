@@ -1109,7 +1109,7 @@ function ValidateLicenseNo(number) {
 }
 function getVal(selector) {
     const value = $(selector).val();
-    return value === "null" || value === null || value === undefined || (typeof value === "string" && value.trim() === "" ? null : value);
+    return value === "null" || value === null || value === undefined || (typeof value === "string" && value.trim() === "" ? null : value.trim());
 }
 function base64ToFile(base64String, filename) {
     const arr = base64String.split(",");
@@ -1175,4 +1175,14 @@ function IsDateField(columnName) {
             return false;
         }
     }
+}
+
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date)) return '';
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
 }

@@ -76,6 +76,8 @@ $(document).ready(function () {
             $("#ddlItemName").val(selectedIndent.itemId == 0 ? 0 : selectedIndent.itemId).trigger('change');
             $("#ddlPackingType").val(selectedIndent.packingTypeId == 0 ? 0 : selectedIndent.packingTypeId).trigger('change');
             $("#hdnIndentDate").val(selectedIndent.indentDate);
+            console.log(selectedIndent.indentDate, "indentDate");
+            console.log(selectedIndent.vehicleReqOn,"vehicleReqOn");
             //$("#hdnIndentExpiryDate").val(selectedIndent.expiryDate);
         }
     });
@@ -923,20 +925,19 @@ function setRfqDateMinDate() {
     var txtRfqDate = $("#txtRfqDate").val();
     var txtVehicleReqDate = $("#txtVehicleReqDate").val();
     var indentval = $('#ddlIndent').val();
+    var indentDate = $('#hdnIndentDate').val();
     if (!IsNullOrEmpty(indentval) && indentval > 0) {
         // if indent date is null or empty
-        if (IsNullOrEmpty(txtVehicleReqDate)) {
+        if (IsNullOrEmpty(indentDate)) {
             $("#txtRfqDate").min = new Date().toISOString().split('T')[0];
             return;
         }
-        var date = new Date(txtVehicleReqDate);
+        var date = new Date(indentDate);
         if (isNaN(date.getTime())) {
             $("#txtRfqDate").min = new Date().toISOString().split('T')[0];
             return;
         }
-        $("#txtRfqDate")[0].min = date.toISOString().split('T')[0];
-    } else {
-        $("#txtRfqDate")[0].min = new Date().toISOString().split('T')[0];
+        $("#txtRfqDate")[0].min = formatDateForInput(date);
     }
 }
 
@@ -966,8 +967,8 @@ $('#btnAddVendor').on('click', function () {
         whatsAppNo: getWhatsappNo,
         email: getEmail
     });
-    
-    
+
+
     const isPresent = fetchedVendorDataList.some(
         x => x.partyId === parseInt(getSelectVendorID)
     );

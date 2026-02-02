@@ -116,7 +116,7 @@ function DropzoneInitialize() {
 function SaveDriver(uploadedFileName, callback) {
     var driverType = parseInt($("#ddlDriverType").val());
     var licenseNo = getVal("#numLicenseNo");
-    var driverName = $("#txtDriverName").val().trim();
+    var driverName = ($("#txtDriverName").val() || "").trim();
     var dlIssueDate = getVal("#txtDLIssueDate");
     var dlIssueRto = getVal("#txtDLIssuingRTO");
     var dateOfBirth = getVal("#txtDateOfBirth");
@@ -288,7 +288,7 @@ function UpdateDriver(fileName) {
         DriverId: $("#hdDriverId").val() || 0,
         DriverTypeId: $("#ddlDriverType").val(),
         LicenseNo: getVal("#numLicenseNo"),
-        DriverName: $("#txtDriverName").val().trim(),
+        DriverName: ($("#txtDriverName").val() || "").trim(),
         LicenseIssueDate: getVal("#txtDLIssueDate"),
         DLIssuingRto: getVal("#txtDLIssuingRTO"),
         DateOfBirth: getVal("#txtDateOfBirth"),
