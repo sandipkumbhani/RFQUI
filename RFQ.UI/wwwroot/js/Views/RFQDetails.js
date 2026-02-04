@@ -182,9 +182,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const previousQuotes = document.getElementById("previousQuotes-tab");
 
     if (vendorDetailsTab) {
-        vendorDetailsTab.addEventListener("click", function () {
+        vendorDetailsTab.addEventListener("click", async function () {
             if (OnSubmitCheckValidation()) {
-                GetAllVendorList();
+                await GetAllVendorList();
                 VendorListBindDropDown();
             } else {
                 rfqDetailsTab.click();
@@ -193,9 +193,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     if (previousQuotes) {
-        previousQuotes.addEventListener("click", function () {
+        previousQuotes.addEventListener("click", async function () {
             if (OnSubmitCheckValidation()) {
-                GetPreviousQuotesList();
+                await GetPreviousQuotesList();
             } else {
                 rfqDetailsTab.click();
                 return
@@ -392,6 +392,7 @@ function GetAllVendorList() {
     let fromStateName = $("#fromState").val().toUpperCase();
     let toStateName = $("#toState").val().toUpperCase();
     var RfqDetailsId = $("#txtRfqDetailsId").val();
+    console.log(RfqDetailsId);
     var formData = {
         OriginFrom: fromStateName,
         ToDestination: toStateName,
@@ -404,6 +405,8 @@ function GetAllVendorList() {
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
+            console.log(response, "GetAllVendorList");
+            
             if (fetchedVendorDataList.length > 0) {
                 $.each(response, function (i, party) {
                     if (!fetchedVendorDataList.some(x => x.partyId == parseInt(party.partyId))) {
@@ -445,7 +448,6 @@ function BindAllVendorList(fetchedVendorDataList) {
         tbody.append(rowHtml);
     })
 }
-
 function RenderFetchTable() {
     const tbody = $('#rfqVendorTable tbody');
     tbody.empty();
@@ -513,9 +515,6 @@ $('#rfqVendorTable').on('click', '#editVendor', function () {
     });
 
 });
-
-
-
 function SaveAndSaveNew(action) {
     var saveUrl = '/RequestForQuote/AddRfq';
     const rfqFormData = {
@@ -1081,6 +1080,7 @@ function ClearFetchForm() {
 function resetRfqDetailsForm() {
     $("#hdnIndentDate").val('');
     $("#txtRfqDetailsId").val('');
+    fetchedVendorDataList = [];
     // Button Hide Show
     $("#f-btnSave").show();
     $("#f-btnSaveAndNew").show();
