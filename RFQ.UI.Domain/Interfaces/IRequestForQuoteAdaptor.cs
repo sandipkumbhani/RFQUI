@@ -17,5 +17,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<IEnumerable<RfqVendorListResponseDto>> GetAllVendorListForRfq(RfqVendorDetailsParam rfqVendorDetailsParam);
         Task<IEnumerable<RfqPreviousQuotesList>> GetPreviousQuotesList(RfqVendorDetailsParam rfqVendorDetailsParam);
         Task<RfqQuoteRateVendorDetails> GetRfqQuoteRateVendorDetailsqById(int rfqId);
+        Task<IEnumerable<RfqResponseDto>> GetRfqTableData();
     }
 }

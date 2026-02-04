@@ -232,5 +232,23 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<IEnumerable<RfqResponseDto>> GetRfqTableData()
+        {
+            try
+            {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetRfqTableData}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                {
+                    return JsonConvert.DeserializeObject<IEnumerable<RfqResponseDto>>(responseModel.Data.ToString());
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
