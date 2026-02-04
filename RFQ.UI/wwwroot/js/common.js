@@ -1164,7 +1164,6 @@ function GetAutoGenerateCode(code, prefix) {
 function IsDateField(columnName) {
     if (!IsNullOrEmpty(columnName)) {
         columnName = columnName.trim().toLowerCase();
-        console.log(columnName);
         if (columnName.includes('date') || columnName.includes('expiredon') || columnName.includes('reqon')) {
             return true;
         }

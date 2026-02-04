@@ -211,6 +211,7 @@ async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
         success: function (response) {
             if (!IsNullOrEmpty(response) && response.length > 0) {
                 VehicIndentList = response.filter(x => x.locationId == selectLocationId);
+                console.log(response, "VehicIndentList");
                 $("#ddlIndentNo").empty();
                 const Indentdropdown = document.getElementById("ddlIndentNo");
                 Indentdropdown.innerHTML = "";
@@ -476,9 +477,9 @@ async function AutoFetch() {
             type: "GET",
             contentType: "application/json",
             success: await function (response) {
-                console.log(response);
                 if (Array.isArray(response) && response.length > 0) {
                     let data = response[0]; // Use the first object in the array
+                    console.log(data,"Data");
                     $("#txtRFQNo").val(data.rfqNo);
                     $("#ddlCustomerName").val(data.partyId).trigger('change');
                     $("#drpVehicleType").val(data.vehicleTypeId).trigger('change');
@@ -489,19 +490,19 @@ async function AutoFetch() {
                     //$("#txtPendingVehicles").val(data.pendingVehicles);
 
                     if (!IsNullOrEmpty(data.indentDate)) {
-                        $('#txtIndentDate').val(FormatDateToLocal(data.indentDate));
+                        $('#txtIndentDate').val(formatDateForInput(data.indentDate));
                     } else {
                         $('#txtIndentDate').val('');
                     }
 
                     if (!IsNullOrEmpty(data.vehicleReqOn)) {
-                        $('#txtVehicleReqOn').val(FormatDateToLocal(data.vehicleReqOn));
+                        $('#txtVehicleReqOn').val(formatDateForInput(data.vehicleReqOn));
                     } else {
                         $('#txtVehicleReqOn').val('');
                     }
 
                     if (!IsNullOrEmpty(data.vehicleReqOn)) {
-                        $('#txtRFQDate').val(FormatDateToLocal(data.vehicleReqOn));
+                        $('#txtRFQDate').val(formatDateForInput(data.vehicleReqOn));
                     } else {
                         $('#txtRFQDate').val('');
                     }
