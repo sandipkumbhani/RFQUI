@@ -113,7 +113,7 @@ function DropzoneInitialize() {
     });
 }
 
-function SaveDriver(uploadedFileName, callback) {
+async function SaveDriver(uploadedFileName) {
     var driverType = parseInt($("#ddlDriverType").val());
     var licenseNo = getVal("#numLicenseNo");
     var driverName = ($("#txtDriverName").val() || "").trim();
@@ -184,7 +184,7 @@ function SaveDriver(uploadedFileName, callback) {
         });
     }
 
-    $.ajax({
+    return  response = await $.ajax({
         url: saveUrl,
         type: "POST",
         contentType: "application/json",
@@ -193,8 +193,7 @@ function SaveDriver(uploadedFileName, callback) {
             if (!IsNullOrEmpty(response)) {
                 await Saveattachment(response.driverId);
                 toastr.success("Driver Details Saved Successfully!", "Success");
-                addMasterUserActivityLog(0, LogType.Create, "Driver Details Saved Successfully!", 0);
-                FetchDriverList();
+                //addMasterUserActivityLog(0, LogType.Create, "Driver Details Saved Successfully!", 0);
             }
             else {
                 toastr.error(response.message || "Failed to Save Driver Details.", "Error");
@@ -207,6 +206,30 @@ function SaveDriver(uploadedFileName, callback) {
                 toastr.error(xhr.responseText || "Failed to Save Driver Details.", "Error");
         }
     });
+
+    //$.ajax({
+    //    url: saveUrl,
+    //    type: "POST",
+    //    contentType: "application/json",
+    //    data: JSON.stringify(formData),
+    //    success: async function (response) {
+    //        if (!IsNullOrEmpty(response)) {
+    //            await Saveattachment(response.driverId);
+    //            toastr.success("Driver Details Saved Successfully!", "Success");
+    //            //addMasterUserActivityLog(0, LogType.Create, "Driver Details Saved Successfully!", 0);
+    //            FetchDriverList();
+    //        }
+    //        else {
+    //            toastr.error(response.message || "Failed to Save Driver Details.", "Error");
+    //        }
+    //    },
+    //    error: function (xhr, status, error) {
+    //        if (xhr.status == 409)
+    //            toastr.warning(xhr.responseText, "Already exists");
+    //        else
+    //            toastr.error(xhr.responseText || "Failed to Save Driver Details.", "Error");
+    //    }
+    //});
 }
 function FetchDriverList() {
     $("#tableDiv").css('display', 'block');
@@ -215,7 +238,10 @@ function FetchDriverList() {
     $("#btnUpdateDriver").hide();
     $("#btnSaveNewDriver").show();
     ResetForm();
-    ResetAttachmentRepeater();
+    FetchDriverCode();
+    setTimeout(() => {
+        ResetAttachmentRepeater();
+    }, 1000);
     FetchDataForTable('driverTable', fetchDriverUrl, orderColumn, orderDir.toUpperCase(), 'EditDriver', 'DeleteDriver', 'driverId');
 };
 
@@ -552,37 +578,36 @@ function InitializeFields() {
     //    }
     //});
 
-    $("#btnSaveDriver").on('click', function (event) {
+    $("#btnSaveDriver").on('click', async function (event) {
         event.preventDefault();
         if (!ValidationCheck()) {
             return false;
         }
         const uploadedFileName = localStorage.getItem("uploadedFileName");
-        SaveDriver(uploadedFileName, function (driverId) {
-            if (driverId > 0) {
-                FetchDriverList();
-            }
-        });
+        var responce = await SaveDriver(uploadedFileName);
+        console.log(responce);
+        if (!IsNullOrEmpty(responce) && responce.driverId > 0) {
+            FetchDriverList();
+        }
     });
 
-    $("#btnSaveNewDriver").on('click', function (event) {
+    $("#btnSaveNewDriver").on('click', async function (event) {
         event.preventDefault();
         if (!ValidationCheck()) {
             return false;
         }
         const uploadedFileName = localStorage.getItem("uploadedFileName");
         console.log(uploadedFileName);
-        SaveDriver(uploadedFileName, function (driverId) {
-            if (driverId > 0) {
-                $("#btnSaveDriver").show();
-                $("#btnUpdateDriver").hide();
-                $("#btnSaveNewDriver").show();
-                ResetForm();
-                setTimeout(() => {
-                    ResetAttachmentRepeater();
-                }, 1000);
-            }
-        });
+        var responce = await SaveDriver(uploadedFileName);
+        if (!IsNullOrEmpty(responce)) {
+            $("#btnSaveDriver").show();
+            $("#btnUpdateDriver").hide();
+            $("#btnSaveNewDriver").show();
+            ResetForm();
+            setTimeout(() => {
+                ResetAttachmentRepeater();
+            }, 1000);
+        }
     });
 
     $("#btnUpdateDriver").on('click', function (event) {
@@ -593,8 +618,6 @@ function InitializeFields() {
         const uploadedFileName = localStorage.getItem("uploadedFileName");
         UpdateDriver(uploadedFileName);
     });
-
-
 }
 function ValidationCheck() {
     if (IsNullOrEmpty($("#ddlDriverType").val())) {
@@ -613,8 +636,15 @@ function ValidationCheck() {
     }
 
     if (IsNullOrEmpty($("#from-search-box").val())) {
-        toastr.warning("Please enter an address", "Validation Error");
-        return false;
+        // THis Popup is From Vehicle Placement Page to Create A Driver Dynamically  
+        var Address = $("#driverPopupModal .modal-body #from-search-box").val();
+        if (!IsNullOrEmpty(Address)) {
+            $("#from-search-box").val(Address);
+            return true;
+        } else {
+            toastr.warning("Please enter an address", "Validation Error");
+            return false;
+        }
     }
 
     //if (IsNullOrEmpty($("#numLicenseNo").val()) || !ValidateLicenseNo($("#numLicenseNo").val())) {

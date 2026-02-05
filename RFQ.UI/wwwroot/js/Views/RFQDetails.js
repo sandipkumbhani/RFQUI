@@ -960,7 +960,6 @@ function setVehicleReqOnDate() {
 }
 function setRfqDateMinDate() {
     var txtRfqDate = $("#txtRfqDate").val();
-    debugger;
     var indentval = $('#ddlIndent').val();
     var indentDate = $('#hdnIndentDate').val();
     if (!IsNullOrEmpty(indentval) && indentval > 0) {

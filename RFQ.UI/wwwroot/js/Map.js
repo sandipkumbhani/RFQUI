@@ -1,5 +1,6 @@
-﻿let autocompleteService;
-let geocoder;
+﻿if (typeof autocompleteService === 'undefined') var autocompleteService = null;
+if (typeof geocoder === 'undefined') var geocoder = null;
+
 function initMap() {
     autocompleteService = new google.maps.places.AutocompleteService();
     geocoder = new google.maps.Geocoder();
@@ -25,7 +26,6 @@ function initMap() {
         );
     }
 }
-
 function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, cityId) {
     const input = document.getElementById(inputId);
     const suggestionsBox = document.getElementById(suggestionListId);
@@ -105,7 +105,6 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, c
         }
     });
 }
-
 function getLatLngAndState(placeId, latId, lngId, stateId, cityId) {
     geocoder.geocode({ placeId: placeId }, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK && results[0]) {

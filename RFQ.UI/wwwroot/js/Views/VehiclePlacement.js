@@ -363,7 +363,6 @@ function GetAllVehicleNumber() {
         dataType: "json",
         success: function (response) {
             if (!IsNullOrEmpty(response) && response.length > 0) {
-                console.log(response, "vehicle number DropDown");
                 const userid = getCookieValue("userid");
                 response = response.filter(x => x.createdBy == userid);
                 var data = response
@@ -479,7 +478,6 @@ async function AutoFetch() {
             success: await function (response) {
                 if (Array.isArray(response) && response.length > 0) {
                     let data = response[0]; // Use the first object in the array
-                    console.log(data,"Data");
                     $("#txtRFQNo").val(data.rfqNo);
                     $("#ddlCustomerName").val(data.partyId).trigger('change');
                     $("#drpVehicleType").val(data.vehicleTypeId).trigger('change');
@@ -530,6 +528,7 @@ function VehiclePopUp() {
         }).fail(function (jqxhr, settings, exception) {
             console.error("Failed to load popup scripts:", exception);
         });
+
         $('#vehiclePopupModal').on('hide.bs.modal', function (event) {
             var closepop = false;
             if ($(event.target).hasClass('modal')) {
@@ -545,9 +544,10 @@ function VehiclePopUp() {
                 closepop = true;
             }
             if (closepop) {
-                const form = $(this).find('vehicleForm')[0];
-                if (form) {
+                const form = $("#vehicleForm")[0];
+                if (!IsNullOrEmpty(form)) {
                     form.reset(); // reset all form inputs
+                    GetAllVehicleNumber();
                 }
                 $('script[src="/js/Views/Vehicle.js"]').remove();
                 $('#tableDiv').css("display", "none");
@@ -723,7 +723,7 @@ function DriverPopUp() {
         });
         $("#driverPopupModal").modal("show");
     });
-
+    
     $('#driverPopupModal').on('hide.bs.modal', function (event) {
         var closepop = false;
         if ($(event.target).hasClass('modal')) {
@@ -739,10 +739,12 @@ function DriverPopUp() {
             closepop = true;
         }
         if (closepop) {
-            const form = $(this).find('driverForm')[0];
-            if (form) {
-                form.reset(); // reset all form inputs
+            const form = $("#driverForm")[0];
+            if (!IsNullOrEmpty(form)) {
+                form.reset();
+                GetAllDriver();
             }
+            $('script[src="/js/Views/Driver.js"]').remove();
             $('#tableDiv').css("display", "none");
         }
     });
@@ -1032,6 +1034,22 @@ function CheckVehicleAndIndentUnique(vehicleId, indentId) {
     });
 }
 function vehiclePlacementFormReset() {
+    Defaultdrpdownset();
+    GetAllDriver();
+    GetAllTrackingType();
+    GetAllVehicleNumber();
+    GetAllOwnerOrVendor();
+    GetAllBrokerVendor();
+    GetAllCustomer("ddlCustomerName", companyId);
+    GetAllVehicleType("drpVehicleType", companyId);
+    GetAllLocation("ddlIndentBranch", companyId); //Both Dropdown Id are Different 
+    GetAllLocation("ddlLocation", companyId, function () {
+        if (profileId == EnumProfile.Branch) {
+            $('#ddlLocation').val(Number(locationId)).trigger('change');
+            $('#ddlLocation').prop('disabled', true);
+        }
+    });
+
     $('#vehiclePlacementForm')[0].reset();
     $("#ddlCustomerName").val(0).trigger('change');
     $("#drpVehicleType").val(0).trigger('change');
@@ -1043,6 +1061,8 @@ function vehiclePlacementFormReset() {
     $("#ddlDriverName").val(0).trigger('change');
     $("#ddlBrokerName").val(0).trigger('change');
     $("#ddlIndentNo").val(0).trigger('change');
+
+
 }
 
 function GetVehiclePlacementCountByIndentNo() {
@@ -1061,8 +1081,14 @@ function GetVehiclePlacementCountByIndentNo() {
                     const panddingVehicles = totalVehicles - placedVehicles;
                     $("#txtPendingVehicles").val(panddingVehicles);
                 }
-                else
-                    $("#txtPendingVehicles").val(0);
+                else {
+                    const val = $("#txtNoOfVehicles").val();
+                    if (!IsNullOrEmpty(val) && isNumeric(val)) {
+                        $("#txtPendingVehicles").val(val);
+                    } else {
+                        $("#txtPendingVehicles").val(0);
+                    }
+                }
             },
             error: function (xhr, status, error) {
                 console.error("Error: GetVehiclePlacementCountByIndentNo :", error);

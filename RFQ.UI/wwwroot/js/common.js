@@ -1172,7 +1172,6 @@ function IsDateField(columnName) {
         }
     }
 }
-
 function formatDateForInput(dateString) {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -1182,7 +1181,6 @@ function formatDateForInput(dateString) {
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
 }
-
 function isFirstDateGreaterOrEqualSecondDate(firstDate, secondDate) {
 
     if (IsNullOrEmpty(firstDate) || IsNullOrEmpty(secondDate)) {
