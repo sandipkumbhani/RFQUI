@@ -171,11 +171,11 @@ namespace RFQ.UI.Infrastructure.Provider
             }
         }
 
-        public async Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId)
+        public async Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId, int placementId)
         {
             try
             {
-                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.CheckVehicleAndIndentUnique + vehicleId + "/" + indentId}";
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.CheckVehicleAndIndentUnique + vehicleId + "/" + indentId + "/" + placementId}";
                 var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel != null && responseModel.StatusCode == 200)
                 {
@@ -240,6 +240,23 @@ namespace RFQ.UI.Infrastructure.Provider
                     return Convert.ToBoolean(responseModel.Data);
                 else
                     return false;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<IEnumerable<int>> GetAwardedVendorListByRfqNo(string rfqNo)
+        {
+            try
+            {
+                var baseUrl = _appSettings.BaseUrl + _appSettings.GetAwardedVendorListByRfqNo + rfqNo;
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
+
+                if (responseModel != null && responseModel.StatusCode == 200 && responseModel.Data != null)
+                    return JsonConvert.DeserializeObject<IList<int>>(responseModel.Data.ToString());
+                else
+                    return new List<int>();
             }
             catch (Exception)
             {

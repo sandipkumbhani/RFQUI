@@ -123,7 +123,13 @@ function SaveDriver(uploadedFileName, callback) {
     var driverCode = getVal("#txtDriverCode");
     var dlExpiryDate = getVal("#txtDLExpiryDate");
     var whatsappNumber = getVal("#numWhatsapp");
-    var address = getVal("#from-search-box");
+
+    var searchBoxId = "#from-search-box";
+    var isCallFromPlacement = $('#isCallFromPlacement').val();
+    if (typeof isCallFromPlacement != 'undefined' && isCallFromPlacement == 1) {
+        searchBoxId = "#from-search-box-popup";
+    }
+    var address = getVal(searchBoxId);
     var city = parseInt($("#ddlCity").val());
     var mobileNumber = getVal("#numMobile");
     var pincode = getVal("#numPincode");
@@ -193,6 +199,11 @@ function SaveDriver(uploadedFileName, callback) {
             if (!IsNullOrEmpty(response)) {
                 await Saveattachment(response.driverId);
                 toastr.success("Driver Details Saved Successfully!", "Success");
+                var isCallFromPlacement = $('#isCallFromPlacement').val();
+                if (typeof isCallFromPlacement != 'undefined' && isCallFromPlacement == '1') {
+                    afterDriverSaveClosePopup();
+                    return;
+                }
                 addMasterUserActivityLog(0, LogType.Create, "Driver Details Saved Successfully!", 0);
                 FetchDriverList();
             }
@@ -612,9 +623,17 @@ function ValidationCheck() {
         return false;
     }
 
-    if (IsNullOrEmpty($("#from-search-box").val())) {
-        toastr.warning("Please enter an address", "Validation Error");
-        return false;
+    var isCallFromPlacement = $('#isCallFromPlacement').val();
+    if (typeof isCallFromPlacement != 'undefined' && isCallFromPlacement == '1') {
+        if (IsNullOrEmpty($("#from-search-box-popup").val())) {
+            toastr.warning("Please enter an address", "Validation Error");
+            return false;
+        }
+    } else {
+        if (IsNullOrEmpty($("#from-search-box").val())) {
+            toastr.warning("Please enter an address", "Validation Error");
+            return false;
+        }
     }
 
     //if (IsNullOrEmpty($("#numLicenseNo").val()) || !ValidateLicenseNo($("#numLicenseNo").val())) {

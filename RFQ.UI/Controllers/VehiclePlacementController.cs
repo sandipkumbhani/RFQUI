@@ -178,11 +178,11 @@ namespace RFQ.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CheckVehicleAndIndentUnique(int vehicleId, int indentId)
+        public async Task<IActionResult> CheckVehicleAndIndentUnique(int vehicleId, int indentId, int placementId)
         {
             try
             {
-                bool isExists = await _vehiclePlacementService.CheckVehicleAndIndentUnique(vehicleId, indentId);
+                bool isExists = await _vehiclePlacementService.CheckVehicleAndIndentUnique(vehicleId, indentId, placementId);
                 return Ok(isExists);
             }
             catch (Exception ex)
@@ -211,6 +211,20 @@ namespace RFQ.UI.Controllers
             try
             {
                 var result = await _vehiclePlacementService.GetVehiclePlacementCountByIndentNo(indentId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("VehiclePlacement/GetAwardedVendorListByRfqNo/{rfqNo}")]
+        public async Task<IActionResult> GetAwardedVendorListByRfqNo(string rfqNo)
+        {
+            try
+            {
+                var result = await _vehiclePlacementService.GetAwardedVendorListByRfqNo(rfqNo);
                 return Ok(result);
             }
             catch (Exception ex)

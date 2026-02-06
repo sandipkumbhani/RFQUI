@@ -211,6 +211,9 @@ async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
         success: function (response) {
             if (!IsNullOrEmpty(response) && response.length > 0) {
                 VehicIndentList = response.filter(x => x.locationId == selectLocationId);
+                if (selectedIndentId == null) {
+                    VehicIndentList = VehicIndentList.filter(x => x.pendignVehicles > 0);
+                }
                 $("#ddlIndentNo").empty();
                 const Indentdropdown = document.getElementById("ddlIndentNo");
                 Indentdropdown.innerHTML = "";
@@ -555,6 +558,12 @@ function VehiclePopUp() {
     });
 
 }
+
+function afterVehicleSaveClosePopup() {
+    GetAllVehicleNumber();
+    $("#vehiclePopupModal .modal-body").html('');
+    $("#vehiclePopupModal").modal("hide");
+}
 function SaveVehicle(action) {
     var vehicleNo = $("#vehicleNo").val();
     var vehicleCategory = $("#ddlVehicleCategory").val();
@@ -710,16 +719,16 @@ function DriverPopUp() {
     var url = '/VehiclePlacement/CreateDriver';
     $("#driverPopupModal .modal-body").load(url, function () {
         $.when(
+            $.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&libraries=places'),
             $.getScript('/js/AttachmentDetails.js'),
-            $.getScript('/js/Views/Driver.js'),
+            $.getScript('/js/Map.js'),
+            $.getScript('/js/Views/Driver.js')
         ).done(function () {
-            setTimeout(() => {
-                $("#formDiv").css('display', 'block');
-            }, 100);
-            console.log("Popup scripts loaded successfully.");
-        }).fail(function (jqxhr, settings, exception) {
-            console.error("Failed to load one or more popup scripts:", exception);
+            $("#formDiv").css('display', 'block');
+        }).fail(function () {
+            console.error("Failed to load scripts");
         });
+
         $("#driverPopupModal").modal("show");
     });
 
@@ -738,14 +747,29 @@ function DriverPopUp() {
             closepop = true;
         }
         if (closepop) {
-            const form = $(this).find('driverForm')[0];
+            const form = $(this).find('#driverForm')[0];
             if (form) {
                 form.reset(); // reset all form inputs
             }
             $('#tableDiv').css("display", "none");
         }
     });
+    $('#driverPopupModal')
+        .off('shown.bs.modal')
+        .on('shown.bs.modal', function () {
+
+            if (typeof initMap === "function") {
+                initMap();
+            }
+
+        });
 }
+function afterDriverSaveClosePopup() {
+    GetAllDriver();
+    $("#driverPopupModal .modal-body").html('');
+    $("#driverPopupModal").modal("hide");
+}
+
 function GetDropdownValue(inputId) {
     const selectedValue = $("#" + inputId).val();
     const selectedText = $("#" + inputId).find("option:selected").text();
@@ -783,10 +807,14 @@ async function SaveVehiclePlacement(action) {
         AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
         LinkId: GetQueryParam("LinkId")
     };
-    var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId);
+    var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId, 0);
     if (check) {
         toastr.warning("Indent are already used this Vehicle");
         return
+    }
+    var valid = await CheckOwnerBroker();
+    if (!valid) {
+        return;
     }
     console.log(formData);
     if (action === "save") {
@@ -853,10 +881,14 @@ function ButtonUpdateClick() {
         if (!isValid) {
             return;
         }
-
+        var valid = await CheckOwnerBroker();
+        if (!valid) {
+            return;
+        }
+        var placementId = $("#vehiclePlacementId").val();
         var driverResult = GetDropdownValue("ddlDriverName");
         var formData = {
-            PlacementId: $("#vehiclePlacementId").val(),
+            PlacementId: placementId,
             LocationId: $("#ddlLocation").val(),
             PlacementNo: $("#txtPlacementNo").val(),
             PlacementDate: $("#txtPlacementDate").val(),
@@ -872,7 +904,7 @@ function ButtonUpdateClick() {
             AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
             LinkId: GetQueryParam("LinkId")
         };
-        var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId);
+        var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId, placementId);
         if (check) {
             toastr.warning("Indent are already used this Vehicle");
             return
@@ -1000,6 +1032,7 @@ async function UpdateVehiclePlacement(placementId) {
     $("#ddlBrokerName").val(formData.brokerVendorId).trigger('change');
     $("#txtTotalHairAmt").val(formData.totalHireAmount);
     $("#txtAdvancePayable").val(formData.advancePayable);
+    $("#txtBalancePayable").val(Number(formData.totalHireAmount) - Number(formData.advancePayable));
     IsEditClick = true;
 }
 function Defaultdrpdownset() {
@@ -1013,13 +1046,14 @@ function Defaultdrpdownset() {
     });
     $Indentdropdown.append(placeholderOption);
 }
-function CheckVehicleAndIndentUnique(vehicleId, indentId) {
+function CheckVehicleAndIndentUnique(vehicleId, indentId, placementId) {
     return $.ajax({
         url: '/VehiclePlacement/CheckVehicleAndIndentUnique',
         type: 'GET',
         data: {
             vehicleId: vehicleId,
-            indentId: indentId
+            indentId: indentId,
+            placementId: placementId
         },
         dataType: 'json',
         success: function (response) {
@@ -1127,42 +1161,42 @@ function loadVendorCosting() {
         }
     });
 }
-function CheckAwardedVendor() {
-
-    let partyId = 0;
-
+async function CheckOwnerBroker() {
+    var ownerId = 0;
+    var brokerId = 0;
+    var valid = true;
+    var rfqNo = $("#txtRFQNo").val();
     // Broker selected
     if (isValidateSelect($("#ddlBrokerName").val())) {
-        partyId = $("#ddlBrokerName").val();
+        brokerId = $("#ddlBrokerName").val();
     }
 
     // Owner selected (priority)
     if (isValidateSelect($("#drpOwnerName").val())) {
-        partyId = $("#drpOwnerName").val();
+        ownerId = $("#drpOwnerName").val();
     }
-
-    // Validation
-    if (partyId == 0) {
-        toastr.warning("Please select Broker or Owner");
-        return;
-    }
-
-    var requestDto = {
-        PartyId: parseInt(partyId)
-    };
-
-    return $.ajax({
-        url: '/vehicleplacement/CheckAwardedVendor',
-        type: 'POST',
+    
+    await $.ajax({
+        url: '/vehicleplacement/GetAwardedVendorListByRfqNo/' + rfqNo,
+        type: 'GET',
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(requestDto),
         dataType: 'json',
         success: function (response) {
-            console.log("CheckAwardedVendor success:", response);
+            console.log("CheckAwardedVendor response:" + ownerId, response);
+            if (response.filter(x => x == ownerId || x == brokerId).length > 0) {
+                valid = true;
+            } else {
+                valid =false;
+            }
         },
         error: function (xhr) {
             console.error("CheckAwardedVendor error:", xhr.responseText);
+            return;
         }
     });
+    if (!valid) {
+        toastr.warning("Please select owner or broker as assigned as RFQ finallization vendors.");
+    }
+    return valid;
 }
 

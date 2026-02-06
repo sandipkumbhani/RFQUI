@@ -1,6 +1,7 @@
-﻿let autocompleteService;
-let geocoder;
+﻿var autocompleteService;
+var geocoder;
 function initMap() {
+
     autocompleteService = new google.maps.places.AutocompleteService();
     geocoder = new google.maps.Geocoder();
 
@@ -24,11 +25,22 @@ function initMap() {
             "toCity"
         );
     }
+    if (document.getElementById("from-search-box-popup")) {
+        setupLocationSearch(
+            "from-search-box-popup",
+            "from-location-suggestions-popup",
+            "fromLat",
+            "fromLng",
+            "fromState",
+            "fromCity"
+        );
+    }
 }
 
 function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, cityId) {
     const input = document.getElementById(inputId);
     const suggestionsBox = document.getElementById(suggestionListId);
+    console.log(input)
     let currentFocus = -1;
 
     input.addEventListener("input", function () {

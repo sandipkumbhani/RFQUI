@@ -18,9 +18,10 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> UpdateVehiclePlacement(int placementId, VehiclePlacementRequestDto vehiclePlacementRequestDto);
         Task<string> DeleteVehiclePlacement(int placementId);
         Task<IEnumerable<VehiclePlacementResponseDto>> GetAllVehiclePlacementNo(int companyId);
-        Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId);
+        Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId, int placementId);
         Task<IEnumerable<AwardedIndentListResponseDto>> GetAwardedIndentList(int companyId);
         Task<int> GetVehiclePlacementCountByIndentNo(int indentId);
         Task<bool> CheckAwardedVendor(CheckAwardedVendorRequestDto requestDto);
+        Task<IEnumerable<int>> GetAwardedVendorListByRfqNo(string rfqNo);
     }
 }
