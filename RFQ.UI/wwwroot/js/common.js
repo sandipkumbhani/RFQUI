@@ -1099,9 +1099,6 @@ function FormatDateToLocal(dateString) {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
         return `${day}-${month}-${year}`;
-        //const date = new Date(dateString);
-        //const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-        //return localDate.toISOString().split('T')[0];
     }
 }
 function ValidateLicenseNo(number) {
@@ -1109,7 +1106,7 @@ function ValidateLicenseNo(number) {
 }
 function getVal(selector) {
     const value = $(selector).val();
-    return value === "null" || value === null || value === undefined || (typeof value === "string" && value.trim() === "" ? null : value);
+    return value === "null" || value === null || value === undefined || (typeof value === "string" && value.trim() === "" ? null : value.trim());
 }
 function base64ToFile(base64String, filename) {
     const arr = base64String.split(",");
@@ -1175,3 +1172,30 @@ function IsDateField(columnName) {
         }
     }
 }
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date)) return '';
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+}
+function isFirstDateGreaterOrEqualSecondDate(firstDate, secondDate) {
+
+    if (IsNullOrEmpty(firstDate) || IsNullOrEmpty(secondDate)) {
+        return console.log("Date null or Empty isFirstDateGreater");
+    }
+    // Convert into Date objects
+    const date1 = new Date(firstDate);
+    const date2 = new Date(secondDate);
+
+    // Check valid dates
+    if (isNaN(date1) || isNaN(date2)) {
+        console.log("Invalid Date Passed isFirstDateGreater");
+    }
+
+    // Compare full date (Day, Month, Year)
+    return date1 > date2;
+}
+

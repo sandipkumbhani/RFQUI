@@ -159,6 +159,10 @@
     @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 
     <div class="button-main">
-        <a href="#" class="card-link" type="button" data-action="save" id="btnSaveDriver"><i class="ri-save-line"></i><span>Save</span></a>
+        <button type="button" id="btnSaveNewDriver" class="card-link btn btn-primary me-2" data-action="saveNew">
+            <i class="ri-save-line"></i>
+            <span>Save</span>
+        </button>
     </div>
 </form>
+
