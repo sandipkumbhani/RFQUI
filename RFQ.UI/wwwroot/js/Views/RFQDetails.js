@@ -277,8 +277,8 @@ function OnSubmitCheckValidation() {
         false
     }
 }
-
 function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
+    debugger;
     var getVehicleTypeUrl = '/RequestForQuote/GetAllVehicleIndentList'
     $.ajax({
         url: getVehicleTypeUrl,
@@ -290,7 +290,9 @@ function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
             var rfqTable = await GetRfqTableData();
             var tableIndentlist = rfqTable.map(x => x.indentId);
             VehicIndentList = response.filter(x => x.locationId == selectLocationId);
-            VehicIndentList = VehicIndentList.filter(x => !tableIndentlist.includes(x.indentId));
+            if (IsNullOrEmpty(selectedIndentId)) {
+                VehicIndentList = VehicIndentList.filter(x => !tableIndentlist.includes(x.indentId));
+            }
             $("#ddlIndent").empty();
             const Indentdropdown = document.getElementById("ddlIndent");
             let placeholderOption = document.createElement("option");
@@ -406,7 +408,7 @@ function GetAllVendorList() {
         data: JSON.stringify(formData),
         success: function (response) {
             console.log(response, "GetAllVendorList");
-            
+
             if (fetchedVendorDataList.length > 0) {
                 $.each(response, function (i, party) {
                     if (!fetchedVendorDataList.some(x => x.partyId == parseInt(party.partyId))) {
@@ -627,7 +629,7 @@ function EditRfq(rfqID) {
         var attachmentData = list;
         $('#tableDiv').css('display', 'none');
         $("#formDiv").css('display', 'Block');
-
+        debugger;
         // Button Hide Show
         $("#f-btnSave").hide();
         $("#f-btnSaveAndNew").hide();
@@ -651,6 +653,7 @@ function EditRfq(rfqID) {
         $("#txtRfqNo").val(formData.rfqNo);
         $("#txtRfqDate").val(formData.rfqDate.split('T')[0]);
         $("#txtRfqExpiredOn").val(formData.expiryDate);
+        console.log(formData.indentId);
         GetAllVehicleIndent(formData.locationId, formData.indentId);
         $("#ddlCustomerName").val(formData.partyId).trigger('change');
         $("#txtVehicleReqDate").val(formData.vehicleReqOn.split('T')[0]);
