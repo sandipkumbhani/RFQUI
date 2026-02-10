@@ -74,7 +74,7 @@
                                                 <div class="col-lg-3">
                                                     <div class="item-input">
                                                         <label class="form-label">RFQ Date <span>*</span></label>
-                                                        <input type="date" class="form-control" onfocus="setRfqDateMinDate()" id="txtRfqDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="Auto Generated" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                                        <input type="date" class="form-control" onfocus="setRfqDateMinDate()" id="txtRfqDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="Auto Generated" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3">
@@ -221,7 +221,32 @@
                                         @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
                                     </form>
                                 </div>
-
+                                <div class="button-main">
+                                    <a href="#" class="card-link me-3" id="f-btnSave" type="button" data-action="save">
+                                        <i class="ri-save-line"></i>
+                                        <span>
+                                            Save
+                                        </span>
+                                    </a>
+                                    <a href="#" class="card-link" id="f-btnSaveAndNew" data-action="saveNew">
+                                        <i class="ri-save-line"></i>
+                                        <span>
+                                            Save & New
+                                        </span>
+                                    </a>
+                                    <a href="#" class="card-link" id="f-btnUpdate" type="button" data-action="update">
+                                        <i class="ri-save-line"></i>
+                                        <span>
+                                            Update
+                                        </span>
+                                    </a>
+                                    <a href="#" class="card-link" id="f-btnCancel" data-action="cancel">
+                                        <i class="ri-close-line"></i>
+                                        <span>
+                                            Cancel
+                                        </span>
+                                    </a>
+                                </div>
                             </div>
 
                         </div>
@@ -266,6 +291,32 @@
                                         </tfoot>
                                     </table>
                                 </div>
+                                <div class="button-main">
+                                    <a href="#" class="card-link me-3" id="s-btnSave" type="button" data-action="save">
+                                        <i class="ri-save-line"></i>
+                                        <span>
+                                            Save
+                                        </span>
+                                    </a>
+                                    <a href="#" class="card-link" id="s-btnSaveAndNew" data-action="saveNew">
+                                        <i class="ri-save-line"></i>
+                                        <span>
+                                            Save & New
+                                        </span>
+                                    </a>
+                                    <a href="#" class="card-link" id="s-btnUpdate" type="button" data-action="update">
+                                        <i class="ri-save-line"></i>
+                                        <span>
+                                            Update
+                                        </span>
+                                    </a>
+                                    <a href="#" class="card-link" id="s=cancel" data-action="cancel">
+                                        <i class="ri-close-line"></i>
+                                        <span>
+                                            Cancel
+                                        </span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <!-- PREVIOUS QUOTES TAB -->
@@ -294,27 +345,25 @@
                             </div>
 
                             <div class="button-main">
-                                <a href="#" class="card-link me-3" id="btnSaveType" type="button" data-action="save">
+                                <a href="#" class="card-link me-3" id="t-btnSave" type="button" data-action="save">
                                     <i class="ri-save-line"></i>
                                     <span>
                                         Save
                                     </span>
                                 </a>
-                                <a href="#" class="card-link" id="btnSaveAndNew" data-action="saveNew">
+                                <a href="#" class="card-link" id="t-btnSaveAndNew" data-action="saveNew">
                                     <i class="ri-save-line"></i>
                                     <span>
                                         Save & New
                                     </span>
                                 </a>
-                            </div>
-                            <div class="button-main" id="button-main" style="display:none;">
-                                <a href="#" class="card-link" id="btnUpdateRfq" type="button">
+                                <a href="#" class="card-link" id="t-btnUpdate" type="button" data-action="update">
                                     <i class="ri-save-line"></i>
                                     <span>
                                         Update
                                     </span>
                                 </a>
-                                <a href="#" class="card-link" id="btnCancel">
+                                <a href="#" class="card-link" id="t-btnCancel" data-action="cancel">
                                     <i class="ri-close-line"></i>
                                     <span>
                                         Cancel

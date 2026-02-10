@@ -113,6 +113,7 @@ namespace RFQ.UI.Domain.Model
         public string? GetVehiclePlacementCountByIndentNo { get; set; }
         public string? CheckAwardedVendor { get; set; }
         public string? GetAwardedVendorListByRfqNo { get; set; }
+        public string? GetRfqTableData { get; set; }
 
 
 
@@ -259,6 +260,7 @@ namespace RFQ.UI.Domain.Model
                 GetVehiclePlacementCountByIndentNo = vehiclePlacementSection["GetVehiclePlacementCountByIndentNo"],
                 CheckAwardedVendor = vehiclePlacementSection["CheckAwardedVendor"],
                 GetAwardedVendorListByRfqNo = vehiclePlacementSection["GetAwardedVendorListByRfqNo"]
+                GetRfqTableData = requestForQuoteSection["GetRfqTableData"]
             };
         }
     }

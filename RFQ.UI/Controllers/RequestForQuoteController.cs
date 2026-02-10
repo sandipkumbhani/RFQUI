@@ -314,5 +314,19 @@ namespace RFQ.UI.Controllers
             };
             return await _emailService.SendEmailAsync(emailRequest);
         }
+
+        public async Task<IActionResult> GetRfqTableData()
+        {
+            try
+            {
+                var result = await _requestForQuoteService.GetRfqTableData();
+                return Json(result);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

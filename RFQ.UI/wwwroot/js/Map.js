@@ -36,7 +36,6 @@ function initMap() {
         );
     }
 }
-
 function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, cityId) {
     const input = document.getElementById(inputId);
     const suggestionsBox = document.getElementById(suggestionListId);
@@ -117,7 +116,6 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, c
         }
     });
 }
-
 function getLatLngAndState(placeId, latId, lngId, stateId, cityId) {
     geocoder.geocode({ placeId: placeId }, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK && results[0]) {

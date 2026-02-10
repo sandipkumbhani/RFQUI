@@ -365,7 +365,6 @@ function GetAllVehicleNumber() {
         dataType: "json",
         success: function (response) {
             if (!IsNullOrEmpty(response) && response.length > 0) {
-                console.log(response, "vehicle number DropDown");
                 const userid = getCookieValue("userid");
                 response = response.filter(x => x.createdBy == userid);
                 var data = response
@@ -479,7 +478,6 @@ async function AutoFetch() {
             type: "GET",
             contentType: "application/json",
             success: await function (response) {
-                console.log(response);
                 if (Array.isArray(response) && response.length > 0) {
                     let data = response[0]; // Use the first object in the array
                     $("#txtRFQNo").val(data.rfqNo);
@@ -492,19 +490,19 @@ async function AutoFetch() {
                     //$("#txtPendingVehicles").val(data.pendingVehicles);
 
                     if (!IsNullOrEmpty(data.indentDate)) {
-                        $('#txtIndentDate').val(FormatDateToLocal(data.indentDate));
+                        $('#txtIndentDate').val(formatDateForInput(data.indentDate));
                     } else {
                         $('#txtIndentDate').val('');
                     }
 
                     if (!IsNullOrEmpty(data.vehicleReqOn)) {
-                        $('#txtVehicleReqOn').val(FormatDateToLocal(data.vehicleReqOn));
+                        $('#txtVehicleReqOn').val(formatDateForInput(data.vehicleReqOn));
                     } else {
                         $('#txtVehicleReqOn').val('');
                     }
 
                     if (!IsNullOrEmpty(data.vehicleReqOn)) {
-                        $('#txtRFQDate').val(FormatDateToLocal(data.vehicleReqOn));
+                        $('#txtRFQDate').val(formatDateForInput(data.vehicleReqOn));
                     } else {
                         $('#txtRFQDate').val('');
                     }
@@ -532,6 +530,7 @@ function VehiclePopUp() {
         }).fail(function (jqxhr, settings, exception) {
             console.error("Failed to load popup scripts:", exception);
         });
+
         $('#vehiclePopupModal').on('hide.bs.modal', function (event) {
             var closepop = false;
             if ($(event.target).hasClass('modal')) {
@@ -547,9 +546,10 @@ function VehiclePopUp() {
                 closepop = true;
             }
             if (closepop) {
-                const form = $(this).find('vehicleForm')[0];
-                if (form) {
+                const form = $("#vehicleForm")[0];
+                if (!IsNullOrEmpty(form)) {
                     form.reset(); // reset all form inputs
+                    GetAllVehicleNumber();
                 }
                 $('script[src="/js/Views/Vehicle.js"]').remove();
                 $('#tableDiv').css("display", "none");
@@ -731,7 +731,7 @@ function DriverPopUp() {
 
         $("#driverPopupModal").modal("show");
     });
-
+    
     $('#driverPopupModal').on('hide.bs.modal', function (event) {
         var closepop = false;
         if ($(event.target).hasClass('modal')) {
@@ -751,6 +751,7 @@ function DriverPopUp() {
             if (form) {
                 form.reset(); // reset all form inputs
             }
+            $('script[src="/js/Views/Driver.js"]').remove();
             $('#tableDiv').css("display", "none");
         }
     });
@@ -1065,6 +1066,22 @@ function CheckVehicleAndIndentUnique(vehicleId, indentId, placementId) {
     });
 }
 function vehiclePlacementFormReset() {
+    Defaultdrpdownset();
+    GetAllDriver();
+    GetAllTrackingType();
+    GetAllVehicleNumber();
+    GetAllOwnerOrVendor();
+    GetAllBrokerVendor();
+    GetAllCustomer("ddlCustomerName", companyId);
+    GetAllVehicleType("drpVehicleType", companyId);
+    GetAllLocation("ddlIndentBranch", companyId); //Both Dropdown Id are Different 
+    GetAllLocation("ddlLocation", companyId, function () {
+        if (profileId == EnumProfile.Branch) {
+            $('#ddlLocation').val(Number(locationId)).trigger('change');
+            $('#ddlLocation').prop('disabled', true);
+        }
+    });
+
     $('#vehiclePlacementForm')[0].reset();
     $("#ddlCustomerName").val(0).trigger('change');
     $("#drpVehicleType").val(0).trigger('change');
@@ -1076,6 +1093,8 @@ function vehiclePlacementFormReset() {
     $("#ddlDriverName").val(0).trigger('change');
     $("#ddlBrokerName").val(0).trigger('change');
     $("#ddlIndentNo").val(0).trigger('change');
+
+
 }
 
 function GetVehiclePlacementCountByIndentNo() {
@@ -1094,8 +1113,14 @@ function GetVehiclePlacementCountByIndentNo() {
                     const panddingVehicles = totalVehicles - placedVehicles;
                     $("#txtPendingVehicles").val(panddingVehicles);
                 }
-                else
-                    $("#txtPendingVehicles").val(0);
+                else {
+                    const val = $("#txtNoOfVehicles").val();
+                    if (!IsNullOrEmpty(val) && isNumeric(val)) {
+                        $("#txtPendingVehicles").val(val);
+                    } else {
+                        $("#txtPendingVehicles").val(0);
+                    }
+                }
             },
             error: function (xhr, status, error) {
                 console.error("Error: GetVehiclePlacementCountByIndentNo :", error);
