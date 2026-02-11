@@ -1,9 +1,24 @@
 ﻿var autocompleteService;
 var geocoder;
+var mapInitialized = false;
+
 function initMap() {
 
-    autocompleteService = new google.maps.places.AutocompleteService();
-    geocoder = new google.maps.Geocoder();
+    if (!window.google || !google.maps || !google.maps.places) {
+        console.warn("Google Maps not ready");
+        return;
+    }
+
+    if (!autocompleteService) {
+        autocompleteService = new google.maps.places.AutocompleteService();
+    }
+    if (!geocoder) {
+        geocoder = new google.maps.Geocoder();
+    }
+
+    // Prevent duplicate listeners
+    if (mapInitialized) return;
+    mapInitialized = true;
 
     if (document.getElementById("from-search-box")) {
         setupLocationSearch(
@@ -39,7 +54,6 @@ function initMap() {
 function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, cityId) {
     const input = document.getElementById(inputId);
     const suggestionsBox = document.getElementById(suggestionListId);
-    console.log(input)
     let currentFocus = -1;
 
     input.addEventListener("input", function () {
