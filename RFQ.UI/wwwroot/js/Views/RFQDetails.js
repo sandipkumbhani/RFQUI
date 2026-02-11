@@ -290,7 +290,9 @@ function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
             var rfqTable = await GetRfqTableData();
             var tableIndentlist = rfqTable.map(x => x.indentId);
             VehicIndentList = response.filter(x => x.locationId == selectLocationId);
-            VehicIndentList = VehicIndentList.filter(x => !tableIndentlist.includes(x.indentId));
+            if (IsNullOrEmpty(selectedIndentId)) {
+                VehicIndentList = VehicIndentList.filter(x => !tableIndentlist.includes(x.indentId));
+            }
             $("#ddlIndent").empty();
             const Indentdropdown = document.getElementById("ddlIndent");
             let placeholderOption = document.createElement("option");
