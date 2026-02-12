@@ -123,6 +123,11 @@ $(document).ready(function () {
 
 });
 
+$("#tableDivLink").click(function (e) {
+    e.preventDefault(); // stop default anchor behavior
+    location.reload();  // reload page
+});
+
 $('#ddlIndentNo').on('change', async function () {
     await AutoFetch();
     setTimeout(() => {
