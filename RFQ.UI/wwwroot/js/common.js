@@ -947,6 +947,7 @@ function GetAllCustomer(dropdownId, companyIdParam) {
         success: function (response) {
             var data = response
             const selectCustomer = document.getElementById(dropdownId);
+            selectCustomer.innerHTML = "";
             let placeholderOption = document.createElement("option");
             placeholderOption.value = 0;
             placeholderOption.textContent = "Select a Customer Name";

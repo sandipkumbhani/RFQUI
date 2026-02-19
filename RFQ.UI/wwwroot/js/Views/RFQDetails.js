@@ -736,12 +736,12 @@ function UpdateRfq() {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(formData),
         dataType: "json",
-        success: function (result) {
+        success: async function (result) {
             if (!IsNullOrEmpty(result)) {
                 toastr.success(result);
                 addMasterUserActivityLog(0, LogType.Update, "Rfq Details Updated Successfully!", 0);
                 const transactionId = $("#txtRfqDetailsId").val();
-                UpdateAttachmentData(transactionId);
+               await UpdateAttachmentData(transactionId);
                 FetchRfqList();
             }
         },

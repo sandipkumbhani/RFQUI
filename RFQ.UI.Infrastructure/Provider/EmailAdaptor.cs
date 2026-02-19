@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace RFQ.UI.Infrastructure.Provider
 {
@@ -15,9 +16,12 @@ namespace RFQ.UI.Infrastructure.Provider
     public class EmailAdaptor : IEmailAdaptor
     {
         private readonly IConfiguration _config;
-        public EmailAdaptor(IConfiguration config)
+        private readonly ILogger<EmailAdaptor> _logger;
+
+        public EmailAdaptor(IConfiguration config, ILogger<EmailAdaptor> logger)
         {
             _config = config;
+            _logger = logger;
         }
 
         public async Task<bool> SendEmailAsync(EmailRequest request)
@@ -27,11 +31,13 @@ namespace RFQ.UI.Infrastructure.Provider
                 var smtpClient = new SmtpClient(_config["EmailSettings:SmtpServer"])
                 {
                     Port = int.Parse(_config["EmailSettings:Port"]),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
                     Credentials = new NetworkCredential(
                         _config["EmailSettings:SenderEmail"],
                         _config["EmailSettings:Password"]
                     ),
-                    EnableSsl = true,
                 };
 
                 var mailMessage = new MailMessage
@@ -47,10 +53,12 @@ namespace RFQ.UI.Infrastructure.Provider
                 mailMessage.To.Add(request.ToEmail);
 
                 await smtpClient.SendMailAsync(mailMessage);
+                _logger.LogInformation("Mail sent successfully to {Email}", request.ToEmail);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Mail sending failed to {Email}", request.ToEmail);
                 return false;
             }
         }

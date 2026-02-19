@@ -204,20 +204,20 @@ namespace RFQ.UI.Controllers
                             };
                             string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", body, Request.Scheme) ?? string.Empty;
                             var vendor = _mapper.Map<RfqRecipientResponseDto>(item);
-                            bool check = await SendEmail(vendor, formLink);
-                            if (check)
-                            {
-                                RfqSendlinkList.Add(new RfqLinkRequestDto
+                                bool check = await SendEmail(vendor, formLink);
+                                if (check)
                                 {
-                                    RfqId = vendor.RfqId,
-                                    VendorId = vendor.VendorId,
-                                    CreatedBy = _globalClass.UserId,
-                                    SharedLink = formLink,
-                                    CreatedOn = DateTime.UtcNow
-                                });
-                                bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
+                                    RfqSendlinkList.Add(new RfqLinkRequestDto
+                                    {
+                                        RfqId = vendor.RfqId,
+                                        VendorId = vendor.VendorId,
+                                        CreatedBy = _globalClass.UserId,
+                                        SharedLink = formLink,
+                                        CreatedOn = DateTime.UtcNow
+                                    });
+                                    bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
+                                }
                             }
-                        }
                     }
                     return Json(result);
                 }
