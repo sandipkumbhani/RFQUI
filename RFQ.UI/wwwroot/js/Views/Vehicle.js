@@ -135,6 +135,11 @@ function SaveVehicle(action) {
                     toastr.warning(response.message, "Warning");
                 } else {
                     toastr.success("Vehicle Details Submitted Successfully!");
+                    var isCallFromPlacement = $('#isCallFromPlacement').val();
+                    if (typeof isCallFromPlacement != 'undefined' && isCallFromPlacement == 1) {
+                        afterVehicleSaveClosePopup();
+                        return;
+                    }
                     addMasterUserActivityLog(0, LogType.Create, "Vehicle Details Submitted Successfully!", 0);
 
                     if (typeof this.completeOnSuccess === "function") {

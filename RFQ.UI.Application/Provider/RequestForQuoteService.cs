@@ -28,6 +28,7 @@ namespace RFQ.UI.Application.Provider
         {
             return await _requestForQuoteAdaptor.GetAllVendorListForRfq(rfqVendorDetailsParam);
         }
+       
         public async Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo)
         {
             return await _requestForQuoteAdaptor.GetRfqByRfqNo(rfqNo);
@@ -64,6 +65,11 @@ namespace RFQ.UI.Application.Provider
         public async Task<bool> DeleteRfq(int rfqId)
         {
             return await _requestForQuoteAdaptor.DeleteRfq(rfqId);
+        }
+
+        public async Task<IEnumerable<RfqResponseDto>> GetRfqTableData()
+        {
+            return await _requestForQuoteAdaptor.GetRfqTableData();
         }
     }
 }

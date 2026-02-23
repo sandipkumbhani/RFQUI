@@ -1,8 +1,24 @@
-﻿let autocompleteService;
-let geocoder;
+﻿var autocompleteService;
+var geocoder;
+var mapInitialized = false;
+
 function initMap() {
-    autocompleteService = new google.maps.places.AutocompleteService();
-    geocoder = new google.maps.Geocoder();
+
+    if (!window.google || !google.maps || !google.maps.places) {
+        console.warn("Google Maps not ready");
+        return;
+    }
+
+    if (!autocompleteService) {
+        autocompleteService = new google.maps.places.AutocompleteService();
+    }
+    if (!geocoder) {
+        geocoder = new google.maps.Geocoder();
+    }
+
+    // Prevent duplicate listeners
+    if (mapInitialized) return;
+    mapInitialized = true;
 
     if (document.getElementById("from-search-box")) {
         setupLocationSearch(
@@ -24,8 +40,17 @@ function initMap() {
             "toCity"
         );
     }
+    if (document.getElementById("from-search-box-popup")) {
+        setupLocationSearch(
+            "from-search-box-popup",
+            "from-location-suggestions-popup",
+            "fromLat",
+            "fromLng",
+            "fromState",
+            "fromCity"
+        );
+    }
 }
-
 function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, cityId) {
     const input = document.getElementById(inputId);
     const suggestionsBox = document.getElementById(suggestionListId);
@@ -105,7 +130,6 @@ function setupLocationSearch(inputId, suggestionListId, latId, lngId, stateId, c
         }
     });
 }
-
 function getLatLngAndState(placeId, latId, lngId, stateId, cityId) {
     geocoder.geocode({ placeId: placeId }, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK && results[0]) {

@@ -867,5 +867,4 @@ function resetBookingForm() {
     $('#btnUpdate').hide();
     $('#btnSaveForm, #btnSaveAndNewForm').show();
     $('#from-location-suggestions, #to-location-suggestions').hide().empty();
-    console.log("Form reset successfully!");
 }

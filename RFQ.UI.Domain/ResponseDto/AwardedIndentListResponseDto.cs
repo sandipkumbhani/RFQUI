@@ -38,5 +38,6 @@
         public int UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
         public int RfqStatusId { get; set; }
+        public int PendignVehicles { get; set; }
     }
 }

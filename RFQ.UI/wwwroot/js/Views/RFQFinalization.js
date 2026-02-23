@@ -40,7 +40,7 @@ $("#ddlRfqStatus").on('change', function () {
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
-
+    DisableFields();
     $("#ddlRfqNo").prop('disabled', false);
 
     $('#tableDivLink').on('click', function (e) {
@@ -113,6 +113,42 @@ $(document).ready(function () {
     //    return;
     //});
 });
+
+function DisableFields() {
+    $("#ddlCustomerName, #ddlVehicleType").on("select2:opening", function (e) {
+        e.preventDefault();
+    });
+    
+    styleReadonlySelect2("#ddlCustomerName");
+    styleReadonlySelect2("#ddlVehicleType");
+
+    let rfqFields = $(
+        "#txtRfqNo, #txtRfqDate, #txtRfqExpiredOn, #txtVehicleReqDate, " +
+        "#from-search-box, #to-search-box, #txtNoofVehicles, #txtSpecial"
+    );
+
+    rfqFields.prop("readonly", true);
+
+    rfqFields.css({
+        "background-color": "#e9ecef",
+        "cursor": "not-allowed"
+    });
+
+    rfqFields.on("keydown paste", function (e) {
+        e.preventDefault();
+    });
+}
+
+function styleReadonlySelect2(selector) {
+
+    let container = $(selector).next(".select2-container");
+
+    container.find(".select2-selection").css({
+        "background-color": "#e9ecef",
+        "cursor": "not-allowed"
+    });
+}
+
 function OnSubmitCheckValidation() {
     if (!isValidateSelect($("#ddlRfqNo").val())) {
         toastr.warning("Please enter a RFQ No", "Validation Error");
@@ -223,10 +259,12 @@ function GetRfqDetailsByRfqNo() {
             $("#txtRfqId").val(response.rfqId);
             $("#ddlCustomerName").val(response.partyId).trigger('change');
             $("#txtRfqNo").val(response.rfqNo)
-            $("#txtRfqDate").val(response.rfqDate.split('T')[0])
+            var rfqDate = new Date(response.rfqDate.split('T')[0])
+            var formattedDate = rfqDate.toLocaleDateString('en-GB').split('/').join('-');
+            $("#txtRfqDate").val(formattedDate);
             $("#txtRfqExpiredOn").val(response.expiryDate)
             if (response.vehicleReqOn) {
-                var date = new Date(response.vehicleReqOn);
+                var date = new Date(response.vehicleReqOn.split('T')[0]);
                 if (!isNaN(date)) {
                     $("#txtVehicleReqDate").val(date.toISOString().split('T')[0]);
                 } else {
@@ -649,11 +687,14 @@ function GetSelectedVendors() {
     const selectedData = [];
     $("#awardedVendorTable tbody input[type='checkbox']:checked").each(function () {
         const vendorId = $(this).data("vendorid"); // capture once
+        let row = $(this).closest("tr");
+        let assignedVehicle = row.find(".assigned-vehicle").val();
         console.log(awardedVendorTable);
         const result = $.grep(awardedVendorTable, function (obj) {
             return obj.vendorId === vendorId; // compare correctly
         });
         if (result.length > 0) {
+            result[0].AssignedVehicles = parseInt(assignedVehicle);
             selectedData.push(result[0]); // push first match
         }
     });

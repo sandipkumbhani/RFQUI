@@ -12,6 +12,8 @@ var VehicIndentList;
 var VehicleList;
 let IsEditClick = false;
 var VendorCosting = [];
+var googleMapsLoaded = false;
+var googleMapsLoading = false;
 
 $(document).ready(function () {
     companyId = getCookieValue('companyid');
@@ -24,7 +26,6 @@ $(document).ready(function () {
         if (!IsNullOrEmpty(VehicleList)) {
             const selectedVehicle = VehicleList.find(x => x.vehicleId == selectedValue);
             if (selectedVehicle) {
-                console.log(VehicleList, "VehicleList");
                 $("#drpOwnerName").val(selectedVehicle.ownerVendorId).trigger('change');
             }
         }
@@ -58,9 +59,7 @@ $(document).ready(function () {
         if (!IsNullOrEmpty(locationId)) {
             await GetAllVehicleIndent(locationId);
             var locationData = await GetLocationById(locationId)
-            console.log(locationData.code);
             var code = await GetAutoGenerateCode(locationData.code, PrefixCode.VP);
-            console.log(code);
         }
         if (!IsEditClick) {
             $("#txtPlacementNo").val(code);
@@ -122,6 +121,11 @@ $(document).ready(function () {
         }
     });
 
+});
+
+$("#tableDivLink").click(function (e) {
+    e.preventDefault(); // stop default anchor behavior
+    location.reload();  // reload page
 });
 
 $('#ddlIndentNo').on('change', async function () {
@@ -211,6 +215,9 @@ async function GetAllVehicleIndent(selectLocationId, selectedIndentId = null) {
         success: function (response) {
             if (!IsNullOrEmpty(response) && response.length > 0) {
                 VehicIndentList = response.filter(x => x.locationId == selectLocationId);
+                if (selectedIndentId == null) {
+                    VehicIndentList = VehicIndentList.filter(x => x.pendignVehicles > 0);
+                }
                 $("#ddlIndentNo").empty();
                 const Indentdropdown = document.getElementById("ddlIndentNo");
                 Indentdropdown.innerHTML = "";
@@ -345,10 +352,7 @@ function GetAllDriver() {
                     opt.textContent = option.driverName;
                     ddlDriverName.appendChild(opt);
                 });
-            } else {
-                console.log("Driver DropDown Not Loded");
             }
-
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -362,7 +366,6 @@ function GetAllVehicleNumber() {
         dataType: "json",
         success: function (response) {
             if (!IsNullOrEmpty(response) && response.length > 0) {
-                console.log(response, "vehicle number DropDown");
                 const userid = getCookieValue("userid");
                 response = response.filter(x => x.createdBy == userid);
                 var data = response
@@ -384,10 +387,6 @@ function GetAllVehicleNumber() {
                 });
                 $('.selectpicker').selectpicker('refresh');
             }
-            else {
-                console.log("No Vehicle Number Found!", "warning");
-            }
-
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -476,7 +475,6 @@ async function AutoFetch() {
             type: "GET",
             contentType: "application/json",
             success: await function (response) {
-                console.log(response);
                 if (Array.isArray(response) && response.length > 0) {
                     let data = response[0]; // Use the first object in the array
                     $("#txtRFQNo").val(data.rfqNo);
@@ -489,25 +487,23 @@ async function AutoFetch() {
                     //$("#txtPendingVehicles").val(data.pendingVehicles);
 
                     if (!IsNullOrEmpty(data.indentDate)) {
-                        $('#txtIndentDate').val(FormatDateToLocal(data.indentDate));
+                        $('#txtIndentDate').val(formatDateForInput(data.indentDate));
                     } else {
                         $('#txtIndentDate').val('');
                     }
 
                     if (!IsNullOrEmpty(data.vehicleReqOn)) {
-                        $('#txtVehicleReqOn').val(FormatDateToLocal(data.vehicleReqOn));
+                        $('#txtVehicleReqOn').val(formatDateForInput(data.vehicleReqOn));
                     } else {
                         $('#txtVehicleReqOn').val('');
                     }
 
                     if (!IsNullOrEmpty(data.vehicleReqOn)) {
-                        $('#txtRFQDate').val(FormatDateToLocal(data.vehicleReqOn));
+                        $('#txtRFQDate').val(formatDateForInput(data.vehicleReqOn));
                     } else {
                         $('#txtRFQDate').val('');
                     }
 
-                } else {
-                    console.log("No data found for selected indent number.", "Warning");
                 }
             },
             error: function (xhr, status, error) {
@@ -520,15 +516,14 @@ function VehiclePopUp() {
     $("#vehiclePopupModal .modal-body").load('/VehiclePlacement/CreateVehicle', function () {
         $("#vehiclePopupModal").modal("show");
 
-        // Load scripts only for popup context
         $.when(
             $.getScript('/js/Views/Vehicle.js'),
             $.getScript('/js/common.js')
         ).done(function () {
-            console.log("Popup scripts loaded successfully.");
         }).fail(function (jqxhr, settings, exception) {
             console.error("Failed to load popup scripts:", exception);
         });
+
         $('#vehiclePopupModal').on('hide.bs.modal', function (event) {
             var closepop = false;
             if ($(event.target).hasClass('modal')) {
@@ -544,9 +539,10 @@ function VehiclePopUp() {
                 closepop = true;
             }
             if (closepop) {
-                const form = $(this).find('vehicleForm')[0];
-                if (form) {
+                const form = $("#vehicleForm")[0];
+                if (!IsNullOrEmpty(form)) {
                     form.reset(); // reset all form inputs
+                    GetAllVehicleNumber();
                 }
                 $('script[src="/js/Views/Vehicle.js"]').remove();
                 $('#tableDiv').css("display", "none");
@@ -554,6 +550,12 @@ function VehiclePopUp() {
         });
     });
 
+}
+
+function afterVehicleSaveClosePopup() {
+    GetAllVehicleNumber();
+    $("#vehiclePopupModal .modal-body").html('');
+    $("#vehiclePopupModal").modal("hide");
 }
 function SaveVehicle(action) {
     var vehicleNo = $("#vehicleNo").val();
@@ -708,21 +710,30 @@ function ClearFields() {
 }
 function DriverPopUp() {
     var url = '/VehiclePlacement/CreateDriver';
+    window.isCallFromPlacementJS = true;
     $("#driverPopupModal .modal-body").load(url, function () {
-        $.when(
-            $.getScript('/js/AttachmentDetails.js'),
-            $.getScript('/js/Views/Driver.js'),
-        ).done(function () {
-            setTimeout(() => {
+        if (!googleMapsLoaded && !googleMapsLoading) {
+            Dropzone.autoDiscover = false;
+            googleMapsLoading = true;
+            $.when(
+                $.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&libraries=places'),
+                $.getScript('/js/AttachmentDetails.js'),
+                $.getScript('/js/Map.js'),
+                $.getScript('/js/Views/Driver.js')
+            ).done(function () {
+                initMap();
                 $("#formDiv").css('display', 'block');
-            }, 100);
-            console.log("Popup scripts loaded successfully.");
-        }).fail(function (jqxhr, settings, exception) {
-            console.error("Failed to load one or more popup scripts:", exception);
-        });
+            }).fail(function () {
+                console.error("Failed to load scripts");
+            });
+        } else {
+            initMap();
+            $("#formDiv").css('display', 'block');
+        }
+
         $("#driverPopupModal").modal("show");
     });
-
+    
     $('#driverPopupModal').on('hide.bs.modal', function (event) {
         var closepop = false;
         if ($(event.target).hasClass('modal')) {
@@ -738,14 +749,21 @@ function DriverPopUp() {
             closepop = true;
         }
         if (closepop) {
-            const form = $(this).find('driverForm')[0];
+            const form = $(this).find('#driverForm')[0];
             if (form) {
                 form.reset(); // reset all form inputs
             }
+            $('script[src="/js/Views/Driver.js"]').remove();
             $('#tableDiv').css("display", "none");
         }
     });
 }
+function afterDriverSaveClosePopup() {
+    GetAllDriver();
+    $("#driverPopupModal .modal-body").html('');
+    $("#driverPopupModal").modal("hide");
+}
+
 function GetDropdownValue(inputId) {
     const selectedValue = $("#" + inputId).val();
     const selectedText = $("#" + inputId).find("option:selected").text();
@@ -783,12 +801,15 @@ async function SaveVehiclePlacement(action) {
         AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
         LinkId: GetQueryParam("LinkId")
     };
-    var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId);
+    var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId, 0);
     if (check) {
         toastr.warning("Indent are already used this Vehicle");
         return
     }
-    console.log(formData);
+    var valid = await CheckOwnerBroker();
+    if (!valid) {
+        return;
+    }
     if (action === "save") {
 
         $.ajax({
@@ -853,10 +874,14 @@ function ButtonUpdateClick() {
         if (!isValid) {
             return;
         }
-
+        var valid = await CheckOwnerBroker();
+        if (!valid) {
+            return;
+        }
+        var placementId = $("#vehiclePlacementId").val();
         var driverResult = GetDropdownValue("ddlDriverName");
         var formData = {
-            PlacementId: $("#vehiclePlacementId").val(),
+            PlacementId: placementId,
             LocationId: $("#ddlLocation").val(),
             PlacementNo: $("#txtPlacementNo").val(),
             PlacementDate: $("#txtPlacementDate").val(),
@@ -872,7 +897,7 @@ function ButtonUpdateClick() {
             AdvancePayable: $("#txtAdvancePayable").val() ? $("#txtAdvancePayable").val() : 0,
             LinkId: GetQueryParam("LinkId")
         };
-        var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId);
+        var check = await CheckVehicleAndIndentUnique(formData.VehicleId, formData.IndentId, placementId);
         if (check) {
             toastr.warning("Indent are already used this Vehicle");
             return
@@ -1000,6 +1025,7 @@ async function UpdateVehiclePlacement(placementId) {
     $("#ddlBrokerName").val(formData.brokerVendorId).trigger('change');
     $("#txtTotalHairAmt").val(formData.totalHireAmount);
     $("#txtAdvancePayable").val(formData.advancePayable);
+    $("#txtBalancePayable").val(Number(formData.totalHireAmount) - Number(formData.advancePayable));
     IsEditClick = true;
 }
 function Defaultdrpdownset() {
@@ -1013,17 +1039,17 @@ function Defaultdrpdownset() {
     });
     $Indentdropdown.append(placeholderOption);
 }
-function CheckVehicleAndIndentUnique(vehicleId, indentId) {
+function CheckVehicleAndIndentUnique(vehicleId, indentId, placementId) {
     return $.ajax({
         url: '/VehiclePlacement/CheckVehicleAndIndentUnique',
         type: 'GET',
         data: {
             vehicleId: vehicleId,
-            indentId: indentId
+            indentId: indentId,
+            placementId: placementId
         },
         dataType: 'json',
         success: function (response) {
-            console.log("Unique check response:", response); // true / false
         },
         error: function (xhr, status, error) {
             console.error("Error in CheckVehicleAndIndentUnique:", error);
@@ -1031,6 +1057,22 @@ function CheckVehicleAndIndentUnique(vehicleId, indentId) {
     });
 }
 function vehiclePlacementFormReset() {
+    Defaultdrpdownset();
+    GetAllDriver();
+    GetAllTrackingType();
+    GetAllVehicleNumber();
+    GetAllOwnerOrVendor();
+    GetAllBrokerVendor();
+    GetAllCustomer("ddlCustomerName", companyId);
+    GetAllVehicleType("drpVehicleType", companyId);
+    GetAllLocation("ddlIndentBranch", companyId); //Both Dropdown Id are Different 
+    GetAllLocation("ddlLocation", companyId, function () {
+        if (profileId == EnumProfile.Branch) {
+            $('#ddlLocation').val(Number(locationId)).trigger('change');
+            $('#ddlLocation').prop('disabled', true);
+        }
+    });
+
     $('#vehiclePlacementForm')[0].reset();
     $("#ddlCustomerName").val(0).trigger('change');
     $("#drpVehicleType").val(0).trigger('change');
@@ -1042,6 +1084,8 @@ function vehiclePlacementFormReset() {
     $("#ddlDriverName").val(0).trigger('change');
     $("#ddlBrokerName").val(0).trigger('change');
     $("#ddlIndentNo").val(0).trigger('change');
+
+
 }
 
 function GetVehiclePlacementCountByIndentNo() {
@@ -1060,8 +1104,14 @@ function GetVehiclePlacementCountByIndentNo() {
                     const panddingVehicles = totalVehicles - placedVehicles;
                     $("#txtPendingVehicles").val(panddingVehicles);
                 }
-                else
-                    $("#txtPendingVehicles").val(0);
+                else {
+                    const val = $("#txtNoOfVehicles").val();
+                    if (!IsNullOrEmpty(val) && isNumeric(val)) {
+                        $("#txtPendingVehicles").val(val);
+                    } else {
+                        $("#txtPendingVehicles").val(0);
+                    }
+                }
             },
             error: function (xhr, status, error) {
                 console.error("Error: GetVehiclePlacementCountByIndentNo :", error);
@@ -1117,7 +1167,6 @@ function loadVendorCosting() {
         success: function (response) {
             if (response.statusCode === 200) {
                 VendorCosting = response.data;
-                console.log(VendorCosting, "loadVendorCosting");
             } else {
                 console.warn(response.message + "⚠️ ");
             }
@@ -1127,42 +1176,41 @@ function loadVendorCosting() {
         }
     });
 }
-function CheckAwardedVendor() {
-
-    let partyId = 0;
-
+async function CheckOwnerBroker() {
+    var ownerId = 0;
+    var brokerId = 0;
+    var valid = true;
+    var rfqNo = $("#txtRFQNo").val();
     // Broker selected
     if (isValidateSelect($("#ddlBrokerName").val())) {
-        partyId = $("#ddlBrokerName").val();
+        brokerId = $("#ddlBrokerName").val();
     }
 
     // Owner selected (priority)
     if (isValidateSelect($("#drpOwnerName").val())) {
-        partyId = $("#drpOwnerName").val();
+        ownerId = $("#drpOwnerName").val();
     }
 
-    // Validation
-    if (partyId == 0) {
-        toastr.warning("Please select Broker or Owner");
-        return;
-    }
-
-    var requestDto = {
-        PartyId: parseInt(partyId)
-    };
-
-    return $.ajax({
-        url: '/vehicleplacement/CheckAwardedVendor',
-        type: 'POST',
+    await $.ajax({
+        url: '/vehicleplacement/GetAwardedVendorListByRfqNo/' + rfqNo,
+        type: 'GET',
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(requestDto),
         dataType: 'json',
         success: function (response) {
-            console.log("CheckAwardedVendor success:", response);
+            if (response.filter(x => x == ownerId || x == brokerId).length > 0) {
+                valid = true;
+            } else {
+                valid = false;
+            }
         },
         error: function (xhr) {
             console.error("CheckAwardedVendor error:", xhr.responseText);
+            return;
         }
     });
+    if (!valid) {
+        toastr.warning("Please select owner or broker as assigned as RFQ finallization vendors.");
+    }
+    return valid;
 }
 

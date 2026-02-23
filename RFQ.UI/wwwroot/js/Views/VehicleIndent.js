@@ -23,7 +23,8 @@ $(document).ready(function () {
     GetAllVehicleType("ddlVehicleType", companyId);
     GetAllCustomer("ddlCustomerName", companyId);
     GetAllItemName("ddlItemName", companyId);
-    GetAllConsignorList();
+    GetAllCustomer("ddlConsignorInput", companyId);
+  /*  GetAllConsignorList();*/
     GetAllConsigneeList();
     GetAllPakingType("ddlPackingType");
     FetchVehicleIndent();
@@ -84,7 +85,8 @@ function FetchVehicleIndent() {
     $("#btnSave").show();
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
-    GetAllConsignorList();
+    GetAllCustomer('ddlConsignorInput', companyId);
+    //GetAllConsignorList();
     GetAllConsigneeList();
     FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehicleIndent', 'DeleteVehicleIndent', 'indentId');
 }
@@ -98,37 +100,37 @@ $('#pageLength').off('change').on('change', function () {
     $('#currentPage').val(1);
     FetchVehicleIndent();
 });
-function GetAllConsignorList() {
-    var getUrl = '/Vendor/GetAllVendorList'
-    $.ajax({
-        url: getUrl,
-        type: "GET",
-        data: { companyId: companyId },
-        contentType: "application/json",
-        success: function (response) {
-            $("#ddlConsignorInput").empty();
-            const consignorListDropdown = document.getElementById("ddlConsignorInput");
-            consignorListDropdown.innerHTML = "";
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = 0;
-            placeholderOption.textContent = "Select or Add a Consignor Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            consignorListDropdown.appendChild(placeholderOption);
-            response.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.partyId;
-                option.textContent = item.partyName;
-                consignorListDropdown.appendChild(option);
-            });
-        },
-        error: function (xhr, status, error) {
-            toastr.error("Failed to Fetch Consignor Name!", "Error");
-            $("#ddlLocation").val()
-        }
+//function GetAllConsignorList() {
+//    var getUrl = '/Vendor/GetAllVendorList'
+//    $.ajax({
+//        url: getUrl,
+//        type: "GET",
+//        data: { companyId: companyId },
+//        contentType: "application/json",
+//        success: function (response) {
+//            $("#ddlConsignorInput").empty();
+//            const consignorListDropdown = document.getElementById("ddlConsignorInput");
+//            consignorListDropdown.innerHTML = "";
+//            let placeholderOption = document.createElement("option");
+//            placeholderOption.value = 0;
+//            placeholderOption.textContent = "Select or Add a Consignor Name";
+//            placeholderOption.disabled = true;
+//            placeholderOption.selected = true;
+//            consignorListDropdown.appendChild(placeholderOption);
+//            response.forEach(item => {
+//                const option = document.createElement("option");
+//                option.value = item.partyId;
+//                option.textContent = item.partyName;
+//                consignorListDropdown.appendChild(option);
+//            });
+//        },
+//        error: function (xhr, status, error) {
+//            toastr.error("Failed to Fetch Consignor Name!", "Error");
+//            $("#ddlLocation").val()
+//        }
 
-    });
-};
+//    });
+//};
 function GetAllConsigneeList() {
     $.ajax({
         url: '/Customer/GetDrpCustomerList',
@@ -487,15 +489,6 @@ async function DeleteVehicleIndent(indentId) {
             });
         }
     });
-}
-function formatDateForInput(dateString) {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    if (isNaN(date)) return '';
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day = ('0' + date.getDate()).slice(-2);
-    return `${year}-${month}-${day}`;
 }
 
 async function UpdateVehicleIndent(indentId) {

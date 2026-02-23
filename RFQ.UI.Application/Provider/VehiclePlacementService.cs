@@ -55,9 +55,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehiclePlacementAdaptor.UpdateVehiclePlacement(placementId, vehiclePlacementRequestDto);
         }
-        public async Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId)
+        public async Task<bool> CheckVehicleAndIndentUnique(int vehicleId, int indentId, int placementId)
         {
-            return await _vehiclePlacementAdaptor.CheckVehicleAndIndentUnique(vehicleId, indentId);
+            return await _vehiclePlacementAdaptor.CheckVehicleAndIndentUnique(vehicleId, indentId, placementId);
         }
         public async Task<IEnumerable<AwardedIndentListResponseDto>> GetAwardedIndentList(int companyId)
         {
@@ -70,6 +70,10 @@ namespace RFQ.UI.Application.Provider
         public async Task<bool> CheckAwardedVendor(CheckAwardedVendorRequestDto requestDto)
         {
             return await _vehiclePlacementAdaptor.CheckAwardedVendor(requestDto);
+        }
+        public async Task<IEnumerable<int>> GetAwardedVendorListByRfqNo(string rfqNo)
+        {
+            return await _vehiclePlacementAdaptor.GetAwardedVendorListByRfqNo(rfqNo);
         }
     }
 }

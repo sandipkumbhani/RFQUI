@@ -3528,3 +3528,6 @@ body.overlay-active {
     align-items: center; /* vertical center */
     justify-content: center; /* horizontal center */
 }
+.pac-container {
+    z-index: 999999 !important;
+}

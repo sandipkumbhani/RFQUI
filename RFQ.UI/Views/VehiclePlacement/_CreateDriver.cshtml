@@ -1,10 +1,14 @@
-﻿ 
-@{
+﻿@{
     Layout = null;
 }
-
+<style>
+    #from-location-suggestions {
+        z-index: 9999 !important;
+    }
+</style>
 <form id="driverForm" method="post">
     <input type="hidden" id="hdDriverId" />
+    <input type="hidden" id="isCallFromPlacement" value="1" />
     <div class="franchise-details">
         <h2 class="page-form-title">
             <a class="arrow-icon toggle-arrow"
@@ -44,8 +48,12 @@
                         </div>
                         <div class="item-input position-relative">
                             <label class="form-label"><span>*</span>Address</label>
-                            <input id="from-search-box" type="text" class="form-control" placeholder="Address" autocomplete="off" />
-                            <ul id="from-location-suggestions" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                            <input id="from-search-box-popup" type="text" class="form-control" placeholder="Address" autocomplete="off" />
+                            <ul id="from-location-suggestions-popup" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                            <input type="hidden" id="fromLat" />
+                            <input type="hidden" id="fromLng" />
+                            <input type="hidden" id="fromState" />
+                            <input type="hidden" id="fromCity" />
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -151,6 +159,10 @@
     @await Html.PartialAsync("~/Views/Partials/_AttachmentDetails.cshtml")
 
     <div class="button-main">
-        <a href="#" class="card-link" type="button" data-action="save" id="btnSaveDriver"><i class="ri-save-line"></i><span>Save</span></a>
+        <button type="button" id="btnSaveNewDriver" class="card-link btn btn-primary me-2" data-action="saveNew">
+            <i class="ri-save-line"></i>
+            <span>Save</span>
+        </button>
     </div>
 </form>
+
