@@ -336,7 +336,8 @@ function GetAllDriver() {
         success: function (response) {
             if (!IsNullOrEmpty(response) && response.length > 0) {
                 const userid = getCookieValue("userid");
-                response = response.filter(x => x.createdBy == userid);
+                const companyId = getCookieValue("companyid");
+                response = response.filter(x => x.createdBy == userid && x.companyId == companyId);
                 driverDrpList = response;
                 const ddlDriverName = document.getElementById("ddlDriverName");
                 ddlDriverName.innerHTML = "";
@@ -367,7 +368,8 @@ function GetAllVehicleNumber() {
         success: function (response) {
             if (!IsNullOrEmpty(response) && response.length > 0) {
                 const userid = getCookieValue("userid");
-                response = response.filter(x => x.createdBy == userid);
+                const companyId = getCookieValue("companyid");
+                response = response.filter(x => x.createdBy == userid && x.companyId == companyId);
                 var data = response
                 VehicleList = response;
                 $('#ddlVehicleNo').empty();
