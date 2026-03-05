@@ -192,6 +192,7 @@ function GetAllLRNo() {
         url: '/BookingOrTrip/GetAllLRNo',
         type: "GET",
         dataType: "json",
+        data: { companyId: companyId },
         success: function (response) {
             DeliveryDrpList = response.result;
             const ddlLR = document.getElementById("ddlLR");

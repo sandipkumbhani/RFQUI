@@ -372,6 +372,7 @@ function GetAllPlacementNo() {
         url: '/VehiclePlacement/GetAllVehiclePlacementNo',
         type: "GET",
         dataType: "json",
+        data: { companyId: companyId },
         success: function (response) {
             bookingDrpList = response.result;
             const ddlPlacementNo = document.getElementById("ddlPlacementNo");

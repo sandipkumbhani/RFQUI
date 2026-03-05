@@ -156,7 +156,7 @@ namespace RFQ.UI.Infrastructure.Provider
         {
             try
             {
-                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllVehiclePlacementNo}?companyId={companyId}";
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetAllVehiclePlacementNo + companyId}";
                 var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 if (responseModel?.Data != null)
                 {
