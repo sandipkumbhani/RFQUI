@@ -33,7 +33,6 @@ namespace RFQ.UI.Controllers
         }
         public async Task<ActionResult> QuoteRateVendor()
         {
-            await SetMenuAsync();
             return View();
         }
         public async Task<ActionResult> QuoteRateBranch()
