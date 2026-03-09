@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RFQ.UI.Domain.RequestDto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace RFQ.UI.Application.Interface
 {
     public interface IWhatsAppService
     {
-        Task<bool> SendWhatsAppMessageAsync(string toNumber, string messageText);
+        Task<string> SendMessageAsync(WhatsAppRequestDto requestDto);
     }
 }

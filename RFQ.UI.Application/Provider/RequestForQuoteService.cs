@@ -57,7 +57,7 @@ namespace RFQ.UI.Application.Provider
             return await _requestForQuoteAdaptor.GetAllRfq(pagingParam);
         }
 
-        public async Task<string> UpdateRfq(int rfqId, RequestForQuoteRequestDto requestForQuoteRequestDto)
+        public async Task<bool> UpdateRfq(int rfqId, RequestForQuoteRequestDto requestForQuoteRequestDto)
         {
             return await _requestForQuoteAdaptor.UpdateRfq(rfqId, requestForQuoteRequestDto);
         }

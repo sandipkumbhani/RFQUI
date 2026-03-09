@@ -135,5 +135,28 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<string> GetShortLink(string formLink)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var url = $"https://www.bitq.in/shortLink/Shorten?url={Uri.EscapeDataString(formLink)}";
+
+                    var response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var shortUrl = await response.Content.ReadAsStringAsync();
+                        return shortUrl;
+                    }
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

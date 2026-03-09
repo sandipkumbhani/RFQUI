@@ -12,6 +12,7 @@ using RFQ.UI.Domain.ResponseDto;
 using System.Numerics;
 using RFQ.UI.Domain.Model;
 using Microsoft.AspNetCore.Authentication;
+using RFQ.UI.Domain.RequestDto;
 
 namespace RFQ.UI.Controllers
 {
@@ -64,7 +65,7 @@ namespace RFQ.UI.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<NewCommonResponseDto> GetToken([FromBody] LoginDto input)
+        public async Task<NewCommonResponseDto> GetToken([FromBody] RFQ.UI.Models.LoginDto input)
         {
             NewCommonResponseDto response = new();
             try

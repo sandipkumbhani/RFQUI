@@ -14,6 +14,9 @@ using RFQ.UI.Infrastructure.Provider;
 using RFQ.UI.Domain.Enum;
 using System.Numerics;
 using AutoMapper;
+using System.Net.Sockets;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace RFQ.UI.Controllers
 {
@@ -27,9 +30,10 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IRfqRecipientService _rfqRecipientService;
         private readonly IMapper _mapper;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
 
 
-        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices, IRfqRecipientService rfqRecipientService, IMapper mapper) : base(menuServices, globalClass)
+        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices, IRfqRecipientService rfqRecipientService, IMapper mapper, CommonApiAdaptor commonApiAdaptor) : base(menuServices, globalClass)
         {
             _requestForQuoteService = requestForQuoteService;
             _logger = logger;
@@ -39,6 +43,7 @@ namespace RFQ.UI.Controllers
             _globalClass = globalClass;
             _rfqRecipientService = rfqRecipientService;
             _mapper = mapper;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<ActionResult> VendorRequest()
         {
@@ -104,6 +109,7 @@ namespace RFQ.UI.Controllers
                         RfqRecipientsList = result.RfqRecipients;
                         foreach (var vendor in RfqRecipientsList)
                         {
+                            bool check = false;
                             //RfqQuoteRateVendorDetails data = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsqById(vendor.RfqId);
                             var data = new
                             {
@@ -113,9 +119,10 @@ namespace RFQ.UI.Controllers
                             if (data != null)
                             {
                                 string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", data, Request.Scheme) ?? string.Empty;
-                                //string? link = await GetShortUrl(formLink);
-                                //bool check = await _whatsAppService.SendWhatsAppMessageAsync(data.WhatsAppNo, formLink);
-                                bool check = await SendEmail(vendor, formLink);
+                                var response = await _commonApiAdaptor.GetShortLink(formLink);
+                                var shortUrl = JsonConvert.DeserializeObject<ShortLinkResponseDto>(response)?.ShortUrl;
+                                check = await SendWhatsappRfqLInk(vendor, shortUrl);
+                                check = await SendEmail(vendor, shortUrl);
                                 if (check)
                                 {
                                     RfqSendlinkList.Add(new RfqLinkRequestDto
@@ -123,7 +130,7 @@ namespace RFQ.UI.Controllers
                                         RfqId = vendor.RfqId,
                                         VendorId = vendor.VendorId,
                                         CreatedBy = _globalClass.UserId,
-                                        SharedLink = formLink,
+                                        SharedLink = shortUrl,
                                         CreatedOn = DateTime.UtcNow
                                     });
                                 }
@@ -187,48 +194,43 @@ namespace RFQ.UI.Controllers
                 requestForQuoteRequestDto.RfqRequestDto.CompanyId = Convert.ToInt32(companyId);
                 requestForQuoteRequestDto.RfqRequestDto.CreatedBy = Convert.ToInt32(userid);
                 requestForQuoteRequestDto.RfqRequestDto.UpdatedBy = Convert.ToInt32(userid);
-                var result = await _requestForQuoteService.UpdateRfq(rfqId, requestForQuoteRequestDto);
+                bool result = await _requestForQuoteService.UpdateRfq(rfqId, requestForQuoteRequestDto);
 
-                if (result != null)
+                if (result)
                 {
-                    bool updatecheck = await _rfqRecipientService.UpdateRfqRecipient(rfqId, requestForQuoteRequestDto.RfqRecipients);
-                    if (updatecheck)
+                    bool checkUpdated = await _rfqRecipientService.UpdateRfqRecipient(rfqId, requestForQuoteRequestDto.RfqRecipients);
+                    if (checkUpdated)
                     {
-
                         foreach (var item in requestForQuoteRequestDto.RfqRecipients)
                         {
-                            var body = new
-                            {
-                                VendorId = item.VendorId,
-                                RfqId = rfqId
-                            };
+                            bool check = false;
+                            var body = new { VendorId = item.VendorId, RfqId = rfqId };
                             string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", body, Request.Scheme) ?? string.Empty;
                             var vendor = _mapper.Map<RfqRecipientResponseDto>(item);
-                                bool check = await SendEmail(vendor, formLink);
-                                if (check)
+                            var response = await _commonApiAdaptor.GetShortLink(formLink);
+                            var shortUrl = JsonConvert.DeserializeObject<ShortLinkResponseDto>(response)?.ShortUrl;
+                            check = await SendWhatsappRfqLInk(vendor, shortUrl);
+                            check = await SendEmail(vendor, shortUrl);
+                            if (check)
+                            {
+                                RfqSendlinkList.Add(new RfqLinkRequestDto
                                 {
-                                    RfqSendlinkList.Add(new RfqLinkRequestDto
-                                    {
-                                        RfqId = vendor.RfqId,
-                                        VendorId = vendor.VendorId,
-                                        CreatedBy = _globalClass.UserId,
-                                        SharedLink = formLink,
-                                        CreatedOn = DateTime.UtcNow
-                                    });
-                                    bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
-                                }
+                                    RfqId = vendor.RfqId,
+                                    VendorId = vendor.VendorId,
+                                    CreatedBy = _globalClass.UserId,
+                                    SharedLink = shortUrl,
+                                    CreatedOn = DateTime.UtcNow
+                                });
+                                bool addlinkCheck = await _rfqLinkService.AddRfqLinkData(RfqSendlinkList);
                             }
+                        }
                     }
-                    return Json(result);
                 }
-                else
-                {
-                    throw new Exception("RFQ Not Updated");
-                }
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(ex);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -326,6 +328,31 @@ namespace RFQ.UI.Controllers
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        private async Task<bool> SendWhatsappRfqLInk(RfqRecipientResponseDto rfqRecipient, string formLink)
+        {
+            try
+            {
+                List<string> dVar = new();
+                dVar.Add("Vendor");
+                dVar.Add(formLink);
+
+                var body = new WhatsAppRequestDto
+                {
+                    MobileNo = rfqRecipient.WhatsAppNo,
+                    TemplateName = WhatsAppTemplate.rfqevent,
+                    DVariables = string.Join(",", dVar),
+                };
+
+                await _whatsAppService.SendMessageAsync(body);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error Send Whatsapp RfqLInk");
+                return false;
             }
         }
     }

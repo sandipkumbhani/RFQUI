@@ -737,8 +737,8 @@ function UpdateRfq() {
         data: JSON.stringify(formData),
         dataType: "json",
         success: async function (result) {
-            if (!IsNullOrEmpty(result)) {
-                toastr.success(result);
+            if (!IsNullOrEmpty(result) && result) {
+                toastr.success("Rfq Details Updated Successfully","success");
                 addMasterUserActivityLog(0, LogType.Update, "Rfq Details Updated Successfully!", 0);
                 const transactionId = $("#txtRfqDetailsId").val();
                await UpdateAttachmentData(transactionId);

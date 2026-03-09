@@ -10,6 +10,7 @@ namespace RFQ.UI.Domain.Model
         public string? GstApiUrl { get; set; }
         public string? VehicleRCApiUrl { get; set; }
         public string? DrivingLicenseAPI { get; set; }
+        public string? WhatsAppApiUrl { get; set; }
         public string? CustomerGetAllCustomer { get; set; }
         public string? CustomerGetAutoCustomerCode { get; set; }
         public string? FranchiseGetAllFranchise { get; set; }
@@ -157,6 +158,7 @@ namespace RFQ.UI.Domain.Model
                 GstApiUrl = section["GstApiUrl"],
                 VehicleRCApiUrl = section["VehicleRCApiUrl"],
                 DrivingLicenseAPI = section["DrivingLicenseAPI"],
+                WhatsAppApiUrl = section["WhatsAppApiUrl"],
                 CustomerGetAllCustomer = customerSection["GetAllCustomer"],
                 CustomerGetAutoCustomerCode = customerSection["GetAutoCustomerCode"],
                 FranchiseGetAllFranchise = franchiseSection["GetAllFranchise"],

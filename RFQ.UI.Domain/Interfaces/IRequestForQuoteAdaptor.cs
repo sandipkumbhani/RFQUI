@@ -10,7 +10,7 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> GetRfqNo();
         Task<RequestForQuoteResponseDto> AddRfq(RequestForQuoteRequestDto requestForQouteRequestDto);
         Task<PageList<RfqListResponseDto>> GetAllRfq(PagingParam pagingParam);
-        Task<string> UpdateRfq(int rfqId, RequestForQuoteRequestDto requestForQuoteRequestDto);
+        Task<bool> UpdateRfq(int rfqId, RequestForQuoteRequestDto requestForQuoteRequestDto);
         Task<bool> DeleteRfq(int rfqId);
         Task<RfqResponseDto> GetRfqByRfqNo(string rfqNo);
         Task<RfqResponseDto> GetRfqById(int rfqId);
