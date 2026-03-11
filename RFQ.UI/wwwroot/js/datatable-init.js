@@ -880,7 +880,9 @@ $(document).ready(function () {
     const table = $('#rcostingReceivedTable').DataTable({
         responsive: false,
         paging: false,
-        ordering: false
+        ordering: false,
+        scrollY: "500px",     // vertical scroll height
+        scrollCollapse: true, // collapse if fewer rows
     });
 });
 $(document).ready(function () {
