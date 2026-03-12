@@ -3,6 +3,7 @@ using RFQ.UI.Domain.Helper;
 using RFQ.UI.Domain.Interfaces;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using System.IO;
 
 namespace RFQ.UI.Application.Provider
 {
@@ -70,6 +71,10 @@ namespace RFQ.UI.Application.Provider
         public async Task<IEnumerable<RfqResponseDto>> GetRfqTableData()
         {
             return await _requestForQuoteAdaptor.GetRfqTableData();
+        }
+        public async Task<MasterPartyDto?> GetMasterPartyById(int partyId)
+        {
+            return await _requestForQuoteAdaptor.GetMasterPartyById(partyId);
         }
     }
 }

@@ -336,7 +336,9 @@ namespace RFQ.UI.Controllers
             try
             {
                 List<string> dVar = new();
-                dVar.Add("Vendor");
+                var Vendor = await _requestForQuoteService.GetMasterPartyById(rfqRecipient.VendorId);
+                string partyName = string.IsNullOrEmpty(Vendor.PartyName)? "Vendor" : Vendor.PartyName;
+                dVar.Add(partyName);
                 dVar.Add(formLink);
 
                 var body = new WhatsAppRequestDto

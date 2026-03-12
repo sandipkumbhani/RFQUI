@@ -250,5 +250,23 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<MasterPartyDto?> GetMasterPartyById(int partyId)
+        {
+            try
+            {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetMasterPartyById + partyId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                {
+                    return JsonConvert.DeserializeObject<MasterPartyDto>(responseModel.Data.ToString());
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
 }
