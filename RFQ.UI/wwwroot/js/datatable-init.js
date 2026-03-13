@@ -881,8 +881,6 @@ $(document).ready(function () {
         responsive: false,
         paging: false,
         ordering: false,
-        scrollY: "500px",     // vertical scroll height
-        scrollCollapse: true, // collapse if fewer rows
     });
 });
 $(document).ready(function () {
