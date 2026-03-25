@@ -331,11 +331,13 @@ async function SaveAndSaveNew(action) {
     };
     let selectedVendorList = GetSelectedVendor();
     const rfqFinalRateFormData = selectedVendorList.map(vendor => ({
-        VendorId: vendor.VendorId || 0,
-        RfqId: vendor.RfqId || 0,
-        IsAssigned: vendor.IsAssigned || 0,
-        AvailVehicleCount: vendor.AvailVehicleCount || 0,
-        AssignedVehicles: vendor.AssignedVehicles || 0
+        RfqFinalRateId: Number(vendor?.RfqFinalRateId) || 0,
+        RfqFinalId: Number(vendor?.RfqFinalId) || null,
+        RfqId: Number(vendor?.RfqId) || null,
+        VendorId: Number(vendor?.VendorId) || null,
+        AvailVehicleCount: Number(vendor?.AvailVehicleCount) || null,
+        AssignedVehicles: Number(vendor?.AssignedVehicles) || null,
+        IsAssigned: vendor?.IsAssigned === 1 || vendor?.IsAssigned === true
     }));
     const check = await checkAssignedVehicles(rfqFinalRateFormData);
     if (check) {

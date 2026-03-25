@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Application.Provider;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
+using RFQ.UI.Infrastructure.Provider;
 
 namespace RFQ.UI.Controllers
 {
@@ -12,12 +16,18 @@ namespace RFQ.UI.Controllers
         private readonly IReceivedVendorCostingService _receivedVendorCostingService;
         private readonly IEmailService _emailService;
         private readonly GlobalClass _globalClass;
+        private readonly IWhatsAppService _whatsAppService;
+        private readonly IRequestForQuoteService _requestForQuoteService;
+        private readonly CommonApiAdaptor _commonApiAdaptor;
 
-        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService, IEmailService emailService, IMenuServices menuServices) : base(menuServices, globalClass)
+        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService, IEmailService emailService, IMenuServices menuServices, IWhatsAppService whatsAppService, IRequestForQuoteService requestForQuoteService, CommonApiAdaptor commonApiAdaptor) : base(menuServices, globalClass)
         {
             _receivedVendorCostingService = receivedVendorCostingService;
             _emailService = emailService;
             _globalClass = globalClass;
+            _whatsAppService = whatsAppService;
+            _requestForQuoteService = requestForQuoteService;
+            _commonApiAdaptor = commonApiAdaptor;
         }
         public async Task<IActionResult> Index()
         {
@@ -104,6 +114,41 @@ namespace RFQ.UI.Controllers
                     Body = body
                 };
                 return await _emailService.SendEmailAsync(emailRequest);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        [HttpPost]
+        public async Task<bool> SendReBidWhatsApp([FromBody] VendorCostingListResponseDto vendor)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(vendor.WhatsAppNo) || string.IsNullOrEmpty(vendor.WhatsAppNo)) return false;
+               
+                string baseUrl = $"{Request.Scheme}://{Request.Host}/QuoteRateVendor/QuoteRateVendor";
+                string formLink = $"{baseUrl}?RfqId={vendor.RfqId}&VendorId={vendor.PartyId}";
+                var response = await _commonApiAdaptor.GetShortLink(formLink);
+                var shortUrl = JsonConvert.DeserializeObject<ShortLinkResponseDto>(response)?.ShortUrl;
+
+                List<string> dVar = new();
+                var Vendor = await _requestForQuoteService.GetMasterPartyById(vendor.PartyId);
+                string partyName = string.IsNullOrEmpty(Vendor.PartyName) ? "Vendor" : Vendor.PartyName;
+                dVar.Add(partyName);
+                dVar.Add(shortUrl);
+
+                var body = new WhatsAppRequestDto
+                {
+                    MobileNo = vendor.WhatsAppNo,
+                    TemplateName = WhatsAppTemplate.rfqevent,
+                    DVariables = string.Join(",", dVar),
+                };
+
+                await _whatsAppService.SendMessageAsync(body);
+                return true;
+
             }
             catch (Exception ex)
             {

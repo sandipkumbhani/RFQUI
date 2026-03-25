@@ -108,18 +108,30 @@ function BindTable(data) {
                 return JSON.parse(rowData);
             }
         }).get().filter(Boolean);
-        console.log(selectedData);
         if (!selectedData.length) {
             toastr.warning('Please select at least one row.');
             return;
         }
 
         for (const rowData of selectedData) {
-            var check = await SendEmail(rowData);
-            if (!IsNullOrEmpty(check) && check) {
-                toastr.success(`${rowData.vendorName} email(s) sent successfully.`);
-            } else {
-                toastr.error(`${rowData.vendorName} email(s) failed to send.`);
+            try {
+                const emailSent = await SendEmail(rowData);
+                const whatsappSent = await sendWhatsApp(rowData);
+
+                if (!IsNullOrEmpty(emailSent) && emailSent) {
+                    toastr.success(`${rowData.vendorName} email sent successfully.`);
+                } else {
+                    toastr.error(`${rowData.vendorName} email failed to send.`);
+                }
+
+                if (!IsNullOrEmpty(whatsappSent) && whatsappSent) {
+                    toastr.success(`${rowData.vendorName} WhatsApp sent successfully.`);
+                } else {
+                    toastr.error(`${rowData.vendorName} WhatsApp failed to send.`);
+                }
+
+            } catch (error) {
+                toastr.error(`${rowData.vendorName} failed due to error.`);
             }
         }
     });
@@ -137,6 +149,31 @@ function SendEmail(rowData) {
         error: function (xhr) {
             console.log("Email Not failed to send:", res);
         }
+    });
+}
+
+function sendWhatsApp(rowData) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/ReceivedVendorCosting/SendReBidWhatsApp',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(rowData),
+            success: function (response) {
+                if (response === true) {
+                    console.log("WhatsApp sent successfully!");
+                    resolve(true);   // ✅ return success
+                } else {
+                    console.log("Failed to send WhatsApp.");
+                    resolve(false);  // ✅ return failure
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                console.log("Something went wrong!");
+                reject(false); // ❌ error case
+            }
+        });
     });
 }
 

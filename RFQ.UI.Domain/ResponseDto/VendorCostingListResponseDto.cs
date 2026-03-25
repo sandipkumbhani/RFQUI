@@ -34,6 +34,7 @@ namespace RFQ.UI.Domain.ResponseDto
         public string ItemName { get; set; }
         public string PANNo { get; set; }
         public string Email { get; set; }
+        public string? WhatsAppNo { get; set; }
         public bool AskForReBid { get; set; }
     }
 }
