@@ -5,6 +5,7 @@ using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
+using System.Numerics;
 
 namespace RFQ.UI.Controllers
 {
@@ -13,14 +14,16 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IRfqFinalService _rfqFinalService;
         private readonly IEmailService _emailService;
+        private readonly IWhatsAppService _whatsAppService;
         private readonly IConfiguration _config;
 
-        public RFQFinalizationController(IRfqFinalService rfqFinalService, GlobalClass globalClass, IEmailService emailService, IConfiguration config, IMenuServices menuServices) : base(menuServices, globalClass)
+        public RFQFinalizationController(IRfqFinalService rfqFinalService, GlobalClass globalClass, IEmailService emailService, IConfiguration config, IMenuServices menuServices, IWhatsAppService whatsAppService) : base(menuServices, globalClass)
         {
             _rfqFinalService = rfqFinalService;
             _globalClass = globalClass;
             _emailService = emailService;
             _config = config;
+            _whatsAppService = whatsAppService;
         }
         public async Task<IActionResult> Index()
         {
@@ -217,12 +220,36 @@ namespace RFQ.UI.Controllers
                         IsHtml = true
                     };
                     bool check = await _emailService.SendEmailAsync(emailRequest);
+                    await SendWhatsAppMessage(requestDto, item);
                 }
                 return Ok(true);
             }
             catch (Exception ex)
             {
                 return Ok(false);
+            }
+        }
+
+        private async Task SendWhatsAppMessage(AssignOrderRequestDto requestDto, VendorFinalizationResposeDto vendor)
+        {
+            if (!string.IsNullOrEmpty(vendor.WhatsAppNo))
+            {
+                List<string> dVar = new();
+                dVar.Add(vendor.VendorName);
+                dVar.Add(requestDto.VehicleReqOn?.ToString("dd-MM-yyyy"));
+                dVar.Add(requestDto.VehicleType);
+                dVar.Add(vendor.VehicleCount.ToString());
+                dVar.Add(requestDto.FromLocation.Replace(',',' '));
+                dVar.Add(requestDto.ToLocation.Replace(',', ' '));
+                dVar.Add(vendor.TotalHireCost.ToString());
+
+                var body = new WhatsAppRequestDto
+                {
+                    MobileNo = vendor.WhatsAppNo,
+                    TemplateName = WhatsAppTemplate.rfqfinalization,
+                    DVariables = string.Join(",", dVar),
+                };
+                await _whatsAppService.SendMessageAsync(body);
             }
         }
     }
