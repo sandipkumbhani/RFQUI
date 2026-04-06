@@ -82,6 +82,7 @@ function BindTable(data) {
         <td>${row.itemName}</td>
         <td>${row.panNo}</td>
         <td>${row.email}</td>
+        <td>${row.whatsAppNo}</td>
         <td><a href="#" class="view-quote">View Quote</a></td>
         <td style="text-align:center;">
           <input type="checkbox" class="select-row" data-index="${index}" ${row.askForReBid ? 'checked' : ''}>
