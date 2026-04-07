@@ -7,7 +7,7 @@
     bool IsCancel = (bool)ViewData["IsCancel"];
 }
 @section Scripts {
-    <script src="~/js/Views/EWayBill.js"></script>
+    <script src="~/js/Views/EWayBill.js?ver=@DateTime.Now.Ticks"></script>
     <script>
         var IsAdd = @IsAdd.ToString().ToLower();
         var IsEdit = @IsEdit.ToString().ToLower();

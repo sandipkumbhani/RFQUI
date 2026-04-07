@@ -96,8 +96,9 @@ $(document).ready(function () {
     $("#drpOwnerName").on('change', async function () {
         if (isValidateSelect($("#drpOwnerName").val())) {
             const value = $(this).val();
+            var indentId = $('#ddlIndentNo').val();
             if (isValidateSelect($("#drpOwnerName").val())) {
-                const costing = VendorCosting.filter(x => x.partyId == value).map(x => x.totalHireCost);
+                const costing = VendorCosting.filter(x => x.partyId == value && x.indentId == parseInt(indentId)).map(x => x.totalHireCost);
                 $("#txtTotalHairAmt").val(costing.length > 0 ? costing[0] : 0);
             }
         }
@@ -501,7 +502,7 @@ async function AutoFetch() {
                     }
 
                     if (!IsNullOrEmpty(data.vehicleReqOn)) {
-                        $('#txtRFQDate').val(formatDateForInput(data.vehicleReqOn));
+                        $('#txtRFQDate').val(formatDateForInput(data.rfqDate));
                     } else {
                         $('#txtRFQDate').val('');
                     }

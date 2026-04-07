@@ -11,6 +11,7 @@ namespace RFQ.UI.Domain.ResponseDto
         public int RfqId { get; set; }
         public int PartyId { get; set; }
         public string SerialNumber { get; set; }
+        public int IndentId { get; set; }
         public string IndentNumber { get; set; }
         public DateTime? IndentDate { get; set; }
         public string RFQNumber { get; set; }

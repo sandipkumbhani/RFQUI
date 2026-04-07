@@ -238,7 +238,7 @@ namespace RFQ.UI.Controllers
                 dVar.Add(vendor.VendorName);
                 dVar.Add(requestDto.VehicleReqOn?.ToString("dd-MM-yyyy"));
                 dVar.Add(requestDto.VehicleType);
-                dVar.Add(vendor.VehicleCount.ToString());
+                dVar.Add(vendor.AssignedVehicles.ToString());
                 dVar.Add(requestDto.FromLocation.Replace(',',' '));
                 dVar.Add(requestDto.ToLocation.Replace(',', ' '));
                 dVar.Add(vendor.TotalHireCost.ToString());

@@ -6,8 +6,8 @@
     ViewData["Title"] = "Customer";
 }
 @section Scripts {
-    <script src="~/js/Views/Customer.js"></script>
-    <script src="~/js/AttachmentDetails.js"></script>
+    <script src="~/js/Views/Customer.js?ver=@DateTime.Now.Ticks"></script>
+    <script src="~/js/AttachmentDetails.js?ver=@DateTime.Now.Ticks"></script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOyN2BYpLwazCPCHihlFTLrZ5H_MNizrc&callback=initMap&libraries=places">
     </script>
