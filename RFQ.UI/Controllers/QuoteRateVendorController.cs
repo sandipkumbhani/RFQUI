@@ -33,6 +33,15 @@ namespace RFQ.UI.Controllers
         }
         public async Task<ActionResult> QuoteRateVendor()
         {
+            var queryStringValue = Request.Query["RfqId"];
+            int rfqId = !string.IsNullOrEmpty(queryStringValue) ? Convert.ToInt32(queryStringValue) : 0;
+            if(rfqId > 0)
+            {
+                int isRFQFinalized = await _rfqRateService.CheckFinalizationStatusOfRFQ(rfqId);
+                if (isRFQFinalized == 1)
+                    return View("~/Views/QuoteRateVendor/RFQFinalizeError.cshtml");
+            }
+
             return View();
         }
         public async Task<ActionResult> QuoteRateBranch()

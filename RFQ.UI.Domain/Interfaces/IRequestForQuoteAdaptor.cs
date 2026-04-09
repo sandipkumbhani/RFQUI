@@ -16,7 +16,7 @@ namespace RFQ.UI.Domain.Interfaces
         Task<RfqResponseDto> GetRfqById(int rfqId);
         Task<IEnumerable<RfqVendorListResponseDto>> GetAllVendorListForRfq(RfqVendorDetailsParam rfqVendorDetailsParam);
         Task<IEnumerable<RfqPreviousQuotesList>> GetPreviousQuotesList(RfqVendorDetailsParam rfqVendorDetailsParam);
-        Task<RfqQuoteRateVendorDetails> GetRfqQuoteRateVendorDetailsqById(int rfqId);
+        Task<RfqQuoteRateVendorDetails> GetRfqQuoteRateVendorDetailsById(int rfqId);
         Task<IEnumerable<RfqResponseDto>> GetRfqTableData();
         Task<MasterPartyDto?> GetMasterPartyById(int partyId);
     }

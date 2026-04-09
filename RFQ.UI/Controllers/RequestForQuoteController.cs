@@ -110,7 +110,7 @@ namespace RFQ.UI.Controllers
                         foreach (var vendor in RfqRecipientsList)
                         {
                             bool check = false;
-                            //RfqQuoteRateVendorDetails data = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsqById(vendor.RfqId);
+                            //RfqQuoteRateVendorDetails data = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsById(vendor.RfqId);
                             var data = new
                             {
                                 VendorId = vendor.VendorId,
