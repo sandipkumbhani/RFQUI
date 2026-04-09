@@ -42,5 +42,21 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<int> CheckFinalizationStatusOfRFQ(int rfqId)
+        {
+            int isFinalized = 0;
+            var url = $"{_appSettings.BaseUrl + _appSettings.CheckFinalizationStatusOfRFQ}";
+            var responseModel = await _commonApiAdaptor.PostAsync<NewCommonResponseDto>(url + $"/{rfqId}", "");
+
+            if (responseModel != null)
+            {
+                var result = responseModel.StatusCode;
+                if (result == 200)
+                    isFinalized = Convert.ToInt32(responseModel.Data);
+            }
+
+            return isFinalized;
+        }
     }
 }

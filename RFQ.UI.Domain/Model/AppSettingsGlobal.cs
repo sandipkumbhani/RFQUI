@@ -59,6 +59,7 @@ namespace RFQ.UI.Domain.Model
         public string? GetProfileRightsByProfileId { get; set; }
         public string? AddOrUpdateProfileRights { get; set; }
         public string? AddRfqRate { get; set; }
+        public string? CheckFinalizationStatusOfRFQ { get; set; }
         public string? GetAllReceivedVendorCosting { get; set; }
         public string? GetAllVehicleIndentList { get; set; }
         public string? GenerateRfqAutoNo { get; set; }
@@ -209,6 +210,7 @@ namespace RFQ.UI.Domain.Model
                 GetProfileRightsByProfileId = profileRightSection["GetProfileRightsByProfileId"],
                 AddOrUpdateProfileRights = profileRightSection["AddOrUpdateProfileRights"],
                 AddRfqRate = rfqRateSection["AddRfqRate"],
+                CheckFinalizationStatusOfRFQ = rfqRateSection["CheckFinalizationStatusOfRFQ"],
                 GetAllReceivedVendorCosting = receivedVendorCostingSection["GetAllReceivedVendorCosting"],
                 GetAllVehicleIndentList = requestForQuoteSection["GetAllVehicleIndentList"],
                 GenerateRfqAutoNo = requestForQuoteSection["GenerateRfqAutoNo"],

@@ -158,7 +158,7 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<RfqQuoteRateVendorDetails> GetRfqQuoteRateVendorDetailsqById(int rfqId)
+        public async Task<RfqQuoteRateVendorDetails> GetRfqQuoteRateVendorDetailsById(int rfqId)
         {
             try
             {
