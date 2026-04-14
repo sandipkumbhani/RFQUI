@@ -26,6 +26,7 @@ builder.Services.AddCors(options =>
                           .WithOrigins("https://localhost:443")
                           .WithOrigins("https://192.168.0.72:443")
                           .WithOrigins("https://192.168.0.72:7075")
+                          .WithOrigins("https://app.fleetlynk.com")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials());

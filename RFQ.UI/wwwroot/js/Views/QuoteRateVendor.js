@@ -23,7 +23,7 @@ $(document).ready(function () {
         }
        
     });
-    UrlParamBind()
+    getRfqQuoteRateVendorDetails();
 });
 function OnSubmitCheckValidation() {
     if (IsNullOrEmpty($("#txtAvailableVehicle").val())) {
@@ -45,130 +45,6 @@ function OnSubmitCheckValidation() {
     return true;
 
 }
-
-//function Initialization() {
-//    $("#txtRFQDate").on("blur", function () {
-//        if (!isValidateSelect($(this).val())) {
-//            toastr.warning("Please select a Rfq Date", "Validation Error");
-//            return;
-//        }
-//    });
-//    $("#txtExpireOn").on("blur", function () {
-//        if (!isValidateSelect($(this).val())) {
-//            toastr.warning("Please select a Rfq ExpireOn", "Validation Error");
-//            return;
-//        }
-//    });
-//    $("#txtVehicleReqOn").on("blur", function () {
-//        if (!isValidateSelect($(this).val())) {
-//            toastr.warning("Please select a Vehicle Req On", "Validation Error");
-//            return;
-//        }
-//    });
-   
-
-
-//    //$("#ddlRFQPriority").on("blur", function () {
-//    //    if (!isValidateSelect($(this).val())) {
-//    //        toastr.warning("Please select a Rfq Priority", "Validation Error");
-//    //        return;
-//    //    }
-//    //});
-//    //$("#txtVednorName").on("blur", function () {
-//    //    if (!isValidateSelect($(this).val())) {
-//    //        toastr.warning("Please select a Vednor Name", "Validation Error");
-//    //        return;
-//    //    }
-//    //});
-//    $("#txtOriginFrom").on("blur", function () {
-//        if (!isValidateSelect($(this).val())) {
-//            toastr.warning("Please select a Origin From", "Validation Error");
-//            return;
-//        }
-//    });
-//    $("#txtDestination").on("blur", function () {
-//        if (!isValidateSelect($(this).val())) {
-//            toastr.warning("Please select aDestination", "Validation Error");
-//            return;
-//        }
-//    });
-//    $("#txtRFQOn").on("blur", function () {
-//        if (!isValidateSelect($(this).val())) {
-//            toastr.warning("Please select a Rfq ON", "Validation Error");
-//            return;
-//        }
-//    });
-//    $("#ddlVehicleType").on("blur", function () {
-//        if (!isValidateSelect($(this).val())) {
-//            toastr.warning("Please select a Vehicle Type", "Validation Error");
-//            return;
-//        }
-//    });
-
-//    $("#txtNoOfVehicles").on("blur", function () {
-//        if (!isNumeric($(this).val())) {
-//            toastr.warning("Please Enter a No of Vehicels", "Validation Error");
-//            return;
-//        }
-//    });
-
-//    $("#txtTotalQTY").on("blur", function () {
-//        if (!isNumeric($(this).val())) {
-//            toastr.warning("Please Enter a Total Qty in Tons", "Validation Error");
-//            return;
-//        }
-//    });
-
-//    //$("#ddlItemName").on("blur", function () {
-//    //    if (!isValidateSelect($(this).val())) {
-//    //        toastr.warning("Please select a Item Name", "Validation Error");
-//    //        return;
-//    //    }
-//    //});
-
-//    //$("#ddlPackingType").on("blur", function () {
-//    //    if (!isValidateSelect($(this).val())) {
-//    //        toastr.warning("Please select a Paking Type", "Validation Error");
-//    //        return;
-//    //    }
-//    //});
-//    $("#txtHireCost").on("blur", function () {
-//        var hirecost = $(this).val();
-//        if (IsNullOrEmpty(hirecost)) {
-//            toastr.warning("Please enter a valid Hire Cost", "Warning");
-//            return;
-//        }
-//    });
-//    $("#txtDetentionDay").on("blur", function () {
-//        var detentionDay = $(this).val();
-//        if (IsNullOrEmpty(detentionDay)) {
-//            $("#txtInstruction").val('');
-//            toastr.warning("Please enter a Valid Detention Per Day", "Warning");
-//            return;
-//        }
-//    });
-
-//    $("#txtDetentionDays").on("blur", function () {
-//        var detentionDays = $(this).val();
-//        if (IsNullOrEmpty(detentionDays)) {
-//            toastr.warning("Please enter a valid Detention Free Days ", "Warning");
-//            return;
-//        }
-//    });
-//    $("#txtInstruction").on("blur", function () {
-//        var instruction = $(this).val();
-//        if (IsNullOrEmpty(instruction)) {
-//            $("#txtInstruction").val('');
-//            toastr.warning("Please enter a Special Intruction", "Warning");
-//            return;
-//        }
-//    });
-//    //on form submit
-//    //$("#btnSaveForm").click(function (event) {
-//    //    event.preventDefault();
-//    //    Save();
-//    //});
-//}
 function ValidationCheck() {
 
     if (IsNullOrEmpty($("#txtRFQDate").val())) {
@@ -262,7 +138,6 @@ function Save(action) {
                     $('#formDiv').addClass('d-none');
                     //toastr.success("Vehicle Indent Saved Successfully!", "Success");
                     $('#QRVendorBodyForm')[0].reset();
-                    UrlParamBind();
                 } else {
                     toastr.error("Failed to Submit Vehicle Indent Details.", "Error");
                 }
@@ -271,18 +146,10 @@ function Save(action) {
     }
 
 }
-function UrlParamBind() {
-    const urlParams = new URLSearchParams(window.location.search);
-    for (const [key, value] of urlParams.entries()) {
-    }
-    console.log(urlParams);
-    const VendorId = urlParams.get("VendorId");
-    const RfqId = urlParams.get("RfqId");
-    $("#vendorId").val(VendorId);
-    $("#RfqId").val(RfqId);
-    getRfqQuoteRateVendorDetails(RfqId, VendorId);
-}
-function getRfqQuoteRateVendorDetails(RfqId, VendorId) {
+function getRfqQuoteRateVendorDetails() {
+    var RfqId = $("#RfqId").val();
+    var VendorId = $("#vendorId").val();
+
     var Body = {
         RfqId: RfqId,
         VendorId: VendorId
@@ -296,8 +163,6 @@ function getRfqQuoteRateVendorDetails(RfqId, VendorId) {
             if (response.statusCode == 200) {
                 var data = response.data;
                 console.log(response);
-                $("#RfqId").val(data.rfqId);
-                $("#RfqId").val(data.rfqId);
                 $("#txtRFQNo").val(data.rfqNo);
                 $("#txtExpireOn").val(formatDate(data.expiryDate));
                 $("#ddlOrigin").val(data.fromLocation);

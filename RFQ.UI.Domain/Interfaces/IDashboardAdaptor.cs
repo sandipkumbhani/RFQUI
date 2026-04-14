@@ -1,10 +1,9 @@
 ﻿using RFQ.UI.Domain.ResponseDto;
 
-namespace RFQ.UI.Application.Interface
+namespace RFQ.UI.Domain.Interfaces
 {
-    public interface IDashboardServices
+    public interface IDashboardAdaptor
     {
-        Task<IEnumerable<UserResponseDto>> GetAllUsers();
         Task<IList<DashboardCardResponseDto>?> GetDashboardCards();
         Task<DashboardCardDetailsResponseDto> GetDashboardCardDetails(string cardId);
     }

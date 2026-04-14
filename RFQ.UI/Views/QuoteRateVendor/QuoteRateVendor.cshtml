@@ -3,6 +3,8 @@
 @{
     Layout = null;
     ViewData["Title"] = "QuoteRate-Vendor";
+    int rfqId = ViewBag.rfqId;
+    int vendorId = ViewBag.vendorId;
 }
 <style>
 
@@ -79,21 +81,8 @@
                                 <input disabled type="text" class="form-control" placeholder="Vehicle Req On" id="txtVehicleReqOn" />
                             </div>
                         </div>
-                        <input type="hidden" id="RfqId" name="RfqId">
-                        <input type="hidden" id="vendorId" name="vendorId">
-                        @* <div class="col-lg-6">
-                            <div class="item-input">
-                                <label class="form-label">Vendor Name</label>
-                                <input disabled class="form-control" placeholder="Vendor Name" id="txtVednorName" style="width: 100%;">
-
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">PAN No </label>
-                                <input disabled type="text" class="form-control" placeholder="PAN No" id="txtPANNo" />
-                            </div>
-                        </div> *@
+                        <input type="hidden" id="RfqId" name="RfqId" value="@rfqId">
+                        <input type="hidden" id="vendorId" name="vendorId" value="@vendorId">
                     </div>
 
                     <div class="row">
@@ -121,24 +110,6 @@
                                 <input disabled type="text" class="form-control" placeholder="No.of Vehicles" id="txtNoOfVehicles" />
                             </div>
                         </div>
-                        @*    <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">Item Name</label>
-                                <input disabled class="form-control" id="ddlItemName" style="width: 100%;">
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="item-input">
-                                <label class="form-label">Packing Type</label>
-                                <input disabled class="form-control" id="ddlPackingType" style="width: 100%;">
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="item-input">
-                                <label class="form-label">Special Instructions </label>
-                                <input disabled type="text" class="form-control" placeholder="Special Instructions" id="txtInstruction" />
-                            </div>
-                        </div> *@
                         <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Available Vehicle Count</label>
@@ -151,7 +122,7 @@
                                 <input type="text" class="form-control" placeholder="Total Hire Cost" id="txtHireCost" maxlength="8" onkeypress="return isNumber(event)" />
                             </div>
                         </div>
-                        <div class="col-lg-3"> 
+                        <div class="col-lg-3">
                             <div class="item-input">
                                 <label class="form-label"><span>*</span>Detention Per Day</label>
                                 <input type="text" class="form-control" placeholder="Detention Per Day" id="txtDetentionDay" maxlength="5" onkeypress="return isNumber(event)" />

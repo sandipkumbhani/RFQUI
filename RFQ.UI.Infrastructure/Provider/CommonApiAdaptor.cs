@@ -31,6 +31,8 @@ namespace RFQ.UI.Infrastructure.Provider
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             if (!string.IsNullOrEmpty(token))
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            else if(!string.IsNullOrEmpty(_globalClass.Token))
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _globalClass.Token);
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();

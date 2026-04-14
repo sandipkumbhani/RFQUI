@@ -31,9 +31,10 @@ namespace RFQ.UI.Controllers
         private readonly IRfqRecipientService _rfqRecipientService;
         private readonly IMapper _mapper;
         private readonly CommonApiAdaptor _commonApiAdaptor;
+        private readonly ICryptographyService _cryptographyService;
 
 
-        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices, IRfqRecipientService rfqRecipientService, IMapper mapper, CommonApiAdaptor commonApiAdaptor) : base(menuServices, globalClass)
+        public RequestForQuoteController(IRequestForQuoteService requestForQuoteService, GlobalClass globalClass, ILogger<RequestForQuoteController> logger, IRfqLinkService rfqLinkService, IWhatsAppService whatsAppService, IEmailService emailService, IMenuServices menuServices, IRfqRecipientService rfqRecipientService, IMapper mapper, CommonApiAdaptor commonApiAdaptor, ICryptographyService cryptographyService) : base(menuServices, globalClass)
         {
             _requestForQuoteService = requestForQuoteService;
             _logger = logger;
@@ -44,6 +45,7 @@ namespace RFQ.UI.Controllers
             _rfqRecipientService = rfqRecipientService;
             _mapper = mapper;
             _commonApiAdaptor = commonApiAdaptor;
+            _cryptographyService = cryptographyService;
         }
         public async Task<ActionResult> VendorRequest()
         {
@@ -111,10 +113,12 @@ namespace RFQ.UI.Controllers
                         {
                             bool check = false;
                             //RfqQuoteRateVendorDetails data = await _requestForQuoteService.GetRfqQuoteRateVendorDetailsById(vendor.RfqId);
+                            string encryptedRfqId = Uri.EscapeDataString(_cryptographyService.Encrypt(vendor.RfqId.ToString()));
+                            string encryptedVendorId = Uri.EscapeDataString(_cryptographyService.Encrypt(vendor.VendorId.ToString()));
                             var data = new
                             {
-                                VendorId = vendor.VendorId,
-                                RfqId = vendor.RfqId
+                                VendorId = encryptedVendorId,
+                                RfqId = encryptedRfqId
                             };
                             if (data != null)
                             {
@@ -204,7 +208,9 @@ namespace RFQ.UI.Controllers
                         foreach (var item in requestForQuoteRequestDto.RfqRecipients)
                         {
                             bool check = false;
-                            var body = new { VendorId = item.VendorId, RfqId = rfqId };
+                            string encryptedRfqId = Uri.EscapeDataString(_cryptographyService.Encrypt(rfqId.ToString()));
+                            string encryptedVendorId = Uri.EscapeDataString(_cryptographyService.Encrypt(item.VendorId.ToString()));
+                            var body = new { VendorId = encryptedVendorId, RfqId = encryptedRfqId };
                             string? formLink = Url.Action("QuoteRateVendor", "QuoteRateVendor", body, Request.Scheme) ?? string.Empty;
                             var vendor = _mapper.Map<RfqRecipientResponseDto>(item);
                             var response = await _commonApiAdaptor.GetShortLink(formLink);

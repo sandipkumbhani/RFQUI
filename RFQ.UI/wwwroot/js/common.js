@@ -1154,7 +1154,6 @@ function GetAutoGenerateCode(code, prefix) {
         dataType: 'json',
         data: JSON.stringify(requestDto),
         success: function (response) {
-            console.log("Auto Generate Code Success:", response);
             return response;
         },
         error: function (xhr, status, error) {
