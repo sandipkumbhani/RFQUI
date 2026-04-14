@@ -117,7 +117,8 @@ namespace RFQ.UI.Domain.Model
         public string? GetAwardedVendorListByRfqNo { get; set; }
         public string? GetRfqTableData { get; set; }
         public string? GetMasterPartyById { get; set; }
-
+        public string? GetCards { get; set; }
+        public string? GetCardDetails { get; set; }
 
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
@@ -151,8 +152,8 @@ namespace RFQ.UI.Domain.Model
             var vehicleSection = config.GetSection("Vehicle");
             var deliverySection = config.GetSection("Delivery");
             var commonSection = config.GetSection("Common");
-            
-            
+            var dashboardSection = config.GetSection("Dashboard");
+
             return new AppSettingsGlobal
             {
                 BaseUrl = section["BaseUrl"],
@@ -202,7 +203,7 @@ namespace RFQ.UI.Domain.Model
                 AddProduct = productSection["AddProduct"],
                 EditProduct = productSection["EditProduct"],
                 GetDrpProductList = productSection["GetDrpProductList"],
-                AddProfile = profileSection["AddProfile"], 
+                AddProfile = profileSection["AddProfile"],
                 GetProfileAll = profileSection["GetProfileAll"],
                 GetAllInternalMaster = profileSection["GetAllInternalMaster"],
                 GetAllLinkGroup = profileRightSection["GetAllLinkGroup"],
@@ -266,8 +267,9 @@ namespace RFQ.UI.Domain.Model
                 CheckAwardedVendor = vehiclePlacementSection["CheckAwardedVendor"],
                 GetAwardedVendorListByRfqNo = vehiclePlacementSection["GetAwardedVendorListByRfqNo"],
                 GetRfqTableData = requestForQuoteSection["GetRfqTableData"],
-                GetMasterPartyById = requestForQuoteSection["GetMasterPartyById"]
-              
+                GetMasterPartyById = requestForQuoteSection["GetMasterPartyById"],
+                GetCards = dashboardSection["GetCards"],
+                GetCardDetails = dashboardSection["GetCardDetails"]
             };
         }
     }

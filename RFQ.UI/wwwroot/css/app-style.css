@@ -3531,3 +3531,95 @@ body.overlay-active {
 .pac-container {
     z-index: 999999 !important;
 }
+/* Pagination */
+.table-pagination {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--gray-200);
+}
+
+.pagination-info {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+.pagination {
+    margin: 0;
+}
+
+.page-link {
+    border: none;
+    color: var(--gray-600);
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--border-radius-sm);
+    margin: 0 0.125rem;
+}
+
+    .page-link:hover {
+        background: var(--gray-100);
+        color: var(--gray-800);
+    }
+
+.page-item.active .page-link {
+    background: var(--primary);
+    color: var(--white);
+}
+.table-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+}
+
+.table-card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.table-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.table-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filter-search {
+    position: relative;
+}
+
+    .filter-search input {
+        padding: 0.5rem 1rem 0.5rem 2.25rem;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--border-radius-sm);
+        font-size: 0.875rem;
+        min-width: 200px;
+    }
+
+        .filter-search input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+    .filter-search svg {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        color: var(--gray-400);
+    }

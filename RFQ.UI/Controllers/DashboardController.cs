@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.ResponseDto;
-using RFQ.UI.Extension;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -14,7 +11,7 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
 
 
-        public DashboardController(IDashboardServices dashBoardServices, IMenuServices menuServices,GlobalClass globalClass) : base(menuServices, globalClass)
+        public DashboardController(IDashboardServices dashBoardServices, IMenuServices menuServices, GlobalClass globalClass) : base(menuServices, globalClass)
         {
             _dashBoardServices = dashBoardServices;
             _globalClass = globalClass;
@@ -28,8 +25,24 @@ namespace RFQ.UI.Controllers
         {
             try
             {
+                IList<DashboardCardResponseDto> dashboardCards = await _dashBoardServices.GetDashboardCards();
+                ViewBag.DashboardCards = dashboardCards != null ? dashboardCards : new List<DashboardCardResponseDto>();
                 await SetMenuAsync();
                 return View();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDashboardCardDetails(string cardId)
+        {
+            try
+            {
+                var dashboardCardDetails = await _dashBoardServices.GetDashboardCardDetails(cardId);
+                return Json(new { data = dashboardCardDetails });
             }
             catch (Exception)
             {

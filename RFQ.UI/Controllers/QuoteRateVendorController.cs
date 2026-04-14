@@ -1,15 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net.Mail;
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RFQ.UI.Application.Interface;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
-using System.Numerics;
 using RFQ.UI.Domain.ResponseDto;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RFQ.UI.Controllers
 {
@@ -19,12 +12,14 @@ namespace RFQ.UI.Controllers
         private readonly GlobalClass _globalClass;
         private readonly IQuoteRateVendorService _rfqRateService;
         private readonly IRequestForQuoteService _requestForQuoteService;
+        private readonly ICryptographyService _cryptographyService;
 
-        public QuoteRateVendorController(GlobalClass globalClass, IQuoteRateVendorService rfqRateService, IRequestForQuoteService requestForQuoteService, IMenuServices menuServices) : base(menuServices, globalClass)
+        public QuoteRateVendorController(GlobalClass globalClass, IQuoteRateVendorService rfqRateService, IRequestForQuoteService requestForQuoteService, IMenuServices menuServices, ICryptographyService cryptographyService) : base(menuServices, globalClass)
         {
             _globalClass = globalClass;
             _rfqRateService = rfqRateService;
             _requestForQuoteService = requestForQuoteService;
+            _cryptographyService = cryptographyService;
         }
         public async Task<IActionResult> Index()
         {
@@ -33,15 +28,19 @@ namespace RFQ.UI.Controllers
         }
         public async Task<ActionResult> QuoteRateVendor()
         {
-            var queryStringValue = Request.Query["RfqId"];
-            int rfqId = !string.IsNullOrEmpty(queryStringValue) ? Convert.ToInt32(queryStringValue) : 0;
-            if(rfqId > 0)
+            string encVendorId = !string.IsNullOrEmpty(Request.Query["VendorId"]) ? Request.Query["VendorId"].ToString() : "";
+            string encRfqId = !string.IsNullOrEmpty(Request.Query["RfqId"]) ? Request.Query["RfqId"].ToString() : "";
+            int vendorId = Convert.ToInt32(_cryptographyService.Decrypt(Uri.UnescapeDataString(encVendorId)));
+            int rfqId = Convert.ToInt32(_cryptographyService.Decrypt(Uri.UnescapeDataString(encRfqId)));
+
+            if (rfqId > 0)
             {
                 int isRFQFinalized = await _rfqRateService.CheckFinalizationStatusOfRFQ(rfqId);
                 if (isRFQFinalized == 1)
                     return View("~/Views/QuoteRateVendor/RFQFinalizeError.cshtml");
             }
-
+            ViewBag.rfqId = rfqId;
+            ViewBag.vendorId = vendorId;
             return View();
         }
         public async Task<ActionResult> QuoteRateBranch()
@@ -94,7 +93,7 @@ namespace RFQ.UI.Controllers
                         StatusCode = 200,
                         Message = "Success"
                     });
-                    
+
                 }
                 return null;
             }

@@ -1,7 +1,9 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using RFQ.UI.Domain.ResponseDto
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
     ViewData["Title"] = "FleetLynk";
+    IList<DashboardCardResponseDto> DashboardCards = ViewBag.DashboardCards;
 }
 @section Scripts {
     <script src="~/js/Views/Dashboard.js?ver=@DateTime.Now.Ticks"></script>
@@ -15,6 +17,47 @@
     <title>Fleetlynk Dashboard</title>
     <link rel="stylesheet" href="~/css/DashboardStyle.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #rfqDashboardTable th,
+        #rfqDashboardTable td {
+        min-width: 120px;
+        max-width: 250px;
+        white-space: normal; /* allow wrapping */
+        word-break: break-word;
+        }
+        #rfqDashboardTable td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.tooltip-cell {
+    position: relative;
+    cursor:  pointer;
+}
+
+.tooltip-cell::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background: #333;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s ease-in-out;
+}
+
+.tooltip-cell:hover::after {
+    opacity: 1;
+}
+    </style>
 </head>
 <body>
     <div class="layout">
@@ -22,30 +65,27 @@
         <div class="main">
             <!-- Stat Cards -->
             <section class="cards">
-                <div class="card">
-                    <h3>Active Vehicles</h3>
-                    <p>152</p>
-                </div>
-                <div class="card">
-                    <h3>Trips Today</h3>
-                    <p>87</p>
-                </div>
-                <div class="card">
-                    <h3>Fuel Consumption</h3>
-                    <p>2,340 L</p>
-                </div>
-                <div class="card">
-                    <h3>Breakdowns</h3>
-                    <p>3</p>
-                </div>
-                <div class="card">
-                    <h3>Revenue</h3>
-                    <p>₹ 1,24,500</p>
-                </div>
+                @if (DashboardCards != null && DashboardCards.Count > 0)
+                {
+                    foreach (var card in DashboardCards)
+                    {
+                        <div class="card" id="@card.CardId" onclick="PopUpModel('@card.CardId','@card.CardHeader.Replace("'", "\\'")')" style="cursor:pointer;">
+                            <h3>@card.CardHeader</h3>
+                            <p>@card.RecordCount</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="card">
+                        <h3>No Data Available</h3>
+                        <p>N/A</p>
+                    </div>
+                }
             </section>
 
             <!-- Charts / Tables -->
-            <section class="charts">
+            @* <section class="charts">
                 <div class="chart">
                     <h3>Vehicle Usage (Last 7 Days)</h3>
                     <canvas id="vehicleChart"></canvas>
@@ -101,7 +141,22 @@
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </section> *@
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="PopupModal" tabindex="-1" aria-labelledby="driverPopupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content" style="max-width:100%;width:100%">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="popupModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="max-width:100%;width:100%">
+                    <div id="rfqCardDetailsTableDiv"></div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

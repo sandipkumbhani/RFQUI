@@ -19,8 +19,9 @@ namespace RFQ.UI.Controllers
         private readonly IWhatsAppService _whatsAppService;
         private readonly IRequestForQuoteService _requestForQuoteService;
         private readonly CommonApiAdaptor _commonApiAdaptor;
+        private readonly ICryptographyService _cryptographyService;
 
-        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService, IEmailService emailService, IMenuServices menuServices, IWhatsAppService whatsAppService, IRequestForQuoteService requestForQuoteService, CommonApiAdaptor commonApiAdaptor) : base(menuServices, globalClass)
+        public ReceivedVendorCostingController(GlobalClass globalClass, IReceivedVendorCostingService receivedVendorCostingService, IEmailService emailService, IMenuServices menuServices, IWhatsAppService whatsAppService, IRequestForQuoteService requestForQuoteService, CommonApiAdaptor commonApiAdaptor, ICryptographyService cryptographyService) : base(menuServices, globalClass)
         {
             _receivedVendorCostingService = receivedVendorCostingService;
             _emailService = emailService;
@@ -28,6 +29,7 @@ namespace RFQ.UI.Controllers
             _whatsAppService = whatsAppService;
             _requestForQuoteService = requestForQuoteService;
             _commonApiAdaptor = commonApiAdaptor;
+            _cryptographyService = cryptographyService;
         }
         public async Task<IActionResult> Index()
         {
@@ -77,41 +79,30 @@ namespace RFQ.UI.Controllers
         {
             try
             {
+                vendor.Email = "pratik.dev540@gmail.com";
                 if (string.IsNullOrWhiteSpace(vendor.Email) || string.IsNullOrEmpty(vendor.Email)) return false;
-                RfqQuoteRateVendorDetails newData = new();
-                newData.PartyName = vendor.PackingName;
-                newData.RfqNo = vendor.RFQNumber;
-                newData.RfqDate = vendor.RFQDate ?? DateTime.Now;
-                newData.ExpiryDate = vendor.RFQExpiredOn ?? DateTime.Now;
-                newData.VehicleReqOn = vendor.VehicleRequiredOn ?? DateTime.Now;
-                newData.FromLocation = vendor.Origin;
-                newData.ToLocation = vendor.Destination;
-                newData.VehicleTypeName = vendor.VehicleType;
-                newData.VehicleCount = vendor.AvailableVehicle;
-                newData.SpecialInstruction = vendor.SpecialInstruction.ToString();
-                newData.ItemName = vendor.ItemName;
-                newData.PANNo = vendor.PANNo;
-                newData.PackingTypeName = vendor.PackingName;
-                newData.RfqId = vendor.RfqId;
-                newData.VendorId = vendor.PartyId;
+                
+                string encryptedRfqId = Uri.EscapeDataString(_cryptographyService.Encrypt(vendor.RfqId.ToString()));
+                string encryptedVendorId = Uri.EscapeDataString(_cryptographyService.Encrypt(vendor.PartyId.ToString()));
 
                 string baseUrl = $"{Request.Scheme}://{Request.Host}/QuoteRateVendor/QuoteRateVendor";
-                string longUrl = $"{baseUrl}?RfqId={vendor.RfqId}&VendorId={vendor.PartyId}";
+                string longUrl = $"{baseUrl}?RfqId={encryptedRfqId}&VendorId={encryptedVendorId}";
                 string body = "";
 
-                body += "Dear Vendor,\n\n";
-                body += "You are requested to provide your quote for the requested services/products. Please use the link below to submit your quotation:\n\n";
-                body += longUrl + "\n\n";  // use short link here
-                body += "Kindly ensure that you submit your response before the specified deadline.\n\n";
-                body += "If you have any questions, feel free to contact us.\n\n";
-                body += "Thank you,\n";
+                body += "Dear Vendor,<br><br>";
+                body += "You are requested to provide your quote for the requested services/products. Please use the link below to submit your quotation:<br><br>";
+                body += $"<a href='{longUrl}' target='_blank'>Click here</a><br><br>";
+                body += "Kindly ensure that you submit your response before the specified deadline.<br><br>";
+                body += "If you have any questions, feel free to contact us.<br><br>";
+                body += "Thank you,<br>";
                 body += "FleetLynk Team";
 
                 var emailRequest = new EmailRequest
                 {
                     ToEmail = vendor.Email,
                     Subject = "Quote Request - FleetLynk",
-                    Body = body
+                    Body = body,
+                    IsHtml = true
                 };
                 return await _emailService.SendEmailAsync(emailRequest);
             }
@@ -126,6 +117,7 @@ namespace RFQ.UI.Controllers
         {
             try
             {
+                return true;
                 if (string.IsNullOrWhiteSpace(vendor.WhatsAppNo) || string.IsNullOrEmpty(vendor.WhatsAppNo)) return false;
                
                 string baseUrl = $"{Request.Scheme}://{Request.Host}/QuoteRateVendor/QuoteRateVendor";
