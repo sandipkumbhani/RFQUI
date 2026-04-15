@@ -31,6 +31,7 @@
     --ft-icon-red-rgb: 242, 75, 90;
     --ft-icon-primary: #0466C8;
     --ft-icon-primary-rgb: 4, 102, 200;
+    --font-weight-bold: 700;
 }
 
 
@@ -3507,9 +3508,11 @@ body.overlay-active {
         font-size: .9rem;
     }
 }
+
 .arrow-icon {
     color: black !important;
 }
+
 #loader {
     position: fixed;
     top: 0;
@@ -3528,6 +3531,7 @@ body.overlay-active {
     align-items: center; /* vertical center */
     justify-content: center; /* horizontal center */
 }
+
 .pac-container {
     z-index: 999999 !important;
 }
@@ -3566,6 +3570,7 @@ body.overlay-active {
     background: var(--primary);
     color: var(--white);
 }
+
 .table-card {
     background: var(--white);
     border-radius: var(--border-radius);
@@ -3623,3 +3628,64 @@ body.overlay-active {
         height: 16px;
         color: var(--gray-400);
     }
+
+.card-animate {
+    animation: fadeUp 0.5s ease-in-out;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-hover {
+    transition: all 0.3s ease;
+}
+
+    .card-hover:hover {
+        transform: scale(1.02);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+    }
+
+.icon-animate {
+    transition: transform 0.3s ease;
+}
+
+.icon-jump {
+    display: inline-block;
+    will-change: transform;
+}
+
+.card:hover .icon-jump {
+    animation: jumpBig 0.6s ease;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.25));
+}
+
+@keyframes jumpBig {
+    0% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform: translateY(-3px);
+    }
+
+    50% {
+        transform: translateY(1px);
+    }
+
+    75% {
+        transform: translateY(-1px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
