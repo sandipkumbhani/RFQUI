@@ -58,21 +58,26 @@ function builTableStructure() {
         <div class="table-card">
             <div class="com-profile-info">
                 <div class="table-top-header">
-                    <div class="d-flex gap-2">
-                        <div class="table-search-box">
-                            <input type="text" id="rfqDashboardTable_Search" class="form-control form-control-sm" placeholder="Search...">
-                            <button type="submit"><i class="ri-search-line"></i></button>
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <div class="d-flex gap-2 align-items-center">
+                            <div class="table-search-box">
+                                <input type="text" id="rfqDashboardTable_Search" class="form-control form-control-sm" placeholder="Search...">
+                                <button type="submit"><i class="ri-search-line"></i></button>
+                            </div>
+                            <div class="d-flex align-items-center gap-2" style="width: 100%;">
+                                <label class="mb-0">Show per page:</label>
+                                <select id="rfqDashboardTable_pageSize" class="form-select form-select-sm" style="width:auto;">
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="25">25</option>
+                                    <option value="-1">All</option>
+                                </select>
+                                <span>entries</span>
+                            </div>
                         </div>
-                        <div id="exportButtons" class="btn-group" role="group"></div>
-                        <div class="d-flex align-items-center gap-2" style="width: 100%;">
-                            <label class="mb-0">Show per page:</label>
-                            <select id="rfqDashboardTable_pageSize" class="form-select form-select-sm" style="width:auto;">
-                                <option value="5">5</option>
-                                <option value="10" selected>10</option>
-                                <option value="25">25</option>
-                                <option value="-1">All</option>
-                            </select>
-                            <span>entries</span>
+
+                        <div class="d-flex justify-content-end">
+                            <div id="exportButtons"></div>
                         </div>
                     </div>
                 </div>
@@ -96,7 +101,58 @@ function builTableStructure() {
             </div>
         </div>`;
     $('#rfqCardDetailsTableDiv').html(html);
+    addExportButton();
     state.pageSize = 10;
+}
+function addExportButton() {
+    const html = `
+        <button class="btn btn-success btn-sm" id="btnExportExcel">
+            <i class="ri-file-excel-2-line"></i> Export All
+        </button>
+    `;
+    $("#exportButtons").html(html);
+
+    $("#btnExportExcel").on("click", function () {
+        exportToExcel();
+    });
+}
+function exportToExcel() {
+    if (!state.filteredData || state.filteredData.length === 0) {
+        alert("No data to export");
+        return;
+    }
+    var fileName = $("#popupModalLabel").text();
+
+    const exportData = state.filteredData.map(row => {
+        let obj = {};
+        state.columns.forEach(col => {
+            obj[col.title] = row[col.data];
+        });
+        return obj;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const columnWidths = state.columns.map(col => {
+        const headerLength = col.title.length;
+
+        const maxDataLength = Math.max(
+            ...state.filteredData.map(row => {
+                const val = row[col.data];
+                return val ? val.toString().length : 0;
+            })
+        );
+
+        return {
+            wch: Math.max(headerLength, maxDataLength) + 1
+        };
+    });
+
+    worksheet['!cols'] = columnWidths;
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, fileName);
+
+    XLSX.writeFile(workbook, fileName + ".xlsx");
 }
 function generateHeaderColumns() {
     var html = "";
