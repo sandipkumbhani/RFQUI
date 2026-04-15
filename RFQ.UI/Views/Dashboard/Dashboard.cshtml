@@ -1,15 +1,9 @@
 ﻿@using RFQ.UI.Domain.ResponseDto
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
     ViewData["Title"] = "FleetLynk";
     IList<DashboardCardResponseDto> DashboardCards = ViewBag.DashboardCards;
 }
-@section Scripts {
-    <script src="~/js/Views/Dashboard.js?ver=@DateTime.Now.Ticks"></script>
-}
-
-
 
 <head>
     <meta charset="UTF-8" />
@@ -17,6 +11,7 @@
     <title>Fleetlynk Dashboard</title>
     <link rel="stylesheet" href="~/css/DashboardStyle.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         #rfqDashboardTable th,
         #rfqDashboardTable td {
@@ -25,38 +20,38 @@
         white-space: normal; /* allow wrapping */
         word-break: break-word;
         }
+
         #rfqDashboardTable td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
-}
-.tooltip-cell {
-    position: relative;
-    cursor:  pointer;
-}
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+        }
 
-.tooltip-cell::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 120%;
-    left: 50%;
-    transform: translateX(-50%);
-    
-    background: #333;
-    color: #fff;
-    padding: 5px 8px;
-    border-radius: 4px;
-    white-space: nowrap;
+        .tooltip-cell {
+        position: relative;
+        cursor: pointer;
+        }
 
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.1s ease-in-out;
-}
+        .tooltip-cell::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 5px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.1s ease-in-out;
+        }
 
-.tooltip-cell:hover::after {
-    opacity: 1;
-}
+        .tooltip-cell:hover::after {
+        opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -65,7 +60,7 @@
         <div class="main">
             <!-- Stat Cards -->
             <section class="cards">
-                @if (DashboardCards != null && DashboardCards.Count > 0)
+                @* @if (DashboardCards != null && DashboardCards.Count > 0)
                 {
                     foreach (var card in DashboardCards)
                     {
@@ -81,67 +76,49 @@
                         <h3>No Data Available</h3>
                         <p>N/A</p>
                     </div>
-                }
+                } *@
+
+                <div class="row" style="padding:20px;">
+                    @foreach (var metric in DashboardCards)
+                    {
+                        <div class="col-md-3 mb-4">
+                            <div class="card card-animate card-hover"
+                                 style="border:2px solid @metric.BorderColor; border-radius:12px; cursor:pointer; font-family: 'Inter' , sans-serif;"
+                                 onclick="PopUpModel('@metric.CardId','@metric.CardHeader.Replace("'", "\\'")')">
+
+                                <div class="card-body">
+
+                                    <!-- Icon + Trend -->
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div class="icon-animate" style="background:@metric.BgColor; padding:10px; border-radius:10px;border:1px solid @metric.BorderColor;">
+                                            <span class="icon-jump" style="font-size:20px;">@metric.Icon</span>
+                                        </div>
+
+                                        @if (!string.IsNullOrEmpty(metric.Trend))
+                                        {
+                                            <span style="font-size:12px; padding:5px 10px; border-radius:20px;
+                                                background:@(metric.RecordCount > 0 ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)");
+                                                color:@(metric.RecordCount > 0 ? "#10B981" : "#EF4444")">
+                                                @metric.Trend
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <!-- CardHeader -->
+                                    <h6 style="color:#64748B;">@metric.CardHeader</h6>
+
+                                    <!-- Value -->
+                                    <div class="d-flex justify-content-between align-items-end" s>
+                                        <h2 style="color:@metric.Color;font-family:Poppins, sans-serif;font-weight:var(--font-weight-bold);">@metric.RecordCount</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
             </section>
-
-            <!-- Charts / Tables -->
-            @* <section class="charts">
-                <div class="chart">
-                    <h3>Vehicle Usage (Last 7 Days)</h3>
-                    <canvas id="vehicleChart"></canvas>
-                </div>
-
-                <div class="chart">
-                    <h3>Fuel Consumption Trend</h3>
-                    <canvas id="fuelChart"></canvas>
-                </div>
-
-                <div class="chart">
-                    <h3>Breakdown Causes</h3>
-                    <canvas id="breakdownChart"></canvas>
-                </div>
-
-                <div class="table-container">
-                    <h3>Recent Trips</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Driver</th>
-                                <th>Route</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>#101</td><td>Rajesh</td><td>Ahmedabad → Surat</td><td>✅ Completed</td></tr>
-                            <tr><td>#102</td><td>Amit</td><td>Vadodara → Mumbai</td><td>🚚 Ongoing</td></tr>
-                            <tr><td>#103</td><td>Neha</td><td>Surat → Pune</td><td>🕒 Pending</td></tr>
-                            <tr><td>#104</td><td>Vikram</td><td>Mumbai → Nashik</td><td>✅ Completed</td></tr>
-                            <tr><td>#105</td><td>Manoj</td><td>Pune → Delhi</td><td>🚚 Ongoing</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-container">
-                    <h3>Top Drivers</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Driver</th>
-                                <th>Trips</th>
-                                <th>Rating</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Rajesh</td><td>48</td><td>⭐ 4.9</td></tr>
-                            <tr><td>Amit</td><td>45</td><td>⭐ 4.7</td></tr>
-                            <tr><td>Neha</td><td>42</td><td>⭐ 4.8</td></tr>
-                            <tr><td>Vikram</td><td>40</td><td>⭐ 4.6</td></tr>
-                            <tr><td>Manoj</td><td>38</td><td>⭐ 4.5</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section> *@
+        
         </div>
     </div>
 
@@ -162,3 +139,6 @@
 </body>
 
 
+@section Scripts {
+    <script src="~/js/Views/Dashboard.js?ver=@DateTime.Now.Ticks"></script>
+}
