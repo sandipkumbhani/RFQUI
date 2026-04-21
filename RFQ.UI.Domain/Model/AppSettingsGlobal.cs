@@ -119,6 +119,7 @@ namespace RFQ.UI.Domain.Model
         public string? GetMasterPartyById { get; set; }
         public string? GetCards { get; set; }
         public string? GetCardDetails { get; set; }
+        public string? GetReportDetails { get; set; }
 
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
@@ -153,6 +154,7 @@ namespace RFQ.UI.Domain.Model
             var deliverySection = config.GetSection("Delivery");
             var commonSection = config.GetSection("Common");
             var dashboardSection = config.GetSection("Dashboard");
+            var reportSection = config.GetSection("Report");
 
             return new AppSettingsGlobal
             {
@@ -269,7 +271,8 @@ namespace RFQ.UI.Domain.Model
                 GetRfqTableData = requestForQuoteSection["GetRfqTableData"],
                 GetMasterPartyById = requestForQuoteSection["GetMasterPartyById"],
                 GetCards = dashboardSection["GetCards"],
-                GetCardDetails = dashboardSection["GetCardDetails"]
+                GetCardDetails = dashboardSection["GetCardDetails"],
+                GetReportDetails = reportSection["GetReportDetails"]
             };
         }
     }

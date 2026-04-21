@@ -97,11 +97,11 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
-        public async Task<IEnumerable<LinkItemResponseDto>?> GetLinkItemList()
+        public async Task<IEnumerable<LinkItemResponseDto>?> GetLinkItemList(int profileId)
         {
             try
             {
-                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetLinkItemList}";
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetLinkItemList + "/" + profileId}";
                 var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
                 _httpClient = new HttpClient();
                 if (responseModel != null)

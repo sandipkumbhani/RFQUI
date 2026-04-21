@@ -8,7 +8,7 @@ $(document).ready(function () {
     initializjquery();
     GetAllProfileName();
     GetAllMenuName();
-    GetLinkItemList()
+    //GetLinkItemList();
     OnChangeMenuGroupDropDown();
     CheckAll();
 });
@@ -113,21 +113,17 @@ function GetAllMenuName() {
     });
 }
 function GetLinkItemList(linkGroupId, profileId) {
-    var GetUrl = '/Profile/GetLinkItemList';
+    var GetUrl = '/Profile/GetLinkItemList?profileId=' + profileId;
     $.ajax({
         url: GetUrl,
         type: "GET",
         contentType: "application/json",
         success: function (response) {
-            var linkGroupId = parseInt($("#txtMenu").val());
-            var profileId = parseInt($("#txtName").val());
-            if (linkGroupId == undefined || profileId == undefined) {
-                linkGroupId = linkGroupId;
-                profileId = profileId;
-            }
             linkItemData = [];
+            var linkGroupNId = parseInt($("#txtMenu").val());
+            var profileNId = parseInt($("#txtName").val());
             var data = $.grep(response, function (x) {
-                return (x.profileId == parseInt(profileId) && x.linkGroupId == linkGroupId);
+                return ((x.profileId == parseInt(profileNId)) && x.linkGroupId == linkGroupNId);
             });
             if (data.length > 0) {
                 linkItemData = data;
@@ -349,6 +345,24 @@ function GetAllProfileRightsData() {
                         item.isCancel = CancelCheckboxData.length > 0
                             ? CancelCheckboxData.find(x => x.linkId === item.linkId)?.status ?? item.isCancel
                             : item.isCancel;
+                    });
+                    linkItemData.forEach(item => {
+                        if (AllProfileRightsData.findIndex(x => x.linkId == item.linkId) == -1) {
+                            AllProfileRightsData.push({
+                                "profileId": parseInt($("#txtName").val()),
+                                "linkId": item.linkId,
+                                "isAdd": AddCheckboxData.length > 0.
+                                    ? AddCheckboxData.find(x => x.linkId === item.linkId)?.status ?? true : true,
+                                "isEdit": EditCheckboxData.length > 0
+                                    ? EditCheckboxData.find(x => x.linkId === item.linkId)?.status ?? true : true,
+                                "isView": ViewCheckboxData.length > 0
+                                    ? ViewCheckboxData.find(x => x.linkId === item.linkId)?.status ?? true : true,
+                                "isCancel": CancelCheckboxData.length > 0
+                                    ? CancelCheckboxData.find(x => x.linkId === item.linkId)?.status ?? true : true,
+                                "linkGroupId": linkGroupId
+
+                            });
+                        }
                     });
                 } else {
                     AllProfileRightsData = [];
