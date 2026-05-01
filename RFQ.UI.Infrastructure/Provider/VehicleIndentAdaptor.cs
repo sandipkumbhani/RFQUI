@@ -135,5 +135,22 @@ namespace RFQ.UI.Infrastructure.Provider
                 throw;
             }
         }
+
+        public async Task<VehicleIndent> GetVehicleIndentById(int indentId)
+        {
+            try
+            {
+                var baseUrl = $"{_appSettings.BaseUrl + _appSettings.GetVehicleIndentById + indentId}";
+                var responseModel = await _commonApiAdaptor.GetAsync<NewCommonResponseDto>(baseUrl, _globalClass.Token);
+                if (responseModel != null && responseModel.StatusCode == 200)
+                    return JsonConvert.DeserializeObject<VehicleIndent>(responseModel.Data.ToString());
+                else
+                    return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -6,5 +6,6 @@
         public string ToDestination { get; set; }
         public int VehicleTypeId { get; set; }
         public int RfqId { get; set; }
+        public string RfqDate { get; set; }
     }
 }

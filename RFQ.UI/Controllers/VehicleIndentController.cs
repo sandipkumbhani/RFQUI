@@ -147,5 +147,18 @@ namespace RFQ.UI.Controllers
 
         }
 
+        [HttpGet("VehicleIndent/GetVehicleIndentById/{indentId}")]
+        public async Task<IActionResult> GetVehicleIndentById(int indentId)
+        {
+            try
+            {
+                VehicleIndent result = await _vehicleIndentService.GetVehicleIndentById(indentId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

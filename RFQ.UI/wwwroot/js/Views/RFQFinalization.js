@@ -70,15 +70,16 @@ $(document).ready(function () {
         $("#tableDiv").css('display', 'none ');
         $("#formDiv").css('display', 'block');
         $('#RFQForm').find('input, select, textarea, button, a').prop('disabled', false);
-        if (viewModelDto.length > 0) {
-            const usedRfqNos = viewModelDto.map(x => x.rfqNo.trim());
-            var drpData = ddlRfqNoData.filter(
-                x => !usedRfqNos.includes(x.rfqNo.trim())
-            );
-            console.log("drpData", drpData);
-            console.log("usedRfqNos", usedRfqNos);
-            ReBindddlRfqNoDrp(drpData)
-        }
+        GetRfqDrpList();
+        //if (viewModelDto.length > 0) {
+        //    const usedRfqNos = viewModelDto.map(x => x.rfqNo.trim());
+        //    var drpData = ddlRfqNoData.filter(
+        //        x => !usedRfqNos.includes(x.rfqNo.trim())
+        //    );
+        //    console.log("drpData", drpData);
+        //    console.log("usedRfqNos", usedRfqNos);
+        //    ReBindddlRfqNoDrp(drpData)
+        //}
     })
 
     $("#btnCancel").on('click', function () {
@@ -86,9 +87,9 @@ $(document).ready(function () {
 
     });
 
-    GetRfqDrpList();
-    GetRfqStatus();
-    GetRfqFailureReason();
+    GetRfqStatusAndFailureResons();
+    //GetRfqStatus();
+    //GetRfqFailureReason();
     FetchRfqFinalizationList();
     UpdateRfqFinalization();
 
@@ -193,51 +194,28 @@ function GetRfqDrpList() {
         data: { companyId: companyId },
         success: function (response) {
             ddlRfqNoData = response;
-            $("#ddlRfqNo").empty();
-            const select = document.getElementById("ddlRfqNo");
-            select.innerHTML = "";
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = 0;
-            placeholderOption.textContent = "Select a RFQ No";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            select.appendChild(placeholderOption);
-
-            ddlRfqNoData.forEach(option => {
-                let opt = document.createElement("option");
-                opt.value = option.rfqId;
-                opt.textContent = option.rfqNo;
-                select.appendChild(opt);
-            });
+            BindDropdownValues('ddlRfqNo', ddlRfqNoData, 'rfqId', 'rfqNo','RFQ No')
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
         }
     });
 }
-function GetRfqStatus() {
+
+function GetRfqStatusAndFailureResons() {
     var getInternalMasterUrl = '/Vendor/GetAllInternalMaster'
     $.ajax({
         url: getInternalMasterUrl,
         type: "GET",
         dataType: "json",
         success: function (response) {
-            let internalData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.RFQ_STATUS);
-            const select = document.getElementById("ddlRfqStatus");
-            select.innerHTML = "";
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = 0;
-            placeholderOption.textContent = "Select a RFQ Status";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            select.appendChild(placeholderOption);
+            let rfqStatusData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.RFQ_STATUS);
 
-            internalData.forEach(option => {
-                let opt = document.createElement("option");
-                opt.value = option.internalMasterId;
-                opt.textContent = option.internalMasterName;
-                select.appendChild(opt);
-            });
+            BindDropdownValues('ddlRfqStatus', rfqStatusData, 'internalMasterId', 'internalMasterName', 'RFQ Status')
+
+            let failureReasonData = response.filter(x => x.internalMasterTypeId == EnumInternalMasterType.FAILURE_REASONS);
+
+            BindDropdownValues('ddlRfqReason', failureReasonData, 'internalMasterId', 'internalMasterName', 'Failure Reason')
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Data!", "Error");
@@ -437,7 +415,13 @@ async function EditRfqFinalizatioin(rfqFinalIdId) {
     }
     var data = viewModelDto.filter(x => x.rfqFinalIdId == rfqFinalIdId);
     var formData = data[0];
-    ReBindddlRfqNoDrp(ddlRfqNoData);
+    const select = document.getElementById("ddlRfqNo");
+    select.innerHTML = "";
+    let opt = document.createElement("option");
+    opt.value = formData.rfqId;
+    opt.textContent = formData.rfqNo;
+    select.appendChild(opt);
+
     $('#tableDiv').css('display', 'none');
     $("#formDiv").css('display', 'Block');
     $("#btnUpdateRfqFinalization").show();
@@ -448,12 +432,12 @@ async function EditRfqFinalizatioin(rfqFinalIdId) {
     $("#txtRfqId").val(formData.rfqId);
     $("#hdnRFQFinalizationId").val(formData.rfqFinalIdId);
     $("#txtRemarks").val(formData.remarks);
-    await GetRfqDetailsByRfqNo();
+    //await GetRfqDetailsByRfqNo();
     $("#ddlRfqStatus").val(formData.rfqStatusId).trigger('change');
     $("#txtBillingRate").val(formData.billingRate);
     $("#txtPerDay").val(formData.detentionPerDay);
     $("#txtFreeDays").val(formData.detentionFreeDays);
-    await FetchAwardedVendorDetails();
+    //await FetchAwardedVendorDetails();
     if (!IsNullOrEmpty(formData.reasonId)) {
         $("#ddlRfqReason").val(formData.reasonId).trigger('change');
     }
@@ -768,21 +752,4 @@ async function checkAssignedVehicles(AssignedVehicleListData) {
         }
     }
     return true;
-}
-function ReBindddlRfqNoDrp(ddlRfqNoData) {
-    $("#ddlRfqNo").empty();
-    const select = document.getElementById("ddlRfqNo");
-    select.innerHTML = "";
-    let placeholderOption = document.createElement("option");
-    placeholderOption.value = 0;
-    placeholderOption.textContent = "Select a RFQ No";
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-    ddlRfqNoData.forEach(option => {
-        let opt = document.createElement("option");
-        opt.value = option.rfqId;
-        opt.textContent = option.rfqNo;
-        select.appendChild(opt);
-    });
 }
