@@ -12,6 +12,6 @@ namespace RFQ.UI.Domain.Interfaces
         Task<string> UpdateVehicleIndent(int indentId, VehicleIndentRequestDto vehicleIndentRequestDto);
         Task<bool> DeleteVehicleIndent(int indentId);
         Task<bool> IndentReferenceCheckInRfqAsync(int indentId);
-
+        Task<VehicleIndent> GetVehicleIndentById(int indentId);
     }
 }

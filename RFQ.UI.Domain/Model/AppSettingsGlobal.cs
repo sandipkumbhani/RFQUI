@@ -109,6 +109,7 @@ namespace RFQ.UI.Domain.Model
         public string? AddBookingOrTrip { get; set; }
         public string? GetLocationById { get; set; }
         public string? IndentReferenceCheckInRfqAsync { get; set; }
+        public string? GetVehicleIndentById { get; set; }
         public string? CheckVehicleAndIndentUnique { get; set; }
         public string? GetAutoGenerateCode { get; set; }
         public string? GetAwardedIndentList { get; set; }
@@ -119,6 +120,7 @@ namespace RFQ.UI.Domain.Model
         public string? GetMasterPartyById { get; set; }
         public string? GetCards { get; set; }
         public string? GetCardDetails { get; set; }
+        public string? GetReportDetails { get; set; }
 
 
         public static AppSettingsGlobal FromConfiguration(IConfiguration config)
@@ -153,6 +155,7 @@ namespace RFQ.UI.Domain.Model
             var deliverySection = config.GetSection("Delivery");
             var commonSection = config.GetSection("Common");
             var dashboardSection = config.GetSection("Dashboard");
+            var reportSection = config.GetSection("Report");
 
             return new AppSettingsGlobal
             {
@@ -259,6 +262,7 @@ namespace RFQ.UI.Domain.Model
                 UpdateRfqRecipient = rfqRecipientSection["UpdateRfqRecipient"],
                 AddBookingOrTrip = bookingOrTripSection["AddBookingOrTrip"],
                 GetLocationById = locationSection["GetLocationById"],
+                GetVehicleIndentById = vehicleIndentSection["GetVehicleIndentById"],
                 IndentReferenceCheckInRfqAsync = vehicleIndentSection["IndentReferenceCheckInRfqAsync"],
                 CheckVehicleAndIndentUnique = vehiclePlacementSection["CheckVehicleAndIndentUnique"],
                 GetAutoGenerateCode = commonSection["GetAutoGenerateCode"],
@@ -269,7 +273,8 @@ namespace RFQ.UI.Domain.Model
                 GetRfqTableData = requestForQuoteSection["GetRfqTableData"],
                 GetMasterPartyById = requestForQuoteSection["GetMasterPartyById"],
                 GetCards = dashboardSection["GetCards"],
-                GetCardDetails = dashboardSection["GetCardDetails"]
+                GetCardDetails = dashboardSection["GetCardDetails"],
+                GetReportDetails = reportSection["GetReportDetails"]
             };
         }
     }

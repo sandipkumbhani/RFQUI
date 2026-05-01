@@ -50,7 +50,7 @@ namespace RFQ.UI.Infrastructure.Provider
             {
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _globalClass.Token);
-                var url = $"{_config["ApiSettings:VehicleRCApiUrl"]}VehicleNo={vehicleKycRequestDto.VehicleNo}&UserId={vehicleKycRequestDto.UserId}&Username={vehicleKycRequestDto.Username}&serviceprovider={vehicleKycRequestDto.ServiceProvider}";
+                var url = $"{_config["ApiSettings:VehicleRCApiUrl"]}VehicleNo={vehicleKycRequestDto.VehicleNo}&UserId={vehicleKycRequestDto.UserId}&Username={vehicleKycRequestDto.Username}&serviceprovider={_config["WhatsAppService:ServiceProvider"]}&ccode={_config["WhatsAppService:CCode"]}";
 
                 var response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)

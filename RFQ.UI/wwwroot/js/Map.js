@@ -17,7 +17,7 @@ function initMap() {
     }
 
     // Prevent duplicate listeners
-    if (mapInitialized) return;
+    //if (mapInitialized) return;
     mapInitialized = true;
 
     if (document.getElementById("from-search-box")) {

@@ -42,5 +42,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _vehicleIndentAdaptor.IndentReferenceCheckInRfqAsync(indentId);
         }
+        public async Task<VehicleIndent> GetVehicleIndentById(int indentId)
+        {
+            return await _vehicleIndentAdaptor.GetVehicleIndentById(indentId);
+        }
     }
 }

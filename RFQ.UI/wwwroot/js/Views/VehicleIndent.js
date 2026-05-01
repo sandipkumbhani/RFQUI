@@ -19,13 +19,9 @@ $(document).ready(function () {
             $('#ddlLocation').prop('disabled', true);
         }
     });
-    //FetchIndentNo();
     GetAllVehicleType("ddlVehicleType", companyId);
-    GetAllCustomer("ddlCustomerName", companyId);
     GetAllItemName("ddlItemName", companyId);
-    GetAllCustomer("ddlConsignorInput", companyId);
-  /*  GetAllConsignorList();*/
-    GetAllConsigneeList();
+    GetAllCustomerDropDownList();
     GetAllPakingType("ddlPackingType");
     FetchVehicleIndent();
     ButtonUpdateClick();
@@ -57,12 +53,14 @@ $(document).ready(function () {
 
     $("#ddlLocation").on("change", async function () {
         var locationId = $(this).val();
-        var locationData = await GetLocationById(locationId)
-        console.log(locationData.code);
-        var code = await GetAutoGenerateCode(locationData.code, PrefixCode.VI);
-        console.log(code);
-        if (!IsEditClick) {
-            $("#txtIndentNo").val(code);
+        if (!IsNullOrEmpty(locationId)) {
+            var locationData = await GetLocationById(locationId)
+            console.log(locationData.code);
+            var code = await GetAutoGenerateCode(locationData.code, PrefixCode.VI);
+            console.log(code);
+            if (!IsEditClick) {
+                $("#txtIndentNo").val(code);
+            }
         }
     });
 });
@@ -85,9 +83,9 @@ function FetchVehicleIndent() {
     $("#btnSave").show();
     $("#btnupdate").hide();
     $("#btnsaveandnew").show();
-    GetAllCustomer('ddlConsignorInput', companyId);
+    //GetAllCustomer('ddlConsignorInput', companyId);
     //GetAllConsignorList();
-    GetAllConsigneeList();
+    //GetAllConsigneeList();
     FetchDataForTable('IndentTable', fetchVehicleIndentUrl, orderColumn, orderDir.toUpperCase(), 'UpdateVehicleIndent', 'DeleteVehicleIndent', 'indentId');
 }
 
@@ -131,28 +129,16 @@ $('#pageLength').off('change').on('change', function () {
 
 //    });
 //};
-function GetAllConsigneeList() {
+function GetAllCustomerDropDownList() {
     $.ajax({
         url: '/Customer/GetDrpCustomerList',
         type: "GET",
         data: { companyId: companyId },
         dataType: "json",
         success: function (response) {
-            $("#ddlConsigneeInput").empty();
-            const selectConsignee = document.getElementById("ddlConsigneeInput");
-            selectConsignee.innerHTML = "";
-            let placeholderOption = document.createElement("option");
-            placeholderOption.value = 0;
-            placeholderOption.textContent = "Select or Add a Consignee Name";
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            selectConsignee.appendChild(placeholderOption);
-            response.forEach(name => {
-                const option = document.createElement("option");
-                option.value = name.partyId;
-                option.textContent = name.partyName;
-                selectConsignee.appendChild(option);
-            });
+            BindDropdownValues('ddlConsigneeInput', response, 'partyId', 'partyName', 'Consignee Name');
+            BindDropdownValues('ddlCustomerName', response, 'partyId', 'partyName', 'Customer Name');
+            BindDropdownValues('ddlConsignorInput', response, 'partyId', 'partyName', 'Consignor Name');
         },
         error: function (xhr, status, error) {
             toastr.error("Failed to Fetch Consignee Name!", "Error");
@@ -604,9 +590,3 @@ function setRfqExpiredMinDate() {
     }
     rfqExpired.min = date.toISOString().slice(0, 16);
 }
-
-
-
-
-
-

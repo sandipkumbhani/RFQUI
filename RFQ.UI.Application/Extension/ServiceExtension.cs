@@ -47,6 +47,7 @@ namespace RFQ.UI.Application.Extension
             services.AddScoped<IBokingInvoiceService, BokingInvoiceService>();
             services.AddScoped<ICommonService, CommonService>();
             services.AddScoped<ICryptographyService, CryptographyService>();
+            services.AddScoped<IReportService, ReportService>();
             return services;
         }
     }

@@ -29,9 +29,9 @@ namespace RFQ.UI.Application.Provider
         {
             return await _profileAdaptor.GetAllMenuGroup();
         }
-        public async Task<IEnumerable<LinkItemResponseDto>> GetLinkItemList()
+        public async Task<IEnumerable<LinkItemResponseDto>> GetLinkItemList(int profileId)
         {
-            return await _profileAdaptor.GetLinkItemList();
+            return await _profileAdaptor.GetLinkItemList(profileId);
         }
         public async Task<IEnumerable<ProfileRightsResponseDto>> GetProfileRightsByProfileId(int profileId)
         {

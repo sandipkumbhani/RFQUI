@@ -110,11 +110,11 @@ namespace RFQ.UI.Controllers
                 return Json(new { result = "error", message = ex.Message });
             }
         }
-        public async Task<IActionResult> GetLinkItemList()
+        public async Task<IActionResult> GetLinkItemList(int profileId)
         {
             try
             {
-                var alllist = await _profileServices.GetLinkItemList();
+                var alllist = await _profileServices.GetLinkItemList(profileId);
                 if (alllist != null && alllist.Count() > 0)
                     return Json(alllist);
                 if (Request.IsAjaxRequest())

@@ -130,10 +130,12 @@ $("#tableDivLink").click(function (e) {
 });
 
 $('#ddlIndentNo').on('change', async function () {
-    await AutoFetch();
-    setTimeout(() => {
-        GetVehiclePlacementCountByIndentNo();
-    }, 100);
+    if ($(this).val() != null) {
+        await AutoFetch();
+        setTimeout(() => {
+            GetVehiclePlacementCountByIndentNo();
+        }, 100);
+    }
 });
 
 $('#btnAdd').on('click', function () {
@@ -198,7 +200,7 @@ function FetchVehiclePlacement() {
     IsEditClick = false;
     $("#tableDiv").css('display', 'block');
     $("#formDiv").css('display', 'none');
-    vehiclePlacementFormReset();
+    //vehiclePlacementFormReset();
     $("#btnSaveForm").show();
     $("#btnUpdate").hide();
     $("#btnSaveAndNewForm").show();
@@ -683,33 +685,6 @@ function GetAllVehicleType(dropdownId, companyIdParam) {
             toastr.error("Failed to Fetch Vehicle Type!", "Error");
         }
     });
-}
-function ClearFields() {
-    $("#vehicleStatusInput").val("");
-    $("#blacklistStatusInput").val("");
-    $("#regdOwnerInput").val("");
-    $("#engineNoInput").val("");
-    $("#chasisNoInput").val("");
-    $("#makeModelInput").val("");
-    $("#pucExpiryInput").val("");
-    $("#financerInput").val("");
-    $("#ownerSerialNoInput").val("");
-    $("#npNoInput").val("");
-    $("#insuranceCoInput").val("");
-    $("#verifiedOnInput").val("");
-    $("#rtoRegistrationInput").val("");
-    $("#registrationDateInput").val("");
-    $("#permanentAddressInput").val("");
-    $("#grossWeightInput").val("");
-    $("#unladenWeightInput").val("");
-    $("#fitnessExpiryInput").val("");
-    $("#taxExpiryInput").val("");
-    $("#permitNoInput").val("");
-    $("#permitExpiryInput").val("");
-    $("#npExpiryInput").val("");
-    $("#vehicleCapacityInput").val("");
-    $("#policyNoInput").val("");
-    $("#policyExpiryInput").val("");
 }
 function DriverPopUp() {
     var url = '/VehiclePlacement/CreateDriver';
