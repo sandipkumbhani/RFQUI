@@ -2,7 +2,7 @@
 {
     public class WhatsAppTemplate
     {
-        public const string rfqevent = "rfqevent";
-        public const string rfqfinalization = "rfqfinalization";
+        public const string rfqevent = "rfq_event";
+        public const string rfqfinalization = "rfq_finalization";
     }
 }

@@ -1,22 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RFQ.UI.Application.Interface;
+using RFQ.UI.Domain.Enum;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
 using RFQ.UI.Domain.ResponseDto;
 using RFQ.UI.Extension;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using RFQ.UI.Domain.Helper;
-using System.Net.Mail;
-using System.Text;
-using RFQ.UI.Application.Provider;
 using RFQ.UI.Infrastructure.Provider;
-using RFQ.UI.Domain.Enum;
-using System.Numerics;
-using AutoMapper;
-using System.Net.Sockets;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RFQ.UI.Controllers
 {
@@ -343,7 +335,7 @@ namespace RFQ.UI.Controllers
             {
                 List<string> dVar = new();
                 var Vendor = await _requestForQuoteService.GetMasterPartyById(rfqRecipient.VendorId);
-                string partyName = string.IsNullOrEmpty(Vendor.PartyName)? "Vendor" : Vendor.PartyName;
+                string partyName = string.IsNullOrEmpty(Vendor.PartyName) ? "Vendor" : Vendor.PartyName;
                 dVar.Add(partyName);
                 dVar.Add(formLink);
 

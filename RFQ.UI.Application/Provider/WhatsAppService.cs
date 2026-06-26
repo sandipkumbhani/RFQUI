@@ -4,14 +4,7 @@ using Newtonsoft.Json;
 using RFQ.UI.Application.Interface;
 using RFQ.UI.Domain.Model;
 using RFQ.UI.Domain.RequestDto;
-using RFQ.UI.Domain.ResponseDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace RFQ.UI.Application.Provider
 {
@@ -42,8 +35,8 @@ namespace RFQ.UI.Application.Provider
                     TemplateName = requestDto.TemplateName,
                     DVariables = requestDto.DVariables,
                     ServiceProvider = whatsAppConfig["ServiceProvider"],
-                    ApiKey = whatsAppConfig["ApiKey"],
-                    VendorId = Guid.Parse(whatsAppConfig["VendorId"] ?? Guid.Empty.ToString())
+                    ApiKey = whatsAppConfig["ApiKey"]
+                    //VendorId = Guid.Parse(whatsAppConfig["VendorId"] ?? Guid.Empty.ToString())
                 };
 
                 _logger.LogInformation("WhatsApp API URL: {Url}", url);
